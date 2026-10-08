@@ -1,0 +1,13 @@
+{
+  "kind": "ROOT_EXACT_ORIGINAL_EVENTHUB_TWO_EXECUTION_GATE_R1",
+  "inputs_sha256": "d9925321e563010fcd28eadecf2b1ca6323177cdc2191c65af010d9107fbe523",
+  "restore_sha256": "90c43f5fa311a949d42cddc3e7fabb3b313fce94a58c672da4d766c8e90732a5",
+  "lock_root_sha256": "f03295a6b684b3e1eec0ae5f27ea9e52c6d1036fe722c05d65b95cb93194413a",
+  "driver_sha256": "4a820e7d4f88c33e00f8dc37bedcc0e4d6f33c9103995847a9707494d83e6d01",
+  "peer_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-original-two-final-preflight-r1.json",
+  "peer_sha256": "8998d4fa0805eb48710b077dc93873b9800e7bf73a4d50611c2736c60be326fd",
+  "source_peer_sha256": "2c7bda69f44f0ef708a60d35fd1dfd00d2e32ab51f1fdd3a3d442fdf6d529095",
+  "actual_lock_peer_sha256": "581b8139d544bf7938ed5e12c8bc34b9cba8222897100e3175d219e519f0f558",
+  "count_erratum_sha256": "45d0db904446c336b57126ed542da1db7bd974a5b90488351af7fc7b8f1ae8f0",
+  "limits": "Only one serial original lockedRestore300/strictRebuild300/nativeTwo75 withclosedresults; nofixed/productAPI/canonical/wholecloud release."
+}

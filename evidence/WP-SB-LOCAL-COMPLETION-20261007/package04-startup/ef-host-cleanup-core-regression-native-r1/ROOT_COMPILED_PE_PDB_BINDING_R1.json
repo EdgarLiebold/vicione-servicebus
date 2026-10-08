@@ -1,0 +1,524 @@
+{
+  "kind": "ROOT_ACTUAL_EF_FIX_AFFECTED_CORE_IMMUTABLE_OWNERS_PHYSICAL_PE_PDB_SOURCE_BINDING_R1",
+  "native_sha256": "f89c85f1202df319d15f6d3d23c1d37493ab17942d4e93f3e213d4e356a506e2",
+  "actual_images": 12,
+  "actual_document_checksums": 3810,
+  "actual_runtime_files": 17,
+  "actual_assets": 12,
+  "images": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-core-regression-native-r1/runtime/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "ffbf0e074e2c5d0a15aab30f0029af2dd011330edf31ba078667763fd01496e0",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4128148328,
+          "guid": "9f81f311-b0ee-4de5-99cd-392971a98dda",
+          "path": "ViciOne.ServiceBus.Abstractions.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "11f3819feeb0e54d99cd392971a98dda688b0ef6",
+        "sha256": "542beb86f88cc61217afdae8ac5bda475da598cf713658fe17200ed47b16008c",
+        "documents": 700,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 697,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "2a451595b860e497e4839b2db32956dd3f122e5e0497052fea56daa80a708c49",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-core-regression-native-r1/runtime/ViciOne.ServiceBus.Courier.dll",
+      "sha256": "8fd35116c1965ed1591784197c77800fe6c60b7edc690336db96e0620674c438",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3709594054,
+          "guid": "adff1403-bb62-48f4-b3f1-30835b88241d",
+          "path": "ViciOne.ServiceBus.Courier.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "0314ffad62bbf448b3f130835b88241dc6e91bdd",
+        "sha256": "56a2c37f93fa9d7ef996f2e97ce0554122990250304ee004a14d7a6bb84b4ade",
+        "documents": 146,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 143,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "6686f3e008efd0372ecc68f66d4dfbef3931115bc53e1c2ad6ba4108332412e3",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-core-regression-native-r1/runtime/ViciOne.ServiceBus.Futures.dll",
+      "sha256": "72ade75548b96cc6a4697e7a497aa2f19624da3d1d7c4e7c645d300d7e23fca7",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3497403619,
+          "guid": "2c0603a9-bae2-4956-bc0b-2204ae6bf0fb",
+          "path": "ViciOne.ServiceBus.Futures.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "a903062ce2ba5649bc0b2204ae6bf0fbe32476d0",
+        "sha256": "6b920562d98b7cd3a5dee7d3f9b6c6823bab3c32dc33f4c05279b285f52eac17",
+        "documents": 61,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 58,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "9cc3bce75a053f8b0346080ddf1f25158549a78b072fba81d28f57352063ebc9",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-core-regression-native-r1/runtime/ViciOne.ServiceBus.Initializers.dll",
+      "sha256": "ce8550c49ab68b6d000881de9edf63daaf61999af7879e5606cd17e04ee7df0c",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2715161806,
+          "guid": "ba3dbffd-75f5-42dd-bf6c-8702465b45f7",
+          "path": "ViciOne.ServiceBus.Initializers.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "fdbf3dbaf575dd42bf6c8702465b45f7ce14d6a1",
+        "sha256": "eb1fb2183d5dedfbc4217705143f51af5e834d6c66fdea64d3d9e11d8d44325f",
+        "documents": 11,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 8,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "7338c9f84373e2f97047933ddc1454b54d29af0cd08df4071583c3298fd26956",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-core-regression-native-r1/runtime/ViciOne.ServiceBus.JobService.dll",
+      "sha256": "070c9bb58594e3f25c4eba3fe567ba278f58618947766c140a7968fc567106e6",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4217522458,
+          "guid": "1eebc857-9ea1-40a8-8901-acf968669df6",
+          "path": "ViciOne.ServiceBus.JobService.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "57c8eb1ea19ea8408901acf968669df61a4962fb",
+        "sha256": "f0f6a3635ce9a1cd807de87fb913616f5bac4a6443e589c2c3fe364433462745",
+        "documents": 175,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 172,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "efede60aa240fedad1913afa61ff4cde167f2428eaf27c963c2ad6633018ef64",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-core-regression-native-r1/runtime/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "a036b883f98f63344218aab0d6a8be0d352c7b7c166d1a1b31a56bae8397c3a8",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3103489279,
+          "guid": "48ba2c8e-51f4-49d3-9254-665b0b70a8fb",
+          "path": "ViciOne.ServiceBus.Mediator.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "8e2cba48f451d3499254665b0b70a8fbff7cfbb8",
+        "sha256": "8cd22e32585c18821b37cf864109c82ffd26add4d9dfaf5e7b3cc2af58ae83cc",
+        "documents": 31,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 28,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "d3ea8f6b61a269d7d2ce56053aa04e019b88a7f57dcd816c39dc7e8a577964aa",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-core-regression-native-r1/runtime/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "1d7089731eb3b1cf0049469db4b55ab2123ac50ed000adac4c99bf437a20c934",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4245033273,
+          "guid": "a5e3e3ca-80e4-4d6d-83d3-c44b575ffa4a",
+          "path": "ViciOne.ServiceBus.Sagas.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "cae3e3a5e4806d4d83d3c44b575ffa4a391106fd",
+        "sha256": "ece290c625d763362f6fb9c9228ae399d3d9c459a7b9055c050fa5133ade4ded",
+        "documents": 374,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 371,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "7f9c7e7fc49c07cc93d2088a69b5ea41c551a7bef5a04c9c7986072b3f68b6c0",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-core-regression-native-r1/runtime/ViciOne.ServiceBus.Testing.dll",
+      "sha256": "11d98e0052e1c7fac71c86dd8633d88540b4439f8d5b2988258bf243569259a5",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3591159790,
+          "guid": "a35375d1-5396-4c72-8af3-404a668649ee",
+          "path": "ViciOne.ServiceBus.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "d17553a39653724c8af3404a668649eeeebf0cd6",
+        "sha256": "7a01ede4160ff4349d56d8d87d63569eea7c62d7309b77394b8f59071d956444",
+        "documents": 104,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 101,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "c59a65e3215fdbeeb6f9bdf5cb207a3310b31178ae9f234e4adf2e7209efeade",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-core-regression-native-r1/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "1a74688f97447b28db21e8a32333464201a7e5c4204846368af0fc67d322718a",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4220478623,
+          "guid": "76794344-c031-4533-90b6-289292ebfee5",
+          "path": "ViciOne.ServiceBus.Tests.Infrastructure.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "4443797631c0334590b6289292ebfee59f648ffb",
+        "sha256": "e183699e20d0e7a7f24a898cf6edeb21326cf596f31c0bac3083494dd8660fa7",
+        "documents": 9,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 6,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "98bbef7e2f432343075970d335ac9b60b9ac5d0c42e0d1a09635f4fda1a2bae9",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-core-regression-native-r1/runtime/ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "sha256": "56489342bdd791e0e87e4603f7aae0679bcdcde157abb0f7e273d29519b23166",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3396902379,
+          "guid": "77d1085d-365e-4a45-bc76-e442d776b12b",
+          "path": "ViciOne.ServiceBus.Tests.InternalAccess.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "5d08d1775e36454abc76e442d776b12beb9d78ca",
+        "sha256": "457a4b1d744b17be2a276786de67aa5e69d83c5ccea85ebcdb98be8907e98633",
+        "documents": 38,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 35,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "c729ccfa190ac915944068907d2ede6d42f3cfbc179252643b37bcccb4402e95",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-core-regression-native-r1/runtime/ViciOne.ServiceBus.Tests.dll",
+      "sha256": "75f5aaac9a95a93b2a01592429286fdbb895a498c7336278d6bb294dd2e97b7d",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2948124732,
+          "guid": "da9ee5fb-8762-4875-b08e-ed10550bd83e",
+          "path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-host-cleanup-core-regression/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "fbe59eda62877548b08eed10550bd83e3cd0b8af",
+        "sha256": "d8de55c63e2a3f990681ceb50cd4c6727b13ffac4f3103566629ac5f95e5bc8c",
+        "documents": 820,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 812,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 8
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "c4159bc9f082d16fd349613c57ac098dc5ceddf5dad7cbe30207ac084cdc41f7",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-host-cleanup-core-regression/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "0cc7f11efd399ace2e91303f3f866a2b372e27309fe800158edf3addf03efda4",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "0cc7f11efd399ace2e91303f3f866a2b372e27309fe800158edf3addf03efda4"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-host-cleanup-core-regression/tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "375f7bfa7809faabd4bd1697fd6330e3800932453365312045df2ca68e1cb600",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "375f7bfa7809faabd4bd1697fd6330e3800932453365312045df2ca68e1cb600"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-core-regression-native-r1/runtime/ViciOne.ServiceBus.dll",
+      "sha256": "af33bd89a540ac31438055e06de06dfaaab1a89b567bb32a9f8847ab56fd4cea",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2886335004,
+          "guid": "b856d34b-1235-4b0d-8441-a99d0b9792ae",
+          "path": "ViciOne.ServiceBus.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "4bd356b835120d4b8441a99d0b9792ae1cfa09ac",
+        "sha256": "bec52a25c4fa5583446aee5b11ab32e5621ea686d1e882e9c0f30bf60000e372",
+        "documents": 1341,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 1293,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 4,
+          "EMBEDDED_SOURCE": 44
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "0ac40e06f5ebc25fe90706e01bfb5af089fc42a0d87a26c87f84dbfab08188f4",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-host-cleanup-core-regression/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-host-cleanup-core-regression/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingOptionsValidator.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "32ab6bc92751e3e670540838bf8ea173b339b0989a07f7dc3fce61f966a06c53",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "32ab6bc92751e3e670540838bf8ea173b339b0989a07f7dc3fce61f966a06c53"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-host-cleanup-core-regression/src/ViciOne.ServiceBus/DependencyInjection/ReliableMessaging/ReliableMessagingServiceCollectionExtensions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "b7f803d5f5ee6196e53dd32595999fe1499f766e2dfa5d2aff563377c9f3b764"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-host-cleanup-core-regression/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "d1998569b140196e67013e1501cef218a0519e7c89cf4b66bed729fd69420729",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "d1998569b140196e67013e1501cef218a0519e7c89cf4b66bed729fd69420729"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    }
+  ],
+  "parser_source_sha256": "1bc09397fe31d1edaa74ae0f2ddc92b3d79b81240ec2ce571064652e7217fe1f",
+  "root_driver_sha256": "d9ee9489cf433e9c94d08e5697519533b2aec61d218baae6889461b914a8d708",
+  "generated_source_sha256": "e4f2e641fe2c81350436cb1793103966628a5ad318cd9d32cb5e2f1e52cfc91e",
+  "source_owners_sha256": "df9274d0b54e8a51fde7fa384d76893c1f3865b775b086a7ab2488a8ee9b03db",
+  "limits": "Pure byte/metadata reads only. Fresh twelve actual images and all PDB document checksums; generated source and mutant owner override are immutable. Compiled Requirements resource/method attrs and finite native causal review are separate; no source-read credit transfer, no current coverage/whole suite/globalA+ claim."
+}

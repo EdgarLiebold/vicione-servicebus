@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:f7450735728b0f5dfc02eeb911592588002a88f352be41e23282fc9cb3ad13bc",
+  "claims": [
+    {
+      "id": "claim_c7374da314224c768af0c3e517f08a7d",
+      "statement": "Automatic endpoint configuration discovers and groups eligible component registrations through the bus registration context.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Configuration/DependencyInjection/BusRegistrationContext.cs",
+          "version": "repo-file-v1:sha256:d95e5163da6daffec33f3088ee52d8e8fb4b44b5f47ec882c95245b1c8cdd178"
+        }
+      ]
+    },
+    {
+      "id": "claim_33c4549f65d347288aa4dc912a74a9da",
+      "statement": "The default formatter trims Consumer, Saga and Activity suffixes and supports namespace/prefix choices.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Configuration/DefaultEndpointNameFormatter.cs",
+          "version": "repo-file-v1:sha256:aabcd1fef862ef31a67d794ac0ab4449493b5e896ecea965accc2583ee8f9616"
+        }
+      ]
+    },
+    {
+      "id": "claim_23d3b02fdd384acfa34a05d4160a6b3f",
+      "statement": "Endpoint QoS validation rejects consumer-owned transport settings on shared endpoints and conflicting declarations.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Configuration/Qos/EndpointQosTopologyValidator.cs",
+          "version": "repo-file-v1:sha256:6e673e5f34d9061b9d5a0164ae08f80554d28f5629afb6e2eb75ed4b3acd6acb"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

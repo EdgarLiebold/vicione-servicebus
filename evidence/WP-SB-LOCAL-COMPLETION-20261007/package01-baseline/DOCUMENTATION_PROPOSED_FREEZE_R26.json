@@ -1,0 +1,42 @@
+{
+  "kind": "ROOT_PROPOSED_SIX_DOCUMENTATION_FREEZE_R26",
+  "prior_freeze_sha256": "945bb09db53be61f16a93f2fbdfe547613c172cc12efc653b22230353cc33bf3",
+  "prior_source_sha256": {
+    "CHANGELOG.md": "c0069f4c35dce5e288a41e52cab153b425f5ac4119ce028e871213de008480b6",
+    "TODO.md": "8745ab60b0276ea5a53d0144adaaf3348a4ed30b2075de78adc36c8c89c075ff",
+    ".testagent/status.md": "d631f93eda9ec1ff10c85d91bb8e96fc74b8d0e08cb44b942996d94c72e00412",
+    ".testagent/plan.md": "45b921cc93cf45adef39020ef178c1ab174de77b527205698d3b027f84144079",
+    ".testagent/local-completion-plan.md": "0b45c6bdb1b5b861ce12e66e84afc2d7e7ae53da2e5c68d747a4c63387bfb6d0",
+    "docs/quality-status.md": "e629643a96b3a1f8a104c28eec081e22a8debcad99a3036c7d39194562cb0bc8"
+  },
+  "source_sha256": {
+    "CHANGELOG.md": "4dabd224e52110cfc04f7eba7b08db973aac8ea5bd4ed6da10d1c31522e92956",
+    "TODO.md": "ac6ba9a8bfda7e92058fe3eced17778eace200300de3a885221932e5807eabe4",
+    ".testagent/status.md": "45c487453693e7fdc97f68269acaa3af3ac671f280e8bcc6a842fab8ccb918f6",
+    ".testagent/plan.md": "ce7db13809907a939b62f464e0ca6188cc4040e3c8209faea630bbe801c70d60",
+    ".testagent/local-completion-plan.md": "109ecc99a31b8dc8800e376ea0d628428fe1212aa2ce749d98eee98127b99ae4",
+    "docs/quality-status.md": "0ab90ba1dc4aeb0c29f19aa920af557bde84fd1a99de8fe9813c797c57a39285"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r26",
+  "cache_retirement_dispatch_acceptance_sha256": "e8321b7b8869bc9d346a890b9d3321dee488104657211924c3fe9b1265309d49",
+  "separate_op_report": {
+    "path": "docs/servicebus-local-completion-report.txt",
+    "prior_sha256": "71bdc3d34b6794b7e49173a2d4c5ea2b06282e14ad0f9825152406deb1ea8ed7",
+    "proposed_sha256": "3ef99188653104aa225b69ce207d3fdedd2b06df52801d681881cb5c25f61da1"
+  },
+  "lossless_diff_sha256": "3bf29b33005d2d7b7a19aaf6623c0c939f1b182e80f2a95ff5bdef3385dda0f6",
+  "preservation": {
+    "other11_TODO_blocks_byteexact": true,
+    "TODO_preamble_byteexact": true,
+    "ordered62_OBL_exact": true,
+    "history_suffix_sha256_including_heading": {
+      "CHANGELOG.md": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+      ".testagent/status.md": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+      ".testagent/plan.md": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+      "docs/quality-status.md": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5"
+    },
+    "only_local_package06_row_changed": true,
+    "frozen234_unchanged": true
+  },
+  "limits": "PROPOSED only; independent docsreview required before publication. Cache4 bounded acceptance only; six Azure sourcecandidate tests not executed yet. Other local/external work open, no newcommit/push/globalA+."
+}

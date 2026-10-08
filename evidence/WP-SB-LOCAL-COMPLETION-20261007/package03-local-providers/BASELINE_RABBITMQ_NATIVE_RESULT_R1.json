@@ -1,0 +1,71 @@
+{
+  "kind": "UNFILTERED_BASELINE_RABBITMQ_NATIVE_EXECUTION",
+  "status": "38_PASS_PENDING_INDEPENDENT_ARTIFACT_REVIEW",
+  "source_commit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "run_root": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/run-output/vicione-ac863b5f408a",
+  "compose_identity": "vicione-ac863b5f408a",
+  "native": {
+    "total": 38,
+    "passed": 38,
+    "failed": 0,
+    "skipped": 0,
+    "modules": 1,
+    "parent_exit": 0
+  },
+  "native_modules": [
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests/release/ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests.dll"
+  ],
+  "binary_sha256": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests/release/ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests.dll": "69b9755afa211dad4e740468720729aef35a18996e202e57ac49d556b3d44de5",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests/release/ViciOne.ServiceBus.RabbitMq.LocalIntegration.Tests.pdb": "a2db7ba0397acef54c57bf00ab470c7686cdd1358365a881e76a7a9e9636d62a"
+  },
+  "parent_exit_observation": {
+    "tool": "exec_command then write_stdin",
+    "session_id": 79192,
+    "exit_code": 0,
+    "observer": "Root personally observed structured process completion"
+  },
+  "source_bundle": {
+    "kind": "LOCAL_PROFILE_FORWARDING_SOURCE_BUNDLE",
+    "native_provider_acceptance": "OWNED_BY_NATIVE_RESULTS_NOT_THIS_RECEIPT",
+    "profile": "rabbitmq",
+    "source_sha256": {
+      "local_colima_forwarding.py": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d",
+      "local_colima_profile_forwarding.py": "6dabf694e6e22fb292a2d6dabf50d5b48f000c3fa346f2b183cbfa5ea5303399"
+    }
+  },
+  "actual_forwarding": {
+    "child_exit": 0,
+    "child_pid": 64210,
+    "child_started": true,
+    "cleanup_failures": [],
+    "exit_code": 0,
+    "kind": "LOCAL_COLIMA_FORWARDING_EXPERIMENT",
+    "ports": [
+      36308,
+      36309
+    ],
+    "provider_acceptance": "OWNED_BY_NATIVE_RESULTS_NOT_TCP_PROBE",
+    "schemaVersion": 1,
+    "source_sha256": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d",
+    "ssh_config_sha256": "e7bf007104328f823793af1cada5535c8849ed48bcaedd1831853fa8f824c01a",
+    "ssh_exit": 0,
+    "ssh_pid": 64205
+  },
+  "cleanup": {
+    "canonical_fixture_findings": [],
+    "exact_label_container_query": "0 remaining containers",
+    "Root_own_pid_pgid_observation": {
+      "64205": "PID and PGID absent",
+      "64210": "PID and PGID absent"
+    }
+  },
+  "raw_sha256": {
+    "rabbitmq-tests-r1.log": "bd6ec0d2c8cb388adf6c211d3c565ed085d14a17b23a30cd0efaa49db6ffd40c",
+    "rabbitmq-tests-r1-20261006-234926--64210--R6uHML-dotnet-test.binlog": "38579d38988288c9c9c20ba08224cefb75e9f30850354ef25a0c762e302507b5",
+    "local-colima-profile-owner.json": "00b0861c486a9b77c46094e3826a9539889fec6835dcedf8653a43618ab01eaf",
+    "local-colima-forwarding.json": "97ba73e2e33aa41a652af27d40a38879362e99cd87ac86374d32d2cdaa7229f3",
+    "fixture-findings.json": "98d72317c2656efe660540704ee9cfa5d4993de70375b7624de00bfc3e4813da"
+  },
+  "scope": "Original baseline RabbitMQ local profile only; not post-Core-correction, AmazonMQ/cloud or target-device proof."
+}

@@ -1,0 +1,18 @@
+{
+  "kind": "ROOT_BOUNDED_ORIGINAL_CACHE4_NATIVE_AND_FRESH_PHYSICAL_OWN_REVIEW_R1",
+  "native_sha256": "6294dc9f39421de02763b7c00c60438902cada7a855dd760dccfd203d320f334",
+  "physical_sha256": "972c16da572ea1beb41e71e458f0b85eb69f98d3417c4a4e23747e647fc10649",
+  "actual_focus": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0
+  },
+  "raw9_sha256_exact": true,
+  "gzip_crc_three_binlogs": true,
+  "own_fresh_PE_images": 12,
+  "own_fresh_document_checksums": 3811,
+  "own_all_ten_target_owner_checksums_immutable": true,
+  "root_read": "Whole restore12 stdout and empty stderr; whole strict rebuild stdout0warnings/errors86.28s and empty stderr; whole four native bodies and exact final counts3.484s/emptystderr; own original35helper matched complete delta and fresh actual parser output ten targetbindings personally read. Fullmanifest/image doccheckhashes mechanical not allsourcebody; peer ALL4734 compiled/native stillpending.",
+  "limits": "Original four bounded public contracts pass on current source; no product changes/new product finding. Independent metadata/native review, whole8213, selected counter controls, forced restoredpost and canonical2 transfer remain pending. No currentglobalcoverage/provider/cloud/HW/API/A+ closure."
+}

@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:887d705ebc9542195463fcc7ab6dc88f31a3a41d64682ee2b092c30149cc6e01",
+  "claims": [
+    {
+      "id": "claim_ae6c26b5c6a3498f9c290c382ec88532",
+      "statement": "PartitionCoordinator hashes a key into stable independently serialized local partitions.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Middleware/Partitioning/PartitionCoordinator.cs",
+          "version": "repo-file-v1:sha256:7a86f0972771c6a83e6bebddc75ca29d854cccbd21b7e5c1b71a1b81a476b27a"
+        }
+      ]
+    },
+    {
+      "id": "claim_7eb4139e5fac495b8780f9dd15252d10",
+      "statement": "BatchConsumer holds individual message operations until its batch outcome and selects completion using size/time/cancellation/terminal state.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+          "version": "repo-file-v1:sha256:da6a9cb0359b3f6d401a5f8a9026565309cb8c4a1936666bae3ba726d8a61eb9"
+        }
+      ]
+    },
+    {
+      "id": "claim_4f53698c23314acd81d25a9fedd3458a",
+      "statement": "Batch endpoint admission must permit enough concurrent messages to reach its configured size.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Advanced/Registration/BatchConsumerExtensions.cs",
+          "version": "repo-file-v1:sha256:2c72eb0fab1c4db6664b0013ad4e046898fa12752aadf6b911938b8d19f803d0"
+        }
+      ]
+    },
+    {
+      "id": "claim_149531e4a3824e84a1fb410f04cab83a",
+      "statement": "Batch timer provider is chosen at batch creation and the system range guard is not a universal startup check.",
+      "evidence": [
+        {
+          "resource": "repo://docs/api/batch-time-limits.md",
+          "version": "repo-file-v1:sha256:fef9610759ba3eac46ba28b5f968fb4603fd229ef20899bf660e100a0a4d457b"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

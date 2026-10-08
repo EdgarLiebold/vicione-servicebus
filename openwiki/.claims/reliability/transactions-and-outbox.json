@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:d1f63c2ffd377df558f8e636c332e99e26542418fb9cfc1f00594a2711a0c012",
+  "claims": [
+    {
+      "id": "claim_a9b5188ad18846c9ad24459ca0cf2948",
+      "statement": "Transactional EF outgoing capture stores intents whose later carrier delivery remains separate from database commit.",
+      "evidence": [
+        {
+          "resource": "repo://src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkScopedBusContext.cs",
+          "version": "repo-file-v1:sha256:4a1481091a5eee7e179aa96b4203273de95dc9508aba8da6c97f0003af4e27a7"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+          "version": "repo-file-v1:sha256:2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

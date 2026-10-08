@@ -1,0 +1,92 @@
+{
+  "receipt": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/M3-processor-registration/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+  "sha256": "51a32edd563684054d724cc5678138935b0c381c34f2844e8b06e9d748fb94bd",
+  "images": 13,
+  "documents": 3257,
+  "targets": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContextTimeProviderExtensions.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206",
+      "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+      "bound_sha256": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusReceiverCancellationClockTests.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "809bc63d0d827b39dfa8c20419f3d37b418e926290577f0363e51428874c01ff",
+      "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+      "bound_sha256": "809bc63d0d827b39dfa8c20419f3d37b418e926290577f0363e51428874c01ff"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ClientContext.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "1e4e7219719db099ad8dbeaa715215f3e850c551cd38ea407de42623dbd8bd8b",
+      "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+      "bound_sha256": "1e4e7219719db099ad8dbeaa715215f3e850c551cd38ea407de42623dbd8bd8b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageLockContext.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "1c0813dd97298c04712e81dbf9f8359c9823144cf7eec3943d880fca5e100a93",
+      "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+      "bound_sha256": "1c0813dd97298c04712e81dbf9f8359c9823144cf7eec3943d880fca5e100a93"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageSessionContext.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "4bf182e49632282f7908f16a777c981807e6d6e18c5271f8b57d841051f9ccd7",
+      "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+      "bound_sha256": "4bf182e49632282f7908f16a777c981807e6d6e18c5271f8b57d841051f9ccd7"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusReceiveContext.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "a02c0198567391fbc7b8ff935b65c451d42fb039d411417b7d64bce8ee154b43",
+      "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+      "bound_sha256": "a02c0198567391fbc7b8ff935b65c451d42fb039d411417b7d64bce8ee154b43"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusSessionMessageLockContext.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "912c7dd6424006d58f0e4bc81326524a91453acef677e642b32ec3dd5f303f10",
+      "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+      "bound_sha256": "912c7dd6424006d58f0e4bc81326524a91453acef677e642b32ec3dd5f303f10"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Receiver.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "37ce51e76e3f0fb9b5d6a56490365b43c456529af83746bb99d41dbbe73fdfe2",
+      "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+      "bound_sha256": "37ce51e76e3f0fb9b5d6a56490365b43c456529af83746bb99d41dbbe73fdfe2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusReceiveLockContext.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "a259b389d481c2fb0fff73c2d8cbd53ac5f71ea15cd3e24f9394abc77c20f8ff",
+      "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+      "bound_sha256": "a259b389d481c2fb0fff73c2d8cbd53ac5f71ea15cd3e24f9394abc77c20f8ff"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/SessionReceiver.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "ac4ae989bdfa220388ee56e1d0c62742f64a0fe6278a828390d34b5483c4f763",
+      "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+      "bound_sha256": "ac4ae989bdfa220388ee56e1d0c62742f64a0fe6278a828390d34b5483c4f763"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/ViciOne.ServiceBus/Transports/Receiving/BaseReceiveContext.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "0b3256e68a15d4dc9a338ba8810d9d32547484f4d7a1d0c01953466af9d40514",
+      "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+      "bound_sha256": "0b3256e68a15d4dc9a338ba8810d9d32547484f4d7a1d0c01953466af9d40514"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "ee1afc2cf94e4d8f4c9ef24edf7dc3ae559d68371db2f5668225e273a7392088",
+      "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+      "bound_sha256": "ee1afc2cf94e4d8f4c9ef24edf7dc3ae559d68371db2f5668225e273a7392088"
+    }
+  ]
+}

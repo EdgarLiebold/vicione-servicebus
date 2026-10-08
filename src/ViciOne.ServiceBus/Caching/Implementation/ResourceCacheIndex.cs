@@ -13,9 +13,9 @@ internal sealed class ResourceCacheIndex<TKey, TValue> :
     where TValue : class
 {
     readonly IEqualityComparer<TKey> _comparer;
-    readonly Dictionary<TKey, ResourceCacheEntry<TValue>> _entries;
+    readonly PreparedResourceMap<TKey, ResourceCacheEntry<TValue>> _entries;
     readonly Func<TValue, TKey> _keySelector;
-    readonly Dictionary<TKey, PendingResourceCreation<TValue>> _pending;
+    readonly PreparedResourceMap<TKey, PendingResourceCreation<TValue>> _pending;
     readonly ResourceCache<TValue> _owner;
 
     public ResourceCacheIndex(ResourceCache<TValue> owner, string name, Func<TValue, TKey> keySelector,
@@ -26,8 +26,8 @@ internal sealed class ResourceCacheIndex<TKey, TValue> :
         _keySelector = keySelector;
         MissingValueFactory = missingValueFactory;
         _comparer = comparer ?? EqualityComparer<TKey>.Default;
-        _entries = new Dictionary<TKey, ResourceCacheEntry<TValue>>(_comparer);
-        _pending = new Dictionary<TKey, PendingResourceCreation<TValue>>(_comparer);
+        _entries = new PreparedResourceMap<TKey, ResourceCacheEntry<TValue>>(_comparer);
+        _pending = new PreparedResourceMap<TKey, PendingResourceCreation<TValue>>(_comparer);
     }
 
     public override Type KeyType => typeof(TKey);
@@ -80,21 +80,36 @@ internal sealed class ResourceCacheIndex<TKey, TValue> :
         return _pending.TryGetValue((TKey)key, out pending);
     }
 
-    public void AddPending(TKey key, PendingResourceCreation<TValue> pending)
+    public object PreparePending(TKey key, PendingResourceCreation<TValue> pending)
     {
-        _pending.Add(key, pending);
+        return _pending.Prepare(key, pending);
     }
 
-    public override void CommitKey(ResourceCacheEntry<TValue> entry, object key)
+    public void PublishPending(object slot, PendingResourceCreation<TValue> pending)
     {
-        _entries.Add((TKey)key, entry);
+        var prepared = (PreparedResourceMap<TKey, PendingResourceCreation<TValue>>.Slot)slot;
+        _pending.Publish(prepared);
+        pending.Slot = prepared;
     }
 
-    public override void RemoveKey(object key, ResourceCacheEntry<TValue> entry)
+    public override object PrepareEntry(ResourceCacheEntry<TValue> entry, object key)
     {
-        var typedKey = (TKey)key;
-        if (_entries.TryGetValue(typedKey, out var current) && ReferenceEquals(current, entry))
-            _entries.Remove(typedKey);
+        return _entries.Prepare((TKey)key, entry);
+    }
+
+    public override void PublishEntry(object slot)
+    {
+        _entries.Publish((PreparedResourceMap<TKey, ResourceCacheEntry<TValue>>.Slot)slot);
+    }
+
+    public override void RemoveEntrySlot(object slot)
+    {
+        _entries.Remove((PreparedResourceMap<TKey, ResourceCacheEntry<TValue>>.Slot)slot);
+    }
+
+    public void ResetEntries()
+    {
+        _entries.Clear();
     }
 
     public override bool PreparedKeyMatches(object requestedKey, object preparedKey)
@@ -102,11 +117,13 @@ internal sealed class ResourceCacheIndex<TKey, TValue> :
         return _comparer.Equals((TKey)requestedKey, (TKey)preparedKey);
     }
 
-    public override void RemovePending(object key, PendingResourceCreation<TValue> pending)
+    public override void RemovePending(PendingResourceCreation<TValue> pending)
     {
-        var typedKey = (TKey)key;
-        if (_pending.TryGetValue(typedKey, out var current) && ReferenceEquals(current, pending))
-            _pending.Remove(typedKey);
+        if (pending.Slot is null)
+            return;
+
+        _pending.Remove((PreparedResourceMap<TKey, PendingResourceCreation<TValue>>.Slot)pending.Slot);
+        pending.Slot = null;
     }
 
     static void ValidateKey(TKey key)

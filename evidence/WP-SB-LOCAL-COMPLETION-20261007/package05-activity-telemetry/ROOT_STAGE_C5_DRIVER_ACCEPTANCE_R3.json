@@ -1,0 +1,7 @@
+{
+  "kind": "ROOT_OPERATIONAL_DRIVER_SUCCESSOR_ACCEPTANCE_R3",
+  "script_sha256": "7dbb52ce7123106d5933117ebafa6b02a1746a1f218e5adc185dab2cfe4fed82",
+  "adversarial_review_sha256": "06624121f2ac2b0f63417e3700ed279b7e04a9c781257744bbeb64d598b9cc23",
+  "prior_driver_acceptance_sha256": "f3c03d9454fd990e377a21e794a2456dd3b476ef1545dc60851d607227534ecb",
+  "scope": "Four fresh R2 source mutants m1/m2/m3/m5 sequential Root-only restore/build/test and actual PID joins; native0 or2 both archived with honest survivor status; no causal credit before artifacts reviewed."
+}

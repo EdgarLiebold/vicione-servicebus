@@ -1,0 +1,649 @@
+{
+  "kind": "INTERNAL_READ_ONLY_P06_CACHE_CONSISTENCY_TRANSACTION_DESIGN_RESEARCH_R1",
+  "utc": "2026-10-07T03:02:27.467468+00:00",
+  "reviewer": "/root/todo_reconciliation_review",
+  "status": "BOUNDED_DESIGN_RESEARCH_ONLY_NO_SOURCE_FIX_OR_NATIVE_FINDING_ACCEPTANCE",
+  "scope": "Coherent committed-index remove/add/factory ownership under ordinary throwing comparer, including persistent failure cleanup. Preserve resource capacity, generations, awaited serialized observation and caller ownership. Current source unchanged from prior whole-read cache inventory.",
+  "priorResearch": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-current-research-r1.json",
+    "sha256": "0f9ab118d2bb6c0fd1704490d3c6d8f158b8fe57ccc35a877afb60eaf7174033",
+    "bytes": 51048
+  },
+  "sourceAndCanonicalTestWholeReadReuse": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs",
+      "sha256": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12",
+      "bytes": 2180,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs",
+      "lines": 32,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs",
+      "sha256": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69",
+      "bytes": 2007,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs",
+      "lines": 32,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs",
+      "sha256": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c",
+      "bytes": 399,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs",
+      "lines": 13,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs",
+      "sha256": "bba8eeb8b9366996b489c820d793bb568d47c396127095a18ef45426fd2a164e",
+      "bytes": 1059,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs",
+      "lines": 24,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs",
+      "sha256": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4",
+      "bytes": 733,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs",
+      "lines": 24,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs",
+      "sha256": "907772e0d3f688f3b11b0542b79d45e76f098559a0fb99e2ad1395ebdb13112d",
+      "bytes": 845,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs",
+      "lines": 27,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "sha256": "d6ce8980172e278b8ce7eae72fed4f6c89f74e23778a24f93e8524ab0b99c5d9",
+      "bytes": 4072,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "lines": 117,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+      "sha256": "54c895f4d2ccb95316a7ae3f521022cea3a25e4014d9b22fabaf75a53211625d",
+      "bytes": 1084,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+      "lines": 25,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs",
+      "sha256": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743",
+      "bytes": 4412,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs",
+      "lines": 82,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "sha256": "a593b0fa0dc498210a20d4669ab68a743a2f13542fe9dbe53aa814ed463f6366",
+      "bytes": 10796,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "lines": 287,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs",
+      "sha256": "0aeb97aeae8196ed5918ccafb7401cdb2bc6f176c74f9e4b8de89833d8a3d00d",
+      "bytes": 4429,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs",
+      "lines": 163,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs",
+      "sha256": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+      "bytes": 3346,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs",
+      "lines": 102,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "sha256": "d33d153e2de28609ec362672c5637c97c9bfa95cc2895af236857b0181f7abd0",
+      "bytes": 10042,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "lines": 351,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "sha256": "98da72d0f863585936f1c9ad702bb3d27b62a7e1d606d0a21f8c8f290c56b4a2",
+      "bytes": 15452,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "lines": 368,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs",
+      "sha256": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7",
+      "bytes": 420,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs",
+      "lines": 11,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs",
+      "sha256": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76",
+      "bytes": 3933,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs",
+      "lines": 75,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs",
+      "sha256": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4",
+      "bytes": 1086,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs",
+      "lines": 16,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceFactory.cs",
+      "sha256": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc",
+      "bytes": 777,
+      "relativePath": "src/ViciOne.ServiceBus/Caching/ResourceFactory.cs",
+      "lines": 13,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheConcurrencyTests.cs",
+      "sha256": "7087567d31ff3d8d42df1dcef4763d11f90cdfe6a97b9265ad8edc8528ed6063",
+      "bytes": 23824,
+      "relativePath": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheConcurrencyTests.cs",
+      "lines": 488,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs",
+      "sha256": "fe08a94c9d3339cc2a83c85bfcc19c90e3b4f6decd3d55810d9147811062d5db",
+      "bytes": 18577,
+      "relativePath": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs",
+      "lines": 383,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpirationTests.cs",
+      "sha256": "8f128a449bc35bf7012638d79237393754c1e823fb33f34d68f34005996299ba",
+      "bytes": 24726,
+      "relativePath": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpirationTests.cs",
+      "lines": 542,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpiredDuplicateOwnershipTests.cs",
+      "sha256": "75455c54efa1c5388e92ac8f577b73a52c330785e2d7e8dd9b933f073010c430",
+      "bytes": 7285,
+      "relativePath": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpiredDuplicateOwnershipTests.cs",
+      "lines": 180,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheGenerationAndLockingTests.cs",
+      "sha256": "56e5e5b8ba01517ba221441930ecfdd9c50f8c6d1279c29220d626d96da63fdf",
+      "bytes": 24973,
+      "relativePath": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheGenerationAndLockingTests.cs",
+      "lines": 586,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheInitializationTests.cs",
+      "sha256": "23871810ed2cdd3bcec89ae6f336a3dc1e8433ae6fbdfe1391f69c3515627a9a",
+      "bytes": 5853,
+      "relativePath": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheInitializationTests.cs",
+      "lines": 141,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheLifecycleTests.cs",
+      "sha256": "4c791cd63c5708a51015d250c943a9e376aa4ddc17518b87add6fafb69823866",
+      "bytes": 21824,
+      "relativePath": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheLifecycleTests.cs",
+      "lines": 497,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverAndDisposalTests.cs",
+      "sha256": "d2c10c5e7cd989c7f747c043bf8a583adec22d721de23544abcda1b6e315836e",
+      "bytes": 26841,
+      "relativePath": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverAndDisposalTests.cs",
+      "lines": 622,
+      "matchesPriorWholeRead": true,
+      "readBasis": "Exact prior whole18owner/8test-body hash reuse; critical commit/remove/caller/lifecycle bodies reread now.",
+      "RootReadCreditTransferred": false
+    }
+  ],
+  "all26ExactPriorWholeReadHashes": true,
+  "RootSharedContextsCurrentBindings": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/TODO.md",
+      "sha256": "62cd8b5da4e4fab97891e6fcab6be0dd739aa2e28e0e54df53e0a35f0690cd55",
+      "bytes": 24963,
+      "matchesHistoricalPriorContext": false,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/local-completion-plan.md",
+      "sha256": "ac9c7ace1493d0cdc21e9787d6d611f3f879eb3d6439f9a284506c7cc9e7d130",
+      "bytes": 4321,
+      "matchesHistoricalPriorContext": false,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "sha256": "8637f1a9bf688ee55f9a0fba10c723e6f7a9ebe0635f83396759d3493ee17a81",
+      "bytes": 1671370,
+      "matchesHistoricalPriorContext": false,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/LogContext.cs",
+      "sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9",
+      "bytes": 14961,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Logging/ILogContext.cs",
+      "sha256": "7e900f8d8f0b981694ca208f516d709cf7d7986b9bb7f2396c663d30b3cfbfca",
+      "bytes": 1418,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs",
+      "sha256": "49824e23a95dd2d2abe0b28615b6debc8854418073dd99945a84925f7dd1c2c1",
+      "bytes": 2629,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Logging/EnabledLogger.cs",
+      "sha256": "ef5aa89d3cf563ec3af0cb6ac5e36cc6371afc8ccf85a57eb92589f69344ef17",
+      "bytes": 1436,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/ConnectHandle.cs",
+      "sha256": "c0f43d3c38e2fab39a7ef1a85b5a7f69562799e4f9980cb2c2a8898d6622f161",
+      "bytes": 776,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Sending/SendEndpointCache.cs",
+      "sha256": "e4b8626538a12a7b062ff8c0e79067ed54ef41c21dd5e7fd3ac5942b24ec3b58",
+      "bytes": 2274,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Sending/SendEndpointCacheDefaults.cs",
+      "sha256": "5a5464268795ed90c5761cc1269d5e41ab1b0dca131328877a4bf83026b88bf4",
+      "bytes": 287,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Sending/CachedSendEndpoint.cs",
+      "sha256": "eb470970f17c2987c3600b7b7f9fdfcf655e8f381919e6c1b2baae42b4021eeb",
+      "bytes": 4625,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/MessageProducerCache.cs",
+      "sha256": "84cf2e11221f80a03fb56f39686e68812319aee46cb70dee3332718b4eb2ebd2",
+      "bytes": 3389,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/CachedMessageProducer.cs",
+      "sha256": "ea1822b1eb3065a253b92f453b9b1356d0db4b1e94c874341b58452bfa00f47c",
+      "bytes": 13544,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducerCache.cs",
+      "sha256": "0c4f398020f9839a205befbc3dfe087555c78a84afd789c771122df10722566b",
+      "bytes": 2060,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/CachedEventHubProducer.cs",
+      "sha256": "d705ef40fae96587d4b4d0119afe6a97731b70d2d2284834b0c60ab6dbdc7bd6",
+      "bytes": 7368,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueCache.cs",
+      "sha256": "0fb5c3df9e6678967cbbfba1dc3726be460d39eda76e4f6d53ffc40a06cfc049",
+      "bytes": 10647,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+      "sha256": "13d304a8b161cbbce750e4ae00f9a543cec80796bb1d2ed823f7e94c31a0ae45",
+      "bytes": 8413,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/DurableResourceStore.cs",
+      "sha256": "0e44570cc0d229e800f4c93354a5f795ab709c36513c5b08f5a6dea38e9e67ff",
+      "bytes": 8841,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "sha256": "382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3",
+      "bytes": 9852,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21",
+      "bytes": 2378,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.props",
+      "sha256": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf",
+      "bytes": 2886,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.targets",
+      "sha256": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1",
+      "bytes": 10658,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Packages.props",
+      "sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e",
+      "bytes": 5677,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Directory.Build.props",
+      "sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8",
+      "bytes": 3303,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Directory.Build.targets",
+      "sha256": "3a866a9a26434dcca1aaf6d61a8d2afc84960f21ceee810b5b825f1ecdd7fdb1",
+      "bytes": 12496,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/TestAssemblyBootstrap.cs",
+      "sha256": "8b489bc250d32dd030b381777b0e54c3493aba8ca465704852058e7d94e962ca",
+      "bytes": 1507,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/GlobalUsings.cs",
+      "sha256": "ae580d7c99fba34f66ce0f433556ed9996fe28a409a049e9f9309a9bfaabed39",
+      "bytes": 268,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs",
+      "sha256": "d78d054d54468692e35500dca6c90e706e6a77bfcbb7d1878bcb4bc97fba4e9e",
+      "bytes": 915,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs",
+      "sha256": "130f488a8ff8ddc7d43561f77f6188e5d3088de109aef1ba588c454e73180c66",
+      "bytes": 13208,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "a5f0ec6f59f1bb688a2378cee86bf81cbd181d29395659a14f4ea4d138ace7f0",
+      "bytes": 1065,
+      "matchesHistoricalPriorContext": true,
+      "RootWholeReadNeededBeforeChange": true
+    }
+  ],
+  "nativeContext": {
+    "latestAcceptedC3Root": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C3_ACCEPTANCE_R1.json",
+      "sha256": "d397e1bfd8229a149b9f66d87821ddb4c71a61ee1dc2de227fc63050b3d2e4c4",
+      "bytes": 3997
+    },
+    "meaning": "Accepted8054Core aggregate contains healthy canonical cache suite; priorB1 whole7968/PDBbinding also retained. No current correction to18cacheowners and no comparer-fault native proof recorded by this research. Green aggregate is not ignored or converted into proof of new hostile cases."
+  },
+  "preciseOldCauses": [
+    {
+      "id": "CACHE-REMOVE-PARTIAL",
+      "owner": "Caching/ResourceCache.Resources.cs RemoveEntry_NoLock",
+      "cause": "Main _entries.Remove and Active=false/_retiringEntries++ precede each external-key index RemoveKey. Later comparer fault skips remaining maps/version/release-list handoff. Ordinary GetAsync lacksActive check, so stale secondary returns detachedresource; later full Dispose iterates only main entries and cannot find it.",
+      "classification": "Strong source-derived candidate; finite original native proof still required."
+    },
+    {
+      "id": "CACHE-COMMIT-PARTIAL",
+      "owner": "Caching/ResourceCache.Resources.cs CommitValue_NoLock",
+      "cause": "Sequential CommitKey dictionary Add precedes main entry publication. Later comparer fault leaves earlier map references to uncommitted entry. Direct Add retains caller ownership; factory catch disposes candidate when committed=null, but earlier map can expose disposedcandidate.",
+      "classification": "Strong source-derived candidate; original comparer stage must be proven as CommitKey, not precheck."
+    },
+    {
+      "id": "CACHE-PENDING-CLEANUP-ADJACENCY",
+      "owner": "Caching/ResourceCache.Creation.cs CompletePending_NoLock/CompleteFaultedPending/CompleteCanceledPending/CompleteInvalidatedPending",
+      "cause": "Origin-index RemovePending invokes comparer in success and fault cleanup. A persistent originating comparer fault can prevent pending completion/OwnershipReleased/slot release. Drafts limited to committed maps cannot establish general factory comparer safety.",
+      "classification": "Design dependency, not accepted new nativefinding; separate finite synchronous factory state oracle needed before any broader claim."
+    },
+    {
+      "id": "CACHE-RETIRED-LIST-HANDOFF",
+      "owner": "Caching/ResourceCache.Creation.cs GetAsync/GetOrAddAsync/RemoveAsync after CollectExpired_NoLock",
+      "cause": "After some expired entries retire, a subsequent caller index lookup can throw before ReleaseEntriesAsync. Comparator-free RemoveKey alone does not guarantee release-list handoff. Either allthrowing planning precedes commit of the full locked operation or an operation-owned release list must reach finally cleanup while preserving primary fault.",
+      "classification": "Design dependency/sourcecandidate distinct from WITHDRAWN expiredduplicate; native phase-specific original confirmation required."
+    }
+  ],
+  "withdrawnHypothesisPreserved": {
+    "acceptedDisposition": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE358_CACHE_REGRESSION2_TESTONLY_ROOT_APPLICATION_R1.json",
+      "sha256": "713974ed6d991191be84cc5523ebb563961c69d0f3f97b6ba0c05b77b72374f2",
+      "bytes": 1863
+    },
+    "meaning": "Expiredduplicate Add hypothesis stays withdrawn: CollectExpired changes indexVersion, so Add skips duplicateprecheck, releases removed resources and reprojects. Do not relabel this design-adjacent post-expiration lookup fault as that old hypothesis."
+  },
+  "runtimeSourceVerification": {
+    "sourceTitle": ".NET10.0.10 System.Private.CoreLib Dictionary implementation",
+    "url": "https://raw.githubusercontent.com/dotnet/runtime/v10.0.10/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/Dictionary.cs",
+    "localInstalledRuntimeVersionFile": {
+      "path": "/usr/local/share/dotnet/shared/Microsoft.NETCore.App/10.0.10/.version",
+      "sha256": "c520743af56fb2b85d443acfa406a6704a37699a1776f34e48d589ab916b99d7",
+      "bytes": 49
+    },
+    "localInstalledCommitAndVersion": [
+      "f7d90799ce4ef09a0bb257852a57248d2a8fb8dd",
+      "10.0.10"
+    ],
+    "loadedNativeRuntimeBinding": "Installed runtime10.0.10 metadata read only; this is not an independent loaded-runtime/PE proof for every prior receipt. DirectcommitURL cachefetch failed; official version-tag source was fetched.",
+    "summary": "Constructor AddRange101-138 uses cached entry copying only for exact Dictionary and identical internal comparer. CopyEntries1464 uses stored hashes. Other paths reinsert. FindValue364 avoids hashing while uninitialized; TryInsert463 hashes before writing. Remove1174 hashes and compares; Clear255 clears arrays without key comparison. Mutable custom comparer instance can share the fastpath; string internal wrappers/randomization can change comparer identity, so equal public semantics alone is insufficient.",
+    "precision": "Implementation observation, not public exception-atomicity guarantee. Never depend on runtime private fields or assume arbitrary IEnumerable cloning is hashfree."
+  },
+  "designComparison": [
+    {
+      "choice": "Full per-operation draft index dictionaries, then reference swap",
+      "coherence": "Prepare every affected committed index draft and master state change under existing owner lock; any comparer fault discards drafts without comparator rollback. Publish all refs/Active/master/counters only after complete plan succeeds. Fulloperation planning must cover batch expiration+later lookup, not merely one RemoveEntry.",
+      "advantages": "Smallest conceptual/code correction with standard dictionaries; copyfastpath can avoid old-keyhash for exact samecustomcomparer. DirectAdd and secondary-fault factory commit can be strongly atomic.",
+      "cost": "O(sum affected live index entries) copied allocations/work per committed mutation; lazy no-draft for reads with no mutation. Bulk expiration/clear must prepare once per index, not clone onceperentry, otherwisequadratic. Live+draftexistence roughly doubles affected map backing storage transiently.",
+      "remainingWork": "Persistent originating pending cleanup still requires independent identity-safe removal or a separately qualified bounded contract. FullClear/Dispose must use no-comparer map Clear/swap and release all owned entries, rather than abort on per-keyremove. Do not claim complete factory/comparer package from committed drafts alone.",
+      "assessment": "Credible smallest bounded committed-state fix/reference design; preserve narrow claim and require actual allocation/cost acceptance before deploying wholesale to ARMmemory target."
+    },
+    {
+      "choice": "Prepared publication slots in internal cached-hash buckets; identity removal",
+      "coherence": "One small internal typed map owner used for BOTH committed entries and pending creations. Outer Dictionary<int,bucket> uses builtinint keys. Bucket slots carry originalTKey,cachedhash,payload and stable identity handle. User GetHashCode/Equals occur only in lookup/preparation, not slot publication/removal or pendingcleanup.",
+      "advantages": "All perindex collision/key work completes before any logical publication; remove uses storedslot identity/hash, so persistently throwing secondary comparator cannot detach partial ownership. Pendingcleanup is identity-based too. Avoids full O(C*I) dictionary copies per operation and unboundedtombstones.",
+      "cost": "Additional slot/bucket references per retained key; ordinary mutation O(indexcount + collisionchains), worst-case O(C) percollisionbucket as with adversarialconstant hashes. More engineering than draftswap; keep utility internal, no novel publicpolicy.",
+      "assessment": "Preferred coherent GENERAL persistent-comparer safety design if Root chooses to include pending cleanup in this package. It is a prepared-state publication mechanism, not a requirement to redesign unrelatedcachepolicy. Full authored code and bounded cost/identity contracts need independent review before native execution."
+    },
+    {
+      "choice": "Active guards plus cleanup tombstones",
+      "coherence": "Can hide stale disposed references but does not alone remove index-key retention or restore pendingcapacity; continued unique-key failures can grow tombstones beyond owned resourcecapacity.",
+      "assessment": "Insufficient unless explicit retention/recovery/backpressure bounds are designed and proven; do not invent a cap, clear unrelated state or silently fault entirecache."
+    },
+    {
+      "choice": "Comparer-based rollback after partial publication",
+      "coherence": "Persistent or stateful GetHashCode/Equals maythrow again while rollback looks up/removes key; expected primaryfault/ownership can be lost.",
+      "assessment": "Reject. No private Dictionary field manipulation, unsupported slot APIs or unsafe runtime-dependent unlinking."
+    }
+  ],
+  "preferredPreparedSlotPlan": {
+    "planning": "Existing key selectors remain outside owner lock with indexVersion snapshot/retry. Under _sync, compute userhash/equality/collisions for all index keys and pending-key operations, reserve all required structural capacities and allocate candidate slot/entry metadata before logical state mutation. Validate generation again after all user callbacks. No arbitrary user comparer call may remain after publish starts.",
+    "publication": "Under same lock add stableintbucket/node links, entry Keys/handles, master long-id entry, Active state/counters/indexVersion and originating pending completion bookkeeping as one no-user-callback phase. DirectAdd resource ownership transfers only here; factoryfault before here disposes rejectedvalue exactly once.",
+    "removal": "Use each entry cached stable slot to unlink by reference/index, remove empty intbucket with builtinint equality, then update master/Active/retiring/version together; no userhash/equality needed to retire, expire,evict,Clear orDispose. Public requested-key lookup can still throw before mutation, leaving old state owned/coherent.",
+    "pending": "Pending creation stores a stable originindex slot/token. Success/fault/invalidation/cancel remove it by identity before completion+OwnershipReleased signals and release capacity; never call faulty originating keycomparer during cleanup. Late oldfactory cleanup must compare exact pending identity/generation and cannot remove a replacementslot for equalkey.",
+    "bulk": "Prepare AddIndex entirely unpublished; publish entrymetadata only after all selector/comparer work succeeds and snapshotgenerationstillvalid. Clear/Dispose remove all owned committed/pending slots withoutkeycallbacks and preserve caller/retiring release obligations. No stale unpublished index metadata on existing entries after failedAddIndex.",
+    "releaseLists": "Caller-local retired lists are owned even when later lookup/precheck faults. Deliver them through finally or prepare entire lockoperation before retiring, preserving original caller error. Disposal still completes actual resourcecleanup and retiring--/capacitysignal once.",
+    "costBounds": "Committed+pending+retiring resource capacity remains unchanged. At most one live slot perindexperresource/pendingkey, no historicaldead slots. Remove emptybucket and clearpayload refs. New utility allocates pernewslot/necessarybucket growth, not everyexistingkey peroperation. Indexcount remains caller-configured/unboundedasbefore; do not infer hard byte/RSS cap.",
+    "limits": "Stable key equality/hash semantics between successful operations remain collection prerequisite; armablethrowing comparer mayfail persistently but key-based lookup is then allowed tothrow. Guarantees are state/ownership and cleanup, not successful lookups with an unusable comparer. Arbitrary comparer-reentrant cache mutation, asynchronous fatal faults/OOM and malicious changinghash/equality need distinct contracts; no universalclaim."
+  },
+  "affectedOwnerList": {
+    "minimumCore": [
+      "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+      "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs",
+      "src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs",
+      "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs"
+    ],
+    "possibleNewPrivateOwner": "An internal generic slot/bucket map or staged mutation token utility; keep nested if that makes actual owner closure smaller. No publicAPI additions required.",
+    "preserveByteOrSemantics": [
+      "ResourceCache.Observers.cs gate/fanout/exceptionisolation/reentrant guard",
+      "ResourceCacheOptions capacity/expiration/timeprovider",
+      "public index interfaces and factory/usage semantics"
+    ],
+    "RootReading": "Root consumed prior research, which does not transfer the18production/8test fullbody reads. Exact Root closure of affectedpartials, helper/test/cleanup/context needed before authoring."
+  },
+  "smallestFiniteNativeProofPackage": [
+    {
+      "id": "REMOVE-SECONDARY-FAULT",
+      "sharedPublicFixture": "Fresh capacity1 cache, healthy primary+armable secondary comparer, oneowneddisposable. Arm after successfulAdd; primary.RemoveAsync then primary/secondary GetAsync and GetValues afterdisarming. Compare public reference consistency and terminaldispose1.",
+      "original": "Current source predicts sentinel from secondaryRemoveKey, mainempty/stalesecondary anddispose0. Assert actual secondaryGetHash trace/stage and public inconsistent identities; no elapsed waits.",
+      "fixed": "Draft design may fail atomically and retain resource untilDispose; identityslotdesign may succeed without calling secondarycomparer and remove/dispose1. Use disposition-neutral public invariant oracle for both, with exact documented primaryerror/result and ownership-specific controls; do not insist both designs throw."
+    },
+    {
+      "id": "ADD-SECONDARY-COMMIT-FAULT",
+      "sharedPublicFixture": "New empty indices so uninitialized lookup does nothash; primaryhealthy, secondary firstarmedGetHash throws persistent sentinel; directAdd candidate caller-owned. Record all comparer calls and originalstack to prove actualCommitKey/TryInsert stage.",
+      "original": "Earlierprimary containscandidate whileGetValuesempty; Addfaults.",
+      "fixed": "Alluserhash work occursbeforepublication or drafts discarded; sentinelAddfault has no retrievablecandidate,callerdispose0untilcaller releases1, cacheTotalCreated unchanged. Healthy twin Addlookupall/GetValuesagree andcacheDisposes1."
+    },
+    {
+      "id": "FACTORY-SECONDARY-COMMIT-FAULT",
+      "sharedPublicFixture": "Primaryhealthy origin index GetOrAdd returns factoryvalue; later secondaryprepared/commit hash fails. Await actual public request; primarypendingcleanup remainshealthy.",
+      "original": "Factorydispose1 but primarylookup can expose disposedcandidate, emptyGetValues.",
+      "fixed": "No index exposescandidate, originalsentinel preserved, factorydispose1, Statistics.PendingCreations0/ownershipreleased, laterhealthycreationuses capacity; caller doesnotdouble-dispose. Healthy factorycontrol commitsoneinstance allindices."
+    },
+    {
+      "id": "PERSISTENT-ORIGIN-PENDING-CLEANUP",
+      "purpose": "Required extra proof only if claiming generaloriginating comparer safety. Factory completes synchronously with a disposable and arms originating hash for commit/cleanupafterPendingAdd; current ignored CompleteCreation task mayfaultduringRemovePending.",
+      "finiteOracle": "After public GetOrAdd invocation returns with synchronously completedfactory/disposal, assert Statistics.PendingCreations == 0 and request.IsCompleted beforeanytimeout. Root must validate exactinline controlflow and sentinelphase; do not count a futureWaitAsync timeout as causalred. Corrected identitycleanup produces completedsentinelfault anddispose1, no strandedpending/capacity.",
+      "cleanup": "Original mayleaveownedoperationtask stranded; use standalone finiteprocessowner and honest guard cleanup disposition rather than silently alter cache/privatefields. If exact finitecause cannot bequalified, keep this asdesignlimit anddonotclaimgeneralclosure."
+    },
+    {
+      "id": "EXPIRED-RELEASE-HANDOFF",
+      "purpose": "Small separate mandatorycontrol for whicheveroperationcleanup strategy isauthored: oneFakeTimeProvider-expiredownedresource, thenarm callerlookup comparatorfaultafterexpiration phase.",
+      "finiteOracle": "Bind actualoldresource retirement and exactlaterlookupfault, then terminaldispose1/no retiringcapacityleak. No reopened expiredduplicateAdd hypothesis. Originalcausalproof needed; do not assume timing or privatefields."
+    }
+  ],
+  "healthyAndMutationControls": [
+    "Healthy publicRemove/Add/factory allindex references equalGetValues, exactowneddisposal andresourcecapacity; constant-hash collision keys+Equalsfault preparation tests ifutilityauthored, equalkeyuniqueness preserved.",
+    "Existing8wholecache suites especially expirationduplicates, multiindexgeneration/locking, Pendinginvalidations, observerfanout, blockedcallbacks, usage-subscriptionrace anddisposefault controls remainunchangedandrun unfilteredaffectedCore.",
+    "Bounded mutations only actualimplemented safeguards: removeall-index preparation boundary; restore comparerdependent removal; restore comparer-dependent pendingcleanup; omitretired-list finally; removegeneration/slot-identity check. Each exactlyonecause andnamed healthycontrol, freshcompiled/nativeOriginal/fixed/post required.",
+    "Draft approach needs samecustomcomparerclone nativecontrol and measured allocation/work characterization for representativeCapacity/indexcounts; preparedslotapproach needs repeatedunique-key fault/removal cycles with count/identity/capacity proof showing no retaineddeadslots. Neither proves targetdeviceRSS/performance absenthardware."
+  ],
+  "broaderTODOsRemainOpen": [
+    "Observercommit-order vsdispatch-gate order disposition; callbacks remainserialized and awaitedwithoutdrainerqueue.",
+    "Mandatory persistent failure sink vscurrentloggedisolation; no newerror API/caller rethrow policy.",
+    "Externalcaller RAM/admissionlimit underblockedobserver beyond boundedcacheownedresources; no arbitraryconcurrencyconstant-memoryclaim.",
+    "Cachehistorical234andknownhealthyCoreacceptance notinvalidated; no blanketCacheTODO/A+/wholeUnit/provider/cloud/hardware closure."
+  ],
+  "executionAndAuthorityLimits": [
+    "Read-only localfiles/hashes/Git andofficialprimary.NET10source browsing only; no .NET/MSBuild/Docker/processstart/control/install/producttesttoolwrites. OwnresearchJSON only.",
+    "Nativecases areproposals, not executedfindings oracceptedfix. Rootsolewriter/executor; independentadversaryreviewafteractualfreeze.",
+    "No universal exceptionatomicity for fatalprocess/OOM, intentionallychanging comparer/key equalityhash semantics, arbitraryreentrantcomparercachemutations ornewglobalobserverpolicy."
+  ]
+}

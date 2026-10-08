@@ -1,0 +1,178 @@
+{
+  "kind": "ROOT_ACTUAL_FOUR_CACHE_COUNTERS_FIRST_FINITE_AND_HEALTHY_LEDGER_R2",
+  "parent_sha256": "ebdce6ed7e638f030f46ada08ba170fe9a1b0ed19fde2bb79cb6a8861d02f586",
+  "rows": [
+    {
+      "name": "M1_OmitAddRetirementCharge",
+      "native": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-four-counters-native-r1/M1_OmitAddRetirementCharge/RESULT.json",
+        "sha256": "3d57402aa4868fc8e0c2e6ab5ae4e3815bf316caf014ea39f35ceb96ed32090d"
+      },
+      "physical": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-four-counters-native-r1/M1_OmitAddRetirementCharge/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+        "sha256": "e59f67e9239b31729ddbb643ae4332dbc54079373891714cbc8c5ca14d61958b"
+      },
+      "actual_counts": {
+        "total": 4,
+        "passed": 3,
+        "failed": 1,
+        "skipped": 0
+      },
+      "first_finite_failures": [
+        {
+          "case_id": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.Retirement_BlocksAdmissionThroughRemovedObserverAndAsyncDisposalAsync",
+          "first_native_and_source_line": 83,
+          "assertion": "Assert.Equal(1, beforeDisposal.TotalCreated)",
+          "expected": "1",
+          "observed": "2",
+          "phase": "beforeDisposal captured while Removed callback held; asserted after joins",
+          "lower_or_duplicate_frame_credit": 0,
+          "unreached_lower_assertions_from_line": 84
+        }
+      ],
+      "healthy_case_ids": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.ObserverSnapshot_IsChosenAfterDispatchAdmissionAndRetainsActiveObserversAsync",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.ActiveInheritedObserverScope_RejectsSameCacheMutationAndAllowsAnotherCacheAsync",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.ObserverDispatch_SerializesTheEntireAwaitedBatchBeforeTheNextCommittedBatchAsync"
+      ]
+    },
+    {
+      "name": "M2_SnapshotBeforeDispatchAdmission",
+      "native": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-four-counters-native-r1/M2_SnapshotBeforeDispatchAdmission/RESULT.json",
+        "sha256": "19e8fd5c9d3b48fda3fe192556a353beb3d4d7231d66fe635a1403f3e799f8d0"
+      },
+      "physical": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-four-counters-native-r1/M2_SnapshotBeforeDispatchAdmission/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+        "sha256": "f1bbbd479aa3934318511b215e7908477d2b438333b8d91d3027311707e73230"
+      },
+      "actual_counts": {
+        "total": 4,
+        "passed": 3,
+        "failed": 1,
+        "skipped": 0
+      },
+      "first_finite_failures": [
+        {
+          "case_id": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.ObserverSnapshot_IsChosenAfterDispatchAdmissionAndRetainsActiveObserversAsync",
+          "first_native_and_source_line": 162,
+          "assertion": "Assert.Equal([A:one,B:one,A:two,C:two], events.ToArray())",
+          "expected": "C:two",
+          "observed": "B:two",
+          "phase": "after actual operation/callback joins; array index3",
+          "lower_or_duplicate_frame_credit": 0,
+          "unreached_lower_assertions_from_line": 163
+        }
+      ],
+      "healthy_case_ids": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.ActiveInheritedObserverScope_RejectsSameCacheMutationAndAllowsAnotherCacheAsync",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.ObserverDispatch_SerializesTheEntireAwaitedBatchBeforeTheNextCommittedBatchAsync",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.Retirement_BlocksAdmissionThroughRemovedObserverAndAsyncDisposalAsync"
+      ]
+    },
+    {
+      "name": "M3_ReleaseDispatchGateBeforeCallbacks",
+      "native": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-four-counters-native-r1/M3_ReleaseDispatchGateBeforeCallbacks/RESULT.json",
+        "sha256": "59a59adff1ba3e751452962deb00fe2ec22190aa66033ad7f9e6a793d4e665cb"
+      },
+      "physical": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-four-counters-native-r1/M3_ReleaseDispatchGateBeforeCallbacks/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+        "sha256": "36237a89c8a43a1d2198005bb5c5bd8a3a6c67de69a308cddf8ce503a0480dc7"
+      },
+      "actual_counts": {
+        "total": 4,
+        "passed": 2,
+        "failed": 2,
+        "skipped": 0
+      },
+      "first_finite_failures": [
+        {
+          "case_id": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.ObserverSnapshot_IsChosenAfterDispatchAdmissionAndRetainsActiveObserversAsync",
+          "first_native_and_source_line": 147,
+          "assertion": "Assert.False(subsequent.IsCompleted)",
+          "expected": "False",
+          "observed": "True",
+          "phase": "INSIDE try before Bdisconnect/Cconnect; finally actual joins follow, later162 unreached",
+          "lower_or_duplicate_frame_credit": 0,
+          "unreached_try_lines": [
+            148,
+            149
+          ],
+          "unreached_lower_assertions_after_finally_from_line": 162,
+          "finally_cleanup_reached_lines": [
+            153,
+            154,
+            155,
+            156,
+            157,
+            158,
+            159
+          ]
+        },
+        {
+          "case_id": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.ObserverDispatch_SerializesTheEntireAwaitedBatchBeforeTheNextCommittedBatchAsync",
+          "first_native_and_source_line": 227,
+          "assertion": "Assert.Equal([A:one,B:one], whileSecondObserverBlocked)",
+          "expected": "B:one",
+          "observed": "A:two",
+          "phase": "captured while B1 held, asserted after actual joins; array index1; not predicted228",
+          "lower_or_duplicate_frame_credit": 0,
+          "unreached_lower_assertions_from_line": 228
+        }
+      ],
+      "healthy_case_ids": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.ActiveInheritedObserverScope_RejectsSameCacheMutationAndAllowsAnotherCacheAsync",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.Retirement_BlocksAdmissionThroughRemovedObserverAndAsyncDisposalAsync"
+      ]
+    },
+    {
+      "name": "M4_InvertActiveInheritedScopeGuard",
+      "native": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-four-counters-native-r1/M4_InvertActiveInheritedScopeGuard/RESULT.json",
+        "sha256": "4a2eb05e3c214a967305ac2d1d97e380e3347b2b79e4b0b832de14331e8040d4"
+      },
+      "physical": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-four-counters-native-r1/M4_InvertActiveInheritedScopeGuard/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+        "sha256": "9a0e72a7881f4a0bd6dbc6fba14aad2d0eef85738b9b371336c87a4c79c5b658"
+      },
+      "actual_counts": {
+        "total": 4,
+        "passed": 3,
+        "failed": 1,
+        "skipped": 0
+      },
+      "first_finite_failures": [
+        {
+          "case_id": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.ActiveInheritedObserverScope_RejectsSameCacheMutationAndAllowsAnotherCacheAsync",
+          "first_native_and_source_line": 285,
+          "assertion": "Assert.IsType<InvalidOperationException>(childFailure)",
+          "expected": "System.InvalidOperationException",
+          "observed": null,
+          "phase": "after actual parent/child/callback joins; lower rejection/ownership assertions unreached",
+          "lower_or_duplicate_frame_credit": 0,
+          "unreached_lower_assertions_from_line": 286
+        }
+      ],
+      "healthy_case_ids": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.ObserverSnapshot_IsChosenAfterDispatchAdmissionAndRetainsActiveObserversAsync",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.ObserverDispatch_SerializesTheEntireAwaitedBatchBeforeTheNextCommittedBatchAsync",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests.Retirement_BlocksAdmissionThroughRemovedObserverAndAsyncDisposalAsync"
+      ]
+    }
+  ],
+  "actual_repeated_slots": 16,
+  "distinct_original_case_ids": 4,
+  "first_finite_red": 5,
+  "healthy": 11,
+  "own_fresh_images": 48,
+  "own_fresh_document_checksums": 15244,
+  "raw_files_hash_exact": 24,
+  "binlogs_full_gzip_crc": 8,
+  "source_restored": true,
+  "compiled_runtime_restored": false,
+  "root_read": "Whole each four strict stdout/stderr and native stdout/stderr, all sixteen native bodies and exact summaries read; own four fresh12PE/PDB parsers and ten immutable targets each read. Actual first lines83/162/147/227/285 preserved; no prediction substituted; fullsource manifests/checksum comparisons mechanical.",
+  "limits": "Five earliest finite failures across four singlecausevariants, samefour cases repeated16slots; notfivebugs or16newtests. Lowerunreachedassertions/duplicateepilogue frames0extra. Countercompiler/discovery/watchdog/survivor0credit, actualnoDeadlines/noSkips. Independent48PE/ALL4734 and finalcountergate/post/canonical stillpending. Pure parsers for firstthree archive sets ran while laterSDKstages active; all potentially changingnine productowners plusfixture and generated39 overriddenbyimmutable snapshots; no mutablecurrent-variant runtime equality claimed.",
+  "supersedes_sha256": "fd11342e12787256d2ba3517f5ec5849c4042511d64793d01907d1ed2f6fbf96",
+  "precision": "Unreached fields refer only to lower assertions/try steps; finally cleanup and awaitusing epilogues run. Firstnative lines/counts unchanged."
+}

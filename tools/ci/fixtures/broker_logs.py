@@ -69,6 +69,25 @@ MSSQL_ACCOUNT_NAME = "sa"
 # lives in a config file. A name alone grants nothing; the secret below is new on every run.
 ACCOUNT_NAME = "vicione_ci"
 
+# The canonical runner owns these values. Provider images may echo them in their
+# startup diagnostics, so remove them before either persistence or console output.
+RUN_SECRET_VARIABLES = frozenset({
+    *(password for _, password in BROKER_CREDENTIAL_VARIABLES.values()),
+    MSSQL_PASSWORD_VARIABLE, "VICIONE_SERVICEBUS_SERVICEBUS_KEY",
+    "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_SESSION_TOKEN",
+    run_scope.RUN_TOKEN_VARIABLE,
+})
+
+
+def redact_run_credentials(text: str, environment: dict[str, str]) -> str:
+    values = {value for name, value in environment.items()
+              if name.upper() in RUN_SECRET_VARIABLES and isinstance(value, str) and value}
+    if not values:
+        return text
+    # A single literal substitution handles overlaps without reprocessing markers.
+    expression = "|".join(re.escape(value) for value in sorted(values, key=lambda value: (-len(value), value)))
+    return re.sub(expression, "[REDACTED]", text)
+
 
 def capture_logs(brokers: list[str], environment: dict[str, str]) -> None:
     """Write each broker's own log next to the test results, before the fixture is torn down.
@@ -82,12 +101,13 @@ def capture_logs(brokers: list[str], environment: dict[str, str]) -> None:
     for broker in brokers:
         result = compose_fixture.compose("logs", "--no-color", "--timestamps", broker, capture=True, environment=environment)
         if result.returncode != 0:
-            print(f"WARN broker-log {broker}: not collected ({result.stderr.strip()})", file=sys.stderr)
+            print(f"WARN broker-log {broker}: not collected ({redact_run_credentials(result.stderr, environment).strip()})", file=sys.stderr)
             continue
         target = broker_log_path(broker, environment)
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(result.stdout, encoding="utf-8")
-        print(f"broker log {broker}: {target} ({len(result.stdout.splitlines())} lines)")
+        protected_output = redact_run_credentials(result.stdout, environment)
+        target.write_text(protected_output, encoding="utf-8")
+        print(f"broker log {broker}: {target} ({len(protected_output.splitlines())} lines)")
 
 
 # A vhost the broker created, and a channel exception it answered with, as the broker itself writes

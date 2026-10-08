@@ -1,0 +1,22 @@
+{
+  "kind": "ROOT_OWN_SQS_EXACT11_AFTERCOPY_FULL_SOURCE_GUARD_R1",
+  "application_sha256": "2e24787fa699d170e6271e585a4b6e5f8ea09e05a30df844f428592d76d2ded2",
+  "source_files": 6110,
+  "exact_changed_paths": [
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsConnectionContext.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Batcher.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/DeleteBatcher.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/PublishBatcher.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueCache.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueInfo.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/SendBatcher.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+    "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatchSelectedClockTests.cs",
+    "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json"
+  ],
+  "qualified_fixed_full_source_equal": true,
+  "original_C26_6110_unchanged": true,
+  "protected92_build11_config15_exact": true,
+  "limits": "Actualsourcecopy andpersonal graph/hash qualification; peeraftercopy pending. Same alreadyqualifiedruntime15 noSDKrerun ornew globalclaim."
+}

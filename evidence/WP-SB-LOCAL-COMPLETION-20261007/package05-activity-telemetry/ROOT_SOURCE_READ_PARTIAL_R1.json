@@ -1,0 +1,63 @@
+{
+  "kind": "ROOT_PERSONAL_TELEMETRY_SOURCE_READ_CHECKPOINT",
+  "status": "PARTIAL_7_OF_37_PACKS_NO_COMPLETION_OR_CODE_AUTHORIZATION",
+  "manifest_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/MANIFEST.json",
+  "manifest_sha256": "ebd54d65bbf052c66b8b12c8325bde51e59269d8ce64899d167170840fe0d99e",
+  "ordered_personally_consumed_untruncated_packs": [
+    {
+      "ordinal": 0,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-000.txt",
+      "sha256": "15ad41003eb77b332e8e203ccd290f4340c203e29ea77c35ea476ad8036f434f",
+      "stream_start": 0,
+      "stream_end": 13991
+    },
+    {
+      "ordinal": 1,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-001.txt",
+      "sha256": "0e4129435a37d63d2c1dcadb115850312ccda920f0abc34841ceb2ab990b240d",
+      "stream_start": 13991,
+      "stream_end": 27966
+    },
+    {
+      "ordinal": 2,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-002.txt",
+      "sha256": "c373419f98a69bb3ebea610d2546e51c7220495a1c2c4c03afdc244ad5d68164",
+      "stream_start": 27966,
+      "stream_end": 41916
+    },
+    {
+      "ordinal": 3,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-003.txt",
+      "sha256": "da724ec50bc5c772fac4ff2855b557810a1bba7c2140814f082327a89770392c",
+      "stream_start": 41916,
+      "stream_end": 55883
+    },
+    {
+      "ordinal": 4,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-004.txt",
+      "sha256": "56b6f42ad871ccb5f0ce10fb3b4037b45de459356109dae16d486e4a6e5097e9",
+      "stream_start": 55883,
+      "stream_end": 69863
+    },
+    {
+      "ordinal": 5,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-005.txt",
+      "sha256": "706f3f6401000f06bbf4ac522fbaa1741e22e9dcbcfefe473c65e412e2616b2e",
+      "stream_start": 69863,
+      "stream_end": 83833
+    },
+    {
+      "ordinal": 6,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-006.txt",
+      "sha256": "7c7bc317f65ed6d767abb2ed292cc31499521b53121d27fecb1b0687571e290e",
+      "stream_start": 83833,
+      "stream_end": 97831
+    }
+  ],
+  "last_read_ordinal": 6,
+  "next_ordinal": 7,
+  "whole_stream_source_files": 57,
+  "whole_stream_bytes": 512603,
+  "agent_read_credit": false,
+  "source_test_edit": "No P05 product or canonical test source modified."
+}

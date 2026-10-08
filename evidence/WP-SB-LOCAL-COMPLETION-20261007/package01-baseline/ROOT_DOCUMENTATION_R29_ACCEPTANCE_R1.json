@@ -1,0 +1,26 @@
+{
+  "kind": "ROOT_BOUNDED_DOCUMENTATION_R29_ACCEPTANCE_R1",
+  "published_freeze_sha256": "e2168d8139a2951c61f625862242ccb73404c312de6eb14edcb9349c9961ce04",
+  "eventhub_clock_acceptance_sha256": "4ae989894f447e10039797d156ac7a86ed2afd0e7d02a18f7aea1949d78fa360",
+  "published_exact_seven": {
+    "CHANGELOG.md": "bb1c8da614f6356c8df83e93df07506df0e9107ccf55656947eec472458dc835",
+    "TODO.md": "4de196f160f0bdcd27a2a1d8efab40d1cad304d3ff1c6aab149bf93d7aecd532",
+    ".testagent/status.md": "b5f85f2cb4438c11567613de24ed3b499d997608f0f9d7c46a535d48eee8f8c1",
+    ".testagent/plan.md": "5866b99cef22a0c9e9b37119b263d38b6011fa7cf75c80d2cc871a37bbee72cd",
+    ".testagent/local-completion-plan.md": "e6069be4afc80990ac7f363d60112b60a7b624d48e785f01d044407615ebc82a",
+    "docs/quality-status.md": "2c6d9497162ae6d1375136d512d83659a08e7f81d440378637263ede3a1dabf7",
+    "docs/servicebus-local-completion-report.txt": "9293421b432e757aeb00513163894a4a9989a527e833f2d1043f273bb0c93c94"
+  },
+  "published_byte_peer_sha256": "77c7fdc0b5e17c74c5eb32e44c2af8bd740f464f1d8b957ec6186512129bac72",
+  "retained_peer_sha256": "77c7fdc0b5e17c74c5eb32e44c2af8bd740f464f1d8b957ec6186512129bac72",
+  "PO_lines": 91,
+  "preserved_other11_TODO_blocks": true,
+  "preserved_ordered62_external_IDs": true,
+  "history_four_heading_inclusive_suffixes": {
+    "CHANGELOG.md": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+    ".testagent/status.md": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+    ".testagent/plan.md": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+    "docs/quality-status.md": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5"
+  },
+  "limits": "Accepts only exact seven current progress docs reflecting acceptedclock packet. All broader local tasks/currentcoverage/API30/provideraggregate/CI/remote/cloud/HW remainopen; frozen234State unchanged, no freshbodyrecount. Continue next separatelyreviewedSQS batchclock package."
+}

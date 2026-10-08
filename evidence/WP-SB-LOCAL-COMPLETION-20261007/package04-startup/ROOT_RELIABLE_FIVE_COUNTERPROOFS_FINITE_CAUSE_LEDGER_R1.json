@@ -1,0 +1,84 @@
+{
+  "kind": "ROOT_RELIABLE_FIVE_COUNTERPROOFS_FINITE_FIRST_CAUSE_LEDGER_R1",
+  "decision": "ROOT_SELECTED_COUNTERPROOFS_VALID_INDEPENDENT_FINAL_GATE_PENDING",
+  "rows": [
+    {
+      "name": "M1-drop-finite-jitter-check",
+      "native_sha256": "560ec223cf00b5f6ea327a91a2df45a6d84aabb73ae3ba9d07a514845f65c0f6",
+      "root_physical_sha256": "059f69c30641535a7f4bb0eda7982816d6e5d0ed87a61cb71f3befda950a446f",
+      "focused": {
+        "total": 13,
+        "failed": 1,
+        "passed": 12,
+        "skipped": 0
+      },
+      "actual_finite_first_cause": "First Assert.IsType value null at actual fixture20; NaN accepted/endpoint started. Lower assertions zero extra credit.",
+      "root_own_human_read": "Complete archived build log and full13 focused native event bodies/summary personally consumed untruncated. Fresh immutable byte parser checks all12PE/3810PDB checksums; target metadata read. No allsource humanbody or allcompiled METHOD/resource ownread claim."
+    },
+    {
+      "name": "M2-replace-typed-diagnostic-with-default",
+      "native_sha256": "9abe4ef01453fac187ca8a7b07f75ab66ed496533649df790ac9f8be2cf97f72",
+      "root_physical_sha256": "3d4d0f3322cdeb75015da4bdc6293980b5045840376be50bdefc5f53ee0c551c",
+      "focused": {
+        "total": 13,
+        "failed": 6,
+        "passed": 7,
+        "skipped": 0
+      },
+      "actual_finite_first_cause": "Five existing options cases first Assert.Equal actual1003; typed Host first Equal actual37, wrong default bus key. Duplicate1011 frames zero extra.",
+      "root_own_human_read": "Complete archived build log and full13 focused native event bodies/summary personally consumed untruncated. Fresh immutable byte parser checks all12PE/3810PDB checksums; target metadata read. No allsource humanbody or allcompiled METHOD/resource ownread claim."
+    },
+    {
+      "name": "M3-restore-only-eager-policy-constructor",
+      "native_sha256": "6567117e3058a9d6818bf0f1dddf84edee7cc7d7044703263a54b4d5a63b4ee4",
+      "root_physical_sha256": "8c3ba8ce294d94982ebfc53412fe3f79940e7f88478dd8fc6876f3a80a9c48d5",
+      "focused": {
+        "total": 13,
+        "failed": 2,
+        "passed": 11,
+        "skipped": 0
+      },
+      "actual_finite_first_cause": "Both Host negatives first Null StopFailure fixture92: Host.StopAsync Enumerable.Reverse(null source), after correct Options rejection. Lower disposal/observer assertions unexecuted, one premature-read cause/two scenarios.",
+      "root_own_human_read": "Complete archived build log and full13 focused native event bodies/summary personally consumed untruncated. Fresh immutable byte parser checks all12PE/3810PDB checksums; target metadata read. No allsource humanbody or allcompiled METHOD/resource ownread claim."
+    },
+    {
+      "name": "M4-drop-runtime-policy-fallback",
+      "native_sha256": "c3d5c0de60ade2d320223e0bbadc6ad9967cc497830b2cffa7ecd0228b2a98a6",
+      "root_physical_sha256": "e45d63a8d9ac1e563b625cf9eb96c55c7667e2edce05bf15f2a0a482c6f2bb55",
+      "focused": {
+        "total": 13,
+        "failed": 1,
+        "passed": 12,
+        "skipped": 0
+      },
+      "actual_finite_first_cause": "Healthy first Null DeliveryJoinFailure fixture50; retained actual task terminal/faulted, joined ConfigurationException RequirePolicy187 -> EnsureCompositionResolved179 -> Execute76. Two ordinary messages consumed once; no deadline/scheduling surrogate or persisted-delivery claim.",
+      "root_own_human_read": "Complete archived build log and full13 focused native event bodies/summary personally consumed untruncated. Fresh immutable byte parser checks all12PE/3810PDB checksums; target metadata read. No allsource humanbody or allcompiled METHOD/resource ownread claim."
+    },
+    {
+      "name": "M5-drop-existing-options-startup-boundary",
+      "native_sha256": "b06bc276d4c5c1a5763973518ea2afbc1d6a5f0539a03911baf2d86280ff91fe",
+      "root_physical_sha256": "ee37e51986eece80c81f95a0e1500b10281c79e60729668409f7de5318f9d17d",
+      "focused": {
+        "total": 13,
+        "failed": 5,
+        "passed": 8,
+        "skipped": 0
+      },
+      "actual_finite_first_cause": "Five existing options cases first ThrowsAny No exception actual968. Duplicate1010 frames zeroextra, lower phase/type/diag unexecuted. Test-quality control, not productfinding.",
+      "root_own_human_read": "Complete archived build log and full13 focused native event bodies/summary personally consumed untruncated. Fresh immutable byte parser checks all12PE/3810PDB checksums; target metadata read. No allsource humanbody or allcompiled METHOD/resource ownread claim."
+    }
+  ],
+  "total_same13_repeat_slots": 65,
+  "total_first_finite_failures": 15,
+  "total_healthy_controls": 50,
+  "new_distinct_cases": 0,
+  "product_variants": 4,
+  "test_quality_variants": 1,
+  "physical": {
+    "fresh_images": 60,
+    "fresh_pdb_document_checksums": 19050
+  },
+  "restored_post13_sha256": "5ec645f91ba6b3552500f50a608e001e149b3b2a27c7ba5c14f57c712b6edd7b",
+  "restored_exact17_source_reuse_sha256": "ffb1d6f6f21232686c30d8ee378f36261dbd20fa84ac38061d36c020f8a83769",
+  "limits": "First failures only; predicted counts not forced. Lower/unreached/duplicate frames zeroextra. No wholeMutantCore/new65cases/15bugs. Independent compiled4730 perchangedTestimage/finalgate pending. Canonical code unchanged; no globalA+/release/cloud/device closure."
+}

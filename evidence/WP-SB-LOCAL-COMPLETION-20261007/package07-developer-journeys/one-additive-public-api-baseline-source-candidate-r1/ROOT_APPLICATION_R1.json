@@ -1,0 +1,13 @@
+{
+  "kind": "ROOT_ACTUAL_EXACT_ONE_API_BASELINE_APPLICATION",
+  "relative_path": "docs/api/packed-public-api.txt",
+  "before_sha256": "493c48624b80c801824bf6caee9b7e6b960b6608335bebaee97da97208e44252",
+  "after_sha256": "e9616090b09c593c8a53cdb24c3404570076706ba8044684d72f3431ea797e5e",
+  "proposal_sha256": "ad220db999d7641357bf1b5107a727fdf77e57a7747462a9f1ebec9d2245b67c",
+  "peer_sha256": "8b2653d4bcaf2d5d972997894b81f60c1b94e8c18ecd6c8e89c9d47931ab4cf1",
+  "all_other6185_selected_paths_and_protected_build_files_unchanged": true,
+  "old20118lines_retained_plus1typedSQSline": true,
+  "current_baseline_equals_qualified_actual_publicAPI30_bytes": true,
+  "read_scope": "Wholepeerpolicy/api/limits+all30compactmetadata andmechanicalbindings; initialwholecat9851tokentruncated so NOwhole30rowJSONhumanreadclaim.",
+  "limits": "Baseline datafix only; defaultfirstattemptnonGreen retained, outerexitunknown. No SDKrerun/implicitpipelinePASS, no source/lock/remotechange. P07integrityautomationgap/runtimejourneys pending."
+}

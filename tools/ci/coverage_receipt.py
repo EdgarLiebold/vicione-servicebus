@@ -52,10 +52,27 @@ def clean_git_state():
 
 
 def run_and_log(command, log, env):
+    if any(log.parent.glob(log.stem + "-*.binlog")):
+        raise ValueError(f"Binary-log family already exists before the {log.stem} command")
+    command = [*command, f"/bl:{log.parent / (log.stem + '-{}.binlog')}"]
     with log.open("x", encoding="utf-8") as stream:
         result = subprocess.run(command, cwd=REPO, env=env, stdout=stream, stderr=subprocess.STDOUT, check=False)
     if result.returncode:
         raise ValueError(f"Command exited {result.returncode}; see {log}")
+    files = sorted(log.parent.glob(log.stem + "-*.binlog"))
+    if not files or any(not path.is_file() or path.is_symlink() or not path.stat().st_size for path in files):
+        raise ValueError(f"Missing or empty completed binary logs for {log.stem}")
+    return {relative(path): sha256(path) for path in files}
+
+
+def unchanged_binlogs(stages, run_dir):
+    for stage, captured in stages.items():
+        files = list(run_dir.glob(stage + "-*.binlog"))
+        if any(not path.is_file() or path.is_symlink() or not path.stat().st_size for path in files):
+            raise ValueError(f"Invalid completed binary logs for {stage}")
+        current = {relative(path): sha256(path) for path in files}
+        if current != captured:
+            raise ValueError(f"Binary logs changed after the {stage} command completed")
 
 
 def binaries_in(test_dll):
@@ -171,13 +188,13 @@ def main():
     if args.disable_hw_intrinsics:
         dotnet_env["DOTNET_EnableHWIntrinsic"] = "0"
     msbuild_parallelism = [f"/m:{args.maxcpucount}"] if args.maxcpucount is not None else []
-    run_and_log(["dotnet", "restore", str(project), "--locked-mode", "--artifacts-path", str(sdk), "-v:minimal", *msbuild_parallelism], run_dir / "restore.log", dotnet_env)
+    binlog_stages = {"restore": run_and_log(["dotnet", "restore", str(project), "--locked-mode", "--artifacts-path", str(sdk), "-v:minimal", *msbuild_parallelism], run_dir / "restore.log", dotnet_env)}
     if not any(
         json.loads(path.read_text(encoding="utf-8")).get("project", {}).get("restore", {}).get("projectPath") == str(project)
         for path in (sdk / "obj").glob("*/project.assets.json")
     ):
         raise ValueError("Restore exited successfully without the requested test project's assets file")
-    run_and_log(["dotnet", "build", str(project), "--no-restore", "--configuration", "Release", "--artifacts-path", str(sdk), "-v:minimal", *msbuild_parallelism], run_dir / "build.log", dotnet_env)
+    binlog_stages["build"] = run_and_log(["dotnet", "build", str(project), "--no-restore", "--configuration", "Release", "--artifacts-path", str(sdk), "-v:minimal", *msbuild_parallelism], run_dir / "build.log", dotnet_env)
     build_log = (run_dir / "build.log").read_text(encoding="utf-8")
     if re.search(r":\s*(?:warning|error)\b", build_log, re.I):
         raise ValueError("Build log contains warnings or errors")
@@ -194,7 +211,7 @@ def main():
     built_binaries = binaries_in(test_dll)
     if clean_git_state() != start_state:
         raise ValueError("Git tree changed during restore/build")
-    run_and_log([
+    binlog_stages["tests"] = run_and_log([
         "dotnet", "test", "--project", str(project), "--configuration", "Release", "--no-build", "--no-restore",
         "--artifacts-path", str(sdk), "--coverage", "--coverage-output-format", "cobertura",
         "--coverage-settings", str(settings), "--coverage-output", str(report),
@@ -215,6 +232,7 @@ def main():
                 required_assembly = required_assembly[:-len(suffix)]
                 break
     assemblies, source_count = report_sources(report, built_binaries, required_assembly)
+    unchanged_binlogs(binlog_stages, run_dir)
     receipt = {
         **start_state,
         "completedUtc": datetime.now(timezone.utc).isoformat(),
@@ -234,6 +252,8 @@ def main():
         "trackedSourceCount": source_count,
         "reports": {relative(report): sha256(report)},
         "logsSha256": {relative(path): sha256(path) for path in sorted(run_dir.glob("*.log"))},
+        "binlogsSha256": {path: digest for captured in binlog_stages.values() for path, digest in captured.items()},
+        "binlogStages": {stage: sorted(captured) for stage, captured in binlog_stages.items()},
     }
     with (run_dir / "receipt.json").open("x", encoding="utf-8") as stream:
         json.dump(receipt, stream, indent=2, sort_keys=True)

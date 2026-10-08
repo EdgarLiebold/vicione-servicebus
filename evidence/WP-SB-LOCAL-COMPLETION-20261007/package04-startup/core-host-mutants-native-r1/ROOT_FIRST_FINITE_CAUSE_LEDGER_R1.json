@@ -1,0 +1,130 @@
+{
+  "kind": "ROOT_CORE_FOUR_MUTANTS_FIRST_FINITE_CAUSE_LEDGER_R1",
+  "outer_tool_session": 81673,
+  "outer_joined_returncode": 0,
+  "variants": [
+    {
+      "name": "M1-original-options-read",
+      "result_sha256": "9ac71dc679bc10886b69ce24092b0203d9bb274341d0ca38ce5c70509f3343d2",
+      "raw_focused_sha256": "1bde2e611f825116d01c46a94a768a2ca532e00532e3bcb3ce8b42655c442564",
+      "focused": {
+        "total": 5,
+        "failed": 3,
+        "passed": 2,
+        "skipped": 0
+      },
+      "native_pid": 17042,
+      "native_joined": true,
+      "actual_first_finite_failures": [
+        {
+          "case_id": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.CanceledStopBeforeStartupRemainsRetryable",
+          "first_assertion_block": "  Assert.Equal() Failure: Values differ\n  Expected: System.Threading.CancellationToken\n  Actual:   System.Threading.CancellationToken\n    um ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.CanceledStopBeforeStartupRemainsRetryable() in /private/tmp/vicione-servicebus-local-completion-20261007-core-host-startup-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/CoreGenericHostStartupTests.cs:67\n    --- End of stack trace from previous location ---\n",
+          "limits": "Only first actual assertion failure counted; printed later outcome/state not evidence of passing unreached assertions."
+        },
+        {
+          "case_id": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.InvalidLifecyclePolicyRejectsStartupAndReleasesOwnedServices(policy: ConsumerExceedsStop)",
+          "first_assertion_block": "  Assert.Null() Failure: Value is not null\n  Expected: null\n  Actual:   Microsoft.Extensions.Options.OptionsValidationException: Host lifecycle for bus 'all': ConsumerStopTimeout (00:00:06) must be less than or equal to StopTimeout (00:00:05). Set ConsumerStopTimeout to no more than StopTimeout.\n     at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)\n     at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()\n     at ViciOne.ServiceBus.Hosting.ServiceBusHostedService.StopCoreAsync(CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-local-completion-20261007-core-host-startup-original/src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs:line 100\n     at ViciOne.ServiceBus.Hosting.ServiceBusHostedService.StopAsync(CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-local-completion-20261007-core-host-startup-original/src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs:line 72\n     at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)\n     at Microsoft.Extensions.Hosting.Internal.Host.StopAsync(CancellationToken cancellationToken)\n     at ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.RunAsync(Nullable`1 policy, Boolean cancelStopBeforeStartup) in /private/tmp/vicione-servicebus-local-completion-20261007-core-host-startup-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/CoreGenericHostStartupTests.cs:line 175\n    um ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.InvalidLifecyclePolicyRejectsStartupAndReleasesOwnedServices(InvalidPolicy policy) in /private/tmp/vicione-servicebus-local-completion-20261007-core-host-startup-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/CoreGenericHostStartupTests.cs:35\n    --- End of stack trace from previous location ---\n",
+          "limits": "Only first actual assertion failure counted; printed later outcome/state not evidence of passing unreached assertions."
+        },
+        {
+          "case_id": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.InvalidLifecyclePolicyRejectsStartupAndReleasesOwnedServices(policy: ZeroStartTimeout)",
+          "first_assertion_block": "  Assert.Null() Failure: Value is not null\n  Expected: null\n  Actual:   Microsoft.Extensions.Options.OptionsValidationException: Host lifecycle for bus 'all': StartTimeout (00:00:00) must be greater than 00:00:00 when specified. Set StartTimeout to a positive duration or leave it unset.\n     at Microsoft.Extensions.Options.OptionsFactory`1.Create(String name)\n     at Microsoft.Extensions.Options.UnnamedOptionsManager`1.get_Value()\n     at ViciOne.ServiceBus.Hosting.ServiceBusHostedService.StopCoreAsync(CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-local-completion-20261007-core-host-startup-original/src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs:line 100\n     at ViciOne.ServiceBus.Hosting.ServiceBusHostedService.StopAsync(CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-local-completion-20261007-core-host-startup-original/src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs:line 72\n     at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)\n     at Microsoft.Extensions.Hosting.Internal.Host.StopAsync(CancellationToken cancellationToken)\n     at ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.RunAsync(Nullable`1 policy, Boolean cancelStopBeforeStartup) in /private/tmp/vicione-servicebus-local-completion-20261007-core-host-startup-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/CoreGenericHostStartupTests.cs:line 175\n    um ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.InvalidLifecyclePolicyRejectsStartupAndReleasesOwnedServices(InvalidPolicy policy) in /private/tmp/vicione-servicebus-local-completion-20261007-core-host-startup-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/CoreGenericHostStartupTests.cs:35\n    --- End of stack trace from previous location ---\n",
+          "limits": "Only first actual assertion failure counted; printed later outcome/state not evidence of passing unreached assertions."
+        }
+      ],
+      "healthy_case_ids": [
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.HostedServiceLifecycleOwnershipTests.CompletedStop_RemainsIdempotentForAnAlreadyCanceledCallerAsync",
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.CoherentPolicyStartsDeliversAndStopsWithUnusedInvalidNamedPolicy"
+      ]
+    },
+    {
+      "name": "M2-canceled-stop-publishes-stopped",
+      "result_sha256": "a147f80cac0f46efb5580b8fb9930385bfddf320cf7314b6d9320e924294b22d",
+      "raw_focused_sha256": "da0ba7056cbbdd7649494b4775f84f4deb9ba42bf5da6b045144e0dac904ca26",
+      "focused": {
+        "total": 5,
+        "failed": 1,
+        "passed": 4,
+        "skipped": 0
+      },
+      "native_pid": 17117,
+      "native_joined": true,
+      "actual_first_finite_failures": [
+        {
+          "case_id": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.CanceledStopBeforeStartupRemainsRetryable",
+          "first_assertion_block": "  Assert.Null() Failure: Value is not null\n  Expected: null\n  Actual:   System.InvalidOperationException: The hosted service cannot be started after stopping has begun.\n     at ViciOne.ServiceBus.Hosting.ServiceBusHostedService.StartAsync(CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-local-completion-20261007-core-host-startup-original/src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs:line 51\n     at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>b__14_1(IHostedService service, CancellationToken token)\n     at Microsoft.Extensions.Hosting.Internal.Host.ForeachService[T](IEnumerable`1 services, CancellationToken token, Boolean concurrent, Boolean abortOnFirstException, List`1 exceptions, Func`3 operation)\n     at Microsoft.Extensions.Hosting.Internal.Host.<StartAsync>g__LogAndRethrow|14_3(<>c__DisplayClass14_0&)\n     at Microsoft.Extensions.Hosting.Internal.Host.StartAsync(CancellationToken cancellationToken)\n     at ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.RunAsync(Nullable`1 policy, Boolean cancelStopBeforeStartup) in /private/tmp/vicione-servicebus-local-completion-20261007-core-host-startup-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/CoreGenericHostStartupTests.cs:line 170\n    um ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.CanceledStopBeforeStartupRemainsRetryable() in /private/tmp/vicione-servicebus-local-completion-20261007-core-host-startup-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/CoreGenericHostStartupTests.cs:68\n    --- End of stack trace from previous location ---\n",
+          "limits": "Only first actual assertion failure counted; printed later outcome/state not evidence of passing unreached assertions."
+        }
+      ],
+      "healthy_case_ids": [
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.HostedServiceLifecycleOwnershipTests.CompletedStop_RemainsIdempotentForAnAlreadyCanceledCallerAsync",
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.CoherentPolicyStartsDeliversAndStopsWithUnusedInvalidNamedPolicy",
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.InvalidLifecyclePolicyRejectsStartupAndReleasesOwnedServices(policy: ConsumerExceedsStop)",
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.InvalidLifecyclePolicyRejectsStartupAndReleasesOwnedServices(policy: ZeroStartTimeout)"
+      ]
+    },
+    {
+      "name": "M3-ignore-unstarted-stop-cancellation",
+      "result_sha256": "533cb559525a73b0bc572a5b27a41d4ac345538b268e2c6a5e4a09f014e5a9a1",
+      "raw_focused_sha256": "26cb5ae7a32fd8a4c5c234a12e2fe8db72ea077fa65b817834a21d37e699e915",
+      "focused": {
+        "total": 5,
+        "failed": 1,
+        "passed": 4,
+        "skipped": 0
+      },
+      "native_pid": 17205,
+      "native_joined": true,
+      "actual_first_finite_failures": [
+        {
+          "case_id": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.CanceledStopBeforeStartupRemainsRetryable",
+          "first_assertion_block": "  Assert.IsAssignableFrom() Failure: Value is null\n  Expected: typeof(System.OperationCanceledException)\n  Actual:   null\n    um ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.CanceledStopBeforeStartupRemainsRetryable() in /private/tmp/vicione-servicebus-local-completion-20261007-core-host-startup-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/CoreGenericHostStartupTests.cs:66\n    --- End of stack trace from previous location ---\n",
+          "limits": "Only first actual assertion failure counted; printed later outcome/state not evidence of passing unreached assertions."
+        }
+      ],
+      "healthy_case_ids": [
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.HostedServiceLifecycleOwnershipTests.CompletedStop_RemainsIdempotentForAnAlreadyCanceledCallerAsync",
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.CoherentPolicyStartsDeliversAndStopsWithUnusedInvalidNamedPolicy",
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.InvalidLifecyclePolicyRejectsStartupAndReleasesOwnedServices(policy: ConsumerExceedsStop)",
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.InvalidLifecyclePolicyRejectsStartupAndReleasesOwnedServices(policy: ZeroStartTimeout)"
+      ]
+    },
+    {
+      "name": "M4-fast-path-for-started-runtime",
+      "result_sha256": "71f61ab20d3ce2e7a3621f6d72e43ca1f2503f4fa7b3223c77f813b0dfb43308",
+      "raw_focused_sha256": "fb3170e10e97b04fbc2e3bd617b10f4eb720baf345eb439f4348e8dd1bcf97c5",
+      "focused": {
+        "total": 5,
+        "failed": 1,
+        "passed": 4,
+        "skipped": 0
+      },
+      "native_pid": 17287,
+      "native_joined": true,
+      "actual_first_finite_failures": [
+        {
+          "case_id": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.HostedServiceLifecycleOwnershipTests.CompletedStop_RemainsIdempotentForAnAlreadyCanceledCallerAsync",
+          "first_assertion_block": "  Assert.Equal() Failure: Values differ\n  Expected: 1\n  Actual:   0\n    um ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.HostedServiceLifecycleOwnershipTests.CompletedStop_RemainsIdempotentForAnAlreadyCanceledCallerAsync() in /private/tmp/vicione-servicebus-local-completion-20261007-core-host-startup-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/HostedServiceLifecycleOwnershipTests.cs:104\n    um ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.HostedServiceLifecycleOwnershipTests.CompletedStop_RemainsIdempotentForAnAlreadyCanceledCallerAsync() in /private/tmp/vicione-servicebus-local-completion-20261007-core-host-startup-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/HostedServiceLifecycleOwnershipTests.cs:104\n    --- End of stack trace from previous location ---\n",
+          "limits": "Only first actual assertion failure counted; printed later outcome/state not evidence of passing unreached assertions."
+        }
+      ],
+      "healthy_case_ids": [
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.CoherentPolicyStartsDeliversAndStopsWithUnusedInvalidNamedPolicy",
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.CanceledStopBeforeStartupRemainsRetryable",
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.InvalidLifecyclePolicyRejectsStartupAndReleasesOwnedServices(policy: ConsumerExceedsStop)",
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests.InvalidLifecyclePolicyRejectsStartupAndReleasesOwnedServices(policy: ZeroStartTimeout)"
+      ]
+    }
+  ],
+  "repeated_native_slots": 20,
+  "selected_unique_case_ids": 5,
+  "first_finite_RED": 6,
+  "healthy_controls": 14,
+  "causal_classification": {
+    "M1-original-options-read": "Two invalid policy firstNullStop fixture35 with OptionsValidationException through owner100; canceledStop firstTokenEquality fixture67 after OCEhierarchy66 passes, linkedToken differs despite later actualstart/consume printed healthy. One originalcleanup defect remains two cases, plus newly checked token identity counterexample, not four Stop+Disposekills.",
+    "M2-canceled-stop-publishes-stopped": "FirstNullStart fixture68 sees InvalidOperationException StartAsync51 after terminal published before cancellation; originalcaller token assertions66/67 reached, later assertions unreached.",
+    "M3-ignore-unstarted-stop-cancellation": "FirstIsAssignableFrom fixture66 receives null canceledStopFailure; printed later InvalidOperationException is observation only, not additional finite oracle.",
+    "M4-fast-path-for-started-runtime": "Existing StartedStopCount equal fixture104 expected1 actual0; four CoreGenericHost fixture cases pass. Protects physical depot-stop contract, no blocking tests selected."
+  },
+  "limits": "Root personally read complete allfour focusedstdout blocks untruncated and matched whole211/272 sources. Product/compiler/deadline/discovery/survivor distinction; allfourstrictbuilds actual0 warning/error, nativeexit2/ownPGIDjoined. Actual PE/PDB and independent causal qualification pending; no predicted extra kills, no full mutation score/globalA+/coverage/Hardware/cloud."
+}

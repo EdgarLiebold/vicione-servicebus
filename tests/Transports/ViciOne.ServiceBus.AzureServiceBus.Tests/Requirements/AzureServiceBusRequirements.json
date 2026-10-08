@@ -1566,5 +1566,68 @@
   "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
   "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ScheduledFallbackOwningDiagnosticsTests",
   "testMethod": "SendFallbackOrIdempotentCancel_OptionalOwningDebugDoesNotChangeDocumentedContinuationAsync"
-}
+},
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "selected-named-azure-options-validated-by-generic-host-before-runtime",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests",
+    "testMethod": "SelectedNamedBlankConnectionStringFailsBeforeRuntime"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "unselected-default-and-other-named-azure-options-cannot-reject-selected-bus",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests",
+    "testMethod": "UnusedInvalidDefaultAndOtherNameCannotRejectSelectedNullConnectionString"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-HOST-CONFIGURATION",
+    "variantKey": "invalid-second-selected-azure-bus-rejected-before-either-runtime",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests",
+    "testMethod": "InvalidSecondSelectedBusFailsBeforeEitherRuntime"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "processor-grace-uses-selected-clock-and-disposes-timer",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests",
+    "testMethod": "ProcessorCancellation_UsesSelectedClockForGraceAndDisposesTimerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "session-grace-uses-selected-clock-and-disposes-timer",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests",
+    "testMethod": "SessionCancellation_UsesSelectedClockForGraceAndDisposesTimerAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "processor-without-grace-cancels-immediately",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests",
+    "testMethod": "ProcessorCancellation_WithoutGraceCancelsImmediatelyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "session-without-grace-cancels-immediately",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests",
+    "testMethod": "SessionCancellation_WithoutGraceCancelsImmediatelyAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "processor-completion-removes-live-broker-registration",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests",
+    "testMethod": "ProcessorCompletion_RemovesBrokerCancellationRegistrationByCallbackCompletionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-ASB-PROCESSOR-LIFECYCLE",
+    "variantKey": "session-completion-removes-live-broker-registration",
+    "testAssembly": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests",
+    "testMethod": "SessionCompletion_RemovesBrokerCancellationRegistrationByCallbackCompletionAsync"
+  }
 ]

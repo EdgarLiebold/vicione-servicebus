@@ -1,0 +1,8 @@
+{
+  "kind": "ROOT_EXACT_ONE_API_BASELINE_ACCEPTANCE",
+  "application_sha256": "f21bff8707c7752df70a07d8fbd2fdab56321c6d61ba70a5f96e7bbcdbbe1898",
+  "afterapply_peer_sha256": "b960f651fde76ecc836a8d8322f0c89b90cb966037e4ca26e5ed0c2623945bcb",
+  "retention_manifest_sha256": "024d47c72df3beb196365fa4498428ed71da45fa8ec5555a421134cc4408ad3e",
+  "current_baseline_sha256": "e9616090b09c593c8a53cdb24c3404570076706ba8044684d72f3431ea797e5e",
+  "limits": "OneAPIdeclaration snapshot correction accepted; no retrospectivedefaultpipelinePASS. Actual30SDKsteps31packs provenance bound; automaticconsumerlockintegrity gap/runtimejourneys pending, hardware/cloud/globalA+open."
+}

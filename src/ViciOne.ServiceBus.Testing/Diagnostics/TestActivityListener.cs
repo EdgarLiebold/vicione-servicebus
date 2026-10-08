@@ -17,11 +17,11 @@ namespace ViciOne.ServiceBus.Testing;
 sealed class TestActivityListener :
     IAsyncDisposable
 {
-    static readonly ActivitySource _source = new ActivitySource("ViciOne.ServiceBus.TestHarness");
+    static readonly Lazy<ActivitySource?> _source = new Lazy<ActivitySource?>(CreateSource);
 
     readonly string? _className;
     readonly bool _includeDetails;
-    readonly ActivityListener _listener;
+    readonly ActivityListener? _listener;
     readonly Activity? _testActivity;
     readonly ConcurrentDictionary<string, TraceInfo> _traces;
     readonly TextWriter _writer;
@@ -35,6 +35,10 @@ sealed class TestActivityListener :
 
         _traces = new ConcurrentDictionary<string, TraceInfo>();
 
+        ActivitySource? source = methodName is not null ? _source.Value : null;
+        if (methodName is not null && source is null)
+            return;
+
         _listener = new ActivityListener
         {
             ShouldListenTo = _ => true,
@@ -46,7 +50,25 @@ sealed class TestActivityListener :
         ActivitySource.AddActivityListener(_listener);
 
         if (methodName != null)
-            _testActivity = ActivityObservation.TryStartSource(_source, methodName, ActivityKind.Internal);
+            _testActivity = ActivityObservation.TryStartSource(source!, methodName, ActivityKind.Internal);
+    }
+
+    static ActivitySource? CreateSource()
+    {
+        Activity? previousActivity = Activity.Current;
+        try
+        {
+            return new ActivitySource("ViciOne.ServiceBus.TestHarness");
+        }
+        catch (Exception)
+        {
+            // The optional timeline remains inert after a failed cold activation.
+            return null;
+        }
+        finally
+        {
+            ActivityObservation.TrySetCurrent(previousActivity);
+        }
     }
 
     public ValueTask DisposeAsync()
@@ -57,7 +79,7 @@ sealed class TestActivityListener :
         if (_testActivity is { } activity)
             ActivityObservation.TryDispose(activity);
 
-        _listener.Dispose();
+        _listener?.Dispose();
 
         GenerateOutput();
         return ValueTask.CompletedTask;

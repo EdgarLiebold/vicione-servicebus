@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:a5f702ddb5403083d8287108d249dc6baf5f57c9a71e377518f7857f9f222cc7",
+  "claims": [
+    {
+      "id": "claim_0d65b246c0f144aca23aa70eb6eb2ea3",
+      "statement": "Future<TCommand,TResult,TFault> uses saga state to subscribe pending callers and answer later commands or result requests with retained terminal outcomes.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+          "version": "repo-file-v1:sha256:0b758a3edbb8d1c56c1658d03ac2f919d1e7da6e45cf15bc2049b27b286f8806"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Futures/Futures/FutureState.cs",
+          "version": "repo-file-v1:sha256:a58239aabc5df413d426bc63151b01dcaaec22eb5b9063109b7ae982d1755504"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

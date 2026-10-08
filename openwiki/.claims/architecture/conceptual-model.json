@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:bbf51b95e99ddcfae7cbd05a4b2feb13821422ff71abef252b1ccdee810949b3",
+  "claims": [
+    {
+      "id": "claim_67a27be16ecf40eea47a17291050a876",
+      "statement": "The current runtime shares receive pipelines and consumer contexts across typed messaging, while optional workflow capabilities have separate dependencies and state models.",
+      "evidence": [
+        {
+          "resource": "repo://docs/provider-capabilities.json",
+          "version": "repo-file-v1:sha256:422a0241dce7f85c76e587727d2a978969f44757063d8b0bacc699299ca9b3cb"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+          "version": "repo-file-v1:sha256:d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Runtime/ServiceBusRuntime.cs",
+          "version": "repo-file-v1:sha256:fdb8a75d182886d32468204ea0413a430fb1f66038e8c25af8cd606515889c56"
+        }
+      ]
+    },
+    {
+      "id": "claim_b9a85795aa0244fda9b665e888624b11",
+      "statement": "Futures use saga-backed FutureState with waiting, completed and faulted behavior, while JobService coordinates Job, JobAttempt and JobType state machines.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Futures/Futures/Future.cs",
+          "version": "repo-file-v1:sha256:0b758a3edbb8d1c56c1658d03ac2f919d1e7da6e45cf15bc2049b27b286f8806"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.JobService/JobService/JobAttemptStateMachine.cs",
+          "version": "repo-file-v1:sha256:c6f2ca467e340244c19186e68bcf3e7511ca03ef6163f8e9e5156ec21a246f2b"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.JobService/JobService/JobStateMachine.cs",
+          "version": "repo-file-v1:sha256:b2427ff0adff6fa9b2f5b7e6ad28826aec0dd19980e14f7ba932965b94bcd4c9"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.JobService/JobService/JobTypeStateMachine.cs",
+          "version": "repo-file-v1:sha256:14069627f5e5c274aa7d3bc966cf6cabdf599d448cb7226c5f61f4966df9ccd8"
+        }
+      ]
+    },
+    {
+      "id": "claim_77ea8b9906ea4185aa7ab0859b28a4ef",
+      "statement": "The separate EF transactional outbox model shares the delivery coordinator but has a different persisted model and endpoint replay path from unified reliable messaging.",
+      "evidence": [
+        {
+          "resource": "repo://src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkBusOutboxConfigurator.cs",
+          "version": "repo-file-v1:sha256:08908a05eece71591d80f8414d3374fab9b0e6449dbe8ed1af2a5c5a5dde0084"
+        },
+        {
+          "resource": "repo://src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkTransactionalOutboxSource.cs",
+          "version": "repo-file-v1:sha256:67aa72ab20c2f4789975e1c77c503fd614ebce2e5a736f0771e1a4fe9dad28bd"
+        },
+        {
+          "resource": "repo://src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ReliableMessaging/EntityFrameworkReliableMessagingServiceCollectionExtensions.cs",
+          "version": "repo-file-v1:sha256:1e8b16ff4e4170fdab1425fb242ac240e3feb1546cb5ab10908f38bfc5c0298f"
+        }
+      ]
+    },
+    {
+      "id": "claim_bff711c4d08841a9aa48a014c6133402",
+      "statement": "Event Hubs rider ownership and partition checkpoints differ from SignalR backplane coordination of node-local connections.",
+      "evidence": [
+        {
+          "resource": "repo://src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/BatchCheckpointer.cs",
+          "version": "repo-file-v1:sha256:f0a40085e9b4ce10bced4f7ddb8ee99db8144a0b8e9e5d78fa724f0680a99f9b"
+        },
+        {
+          "resource": "repo://src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubRider.cs",
+          "version": "repo-file-v1:sha256:98da1eee183426df897a88625c33299a17469429ec510c21217357b239d005ef"
+        },
+        {
+          "resource": "repo://src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ServiceBusHubLifetimeManager.cs",
+          "version": "repo-file-v1:sha256:3179bec723f105baacf202c64e40da9aeba8a49955641c770a114ff3af5a2a03"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

@@ -1,0 +1,3572 @@
+{
+  "kind": "ROOT_PERSONAL_CANONICAL_CORE801_STAGE_A_READ_CLOSURE",
+  "status": "CURRENT_OWNER_READ_COMPLETE_PENDING_INDEPENDENT_REVIEW",
+  "prior_complete_read_sha256": "5e807c7f46275c714dcb6e8c3b6f478f5f6846299510c58a2fcac60b763c6b08",
+  "unchanged_complete_owner_reuse": 798,
+  "explicit_personal_delta_reads": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs",
+      "sha256": "21f7290640fbe910bac4c87bb3b3ee1881dcafcfaa9255acd85e1c131ed16589",
+      "basis": "Root authored/read complete new body; 229 lines including2explicitAction casts and unrelated-current control"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "sha256": "d25a434309bd395ff5b34a3864ea292a9ec2eff4f63c3e30ebca0cff486638a1",
+      "basis": "Complete4685priorqualifiedrows unchanged, Root authored and read all5newexactrows; validated lossless projectionappend"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/ConsumerAgentTests.cs",
+      "sha256": "160ccfa858b1cdd4524bf9b352b9dd6042994bdaa450994617dae7716c217dfd",
+      "basis": "AcceptedP06 exact8line Root-read fallback proxy delta/source-review qualification"
+    }
+  ],
+  "current_owner_rows": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/ApiSurfaceGlobalUsings.cs",
+      "sha256": "92a91807b899850c048356982d623be2d372f1cf2b903612969d07f297b7c0c6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Architecture/OutboundNetworkBoundaryTests.cs",
+      "sha256": "617021a94afdc3b8dc3208d032ff4550b75c7151981293bf2d2b96cd39e251de"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Architecture/RemovalBoundaryTests.cs",
+      "sha256": "693d54becba86eed6323a75e853ff7ef051d3412ef3c29e7999ab9ebb0c516de"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheConcurrencyTests.cs",
+      "sha256": "7087567d31ff3d8d42df1dcef4763d11f90cdfe6a97b9265ad8edc8528ed6063"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs",
+      "sha256": "fe08a94c9d3339cc2a83c85bfcc19c90e3b4f6decd3d55810d9147811062d5db"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpirationTests.cs",
+      "sha256": "8f128a449bc35bf7012638d79237393754c1e823fb33f34d68f34005996299ba"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpiredDuplicateOwnershipTests.cs",
+      "sha256": "75455c54efa1c5388e92ac8f577b73a52c330785e2d7e8dd9b933f073010c430"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheGenerationAndLockingTests.cs",
+      "sha256": "56e5e5b8ba01517ba221441930ecfdd9c50f8c6d1279c29220d626d96da63fdf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheInitializationTests.cs",
+      "sha256": "23871810ed2cdd3bcec89ae6f336a3dc1e8433ae6fbdfe1391f69c3515627a9a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheLifecycleTests.cs",
+      "sha256": "4c791cd63c5708a51015d250c943a9e376aa4ddc17518b87add6fafb69823866"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverAndDisposalTests.cs",
+      "sha256": "d2c10c5e7cd989c7f747c043bf8a583adec22d721de23544abcda1b6e315836e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Clients/ClientFactoryExtensionsBoundaryTests.cs",
+      "sha256": "a99c477d523298d3d162b7ab744965f3a200acb15e1f0bd5a2bf9307ee8a9cbe"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Clients/ClientFactoryRequestContractTests.cs",
+      "sha256": "2f0b3f51a8f28e22579bf0bd52f400f3c8099048882815496b5f3319057dad89"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Clients/ContainerRequestClientRegistrationTests.cs",
+      "sha256": "438dfcbe48233d60b59f9d69a1cd728f9c8cd4fbaeb000124f9a5ff609e21f70"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Clients/ReceiveEndpointClientFactoryContextTests.cs",
+      "sha256": "3e1fd48c093f64f0c9f2f16b0a3a9c383cc7fe5398bc17d2a7e955bccabacd34"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Clients/RequestClientBoundaryTests.cs",
+      "sha256": "01493239c8cef119d985be823fc43852bdaff9678f75158cee85aed2b6de6660"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Clients/RequestClientLifecycleTests.cs",
+      "sha256": "37e44edc8c53ae8a8ef9c5023b5f3838df7d444a76b295b54f0baf2b2c7df024"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Clients/RequestClientMetadataTests.cs",
+      "sha256": "7a974786e7581e93b2ddf7ae0773f72c91052f87f81ee6cd1a5590cda5e7489e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Clients/RequestExtensionsBoundaryTests.cs",
+      "sha256": "193a8d5875731c53894eb725efb72ffd89e73ce8ce64f3e127935ab3daaa05cb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Clients/RequestExtensionsContractTests.cs",
+      "sha256": "33fe9b91db1c436e67643ff9f12b5aa5be35b14e144a08d6f30e1e30d7cf34d0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Clients/ResponseAcceptanceTests.cs",
+      "sha256": "b8297fff92d143461fe675f72ee4d04d77bf8799febf8f2d79c72a923ac6210f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Clients/ResponseMatchingTests.cs",
+      "sha256": "165b9053e3f1d4032fe25bab363bb8d73a8cc6907d4b6734f44c2dab218c9d4b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Components/RequestStateMachineDeepContractTests.cs",
+      "sha256": "1ee930cbb5be12dca4c3bd544610bde3bdb0931c94c7c8cd0dc276aaa56756b4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/BindPipeSpecificationTests.cs",
+      "sha256": "0eaed002c2e6e1ce61b6edda576b76b6dc7c7a6a5a37d9ce455ac931154b771c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/CircuitBreakerOptionsTests.cs",
+      "sha256": "6054075d975657009ae2eb1c6cc1c897048941f2a5571887a0808229679b23fb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ActivityObserverRegistrationCleanupTests.cs",
+      "sha256": "9d0835cbf6ea89c3522dd33550d0c8688393164c442d2243a4e3b3c041a132f7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/BuiltPipelineConfigurationTests.cs",
+      "sha256": "09766bc7f807a18ae3aa872706dbfd1e15a0e30718205deb8046c4b27c7dad39"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/CompositeFilterTests.cs",
+      "sha256": "cdb310e15acc7a901fe82d53a82afa4b42623307f2ef12370fef2cba693ec249"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConfigurationObserverTests.cs",
+      "sha256": "65bd8e8bcb5650d6014c73cc9a3ec6b2f2e75deb48c15f6eecd1cb12dba93369"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConfigurationValidationTests.cs",
+      "sha256": "48cb590b75030dffbf8bd7ede046a6eb8b82a8c10819d9f5f8aa892b6c293ff6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConsumerMessageConfigurationTests.cs",
+      "sha256": "edc0ecdb8042a754a39400ea0bfe41919340c2f11eccc54a45325aa4af0e5c41"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConsumerSpecificationObserverAdmissionCleanupTests.cs",
+      "sha256": "b2c2ab57e8ecc3bb69601a91086417cb54f8dc4396ba17e67c2b34449e5a7a6a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/MessageLimitsConfigurationTests.cs",
+      "sha256": "796a9149f9ee97a97c9caa428517a4a455cdbc3af533e54300050f9ebd026893"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/PublishPipeConfigurationTests.cs",
+      "sha256": "f375e98d90d24d7e429ea48c8c8f58b17816a538b93f890565c1e6601d7c2553"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ReceiverConfigurationTests.cs",
+      "sha256": "7860e296f611b73c1b6f953de1563bc35e0ae814970b807fc717927aba2a60f4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/Retry/ConsumeContextRetryPipeSpecificationTests.cs",
+      "sha256": "c1eb39e0af6b6c9338ebc0fede9e3818287ead01e434253a9853d07f6cf92a79"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/Retry/RetryPipeSpecificationTests.cs",
+      "sha256": "58cf67864049f3b0b7b58f65dfddee7dfab973cb47bf88ee6c5e3d0b30ffbe3d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/SendPipeConfigurationTests.cs",
+      "sha256": "3b458f58cb2d05a7f691d1a4594b4fa1ea4ed86b058644518890e66e52fb28df"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/AsyncBusHandleLifecycleTests.cs",
+      "sha256": "682d06607a524936bcd0bed26737563daa8ed94cbf346e9b0e5d5e997631a1ab"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/BusCompositionStartupValidationTests.cs",
+      "sha256": "613bfc0b93c3bed39323846ed27ede88c2d44f687271c45d18f96a05cd0d382b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs",
+      "sha256": "57dd6670a920b1f4b86b98d3cbf2c8c7b7e954286fb212ded5c38cd9dd8fa885"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/HostedServiceLifecycleOwnershipTests.cs",
+      "sha256": "2abeaa9d7637aabbc3b1bc8cfb57dd0f8d7060c5d1e01ccc4c9b1f02e3defba2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/RegistrationConfiguratorExtensionsTests.cs",
+      "sha256": "cdd61a5c15a2282fe11ecc4078fd3781393684c32d4fa203d7a7ce667c067df8"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ViciOneServiceBusHostOptionsValidationTests.cs",
+      "sha256": "fc07f872fbddc3287408e0c56e5243093ba941c60fcbe3675ed4419cdff21ec2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjectionSagaConfigurationDiagnosticTests.cs",
+      "sha256": "27e8c0cba984f96f08113ff9b554102b14fceb5fc6796f599fdaf280a3a16b64"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjectionSagaReceiveEndpointExtensionsDeepContractTests.cs",
+      "sha256": "19b45cbe6b8c7e168661792c32a2820b80c7bb7b206fe3f79c27add39b40ef9d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjectionSagaRegistrationExtensionsDeepContractTests.cs",
+      "sha256": "00fc7f0aa05fdc2920c9684d7e7f558596a39b277a466f74433d230d5a10ae8d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjectionSagaStateMachineRegistrationExtensionsDeepContractTests.cs",
+      "sha256": "1267381145f7cc0f1881de815da82fbff30cba56c7965c09896a56b1f31398bc"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/EndpointNaming/EndpointNameFormatterTests.cs",
+      "sha256": "7de7c91c468e9a63d8ac792933f379b0c8613497e5bce7fd07e901ea2e5b562f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/EndpointNaming/FormatterJoinSeparatorNullabilityOriginalTests.cs",
+      "sha256": "1d0d10eeeb4ab9cbcb87b9e73ec42596539c1dfa709f9a329f00c06603f37d8f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/InMemorySagaRepositoryServiceCollectionExtensionsDeepContractTests.cs",
+      "sha256": "668e0488cb0b712a68c4415d072773b8695eeb0c567cd1acfc0d950b6c953582"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/KillSwitchOptionsTests.cs",
+      "sha256": "d8f6b01c4c6b8cc24dfb52790500bdf7b80be7f060c70df89a0f4d7a40a22808"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/MessageJournalConfigurationTests.cs",
+      "sha256": "c2c6bb783d7c9b51dc9bcd4300a803e2da0dfcdf145c338d612b041926200d8a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/MessageRetryConfigurationExtensionsTests.cs",
+      "sha256": "f10c10433900077d6695aeec5a77a193e0830df2a2b891538997380c9cd900bd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/NonContainerOptionsValidationTests.cs",
+      "sha256": "77682cfc4836e982f17297f8577059d467ab062047c23bb552c61e414942018a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/PartitionMessageConfigurationTests.cs",
+      "sha256": "5883f41aad1a624c4287c0919fd167dc511472811e2f618a4022a4cfa5db93b5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/Qos/EndpointQosTopologyValidatorTests.cs",
+      "sha256": "de21e7a927eaf4320e37f05aa0a483e2e49e4ce63fda070172dac2c4584bffea"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/RegistrationServiceCollectionExtensionsDeepContractTests.cs",
+      "sha256": "6608a9bdd7c67d94cd91885a99d790f2d62db3fae497ad1bdfce78e4ae44d913"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/RetryConfigurationExtensionsTests.cs",
+      "sha256": "209e11b1ebe6f9d2297037456416ac7720e4d8605b9e2c84832db379583e9f85"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConfiguratorPipeDeepContractTests.cs",
+      "sha256": "e0ef8907e39cb66518dc62351aa474c4cc14ac382d1fce6a6f3e9be407972b1a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnectorDiscoveryCacheDeepContractTests.cs",
+      "sha256": "b2fd8bf20a16fb8485acbfcf58a6f306b92fb1d97fc519af4cecd8cbdcd7fa30"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnectorFactoryDeepContractTests.cs",
+      "sha256": "f5e34a399fe958f8ad45454d90de2b07856cbc1965d1dc5ffae780b90cf165e5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnectorPipelineDeepContractTests.cs",
+      "sha256": "c395308d438234cb0eafc82827f4ca98063962220a1822aa0b1b79a9d314a7b2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnectorPublicContractTests.cs",
+      "sha256": "7162a2c65c6675f01844216c0f0fb4b4d2b766c94d991be50ac9ba3882a4f5fe"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnectorSpecificationAdapterDeepContractTests.cs",
+      "sha256": "97ce56e1c6885ba7b5794df1b8dcf608f00f945e46dd9ed00ca8c6f0ed89e411"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaDefinitionDeepContractTests.cs",
+      "sha256": "f87356dc846f42941d63c539a941dca818390ee2994fdba170aba581789cad23"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaEndpointDefinitionDeepContractTests.cs",
+      "sha256": "d6f3295094f59f43ffcf3c41639a687e1764b30f7a8f27c3f2f85e3fc70681a6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaExtensionsDeepContractTests.cs",
+      "sha256": "8ffa9f87e16d265e97da1bf3d7ad9c5aaaacb7c791fd27e0ad0f0190511ab882"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaInstanceFactoryDeepContractTests.cs",
+      "sha256": "554ea89913f5406e242d7a29608f7f1a55fdafd506366e6495c8f00c48886f43"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaMessageObserverAdapterDeepContractTests.cs",
+      "sha256": "89dd1c61ba1d606c61f412cf4ad94b49a0cea65a97a882c387d4be91bd7ff1b5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaMetadataAndSpecificationDeepContractTests.cs",
+      "sha256": "90497967912ef61a4df817c3bef3bb067d9780a6e7cce0290de213b551af94f2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaMissingInstanceRedeliveryDeepContractTests.cs",
+      "sha256": "a0d9aed8d57e96848970e762d4eea7284ff470147ba46c4b8d7e32ac2ecd5213"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaPipeConfiguratorExtensionsDeepContractTests.cs",
+      "sha256": "621ae8835ce915758a3a2d3a905a10b8d3a9712152c1ccfdfa3e81074c045ba7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaPublicPartitionContractTests.cs",
+      "sha256": "4bdd69a4e555efb7e277108cbc2bfb34f293978fd9926900dd95ce15a74365c1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaQueryPropertySelectorDeepContractTests.cs",
+      "sha256": "71f1ba57178cb03832fb3e2863cd016d6c46137fd3be3afc5145b139043600a8"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaRegistrationCompletionParticipantDeepContractTests.cs",
+      "sha256": "5251a34c10c97e9e07615dc9975405b46ac9bf0c43ec8277db1b29dda455f7c3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaRegistrationConfiguratorExtensionsDeepContractTests.cs",
+      "sha256": "fc86baca785aa978e98f11af7b4e703d0c7b4f65419477f34f69b5d62c27e7ec"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaRegistrationConfiguratorRuntimeExtensionsDeepContractTests.cs",
+      "sha256": "6bfda4bf3f9ed39393a767ebf03b386abee0dd66b8dcdb42bc2b30081898818b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaRegistrationExtensionsDeepContractTests.cs",
+      "sha256": "473a725e4ea523efaed433450e0c3576131e10c090b645024d15b222c783f9df"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaRegistrationPublicContractTests.cs",
+      "sha256": "cdbce70ece2350e94e23682c44d0ec9201158f2f4b0fe4bad770bc5d1d1efb53"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaRepositoryRegistrationProviderDeepContractTests.cs",
+      "sha256": "b5882143dea156bbae7aeb69da3be369d3918d2155c15409375e91201f600859"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaRetryCorrelationMissingInstanceDeepContractTests.cs",
+      "sha256": "135f2709b1dcd0b85ac2c5360ecbfb529997f0f0d5c314d8c64b8df77ed3b19a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SagaStateMachineReceiveEndpointExtensionsDeepContractTests.cs",
+      "sha256": "11902a0c4ba93b838dc2ee26f5ad0cbd09525d4ec3461077c0ef4d2293da18ce"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/ServiceInstanceEndpointTests.cs",
+      "sha256": "410aaa361faa9d498a49aeb0446cf5a985d0e0f75458421ad6a164968182de04"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/SpecificationOptionsValidationTests.cs",
+      "sha256": "d9fe4b3f75ee77982a60347ba9afacd2dc06c88baa3fc683745574abd2b0d814"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/StateMachineBuilderModifierDeepContractTests.cs",
+      "sha256": "dbdd0dad25d3a8f23e12d53ca85d1ec0a4d45af95b2637a076c83218c3e22e17"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/StateMachineEventCorrelationConfiguratorDeepContractTests.cs",
+      "sha256": "688523475a9e1f3448a9adb2bec5af13b18ca2774a962225ef6679e087a88d94"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/StateMachineInterfaceTypeFactoryDeepContractTests.cs",
+      "sha256": "258ae29d5b97d9cd270248d56d00f95772b577aa5e79f65f2fa3f4e54cd37551"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/StateMachineRequestScheduleTimeoutDeepContractTests.cs",
+      "sha256": "e40fbd10916fd60089b37a3a2bb54580c837d0202f57a7885d41a1f65cc91b48"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/StateMachineSagaMessageConnectorDeepContractTests.cs",
+      "sha256": "ec22232fa7a9ced1e68ff79474e6d4a550f93470d177ef0b808bb3b452cca8ad"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/TransactionConfigurationTests.cs",
+      "sha256": "26d7f8162595e5e23bd2f4050faf3c70f9334991deb14af5cf2a5a2b4e9259c2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchCollectorLifecycleTests.cs",
+      "sha256": "17d53b9498cf1747c6cc9feece41cc6eb1556fe9b59dc519f3f2e9af990bb335"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchCollectorLifetimeTests.cs",
+      "sha256": "926e164d0f84e03d05f2431a96c7efe3391f7872612ab32f7da1f24ba432337d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchConfigurationComponentTests.cs",
+      "sha256": "fe1a8212d24902d6e427d9b03afb6f2b1b9d6567a109da89a9d746a9503843b9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchConsumeContextTests.cs",
+      "sha256": "3f96def591b65ec6ef92e7e84ec835d12a9858c00f52a2417f31b53b70cd60e1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchConsumerConnectHandleTests.cs",
+      "sha256": "ff7b0a2fe0779da1c65e34ab1aa49bd94b9c973678c59520cc16a3be3d4e9d7a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchConsumerFactoryTests.cs",
+      "sha256": "4504303a0c6e8cda2d755ee1090b24ef67e4a37e17646db45064f05c359a7643"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs",
+      "sha256": "f4df2034de77fdb77e3169622dc0f3806032cf230d74e53082fe0aea39bc61db"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchRuntimeStateTests.cs",
+      "sha256": "6cfab285e557388ccbb05f3657f0c8d7f3a02506e07f053ee3036b75803735cf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchTimeProviderTests.cs",
+      "sha256": "8e52f4247f44e604f9b4655f63962688094bf0d0084f55a54f54b383cf9f45df"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/Concurrency/ConsumerConcurrencyConfigurationTests.cs",
+      "sha256": "5eb95f44827f32e093e1899c0028ee318527d837d903f5703edc5863f5ecf199"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/Concurrency/ConsumerConcurrencyGateTests.cs",
+      "sha256": "2491430c6181e88253070f92dbdf785418a6237cfa4c5b6014f12f0446fd2cc5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerAndSagaConcurrencyTests.cs",
+      "sha256": "c157512b6a1852650e31c5e081109af35b6649550d7f46e986ec2cc2210e9535"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerConfigurationBoundaryTests.cs",
+      "sha256": "570209fb312e04f1da132be34a8e0be7b26e2f7a0524299b1fd294315f84b6a1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerConnectionRollbackTests.cs",
+      "sha256": "aba850dda884d7df652f5e4b09caee663ed90978a5d5d96dd58dd80d221d9ded"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerConventionIntegrationTests.cs",
+      "sha256": "2dc015b5edade0747e624aada2b9607d378d0073018f313fdf96e59cd0f0c876"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerConventionStateCollection.cs",
+      "sha256": "0a79273a173561b57b27fa6e5503a8083c41aafb01a66ec984845282ca451678"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerFactoryLifetimeTests.cs",
+      "sha256": "85f87a4b524def58d90f76afd870e6db58a85d30142deb0b254f90bc3f6d8c84"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerMetadataCacheImmutabilityTests.cs",
+      "sha256": "fc3a75b732dc0c43def6b2b3791e43640519c4d2f695ef8e49c380573d4a9693"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerRegistrationDiagnosticTests.cs",
+      "sha256": "e6b920dd53ded882afc265a73b52e19c6fa99af645717fc39396966edd894949"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/Contexts/ConsumerConsumeContextTests.cs",
+      "sha256": "b77721f208840296aaabbf86e8b47491e2a2414f7cf89e5f669dde2169987e5e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/DynamicConsumePipeConnectionTests.cs",
+      "sha256": "a9d7cb67d311685c0415e0b8cbc19c95d1e1443f75127eb4e0e7d64e3c0fcaa9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/InstanceConnectionAdmissionCleanupTests.cs",
+      "sha256": "cbac007a4f72a60cfe693c1dfa397bdfd93767277192ada4662738695d4a9408"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/InstanceExtensionsTests.cs",
+      "sha256": "f7ed0feff591fa4bf3433cd46d427b076ab3aabaa79d56871f43fdb1c734f3c5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/Metadata/ConsumerRegistrationMetadataTests.cs",
+      "sha256": "9fd542289bc2da8074383165179a74f419299ea53a87222b20a7dfbc39122bbf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Context/Activities/ActivityContextAdapterTests.cs",
+      "sha256": "f24b9ace169455f6e27be8d44e5125391e1a354e185219f1c7c941b7d2e9145c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Context/Consumption/ApplicationConsumeContextOutgoingTests.cs",
+      "sha256": "6d0041d1b8417ba7eec3692e28b67968e6c65562c099a77df96c7c9d81f30c7b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Context/Consumption/BaseConsumeContextLifetimeTests.cs",
+      "sha256": "4ee03c0fe8711e6f6678bcf5cfd211f6808e8251f5b361505b0ddb1233243a20"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Context/Consumption/ConsumeContextEndpointExtensionsTests.cs",
+      "sha256": "5d4ff69a443d3e55f42cdfaaede77c3b330b321ee3cf2acc4b2adb821d3e48e3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Context/Consumption/ConsumeContextOutgoingMessagesTests.cs",
+      "sha256": "9f2ae6033dc12e8a44149298efa06935062b8ddb5dbf0c5cb5f789acb5e1df96"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Context/Consumption/ConsumeContextProxyTests.cs",
+      "sha256": "3568051b62bd609fa360448ca372876de34de9f3c315e909308b86123a17e193"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Context/Consumption/ConsumeContextScopeTests.cs",
+      "sha256": "773b7c1eabf807f9a36526bf7348431f204342f17341806f67cf811dffd33bd6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Context/Consumption/ConsumeNotificationContractTests.cs",
+      "sha256": "e10facc8b9f337852a35b5a4170cd3ad7eace0f65c47a85dcc48c7d6b7a8124e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Context/Consumption/ConversationContextTests.cs",
+      "sha256": "c096708a18a17058fedb4f2db255af3d0615e409ef7ef210c91a959fa681f035"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Context/Consumption/DeserializerConsumeContextTests.cs",
+      "sha256": "f3772df20b35d272621ec7cda51b9a9a521fbce4cb76982e6d5a5db541b5cc74"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Context/Consumption/EndpointResolutionContractTests.cs",
+      "sha256": "235bf8437dd0670e51c5c394b4ec4bb7094dd05c1b7daef1b9bb651a2087e385"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Context/Consumption/MessageConsumeContextTests.cs",
+      "sha256": "1494f75edaa810be05919c539da73cbc7d9c1880f6a870f73e7b274fcd645919"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Context/Consumption/MessageContextFlowTests.cs",
+      "sha256": "205df490429f337c05ace47842e5f994f5484144628883327edf8f5c8eeee3fe"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Context/Consumption/UnavailableConsumeContextTests.cs",
+      "sha256": "48752c301e893ccadecee9f842ac8833b3c39464040a1e23eefa80e33604a8a3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Context/SagaConsumeContextProxyDeepContractTests.cs",
+      "sha256": "dae7d87e066cbfd8f766a25790455de869f1701972b11783e2240aca0f83ad3f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Contracts/InterfaceMessageDispatchTests.cs",
+      "sha256": "8b7e69b9aacea0bf9280b55945e95b5d8e27ea5c5aae005378a23ad997d6cf29"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Contracts/MessageContractCatalogTests.cs",
+      "sha256": "323bcae277699ef96b2b3f0ff00ed332f7f9504d0d4bf1d4fa29a68be6c81edf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Contracts/SagaAdvancedRequestContractTests.cs",
+      "sha256": "742be24b4851c3e5b0902981b296ec0aac8f6acb44cd7929563ec07bd496dc88"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/ActivityDefinitionContractTests.cs",
+      "sha256": "911b99fe9017f8c77604252f4fef6b74f12145b38ccd5aa803bd28fa60b8ae41"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/ActivityEndpointConfigurationTests.cs",
+      "sha256": "57dbc57cee4cec54c60489e81ea933067ba006dc8280f79d55491c879caa90ed"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/ActivityRedeliveryMessageIdentityTests.cs",
+      "sha256": "57c74e7a31763d0fe68ef5d609f6ad9ddd89d18a9d91b605d8f12821c6bb64fc"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/ActivityRegistrationLifecycleTests.cs",
+      "sha256": "fa74f87b9a892e80565e210a83710cce748b82440f95be14c88df3e2a7619cd4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/ActivityScopeLifecycleTests.cs",
+      "sha256": "c5b11cc3fb6f4f5000e2f7c1590678cbdbbafa9c3ee86c67f7f205558e7a6ea2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/ContainerActivityRegistrationTests.cs",
+      "sha256": "2ff919d7f2bedd23f470603deb612a4c8c10997d6fc273fdf37c3994e0eb1b9b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/ContainerRoutingSlipOutboxRequestTests.cs",
+      "sha256": "a684ce1fa1903ee1036dda93a1c1c737caec87e6f04ad11f5c4e85deeebc57b2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityAndRoutingSlipContractDeepTests.cs",
+      "sha256": "ee31505ed33dfb4c591ec2a7b63f62c1e75e54afa11a2dc3b9501626d54a6149"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityContextApiContractTests.cs",
+      "sha256": "932a6ce1f1a70421e5eee91888ad4d8c7546e6be3df598b417e64eed921de9c2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityFactoryContractTests.cs",
+      "sha256": "d9b0ef4f6b7cef937a0c85dd020bd4f3504b2fa9a34aba58052d26057f0480f1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityFactoryRegistrationDeepContractTests.cs",
+      "sha256": "e47b33cb23dc6af7b648189c388d1b65734ceccbba063c578402f42abf234a9e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityObserverFailureTests.cs",
+      "sha256": "dec1f7966301288306234de54e2b244a02989a9e6be46e9f36ecfe200af75f7c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityRegistrationAndScopeFactoryDeepContractTests.cs",
+      "sha256": "f18eba67544897cef2e083ee10076af0ede2ad79c5cd45c86fff2290d876bede"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityScopeContextDeepContractTests.cs",
+      "sha256": "0a1982c186d7747715b2b4fe0cd45d2bd788da48cd1c2e1383b6240f2b8b4931"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityScopeProviderDeepContractTests.cs",
+      "sha256": "0b86a55ebcc60254ee4a90cfe1de71a43c204c967cf483efdf843f18f6257c61"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityScopeProviderTests.cs",
+      "sha256": "f214ec93b139f8d63f6a34899fbd0ce572bd480b7d3131f684e2952826322ac7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierCompensationResultEvaluationContractTests.cs",
+      "sha256": "51ea12c4c5e2124ab393005415778b7a042d6019073ce00226f057aad603e6c6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierConfigurationSurfaceTests.cs",
+      "sha256": "6534e64e343b3bcc76d04fd145ac321915324bbba21f8097fbdeffa27ffec162"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierConsumerKindContractTests.cs",
+      "sha256": "5d31315cc7be72a2cd9715a73c1ae98caa0775ab6124f88deaba61014a25bc50"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierContextContractTests.cs",
+      "sha256": "3e805f5daaf2d56465e2694b17149a51267ecd6643c085b10d293edeb5f875a7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierConventionSerializationDeepContractTests.cs",
+      "sha256": "22823f85435f98fa476631ad9758271bf757c5ce18b2f910cfa0479f78dcdbd9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierExecutionResultEvaluationContractTests.cs",
+      "sha256": "4d90590a6f6bc8d1891ddfb3d658bdafd03ed172d49628d7ce4f3311a6753b57"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierHostContextDeepContractTests.cs",
+      "sha256": "80d09c9ea578128f22e8186cbe27e8160a23cda62746a0c58124b07cff46c5a8"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierHostPipelineContractTests.cs",
+      "sha256": "b11e84f30e8836baa26b924fed6810402392e327cc8827c7a390d9451a3906b0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierHostRegistrationDiagnosticsTests.cs",
+      "sha256": "3959e2c8d35cc07f4f052226d3599f0b0c7b4e074f26a5c333d50d45277d6090"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierHostResultContractTests.cs",
+      "sha256": "6f15a885b294c5b014d264616385850703b23d6e02dd8f90f003fd0240e40d11"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierHostResultParameterContractTests.cs",
+      "sha256": "29779c1becc5626fab79f77f9ace275bb6990056fc7b5a276fc091940253acb7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierMessageContractTests.cs",
+      "sha256": "f468165a01d960049078d41c70f4a2e6fc9837d15840e4b194a57ac82925f473"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierMessageDataIntegrationTests.cs",
+      "sha256": "9b7300cb4609b99379d7dadc69169137107e787f925f9bfe2a91cb5c2b822ddd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierOutboxJourneyIntegrationTests.cs",
+      "sha256": "b23eece30de982a834f95375927f598e0e88fd143801ecce6da541f874d25182"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierRegistrationBoundaryTests.cs",
+      "sha256": "ef481895f529ec4a0083853d8cce0d5476676a0a32d6ef823e51aa0b928042b4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierResultMessageStateContractTests.cs",
+      "sha256": "82b3699d4ef49b12b41b01dc55b63568e6952b42056fb7c8683d1360120fa735"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierRoutingSlipBuilderDeepContractTests.cs",
+      "sha256": "87b4b5193a8b1bfcabdf62725ca034f4a89dd20fcaead3eb4f75ccd2f31b33a9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierRoutingSlipEventPublisherDeepContractTests.cs",
+      "sha256": "1eb229ba2dda559a54e164bac4a3c22de968d4f974148952ce63f0916beec5b7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierRoutingSlipExecutorDeepContractTests.cs",
+      "sha256": "a8c3af3811c3414d95a90b4de5a37f373511838cbd1470b6e1caa741ceb4a64d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierRoutingSlipMessageModelDeepContractTests.cs",
+      "sha256": "90dea3c5d1d16dc5ded67cb0ca3d83abeedf0f02d3065959d272ca382be53a56"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierRoutingSlipRequestResponseDeepContractTests.cs",
+      "sha256": "068a98245ca5fd1018195516829aebce927a057905913275b5637f4b523f6270"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierRoutingSlipSubscriptionDeepContractTests.cs",
+      "sha256": "8cfa09efeccd0524065ccb41a17558393682cb58f796f722fb5bfb3cf92bdd6e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierTestSupport.cs",
+      "sha256": "873e148ad52753625981cd4ad52d9f0a4814aeab9f53654048b0e5593357b15c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierTimeoutOutboxJourneyIntegrationTests.cs",
+      "sha256": "2d51d7546390d5b5f9825a7593416e5c0cc525b8d0db8c701f61b1f762fd10bf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/CourierTraceTests.cs",
+      "sha256": "fbb5575192b9c42de5883094c7ab157098325a080ca81f879758476bc478ec42"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipArgumentIntegrationTests.cs",
+      "sha256": "53ccf87d79853108fabe345fd5537bfaed141a0bc0482ced8a53bc3187339856"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipBuilderContractTests.cs",
+      "sha256": "2825430bfbee431e198073286dd5d77584e2a663bff580868936f78e632a4392"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipEventAccessorTests.cs",
+      "sha256": "f1afc26886a18f93a1587194f3962c6acf6d562fbb9e8eb7c65c31a7b41822fa"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipEventPublisherContractTests.cs",
+      "sha256": "983c926031d70d68de6a72c36df64e951a5364909ea37e1a77c17a9099332d25"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipExecutorContractTests.cs",
+      "sha256": "17afbdd4181302c1ebb7e23ba05137c8fddd493524a3c263e5e810a0b6dd5323"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipFaultIntegrationTests.cs",
+      "sha256": "d0b0b9d91ec00b42fcb5a207fec689a2543382e46e55fb4b2261186efa430eb8"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipHostConfigurationTests.cs",
+      "sha256": "46e7208a442303b5086e3cc361b21b55359e1d64b6721e26eb164602f1642068"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipLifecycleIntegrationTests.cs",
+      "sha256": "a0cbdf56a532788c7a0c92d25983bc598d8fee2a323d0ded8b6888b78ccb1cff"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipPayloadIntegrationTests.cs",
+      "sha256": "e65672f61bdcf62f208b32ab0059095f547687b3ef8e6860aadcbb28302d7820"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRequestIntegrationTests.cs",
+      "sha256": "c19b3bf139702a5180c15a0455b0b85c14d4a786411b65df819f925fc2f78c6b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRequestProxyContractTests.cs",
+      "sha256": "29556540fcd65ebf997727b60a9485dc1a8ebf21997fbf2f5f839235f0f81b2b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRetryIntegrationTests.cs",
+      "sha256": "14850e0c672fa3d1cbd9dc48086b57c74dbeead9a8cfee47f9663201bb1916cf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRevisionAndSubscriptionTests.cs",
+      "sha256": "7b8abb3d0f6e3de98090953dabd899c386476824a7eed4f10cf11150cc5a581a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipSubscriptionCaptureEndpointTests.cs",
+      "sha256": "1a2456233efc937d98aa5434de14600165288033e7999ec6174465aae31fb7b8"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ActivityAndFilterScopeLifecycleTests.cs",
+      "sha256": "7a18b1131a0a8acb93f86725a2274df1310fd7f8ca9117697b7d227cbb48732b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/BindEqualityTests.cs",
+      "sha256": "2cedb28ecf4213c5854c3cc83668a4c7521bcc182e8c12bf4b55eeccadbbb07d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/BusObserverOwnershipTests.cs",
+      "sha256": "f46404bf1ba8e73777235f2a178248fd6775843bf996e1b6aa6a9c13f1e80b09"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ConfigureEndpointExclusionTests.cs",
+      "sha256": "71e677603cb5ccb0591c81bfb8408459fc35a249ab77efbe1f7eb6a0c6b564af"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ConsumeContextActivatorExtensionsTests.cs",
+      "sha256": "17c091ec950bc50c4b71504ecd2f532cd04e85e6c9f51b7f1f0dbea26d2ef611"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ConsumeScopeLifecycleTests.cs",
+      "sha256": "8b6f9d1f3a9546bb9a628eed9f3ae019b70c29eb53a9d558e3f85ff0abf24b43"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ConsumerKindExtensionTests.cs",
+      "sha256": "7b4c340d7f27eb16f0661b58c1a1d5f671ea3bcc487c3354129ee47b280dc65e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs",
+      "sha256": "1c66dfc9a3ecd051856d83a5c0e386a400251c6ed381f7a6305432df5526a94d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumerRegistrationTests.cs",
+      "sha256": "fb74fd7ccdb8c492d3f5e5280565450afd85cc3f9e167385e9cadf7151289751"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerDiscovery/ContainerDiscoveryTypes.cs",
+      "sha256": "70fbd1660088d62d678f998960fd114c0594c2632a5bb587bbf288b2e848c4c5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerEndpointRoutingTests.cs",
+      "sha256": "a435da73e8891637e77c198e0ed6285484caa35ce2073732aa6105baf505ded4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerNamespaceDiscoveryTests.cs",
+      "sha256": "a01a9d2152b3dbbaeb7ddd4691f47bf71b946baa058bc43329d8eaf6a65e32d5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerOutboxScopeTests.cs",
+      "sha256": "ecccbabc232baa5b6ac057a4ce5409c5246e4d9d6fcd3fddd8e12d0ee0228f41"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerScopedEndpointTests.cs",
+      "sha256": "3c389871c4cc866581a68facf45f0dcbbeb5d6efc20dc481e1e9dc0a694b1100"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/CoreRegistrationOracleTests.cs",
+      "sha256": "60dfefdc722f2f3c19fe2fa11814489c5ece07bde61736e77df9548ad696189a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/DependencyInjectionConfigurationContractTests.cs",
+      "sha256": "716bb742084a270f2139610d2f8ecc2d056cfcaab824111a387b65fa00e5b37a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/DependencyInjectionSagaRepositoryRuntimeDeepContractTests.cs",
+      "sha256": "d919160b98453a8790844455d5c389e0054dc0962d87d317c3ed8ad9a2c74015"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/EndpointConfigurationIsolationTests.cs",
+      "sha256": "41a37bb4e2bd3e368dd5e4df236c477ecd5954a79a5791cd080cb01214ec1515"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/EndpointConfigurationTests.cs",
+      "sha256": "30ab0be2470928c304c5653d18e17b86933023368ce892fec0a7426df4a52e3b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/EndpointRegistrationTests.cs",
+      "sha256": "a1e2d6d70f70d67e9f1de10ee968f59c27b3df505542899ad0ca448e83bf0848"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/GenericRequestClientTests.cs",
+      "sha256": "78a927963d91de863fe3730ae9d00cee40b21ff5e9474b311f29f2dffa038795"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/HandlerRegistrationTests.cs",
+      "sha256": "fc7f25bf3faa042502f06a5571fd3feb97fa43f684a21300ad1c37e65272e41e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/MessageHandlerConsumerTaskContractTests.cs",
+      "sha256": "e72b38d5be0c8828962678502b0dabf5a8c65c29b697452b91c81eaab001d516"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/MessageScopeHandlerIntegrationTests.cs",
+      "sha256": "a8481552fb2a770e9022370853bfed175c0dbe83a6aa75b2f8e5f63b9d9c77e9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusHostOwnershipIntegrationTests.cs",
+      "sha256": "9f8da68ba52027ec6f57f259168904b6f72b3021844a79ba3470d8557af1f300"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusRequestTests.cs",
+      "sha256": "d659fde936efd286a8181a868a3e8ebd7a75d08e84226ec8a6d6fba59c87dc26"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusSchedulerOwnershipIntegrationTests.cs",
+      "sha256": "ee1ad85fb422adfb68c9072dcf6da031283de8e0556b4529763fe785177c557b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusScopeIsolationTests.cs",
+      "sha256": "cac6ad7fa7da97c3ce6604c0def2060c71c461bdf7fbd847ef314b61f63f7f40"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ProviderDefinitionIsolationTests.cs",
+      "sha256": "b4c16ec148be06bdafc428879353ce0f83be0aafc2923fe9da496190a9eb625c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ProviderRuntimeConfigurationIsolationTests.cs",
+      "sha256": "d3ec0a79387a83397ccac45efc566e41b0033fc67bcdef75a8e19f67face607f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/PublicScopedFilterSelectionContractTests.cs",
+      "sha256": "2c5a0b73ac426bf44ce494acc9fbc899a503b62ce56c98d4d494924f5b1efcc2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ReceiveEndpointDependencyTests.cs",
+      "sha256": "3ad91a46b02a6fb0a08ef72e748ccffd0079a93626a1ab7caea1588e5cd50f16"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/RequestHandlerConsumerOutcomeTests.cs",
+      "sha256": "30b6afa083628c3fb89c9a43b90dad7cb88ef6156f2217d0880efdcc7b5e04e3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/RuntimeRegistrationTypeContractTests.cs",
+      "sha256": "5bd3f429eb1ac5028d2cad5915c0c82d61efe81071074df69acf79948578fb32"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/SagaRegistrationConfiguratorDeepContractTests.cs",
+      "sha256": "5d149ef90f4e5201c90cd43079536d1107ab41e9384733129942d3ff296f250b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/SagaRegistrationRuntimeDeepContractTests.cs",
+      "sha256": "fa0477fd5cab0b701fc7cd1facb07f742c512ca414b657ff97f472ba89a0480c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedBusContextProviderTests.cs",
+      "sha256": "634bb15a11d96952dcf85da15f8ac1d09f9de639394cbfe2dc5b584443583500"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedBusContextTests.cs",
+      "sha256": "fd5602a3bdc569a123cd9bbe9845637b0954d5f9d9819f7ed674c908344258fa"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedClientFactoryContextTests.cs",
+      "sha256": "143ae4def9ef44c4a3f303802845191164198cdeef123977ec31cd19fe18c5d4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedConsumeContextProviderTests.cs",
+      "sha256": "f67c4dbd3be21386396e20862b724f5b8f607c11ebc4048d9c1ef220087d9199"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedConsumeEndpointProviderTests.cs",
+      "sha256": "add659aee2ba4185850195839814701d167019dee1837dc7444ca5b70b957b8f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedEndpointProviderTests.cs",
+      "sha256": "f9adfd36bf28efbad19f30f2a6310eeb3bad02a6f5e00d3b18423b11fcac8aaa"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedPipelineTests.cs",
+      "sha256": "d41ccf623ea6fd6eb066e199357e0ed76fc5bcdbe8b21fdbdfdbec3e637f4005"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedSendEndpointTests.cs",
+      "sha256": "61f8025516f8d1f1a8b3f4d693a6cdc791405506a558f016288ad0e0d048fca0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Diagnostics/MessageDiagnosticRedactorTests.cs",
+      "sha256": "117baaf9aec5c95b86cf8e81b1502c69a7a2974738a312f67aefbd81caf49b11"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderDeliveryTests.cs",
+      "sha256": "d1a2553111cf63c9d272266a5d2644e76f7060e1e8a34fc7fa7aa9a19e432029"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/InMemoryConsumerCommitTests.cs",
+      "sha256": "ba7454f4b35166b108d5d5bbef8340cab7ec0f8961e0cb0bc14f78878fc6dedb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/InMemoryReliableInboxContextTests.cs",
+      "sha256": "2f7af16397a835c81492c20995901b74026dc25f555e567f185fbbb238663137"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/InMemoryReliableStoreTests.cs",
+      "sha256": "c0444602accbe813ed179a8d438604cb5c5373521b34e12a7111cb80910a8a19"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingProviderGuardTests.cs",
+      "sha256": "28378d582bf461b970bf3c439f98517fce5585ca6790024df3a35bdd8a4021cb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
+      "sha256": "28abbdaeccc928891ad98e34c4dafe0f7cb8b2c366b4b9b7964b90a59e3ad97a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/TypedDurableSenderConfigurationTests.cs",
+      "sha256": "0c82802017e86a595cb5654e57617ecd84bea1558be819f438416ff71488c3d0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Events/BusReadyEventTests.cs",
+      "sha256": "a0a1dee4a38e54ca60be3dc19d660becc97ae27ab61e90badf82678c8391fd2c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Events/FaultExceptionInfoTests.cs",
+      "sha256": "3ca3279c645e2954ab33c5788e937e634211b926230b62074a83d6a26436f047"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Events/HostReadyEventTests.cs",
+      "sha256": "95857e67ff6c84cdfec93339bf1c048f261f9f3314f641460e226a9b48b6daa9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Events/PolymorphicFaultDispatchTests.cs",
+      "sha256": "0baab4e6ce24f860f41d9cb697effe305292efd9c60cd1fa112f8800de9d1a76"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Events/ReceiveLifecycleEventTests.cs",
+      "sha256": "69f90129104d44b13ce38a03352eb9a590c05a08b69c0f5e8d24cf6afef446e1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Exceptions/CapabilityExceptionOwnershipTests.cs",
+      "sha256": "1539fa725723a19941967eb186d61fa0b220662d11a704335e90f8cc9edae50c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/BatchFutureIntegrationTests.cs",
+      "sha256": "5fa102239165e33488c5f157c3146636a55bb4f1ca9152bac49c115cb86009aa"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureBehaviorContextFactory.cs",
+      "sha256": "84c864a0ebdb0b7893b40132add62b92287d29026337eb03a681342d049de279"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureConfigurationContractTests.cs",
+      "sha256": "9717f2ca553956c0a29a4aedd8c3c44c72130e5986dc59cf002609db6ef855f4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureConsumerKindContractTests.cs",
+      "sha256": "433a0f54b1c62f2e97877043be947216910574b80c7da98b613a6e984ba75307"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureCustomRegistrarSpiTests.cs",
+      "sha256": "b41fb445e80642f809410bfd9e3d79ee6d786f66e3e2a0080f2a6c2b5e2bea21"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureEventAdmissionContractTests.cs",
+      "sha256": "0a301c9d10843186f514df15382fb8250a4789cc57da5d17d5ce1b3cdc32bf2a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureLocationTests.cs",
+      "sha256": "9e8418f076c6da82cb4ce4d57a9398320ebc958ea05246c427758ba7d5e23f10"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureMachineOverrideCompatibilityTests.cs",
+      "sha256": "259dd1ff66484ce76218ec449d63da43d43aa1938ec6c1c9d334b462812a5c4d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureMessageTests.cs",
+      "sha256": "45801d45c5a4898ec4d8bef9a57c1d5184200be51bef006136865b5e02611252"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureRegistrationBoundaryTests.cs",
+      "sha256": "009745b982e7e431dbdf1b3dc672d8aeac04dca362d10180b5c3739d167ec54f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureRequestConsumerIntegrationTests.cs",
+      "sha256": "37908844d0b495aa73ed86e80cc912a40d96ac6a5ecc0e6842743b65c7f574ba"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureRequestDispatchContractTests.cs",
+      "sha256": "536a05830e23c97d13f43e61e543ca6d04d4171c30ca1191412d26ef379953b2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureRoutingSlipContractTests.cs",
+      "sha256": "6cb9091bdc2f997c5e4f4a0f05418e981c7c2056f5fbc0699566e101659cfe82"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureSameTypeBusOwnershipTests.cs",
+      "sha256": "11c71cf193faa1b7b571566e58645fe2f4525309df102f03142122ead36467ed"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureSelectedDefinitionAndSharedEventTests.cs",
+      "sha256": "ce7c5267732bbac811bd0eea1fd187a5eea94812820328943794f4d46dbbe632"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureStateExtensionContractTests.cs",
+      "sha256": "a5ce0a287d988dca45b899e88a3143028e8bed4f80cad90f22a20e4cb926af98"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureStateTests.cs",
+      "sha256": "cdcfdda25d15fc4ea957fcfbd27994b333f1d1036c11d71b10a61e8b347852a4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureSubscriberFanoutContractTests.cs",
+      "sha256": "4eb416593ca98b302ab029b604bf4d8890416825aecd784e574be2f68461ad24"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureSubscriptionTests.cs",
+      "sha256": "1f5dc863bbc13c3545641263c7374d6143deff7ca59d2eb1c1d45d90053bf537"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureTerminalConfiguratorContractTests.cs",
+      "sha256": "bdfbd200eae222c4d17eec704498f60b1c0cedeed3f70f6cccb96741015d63ce"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureTerminalDispatchContractTests.cs",
+      "sha256": "462dc773e6006ade322120f04d5a4473d24fbdefe87dff88c4157fbcf3b9d8ec"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Futures/FutureVariableContractTests.cs",
+      "sha256": "b99b5a5dbaf2d294d8a3f099b1c970efa4ab16c58d5fa0a432c3d33012eb27ff"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/GlobalUsings.cs",
+      "sha256": "ae580d7c99fba34f66ce0f433556ed9996fe28a409a049e9f9309a9bfaabed39"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/ApplicationOutgoingOptionsTests.cs",
+      "sha256": "bf41f9dee09a999bd6a4517b56e9321a6aff0c2c2d3b3f8f3c428226d70c20a2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusFactoryConfiguratorTests.cs",
+      "sha256": "6f9ec8d0c1889b5f32bb0f1ce75f967a3bba5c790367643b93260406b6152335"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusLifecycleTests.cs",
+      "sha256": "7159b8ae98c4374d15699b040e4412fcdee9002cf3a462556069cdde8a3f6962"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryDelayProviderTests.cs",
+      "sha256": "c974bf4ac935f7500a8e2b0be04234ea18d0fe4c5200802600816f04a40117c0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryDurableSendBoundaryTests.cs",
+      "sha256": "bd6f2a6320bca992edf9359c77c70961a0588981783a03d213a2b5ecf00c037d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryDurableSendIntegrationTests.cs",
+      "sha256": "3018bf860d4a96c6e9f02c359e28249b2d6ca2ed5823301c172b8a7209e92c91"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryErrorTransportTests.cs",
+      "sha256": "d571c21b39097eb559add7092f2547cd030acb133ec46ea62ec6673762795c0f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryFaultPublicationTests.cs",
+      "sha256": "eddd552aaa9b70e49d4965022db96c3d43a8f0fd3038b083fa3f5c97eeba3634"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryPublishEndpointTests.cs",
+      "sha256": "74ecd1807986bb8ae2cfa81692a713fc5693bde6b5d4c1b188a69285b219ffdf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryReceiveContextTests.cs",
+      "sha256": "391bda44d91823b336e2e0ad78a2a0f6bb517d4959a8948014cc1dbe23b0c576"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryReceiveEndpointConcurrencyTests.cs",
+      "sha256": "01d8376bdcd676eafedc5445aead6320ba39a8a849556a708d3a0bad956279e9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryScheduledPublishTests.cs",
+      "sha256": "0aba186d13bc1dddf3d43a14eb9a38e4e9a025626fc269734d2c897eabf76623"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemorySendEndpointTests.cs",
+      "sha256": "21a7a9b9f9263c832237d927ff5690ca602b98d8484d7ce705e3732c24928c70"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryTransportBoundaryTests.cs",
+      "sha256": "4572c36ee2641c0b845a5151073e0dae5b1a01aa19b95b3077f159ca8bd22d71"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryTransportHeaderMapperTests.cs",
+      "sha256": "2338aa730d12fb73fb7ef54a73ba3615a7baa00e9ba7dee9318f310cc8f2829f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryTransportIsolationTests.cs",
+      "sha256": "60da5f65b8a1f2ca760bcb46e89f032176e1fbfe01676433eaf2fb3aca64c6dd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/AdvancedMessageInitializerExtensionsTests.cs",
+      "sha256": "0a11eea8809af157b3fb12da536b2ed4b815cc46d23a23dbb13f05abff86f5f6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/AdvancedRequestInitializerExtensionsTests.cs",
+      "sha256": "7535f9dd64385b0d3338b34cc733e6de2b2e50750116258ccfac953bdab1671d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/AdvancedScheduleInitializerExtensionsTests.cs",
+      "sha256": "83b5690fa71bd01372737ad2612c72c16683a7f8b81195d14a4204a9011dc4e2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/Contexts/InitializerContextContractTests.cs",
+      "sha256": "6fe190ad0f606b39232070d68b7ab85c0e09c9406651aae1c123030924c88def"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/Conventions/DefaultInitializerConventionTests.cs",
+      "sha256": "2db6c9ef07ab4548a6066a4730e915f494de5a86d0c66a9f924d5968077f75b9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/Conventions/DictionaryInitializerConventionTests.cs",
+      "sha256": "d5cc7415b609b7acf39f0860f83dc885383883b80c65ea8ec24929a5e94bfadc"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/DynamicContractIntegrationTests.cs",
+      "sha256": "44425fbe7e684065da9c349d5dc94a85734c1a75275cff5d1cc713ad3bcbb49d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/Factories/MessageInitializerBuilderContractTests.cs",
+      "sha256": "95ec65485480c702bd5e54a578a7b31600845c59b1b46178e66343dd3bf42649"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/HeaderInitializers/HeaderInitializerContractTests.cs",
+      "sha256": "a017c607a41ee53d1bace7a560ead82edcf1664af97961b3a228e6ad558475ce"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/InitializerCacheOwnershipTests.cs",
+      "sha256": "0fa333ec290cc23da61c3d29538e4e951b0bd3295381e01e5904be6f00b56ddb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/InitializerConventionRegistryTests.cs",
+      "sha256": "78ee1297411a2af9d70892c66b02db66a8f1a8082e87298d51901cd38ee1aadd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/InitializerProviderLifetimeTests.cs",
+      "sha256": "0036393dedbbc13f90292eff745e18f1d19db796db381fe1caff9f2676cf42ce"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerCacheContractTests.cs",
+      "sha256": "3be2a02e1c321f94e3327698e8a4ae9c48c0a08579bae26763096f8106d5cde9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerContractTests.cs",
+      "sha256": "c7dafd416b00cdf348284891832c24c0036e60913d52645ffbf812040062025f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerFactoryContractTests.cs",
+      "sha256": "75cdc2328dbbecaf0c2c1d5942409b188a74834839b3a8d510c646340531b159"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerLifetimeTests.cs",
+      "sha256": "3e0b78d7b9db228e45d3b78d2fa8ba89b19abc6dfd6eeb479c47b8d23646409b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerObjectGraphTests.cs",
+      "sha256": "3826219e9dfc3f7d6218a770bd3cae343b9dd06f865c64508659d2639959a5d3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerRequestResponseTests.cs",
+      "sha256": "8c3283d0b949c0f38622d4cd3f672c56472cb78f82be8e0a3cf27ee2c1a251bf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerScalarConversionTests.cs",
+      "sha256": "5bd09b51752a70e5823df57e35db696e42ef502adedafbd78abcf0727eceb035"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/ArrayPropertyConverterTests.cs",
+      "sha256": "aef9bbe0e9fb6fd019555b8583c82814e3b928eb17452eec8541557647ea40ac"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/CollectionPropertyConverterContractTests.cs",
+      "sha256": "5aeee57c5e427f4ffef375e513ba73a46685de3db3480ff8d879379438f53347"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/DictionaryPropertyConverterTests.cs",
+      "sha256": "97a5d23e45df958cc06f40208f11789e1311884b4a959ec81f1bd3c06d4928ec"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/ListPropertyConverterTests.cs",
+      "sha256": "9ff4600a7a27a7ca9396b3909e696220acbf0bfe16dada0e3d118a496f5778ac"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/MessageDataPropertyConverterContractTests.cs",
+      "sha256": "671c1642884adcf945c94a16b8347fbb8107f45701cfa068ab6ca4d79cf87d1c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/PropertyConverterContractTests.cs",
+      "sha256": "73cdbe5e9437f0eb5277257a422bb9b6a8b48ea0b7e579bf74285584050869bb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/PropertyConverterOwnershipTests.cs",
+      "sha256": "d797a75f7acefe9986b1cbd9cfea2d0a9812b6ba409bf47d20750e6dffd2486e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/ScalarPropertyConverterContractTests.cs",
+      "sha256": "b2d827cc603857fec449a32a6c28e5afd6f4fbd20b61738cdee46dafa4ca211b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/ScalarPropertyConverterOwnershipTests.cs",
+      "sha256": "5bd282188be7b39fd1fd706e4291645547f6a3ac4490d9bdaba0fdeec8daf503"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/StatePropertyConverterTests.cs",
+      "sha256": "88344627ece29d33cadd9d5f2958d7004f2854e3202f3d8693e8e366e0e6a836"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/TaskPropertyConverterTests.cs",
+      "sha256": "a008fa0ed51263cf0be864256482606431db7c04511016516a111a08db3e8deb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/VariablePropertyConverterTests.cs",
+      "sha256": "64b2bd74378b082b422b73a3f58692421b48655187430f44228af8ecabd6659f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyInitializers/PropertyInitializerContractTests.cs",
+      "sha256": "525a44ad976c3080a277b6e8c0a7c248d9eb9040fa3c5e6c86888c9ceabdf985"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/AsyncPropertyProviderTests.cs",
+      "sha256": "9dfe0e26444dbc17e956a42331347e2f6429b46d7e76f71df6d4746922404996"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderContractTests.cs",
+      "sha256": "ce112399d3f9ffa3c085dd668ed1330a01a400237eac415c78480e2825bf42d6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryArrayTests.cs",
+      "sha256": "dd49fe62d762b7dd2018d67314c8181756f84a48bd9702044010b11242341259"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryContractMatrixTests.cs",
+      "sha256": "b9dcaf16b44d5fbddf097668ac8729587b7d70b6052bded63d221375328d52d4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryDictionaryTests.cs",
+      "sha256": "b7dc62987d9c723f34e7fbfe882ada9a1a5f81f12786f48e968dcb9369481a91"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryObjectGraphTests.cs",
+      "sha256": "00485fcf15747e677d26d879332476c9c76465d12539a34922753fdf68547d44"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryScalarTests.cs",
+      "sha256": "b23aae3e7d9e94cb073e1221fe11f89c64a62eb277801c01e21fa429ad86285d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryTests.cs",
+      "sha256": "f695be7e8a643a0a294b873192b9d491d52b9b617f9a9b59db9fa8462e7fc460"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryVariableTests.cs",
+      "sha256": "8f4fa00ba09a54c8ffc21d23f073d9a1f423662485c402d6a3b08eada777f97a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderOwnershipTests.cs",
+      "sha256": "6e031180403ac463d470ba4eff8bcfcb717053c682836d6cc88210af30ae7525"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderStateMatrixTests.cs",
+      "sha256": "5ef97bba9a2a0fce4b0e859edacb42849807e2d51c2294b8f9d3909b8447f249"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderTestContext.cs",
+      "sha256": "cc512bee9f32eed59a33ba70179bcf12ca4226a5e72ccb953dff161f060def6b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/TaskPropertyProviderTests.cs",
+      "sha256": "59f768aa40d66c7a0aa5f714a8cc412c6c0013d60359eb4c399bd5faec9d187a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/TaskInitializerExtensionsTests.cs",
+      "sha256": "eb5c6be876397d9b791abc115b853e79c1b62766c243ad2efe0b7b9e8d7c86c7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/DateTimeTypeConverterTests.cs",
+      "sha256": "673d24e180aa900b3483dfed938612f1a6c89c4a64d152f60535d77b42ca3cc0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/ExceptionTypeConverterTests.cs",
+      "sha256": "959005a0e0703c9e4b4b0f7c7897cb56f0f1b0a0c91eee7f8622e72f43ae2081"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/NumericTypeConverterTests.cs",
+      "sha256": "56fdd74c32081491ce512b361706ff68f5f30f71b24d2cfa1f2a17ede8fcaacb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/SpecialTypeConverterTests.cs",
+      "sha256": "788fd496b967d7cdb60a010aea31156e79f6f8e6621887756684c6a3d624c6d5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/TemporalTypeConverterTests.cs",
+      "sha256": "f6ffc601483e7ed29967b8958169a439bb57afc058da4a283f374f3c4809bf81"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/TypeConverterContractTests.cs",
+      "sha256": "6bf279b6870bc2a121f6cbd58831ad046a4dec79bed0dc3745adaa96eb64a719"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Internals/Reflection/DynamicImplementationBuilderTests.cs",
+      "sha256": "130d4ff97f343aabb0c5a575ff0b8bd400aedada6dd6351e599223581cd16fc7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Internals/Reflection/MessageImplementationCacheTests.cs",
+      "sha256": "871c82d628d8e26820300398c3107df85aa863c734d6ed9bfe894326a131f0dd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Internals/Reflection/PropertyCacheContractTests.cs",
+      "sha256": "a1b14991ed65d734175a54222ce9a04535d730a3f0183e95910b3aceea5af867"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Internals/Reflection/ReadWritePropertyTests.cs",
+      "sha256": "be6daf41710b5c9cc99d2656c1dd1dffd23cef3ee5008bc94ebac466afa76de4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Api/ApiJob.cs",
+      "sha256": "e0491e3be6ff10859dc8988e99859c2153f42014f0081f4beed236fa87f52114"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Api/JobServiceContractArchitectureTests.cs",
+      "sha256": "bafc70219b32e60a1426920b05965d21919c2a2db41038960d8626e788aa7bd8"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Api/JobServiceEventExtensionsTests.cs",
+      "sha256": "562d02fb03d8f4ded819fed0e4eaed961fd33dc1ce3d557384582e3ab96ab046"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Api/JobServiceExceptionTests.cs",
+      "sha256": "c7849aecef9272fa1259b23755b863134bfa7b13270eee816a75d8f0514b3aee"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Api/JobServiceExtensionsTests.cs",
+      "sha256": "d4dee186f7955e951d5c39fb59ce73c780213dbca7160642019d258c77835164"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Api/JobStateResponseTests.cs",
+      "sha256": "1f9312b2166103bfd903c635b2c1242eeb9d4db99ab84fdd4a3ee8c3ccc3c9d1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Api/RecordingPublishEndpoint.cs",
+      "sha256": "987ac07b42684db3abe679a86cd00c2b1b6e49e2c1d3072c462ff1482c43e80b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Api/RecordingSubmitJobClient.cs",
+      "sha256": "3b48e91bfc3d472ccf5f32dfcb7d7bbb4a2baa97e9d27d3cc5e2f409a09db538"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Api/RecurringJobExtensionsTests.cs",
+      "sha256": "140ae2e65ad4c2db9aa1c27608eb52d3daac80443f73cc2625c29b4dae46ac11"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Api/ResponseFactory.cs",
+      "sha256": "fa4a9d6b00f279f3ec3e9bbdf186144183cfd09a7b9c4d6fd277eb5e3e8e2034"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/JobConsumerKindContractTests.cs",
+      "sha256": "5ae3fe4b201f0889fc964416dc1e91c78e6844e8b8194e6109d0d6f4e22d0ee9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/JobConsumerTimeProviderTests.cs",
+      "sha256": "20676fe56c86d030601f19e107162a819f5b59e677a3d0c16d796507406bec6d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/JobSagaPartitionKeyConfigurationTests.cs",
+      "sha256": "f73e9e8e213a35fcecdc7c66a938e7bf35658c03ae268bbf2b30352d7fd689d4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/JobServiceCorrelationConventionsTests.cs",
+      "sha256": "0efc2bcc35794aff8b2f17131a418ec8dbd2bbe5b401a31bfe0d5c89b805a468"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/JobServiceEndpointConfigurationTests.cs",
+      "sha256": "a4198ec9afb5d8cbd9b9914bbe93041ef2dab05dcad8e8066ddcdc0d91911d71"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/JobServicePublicConfigurationApiTests.cs",
+      "sha256": "f0a44850b968373fe331b1d3596847e3e918039f3dc0b146d75162c330135dd2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/JobServiceReceivePartitioningTests.cs",
+      "sha256": "b765572c54e60e4acf2589a9f17e341d78f98ab469efe63d2a3e9c86d5e4b9bd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/RecurringJobScheduleConfiguratorTests.cs",
+      "sha256": "16bf0609b8bd7f86a730b65e044d4ba6f085321783e5c34fd3be5b1d1f3ba2a6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Integration/ContainerJobConsumerDiscoveryTests.cs",
+      "sha256": "b457b6448506458c5e7e4c1c62f80100102d13c43d4f62cb22f1090587db7fb8"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Integration/ContainerJobDiscovery/ContainerJobDiscoveryTypes.cs",
+      "sha256": "9aaba201744b383a4ed9a1b5154a73a9f27c2c8fcb5883749c5dc51e31a67453"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Integration/InMemoryJobServiceTests.cs",
+      "sha256": "49de14dd4584f360e804650814b6ce28647e088d78c38f95ec415f1b81429994"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/JobService/ConsumeJobContextCancellationTests.cs",
+      "sha256": "72b1d3ca7fdb99e3e71b6620287c73a42866dfa5185f181358f8f95b26b681aa"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobConsumerMessageFilterTests.cs",
+      "sha256": "e8a05ba01f6048410bfbd66c24dc485bccaacf993e60b06f052f8fc28bbb6d42"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobDistributionStrategyTests.cs",
+      "sha256": "152a81db9ff28a6e4f001f426e23f164edf07842affe53b4fe86d547e59f1ca1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobIdentityTests.cs",
+      "sha256": "545f204428f10409082f3a054de899725846bfe7845012e25b34263c4b4afbcd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobProgressBufferTests.cs",
+      "sha256": "985af2cd75bbceaaf2fefec9d29245ce1f374b3ed6e755aa6113a6d861253f4d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobServiceBusObserverTests.cs",
+      "sha256": "e2c6f242a38e67e08e3bdabd21164b9985f4d0787bfa1c18654574aed01bcb2b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobServiceLifecycleTests.cs",
+      "sha256": "2ca0b7a6225cc58b5b299975d90a619e6c7721e2119df0e08a6e2406ea6f6ea2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/JobService/StartJobConsumerTests.cs",
+      "sha256": "3fbc7ddb3a458af8799a21e8af8e6eb1883e6b24ad0835d7eecd6fc896eca7b2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/JobService/SubmitJobConsumerTests.cs",
+      "sha256": "c13bf82d6aa3df25d7a40a8db811354c9368cd54fd0703fd2ca94952508e8567"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/JobService/SuperviseJobConsumerTests.cs",
+      "sha256": "49fa64b465cd40b14bc7fbcf1ae2f25197a69d382f7ce8d077e2bb0ef2b0e238"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionBoundaryRegressionTests.cs",
+      "sha256": "cd9dd38ac0326b2f4e5d620df777465d7b09d30495308c6ed95740e528fb55f0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionCalendarTests.cs",
+      "sha256": "fe063ed8637b047897a1d75ae14fe3931b57d7abebf152ef31ae4be874409e5e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionContractTests.cs",
+      "sha256": "9a4c3dd6f086ef374a94cb13284a920203f98af0865d0b11461918f251da672c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionDaylightSavingTests.cs",
+      "sha256": "cde18001254d96c5dcae487803e1aeb2df430ed7278a95ee7931bf60840a82af"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionParsingTests.cs",
+      "sha256": "6adeeef4fd6fc33258349f1812a48601f391dc4b7e262caf886e80c69017de79"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionSchedulingTests.cs",
+      "sha256": "fb44df10066f3efbf3e8d22b354c29c8edbe34abb327792cc498dc287e5dcbd3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/TimeZoneResolverTests.cs",
+      "sha256": "6fc8ea04cac2f4d77d7f75291f1bd3c8050579d1839ee3122c81569062e17e2a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Serialization/JobPropertyCollectionTests.cs",
+      "sha256": "bf4066af153b1b26baf1fc4dc9a7f00035dbd8fc8104eccb20ec26fc65050513"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/Serialization/JobPropertySnapshotTests.cs",
+      "sha256": "777a3ea2d070269eb3b163b350e9f36138c2720f6372a2ea9f5aa645594c7c7a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/StateMachine/JobAttemptGenerationTests.cs",
+      "sha256": "f0fc80cc344fc8eab22e35f45a1c52f0c8f8cb55f138f92641f96021edee8b8f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/StateMachine/JobAttemptStateMachineTests.cs",
+      "sha256": "41bc116c8e2972baf72b3b992e81898c6809655fddf82b7b0b34a63c12bbe2f0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/StateMachine/JobStateMachineLifecycleTests.cs",
+      "sha256": "f6e65b9dbe99d5b251ef643ec5abbbafee175091487f145f4eec038016f69de0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/StateMachine/JobTypeCapacityTests.cs",
+      "sha256": "1e8a275cf55894b54bb2db12017650a049e0fe4d4bba871d563c180171b8f6cf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/StateMachine/JobTypeStateMachineTests.cs",
+      "sha256": "a2b1afbf33188018f6c16e6ee58a86f4117851b0f58c3ec25311badbb1c983d0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/JobService/StateMachine/StateMachineTestScheduler.cs",
+      "sha256": "fc51c90e26587044d3474a86809751830778292b7d4fd7a026c36363b2256e10"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Logging/LogContextTests.cs",
+      "sha256": "337fe1fad23c817bef74c33871a53a1f8f9c515be20a4a4234aa74dad986729d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Logging/MessageActivityTests.cs",
+      "sha256": "246b6cfa420d6573214d77bbc35fdc596b81db63d07fc51103c041cd46bb00da"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Logging/StartedActivityTests.cs",
+      "sha256": "2da5175aacc75645e9f59a15221acacf4abfb881b6e33683f1a950481812b348"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/CallbackConfiguredDispatchTests.cs",
+      "sha256": "e3bec20c38da5e4b27d474583dcb70fab612c0cd4970d8ae63e9be6a2d292cce"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/ContainerMediatorIntegrationTests.cs",
+      "sha256": "ff9f0ef0527400572766c245873838ad9d559222d8f2b782eab27bf07baeaa79"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorMessageBodySerializerContractTests.cs",
+      "sha256": "b0f92c2839b11f543fb69c6908a519df8cd1b014658804c55ed45756c06c2ace"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorReceiveContextContractTests.cs",
+      "sha256": "a7a38cf6ff34273b82994b1d84dcbb4e7d0d5d1a894a0e3bdef29a73c8f5626d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorSendObserverTests.cs",
+      "sha256": "091b3833eb6194f9ecdd507c2de4168d4225ae8ce4f74820d17fd9da874fd24b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorSerializationContextContractTests.cs",
+      "sha256": "cfa5b3fe2a059db66a40b96e35dc1fab452aa24efbc8466c686f9a82c72044b8"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/ExpiredForwardingMediatorTests.cs",
+      "sha256": "8cafa982446614e6707f5a576272a384d6184850e8a30e3a60066d32702efbdd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorAdvancedApiTests.cs",
+      "sha256": "674ac1dd355fb46862d57bfd43f1ec91a6988d1b3e20d006466e03fb009e1276"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorConfigurationDependencyInjectionDeepContractTests.cs",
+      "sha256": "61af0432130f57ec1addd447da5ecdf5a5f533bf07c242cb985dee407fa628ac"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorDispatchTests.cs",
+      "sha256": "3eac56e51d02d610797b738e34819beb1394f63dbfb68bbb32c8dce9d0b7b533"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorEndpointContextDeepContractTests.cs",
+      "sha256": "d989c6d96e06d3b8ca518a4e9b225bf675801f0306bd1b0f03b53780212830b7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorFactoryContractTests.cs",
+      "sha256": "57019971c7e5d0645cfbca8151160dbe05da667a3cf43f6f2a24d443916bce5c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorObserverContractTests.cs",
+      "sha256": "a82dab948a6a64cec7cceb5fe3f57e4a51fdac3831a08a6345589c404ee5634b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorRequestApiContractTests.cs",
+      "sha256": "964a7d60630007235fc9eb8b897788fdff0fa8edecc25afa9d8608b8ad346cd9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorRequestHandlerContractTests.cs",
+      "sha256": "0a2651c7df921a8468e2ae5426992ca98d87be4a96b0bdf61e5ccc7ef60c2f0d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorRequestTests.cs",
+      "sha256": "05bd40508e84abb5588ca5ebf5fee69eda9458ab304ed7f953946a1d8aa4fb91"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorRuntimeRequestDeepContractTests.cs",
+      "sha256": "68d84843b61d852891813342330eecfdc6e9a4b199b53c67eec5d3f7b9302f28"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Mediator/ScopedMediatorContractTests.cs",
+      "sha256": "8ae36e989992be106529909f5e0918ecf8d350a3f6cce2a97fbb2e2d792635a7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageData/AesGcmMessageDataEncryptionTests.cs",
+      "sha256": "9b57cdec59f49d56fbf2d046bd1a1af9d6fce145404c70d7d76c9c3015db4d20"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataConfigurationApiTests.cs",
+      "sha256": "f530c69363be9747a404271e48dfcf770f0c79ac1762e05c69ecb86145e36140"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataConverterTests.cs",
+      "sha256": "db4ec731fe6a73df48bcdf8f53a8f53f4d22013800881369d622390c4c3075da"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataEndpointIntegrationTests.cs",
+      "sha256": "90053870da07e2c67f987e480d71ad06ffff4c3c38292f7def14989a936b18f5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataInitializerIntegrationTests.cs",
+      "sha256": "4b27b66304e22b9973a46af886fc47b6d4894c55ddf9952ba806ff3e13213576"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataPublicApiTests.cs",
+      "sha256": "7c213c5539aa14c805333353b6c11df669772f0732c5467c990676b7885232cb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataRepositoryTests.cs",
+      "sha256": "20b9611a5e4f16e5f6b604ee22fa229911d572cea64f78528edbac4ceb89f526"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataTestSupport.cs",
+      "sha256": "5d32f5b8e0418b34377d3ed0442a4126bfaf8d24a320c2950c1528a0a45eba76"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataTransportIntegrationTests.cs",
+      "sha256": "02919b113b7a0c6618691b0b0d521cb0651186a36edd031cc9aca9ab1a1deee5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataValueTests.cs",
+      "sha256": "a81c7c773bb8f9809b649c37d89d2cbe1fa37f02d638c591383ed4c33ce4ded4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageData/PropertyProviders/GetMessageDataPropertyProviderTests.cs",
+      "sha256": "cfb35b62a1614916d82d0a61f4003b33898c6828581a3b7292281143eb6490fd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageData/PropertyProviders/PutMessageDataPropertyProviderTests.cs",
+      "sha256": "9d579e4537b5524a2544a58ae0cb3fec867f0a77ff9112e661fae66b82f83f95"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageData/TestEncryptionKeyProvider.cs",
+      "sha256": "87eb71a6d6028e0b4d836d4e0c1c96ec82db317edba3d4e46856192cf69aa704"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalCaptureFactoryTests.cs",
+      "sha256": "1b012ede0269a186f56ef2d589abcd49bb59bcbd66c54bd01f423c6a28f2d406"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalContractTests.cs",
+      "sha256": "aeb326dc46bba2901095dc459b170e18a64d4561b2dcf165d121a7190b6aec96"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalIntegrationTests.cs",
+      "sha256": "d833d4827ab279a62d154406e3fa0c967d37ce10c06aecc7ca203fd9c16f8415"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalTelemetryTests.cs",
+      "sha256": "6c0f5d020b7dd527f400745a4b5e7e21ed4a008a45e5e2ba735cdf5349226682"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalWriterTests.cs",
+      "sha256": "88fbeb65a015ac2821b1a429d91ff3a0e20df5641357ecab302094a555505787"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerFilterTests.cs",
+      "sha256": "be8cf575fe19ac370e0734bd39d7fd971b2d3e54460530bad15aa073f202ea02"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerSettingsTests.cs",
+      "sha256": "d9d253cabca4527324e33907b4520e83502908d82c15f8ab48aa5f70eeaffbbd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/ConsumeContextPayloadPropagationTests.cs",
+      "sha256": "5b92836b39753718161abe888b6efdf1978af36e64b8deb336b7e6ff3d012ed4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/ConsumeOutputObserverContractTests.cs",
+      "sha256": "1d6f7bbbb1037f6148afe5e78698d1e6978f51cf582fc7d1f3e26aa388420c00"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/ConsumerIngressFilterContractTests.cs",
+      "sha256": "9bff0f365640a3bdc4d4724fd96670d318636e2f1b005dc63110dc8e4b10d379"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/ContextFilterTests.cs",
+      "sha256": "98fbca7a15619fae572e88c6d56f9c29709d70705e0bd581b5dc8fa3a6da33d4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Contexts/BindContextProxyTests.cs",
+      "sha256": "b0cb3df3d3889b3ea5644021d0a6b9dab3591387d7b18b69a9a6db48a4df1535"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/DynamicRoutingTests.cs",
+      "sha256": "e01d746ed88b5be3a3d134fa47a198ec79fad3fcde5fc3e3dd87553c17e54c5f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/FilterObserverTests.cs",
+      "sha256": "eaa3b0e2d7d864f81efd3e4ad087113c8d2795a47a42a48e20a53fe63b993609"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/ForkFilterTests.cs",
+      "sha256": "284feb12bdd650a97d60b49593f1043a96c90b6adf8f27b07dcadfbf6a8cff38"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxCheckpointTests.cs",
+      "sha256": "f43a6eb522d39deee008dbe6cdf87e21df995b551a624b71bf5f7d18bb2b5916"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxFilterTests.cs",
+      "sha256": "0b94563a111bea595404cc5f8f268fdaa143021ab2a778877443384ce6733585"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxMessageSchedulerBoundaryTests.cs",
+      "sha256": "3329936122c48cc1ad636d61388f4c87fdc8fd638a64ff4f2bd9285853120beb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxReleaseAdmissionTests.cs",
+      "sha256": "46f678e1961bedcbe950d174b2aa93a8abb6bcb45ad7e0fbff6cf3d28ad5967b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxSchedulingLifecycleTests.cs",
+      "sha256": "1025336d56a84ed785020733fb8602d1268a6ab6484423347d8faf804d80c4f6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/LatestFilterTests.cs",
+      "sha256": "e2c9af555a72deb0b617f39423b6e4817cf2add0f118674f5d11ac224a5207c3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextHandleLifecycleTests.cs",
+      "sha256": "5ffcf56c1aa1619cdc2a1ef42607daf515d74059efbe22115f2f901bff793299"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorFailureTests.cs",
+      "sha256": "816fa2a0bb0822f47eaaf2f4ecd4f2a0bd60231b68171aa0376c631e9bd172d4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorOwnedStopAdmissionTests.cs",
+      "sha256": "4649a2b9604a86b7c8bb5f82d0530d49a4ccd68ae6c4b17f5e791c5ceed2ff59"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorShutdownTests.cs",
+      "sha256": "b584ffcfbf65bb015592a0928fe94d3cb636d3f8e90d1deb27f72327d084eef1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorTests.cs",
+      "sha256": "17052f6f2307ce828632628de66e0e5f9fc016207cac1dc51471963ce6544691"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/SupervisorAgentCreationTests.cs",
+      "sha256": "a81e9dbdb38702ed7040c32d88892e56e0b140fe641eff45a1573657c8d6d62b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/ObserverMessageFilterFailureTests.cs",
+      "sha256": "71f6070027c23791caf961157ce06f73d127ade393c9e9b7575fc0d29d4a7ae9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/BusOutboxNotificationTests.cs",
+      "sha256": "d936434f6744ae891ab2445e5f22f6e8d116af450608d241408fd74c8bf08d13"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/ExpiredForwardingOutboxTests.cs",
+      "sha256": "e89035bb1c37e043520ee4200ffe07e9883b40405bd509c0461acd0ca77632fd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxAttemptIsolationTests.cs",
+      "sha256": "4fda2291c45d8d94a0ded7dac909f537da68205b075e9d25346fbf3e10649bfb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxFaultTests.cs",
+      "sha256": "8a854afd08368caa092285393a4a44d40accd42a001b838203f9fa8dfc8a1526"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxMessageRepositoryTests.cs",
+      "sha256": "bc41dfe5c17dd04274e0c31583d1c718cfe7121cdd877869935216587f1113a3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxRedeliveryTests.cs",
+      "sha256": "b63fb6446b681f1ad36de2d6dac011e5a779b6eed84ee8a8dd9e53cf7e0218f5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/OutboxSendEndpointBoundaryTests.cs",
+      "sha256": "892b316632d78c9eb772dcba9f0386f1bce71363fccff981022045ff8e9f46b9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/PersistentOutboxCancellationHandoffTests.cs",
+      "sha256": "d157d721a462c9da30efb763872a80c28e30e3d6bd105da1ad314a82a9ca989d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/ReceiveOutboxCancellationTests.cs",
+      "sha256": "46206065caf3739aeabafae408f9b30090ec5f8abd43e85e0e3b1d0b48c95a55"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/ReceiveOutboxMessageIdentityTests.cs",
+      "sha256": "d321349205abd412694d227eb9e9f9905dab994e23c280897f344df3e028031f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/RequestClientOutboxTests.cs",
+      "sha256": "79d156a3ca618b9e835c482c8f8f4faa60150b5f5b0da0cd0753774c964b9fa3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/OutboxConsumerIdentityTests.cs",
+      "sha256": "277a4386a4136e73a5b99741b8a5da0b9f018ad834f3d4bcac9ace1b161d029f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/OutboxMessagePipeTests.cs",
+      "sha256": "960f4369d0a340e2079e6d98c89e093217912e7be07d492d3f0251f58c85fcd5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/PartitionerTests.cs",
+      "sha256": "5ef9cdabf65393adf4cdddcf175575233bba696fddc6d0be9f97486b204b5335"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/PipeCompositionTests.cs",
+      "sha256": "1654440a69015ee0e9c212d5282ffbce0c396bc2c0cd720c43d58e5e735a8ff1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/RateAndConcurrencyLimitTests.cs",
+      "sha256": "42f30252f0c58e7930171b3bf4fa3f3bbbc4d9e701896387c5ab98b92568235a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/ReceiveErrorPipelineCancellationTests.cs",
+      "sha256": "3b7e7de0e68a57725d07105899c7ce9b72aa02eb5713d9153598a0e3cedcf591"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Redelivery/DelayedRedeliveryIntegrationTests.cs",
+      "sha256": "d69db70ace6173bd467359daf89cca0670b51e2c5f64f9eb48aced73705b64a6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/RequestFilterFaultTests.cs",
+      "sha256": "29e83aa954a5db059aeb918e3404189569cda1148e65bf626efdbf811a4a5c33"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/RescueContextProjectionTests.cs",
+      "sha256": "808e96de85693e3d657bbbe19c520fb2ad3c8da55fcc786ba2dee110bd56363d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/RescueFilterTests.cs",
+      "sha256": "fbfa8e14c4fc73762ea275eb9b20d68dc2c9f627f0d51bdcfea45c43e35b459a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/RethrowErrorTransportFilterTests.cs",
+      "sha256": "a6b757f488ae6737c809714424d9a3b344a02f8561b61e52b0e3258b464f28b6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/RetryBusObserverTests.cs",
+      "sha256": "17659eef67d66556021b390bafa157e528cea9268daad60408cb101b8623e0b5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/RetryFilterTests.cs",
+      "sha256": "fba70f741f05c85e6f171690313e3c7a48ba0db59d92fdbdfa459f4e8eb75036"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/RetryOperationOwnershipTests.cs",
+      "sha256": "512f7a0040028cb13d477d9b322a7e5ce1e7987db2b7628d47e930b03bcc72f1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/RetryRescueJourneyIntegrationTests.cs",
+      "sha256": "c08eb8d393cfbbeab017cf6b5c42932333dd687e5d91c73919c92b504e171605"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/SagaIngressRedeliveryDeepContractTests.cs",
+      "sha256": "80477548bcecaf2bd34e8e2d0fbf4db906429b11559b57ceeaa4e83780b7f3e0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/SagaInitiationMessageFilterDeepContractTests.cs",
+      "sha256": "c9210aa0742e5f0c1bf0135728b65660a0cd61f7936f41059c8efaf4ef14ce99"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/SagaMessageFilterContractDeepContractTests.cs",
+      "sha256": "ff286d5dd09a804e6490e2d76b7522be825314fb4392d98312ba90a75bd5dcac"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/SagaObservationMessageFilterDeepContractTests.cs",
+      "sha256": "ee3e3c2006d4c8e953ef86c1c2627af0bba20225dc058b3248ed50ad516770e0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/SagaRepositoryLifecycleDeepContractTests.cs",
+      "sha256": "a6c4ac40027af9d500d24e51d32d0966bd827b72d25e524147b7a02f3d1ff3dd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/SagaSplitMergeRescueDeepContractTests.cs",
+      "sha256": "8ccacb6169c354d562cc0a3f8f7c3a0a314d5b7ae6c67c4e8de92242d2f6d4a7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/ScopedCompensationFilterIntegrationTests.cs",
+      "sha256": "53884511ab8ace5a6303158e2f9b942a2846ede401c3634fee8d295d26c01165"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/TenantScopeIntegrationTests.cs",
+      "sha256": "79601052a90fcd4be58a3f4b4eac9f3d1344b6937c5cf62f6f9c09211ec52846"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutActivityContextTests.cs",
+      "sha256": "cafc513ba865ee8583d16892911a5ce8da96d642fd524662171fb03aee343e9a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutCancellationIntegrationTests.cs",
+      "sha256": "7225197991a9e0d598edeb8d128deb5df43522a97548abcb002a7a89b28f52ca"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutConfigurationSurfaceTests.cs",
+      "sha256": "80327fb53ded63b3df4e4ae487b0c0798132e1e0ac78e6d7e4dbcf65e2111e64"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutConsumeContextTests.cs",
+      "sha256": "7b494d2fa82eff5ad008b42abb8b451ccdf0d2fc5351d30de98483e2664ba371"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutFilterTests.cs",
+      "sha256": "c231a848819e9c350d0e308bf29a5b1a97764eba25ec2f76732a443ddde3c3f0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Middleware/TransactionFilterTests.cs",
+      "sha256": "89ec557bf5d26a34a9c2f6b49e4e4e297a50639e57b3bc4ae4c6f3d7008d8b71"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/BusHealthCheckTests.cs",
+      "sha256": "a2ed61556ee53b758d9996cb89a1331fcc1ba43f4ab3cca61dacbfb6c561a97b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineActivityTests.cs",
+      "sha256": "6a65ac294cba1e8479f7043c182694ce2fbba9b83c8ea134ffaac0a54db7928f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineMetricsTests.cs",
+      "sha256": "dc517604e676bf9c9261b836f0fc92f9bb4996f732c73cc4b3c39cb288323023"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs",
+      "sha256": "41c159a7730682a1c30d57d6c7e1c81c430fba11d9a9fb70ff827df85c7fb8ee"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/PayloadAdmissionTelemetryTests.cs",
+      "sha256": "b4feab55d510506f13fd0028fbca77f005bdf1103b162a0de38d3efa7e920bdf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/ServiceBusInstrumentationTests.cs",
+      "sha256": "736791d5165a037b3cad460cb9bb8940b8ec35b063db82f1566022cee4260984"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/ServiceBusTelemetryTests.cs",
+      "sha256": "556b6d7d2d21338a2d409d537d50695f5f69486f836c220246aedc937f408186"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Observers/MessageObserverTests.cs",
+      "sha256": "c47833621616c194d56027c528f0c4e0a6be0081d549bd248c8ec0ffb95f5532"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Observers/PublishObserverTests.cs",
+      "sha256": "746129497074b58c067059b1e68e37340537aa697f97ebf0bb88ff2d8ba510fd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Observers/ReceiveObserverTests.cs",
+      "sha256": "a4ef395e401c4d9ef97cd08ae8c092c7179891d6b1f8a75e851c386f62ffba7a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Observers/SendObserverTests.cs",
+      "sha256": "aedb5263665d4a7e9c588d00ba1ccf8f9cab0d518e6701d5ff75863dc55b22b5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Operations/BusProbeTests.cs",
+      "sha256": "15a894935cf3bdbb72c20347ae18357c5b98b551cfa1ae1b49dd71b1f2432f67"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Operations/HealthReportExtensionsTests.cs",
+      "sha256": "dc1a87fa25487f7001ec3b808ef4cae85c2a5654b93a05ac9f9a407ac3f7d06c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Operations/ProbeContractTests.cs",
+      "sha256": "800c60fa90c64aa1902d02b708e40e1ec6ad7a2358dafb5c24e8fee857215a72"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Partitioning/Murmur3PartitionHashGeneratorTests.cs",
+      "sha256": "7399ea9d917548a48340ced37b0a22b182848f71160769803ff4a65613389d94"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Partitioning/PartitionedTaskExecutorTests.cs",
+      "sha256": "a8dc3162772816675caea6c2ae7b40aa50f4955b7eefa568dad3ed789c8e10eb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/ReliableMessaging/ReliableInMemoryIntegrationTests.cs",
+      "sha256": "7803aed9d64346e498d0f43d04a65d68d1271039b2dca3a6095fc72ebfd452f3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "sha256": "d25a434309bd395ff5b34a3864ea292a9ec2eff4f63c3e30ebca0cff486638a1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "a5f0ec6f59f1bb688a2378cee86bf81cbd181d29395659a14f4ea4d138ace7f0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/RetryPolicies/BaseRetryPolicyContextTests.cs",
+      "sha256": "96c0ddb1ed6802a5892e0554ce2895f35f434d3e5f49ef4269a9e9058915cf39"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/RetryPolicies/ConsumeContextRetryPolicyTests.cs",
+      "sha256": "b704010d25c6ee4136fbc7f2fe3f6e89a68295fa3d60fee51d048c416f567573"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/RetryPolicies/DefaultTechnicalFailureClassifierTests.cs",
+      "sha256": "f5ea50b8c75fed482a5edcf6fd2c6bd1efdda67e7423f50103f68da6b1441a07"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/RetryPolicies/ExceptionFilterContractTests.cs",
+      "sha256": "39a40c3b839a68544b70c1fccf12ccda6ae3708be633e5064e676edf314e0d15"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/RetryPolicies/ExponentialRetryPolicyTests.cs",
+      "sha256": "12129530b3cc29d8c5dea9e1759b327864c9356e65eaa4eeaa38bfb64823da19"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/RetryPolicies/ImmediateRetryPolicyTests.cs",
+      "sha256": "3be0360267274613869f4f4ae4ef7fedfd49e918604c76f5ec1d60d674f48700"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/RetryPolicies/IncrementalRetryPolicyTests.cs",
+      "sha256": "73e266bb09e9dc295a023638aabb7f614375cb83693567668255b8ec6741d2ca"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/RetryPolicies/IntervalRetryPolicyTests.cs",
+      "sha256": "2100cf9b3b7ca7084e27cc61ad65ac3da084d5d7c0743bf933356fa2b141ebb1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/RetryPolicies/NoRetryPolicyTests.cs",
+      "sha256": "e07c94baf8ceafb2723799b716e2fc43b8b4ef28624588e06adfc2db5092f36c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/RetryPolicies/PendingFaultCollectionTests.cs",
+      "sha256": "0f01609c231e8e48b842ee0c5ca81c4988a1c615fdb26a833dfb4e2534222882"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/RetryPolicies/PipeRetryExtensionsTests.cs",
+      "sha256": "ebba782744b25484256bc179192d07fec53b7b180b2f4888d1b6b924319d747a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/RetryPolicies/RetryFactoryTests.cs",
+      "sha256": "493aed55264a563aa40224ec4aea2f0c75ff745098287885cb5754d61fcbd928"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/RetryPolicies/TechnicalRetryPolicyTests.cs",
+      "sha256": "a44031520d5008bf189b8dc0164af8bbb0ae8f6decc96b2ef43d0760b9e97f3d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Runtime/ServiceBusRuntimeLifecycleTests.cs",
+      "sha256": "f813d760ca4ff952975dc179c1d39c5421daac4a159e0ec8e6eb34f12185c39a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/InMemorySagaConsumeContextTests.cs",
+      "sha256": "0283c4a3aaecfd97be39d009706fcaf556c36c1117ecd4379619bf9347562c54"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/InMemorySagaRepositoryContextFactoryTests.cs",
+      "sha256": "a0d10a9c4000cf7dd1041e25546f9ebf870b76eb90aa363efe1a41314d1b587f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/InMemorySagaRepositoryContextTests.cs",
+      "sha256": "310b14c861b77c88a0b3ba53d2a78cfd0272545cd11d3f812c6e7e7d44cb95ea"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/InMemorySagaRepositoryQueryTests.cs",
+      "sha256": "e51a35b7700502a9c148bde790f90bad19421224001fda2cbb2fb2795e84d6bd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/IndexedSagaDictionaryTests.cs",
+      "sha256": "d725da5782659678fd4d5a5bac7374bbc5d9e820d44d8554cf0fb8e4ed8cbaaf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/IndexedSagaPropertyTests.cs",
+      "sha256": "c8518cc8f3d83c798e400cd629a1e59a9418cab221e57e65265c92c8dc5ab87f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/InMemorySagaIndexDeepContractTests.cs",
+      "sha256": "81b58d66f98b887f8bb3596c2238cea323c416367cc6e81a2a00f811bd922d95"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/SagaConsumeContextFactoryTests.cs",
+      "sha256": "d946d0ae92cc9d76a8a9ffdee4cc3bb0cfc4fe9b360e04eadedbee1ccf1f8b8c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/SagaInstanceEqualityTests.cs",
+      "sha256": "c549757ea6d95d28af201c831874fe0568cc47e5a91a39785b1f3961c3929baf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/SagaPolicyContextQueryDeepContractTests.cs",
+      "sha256": "1e950254fac6e980bbe044097bb812cc26d0b63851feaabca3b5179104d1811c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Saga/SagaQueryTests.cs",
+      "sha256": "54b4e3c5a87011ababdf47c06743d31687eb1178d86715cdb437da16ccb57822"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/CompositeEventStatusTests.cs",
+      "sha256": "8ef9d77d4a2fcaa6d908d0a16c7e8c6f2861382dd8a677231198fde0998a674e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/ContainerStateMachineScopeTests.cs",
+      "sha256": "c9fa34098c5c6a9703d53d225ac74eff66c6724952fe86a6b2cb1f3472c8e35b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/DataEventActivityBinderCoverageContractTests.cs",
+      "sha256": "e8146c10f0bab73f36927d28a2652896e1c525796c4ea76a0ed6b9887873f63b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/EventCorrelationExpressionQueryDeepContractTests.cs",
+      "sha256": "f2b58380c932fcbef0d2d7930652f49323341db98b9031057ef329eae58a4433"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/MissingInstanceRedeliveryTests.cs",
+      "sha256": "d549115b1064d5b9638f4c5fbc01d289892e3f0916eefa687039b47e761b4ea1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/RequestStateMachineOwnershipTests.cs",
+      "sha256": "9c2ca15a51d8c4d9623e632cb58b15220c1671f36f762f36797aada855bdff08"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/SagaPublicContractShapeTests.cs",
+      "sha256": "bd99f5a4ac83f9a67177baf7b533e2a2636ba228cef8f8d7d9d7e0a464743da5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActionActivitiesDeepContractTests.cs",
+      "sha256": "5aecabd7cc59fa4b6c1ffd1d446cb268d630f1d303f4429e3982a0123a180c97"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActivityTests.cs",
+      "sha256": "6d194bca88a713e7a1459741b422858e3faa9cc4b6959984969822fb4f718efb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineBehaviorActivityPublicContractTests.cs",
+      "sha256": "10e7aeecd561d6cb326d01d3afaf54c624eb3a9d73bc07e0dad367c8eedb701f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineBehaviorBuilderDeepContractTests.cs",
+      "sha256": "948ee8af10715da1280106143263d55202b430016a4753464462b324f90ce79c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineBehaviorFaultDispatchDeepContractTests.cs",
+      "sha256": "9a5793f9fd30d1e79fb81a7875125c7cd695d6e1e1e737ed18fb9d899244e205"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineBehaviorProxyObserverDeepContractTests.cs",
+      "sha256": "cb087538a368c6c1b4574ce4f83b7af4d9cca26e42a5786307eb88d6b2c9a125"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCallbackJourneyIntegrationTests.cs",
+      "sha256": "5432a4b5332b18356b4901f074b9fc49c70da90f199bdbed012bba4bf149e325"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCancellationTests.cs",
+      "sha256": "2205366eb1901de714c0a477e63c57c11abb8171b2919c56366ffee24c0b631d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCompositeConversionRetryActivitiesDeepContractTests.cs",
+      "sha256": "54cdc72dc59927103f63a7a2d57d4ffa82174e7e00e7cb415a9213e606299f53"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCompositeDeclarationAtomicityTests.cs",
+      "sha256": "5550c4482d9764c28218d5b43d58431916074e69dc24816da66f551ca1655f08"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCompositeEventStatusAccessorDeepContractTests.cs",
+      "sha256": "e7e351498592268e5114c63a881e889d2164e449c519921324c64bea3e8e54b0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCompositeEventTests.cs",
+      "sha256": "5c17ca41e1910eda267b67165012e288a98af711ae4c3ed3fd5a93eca7a223ee"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConcurrencyIntegrationTests.cs",
+      "sha256": "e3872e50c2d87356c282c21fedcfd5c6890d5a1a57f04a0fb503c83bcd85a433"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConditionFaultActivitiesDeepContractTests.cs",
+      "sha256": "4b1999902b841a150dd4fff30c0d76f37e5cb681e4404655c7ce70d0701d84bf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConditionTests.cs",
+      "sha256": "d0adc1b60a3bea63521e58ab50dc420ab6e243a511476d2137c5737906aa16e9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConditionalActivityBindersDeepContractTests.cs",
+      "sha256": "a3612244a655d94708fa9e6fcb23c99a7c72a083acff89e3335370f63effef10"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConfigurationContractTests.cs",
+      "sha256": "baaac9368efca93be7653b27f26a848dea76ecadd73ab79f3bac91049451840c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConfigurationMetadataDeepContractTests.cs",
+      "sha256": "125ed92cd596813a421b359f4938a6bf966a0e3854fa22a3b9c56b588be25e52"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineContainerFaultActivitiesDeepContractTests.cs",
+      "sha256": "a915b1acc35f9d097fa952fec091bec41dd68d0b731126925e1e73079d85ad5b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCoreActivityBindersDeepContractTests.cs",
+      "sha256": "c75aa880725f4aa0f4350a37a0dabca9cbbfb92bcf27e03fc2fad80225d2514d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDeclarationOwnershipTests.cs",
+      "sha256": "6e2f1906f2c10d820f76252da24b2886ecac9c9fba33bf4568044f1afcbbc1fb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDefinitionTests.cs",
+      "sha256": "0978576b2de53c7d4804835ada2d6681d02f0d31ffe26b4f7a7af81a1e5ae6eb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDualResponseCorrelationTests.cs",
+      "sha256": "29d8b7f7d9c9dccb54162fc010243d7e8276f77a385425216935853783ad1aab"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineEventExceptionActivityBindersDeepContractTests.cs",
+      "sha256": "9b8baf6e22aff4b9fd4dd15fda0aea6595dc6d19059aec1502c7a0633457ab22"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineEventTypesDeepContractTests.cs",
+      "sha256": "aea25c5634bcc6394bf7f0865026347d6ff6ba9e4d2c2dc50d19d1166793d50c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineExceptionBehaviorTests.cs",
+      "sha256": "e358804e869bc089dff778303194a0405fb93353267320fd441257ed441f4096"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineFactoryAdapterActivitiesDeepContractTests.cs",
+      "sha256": "bc202d6a07152b3ee0ee97d434b85d34e25180fb290dacb798032dc93fb96fb2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineFaultRecoveryRequestIntegrationTests.cs",
+      "sha256": "eeb35b7056df6518da4b950889098a50b86cb32a6a9841f39767ffe5bd8b7812"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineFaultedRequestScheduleActivitiesDeepContractTests.cs",
+      "sha256": "8f9e097d2a5bb3ada85336457586289a04a5772b183808753ac8e3a8733cdf52"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineGraphContractTests.cs",
+      "sha256": "db07d57b2bc31c4c43a63ff34b3104559acefb8203b29f117cbdb2d6c816eaf9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineGraphNodeDeepContractTests.cs",
+      "sha256": "13a19983b4a2d20f3b0e640ed071322469e08ea997dea826f8c53aca7c6511be"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineGraphSnapshotDeepContractTests.cs",
+      "sha256": "9c29fdafcff2209e23545cf17c79a51171017a164cafccad3137c074d684c989"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineGraphVisitorDeepContractTests.cs",
+      "sha256": "a648a98aac911aaa1d7212fbe646974dfb7963285ada92ba309c85a883c88822"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineLifecycleIntegrationTests.cs",
+      "sha256": "b0cce8fe1609e9471ee2a5f7aa080a29cf0453ec6260d60346cef38fb78cf15a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineMessageFactoriesDeepContractTests.cs",
+      "sha256": "d382a5bea76d59ce076a955e4897ec27f92d42c2338ea8a3fca8de2a7f3daf03"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineNestedRequestIntegrationTests.cs",
+      "sha256": "308afe9e1f1c09336c567a79d644243073852799400871f70e5720ab4450ffec"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineObservationTests.cs",
+      "sha256": "4e5411aa3eed09238a78963d0cc88151255177e201081a2d61c2361f34a94516"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineOutboxSchedulingIntegrationTests.cs",
+      "sha256": "0e47b7398edbdd8270b654f1bb57f23adf72a0752afc43488fa69e20b03ae620"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachinePolicyIntegrationTests.cs",
+      "sha256": "1bc9d145e4d072a23f32f87ebf629e9fd793f7ebe9ee4ff3851235d914256581"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachinePublishSendRespondActivitiesDeepContractTests.cs",
+      "sha256": "c5a8cab170004bb1b4cd3cbe332eb815596c3c3682d297545d1324d4a389eb02"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRecoveryTests.cs",
+      "sha256": "9053ee8ef42fec7a26beca3ee59c81ecc5aa449c36580808aa3d2bb2ece830fd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRequestCompletionPublicationTests.cs",
+      "sha256": "96ccc52e448a883f9c3354ad97721d646e0b0280440bb02329924448ca1df4e7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRequestForwardingTimeoutActivitiesDeepContractTests.cs",
+      "sha256": "639e23078cc461b433b1d2d8e11544f072b79b25fb89ff2f4311762a11b62b0d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRequestIntegrationTests.cs",
+      "sha256": "96c02222ab34804a404285c15256a9d01aff23663e043b14d56f3da740437303"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRequestLifecyclePublicationTests.cs",
+      "sha256": "d89dd7e06aafbc2120f165966f1ca88945f593466ad85c16aca5906b104c0e97"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineResponseAndFaultIntegrationTests.cs",
+      "sha256": "2ff1d350775f72b1d70d20ad9c0c732e86afcba819b25cb7eab38e836f692e2a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRuntimeContractTests.cs",
+      "sha256": "fc71344c9b1b54997382bff9c99184ff4cddbb2d090dc132d849e97cc7c32e65"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRuntimeMetadataContractTests.cs",
+      "sha256": "a121042d8f351a018a820dd69009f2e6a79b3b8bdb9e9237108df666b0e0013b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRuntimeSurfacePublicContractTests.cs",
+      "sha256": "abef190ad3e4cbdafedf27dfd25bf45357b03ca33058c0a24c537ba4ab7a7c52"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineScheduleActivityContractTests.cs",
+      "sha256": "dc93f1174fd9b667ef825b956eef49972371d1bf852000e9a67ffd207ec1e17a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineSchedulingIntegrationTests.cs",
+      "sha256": "78a4a40d791d0cca8f2b7deb42825b1394921efb98d8b541ec49529529acfb79"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineSelectorTransitionOutcomeDeepContractTests.cs",
+      "sha256": "cc3e0de3dace3c864d2f5bed7816d87d50cb7fda5ab94cde8c3bc5856c5de198"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineSignalSendCallbackIntegrationTests.cs",
+      "sha256": "7543bd2f92c1e86d51f423eee1b030b561571de40a3c5d45ae30fb7471f87d0e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateAccessorDeepContractTests.cs",
+      "sha256": "e31ef07c60bd0d2aada823a7a073a3957a74c203983c4656e19ba6ab3a0c5600"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateEventFilterDeepContractTests.cs",
+      "sha256": "f3e7386c126c3a8b49a27c4887bbdb9711dfec33022d6d1ee20af66b3ffa636e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateStorageTests.cs",
+      "sha256": "17ff43b2277bd3aa3769cee1be2514871907706b685543650d3af2a3967b56df"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTelephoneTests.cs",
+      "sha256": "6fdbd70ade2c8c150db0952252cf666359cb5e4d33df3d9a7a8714f98c8d891d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTerminalBehaviorDeepContractTests.cs",
+      "sha256": "0c79ddcd3bede1e5e76f36eb115215c77139c0d7feb61bab92f5a77dc1a0ae11"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTestExecution.cs",
+      "sha256": "ce430c873552984b0e103557c21960a9b0c84ddd8a911154a0efd3e46907b7ad"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTransportIntegrationTests.cs",
+      "sha256": "4849c44607937a25b8bcb12ac0f27becebbaed51c8487af18d5408d0353d4d26"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineUnhandledEventCallbackDeepContractTests.cs",
+      "sha256": "241f6f31673daf508d7bfee07a6f2cac3bc414452da4d5dde40b902cd8d18847"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/TriggerEventActivityBinderCoverageContractTests.cs",
+      "sha256": "7bbac03381e7f637feeb0fa51441d7b3f6d767f46c9bba0522d655cc8aed9dbb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/Configuration/SagaConnectorTests.cs",
+      "sha256": "48fb0d74cd2395499f358692cf51e3abf4cd451e48ea44007ccbfdf1ad98672a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/ContainerSagaIntegrationTests.cs",
+      "sha256": "0742fe3591b1045ccee3612518d4af94e67f654f77597749650828635c9ef145"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/InMemorySagaRepositoryConcurrencyTests.cs",
+      "sha256": "bd94a0327f7c1dcdadcbd2c6c4fc28757b321be0fc86fd2f93eedaa84d43a257"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/LegacySagaIntegrationTests.cs",
+      "sha256": "746b3a359b765c64a9435e7ba42bf7293d7c711135f50248c9f3d5cf55667bdb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaActivityRequestExtensionDeepContractTests.cs",
+      "sha256": "b043de16bf339d5e326adbcc2933b9a71b744715e0d1f997093a88e9c17600f4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaBehaviorTransitionExtensionDeepContractTests.cs",
+      "sha256": "036ff12172b686a3cf74c44d4ad02075ac4c87dc96f9d6a360c2571e76f9ffc1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaFactoryProviderDelegateContractTests.cs",
+      "sha256": "731eac9d4aaaf5eec6b807fe1c56ffb6717851d514d13144d00eb2de3af74e92"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaMessageFilterBoundaryTests.cs",
+      "sha256": "c63475fb92b71b4c56562fc04571eaaf6adbe4ed219b9bf2786c10ae5b83c569"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaPartitionerConfigurationTests.cs",
+      "sha256": "ef192569c53eec78f6465f411e16e8311d998181648ad81da347b318d09cab45"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaPipelineAndStateMachineConfigurationDeepContractTests.cs",
+      "sha256": "9cb11a32a5828787d4c85781cc3d7e6320ac327e14c8247d3b50c9aa4ad49b3d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaPublicRoleContractTests.cs",
+      "sha256": "07bac27fb639f2effcd1a3afc5108097b1505adda333a935b5648e826399d478"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaPublishExtensionDeepContractTests.cs",
+      "sha256": "d831d8736ff0fc4a1cc8d9d09103ad4824c839ae7cb56022ee98b58dd6aed028"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaRegistrationRuntimeDeepContractTests.cs",
+      "sha256": "10cc310573cad1e5f799e9318efeb9d30eeea8b62ba1ae3d1e410d4aeee61869"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaRepositoryCapabilityTests.cs",
+      "sha256": "6a6b82042fa9667d576ce506bacba09ba3af744ffbcc489d29624a7fe92bb75f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaRepositoryFactoryPolicyDeepContractTests.cs",
+      "sha256": "599701ed96f95321026ad3ee86c2ebda3c5e8e1b02a9f0d7b324dc93b9d64dd3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaRepositoryPublicContractTests.cs",
+      "sha256": "e75121fd54dde39fd4b37c836c9d713e726a13ad20fdb59a5152880da617bbba"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaRepositoryQueryDeepContractTests.cs",
+      "sha256": "05b27814f1bf1b230198121cd2507076159a14e63d680829c987afef08e81d10"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaRepositoryRuntimeDeepContractTests.cs",
+      "sha256": "8afae2dd044ab4487a0fa1256f3a579b5ea58804223377b98f570c2b2cd41f97"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaRespondExtensionDeepContractTests.cs",
+      "sha256": "d6044c25f251a8f4d937d8f84209256ff0c816e38e7256f2a464270426b92400"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaScheduleDateTimeExtensionDeepContractTests.cs",
+      "sha256": "b7c7ae2968a53efbd1fec1ba4bd5a1f1124cbba623d08f9d64718b08b21471e1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaScheduleTimeSpanExtensionDeepContractTests.cs",
+      "sha256": "cd142398b5c85d4484a0c6ccea8f385bf6c89b59dd985a5fc5ed1920817fd87c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaSendByConventionExtensionDeepContractTests.cs",
+      "sha256": "fb7031537bffce87abc8386e13385212195c8c257f33c47fe5005376722270d6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaSendExtensionDeepContractTests.cs",
+      "sha256": "56b001b24059e2f2f0afd203c133914abbf26476b2eb5a824de94d7a6587f7c6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/SagaStateQueryRuntimeExtensionDeepContractTests.cs",
+      "sha256": "96c6bff71849d04a5dea4c982b09c5a4b32c3c433ca1574f4627e2d3e7e80750"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Sagas/StateMachineConditionCallbackDelegateContractTests.cs",
+      "sha256": "dce6b492c1ef015ca29ec870cd106fdeafa336dd2139e743ddaa77ababf6562a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/AdvancedSchedulerDefaultAdapterTests.cs",
+      "sha256": "b125fcc5cd53562fa2fb6caa1cad50b1907a5fcbc7a4a9752cd6d98573a457a6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/ApplicationScheduleOptionsTests.cs",
+      "sha256": "20da124916b8a0dfb9d338eafbe70886d5131e0e6002c0e430851776afca05b6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/ExplicitRedeliveryIntegrationTests.cs",
+      "sha256": "f1bb1b518a18f8f4d524b052b839ba47fd7ba675258ee6feea1d443c59711f89"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/MessageSchedulerInitializedContractTests.cs",
+      "sha256": "bcd2427facb5f45f6a0087526147a290f01b910b93888b6021bb16d3acaf23ea"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/MessageSchedulerRuntimeContractTests.cs",
+      "sha256": "ea67539fe4f604c6392f4d63dc21ff3b99d8b073d32750e83a3c95e2274b42ae"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringCancellationAdmissionTests.cs",
+      "sha256": "05ebef2b7c7127b06280313ad85af01f37cf6c33a1f6e54dec4265b52bb539d1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringControlOwnershipTests.cs",
+      "sha256": "99b71614fff5c44659c7500a69b9a3e869bd0ebc1e4e76465788493d0384410a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringPublishAdmissionTests.cs",
+      "sha256": "5b129e9b8c44c413faea1062e616d4e019219a14d908bb4843d262a018beef42"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringSchedulerContractTests.cs",
+      "sha256": "51537da2ae7c1caa9806dad09d8fa5d3d1c57c51b56b337488cb7a0eafe5dc4d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringSchedulingCompletionTests.cs",
+      "sha256": "41f3e91bb3b72e724f010c8564b83f3cdcc387331f8a70ec7091ba9beea9aeef"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/RedeliverExtensionsContractTests.cs",
+      "sha256": "c6c1d4a61d6937cf5db7a536d7abdd60aac8113d934d3d3ff6227f2ede95e9c1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/SchedulerProviderContractTests.cs",
+      "sha256": "00ff1013f1cf47b3d9126c300cf3c758aba98311dd548dffa2dd1903dd4eff6f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/SchedulerTimeProviderTests.cs",
+      "sha256": "6e3530d562b125dd6efb4b6549f468c08f12cb6501445fb493c2a19ea575d1ad"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/SchedulingExtensionContractTests.cs",
+      "sha256": "29bb795e25f845756bccd9c4da61987046d80f2a04bbcdd682eb1a42281b16f3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Scheduling/ScopedSchedulingTests.cs",
+      "sha256": "41b94fa5de62ea924b3cc137c29267341509755ed4c054cd48660b4c9e2a7020"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/ArrayMessageTypeTests.cs",
+      "sha256": "01ba23e983b73f02b9b9b7b4d8551173896ab2878fb8b44129f192f1d6e160fe"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/BoundedSerializerAdmissionContractTests.cs",
+      "sha256": "8337514f0ab2c304148451f7e29577884d958dd8986e43381482f9f3dda64178"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/ConfiguredJsonCopyAdmissionTests.cs",
+      "sha256": "cd27326e6244e49136725dbbb895cc5708ff52f56f430fb55641ce76434a7fb1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/CoreMessageBodyContractTests.cs",
+      "sha256": "d71d4ded255b7e3e141011e93baeac6dac96f1251f07db6cecfc1135ca7e56cc"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/DeserializeVariableExtensionsTests.cs",
+      "sha256": "3a5f6e8792acd60a3feb183c3695fcb75198125d3b4df4c0d00ca108466c720b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/DictionarySendHeadersTests.cs",
+      "sha256": "987ca4973347baad46d79330dcfc504969c9b583607dad3124147166da2526e3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/EnvelopeMetadataProjectionTests.cs",
+      "sha256": "a92369df8dcad2fe11dcf108c7381d9f4e62cd654c1fd5e249d82229d771b71d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/ForwardExtensionsBoundaryTests.cs",
+      "sha256": "50d235c6e8477088b31f1d6b66f0ec0f4ba1ee1656b961b999bf24f22c975a67"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/ForwardMessageTests.cs",
+      "sha256": "4aabebde685a097b3d6aac1ca1d889c9313c510ced328e744b6f4b8260813324"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/HeaderRoundTripTests.cs",
+      "sha256": "6094a245f289ef252cd2d7b6de7ea3c4c4f8e5a2208ed452beba52da7fe3afd6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/HostMetadataRoundTripTests.cs",
+      "sha256": "d081a6f1220807f7f4d72add0d1c1f7518d8989e40035be2fd85d1bda5a16d4b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/JsonForwardBranchIsolationTests.cs",
+      "sha256": "8b9a072b92cbb754f4121b3bf67c0731daf64fbe1678a95cf40c82b219f76781"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/JsonMessageTypeMappingRegistryTests.cs",
+      "sha256": "88fb63875161e10ee4559274c80f66bf1e5effaab08b0c6bc3af3ca39e808379"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/JsonObjectConsumptionTests.cs",
+      "sha256": "8e0bf634789733369ad11279baeecc27b8c1add3a158de6513017913d651e28b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/JsonValueReceiveBoundaryTests.cs",
+      "sha256": "f2c930a3f343253abf22aa491c3d8db99acf388f64f0eed7844c64c515948c8b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyContractAssertions.cs",
+      "sha256": "f1fbd25c7b37651bb9150629e7a9437eb11e7d64443b1ff4dac8f39b8fa53cfe"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/MessageIdHeadersTests.cs",
+      "sha256": "ae22a8c877513d56e5dded4ae6f52c71433e0984d6f08e237a20b07fd5954e8a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/MinimalEnvelopeRedeliveryTests.cs",
+      "sha256": "ec9e12b030a1794ddd7235ee391464dab2675150f6f5a63ea3f054882d0a2247"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs",
+      "sha256": "1d2f15b80cd90109bd1b944c789761c019632d23617d9ce4e7547bc3c69c28d1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionTransportBoundaryTests.cs",
+      "sha256": "f3082453e70780e23816800a872f2f7dd1b234e4961dcae94923870eab92e15b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionTransportIntegrationTests.cs",
+      "sha256": "451c55e3187ceace54327020e53744d6cc629f38a0a60088bf540cb53b6e8048"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/Protobuf/ProtobufCompatibilityPayload.Populate.cs",
+      "sha256": "6dee1e2f2037acadf5e004dc03e07353132f559a1bf54ecc1974070a6f7da9bf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/Protobuf/ProtobufCompatibilityPayload.proto",
+      "sha256": "0e274fde70f5cd345b7f0b3f648d415be786a5b9968067c58fd6320853011fad"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/RawMessageContextTests.cs",
+      "sha256": "af1bf869116dd0c9c4c47b952128735b1a411b18382b002718b7d2b94c38863a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/RejectingMessageSerializer.cs",
+      "sha256": "07cbcae464d0a8f1001a80c43a83e9c46a6c9027b5d33dc98a1781b93792c772"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SerializationConfigurationTests.cs",
+      "sha256": "4453ca849587d98318297137c74445682a3724f34c570aaf0edf0dc04e341e7c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SerializationContractIntegrationTests.cs",
+      "sha256": "7c7f4c87aa31fe5c9c21ce3a10ee7132aa2545da9de44e00f7cf707717936c23"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SerializationFaultTests.cs",
+      "sha256": "53b2193b16dfc2e72c71570876108dd0de151c36c135a265210556cdec6a0546"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SerializerContextContractTests.cs",
+      "sha256": "34fcf4666ec12947574cada89245bda1dc6f73b61e631bceadc6bda6d2554cc1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/ServiceBusMetadataSerializerTests.cs",
+      "sha256": "a3fcd6fc6cd9d0259e3dfae4597eee38fdcc09ffd65ec2481e3cd08ee23b4a05"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonApplicationFormatCompatibilityTests.cs",
+      "sha256": "135fc30af9de6bcce5f7c241e034a37c88e55774190bd30c5e0838fa667b7c53"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonCollectionTests.cs",
+      "sha256": "2b07bb1beb4693d9a7d3d597ca23ae440678a0d1a884e1406fbb5503e7ee99a3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonConstructorBindingTests.cs",
+      "sha256": "2151f25e2bee2f8a83a33d789207851910f5a93e23dd3e1decea32bf535d7e93"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDateOnlyTimeOnlyTests.cs",
+      "sha256": "b69612208ea79db5f97830da72884144b9d1a091ff98f14c44bbf752e0c534c6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDateTimeTests.cs",
+      "sha256": "58d439b5a0e8f46ed82e2d7f3c51cd68c5632d877b6ad3f2fe4f7c6d48656207"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDecimalTests.cs",
+      "sha256": "f16543560ad33c8e6a14c5c9c2f35c60bce7c2257b0b21f22201c8340b9d52a0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDictionaryConverterTests.cs",
+      "sha256": "ed6a5655bec9ab414839c002b77e521cd89caf384ce07ac7f14f7683eff3eb4b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonExtensionDataTests.cs",
+      "sha256": "5595c6a21c87b48aed62d49be908a32fc995d2c4350f876bc03f313f3104380b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonExtensionsTests.cs",
+      "sha256": "b71834e16627a5ee32e407149f73f913d4514050c656c03941bcb7193d9fe4fa"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonForwardingSerializerTests.cs",
+      "sha256": "9de410aecc371afe9be4dd1e8fd5597c33463362f7ae4a930156c1bf8c30d65f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonInterfaceMetadataTests.cs",
+      "sha256": "3864b155b724fcc2ed1025c46c1025ba3753b7fa30c5765eabd8f1debca32d5e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonIsolationTests.cs",
+      "sha256": "411a4ee787b628db5acbf9a6bc85fa405c0cf3abf9530ac0c70bece7b6ddf0c4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonMessageBodyTests.cs",
+      "sha256": "eaf7006d11947637bff083c581a538fb922491058dfdc36b414744fadef09d58"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonMessageSerializerOptionsTests.cs",
+      "sha256": "8c2720acfaab399f856704106e93a3496c32af588c9e8407e2b1340aa5c49fd7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonMessageTypeAdmissionTests.cs",
+      "sha256": "e41ec3ddf94b46de25deffb9f8c31efbbfe03b3795ad76ed04400eb4aa37b0d2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonObjectMessageBodyTests.cs",
+      "sha256": "de9fac7c8cbf1e45b11a25013e762efbf2422dc3c35a80ea3e59a1f4b05e0d81"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonPerMessageConfigurationTests.cs",
+      "sha256": "72f72e702714a5d28a74623ed921ca57d2e9af5a5b2f68b42b06e193ef36fb4e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonPolymorphismTests.cs",
+      "sha256": "fa93f03932d6524d7fb3f5120d1a96669fa2d7bb714fb01e0ec7db90177f9c4f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonRawMessageBodyTests.cs",
+      "sha256": "ca2c7d7f1eb35d047cf1b6bca832f88550ae339d7596c64c5094468d2b7be31c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonRoundTrip.cs",
+      "sha256": "79406dfd2f62889bd80587b20756064809a06a838fbb45f3179c700af32f9532"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonRuntimeIsolationTests.cs",
+      "sha256": "75dbe6b0eaa00a6b44a3046b10de063e7e91c08360529f61f738db089de6b4f1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonScalarTests.cs",
+      "sha256": "68dfc9a7a1133ccbb420cc0e67d8d71d8684d4fc56d51dfd5b57ca58b28140f4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonTypeSafetyTests.cs",
+      "sha256": "01cb55ebde4b0f3745c127fe5e51e9192d822097f59a76fc403c46561aa1525e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/TransportTextMessageBodyNormalizerTests.cs",
+      "sha256": "8bc0e5ece62843c67aa87bf25814f4c1e16d0bae69ada76d157a4c6dd5ca43c6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/TestAssemblyBootstrap.cs",
+      "sha256": "8b489bc250d32dd030b381777b0e54c3493aba8ca465704852058e7d94e962ca"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/ActivityTestHarnessTests.cs",
+      "sha256": "9ecce1caf207372914a92bc320d3124f10ed0e4173147a8d4177989360500069"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/AsyncElementListTests.cs",
+      "sha256": "226777e87fcef7356cc05f6aba8b0d88858df2e1df8a15a5906c81559e640857"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/AsyncInactivityObserverTests.cs",
+      "sha256": "1bfdf2b67e05645c0d68ffeed2c44f49f49cdf86fe0ac563a5c64db364da3ad8"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/BusObserverDisposalFailureBoundaryTests.cs",
+      "sha256": "a115f3359a4dc115fd26e1dcfc846e94ab367403702e84dccfc846db08a6fc42"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/BusTestHarnessLifecycleTests.cs",
+      "sha256": "945ee303501523ef536da6ad356d676b2a4eeffd7e63b9f29db5ac021777a1ff"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/ConsumeObserverTests.cs",
+      "sha256": "be0c34d0b2513b823c70f9571914396122a40cd5007dc0800a995113c0ca0a95"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/DependencyInjectionTestHarnessTests.cs",
+      "sha256": "d3100d922e75fdda31a86b756604c85e9d03731d88ad84cd059191a32edf35f9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/DiagnosticOutputTests.cs",
+      "sha256": "721ac8310ff92266c8ca99aa9dd50719106c3183e01bdcadf63556ca248791f1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/Diagnostics/TrackedActivityTests.cs",
+      "sha256": "77a935c0cd20bbc4545e158e3a7d5c75828efecc240e3699be405bc5b3c6cee6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/DynamicReceiveEndpointConnectorTests.cs",
+      "sha256": "3022c861a4996791b0319a633d0e17ac2b16a18758211b9abaf2e428bc6e523f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/HarnessAdditionalFailureBoundaryTests.cs",
+      "sha256": "6b563e2514d285533054f7e18919de795a3ccdbacfd318c51245180145f3accf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/HostedServiceLifecycleTests.cs",
+      "sha256": "dcb2349e7a9f511381fb34f4d37e5dde654d26fdb76f0949c6f45be5d997f905"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/InMemoryTestHarnessBehaviorTests.cs",
+      "sha256": "5762886d2e36da909bf7b01a0127cb212d5293aa188b44ca4e4b575ce84e7265"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/MediatorTestHarnessBehaviorTests.cs",
+      "sha256": "998ff08a7841558cc60b042eb5844c1ffa84d7615da86cf1aa9315a472a05841"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/MessageFilterTests.cs",
+      "sha256": "83811b7fd260ced91522f16c28aa4deae143a7d72981f62f8254d246a87b3e39"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/MessageObservationListTests.cs",
+      "sha256": "950fc2d1711fcd7d331eb53ca93b758170bc220ecd4747c70d616117ec365d90"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/MultiTestConsumerAdmissionCleanupTests.cs",
+      "sha256": "adb924cc7bc471687cdd8151631b812148f082bf5994880f69b825c389abe292"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/MultiTestConsumerBehaviorTests.cs",
+      "sha256": "ca04ec859b230b5ccd7e24d69d6ff67b9dbbebcd1911debbd73fbf1261e4047a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/ObservableTimeProvider.cs",
+      "sha256": "e3bf439b800f4f8cf7b96dc8a9a21be05d637157104efa4c72514eadb59c6f5c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/OpenTelemetryGlobalCollection.cs",
+      "sha256": "bf37ae4bc28f82905a7cbc8663b440ed2d81f6d41247418b717ff3b48ff37df6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/QueuedCallbackTimeProvider.cs",
+      "sha256": "12dc6778a86c55c4ffd880d9e7d9e02571759f60b3a7886ea9e6f447293f04ae"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/RecordedMessageTests.cs",
+      "sha256": "74f28d3cee639ce3b3da22267f149d22325fb075010b3e5c3d50782c8f3149b0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/SagaPollingTests.cs",
+      "sha256": "74bee5ec2246c9b10080b63337c9bcdfb420e647d9d848044e0b58d8a0669d4a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/SagaTestHarnessBehaviorTests.cs",
+      "sha256": "a0d158983c8230ea819bfd980ad9fc7da6021dd3f150d2e0c7ef5181e0897cf8"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/StateMachineObservationCollectorTests.cs",
+      "sha256": "048e514d7a2a1172cc8e1a5d79317438883bbbbdcc6ac1182ec13034ee0234e2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/TelemetryActivityExtensionsTests.cs",
+      "sha256": "52473ed8659559b5bfb03f459364f7af56bb18bc924342f631635dfb7be5e348"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessObservationPolicyTests.cs",
+      "sha256": "4a8343b4152a0f0a5234609173fa93ba997d8f295085861abd9125e884d929fa"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessOptionsStartupValidationTests.cs",
+      "sha256": "2e538ef5e583592df39aa60ccb7e1830cc4f22a858972abd0328901ef7f45421"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessTimeProviderTests.cs",
+      "sha256": "586db989b1fb36b502ab2d94ab069e8fad8ed5a0ec4797eaf0e0be2ada55dd1a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestingServiceCollectionExtensionsTests.cs",
+      "sha256": "291a208d726b4ec0c8522c039cb68f34b6b0ca1789d9875046cc43140b9a7b37"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestingServiceProviderExtensionsTests.cs",
+      "sha256": "4ba29f7f39f9d508ad7c8c3685c806777f4c88534731299b5bb28ca3bbb3d9da"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/TextWriterLoggerTests.cs",
+      "sha256": "e3f4977fe5b2f0de91a98e8de7d7be254f9227e589022d507828ed8cd0cc100c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Topology/Configuration/ApplicationMessageTopologyTests.cs",
+      "sha256": "cd5069b21f6a8f1ffd8e4f512abc08ff71900dbfd34ba09746978f06283a73aa"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Topology/Configuration/CorrelationIdConventionTests.cs",
+      "sha256": "b28b7b9b3cf0d395a927274c0a4adcd83a9f76677b4fa7c531106fc0f2b2a83e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Topology/Configuration/EndpointConventionExtensionsContractTests.cs",
+      "sha256": "7788ff488f7b3d284d0f5009210f2710835d904968a108d3cca70f43e70eda51"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Topology/Configuration/EndpointConventionIntegrationTests.cs",
+      "sha256": "a0587708e4842ce867728fa992ba665f6d2e43daf896db3939428940f39fbac6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Topology/Configuration/TopologyConventionExtensionTests.cs",
+      "sha256": "0062d35635a60d58044d62b9894516121f44761712cecd26d582f44131e80291"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Topology/Configuration/TopologyConventionIntegrationTests.cs",
+      "sha256": "0111a9302fccb92986a1a1dadc84da82b149d3f04b2811488fff816be0d7f454"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Topology/ConsumeTopologyTests.cs",
+      "sha256": "203e5a5541951585b9e3adb4b7eba9d4d050601001c1f86a8f2d3a1f3dd1e73a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Topology/EntityNameShortenerUnicodeContractTests.cs",
+      "sha256": "15fdc527453a7d31bc65bedfbc93b568cb8a13adadb3cb22fb01bba5c6ad4c6f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Topology/MessageConsumeTopologyTests.cs",
+      "sha256": "9b86410e4f04b7b9f3a4e875d72a8fbd3738f5d0532ba526c0461eeefe55bf88"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Topology/MessageCorrelationIdTests.cs",
+      "sha256": "74a5884766da4edb082f49c23cfb5801c5564df339b9643cdbb7ea2efbc735a6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Topology/NamedEntityCollectionTests.cs",
+      "sha256": "043fe857d500c316ee01dc91033bfc0ead14c4e5bdeea3a41fe49adff25ce05f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Topology/SendTopologyConventionTests.cs",
+      "sha256": "f995b9584b902691bd21c68d9250b20292252eea811f1007fa080ccd44e1edc0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Topology/TopologyBoundaryTests.cs",
+      "sha256": "2891828af6187d8225d6f1b9822923f7039f43361aa9a8690592d1fda0cd4bfd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Topology/TopologyEntityNameTests.cs",
+      "sha256": "18dd7b0f06a1c2bdc474683ed51b132906678310fcf49f2df03e60208a23b047"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transactions/AmbientTransactionBusTests.cs",
+      "sha256": "efd5fe420544ccb440e78eb617721d8214d319225b57d5039461d5e32bed1f61"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transactions/BufferedBusTests.cs",
+      "sha256": "e5760e51202f4e7925951bdffed84760f2e42d208642725e1d8f38e75364f36f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transactions/DeferredBusContractTests.cs",
+      "sha256": "26c5db799c8757a81f2ced37c056fcd7085dbd4ef7506c571951b35f6a6dcfcb"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transactions/DeferredBusRegistrationTests.cs",
+      "sha256": "ee477132adff2aa34f0b70c2e265031f768f67788d5fc15c32ac870d6add41f0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transactions/SystemTransactionContextTests.cs",
+      "sha256": "7f08729eec86e7c1f30ee250a6c8857868f23cb382cbcacc394d8d00bdaeb443"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transactions/TransactionContextExtensionsTests.cs",
+      "sha256": "a56417a14fb8821917e2ff4a5e540c6593602dd22f8803d596147768b8d29457"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transformation/ActivityTransformAsyncTests.cs",
+      "sha256": "9b0bfe42dc59661514309e11208bf411de4fafaa7508985bb80170312d42908e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transformation/TransformPipelineTests.cs",
+      "sha256": "9a98c94a7c8af7732c6935841955a61552d35f4b26f49cbcef1593693278be1e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transformation/TransformPropertyContractTests.cs",
+      "sha256": "7e40a20bd724c9964045124efcf11f05e9a590d2c94cb84be6329be100a17bc6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/BusDepotTests.cs",
+      "sha256": "0dfaf3a2bf4ed188bea256dbf08f2ea6a48b438fbecbbf0e516d84c9fa1185a1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/BusHealthLifecycleTests.cs",
+      "sha256": "f0e7b1c851e15ddbb68a180828adc403ecff7880b349ca23d31b75a53b2a4fd9"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchIntegrationTests.cs",
+      "sha256": "c69d7c7b8793f4209efba87bf29b5737080f6f46f617c8f6d8376d5c6d1acdf7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchSettingsTests.cs",
+      "sha256": "b677f345e7288ee9a7d7f5c619175ce13c3d3709409d031c657b80de584974d1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchTests.cs",
+      "sha256": "8ad9fffb0c76e341129dc8c7eeccbeb586d917348a3fe1583d66d639682caa97"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/ConsumerAgentTests.cs",
+      "sha256": "160ccfa858b1cdd4524bf9b352b9dd6042994bdaa450994617dae7716c217dfd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/ConsumerDuplicateAndTypedObserverAdmissionTests.cs",
+      "sha256": "be54df46075c59f517b4aeb22fec608c4c986c9010281ca9b669cb5d0e46bd5c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/EndpointProviderTests.cs",
+      "sha256": "7bb91454473d87cd895a4b0405780e3c5c6fe277f58d65f1992747c6cc77e39a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/Fabric/MessageExchangeTests.cs",
+      "sha256": "89e27ed5849800f861131f95c566815523a66289412f7d06a012fc07b17b3a02"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/Fabric/MessageFabricTests.cs",
+      "sha256": "1f7be94a4dfcd329bf556d1c78a13816756612f2cac1864fe55d0d6d002870db"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/Fabric/MessageFabricTopologyBuilderTests.cs",
+      "sha256": "b2d289952c712461125945621672bfa9d213fcb44d04f1228eee73099f09b14b"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/Fabric/MessageReceiverCollectionTests.cs",
+      "sha256": "44ba144bcf34ebe3f7753a60990eb7311cdbb293a10df07dcb1bcdccc8a36257"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/Fabric/TopicMessageExchangeTests.cs",
+      "sha256": "0800b0022d86e3723393f65777fba0b952edd0dae26ed6d08ebc154baf81b1c0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/HostConfigurationRetryExtensionsTests.cs",
+      "sha256": "9ede074c2a37ec3329614e59212df0a52854a930f0b619c512e4b0d019ac9b7c"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/HostHandleApiTests.cs",
+      "sha256": "e1c30b01e6b81a7db920a00e0316b46b33dde8e256f19c8e996c5e935fac72e6"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/HostOwnedShutdownDrainTests.cs",
+      "sha256": "238bafbc43ee1ddb96451a58101bfca10085664403279ee9bc1ff64a397bb6c3"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/HostStartingDiagnosticTests.cs",
+      "sha256": "1684ea5b63a4d9219564bfc01d4bce543872a36ebc02acbf0aaf6556b91a15f4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/JsonTransportHeaderConversionTests.cs",
+      "sha256": "e5bf534185192ed40116197108f7ac9a0014f74181ad51e2b2389833d09f6c86"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/ReceiveEndpointDispatcherTests.cs",
+      "sha256": "fd619062c91316407b0bb43c2366c047b1a543b2bc1c80c4cab3dc86fc0e4ab4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/ReceiveEndpointProviderResetFailureTests.cs",
+      "sha256": "4e58f782d12ee99fea582fcf07582dc8a95604328a7c6bab3d1ec608310e5846"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/ReceiveLifecycleTerminalityTests.cs",
+      "sha256": "3e754ba399031a6e53ec6b33a247f0602805f01dd27a6e64c73b743a3e016833"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/ReceiveMessageLimitsTests.cs",
+      "sha256": "afd3e2e9aa6704979e5afbed93b4c05a038ea06643ece259d73cce33053b1c17"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/ReceivePipeDispatcherTests.cs",
+      "sha256": "0288a282b0b6f7f32036c9bb7ce8f0925a9ef86635af94d1e5bdacd19b971109"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/Receiving/PendingReceiveSettlementBoundaryTests.cs",
+      "sha256": "a527c4025be3186d9814c9ca0075e767029d86ee623a5ff2796c93092bb50fe2"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/Receiving/ReceiveContextProxyTests.cs",
+      "sha256": "0bb00ab8cfbd63e7d75d4d343bcd0d0f9c33a4a4449b839e10c57cb58e937fc7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/Receiving/ReceiveLockContextTests.cs",
+      "sha256": "1aaba45ebae05bdff42bdfb030961b4a19581bed590de61a6cf164edfb34b0ee"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/Receiving/ReceiveNotificationContractTests.cs",
+      "sha256": "bb179b6d60b15ed4bf2f30452714a54e9f11732f017c0759208f89b44a610b23"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/RequestOutcomeTimeToLiveTests.cs",
+      "sha256": "1dff821ccf9096867f987bec40ba0868bea181fd6281939ffb31a956c4754b80"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/RiderCollectionTests.cs",
+      "sha256": "f7b5a5451f3059a0a9700c74e774ec9cc2cbc8ded77491894d3ab5d5cb7679dd"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/SendEndpointCacheTests.cs",
+      "sha256": "7066eb751da4fe224d0af66fcdc9b303d42f36127bab1a3c5f958d59454a28b7"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/SendEndpointContractTests.cs",
+      "sha256": "e1344d12012f04e3f47764668a8a5785e073b1bdf378d6b5ca7cf8aff6903758"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/SendTransportTests.cs",
+      "sha256": "2dcb59821771c39122a3a4050afc1385826e4a5894bf64f89d1552130a5798f1"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/Sending/MessageSendContextPropertyTests.cs",
+      "sha256": "738b294719fc20b29b48ef64925bfc2d9de52ad4b17a1de3bbbf9740ef15f924"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/Sending/SentMessageMetadataTests.cs",
+      "sha256": "7906a59b21d63770608e4fdc914b265a9230b0f43d8c9af7ed5a3da069e60b7f"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/TransportValueFormattingTests.cs",
+      "sha256": "3501cc8e2523321ce5868732402ef72b4a57df2e9682c841cfbf9fdce20b96f4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Util/AssemblyFinderTests.cs",
+      "sha256": "d6ce783d44c20b11c91669e7757b872b768f92f7a97f0ece64084fb83a64d659"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Util/AssemblyScannerTests.cs",
+      "sha256": "23d481eafdb0326a2c73a44bc8969e6725026166913cc75bc1859330db057dc0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Util/AssemblyTypeCacheTests.cs",
+      "sha256": "db32e57298ab6cb961e2e66ca3b76513599dc974231a4d86177b67616ac3b83e"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Util/CancellationTokenExtensionsTests.cs",
+      "sha256": "ee9f1edcb6593bf4fecc461e3a1b8229e5d8f0475639297d332f0714c74a9b8d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Util/DisposeAsyncExtensionsTests.cs",
+      "sha256": "e44cac8bbdabe1ab82b876106de3aa23e62534bd192309c03c4301d493c2ac73"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Util/MultipleConnectHandleTests.cs",
+      "sha256": "c31df0ca72f76e0bc9d02c748ee1023b34d47df99e6544890e8878139db45a60"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Util/SingleThreadedDictionaryTests.cs",
+      "sha256": "c16f504467eed8779c550400c7b9baa9009c4947933b56d3b87f297ce2bea470"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Util/TaskBlockingTests.cs",
+      "sha256": "2c38d3debeda01eb048bb0d9861eefe868c3e549541ef9ac0e7c2f458838a0cc"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Util/TaskCompletionSourcesTests.cs",
+      "sha256": "2f4dde1137264562d7e5dcf2c20da7e1fe615de28ad7c52a5322fa48efd306b0"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Util/TaskExecutorTests.cs",
+      "sha256": "fa86e8f8b658000e1756816443d2bfb481d747b99044486be5a829245848eda5"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Util/TaskResultsTests.cs",
+      "sha256": "83db21ed3eff5876c957101e7075397e8659959a462c40bcf3efa493cfdb0361"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/packages.lock.json",
+      "sha256": "d375ff4c06a3b00d9f80a63a8eada1a62bb720261742ad6be7cfbcffc5fdab30"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs",
+      "sha256": "21f7290640fbe910bac4c87bb3b3ee1881dcafcfaa9255acd85e1c131ed16589"
+    }
+  ],
+  "context_rows": [
+    {
+      "path": ".editorconfig",
+      "sha256": "620cf8f37fd9c45ae51dccf0ddadca145d1bb44daacd3b092e1a910444646f66"
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "c17b2e3401aac308943eefaffa5316a3110445858bf848917a7a774e232020aa"
+    },
+    {
+      "path": ".github/workflows/native-tests.yml",
+      "sha256": "2cd77f10f95e87fea7c5bbefcae9908adadb5dd27f7add3e289898100a10406d"
+    },
+    {
+      "path": "Directory.Build.props",
+      "sha256": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf"
+    },
+    {
+      "path": "Directory.Build.targets",
+      "sha256": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1"
+    },
+    {
+      "path": "Directory.Packages.props",
+      "sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e"
+    },
+    {
+      "path": "NuGet.config",
+      "sha256": "3f6cda87abdfbc3e7f7a80906f21b11009ac811c70834dfdbc4840db01a9ce93"
+    },
+    {
+      "path": "README.md",
+      "sha256": "1a6fb626c4b2d2523298a62e8f2c148e969fc21df3d8a058d3a4a2dfe069a83a"
+    },
+    {
+      "path": "ViciOne.ServiceBus.Engineering.slnx",
+      "sha256": "bc11986b349179fc182a6cf8ef222f269d09d8f3361b27a72c2db675ec3fee72"
+    },
+    {
+      "path": "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "sha256": "ac102688f92ab8ee214af159e05703a6d0bc43dde268efe78c4ca41e82f45091"
+    },
+    {
+      "path": "ViciOne.ServiceBus.slnx",
+      "sha256": "1977742d6c335f003ea6d556a61b8c725993dae81abfe2b81432da9128d8f070"
+    },
+    {
+      "path": "ViciOne.ServiceBus.snk",
+      "sha256": "d8556825164fad48714aa53b243a704787add3646fcaef42c1740eba37e9f303"
+    },
+    {
+      "path": "global.json",
+      "sha256": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93"
+    },
+    {
+      "path": "signing.props",
+      "sha256": "71a2cc9a5b04a60ea4093aa41824f275ad7cf5d87f4a8866a09990450ec2e411"
+    },
+    {
+      "path": "src/Directory.Build.props",
+      "sha256": "be8359cbeaf46760b90b3755da645aeb7b4a786af8f0fd6db9396d21f6e67911"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "sha256": "fc0b486dd4aa4c78487b1e0fa9f56c546cf1c27e0499d9e1f403f26923d54fbb"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/packages.lock.json",
+      "sha256": "03eeadc5ef377c17f787ab65f41fb4c8a9c936bb7f7f4171111fdeec8a81cb46"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+      "sha256": "3f04063a3393b887bc0d1b666c73e7f4375e73860b8d6b7640960d559913adad"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/packages.lock.json",
+      "sha256": "86765fee52d3b678b0284dcb4e4b3ce29040f0f50ef2cbd06b34d1768396c1d0"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+      "sha256": "8fe3e90f79ab15806ba2fd38e37e717f02a75eafa5b4c05f08b9ee63dd57ea18"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/packages.lock.json",
+      "sha256": "9f0d542ac05088157738f3a4e312168895e97f0b758b7998d2c11107280dad02"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj",
+      "sha256": "16d4e0c3ae2688b32231a0139ef2c6a47baefe670d260703054d73d83eb1d443"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Initializers/packages.lock.json",
+      "sha256": "86765fee52d3b678b0284dcb4e4b3ce29040f0f50ef2cbd06b34d1768396c1d0"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj",
+      "sha256": "8212a7535e1eb020e3b0a4f52d4e49443976acd30b7c0a5a3339d1610fb91f01"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.JobService/packages.lock.json",
+      "sha256": "af5e5dbd69748d534f399e6d87afb9285147054a8b3df4094015e9423d3dd239"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+      "sha256": "5594cd1825e0998de96fa6d78a5995ad36e949fa54cdcd75cf02de181877d023"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Mediator/packages.lock.json",
+      "sha256": "86765fee52d3b678b0284dcb4e4b3ce29040f0f50ef2cbd06b34d1768396c1d0"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+      "sha256": "a6d0faa1c1f4065a2a95f49d92ff643cab6de89f9b5c62bb30980b60009e7a77"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/packages.lock.json",
+      "sha256": "eae729ac7ee049d15a83ac5e54dbc26cc4c148b252db538609c1303c07f758ab"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+      "sha256": "1e90e8eedf73e374ffb0a4bb145fd4d1cf4a94cdd05b65c29d440a41f8b90603"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/packages.lock.json",
+      "sha256": "8e91f165afa3f9fdfd56e070b75a25061222765e992e9caf27d64713a1ab815b"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "sha256": "382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/packages.lock.json",
+      "sha256": "9e662b8bebadccac8b2e96c2db3a2694e922596877fcb1de9b95e4721f6c61cd"
+    },
+    {
+      "path": "tests/Directory.Build.props",
+      "sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8"
+    },
+    {
+      "path": "tests/Directory.Build.targets",
+      "sha256": "3a866a9a26434dcca1aaf6d61a8d2afc84960f21ceee810b5b825f1ecdd7fdb1"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers/BrokerOutageControlClient.cs",
+      "sha256": "fcc2f6f41067c741561876cd1c7f21554397849303358de2907f9e3b0e2a1370"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs",
+      "sha256": "a8192e1d3b520714ee1a732505a26a740e06ae073a6f303972a17aefaf328206"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs",
+      "sha256": "14ec1d7a56de88968a8bbbb25bb578c50fef16bfb9a4dd078780fbd6e6534c83"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Databases/TestDatabaseName.cs",
+      "sha256": "0cbef22e6e824fbf72de4b7d16cea1fab71fe4c59c03966cf04edd853daeee18"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs",
+      "sha256": "d78d054d54468692e35500dca6c90e706e6a77bfcbb7d1878bcb4bc97fba4e9e"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs",
+      "sha256": "130f488a8ff8ddc7d43561f77f6188e5d3088de109aef1ba588c454e73180c66"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+      "sha256": "954d1e414f5ad15239213b69d4d6e0dd7bb71fff95d8ce81616f49f991d11656"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json",
+      "sha256": "aef4c037696049b2f689024c6407dab31fe6d8d65594580bde74917261ac7d76"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ApiSurfaceGlobalUsings.cs",
+      "sha256": "35832a2f279237fbe0e7adc762bbeb566d3f5b1b998389ceb04e3d0b9777c8e1"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs",
+      "sha256": "ab5934a4fb8e642f631ceb9f1c7cb5593565c5efca1131041e9a6dbcad744e02"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs",
+      "sha256": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs",
+      "sha256": "4ff7066cdd86cda1ea8e3890e4e6e437be99c4690192aeae750e392133ac2f96"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryConsumerCommitTestDriver.cs",
+      "sha256": "d85c1411aa5107ffde60c9dced298e16c3ecc862d4c9aee96d3817f47900703d"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryInboxPipelineTestDriver.cs",
+      "sha256": "6a9919dae8a87bac8ba04e921d6dd504afa16712c8e20534d9cabf6c76e8229d"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Events/HostReadyEventTestDriver.cs",
+      "sha256": "c19ec68977034c7fed3736c0ad3bbe7aa0c01a454b00f64537153a7f740f3c18"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxCheckpointDriver.cs",
+      "sha256": "5298150f303bc6b4d0fa30ff9a68dea14fa4334c72299e53988121c4139011e4"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs",
+      "sha256": "d418b48fcfab4651883083f6cef6a642c076a296fc0dd79758d046e59a17ad12"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/OutboxConsumerIdentityTestDriver.cs",
+      "sha256": "2e4ae978decb1f63b3456a77f3c08d38e3e083b9cd40131b9f7c58001fff221d"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Initializers/InitializerConventionRegistryTestDriver.cs",
+      "sha256": "4d44deb119926f67ca14b3ce7a944cea5cfaa6b9098078b80d51f87ff2878cb4"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Internals/ReflectionImplementationTestDrivers.cs",
+      "sha256": "a23bbb90452db6f9a76b8e168b48bcafece435260daee7f1c2cb554659cbe6a7"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs",
+      "sha256": "06c55acde94dca39c78655175fd381f55488a348ae46ed9f3858be657a7d7960"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalEntryTestFactory.cs",
+      "sha256": "ac018f767c496f22a58fc529d53b773176e0471141f7954dcb7f2b7cab6dbd0a"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs",
+      "sha256": "789980d42226b6c1938dd5c0222ee1057d42bea3fabd6e7f98249515cef480bd"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs",
+      "sha256": "80587a0e121646e103d4700c6707919e748dd5d1635e90eac3ec98ba9d2d0c08"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/OutboxTelemetryTestDriver.cs",
+      "sha256": "ac51a79581afbe888d74a0c12245d66fbb428f105a5c309f1dff93767a7c0be2"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Operations/ProbeResultBuilderTestDriver.cs",
+      "sha256": "0657cc0ce032c70257ca95fd18d3cf1fa7b3c80cb4a77c198699298cef86ead7"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Rescue/RescueContextTestFactory.cs",
+      "sha256": "672c8bd230b4f0ac01574f52e559a7dc4f93ef48c328301de0b26dec10b21b74"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Retry/RetryFilterTestFactory.cs",
+      "sha256": "c230acd666687c6e70319de6aa581ce20add2c455e0f2c7e1761775d97509055"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Runtime/ServiceBusRuntimeLifecycleTestDriver.cs",
+      "sha256": "155a66607a8c85646bea342904e86fe7606dd8cea017b175328f93bc4391dee4"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/SagaStateMachine/SagaStateMachineExecutionTestDriver.cs",
+      "sha256": "79f741e8b9fc718c86fda5c8a333c7da0ba55e507d0b2645d378b1aa9193d98f"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs",
+      "sha256": "ac92cde6bf4efc46451bb85f8ec514fca7afafbb982feaaac8aa8328f1625f22"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/PayloadAdmissionSerializationTestDriver.cs",
+      "sha256": "c0699d7fa459b2fbf9cdb7bccc05fccfbdb8f5d73a1f284a25fa08615c306ec1"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Topology/GlobalTopologyTestDriver.cs",
+      "sha256": "32db4639f1d698578cbe75bea5f94d43ccfe2927163290dc4dd33d4b9850f392"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionBusTestDriver.cs",
+      "sha256": "faa22502a108b193f1592ba1f1f9eda5320c254bc07da3007d9d943b265a94a4"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionNotificationTestDriver.cs",
+      "sha256": "8e36b57dae4f54a9399f99827b9308414bc8a948a35c7db79966055dca9342c1"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/BufferedBusTestDriver.cs",
+      "sha256": "6e7f2318d2f2afbaa7acee1867842145db4f883751c8a6eb08939127f6ae218d"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs",
+      "sha256": "bad849fbe21adccb3bbc1a16bfa700ff90bf1203110f6650041e746f030db9b0"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/UnusedBus.cs",
+      "sha256": "f689f18d739607feac64adf96c1ad112a33cdc167a5dc05f51a0b09d5fe89596"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/AsyncBusHandleLifecycleTestDriver.cs",
+      "sha256": "29fe423859ac06922d90c0e4d00a186a0de7f123f279963361a674bfb2a4bddf"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/BusDepotTestDriver.cs",
+      "sha256": "2501d5e0fe70942b4539158d711bf9aa17326237248b70574dc72c2e087fc72e"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs",
+      "sha256": "2cbd0652ebc77f9defb1bad0fc9deb3c2a125f925e913748b53520366b99fe95"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/ReceiveMessageLimitsTestContext.cs",
+      "sha256": "d36b449f057befd98796a4c361ec5d42ecbd6651ddfcf6baa069feb047fe6f64"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/RiderCollectionTestDriver.cs",
+      "sha256": "ea4d9d5fcb7451746683f6f4d924e12b249964bcdae23d99dbeb74442fb6db6c"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+      "sha256": "f79459b8d6dc2fd119935f425fa0284caa4592a8cb04fb79fd2e732d8db76f2d"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json",
+      "sha256": "43949251eee801841536031e9d9f8405b562e4db8d409b84bb73e217e54226ef"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/packages.lock.json",
+      "sha256": "d375ff4c06a3b00d9f80a63a8eada1a62bb720261742ad6be7cfbcffc5fdab30"
+    },
+    {
+      "path": "tests/testconfig.json",
+      "sha256": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f"
+    },
+    {
+      "path": "tests/testsettings.json",
+      "sha256": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7"
+    }
+  ],
+  "context_delta_basis": "All84currentcontext bytes equal prior complete Root qualified hashes; coverage tools are separate acceptedP02, not members of this84set.",
+  "new_test_cases": 8,
+  "new_requirement_rows": 5,
+  "no_agent_transfer": true,
+  "supersedes": "R1 metadata errata227line\u2192actual226 and context reuse84; current test2casts+unrelatedcontrol fully Root-authored/read"
+}

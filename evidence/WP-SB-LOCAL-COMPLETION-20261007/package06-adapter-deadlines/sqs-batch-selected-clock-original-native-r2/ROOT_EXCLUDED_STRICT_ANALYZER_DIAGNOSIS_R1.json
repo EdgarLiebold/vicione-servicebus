@@ -1,0 +1,70 @@
+{
+  "kind": "ROOT_EXCLUDED_TEST_ANALYZER_COMPILATION_R1",
+  "tool_session": 12507,
+  "joined_root_exit": 1,
+  "stages": {
+    "locked-restore": {
+      "command": [
+        "dotnet",
+        "restore",
+        "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+        "--locked-mode",
+        "-nodeReuse:false",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-original-native-r2/locked-restore-r1-{}.binlog"
+      ],
+      "joined": true,
+      "budget_seconds": 300,
+      "pid": 85169,
+      "process_group": 85169,
+      "group_absent": true,
+      "returncode": 0,
+      "deadline_exceeded": false,
+      "seconds": 5.051672299999999,
+      "raw_sha256": {
+        "locked-restore.stdout.log": "bb87a34379941077ff199804e6739aae22f597b33f9feef942db1184da34ff26",
+        "locked-restore.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "locked-restore-r1-20261008-083727--85169--4B2smH.binlog": "481fbfb223f4e5d2aaca912ae036aa405edf89132bfcaa69e1808b7ec5ad6a37"
+      },
+      "binlog_gzip_crc_verified": true
+    },
+    "strict-rebuild": {
+      "command": [
+        "dotnet",
+        "build",
+        "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+        "-c",
+        "Release",
+        "--no-restore",
+        "--warnaserror",
+        "--disable-build-servers",
+        "-t:Rebuild",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-original-native-r2/strict-rebuild-r1-{}.binlog"
+      ],
+      "joined": true,
+      "budget_seconds": 300,
+      "pid": 85182,
+      "process_group": 85182,
+      "group_absent": true,
+      "returncode": 1,
+      "deadline_exceeded": false,
+      "seconds": 41.885624621000005,
+      "raw_sha256": {
+        "strict-rebuild.stdout.log": "ef499a62d4f87522702d89507c3b296ea866210bdc8744c33b17290d68ff4cea",
+        "strict-rebuild.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "strict-rebuild-r1-20261008-083737--85182--BvUYvr.binlog": "ae9fe12f0b0de566172e7241c2dcc0489a3772be09c18f90b380a3ae6829adad"
+      }
+    }
+  },
+  "binlogs_crc_verified": 2,
+  "first_cause": {
+    "rule": "xUnit1051",
+    "fixture_lines": [
+      151,
+      152
+    ],
+    "required": "Use TestContext.Current.CancellationToken on two ThrowsAsync lambda WaitAsync calls"
+  },
+  "prospective_native_cases": 9,
+  "actual_native_cases": 0,
+  "limits": "Fixture compilerfinding, notproduction/nativecausal failure. No compiler or nativecredit; sourcesunchanged until separatelyreviewed R3fixturecopy. Samepermissionescalation restoredsuccessfully; initialIPCcause stillinference."
+}

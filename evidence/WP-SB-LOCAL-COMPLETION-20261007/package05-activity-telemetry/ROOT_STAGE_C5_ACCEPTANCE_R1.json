@@ -1,0 +1,61 @@
+{
+  "kind": "ROOT_BOUNDED_STAGE_C5_COLD_SOURCE_PRIMARY_UNWIND_ACCEPTANCE",
+  "status": "ACCEPTED",
+  "product_owners": 2,
+  "new_parent_facts": 7,
+  "child_cases_per_focused_run": 7,
+  "requirements_rows_added": 7,
+  "freeze_sha256": "7cd6b26b0bc32d858d55ba06f2db22c5d82510f24e3a1992950ac2a87fc9aa47",
+  "source_sha256": {
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/ColdTelemetrySourceIsolationTests.cs": "b70774d05b7d4bba088e0f2f0266bc0807fb1435b927077b2720ebd1a79d8eb6",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "00913637eafb82610ecbdd3a1a11a2e7c30d62bbe2ad81ce9ca0325287c52db4",
+    "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs": "05e403b9ff64a86e7828b08103837c7bd631e935890b089c63fe58eeb454abb5",
+    "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs": "90a781b81f734a2be9b4b3a4e4272b49afb842d46cd62bb9f05df823ec33126e"
+  },
+  "root_core808_read_sha256": "a7ef18b7dbf6d015f10a0873f4f771d1fc0568701e4c9ff8fbc49b7c5ebbbd0c",
+  "root_product_read_sha256": "b5326ea45615fd45e1d0e54a42a2c85a65bbc46de1e8d3496eb0faec615391f2",
+  "independent_reviews_sha256": {
+    "package05-stage-c5-original-r4-native-artifact-review-r1.json": "6043b26a99944fa8143d0bd624f231c057125fa9826913c1f8ae5ea5b3b7332e",
+    "package05-stage-c5-product-source-tests-adversarial-r2.json": "47e0869f5d67fb9e53ba68b59b774eb6ec08ea2e0c0ef8d20170885d6e53967b",
+    "package05-stage-c5-fixed-r3-native-artifact-review-r1.json": "4b9370ec53749a15f87580caa2d85d750c2983513a15a42e5d0e333346ef619e",
+    "package05-stage-c5-r2-native-m1-m2-adversarial-r1.json": "78b8001b254d0d96b99b8deb8dd58c81d66e80342c533276b6fd0f4c54510739",
+    "package05-stage-c5-mutant-m3-r2-native-artifact-review-r1.json": "d24fd3058c5af000321e97d774c4925965bf9574022e38f928fe2b32c345be37",
+    "package05-stage-c5-mutant-m5-r2-native-artifact-review-r1.json": "e22559582138c6a755bca9f10452962e4d13655a0dde54cede1a65066e71ca80",
+    "package05-stage-c5-final-native-artifact-review-r1.json": "3b8f52a32189b24b22f372eeb598b599b341eeb8775045fd29c33e38dd6e6157",
+    "package05-stage-c5-mutant-m4-r1-survivor-native-artifact-review-r1.json": "f8bf800d74a616d0b54b3fe72b013a019196f029f277db8eb4312ef96eba935b",
+    "package05-stage-c5-r2-four-mutants-and-r3-driver-preexecution-adversarial-r1.json": "06624121f2ac2b0f63417e3700ed279b7e04a9c781257744bbeb64d598b9cc23"
+  },
+  "native_summary": {
+    "original_finite_child_red": 3,
+    "original_named_healthy": 4,
+    "fixed_focused_parent_pass": 7,
+    "fixed_focused_child_pass": 7,
+    "fixed_whole_core_pass": 8074,
+    "compiled_final_single_cause_mutants": 4,
+    "finite_mutant_child_red": 4,
+    "mutant_named_child_healthy": 24,
+    "distinct_mutant_red_case_ids": 3,
+    "unchanged_final_post_parent_pass": 7,
+    "unchanged_final_post_child_pass": 7,
+    "selected_focused_parent_event_slots": 49,
+    "selected_focused_child_event_slots": 49,
+    "selected_red_slots_per_layer": 7,
+    "selected_healthy_slots_per_layer": 42,
+    "unique_closed_binlogs": 18,
+    "historical_r1_m4_survivor_kill_credit": 0
+  },
+  "root_native_joined_sessions": {
+    "original_build15986": 0,
+    "original_focus29820": 2,
+    "final_build55767": 0,
+    "final_focus51359": 0,
+    "final_core7982": 0,
+    "four_final_mutants_driver50451": 0,
+    "final_post70338": 0
+  },
+  "original_result_sha256": "88a6afdbc9e6a19482fa1c70d4ef4c4a3bb941abf00e87107e223b63277e253a",
+  "fixed_result_sha256": "8726035e58118549b7b5ca57d3ff7182557a7ea3ff81dae00f03c9e40af7b7e3",
+  "core_result_sha256": "c08772ca675fea89c196a2250a6b78f711528d893563fbcaf2e4b4c83614c16f",
+  "post_result_sha256": "288ba71d98952f03b73e423de7d85169977c48dd0ff8952ccdd44785f18b03ba",
+  "limits": "Cold optional named timeline source cached inert null before owned sampling; required source caches original exception; constructor secondary cleanup preserves primary while normal timer cleanup remains required. Original nonthrowing source case healthy; actual redundant factory-restore mutant survived and was removed, not counted as kill. Parent wrappers and fresh child cases counted separately, child direct apps zero MSBuild; no compiler/protocol/stale-source attempt credit. No invisible global ActivitySource rollback, malicious reentrant ambient restoration or arbitrary unreleased timer guarantee. Required public caller cleanup/EF elapsed remain open. No entire P05/currentcoverage/allUnit/providers/CI/cloud/device acceptance."
+}

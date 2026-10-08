@@ -1,0 +1,14 @@
+{
+  "kind": "LOCAL_COMPLETION_DOCUMENTATION_R12",
+  "source_sha256": {
+    "CHANGELOG.md": "2a5c742a4715e5df1a2b3f8359b4e824a2804503167fee0f1ae17898ea0ab608",
+    "TODO.md": "62cd8b5da4e4fab97891e6fcab6be0dd739aa2e28e0e54df53e0a35f0690cd55",
+    ".testagent/status.md": "94dd267cba17043852dd73c4effa7310ff98cd2d3895450e8a56d265f218704c",
+    ".testagent/plan.md": "06912c0b49cd69dc87b11b8ca2f4d4de50fcfde77001fdb8e50df0fac533615c",
+    ".testagent/local-completion-plan.md": "ac9c7ace1493d0cdc21e9787d6d611f3f879eb3d6439f9a284506c7cc9e7d130",
+    "docs/quality-status.md": "ac775df271f1fd6415223a3bffd202236204baf50e020b7c911aa8c85d51b431"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r12",
+  "bounded_C4_acceptance_sha256": "fa5625bd9f983099ceb398b48457bb513ac005f239197d716378974776e1867c",
+  "limits": "Historical234 unchanged; C4only; cold lifecycle/EF and broaderlocal/currentcoverage/CI/cloud/device open"
+}

@@ -2049,5 +2049,26 @@
     "testAssembly": "ViciOne.ServiceBus.RabbitMq.Tests",
     "testType": "ViciOne.ServiceBus.RabbitMq.Tests.RabbitMqTransport.RabbitMqBasicConsumerExtraDiagnosticsTests",
     "testMethod": "ExtraCallbacks_OwningDiagnosticsPreservePublicOutcomesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-RABBITMQ-HOST-CONFIGURATION",
+    "variantKey": "selected-named-rabbit-options-validated-by-generic-host-before-runtime",
+    "testAssembly": "ViciOne.ServiceBus.RabbitMq.Tests",
+    "testType": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests",
+    "testMethod": "SelectedNamedInvalidOptionsFailBeforeRuntime"
+  },
+  {
+    "requirementId": "REQ-VSB-RABBITMQ-HOST-CONFIGURATION",
+    "variantKey": "unselected-default-and-other-named-rabbit-options-cannot-reject-selected-bus",
+    "testAssembly": "ViciOne.ServiceBus.RabbitMq.Tests",
+    "testType": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests",
+    "testMethod": "UnusedInvalidDefaultAndOtherNameCannotRejectSelectedBus"
+  },
+  {
+    "requirementId": "REQ-VSB-RABBITMQ-HOST-CONFIGURATION",
+    "variantKey": "invalid-second-selected-rabbit-bus-rejected-before-either-runtime",
+    "testAssembly": "ViciOne.ServiceBus.RabbitMq.Tests",
+    "testType": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests",
+    "testMethod": "InvalidSecondSelectedBusFailsBeforeEitherRuntime"
   }
 ]

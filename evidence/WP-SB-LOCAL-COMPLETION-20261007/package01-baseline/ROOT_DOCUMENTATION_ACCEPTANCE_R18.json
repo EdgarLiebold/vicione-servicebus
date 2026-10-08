@@ -1,0 +1,16 @@
+{
+  "kind": "ROOT_ACCEPTED_SIX_EXACT_DOCUMENTATION_R18",
+  "published_freeze_sha256": "ad155868be56a20055842c452f9d64cfd6b753a190e96e47bf9df8483d7efdd4",
+  "independent_review_sha256": "b08dc9b0753072cd5b5cdd22941843a314b2387ddf0ddc541283aae94f9a2bbd",
+  "source_sha256": {
+    "CHANGELOG.md": "a95593e5d5528b798fbccd02dfe7ea8ba98b1907a8b59b8548f2a2ec3137146d",
+    "TODO.md": "9b7db19f97678ccf1630890aff3777c09a34392494e774c1911b061c2178bd2b",
+    ".testagent/status.md": "5868f99cfda21c635e8e92d9adb0cf8bfe3d545c017a79bf66b728558e0aab9b",
+    ".testagent/plan.md": "6d35325ff148daf752ccfcf4d9fefd8aac38941eaa1df066e127e2d2e83a8fca",
+    ".testagent/local-completion-plan.md": "ac4b5610c5616b707820797cd7a03d46af90edf1607aaac89c2663c0bfeb2f25",
+    "docs/quality-status.md": "128ed40aa1d89bcc68d755c856f6c7632f95671cdf077ef0f4d30d88aa0e1d62"
+  },
+  "sqs_acceptance_sha256": "2a4af610b49a00152377d8f00decf2286142f1a80e0e7079954127b5a06cbbc5",
+  "Root_author_read": "Authored and reviewed every complete six delta against exact R17 source, preserved unchanged history; summary stale3hashes corrected against actual immutableR17 without modifying prior evidence. No agent body credit transfer.",
+  "limits": "Only bounded local named SQS stage A added. Every other eleven TODO sections and 62 OBL IDs retained byte-for-byte; old audit234 and all historical sections retained. Other packages/external gates remain open."
+}

@@ -1,0 +1,566 @@
+{
+  "kind": "ROOT_FRESH_SQS_BATCH_CLOCK_PHYSICAL_QUALIFICATION_R1",
+  "native_sha256": "71a09bdd59260fdd37fa01004898d6a52e4146d7ce4dd88c96c162d3764b04c2",
+  "actual_images": 10,
+  "actual_document_checksums": 2999,
+  "actual_runtime_files": 15,
+  "actual_assets": 10,
+  "actual_immutable_source_owners": 23,
+  "images": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M5-no-fatal-drain/runtime/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "883750f3a083efe30211f9465eba9d8d97e05c3d64526cf06208ecc932d22d08",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3985908930,
+          "guid": "a3730e47-a1ec-47da-88f5-e9fe188c391d",
+          "path": "ViciOne.ServiceBus.Abstractions.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "470e73a3eca1da4788f5e9fe188c391dc22494ed",
+        "sha256": "5198908b76c220309e2a7048b040fe2b57d9707310a4fd890e028048a0c49c13",
+        "documents": 700,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 694,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 6
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "5b8a9f923d0609092fe83b39d33084f206d13fb0de5703655aba22343de1257a",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContextTimeProviderExtensions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/ViciOne.ServiceBus.Abstractions/Middleware/BasePipeContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "2303156020d82484c5e11820816eeea2ba27d0699ce51ba56a38fdf93cbfc586",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "2303156020d82484c5e11820816eeea2ba27d0699ce51ba56a38fdf93cbfc586"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/ViciOne.ServiceBus.Abstractions/Middleware/ProxyPipeContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "85171def7caf187a9f288fb5832c25329df494842db228183521db59d2ee1922",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "85171def7caf187a9f288fb5832c25329df494842db228183521db59d2ee1922"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M5-no-fatal-drain/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.dll",
+      "sha256": "95cd500bb6743fac38498211f5d4a860a8b08b7f9ebb9cd09c3320dc450ce26d",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3551255330,
+          "guid": "9ba49772-ff3d-4890-aaea-e03a319bb2ee",
+          "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/artifacts/sdk/obj/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.AmazonSqs.Tests.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "7297a49b3dff9048aaeae03a319bb2ee22dbabd3",
+        "sha256": "fdbf2c94b5b6e5f2c54746756eae83d08c07382280a542c8ff1a5cb6015a6fa3",
+        "documents": 65,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 58,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 7
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "70f0f650f37a4c23a192d5c0ae1c1d1193c0768646371e0e9da9799895dd97f3",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatchSelectedClockTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "58dc2c12c0b784a5f44cf90f4168c57eb32b91d45a543f0e7c4daedf49577d01",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "58dc2c12c0b784a5f44cf90f4168c57eb32b91d45a543f0e7c4daedf49577d01"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/TestDoubles/InterfaceProxy.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "55a842f6dddc1ba37756a23f01159dc4adb64cf4a686cae6565e7ab8b44677d7",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "55a842f6dddc1ba37756a23f01159dc4adb64cf4a686cae6565e7ab8b44677d7"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M5-no-fatal-drain/runtime/ViciOne.ServiceBus.AmazonSqs.dll",
+      "sha256": "8f1f2e8680c796c17883e56163b1aca3350b5bc110bd58204a2250fb03959dc2",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3624248460,
+          "guid": "d8f7b6f0-ef9c-4940-9ee0-c17b7bb65f1f",
+          "path": "ViciOne.ServiceBus.AmazonSqs.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "f0b6f7d89cef40499ee0c17b7bb65f1f8ca405d8",
+        "sha256": "a16998be9cc11db2f00c49745009fc98d9e77ac53df1f235fa88811fa8f2ef3b",
+        "documents": 168,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 148,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 20
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "964a6b3d7c805f5fda41f74ed500e0c53e552a5a655a408a5d5f3af958f9478b",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsClientContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "3cd1c53d27e83c627acfe8c48e05eae19eaf648b5268c6b10e5b16f8edf4d9dd",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "3cd1c53d27e83c627acfe8c48e05eae19eaf648b5268c6b10e5b16f8edf4d9dd"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsConnectionContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "d1a3dbe43b319e8ea020f1ac19119a73d168aaa7db2ac6337b8c616ce7c8b526",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "d1a3dbe43b319e8ea020f1ac19119a73d168aaa7db2ac6337b8c616ce7c8b526"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/BatchEntry.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "bcec5699585f925497c5729b6bc8f9ef4c37d6ad4a0fda4d0819e2e7114b02b6",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "bcec5699585f925497c5729b6bc8f9ef4c37d6ad4a0fda4d0819e2e7114b02b6"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Batcher.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "af893f73d5d22a7e5f7ecb1c21ba40924ace5a2c5fadf42409d324460965329c",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "af893f73d5d22a7e5f7ecb1c21ba40924ace5a2c5fadf42409d324460965329c"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/BatchSettings.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "38a2ed3b6af97024272d236c11d80ca028a6bf25a01627503b3ee368b8f169f4",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "38a2ed3b6af97024272d236c11d80ca028a6bf25a01627503b3ee368b8f169f4"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "f844ee8d2971b6c514026bccf55a7870359db9c687c3243fb78cc89d9f3cc3be",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "f844ee8d2971b6c514026bccf55a7870359db9c687c3243fb78cc89d9f3cc3be"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/DeleteBatcher.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "103ff4548994fc24eb2c9519a6a5af665ac9436bbcdec337ae94c4d7daa5c2b7",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "103ff4548994fc24eb2c9519a6a5af665ac9436bbcdec337ae94c4d7daa5c2b7"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/IBatcher.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "14fcfe90806ed1fb0a21753d4083c8e0bafb3047ba12c2af9536a2b3c056592d",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "14fcfe90806ed1fb0a21753d4083c8e0bafb3047ba12c2af9536a2b3c056592d"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/PublishBatcher.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "d0fd959e255a92b3ec590b1c18fad10f593f7a2cc65268044eaa694227dfb7bf",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "d0fd959e255a92b3ec590b1c18fad10f593f7a2cc65268044eaa694227dfb7bf"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/PublishBatchSettings.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "5190de9e1b49cb2559edb31d4010e15633bc68d76f0077af4ae1f4f51e667846",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "5190de9e1b49cb2559edb31d4010e15633bc68d76f0077af4ae1f4f51e667846"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueCache.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "ca9d922919ecf41c3d9730c7897898e7b8ae4828c7ac48bb7852a4c359f21af1",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "ca9d922919ecf41c3d9730c7897898e7b8ae4828c7ac48bb7852a4c359f21af1"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueInfo.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "37d726b27c1b2c1b3cad7182774cf3cc433641f42e139349337d976cf40dd858",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "37d726b27c1b2c1b3cad7182774cf3cc433641f42e139349337d976cf40dd858"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ScopeClientContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "b2ba7f9ac07d127bd28fc3a314f552965d204e6c85722b3d6fc41939b3c24be7",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "b2ba7f9ac07d127bd28fc3a314f552965d204e6c85722b3d6fc41939b3c24be7"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/SendBatcher.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "9befe7bed83b585d89505d6b38d1fb9f8e93b90c6bcc6deb7c9e213ff7c8e6c9",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "9befe7bed83b585d89505d6b38d1fb9f8e93b90c6bcc6deb7c9e213ff7c8e6c9"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/SharedConnectionContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "3f0f1c304085ddbf85af0564e2e9e1c925482aaf6edbeee3cc405b9ae70fcdc7",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "3f0f1c304085ddbf85af0564e2e9e1c925482aaf6edbeee3cc405b9ae70fcdc7"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "ffddbb75de458192267d4ce5150919043ca45d89ee347fc3926790dc50d2bb1a",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "ffddbb75de458192267d4ce5150919043ca45d89ee347fc3926790dc50d2bb1a"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "8c69df040650f3729b2c5d7d4151b50c727e8a3d68f48ac958d33405eee5d697",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "8c69df040650f3729b2c5d7d4151b50c727e8a3d68f48ac958d33405eee5d697"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M5-no-fatal-drain/runtime/ViciOne.ServiceBus.Courier.dll",
+      "sha256": "d688d39525df5c26b4c3f25d2b339dc71d0c319c1c56ebcbbe319fef738bbab0",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3924563637,
+          "guid": "de9c6b60-94b8-4fd1-bd97-f4e4afe2ebce",
+          "path": "ViciOne.ServiceBus.Courier.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "606b9cdeb894d14fbd97f4e4afe2ebceb516ece9",
+        "sha256": "023bd18661b61b3b4a548b20f898bb6d8a26d93d5b187df7da90d8d90aee1f7a",
+        "documents": 146,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 143,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "5aa7bcb9f8d440607f20275d5b4e56e850aa270e30e77362190eb3fc2043644a",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M5-no-fatal-drain/runtime/ViciOne.ServiceBus.Futures.dll",
+      "sha256": "49fb4e180b5fcbd30fc5134f7e987b361d7975ec048987175c3ae5143471b50b",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2902548668,
+          "guid": "382753e9-5de1-4b93-970b-180c6ad4632b",
+          "path": "ViciOne.ServiceBus.Futures.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "e9532738e15d934b970b180c6ad4632bbc6001ad",
+        "sha256": "792f3a33ba6321887b90e395bfe82a2f88d3378fd6844993db594358b76f5715",
+        "documents": 61,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 58,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "5bbe7057d510241a9918c403b3629632f00ddaabce348ed3b74ce4315e31abf8",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M5-no-fatal-drain/runtime/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "f81841af408905b3c2e68a23998ba1feacfc7dba22debdd76e31c5e0cd1c03d8",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4226528478,
+          "guid": "61d5898f-3f5a-4e00-91bf-fca6beb775d2",
+          "path": "ViciOne.ServiceBus.Mediator.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "8f89d5615a3f004e91bffca6beb775d2deb4ebfb",
+        "sha256": "ad991905523361662c4432b81e72f8c1f3e386aaac10167fd93ca9a7dfbbbe6e",
+        "documents": 31,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 28,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "a160c3753a18a4c5016f03d4743be5f58bbeebf2c6b35e92585f8efb210cdb3e",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M5-no-fatal-drain/runtime/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "f1d02da866d89d244adb70742c6e08d4254ba838b5d70042b3b2794993737f7d",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2510114176,
+          "guid": "b52b1510-a28b-4db2-80b1-0217c564d0ba",
+          "path": "ViciOne.ServiceBus.Sagas.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "10152bb58ba2b24d80b10217c564d0ba804d9d95",
+        "sha256": "de947c17f96b0698a33d89d298d0e578b8497ed46e7233fb8b046bbcf40a331d",
+        "documents": 374,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 371,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "5240566dae7d970d15060421aeb321fd4c2ceac7c992194ab201ca03111cba16",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M5-no-fatal-drain/runtime/ViciOne.ServiceBus.Testing.dll",
+      "sha256": "f0e6cdff78d378c75d99c76d612be7dfd7ccacccca27060c1de0ce2e9fe3a7bf",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2522777594,
+          "guid": "a2d3f20c-b667-4350-965a-0d3e341bbc59",
+          "path": "ViciOne.ServiceBus.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "0cf2d3a267b65043965a0d3e341bbc59fa875e96",
+        "sha256": "1c7b25c7655fe87942d5da52b925c71f560bdc20c7abe171decdaae7cae7eb50",
+        "documents": 104,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 101,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "a6e3fd40236497c3a451ac706747703fe415228001cf0d03ce08cfe7db19bf7f",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M5-no-fatal-drain/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "b7454c85e9515dfa4125b8f064d0a972e608e34f7975fca2fdfdbda5c1d69a75",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3995667978,
+          "guid": "a651aaa4-bf68-4ef6-beb3-8f09e2c0b27c",
+          "path": "ViciOne.ServiceBus.Tests.Infrastructure.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "a4aa51a668bff64ebeb38f09e2c0b27c0a0e29ee",
+        "sha256": "b21a6c576ba8ece542af84f2ef1cbf9df9fccaa2d396d1189e2415ed095a09fa",
+        "documents": 9,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 6,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "48f1b5f9542a46d61dc53a42cc21f0540f40b17d1d312004d25e6c9ff22732bc",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M5-no-fatal-drain/runtime/ViciOne.ServiceBus.dll",
+      "sha256": "2910773ee35ed700decdd37ce0fbd95270fd570cddbb20342eb9adc51a819bea",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4135825558,
+          "guid": "d756c2dc-324e-4913-8de0-e222d70635e4",
+          "path": "ViciOne.ServiceBus.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "dcc256d74e3213498de0e222d70635e496b083f6",
+        "sha256": "4562dad681a57f7d0ea86ec2113ab95a9bb5ed063921373587fc26e1415692ac",
+        "documents": 1341,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 1293,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 4,
+          "EMBEDDED_SOURCE": 44
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "52290e65386c5ba7b72a9afc30bc9e04a3a222229ccae3e09e8c27e7dfe51478",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/src/ViciOne.ServiceBus/Util/TaskExecutor.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    }
+  ],
+  "parser_source_sha256": "1bc09397fe31d1edaa74ae0f2ddc92b3d79b81240ec2ce571064652e7217fe1f",
+  "driver_sha256": "f177dbad79ae26854170f9e9bd09510e48727ad2d69fca5be8f0c4c7e849edf1",
+  "limits": "Fresh pure bytes/PE/PDB and all document checksum reads. Compiled216 attributes/resource, native causes and API metadata are separately qualified. No SDK or product mutation."
+}

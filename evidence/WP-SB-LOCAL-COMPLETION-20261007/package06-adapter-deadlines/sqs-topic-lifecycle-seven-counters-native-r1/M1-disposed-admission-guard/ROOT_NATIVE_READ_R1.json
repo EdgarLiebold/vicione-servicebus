@@ -1,0 +1,15 @@
+{
+  "kind": "ROOT_ACTUAL_COUNTER_NATIVE_FIRST_FINITE_READ_R1",
+  "variant": "M1-disposed-admission-guard",
+  "native_result_sha256": "b13d5d101966c22129077539d394344136ff482f87544c8cd71c42c27ef85467",
+  "physical_receipt_sha256": "d413d162f5687b338f772a20c48aa4363879fee0011a4c57f0dc828af3c09396",
+  "actual": {
+    "total": 11,
+    "passed": 8,
+    "failed": 3,
+    "skipped": 0
+  },
+  "first_finite": "first RED stale103 expected2actual1; twoStale258 andcold44 expectedODEactualnull. Lower104..105/259..262/45..48unreached0credit.",
+  "personally_read": "Entire actual11 native event/error blocks and complete strictbuild body; fixture487 and singlecause diff previously personally read at exacthash. raw6/CRC2 mechanically validated; healthycase exact IDs retained.",
+  "limits": "Same11cases repeated; firstfiniteonly, lowerunreachedassertions/finallyframes notadditionalcauses. No compiler/discovery/watchdogcredit, no predictioncounts or cloud/globalclosure."
+}

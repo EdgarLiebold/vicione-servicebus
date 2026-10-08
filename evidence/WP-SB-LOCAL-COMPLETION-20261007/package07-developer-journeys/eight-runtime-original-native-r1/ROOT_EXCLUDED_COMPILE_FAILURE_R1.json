@@ -1,0 +1,27 @@
+{
+  "kind": "ROOT_RETAINED_ORIGINAL_R1_COMPILE_FAILURE_EXCLUDED",
+  "result_sha256": "3dcffaf9bb4688e7858dfd2e573f54d341b5650aaea9604395a767b491e670e0",
+  "own_session": 97445,
+  "observed_tool_exit": 1,
+  "runtime_executed": false,
+  "compile_error": "CS0246 missing namespace import for DurableSendStoreSnapshot in private runtime verification source",
+  "owned_group_probes": [
+    {
+      "pid": 1428,
+      "group_absent_independently_probed": true
+    },
+    {
+      "pid": 1433,
+      "group_absent_independently_probed": true
+    },
+    {
+      "pid": 1434,
+      "group_absent_independently_probed": true
+    },
+    {
+      "pid": 1430,
+      "group_absent_independently_probed": true
+    }
+  ],
+  "limits": "Restore0/build1 sourcefixturecompilefailure retained. No semantic original failure, mutation or product finding credited."
+}

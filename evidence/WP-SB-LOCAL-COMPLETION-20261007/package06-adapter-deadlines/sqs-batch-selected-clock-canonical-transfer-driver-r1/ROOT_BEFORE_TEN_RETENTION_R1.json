@@ -1,0 +1,59 @@
+{
+  "kind": "ROOT_CURRENT_SQS_CANONICAL_BEFORE10_PLUS_NEW_FIXTURE_ABSENCE_RETENTION_R1",
+  "retained": [
+    {
+      "relative_path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsConnectionContext.cs",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-canonical-transfer-driver-r1/before-ten/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsConnectionContext.cs",
+      "sha256": "b1639c38ff15b71aeca975a5d9704087c8be3fd9eaabfb584f84d7e3abc3cb5b"
+    },
+    {
+      "relative_path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Batcher.cs",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-canonical-transfer-driver-r1/before-ten/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Batcher.cs",
+      "sha256": "2539ec46704400fb75596c69b1162cc620f487691bc227d0bca1aeefa5c6d9f9"
+    },
+    {
+      "relative_path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/DeleteBatcher.cs",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-canonical-transfer-driver-r1/before-ten/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/DeleteBatcher.cs",
+      "sha256": "4f1208500ddbff5fe2a905b4fa19044e14c4c5bc5f3ee4ed963678ec320279d3"
+    },
+    {
+      "relative_path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/PublishBatcher.cs",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-canonical-transfer-driver-r1/before-ten/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/PublishBatcher.cs",
+      "sha256": "54c3110613a8ccdfbb9843b6fc7d6b19f70a0bfb999c2f25f366add8b531d0fe"
+    },
+    {
+      "relative_path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueCache.cs",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-canonical-transfer-driver-r1/before-ten/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueCache.cs",
+      "sha256": "0fb5c3df9e6678967cbbfba1dc3726be460d39eda76e4f6d53ffc40a06cfc049"
+    },
+    {
+      "relative_path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueInfo.cs",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-canonical-transfer-driver-r1/before-ten/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueInfo.cs",
+      "sha256": "3ea57707ac22b6755e42f69b7148b761abc67249484a87a4febf9db046934a81"
+    },
+    {
+      "relative_path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/SendBatcher.cs",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-canonical-transfer-driver-r1/before-ten/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/SendBatcher.cs",
+      "sha256": "44fa548192a7027d6f13a8d647e7992ef0402307082ddfe7443752424af538a5"
+    },
+    {
+      "relative_path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-canonical-transfer-driver-r1/before-ten/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+      "sha256": "13d304a8b161cbbce750e4ae00f9a543cec80796bb1d2ed823f7e94c31a0ae45"
+    },
+    {
+      "relative_path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-canonical-transfer-driver-r1/before-ten/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+      "sha256": "e2fd86c68ff15e5780d7e58c463b2a2ee88fbd6398fe47fd1667fab53705eada"
+    },
+    {
+      "relative_path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-canonical-transfer-driver-r1/before-ten/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "sha256": "d9c16e5dc15c40ead163dc6b172343b73e92e068aadc18de78235e01454bd209"
+    }
+  ],
+  "new_absent_paths": [
+    "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatchSelectedClockTests.cs"
+  ],
+  "limits": "Durable pretransfer bytes only; no runtime/control/post/canonical release. Actualtransfer still pendingsource/protected/qualifiedpeer gate."
+}

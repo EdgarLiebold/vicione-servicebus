@@ -1,0 +1,2833 @@
+{
+  "kind": "INTERNAL_READONLY_P04_SQS_WHOLE_LOCAL_MODULE417_ARTIFACT_ADVERSARIAL_R1",
+  "utc": "2026-10-07T09:07:17.963033+00:00",
+  "status": "NO_BLOCK_WITHIN_LOCAL_MODULE417_NATIVE_ARTIFACT_SCOPE",
+  "reviewer": "todo_reconciliation_review",
+  "findings": [],
+  "receipt": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/RESULT.json",
+    "sha256": "426241207468a72d293808121794c570430997bff7c954623a9b61df8421d702",
+    "exec_session_id": 31991,
+    "joined_exit": 0,
+    "outer_OS_PID": "not independently captured; no claim"
+  },
+  "native_actual": {
+    "parent_events": 417,
+    "unique_full_display_labels": 417,
+    "passed": 417,
+    "failed": 0,
+    "skipped": 0,
+    "all_event_sequence": [
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextApiTests.DeleteMessage_ConsistentlyNamesItsLogicalQueueParameter"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHeaderProviderTests.Constructor_RejectsMissingMessageOrBodyWithExactOwnership"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendFailureClassifierTests.TypedFailures_UseStatusCodesAndTheCompleteChainWithPermanentPrecedence"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextApiTests.PublicApi_ExposesOneUnambiguousConnectionException"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHeaderProviderTests.MissingNativeMessageId_DoesNotViolateTheSuccessfulHeaderLookupContract"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests.SqsFilter_ReceivesInvariantScalarAndControlsProviderAttribute(typed: True, allow: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHeaderProviderTests.MalformedNotificationAttribute_IsRejectedOnlyWhenEnvelopeMetadataIsRead"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests.SqsFilter_ReceivesInvariantScalarAndControlsProviderAttribute(typed: False, allow: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests.SqsFilter_ReceivesInvariantScalarAndControlsProviderAttribute(typed: True, allow: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests.SqsFilter_ReceivesInvariantScalarAndControlsProviderAttribute(typed: False, allow: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests.SnsUnsupportedValues_DoNotInvokeFilter(typed: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests.SnsUnsupportedValues_DoNotInvokeFilter(typed: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests.SqsUnsupportedValues_DoNotInvokeFilter(typed: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests.SqsUnsupportedValues_DoNotInvokeFilter(typed: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests.SnsFilter_ReceivesInvariantScalarAndControlsProviderAttribute(typed: True, allow: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests.SnsFilter_ReceivesInvariantScalarAndControlsProviderAttribute(typed: True, allow: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests.SnsFilter_ReceivesInvariantScalarAndControlsProviderAttribute(typed: False, allow: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests.SnsFilter_ReceivesInvariantScalarAndControlsProviderAttribute(typed: False, allow: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEntityNameTests.QueueAndTopicNameValidation_RejectsUnsupportedTrailingCharacters(topic: False, suffix: \"\\n\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEntityNameTests.QueueAndTopicNameValidation_RejectsUnsupportedTrailingCharacters(topic: False, suffix: \"\\0\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsEveryInvalidProviderDiscriminator(field: \"TopicArn\", invalidValue: \"orders\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsEveryInvalidProviderDiscriminator(field: \"Timestamp\", invalidValue: \"not-a-timestamp\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsEveryInvalidProviderDiscriminator(field: \"Signature\", invalidValue: \" \")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsEveryInvalidProviderDiscriminator(field: \"MessageId\", invalidValue: \"not-a-guid\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsEveryInvalidProviderDiscriminator(field: \"Type\", invalidValue: \"ApplicationNotification\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsEveryInvalidProviderDiscriminator(field: \"SigningCertURL\", invalidValue: \"cert.pem\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEntityNameTests.QueueAndTopicNameValidation_RejectsUnsupportedTrailingCharacters(topic: True, suffix: \"\\0\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsEveryInvalidProviderDiscriminator(field: \"SignatureVersion\", invalidValue: \"3\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEntityNameTests.QueueAndTopicNameValidation_RejectsUnsupportedTrailingCharacters(topic: True, suffix: \"\\n\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEntityNameTests.QueueAndTopicNameValidation_RejectsUnsupportedTrailingCharacters(topic: False, suffix: \"\\r\\n\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEntityNameTests.QueueAndTopicNameValidation_RejectsUnsupportedTrailingCharacters(topic: True, suffix: \"\\r\\n\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendFailureClassifierTests.BusRegistration_AddsExactlyOneClassifierDescriptor"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEntityNameTests.QueueAndTopicNames_EnforceAwsGrammarAndFifoSuffix"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEntityNameTests.QueueNameBeyondTheServiceLimit_IsRejected"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.CompleteSnsShapedApplicationJson_RemainsDirectUnlessUnwrappingIsExplicitlyEnabled"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHeaderProviderTests.NativeMessageAttribute_TakesPrecedenceOverTheNotificationAttribute"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsEveryMissingProviderField(field: \"Timestamp\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsQueueSubscriptionEntityTests.NameComparer_UsesBrokerPairAcrossSubscriptionSubtypes"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsEveryMissingProviderField(field: \"SignatureVersion\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsEveryMissingProviderField(field: \"SigningCertURL\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsEveryMissingProviderField(field: \"Message\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsEveryMissingProviderField(field: \"Signature\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsEveryMissingProviderField(field: \"Type\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsEveryMissingProviderField(field: \"MessageId\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsEveryMissingProviderField(field: \"TopicArn\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsMalformedOrNonObjectJson(bodyText: \"[]\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsPublishTopologyDiscoveryTests.NamespaceDiscovery_PublishesOnlySelectedClosedContractsWithMatchingCallbacks"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.RequiredNotificationEnvelope_RejectsMalformedOrNonObjectJson(bodyText: \"not-json\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsQueueSubscriptionEntityTests.StructuralComparer_RejectsChangedSourceOrDestinationSettings"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHeaderProviderTests.ProviderSentTimestamp_ParsesExactUnixMillisecondsAsUtc"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.DirectJsonWithNotificationLikeFields_IsNeverSilentlyUnwrapped"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.MutableVisibilityRenewal_RejectsValuesBelowEffectiveMinimum(renewalSeconds: 0)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHeaderProviderTests.NotificationMessageAttributes_AreExposedWithoutLosingTheirNamesOrValues"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.CrossAndIntraRegionBodies_DecodeToExactPayload(wrappedBySns: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests.CrossAndIntraRegionBodies_DecodeToExactPayload(wrappedBySns: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.MutableVisibilityRenewal_RejectsValuesBelowEffectiveMinimum(renewalSeconds: 59)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.MutableVisibilityRenewal_RejectsValuesBelowEffectiveMinimum(renewalSeconds: 1)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsPublishTopologyDiscoveryTests.InvalidExplicitTypes_RejectBeforeAnyPublishRegistration"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.SnsNotificationEnvelope_IsOptionalByDefaultAndCanBeExplicitlyRequired"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsQueueSubscriptionEntityTests.Collection_RejectsConflictingBrokerRelationAndKeepsFirst"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsPublishTopologyDiscoveryTests.ExplicitTypes_PreserveInputOrderAndCallbackIdentity"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsQueueSubscriptionEntityTests.Collection_RejectsDuplicateBrokerPairFromSubscriptionSubtype"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.SnsNotificationEnvelopeAndCaseVariantRawDelivery_RejectContradictoryConfiguration"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsQueueSubscriptionEntityTests.StructuralComparer_DistinguishesSourceAndDestinationNames"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsQueueSubscriptionEntityTests.StructuralComparer_ReusesIndependentEquivalentBrokerDeclarations"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.NativeRedrivePolicy_IsRejectedWhileProductErrorAndSkippedQueuesOwnSettlement"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.ConcurrencyAndPrefetch_ResolveFromEndpointAndBusSettings"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsVisibilityConfigurationTests.VisibilityDurations_ValidateAndClampAtAwsBoundaries"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsQueueSubscriptionEntityTests.Builder_ReusesRepeatedTopicToQueueSubscription"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.RequiredSnsEnvelope_RejectsRemovalOfItsRawDeliverySetting"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsPublishTopologyDiscoveryTests.NamespaceDiscovery_RejectsMissingConfiguratorAndMarkerBeforeScanning"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsQueueSubscriptionEntityTests.NameComparer_DistinguishesSourceAndDestinationNames"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsPublishTopologyDiscoveryTests.NamespaceFilterFailure_DoesNotPartlyRegisterDiscoveredMessages"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.HostSettingsEquality_UsesTheSameIdentityForEqualityAndHashing"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.HostUris_RequireAnAbsoluteAddressWithAHost(address: \"amazonsqs:/production\", uriKind: Absolute, expectedReason: \"must be specified\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.HostUris_RequireAnAbsoluteAddressWithAHost(address: \"production\", uriKind: Relative, expectedReason: \"must be absolute\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.MutableReceiveSettings_RejectOutOfRangeOperationalLimitsBeforeStartup"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.MutableMaximumVisibility_RejectsZeroDuration"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.PurgeOnStartup_WarnsOnlyWhileDestructiveStartupIsEnabled"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.ClientFactories_CreateAFreshOwnedPairForEveryConnection"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.SnsNotificationEnvelopeAndRawDelivery_RejectContradictoryConfiguration(rawMessageDelivery: \"false\", requireEnvelope: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.SnsNotificationEnvelopeAndRawDelivery_RejectContradictoryConfiguration(rawMessageDelivery: \"true\", requireEnvelope: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsTransportOptionsStartupTests.InvalidOptions_FailBeforeAwsClientCreation(invalid: Region, reason: \"Region\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextQueueEvictionTests.Client_StopsAfterTwoEvictedQueueResolutionsWithoutCallingProviderAsync(delete: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.SharedConnectionContextTests.CacheRemoval_LinksTheSharedLifetimeToTheUnderlyingOperationAsync(topic: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.Validation_PreservesLocalDiagnosticOrderAndReadsSettingsWhenEnumerated"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextQueueEvictionTests.Client_StopsAfterTwoEvictedQueueResolutionsWithoutCallingProviderAsync(delete: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.MutableReceiveSettings_RejectNegativePollingAndVisibilityValues"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.MutableVisibilityTimeout_RejectsBothOutOfRangeValuesWithItsOwnKey(visibilityTimeout: 43201)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.MutableVisibilityTimeout_RejectsBothOutOfRangeValuesWithItsOwnKey(visibilityTimeout: -1)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsTransportOptionsStartupTests.InvalidOptions_FailBeforeAwsClientCreation(invalid: Scope, reason: \"Scope\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.RawMessageDelivery_RejectsMalformedTextAndNonStringAttributes"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests.MutableMaximumVisibility_RejectsDurationAboveTwelveHours"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsTransportOptionsStartupTests.InvalidOptions_FailBeforeAwsClientCreation(invalid: ScopeWithoutRegion, reason: \"Scope requires Region\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsTransportOptionsStartupTests.EmptyAndCoherentOptions_PassStartupValidation"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyCleanupTests.Configure_FailedDeclarationThenRetryRegistersOneCleanupAgentAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.SharedConnectionContextTests.CacheRemoval_LinksTheSharedLifetimeToTheUnderlyingOperationAsync(topic: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConfiguredPipelinesAndSendTopologyTests.QueueSendTopology_PreservesConfiguredMetadataToProviderAsync(metadataKind: 3)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationTests.CreateContext_UsesConfiguredConnectionAndOwnsItsLifetimeAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConfiguredPipelinesAndSendTopologyTests.QueueSendTopology_PreservesConfiguredMetadataToProviderAsync(metadataKind: 0)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyCleanupTests.Configure_RegistersCleanupOnlyForAutoDeleteAndRemovesExactlyThoseEntitiesAsync(autoDeleteTopic: False, autoDeleteQueue: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicDiscoveryLifetimeTests.TopicLookup_LifetimeEndsDiscoveryWithoutReadmissionAsync(byName: False, cancelLifetime: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.SharedConnectionContextTests.CreatedClientContext_LinksSharedAndCallerLifetimes(cancelSharedLifetime: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.SharedConnectionContextTests.CreatedClientContext_LinksSharedAndCallerLifetimes(cancelSharedLifetime: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConfiguredPipelinesAndSendTopologyTests.QueueSendTopology_PreservesConfiguredMetadataToProviderAsync(metadataKind: 2)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyCleanupTests.Configure_RegistersCleanupOnlyForAutoDeleteAndRemovesExactlyThoseEntitiesAsync(autoDeleteTopic: True, autoDeleteQueue: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyCleanupTests.Configure_RegistersCleanupOnlyForAutoDeleteAndRemovesExactlyThoseEntitiesAsync(autoDeleteTopic: True, autoDeleteQueue: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyCleanupTests.Configure_RegistersCleanupOnlyForAutoDeleteAndRemovesExactlyThoseEntitiesAsync(autoDeleteTopic: False, autoDeleteQueue: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConfiguredPipelinesAndSendTopologyTests.QueueSendTopology_PreservesConfiguredMetadataToProviderAsync(metadataKind: 1)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests.NonAsciiLength_CountsUtf8BytesNotCharacters"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationTests.CreateContext_PreservesProviderFailureAsConnectionFailureAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.ConnectionCreation_OptionalDiagnosticPreservesTheFactoryOutcomeAsync(providerFails: False, hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSettlementBoundaryTests.Settlement_DrainsCanceledRenewalBeforeAnyTerminalProviderEffectAsync(faulted: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests.AllAccessOrders_UseOwnedSnapshotAndExternalOracles"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicDiscoveryLifetimeTests.TopicLookup_LifetimeEndsDiscoveryWithoutReadmissionAsync(byName: True, cancelLifetime: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicDiscoveryLifetimeTests.TopicLookup_LifetimeEndsDiscoveryWithoutReadmissionAsync(byName: False, cancelLifetime: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests.Type_IsASealedProviderInternalMessageBody"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicDiscoveryLifetimeTests.TopicLookup_LifetimeEndsDiscoveryWithoutReadmissionAsync(byName: True, cancelLifetime: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationTests.CreateContext_WhenStopping_DoesNotOpenAConnectionAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.DefaultHost_WithExplicitCredentialsCreatesBothSdkClientsInTheConfiguredRegion"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests.ReadStream_IsReadOnlyAndBodyRemainsUnchanged"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests.WhitespaceBody_RoundTripsExactly"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests.LengthFirst_EqualsExactUtf8Bytes"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationMiddlewareLifetimeTests.ConfiguredCreation_ControlsPublicationAndRetiresUnpublishedContextsAsync(mode: 1)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.ConnectionCreation_OptionalDiagnosticPreservesTheFactoryOutcomeAsync(providerFails: True, hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationTests.CreateContext_PropagatesProviderCancellationWithoutWrappingAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests.Constructor_RejectsTextThatCannotBeEncodedAsUtf8"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsDelayTests.FifoQueuesAndSnsTopics_RejectUnsupportedPerMessageDelay"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.ConnectionCreation_OptionalDiagnosticPreservesTheFactoryOutcomeAsync(providerFails: False, hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests.Constructor_OwnsTheNativeMessageBoundaryAndNormalizesAnAbsentBody"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.ConnectionCreation_OptionalDiagnosticPreservesTheFactoryOutcomeAsync(providerFails: True, hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests.FaultedFactory_IsEvictedAndTheNextAttemptCanRecoverAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests.StringFirst_DoesNotChangeLengthOrBytes"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationMiddlewareLifetimeTests.ConfiguredCreation_ControlsPublicationAndRetiresUnpublishedContextsAsync(mode: 5)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientOwnedDiagnosticsTests.ClientOperation_OwnDiagnosticDoesNotReplaceProviderOutcomeAsync(route: 0, hostileLogger: False, providerFails: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSettlementBoundaryTests.Settlement_DrainsCanceledRenewalBeforeAnyTerminalProviderEffectAsync(faulted: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationMiddlewareLifetimeTests.ConfiguredCreation_ControlsPublicationAndRetiresUnpublishedContextsAsync(mode: 0)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationMiddlewareLifetimeTests.ConfiguredCreation_ControlsPublicationAndRetiresUnpublishedContextsAsync(mode: 2)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationMiddlewareLifetimeTests.ConfiguredCreation_ControlsPublicationAndRetiresUnpublishedContextsAsync(mode: 3)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationMiddlewareLifetimeTests.ConfiguredCreation_ControlsPublicationAndRetiresUnpublishedContextsAsync(mode: 7)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationMiddlewareLifetimeTests.ConfiguredCreation_ControlsPublicationAndRetiresUnpublishedContextsAsync(mode: 6)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchResponseTests.PartialBatchResponse_FaultsEveryUnaccountedRequestAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchIdentityTests.OneSidedResponse_WithAbsentOppositeListPreservesEveryOutcomeAsync(allSuccessful: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextQueueEvictionTests.Client_ReresolvesAnEvictedQueueBeforeSendOrDeleteAdmissionAsync(delete: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests.ThrowingOwnershipCancellationCallback_DoesNotAbortReleaseAsync(disposeStore: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationMiddlewareLifetimeTests.ConfiguredCreation_ControlsPublicationAndRetiresUnpublishedContextsAsync(mode: 4)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchIdentityTests.OneSidedResponse_WithAbsentOppositeListPreservesEveryOutcomeAsync(allSuccessful: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests.ThrowingOwnershipCancellationCallback_DoesNotAbortReleaseAsync(disposeStore: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchResponseTests.SnsEntryLength_CountsUtf8NamesDataTypesStringAndBinaryValuesAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientOwnedDiagnosticsTests.ClientOperation_OwnDiagnosticDoesNotReplaceProviderOutcomeAsync(route: 2, hostileLogger: False, providerFails: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchIdentityTests.DuplicateResponseIdentity_FaultsEveryCallerBeforeAnyPartialCompletionAsync(kind: DuplicateSuccess)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationMiddlewareLifetimeTests.TwoEndpointBuilders_KeepTheirConfiguredFiltersAndClientOwnersSeparateAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientOwnedDiagnosticsTests.ClientOperation_OwnDiagnosticDoesNotReplaceProviderOutcomeAsync(route: 2, hostileLogger: False, providerFails: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSettlementBoundaryTests.RenewalFailure_StopsRenewalAndRetainsFaultSettlementIdentityAsync(failureKind: 1)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextQueueEvictionTests.Client_ReresolvesAnEvictedQueueBeforeSendOrDeleteAdmissionAsync(delete: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchResponseTests.SqsEntryLength_CountsUtf8NamesDataTypesStringAndBinaryValuesAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchResponseTests.BatchDefaults_AreImmutableSnapshots"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests.RemoveAsync_WaitsForPendingOwnershipAndDisposesALateValueExactlyOnceAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsDelayTests.MessageDelay_RoundsUpWithoutDeliveringEarlyAndEnforcesTheSqsRange"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchIdentityTests.DuplicateResponseIdentity_FaultsEveryCallerBeforeAnyPartialCompletionAsync(kind: DuplicateFailure)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSettlementBoundaryTests.RenewalFailure_StopsRenewalAndRetainsFaultSettlementIdentityAsync(failureKind: 2)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchIdentityTests.DuplicateResponseIdentity_FaultsEveryCallerBeforeAnyPartialCompletionAsync(kind: OverlappingOutcome)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSettlementBoundaryTests.RenewalFailure_StopsRenewalAndRetainsFaultSettlementIdentityAsync(failureKind: 0)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests.DisposalFault_DoesNotPreventRemainingResourcesFromBeingReleasedAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.OwnedClientDisposal_AttemptsBothClientsAndPreservesFailures(sqsFails: True, snsFails: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.OwnedClientDisposal_AttemptsBothClientsAndPreservesFailures(sqsFails: True, snsFails: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.OwnedClientDisposal_AttemptsBothClientsAndPreservesFailures(sqsFails: False, snsFails: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.HostUris_RejectCredentialsAndControlComponents(address: \"amazonsqs://access:secret@eu-central-1/\", expectedReason: \"Credentials\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.HostUris_RejectCredentialsAndControlComponents(address: \"amazonsqs://eu-central-1/?accessKey=secret\", expectedReason: \"Query\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.HostUris_RejectCredentialsAndControlComponents(address: \"amazonsqs://eu-central-1/#secret\", expectedReason: \"Fragments\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests.ConcurrentWaiters_ShareOneFactoryAndCallerCancellationDoesNotOwnCreationAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSettlementBoundaryTests.CanceledSettlement_LeavesTheActiveDeliveryAvailableForAnotherCallerAsync(faulted: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.LowLevelHost_AcceptsOnlyTheSealedSnapshotProducedByTheTypedBuilder"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.TopologyDeclaration_OptionalDiagnosticPreservesTheContinuationAsync(route: 3, hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.StringHostConstruction_RejectsMissingHost(host: null)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchIdentityTests.MixedReorderedResponse_PreservesEveryCallersOwnOutcomeAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.StringHostConstruction_RejectsMissingHost(host: \" \")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSettlementBoundaryTests.CanceledSettlement_LeavesTheActiveDeliveryAvailableForAnotherCallerAsync(faulted: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.StringHostConstruction_RejectsMissingHost(host: \"\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.PartialClientConstruction_PreservesPrimaryFailureAndAlwaysCleansSqs(nullSnsClient: False, cleanupFails: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.TopologyDeclaration_OptionalDiagnosticPreservesTheContinuationAsync(route: 2, hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextQueueEvictionTests.Client_RetriesAWaitingBatchEntryAfterEvictionClosesTheFullChannelAsync(delete: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests.ConcurrentDisposeAsync_WaitsForTheSamePendingOwnershipAndReleasesTheLateResourceOnceAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.PartialClientConstruction_PreservesPrimaryFailureAndAlwaysCleansSqs(nullSnsClient: True, cleanupFails: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.PartialClientConstruction_PreservesPrimaryFailureAndAlwaysCleansSqs(nullSnsClient: True, cleanupFails: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.PartialClientConstruction_PreservesPrimaryFailureAndAlwaysCleansSqs(nullSnsClient: False, cleanupFails: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.SqsMoveTransportTests.Move_LinksCallerCancellationToTopologyAndProviderOperationsAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.Connection_PreservesDistinctSuppliedSdkServiceEndpoints"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests.UnrequestedProviderCancellationDuringRenewal_MarksTheReceiveLockLostAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientOwnedDiagnosticsTests.ClientOperation_OwnDiagnosticDoesNotReplaceProviderOutcomeAsync(route: 0, hostileLogger: False, providerFails: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientOwnedDiagnosticsTests.ClientOperation_OwnDiagnosticDoesNotReplaceProviderOutcomeAsync(route: 1, hostileLogger: False, providerFails: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests.CompletedResources_RemainOwnedUntilRemovalOrStoreDisposalAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests.ReceiveLoop_PropagatesUnrequestedProviderCancellationAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.SqsMoveTransportTests.Move_ProviderFailureEvictsTopologySoRetryRedeclaresDestinationAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientOwnedDiagnosticsTests.ClientOperation_OwnDiagnosticDoesNotReplaceProviderOutcomeAsync(route: 3, hostileLogger: False, providerFails: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientOwnedDiagnosticsTests.ClientOperation_OwnDiagnosticDoesNotReplaceProviderOutcomeAsync(route: 1, hostileLogger: False, providerFails: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientOwnedDiagnosticsTests.ClientOperation_OwnDiagnosticDoesNotReplaceProviderOutcomeAsync(route: 3, hostileLogger: True, providerFails: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientOwnedDiagnosticsTests.ClientOperation_OwnDiagnosticDoesNotReplaceProviderOutcomeAsync(route: 0, hostileLogger: True, providerFails: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextQueueEvictionTests.Client_RetriesAWaitingBatchEntryAfterEvictionClosesTheFullChannelAsync(delete: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientOwnedDiagnosticsTests.ClientOperation_OwnDiagnosticDoesNotReplaceProviderOutcomeAsync(route: 1, hostileLogger: True, providerFails: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientOwnedDiagnosticsTests.ClientOperation_OwnDiagnosticDoesNotReplaceProviderOutcomeAsync(route: 2, hostileLogger: True, providerFails: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientOwnedDiagnosticsTests.ClientOperation_OwnDiagnosticDoesNotReplaceProviderOutcomeAsync(route: 3, hostileLogger: False, providerFails: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.TopologyDeclaration_OptionalDiagnosticPreservesTheContinuationAsync(route: 1, hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests.Settlement_LinksCallerCancellationToTheProviderOperationAsync(faulted: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests.OwnershipCancellationCallbacks_CanReadStoreStateWithoutLockInversionAsync(disposeStore: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests.Settlement_LinksCallerCancellationToTheProviderOperationAsync(faulted: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests.OwnershipCancellationCallbacks_CanReadStoreStateWithoutLockInversionAsync(disposeStore: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextQueueEvictionTests.Client_DoesNotReplayAnAdmittedBatchAfterProviderFailureAsync(delete: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests.VisibilityRenewal_UsesMonotonicTimeAndNeverExtendsBeyondTheTotalLimitAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextQueueEvictionTests.Client_DoesNotReplayAnAdmittedBatchAfterProviderFailureAsync(delete: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.SqsMoveTransportTests.DeadLetterMove_HandlesTheSqsAttributeLimitBeforeProviderSubmissionAsync(customCount: 9, shouldSend: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportContextTests.TopicTransport_ReportsTheCanonicalAmazonSnsMessagingSystem"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.SqsMoveTransportTests.DeadLetterMove_HandlesTheSqsAttributeLimitBeforeProviderSubmissionAsync(customCount: 10, shouldSend: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests.DisposeAsync_CancelsPendingCreationAndReleasesCommittedResourcesExactlyOnceAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockCallbackOrderTests.Complete_RealSdkCancellationCallbackPreservesObservedWorkerOrderAsync(hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockDiagnosticsTests.Complete_OptionalRenewalDiagnosticPreservesActualDeleteAsync(hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.ClientContextCacheOptions_ArePerHostAndExpireThroughTheConfiguredTimeProviderAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.TopologyDeclaration_OptionalDiagnosticPreservesTheContinuationAsync(route: 5, hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockDiagnosticsTests.Complete_OptionalRenewalDiagnosticPreservesActualDeleteAsync(hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests.MaximumRenewalWindowExpiry_MarksTheReceiveLockLostAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockCallbackOrderTests.Complete_RealSdkCancellationCallbackPreservesObservedWorkerOrderAsync(hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.HostConfiguration_IsFrozenAndRejectsAmbiguousOrNullClientSources"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests.ExistingSubscription_ReconcilesChangedAttributesBeforeQueuePolicyAsync(changeSettings: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.SqsMoveTransportTests.Move_SendsContextBodyAndCustomAttributesWithoutStaleTransportHeadersAsync(destination: \"errors\", fifo: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.TopologyDeclaration_OptionalDiagnosticPreservesTheContinuationAsync(route: 3, hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.PublicConfiguration_ContainsNoRawCredentialOrProductTestHarnessSurface"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.SqsMoveTransportTests.Move_SendsContextBodyAndCustomAttributesWithoutStaleTransportHeadersAsync(destination: \"errors.fifo\", fifo: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockCallbackOrderTests.Faulted_RealSdkCancellationCallbackPreservesObservedWorkerOrderAsync(hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockDiagnosticsTests.Faulted_OptionalDiagnosticsPreserveActualRenewalAndRedeliveryAsync(site: 3, hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests.HostComposition_UsesTheSdkChainOrAnExplicitCredentialObject"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests.FailedOrCancelledComplete_PreservesTheOriginalFailureAndMarksTheLockLostAsync(callerCancellation: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.TopologyDeclaration_OptionalDiagnosticPreservesTheContinuationAsync(route: 2, hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockCallbackOrderTests.Faulted_RealSdkCancellationCallbackPreservesObservedWorkerOrderAsync(hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests.FailedOrCancelledComplete_PreservesTheOriginalFailureAndMarksTheLockLostAsync(callerCancellation: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Requirements.RequirementCoverageProjectionTests.AmazonSqsRequirements_MatchCompiledRequirementMetadata"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.TopologyDeclaration_OptionalDiagnosticPreservesTheContinuationAsync(route: 0, hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockDiagnosticsTests.Faulted_OptionalDiagnosticsPreserveActualRenewalAndRedeliveryAsync(site: 2, hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyEntityTests.TopicDiagnostics_ShowRawDeliveryDefaultAndExplicitSettings"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyEntityTests.TopicComparer_DetectsEveryBrokerMetadataDifference"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests.Complete_CancelsTheSnapshottedRenewalBeforeDeletingTheMessageAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyEntityTests.TopicNameComparer_UsesAwsNameAcrossSubtypesWithoutLifecycleFlags"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyEntityTests.QueueComparer_DetectsChangedMetadataKeysWithIdenticalValues"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.InvalidOrAmbiguousEndpointOptions_AreRejected(source: \"topic:orders?type=invalid\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests.ExistingSubscription_ReconcilesChangedAttributesBeforeQueuePolicyAsync(changeSettings: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyEntityTests.TopicBuilder_RejectsRawDeliveryConflictWithoutLosingTheFirstDeclaration"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceWarningOwnershipTests.WarningFromDisposal_DoesNotSkipTheRemainingCommittedResourceAsync(hostileLogger: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.InvalidOrAmbiguousEndpointOptions_AreRejected(source: \"queue:orders?unknown=true\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockDiagnosticsTests.Faulted_OptionalDiagnosticsPreserveActualRenewalAndRedeliveryAsync(site: 0, hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.InvalidOrAmbiguousEndpointOptions_AreRejected(source: \"queue:orders?durable=true&durable=false\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.InvalidOrAmbiguousEndpointOptions_AreRejected(source: \"queue:orders?durable=not-a-boolean\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceWarningOwnershipTests.WarningFromDisposal_DoesNotSkipTheRemainingCommittedResourceAsync(hostileLogger: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyEntityTests.QueueBuilder_RejectsSameAwsNameFromDifferentEntityTypes"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyEntityTests.QueueComparer_UsesNameAndBothLifecycleFlags"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockDiagnosticsTests.Faulted_OptionalDiagnosticsPreserveActualRenewalAndRedeliveryAsync(site: 3, hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyEntityTests.QueueBuilder_RejectsConflictingAttributesWithoutLosingTheFirstDeclaration"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockDiagnosticsTests.Faulted_OptionalDiagnosticsPreserveActualRenewalAndRedeliveryAsync(site: 1, hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyEntityTests.QueueNameComparer_UsesAwsNameAcrossSubtypesWithoutLifecycleFlags"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConsumeTopologyConnectionTests.ConnectConsumePipe_SubscribesOnlyWhenAllTopologyFlagsAllowIt(endpointEnabled: False, options: All, messageEnabled: True, shouldSubscribe: False, useDefaultOverload: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockDiagnosticsTests.Faulted_OptionalDiagnosticsPreserveActualRenewalAndRedeliveryAsync(site: 1, hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests.ExistingSubscriptionAttributeUpdateFailure_IsNotReportedAsSuccessAsync(attributeName: \"FilterPolicyScope\", existingValue: \"MessageAttributes\", desiredValue: \"MessageBody\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.TopicAddress_PreservesLifetimeFlags(source: \"topic:orders?durable=false\", expectedDurable: False, expectedAutoDelete: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests.ExistingSubscriptionAttributeUpdateFailure_IsNotReportedAsSuccessAsync(attributeName: \"FilterPolicy\", existingValue: null, desiredValue: \"{\\\"RoutingKey\\\":[\\\"new\\\"]}\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockDiagnosticsTests.Faulted_OptionalDiagnosticsPreserveActualRenewalAndRedeliveryAsync(site: 0, hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.TopicAddress_PreservesLifetimeFlags(source: \"topic:orders?autodelete=true\", expectedDurable: True, expectedAutoDelete: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyEntityTests.TopicBuilder_RejectsSameAwsNameFromDifferentEntityTypes"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests.ExistingSubscriptionAttributeUpdateFailure_IsNotReportedAsSuccessAsync(attributeName: \"RedrivePolicy\", existingValue: \"{\\\"deadLetterTargetArn\\\":\\\"arn:aws:sqs:eu-central-1:1\"···, desiredValue: \"{\\\"deadLetterTargetArn\\\":\\\"arn:aws:sqs:eu-central-1:1\"···)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.TopicAddress_PreservesLifetimeFlags(source: \"topic:orders?temporary=true\", expectedDurable: False, expectedAutoDelete: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.TopicAddress_PreservesLifetimeFlags(source: \"topic:orders\", expectedDurable: True, expectedAutoDelete: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests.ExistingSubscriptionAttributeUpdateFailure_IsNotReportedAsSuccessAsync(attributeName: \"RawMessageDelivery\", existingValue: \"false\", desiredValue: \"true\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockDiagnosticsTests.Faulted_OptionalDiagnosticsPreserveActualRenewalAndRedeliveryAsync(site: 2, hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportSelectionTests.CreateSendTransport_SelectsQueueTopologyAndRegistersOwnedAgentsAsync(destination: \"topic:events\", isQueue: False, expectedName: \"events\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyEntityTests.TopicComparer_UsesNameAndBothLifecycleFlags"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests.ExistingSubscriptionAttributeUpdateFailure_IsNotReportedAsSuccessAsync(attributeName: \"FilterPolicy\", existingValue: \"{\\\"RoutingKey\\\":[\\\"old\\\"]}\", desiredValue: \"{\\\"RoutingKey\\\":[\\\"new\\\"]}\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.HostAndEndpointAddresses_PreserveRegionScopeAndPath(source: \"amazonsqs://eu-central-1\", expectedScope: \"/\", expectedHost: \"eu-central-1\", expectedAddress: \"amazonsqs://eu-central-1/\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyEntityTests.TopicComparer_DetectsChangedMetadataKeysWithIdenticalValues"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.HostAndEndpointAddresses_PreserveRegionScopeAndPath(source: \"amazonsqs://eu-central-1/production\", expectedScope: \"production\", expectedHost: \"eu-central-1\", expectedAddress: \"amazonsqs://eu-central-1/production\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConsumeTopologyConnectionTests.ConnectConsumePipe_SubscribesOnlyWhenAllTopologyFlagsAllowIt(endpointEnabled: True, options: All, messageEnabled: True, shouldSubscribe: True, useDefaultOverload: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.HostAndEndpointAddresses_PreserveRegionScopeAndPath(source: \"amazonsqs://eu-central-1/production%2Fblue\", expectedScope: \"production/blue\", expectedHost: \"eu-central-1\", expectedAddress: \"amazonsqs://eu-central-1/production%2Fblue\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.TopologyDeclaration_OptionalDiagnosticPreservesTheContinuationAsync(route: 4, hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyEntityTests.QueueComparer_DetectsEveryBrokerMetadataDifference"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportSelectionTests.CreateSendTransport_SelectsQueueTopologyAndRegistersOwnedAgentsAsync(destination: \"queue:orders\", isQueue: True, expectedName: \"orders\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.TopologyDeclaration_OptionalDiagnosticPreservesTheContinuationAsync(route: 5, hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConsumeTopologyConnectionTests.ConnectConsumePipe_SubscribesOnlyWhenAllTopologyFlagsAllowIt(endpointEnabled: True, options: 0, messageEnabled: True, shouldSubscribe: False, useDefaultOverload: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.ExplicitTopicName_RejectsAnAmbiguousRelativeProjection"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportSelectionTests.CreateSendTransport_SelectsQueueTopologyAndRegistersOwnedAgentsAsync(destination: \"amazonsqs://eu-central-1/orders?type=topic\", isQueue: False, expectedName: \"orders\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.TopologyDeclaration_OptionalDiagnosticPreservesTheContinuationAsync(route: 4, hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.QueueAddress_RejectsRelativeTopicProjection"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConsumeTopologyConnectionTests.ConnectConsumePipe_SubscribesOnlyWhenAllTopologyFlagsAllowIt(endpointEnabled: True, options: All, messageEnabled: True, shouldSubscribe: True, useDefaultOverload: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests.QueueSubscription_CanonicalizesTheOutboundRawMessageDeliveryNameAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConsumeTopologyConnectionTests.ConnectConsumePipe_SubscribesOnlyWhenAllTopologyFlagsAllowIt(endpointEnabled: True, options: All, messageEnabled: False, shouldSubscribe: False, useDefaultOverload: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.TopologyDeclaration_OptionalDiagnosticPreservesTheContinuationAsync(route: 1, hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.AdditionalRestriction_DoesNotLeakIntoTheNewSnsAllowAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportSelectionTests.CreateSendTransport_CanceledRequestDoesNotResolveAddressOrRegisterAgentsAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests.TopologyDeclaration_OptionalDiagnosticPreservesTheContinuationAsync(route: 0, hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyEntityTests.QueueDiagnostics_ShowExactLifecycleTagsAndAttributeGroups"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.TopologyDestinationNames_AreValidatedAsData(name: \"orders#fragment\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyTests.Topic_PreservesAnExplicitRawMessageDeliverySetting"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceWarningOwnershipTests.WarningFromCancellation_DoesNotFinishRemovalOrDisposalBeforeHeldOwnershipAsync(disposeStore: False, hostileLogger: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.TopologyDestinationNames_AreValidatedAsData(name: \"orders?temporary=true\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.TopologyDestinationNames_AreValidatedAsData(name: \"orders/path\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.QueueAddress_IsClassifiedAndRoundTrips"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceWarningOwnershipTests.WarningFromCancellation_DoesNotFinishRemovalOrDisposalBeforeHeldOwnershipAsync(disposeStore: False, hostileLogger: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests.TopologyDeclaration_CreatesEachEntityExactlyOnceAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.RelativeTopicAddress_ResolvesToTheSameEntityAndLifetime(hostUri: \"amazonsqs://eu-central-1/production\", expectedName: \"production_orders\", relativeName: \"orders\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceWarningOwnershipTests.WarningFromCancellation_DoesNotFinishRemovalOrDisposalBeforeHeldOwnershipAsync(disposeStore: True, hostileLogger: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceWarningOwnershipTests.WarningFromCancellation_DoesNotFinishRemovalOrDisposalBeforeHeldOwnershipAsync(disposeStore: True, hostileLogger: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyTests.BrokerTopology_UsesProviderNativeNamesAndContainsNoUnsupportedTopicChaining"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests.RelativeTopicAddress_ResolvesToTheSameEntityAndLifetime(hostUri: \"amazonsqs://eu-central-1/\", expectedName: \"orders\", relativeName: \"orders\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.UnrelatedMatchingCondition_StillAddsSnsSendAllowAsync(allow: True, action: \"sqs:ReceiveMessage\", principal: \"sns.amazonaws.com\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyTests.QueueSubscriptions_PreserveEveryDistinctSourceAndDestinationPair"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.UnrelatedMatchingCondition_StillAddsSnsSendAllowAsync(allow: True, action: \"sqs:SendMessage\", principal: \"other.amazonaws.com\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockDiagnosticsTests.MaximumVisibility_OptionalDiagnosticsPreserveActualDeleteAsync(hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheCreationTests.MissingFifoQueue_AddsRequiredFlagWithoutMutatingDeclarationAsync(explicitFlag: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests.ExistingSubscriptionAttributeReadFailure_DoesNotAcceptStaleSubscriptionAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheCreationTests.MissingFifoQueue_AddsRequiredFlagWithoutMutatingDeclarationAsync(explicitFlag: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConfiguredPipeValidationTests.ConfiguredPipeSpecification_ReportsItsFailureBeforeEndpointBuild(connectionPipe: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockDiagnosticsTests.MaximumVisibility_OptionalDiagnosticsPreserveActualDeleteAsync(hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConfiguredPipeValidationTests.ConfiguredPipeSpecification_ReportsItsFailureBeforeEndpointBuild(connectionPipe: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.UnrelatedMatchingCondition_StillAddsSnsSendAllowAsync(allow: False, action: \"sqs:ReceiveMessage\", principal: \"sns.amazonaws.com\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheCreationTests.FailedCreateResponse_DoesNotFetchAttributesAndAllowsCleanRetryAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveContextTests.NotificationEnvelope_PreservesCarrierAndSelectsItsDeclaredSerializer"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.ExistingSnsSendAllow_DoesNotRewritePolicyAsync(sourceArn: \"arn:aws:sns:eu-central-1:123456789012:*\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.ExistingSnsSendAllow_DoesNotRewritePolicyAsync(sourceArn: \"arn:aws:sns:eu-central-1:123456789012:events\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveContextTests.Body_PreservesTheWireCarrierUntilTheCommonAdmissionBoundary"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheCreationTests.AttributeReadFailureAfterCreation_RediscoversExistingQueueWithoutCreatingAgainAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveContextTests.TransportProperties_WithFifoAttributes_ReturnsExactCanonicalValues"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveContextTests.TransportProperties_WithoutUsableFifoAttributes_ReturnsNull"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.WildcardPrincipalDeny_RejectsAnIneffectivePolicyUpdateAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests.PurgeOnStartup_IsSingleFlightAndRetriesAfterFailureAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests.ProviderOwnerCancellation_CancelsEveryDispatchedEntryAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConfiguredPipelinesAndSendTopologyTests.ConfiguredContextFilters_ExecuteBeforeProviderTopologyAsync(route: 2)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheCreationTests.MissingQueue_CreatesWithExactAttributesAndTagsThenCachesReturnedIdentityAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveContextTests.TransportProperties_ReturnAnnotationMatchesTheNullableInterfaceContract"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.DedicatedSnsAllow_AddsAnotherTopicWithoutGrowingStatementCountAsync(conditionType: \"ArnEquals\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostSendReceiverDiagnosticsTests.HostConnection_OptionalDiagnosticPreservesActualEndpointStartAsync(hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.DedicatedSnsAllow_AddsAnotherTopicWithoutGrowingStatementCountAsync(conditionType: \"ArnLike\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConfiguredPipelinesAndSendTopologyTests.ConfiguredContextFilters_ExecuteBeforeProviderTopologyAsync(route: 1)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConfiguredPipelinesAndSendTopologyTests.ConfiguredContextFilters_ExecuteBeforeProviderTopologyAsync(route: 3)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.ExplicitSnsSendDeny_RejectsAnIneffectivePolicyUpdateAsync(action: \"sqs:*\", conditionType: \"ArnLike\", conditionArn: \"arn:aws:sns:eu-central-1:123456789012:events\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.ExplicitSnsSendDeny_RejectsAnIneffectivePolicyUpdateAsync(action: \"sqs:SendMessage\", conditionType: \"ArnLike\", conditionArn: \"arn:aws:sns:eu-central-1:123456789012:events\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests.QueueInfoSendAsync_CallerCancellationAfterDispatch_DoesNotCancelProviderRequestAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.ExplicitSnsSendDeny_RejectsAnIneffectivePolicyUpdateAsync(action: \"*\", conditionType: \"ArnLike\", conditionArn: \"arn:aws:sns:eu-central-1:123456789012:events\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.ExplicitSnsSendDeny_RejectsAnIneffectivePolicyUpdateAsync(action: \"sqs:SendMessage\", conditionType: \"ArnNotEquals\", conditionArn: \"arn:aws:sns:eu-central-1:123456789012:other\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConfiguredPipelinesAndSendTopologyTests.ConfiguredContextFilters_ExecuteBeforeProviderTopologyAsync(route: 0)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostSendReceiverDiagnosticsTests.HostConnection_OptionalDiagnosticPreservesActualEndpointStartAsync(hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.ExistingArnEqualsAllow_DoesNotRewritePolicyAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsStartupPurgeDiagnosticsTests.StartupPurge_SuccessPreservesContinuationAndOnceStateDespiteDebugAsync(hostileLogger: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsStartupPurgeDiagnosticsTests.StartupPurge_SuccessPreservesContinuationAndOnceStateDespiteDebugAsync(hostileLogger: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.UnrestrictedExistingAllow_IsNotNarrowedByAddingAConditionAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.DirectPublishTopology_PreventsLateScopeChangesWithoutMutatingHostSettings"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.ClosedMessageTypes_ProduceStableDistinctAwsTopicNames"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests.QueueInfoDeleteAsync_CallerCancellationAfterDispatch_DoesNotCancelProviderRequestAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests.DenyForEveryOtherTopic_DoesNotBlockThisTopicAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.ScopedHostAfterPublishConfiguration_IsRejectedBeforeTopicsDiverge"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests.CancellationAfterCollectionBeforeDispatch_FiltersEntryAndReindexesSurvivorAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostSendReceiverDiagnosticsTests.SendCreation_OptionalDiagnosticPreservesBothRealOwnerAdmissionsAsync(topic: False, hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostSendReceiverDiagnosticsTests.SendCreation_OptionalDiagnosticPreservesBothRealOwnerAdmissionsAsync(topic: True, hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostSendReceiverDiagnosticsTests.SendCreation_OptionalDiagnosticPreservesBothRealOwnerAdmissionsAsync(topic: True, hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostSendReceiverDiagnosticsTests.SendCreation_OptionalDiagnosticPreservesBothRealOwnerAdmissionsAsync(topic: False, hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests.DisposeAsync_WithOnlyCanceledCollectedEntries_DoesNotCallProviderAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyTests.BrokerTopologyProbe_ReportsEntityLifetimeAndEverySubscriptionPair"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests.ExecuteAsync_PreCanceledToken_DoesNotAdmitEntryOrCallProviderAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.ScopedLongCanonicalContract_UsesAValidDistinctPublishDestination"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.ConfiguredSeparators_ProduceTheRequestedClosedGenericName"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.LongCanonicalNames_StayValidAndRetainDistinctStableSuffixes"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.PublishTopology_UsesTheContractNameAndRejectsPartiallyOpenContracts"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.EmptyAndDuplicateSeparators_AreRejectedBeforeTheyCanMergeContracts"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverFifoTests.FifoReceiver_OrdersEachInterleavedGroupIndependentlyAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.ScopeThatLeavesNoRoomForADigest_RejectsTheLongTopic"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.OpenMessageTypes_AreRejectedBeforeTheyCanNameSharedTopics"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedInvalidDefaultStillFailsBeforeRuntime"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.RepeatingScopedHostSettings_DoesNotStackThePublishPrefix"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests.TopicInfoPublishAsync_CallerCancellationAfterDispatch_DoesNotCancelProviderRequestAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.CustomNamespaceSeparator_CannotMergeASeparatorWithAnIdentifier"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.ScopedHostWithOpaqueMessageTopology_IsRejectedWithoutChangingTheHost"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.ScopedTypeDestination_ResolvesTheActualPublishTopic"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests.CancellationAfterDispatch_CancelsOnlyCallerWaitAndPreservesSharedProviderRequestAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.ScopedHostAfterMessageTopologyConfiguration_IsRejectedBeforeTopicsDiverge"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostSendReceiverDiagnosticsTests.ReceiverVisibility_OptionalDiagnosticPreservesActualReceiveAdmissionAsync(hostile: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.ScopedHostAfterPreexistingMessageTopology_IsRejectedBeforeTopicsDiverge"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.HashedCanonicalName_CannotEqualAShortCanonicalContract"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostSendReceiverDiagnosticsTests.ReceiverVisibility_OptionalDiagnosticPreservesActualReceiveAdmissionAsync(hostile: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageNameFormatterTests.DistinctNamespaceAndNestedContracts_NeverShareATopicName"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests.CanceledCaller_RemainsCanceledWhenSharedProviderRequestFailsAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests.QueueInfoDispose_WaitsForAdmittedSendAndDeleteProviderWorkAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheOwnershipTests.CanceledCallers_DoNotReleasePendingOwnershipOrBlockAnotherQueueAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheOwnershipTests.Dispose_WaitsForPolicyWriteAndPreservesItsSuccessfulResultAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.UnusedInvalidDefaultCannotRejectCoherentNamedBus"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheOwnershipTests.EvictedQueue_RejectsSendAndDeleteWithoutRestartingBatchWorkersAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.CoherentNamedBusReachesExactlyTheSameRuntimeBoundary"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Region, reason: \"Region must not be empty\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportDispatchTests.CreatedTransport_DispatchesToTheAddressSelectedProviderAsync(destination: \"queue:orders\", entityName: \"orders\", topic: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportContextTests.Send_LinksCallerCancellationThroughTopologyAndProviderOperationsAsync(topic: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Scope, reason: \"Scope must not be empty\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: ScopeWithoutRegion, reason: \"Scope requires Region\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportContextTests.Send_LinksCallerCancellationThroughTopologyAndProviderOperationsAsync(topic: False)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportDispatchTests.CreatedTransport_DispatchesToTheAddressSelectedProviderAsync(destination: \"topic:events\", entityName: \"events\", topic: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportContextTests.TopicSend_UsesTheCanonicalCorrelationIdHeaderAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportDispatchTests.CreatedTransport_DispatchesToTheAddressSelectedProviderAsync(destination: \"amazonsqs://eu-central-1/events?type=topic\", entityName: \"events\", topic: True)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportContextTests.QueueSend_EmitsOnlyPermittedHeadersInProviderRequestAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheOwnershipTests.DurableTransition_WaitsForPendingEphemeralResolutionBeforeStartingItsOwnAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheOwnershipTests.NameLookup_JoinsPendingDurableResolutionWithoutCreatingAnEphemeralCopyAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheOwnershipTests.FailedResolution_ReleasesTheNameForASecondProviderAttemptAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheOwnershipTests.Removal_WaitsForPendingResolutionAndAllowsFreshLookupAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverPollingTests.Receiver_SuccessfulEmptyPollAfterStopCompletesWithoutPollingAgainAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverFifoTests.FifoReceiver_WidePrefetchAdmitsQueuedMessagesWhileFirstIsBlockedAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverFifoTests.FifoReceiver_RejectsMissingOrInvalidOrderingAttributesBeforeDispatchAsync(group: \" \", sequence: \"1\", diagnostic: \"MessageGroupId\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverFifoTests.FifoReceiver_RejectsMissingOrInvalidOrderingAttributesBeforeDispatchAsync(group: null, sequence: \"1\", diagnostic: \"MessageGroupId\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverFifoTests.FifoReceiver_RejectsMissingOrInvalidOrderingAttributesBeforeDispatchAsync(group: \"group-A\", sequence: \"invalid\", diagnostic: \"SequenceNumber\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverFifoTests.FifoReceiver_RejectsMissingOrInvalidOrderingAttributesBeforeDispatchAsync(group: \"group-A\", sequence: \"-1\", diagnostic: \"SequenceNumber\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverFifoTests.FifoReceiver_RejectsMissingOrInvalidOrderingAttributesBeforeDispatchAsync(group: \"group-A\", sequence: null, diagnostic: \"SequenceNumber\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverPollingTests.Receiver_ResolvesQueueBeforePollingAndUsesValidProviderVisibilityAsync(providerVisibility: \"invalid\", expectedVisibility: 30)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverFifoTests.FifoReceiver_BlockedGroupDoesNotStopAnotherPartitionAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverPollingTests.Receiver_ResolvesQueueBeforePollingAndUsesValidProviderVisibilityAsync(providerVisibility: null, expectedVisibility: 30)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverFifoTests.FifoReceiver_DispatchesOneGroupInNumericSequenceOrderAsync"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverPollingTests.Receiver_ResolvesQueueBeforePollingAndUsesValidProviderVisibilityAsync(providerVisibility: \"45\", expectedVisibility: 45)"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverPollingTests.Receiver_ResolvesQueueBeforePollingAndUsesValidProviderVisibilityAsync(providerVisibility: \"30\", expectedVisibility: 30)"
+      }
+    ],
+    "included_six_startup_ids": [
+      "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedInvalidDefaultStillFailsBeforeRuntime",
+      "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.UnusedInvalidDefaultCannotRejectCoherentNamedBus",
+      "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.CoherentNamedBusReachesExactlyTheSameRuntimeBoundary",
+      "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Region, reason: \"Region must not be empty\")",
+      "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Scope, reason: \"Scope must not be empty\")",
+      "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: ScopeWithoutRegion, reason: \"Scope requires Region\")"
+    ],
+    "compiled_requirement203_projection_case": {
+      "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Requirements.RequirementCoverageProjectionTests.AmazonSqsRequirements_MatchCompiledRequirementMetadata",
+      "passed": true,
+      "credit": "Same fixed203 embedded resource/compiled passive metadata projection is now exercised by this native successful parent, unlike earlier focused6 where projection remained unrun."
+    },
+    "invocation_scope": {
+      "Root_recorded_profile": "UnitArchitecture",
+      "Root_recorded_no_test_filters": true,
+      "reviewer_observed": "417 unique native parent IDs include all six new startup cases and the compiled requirement projection; no explicit focused class/method option strings in actual MSBuild binlog.",
+      "limits": "No independent full MTP process argument/environment transcript was archived in this receipt; invocation profile/no-filter declaration remains Root executor provenance, supported by the observed whole module event set. No secret environment inspection."
+    }
+  },
+  "raw3": [
+    {
+      "name": "p04-sqs-whole-module-r1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/p04-sqs-whole-module-r1.stderr.log",
+      "actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/local-completion/p04-sqs-whole-module-r1.stderr.log"
+    },
+    {
+      "name": "p04-sqs-whole-module-r1-20261007-090245--96579--MYnwXS-dotnet-test.binlog",
+      "sha256": "c7148921dd41e7974e676a9891a9ba7a7b335c04944c1fc0b1b5504de47e8d73",
+      "bytes": 696638,
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/p04-sqs-whole-module-r1-20261007-090245--96579--MYnwXS-dotnet-test.binlog",
+      "actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/local-completion/p04-sqs-whole-module-r1-20261007-090245--96579--MYnwXS-dotnet-test.binlog",
+      "decoded_bytes": 3027375,
+      "decoded_sha256": "382a403d10d2503386c935d5f541c20fdf2ede98885849173f469807e4ba523a",
+      "closed": {
+        "returncode": 1,
+        "stdout": "",
+        "stderr": ""
+      },
+      "limits": "No focused class/method strings observed; not a full MTP process command/environment capture or MSBuild event replay."
+    },
+    {
+      "name": "p04-sqs-whole-module-r1.stdout.log",
+      "sha256": "a0f1b3d5b5194e8f48379957b45138a35367e0776ae50eb28923977579d07981",
+      "bytes": 166177,
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/p04-sqs-whole-module-r1.stdout.log",
+      "actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/local-completion/p04-sqs-whole-module-r1.stdout.log"
+    }
+  ],
+  "closed_unique_binlog1": {
+    "name": "p04-sqs-whole-module-r1-20261007-090245--96579--MYnwXS-dotnet-test.binlog",
+    "sha256": "c7148921dd41e7974e676a9891a9ba7a7b335c04944c1fc0b1b5504de47e8d73",
+    "bytes": 696638,
+    "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/p04-sqs-whole-module-r1-20261007-090245--96579--MYnwXS-dotnet-test.binlog",
+    "actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/local-completion/p04-sqs-whole-module-r1-20261007-090245--96579--MYnwXS-dotnet-test.binlog",
+    "decoded_bytes": 3027375,
+    "decoded_sha256": "382a403d10d2503386c935d5f541c20fdf2ede98885849173f469807e4ba523a",
+    "closed": {
+      "returncode": 1,
+      "stdout": "",
+      "stderr": ""
+    },
+    "limits": "No focused class/method strings observed; not a full MTP process command/environment capture or MSBuild event replay."
+  },
+  "runtime26": [
+    {
+      "name": "ViciOne.ServiceBus.xml",
+      "sha256": "bb4dc15bad6a4df93e36f1d2ebceebe594236f2efd33658d0fb68a3635942fb1",
+      "bytes": 2481883,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.xml",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.xml",
+      "independent_after_sha256": "bb4dc15bad6a4df93e36f1d2ebceebe594236f2efd33658d0fb68a3635942fb1"
+    },
+    {
+      "name": "ViciOne.ServiceBus.AmazonSqs.xml",
+      "sha256": "fc6a55c12f5cf2da4b72a8c45bfd411619360a944d7714a6b320e41f09572f2a",
+      "bytes": 285933,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.xml",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.AmazonSqs.xml",
+      "independent_after_sha256": "fc6a55c12f5cf2da4b72a8c45bfd411619360a944d7714a6b320e41f09572f2a"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Futures.xml",
+      "sha256": "9e19a1ebde017b35cf0de392fe293da2bd5dac7e6e00f6bd665705c7336585ff",
+      "bytes": 155010,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Futures.xml",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.Futures.xml",
+      "independent_after_sha256": "9e19a1ebde017b35cf0de392fe293da2bd5dac7e6e00f6bd665705c7336585ff"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Abstractions.xml",
+      "sha256": "ad0691b5b4c76e79e2204b90bed2a6909761fb4eff86e5d16da129f1a64663aa",
+      "bytes": 1365069,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Abstractions.xml",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.Abstractions.xml",
+      "independent_after_sha256": "ad0691b5b4c76e79e2204b90bed2a6909761fb4eff86e5d16da129f1a64663aa"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "207dda85d4522b78f142f07f107b7d4a30ba6b2a87a3de79e1fa896118645796",
+      "bytes": 94720,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Mediator.dll",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.Mediator.dll",
+      "independent_after_sha256": "207dda85d4522b78f142f07f107b7d4a30ba6b2a87a3de79e1fa896118645796"
+    },
+    {
+      "name": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "sha256": "640bed872dc2f947c65b12e2b7b99f5910d769101c0616fa69f66afecbd10588",
+      "bytes": 88920,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.AmazonSqs.Tests",
+      "independent_after_sha256": "640bed872dc2f947c65b12e2b7b99f5910d769101c0616fa69f66afecbd10588"
+    },
+    {
+      "name": "ViciOne.ServiceBus.AmazonSqs.Tests.testconfig.json",
+      "sha256": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+      "bytes": 66,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.testconfig.json",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.AmazonSqs.Tests.testconfig.json",
+      "independent_after_sha256": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Sagas.xml",
+      "sha256": "c35dbbd5c06e5a63538f5936c902079bde4b133336e518927dc7d9b556a6fe87",
+      "bytes": 1246223,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Sagas.xml",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.Sagas.xml",
+      "independent_after_sha256": "c35dbbd5c06e5a63538f5936c902079bde4b133336e518927dc7d9b556a6fe87"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Testing.dll",
+      "sha256": "1b9a847081a7bf189acee9951954d213f93b294fdb4e09411f775e6420762ffa",
+      "bytes": 298496,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Testing.dll",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.Testing.dll",
+      "independent_after_sha256": "1b9a847081a7bf189acee9951954d213f93b294fdb4e09411f775e6420762ffa"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Courier.dll",
+      "sha256": "b8ff979beb06da84c1d74beaef6858ccff77bd777b827daf76cec92eb6f4a089",
+      "bytes": 248832,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Courier.dll",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.Courier.dll",
+      "independent_after_sha256": "b8ff979beb06da84c1d74beaef6858ccff77bd777b827daf76cec92eb6f4a089"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Tests.Infrastructure.xml",
+      "sha256": "97a599f151cf6b7f5d2b59277b5ea58a351616053d8b042b30399008582ef89c",
+      "bytes": 12768,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Tests.Infrastructure.xml",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.xml",
+      "independent_after_sha256": "97a599f151cf6b7f5d2b59277b5ea58a351616053d8b042b30399008582ef89c"
+    },
+    {
+      "name": "ViciOne.ServiceBus.AmazonSqs.Tests.xml",
+      "sha256": "f7ff670ad1d2038739bbb05e38ea4592117cdafa709d414fdb9e4c7896ad7a87",
+      "bytes": 151,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.xml",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.AmazonSqs.Tests.xml",
+      "independent_after_sha256": "f7ff670ad1d2038739bbb05e38ea4592117cdafa709d414fdb9e4c7896ad7a87"
+    },
+    {
+      "name": "ViciOne.ServiceBus.AmazonSqs.Tests.runtimeconfig.json",
+      "sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+      "bytes": 330,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.runtimeconfig.json",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.AmazonSqs.Tests.runtimeconfig.json",
+      "independent_after_sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Futures.dll",
+      "sha256": "ecacda698b7afa82beee23e0ac2fa783803ed92cd69a35dcfb430adbf9994e67",
+      "bytes": 178688,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Futures.dll",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.Futures.dll",
+      "independent_after_sha256": "ecacda698b7afa82beee23e0ac2fa783803ed92cd69a35dcfb430adbf9994e67"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "33e7cd73bfdf6ead7cfbcedee314fc19a5875e5ebe951e8f674c737b84232df4",
+      "bytes": 772608,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Abstractions.dll",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.Abstractions.dll",
+      "independent_after_sha256": "33e7cd73bfdf6ead7cfbcedee314fc19a5875e5ebe951e8f674c737b84232df4"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Mediator.xml",
+      "sha256": "84f8f45c2abe285749733beb4bc82bd8693bae18a191acab9a651b01ef270fa0",
+      "bytes": 69081,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Mediator.xml",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.Mediator.xml",
+      "independent_after_sha256": "84f8f45c2abe285749733beb4bc82bd8693bae18a191acab9a651b01ef270fa0"
+    },
+    {
+      "name": "ViciOne.ServiceBus.AmazonSqs.Tests.deps.json",
+      "sha256": "38bf461e9cf3839ef3f959043381ad56025ece9519952c2085cdeccde132214f",
+      "bytes": 63227,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.deps.json",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.AmazonSqs.Tests.deps.json",
+      "independent_after_sha256": "38bf461e9cf3839ef3f959043381ad56025ece9519952c2085cdeccde132214f"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "896be57d8b1fa04bdd602bb24a918c5c55cdde296207292932c8dadbd74d9e93",
+      "bytes": 939520,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Sagas.dll",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.Sagas.dll",
+      "independent_after_sha256": "896be57d8b1fa04bdd602bb24a918c5c55cdde296207292932c8dadbd74d9e93"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Testing.xml",
+      "sha256": "5fa24bada850262cf165da87972dffbd3aea42ea08de6d5ce7e493e4acaf07f2",
+      "bytes": 273048,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Testing.xml",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.Testing.xml",
+      "independent_after_sha256": "5fa24bada850262cf165da87972dffbd3aea42ea08de6d5ce7e493e4acaf07f2"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Courier.xml",
+      "sha256": "ea159b7edf3d6ebf50ed8618f6286aaf85cea65dca5aaca0d0a4fcb419e82b66",
+      "bytes": 319003,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Courier.xml",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.Courier.xml",
+      "independent_after_sha256": "ea159b7edf3d6ebf50ed8618f6286aaf85cea65dca5aaca0d0a4fcb419e82b66"
+    },
+    {
+      "name": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "4afcbd64f7304a9c3c090858cef47b42ba64f7a0b30fe293aa6ed6c70b11f7e9",
+      "bytes": 86528,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "independent_after_sha256": "4afcbd64f7304a9c3c090858cef47b42ba64f7a0b30fe293aa6ed6c70b11f7e9"
+    },
+    {
+      "name": "ViciOne.ServiceBus.AmazonSqs.Tests.dll",
+      "sha256": "f1e6828739348908ddd1c6c76003759198994d17999f33609076a8885fcb28c9",
+      "bytes": 849408,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.dll",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.AmazonSqs.Tests.dll",
+      "independent_after_sha256": "f1e6828739348908ddd1c6c76003759198994d17999f33609076a8885fcb28c9"
+    },
+    {
+      "name": "testsettings.json",
+      "sha256": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7",
+      "bytes": 1300,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/testsettings.json",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/testsettings.json",
+      "independent_after_sha256": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7"
+    },
+    {
+      "name": "ViciOne.ServiceBus.dll",
+      "sha256": "811d01b8f4f6de7cbe93e89dbc2b67a7b37ba5002c2c9391f0b6dd95c5bc8f6b",
+      "bytes": 3046400,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.dll",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.dll",
+      "independent_after_sha256": "811d01b8f4f6de7cbe93e89dbc2b67a7b37ba5002c2c9391f0b6dd95c5bc8f6b"
+    },
+    {
+      "name": "ViciOne.ServiceBus.AmazonSqs.Tests.pdb",
+      "sha256": "7a3fa5ab02dbf05002bb4b0091469ca4aea9d4ecb3a0a35cb1f627620e7fde22",
+      "bytes": 157180,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.pdb",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.AmazonSqs.Tests.pdb",
+      "independent_after_sha256": "7a3fa5ab02dbf05002bb4b0091469ca4aea9d4ecb3a0a35cb1f627620e7fde22"
+    },
+    {
+      "name": "ViciOne.ServiceBus.AmazonSqs.dll",
+      "sha256": "74b9f008c60b1ff33a303f97c39d32b617b077e1be6745de1d79762566444295",
+      "bytes": 358400,
+      "fixed_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.dll",
+      "current_actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.AmazonSqs.dll",
+      "independent_after_sha256": "74b9f008c60b1ff33a303f97c39d32b617b077e1be6745de1d79762566444295"
+    }
+  ],
+  "runtime_before_after_binding": {
+    "prior_independent_fixed6_API_review": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-sqs-fixed6-and-scoped-api-native-adversarial-r1.json",
+    "prior_review_sha256": "55e7f5534661d722b152f4e37e7b1440f5b60404237bccdc26e24b37e6d833fe",
+    "fixed6_result_sha256": "f2261b92f30aa6fcc2e1da84c5e56b2ff5a8886e9e99360d9f04c2b597345366",
+    "Root_PE10_PDB2997_reuse_sha256": "d54ba994eb2dffedac78d056cafec381535ff36bc480090009c890891597dbea",
+    "prior_review_actual26_hashes_now_exact_again": true,
+    "Root_recorded_immediate_run_before_after": true,
+    "limits": "Prior independent fixed6 review plus current independent after bytes and immutable fixed26 archive bind the same graph. Root records immediate per-run before/after identity; no universal CLR AssemblyLoad trace or process-time capture invented."
+  },
+  "source_snapshots5": [
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "frozen_fixed_sha256": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973",
+      "current_C9_sha256": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973",
+      "matches": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "frozen_fixed_sha256": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f",
+      "current_C9_sha256": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f",
+      "matches": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+      "frozen_fixed_sha256": "694ffbfb2fb103e081e1de064c1f4d7a875c32d971e3beb2b91ebe79e60a98d8",
+      "current_C9_sha256": "694ffbfb2fb103e081e1de064c1f4d7a875c32d971e3beb2b91ebe79e60a98d8",
+      "matches": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "frozen_fixed_sha256": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa",
+      "current_C9_sha256": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa",
+      "matches": true
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "frozen_fixed_sha256": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a",
+      "current_C9_sha256": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a",
+      "matches": true
+    }
+  ],
+  "compiled_graph_exact_reuse": {
+    "PE10": true,
+    "PDB_documents2997": true,
+    "resource203": true,
+    "deps_assets10": true,
+    "independent_current_assets10_byte_equal": true
+  },
+  "checks": [
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/RESULT.json",
+      "pass": true,
+      "details": {
+        "actual": "426241207468a72d293808121794c570430997bff7c954623a9b61df8421d702"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/RESULT.json",
+      "pass": true,
+      "details": {
+        "actual": "f2261b92f30aa6fcc2e1da84c5e56b2ff5a8886e9e99360d9f04c2b597345366"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-sqs-fixed6-and-scoped-api-native-adversarial-r1.json",
+      "pass": true,
+      "details": {
+        "actual": "55e7f5534661d722b152f4e37e7b1440f5b60404237bccdc26e24b37e6d833fe"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "pass": true,
+      "details": {
+        "actual": "d54ba994eb2dffedac78d056cafec381535ff36bc480090009c890891597dbea"
+      }
+    },
+    {
+      "check": "Root whole module joined31991exit0/counts417allpass0skip",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/p04-sqs-whole-module-r1.stderr.log",
+      "pass": true,
+      "details": {
+        "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/local-completion/p04-sqs-whole-module-r1.stderr.log",
+      "pass": true,
+      "details": {
+        "actual": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "check": "actual archive bytes p04-sqs-whole-module-r1.stderr.log",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/p04-sqs-whole-module-r1-20261007-090245--96579--MYnwXS-dotnet-test.binlog",
+      "pass": true,
+      "details": {
+        "actual": "c7148921dd41e7974e676a9891a9ba7a7b335c04944c1fc0b1b5504de47e8d73"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/local-completion/p04-sqs-whole-module-r1-20261007-090245--96579--MYnwXS-dotnet-test.binlog",
+      "pass": true,
+      "details": {
+        "actual": "c7148921dd41e7974e676a9891a9ba7a7b335c04944c1fc0b1b5504de47e8d73"
+      }
+    },
+    {
+      "check": "actual archive bytes p04-sqs-whole-module-r1-20261007-090245--96579--MYnwXS-dotnet-test.binlog",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "unique whole module binlog nonempty CRC-complete closed",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "whole module binlog contains no explicit focused class/method option strings",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/p04-sqs-whole-module-r1.stdout.log",
+      "pass": true,
+      "details": {
+        "actual": "a0f1b3d5b5194e8f48379957b45138a35367e0776ae50eb28923977579d07981"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/local-completion/p04-sqs-whole-module-r1.stdout.log",
+      "pass": true,
+      "details": {
+        "actual": "a0f1b3d5b5194e8f48379957b45138a35367e0776ae50eb28923977579d07981"
+      }
+    },
+    {
+      "check": "actual archive bytes p04-sqs-whole-module-r1.stdout.log",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "raw3 two streams plusone binlog",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "all417 exact full parent display IDs raw sequence equals receipt",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "whole native summary gesamt",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "whole native summary fehlgeschlagen",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "whole native summary erfolgreich",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "whole native summary übersprungen",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "whole stderr actually empty",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "all six startup cases actually included as passed parents",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual whole-module compiled requirements projection parent passed",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.xml",
+      "pass": true,
+      "details": {
+        "actual": "bb4dc15bad6a4df93e36f1d2ebceebe594236f2efd33658d0fb68a3635942fb1"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.xml",
+      "pass": true,
+      "details": {
+        "actual": "fc6a55c12f5cf2da4b72a8c45bfd411619360a944d7714a6b320e41f09572f2a"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.AmazonSqs.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Futures.xml",
+      "pass": true,
+      "details": {
+        "actual": "9e19a1ebde017b35cf0de392fe293da2bd5dac7e6e00f6bd665705c7336585ff"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.Futures.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Abstractions.xml",
+      "pass": true,
+      "details": {
+        "actual": "ad0691b5b4c76e79e2204b90bed2a6909761fb4eff86e5d16da129f1a64663aa"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.Abstractions.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Mediator.dll",
+      "pass": true,
+      "details": {
+        "actual": "207dda85d4522b78f142f07f107b7d4a30ba6b2a87a3de79e1fa896118645796"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.Mediator.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests",
+      "pass": true,
+      "details": {
+        "actual": "640bed872dc2f947c65b12e2b7b99f5910d769101c0616fa69f66afecbd10588"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.AmazonSqs.Tests",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.testconfig.json",
+      "pass": true,
+      "details": {
+        "actual": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.AmazonSqs.Tests.testconfig.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Sagas.xml",
+      "pass": true,
+      "details": {
+        "actual": "c35dbbd5c06e5a63538f5936c902079bde4b133336e518927dc7d9b556a6fe87"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.Sagas.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Testing.dll",
+      "pass": true,
+      "details": {
+        "actual": "1b9a847081a7bf189acee9951954d213f93b294fdb4e09411f775e6420762ffa"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.Testing.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Courier.dll",
+      "pass": true,
+      "details": {
+        "actual": "b8ff979beb06da84c1d74beaef6858ccff77bd777b827daf76cec92eb6f4a089"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.Courier.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Tests.Infrastructure.xml",
+      "pass": true,
+      "details": {
+        "actual": "97a599f151cf6b7f5d2b59277b5ea58a351616053d8b042b30399008582ef89c"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.Tests.Infrastructure.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.xml",
+      "pass": true,
+      "details": {
+        "actual": "f7ff670ad1d2038739bbb05e38ea4592117cdafa709d414fdb9e4c7896ad7a87"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.AmazonSqs.Tests.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.runtimeconfig.json",
+      "pass": true,
+      "details": {
+        "actual": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.AmazonSqs.Tests.runtimeconfig.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Futures.dll",
+      "pass": true,
+      "details": {
+        "actual": "ecacda698b7afa82beee23e0ac2fa783803ed92cd69a35dcfb430adbf9994e67"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.Futures.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Abstractions.dll",
+      "pass": true,
+      "details": {
+        "actual": "33e7cd73bfdf6ead7cfbcedee314fc19a5875e5ebe951e8f674c737b84232df4"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.Abstractions.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Mediator.xml",
+      "pass": true,
+      "details": {
+        "actual": "84f8f45c2abe285749733beb4bc82bd8693bae18a191acab9a651b01ef270fa0"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.Mediator.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.deps.json",
+      "pass": true,
+      "details": {
+        "actual": "38bf461e9cf3839ef3f959043381ad56025ece9519952c2085cdeccde132214f"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.AmazonSqs.Tests.deps.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Sagas.dll",
+      "pass": true,
+      "details": {
+        "actual": "896be57d8b1fa04bdd602bb24a918c5c55cdde296207292932c8dadbd74d9e93"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.Sagas.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Testing.xml",
+      "pass": true,
+      "details": {
+        "actual": "5fa24bada850262cf165da87972dffbd3aea42ea08de6d5ce7e493e4acaf07f2"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.Testing.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Courier.xml",
+      "pass": true,
+      "details": {
+        "actual": "ea159b7edf3d6ebf50ed8618f6286aaf85cea65dca5aaca0d0a4fcb419e82b66"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.Courier.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "pass": true,
+      "details": {
+        "actual": "4afcbd64f7304a9c3c090858cef47b42ba64f7a0b30fe293aa6ed6c70b11f7e9"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.dll",
+      "pass": true,
+      "details": {
+        "actual": "f1e6828739348908ddd1c6c76003759198994d17999f33609076a8885fcb28c9"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.AmazonSqs.Tests.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/testsettings.json",
+      "pass": true,
+      "details": {
+        "actual": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime testsettings.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.dll",
+      "pass": true,
+      "details": {
+        "actual": "811d01b8f4f6de7cbe93e89dbc2b67a7b37ba5002c2c9391f0b6dd95c5bc8f6b"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.pdb",
+      "pass": true,
+      "details": {
+        "actual": "7a3fa5ab02dbf05002bb4b0091469ca4aea9d4ecb3a0a35cb1f627620e7fde22"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.AmazonSqs.Tests.pdb",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.dll",
+      "pass": true,
+      "details": {
+        "actual": "74b9f008c60b1ff33a303f97c39d32b617b077e1be6745de1d79762566444295"
+      }
+    },
+    {
+      "check": "whole actualafter bytes exact qualified fixed6runtime ViciOne.ServiceBus.AmazonSqs.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "runtime26 exactly prior fixed6 independently qualified PEgraph",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/source/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "pass": true,
+      "details": {
+        "actual": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/source/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/source/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "694ffbfb2fb103e081e1de064c1f4d7a875c32d971e3beb2b91ebe79e60a98d8"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/source/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "pass": true,
+      "details": {
+        "actual": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/source/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a"
+      }
+    },
+    {
+      "check": "actual current fixed five source owners unchanged at observation",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/assets/ViciOne.ServiceBus.Abstractions/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "2d2f936a6a82f5b82ed0aa9841c030df4f8e8a291af5a08efd60be4635b17eb9"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/obj/ViciOne.ServiceBus.Abstractions/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "2d2f936a6a82f5b82ed0aa9841c030df4f8e8a291af5a08efd60be4635b17eb9"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/assets/ViciOne.ServiceBus.Courier/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "7cf4e0792f614c0995cc59f40a3a3b576a09bf603a89bf03137cce2f4438b472"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/obj/ViciOne.ServiceBus.Courier/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "7cf4e0792f614c0995cc59f40a3a3b576a09bf603a89bf03137cce2f4438b472"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/assets/ViciOne.ServiceBus.Futures/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "e6299b5aef2f5837058fc652c50b379373f24530b5dd2d59a0182573d0785b8f"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/obj/ViciOne.ServiceBus.Futures/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "e6299b5aef2f5837058fc652c50b379373f24530b5dd2d59a0182573d0785b8f"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/assets/ViciOne.ServiceBus.AmazonSqs.Tests/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "e58466527548466e5b871f46cde68831b7d6f9fe160ecbde462f3546000fca8c"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/obj/ViciOne.ServiceBus.AmazonSqs.Tests/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "e58466527548466e5b871f46cde68831b7d6f9fe160ecbde462f3546000fca8c"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/assets/ViciOne.ServiceBus.Mediator/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "d24c81ca2bc99bae359979b588e20300a95a99804c56598b4d5ec2b9c65c622b"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/obj/ViciOne.ServiceBus.Mediator/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "d24c81ca2bc99bae359979b588e20300a95a99804c56598b4d5ec2b9c65c622b"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/assets/ViciOne.ServiceBus.Tests.Infrastructure/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "5cb9a70a25999f5f587e66bc1f32af6478e006613bc91c8c140983213cbc5881"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.Infrastructure/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "5cb9a70a25999f5f587e66bc1f32af6478e006613bc91c8c140983213cbc5881"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/assets/ViciOne.ServiceBus.Testing/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "66cecfd68314655f6bb74cbb3d8efc630c8cfaba8dc338bd6388f77119d670f8"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/obj/ViciOne.ServiceBus.Testing/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "66cecfd68314655f6bb74cbb3d8efc630c8cfaba8dc338bd6388f77119d670f8"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/assets/ViciOne.ServiceBus.AmazonSqs/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "43ef47f580237dd3d51526e7e6540f9fa5938ad6d53323e25bb0d34a45ded032"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/obj/ViciOne.ServiceBus.AmazonSqs/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "43ef47f580237dd3d51526e7e6540f9fa5938ad6d53323e25bb0d34a45ded032"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/assets/ViciOne.ServiceBus/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "5becc382ee37bb01897067ef4e09600e15ac2094c034ebcbe48b59cd672f1e9c"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/obj/ViciOne.ServiceBus/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "5becc382ee37bb01897067ef4e09600e15ac2094c034ebcbe48b59cd672f1e9c"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/assets/ViciOne.ServiceBus.Sagas/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "d6555dbca5ecd505a6da39e8c8c3959dc126d936f9d7c1034395a85d426d21e4"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/obj/ViciOne.ServiceBus.Sagas/project.assets.json",
+      "pass": true,
+      "details": {
+        "actual": "d6555dbca5ecd505a6da39e8c8c3959dc126d936f9d7c1034395a85d426d21e4"
+      }
+    },
+    {
+      "check": "current unchanged compiled requirement203 payload remains frozen",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.AmazonSqs.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.Futures.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.Abstractions.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.Mediator.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.AmazonSqs.Tests",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.AmazonSqs.Tests.testconfig.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.Sagas.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.Testing.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.Courier.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.Tests.Infrastructure.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.AmazonSqs.Tests.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.AmazonSqs.Tests.runtimeconfig.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.Futures.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.Abstractions.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.Mediator.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.AmazonSqs.Tests.deps.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.Sagas.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.Testing.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.Courier.xml",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.AmazonSqs.Tests.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable testsettings.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.AmazonSqs.Tests.pdb",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after whole review currentactual and frozen26stable ViciOne.ServiceBus.AmazonSqs.dll",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after fixed source snapshot5 stable tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after fixed source snapshot5 stable tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after fixed source snapshot5 stable tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after fixed source snapshot5 stable tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after fixed source snapshot5 stable src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/RESULT.json",
+      "pass": true,
+      "details": {
+        "actual": "426241207468a72d293808121794c570430997bff7c954623a9b61df8421d702"
+      }
+    }
+  ],
+  "check_count": 137,
+  "limits": [
+    "This qualifies the observed complete local SQS native module417 event set on the exact fixed6 runtime; no whole55 owner/test-body read or assertion-quality grade follows from a run.",
+    "No native provider/realAWS/cloud/hardware evidence or complete ServiceBus/GenericHost runtime start. Startup sentinel tests remain before provider runtime.",
+    "Other modules/full Unit/provider replay/globalP04/P07packageAPI/currentcoverage/mutants/post/CI/globalA+ remain separate pending gates.",
+    "Session31991 is an exec session identity, not outer OS PID. Only actual archived/current bytes and native events are independently inspected; package signatures/full CLR load census not checked.",
+    "No .NET/MSBuild/native/Docker/SSH/provider/processcontrol or source/test/tool/doc/frozen mutations by reviewer; only this immutable report written; no Root body-read credit transfer."
+  ]
+}

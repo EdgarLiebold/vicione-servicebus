@@ -1,0 +1,10 @@
+{
+  "kind": "FULL_NEW_CHECKPOINT_RESTORE_BYTE_MODE_PROOF",
+  "member_count": 19465,
+  "archive_sha256": "41733eb92c3b3a0651087145d50f5eecbde371c6c2631cab8ddeb4bed68d78ef",
+  "input_sha256": "b981ec26d8a75413f70712cbbca98f4833e38e54b79918bb359dbf2bc179394b",
+  "all_bytes_sizes_modes_exact": true,
+  "destination": "/private/tmp/vicione-servicebus-checkpoint-restored-20261008",
+  "prior_archive_is_separate_dependency": true,
+  "limits": "Restores new evidence archive only. Previously archived identical files are retrieved separately from the retained 6 October archive; normal product/test/docs are in Git."
+}

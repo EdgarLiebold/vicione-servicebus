@@ -1,0 +1,276 @@
+{
+  "kind": "READ_ONLY_P06_CACHE_CANONICAL_TEST_ONLY_PREFLIGHT_R1",
+  "status": "QUALIFIED_EXACT_CANONICAL_SOURCE_TEST_REQUIREMENTS_ROOT812_BINDING__NATIVE_ORIGINAL_PENDING",
+  "reviewer": "/root/continuation_adversarial",
+  "utc": "2026-10-07T06:13:07.285838+00:00",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/CACHE_TEST_ONLY_ORIGINAL_FREEZE_R2.json",
+    "sha256": "aaf0a7d823eb7de0a2f8ca26f73768d6dced905aa4891d89391b17bdfa216d7e"
+  },
+  "Root812": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/ROOT_CORE812_CACHE_TEST_ONLY_READ_CLOSURE_R2.json",
+    "sha256": "aae21c42cb93ee9f6b2cf759c7a184b3513c81d3696d750208e4740d1eac1d38",
+    "actual812_O_C_files_equal": true,
+    "all810_prior_paths_retained": true,
+    "only_old_changed_path": [
+      "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json"
+    ],
+    "new2_whole_author_bodies_private_equal": true,
+    "immutable_Root812_R1_stale_requirement_row_corrected_only_by_R2": true,
+    "shared84_prior_current_O_C_equal": true,
+    "actualCoreOwnerFsPathset_equal": true,
+    "author_read_limits": "Root personal full-body provenance is own prior810/84 whole-read closure plus two own439/249 authored/read bodies and exact eight appended requirements. Hash checks/reviewer reads never replace author body consumption."
+  },
+  "research_plan": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/CACHE_COMPARER_AND_RETIREMENT_IMPLEMENTATION_PLAN_R1.md",
+    "sha256": "8329cff96e05e777376fad42fde583dd9495245d8e6214d226dd02866d2f3e89",
+    "complete61_lines_personally_read": true,
+    "bound_CurrentOrder": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/vicione-architecture/work/CURRENT_ORDER.yaml",
+    "CurrentOrder_sha256_checkpoint": "2990c7825b832189068f57f46e90842d0a0b28786dedb30297fa74e51095e07f"
+  },
+  "canonical_frozen_source21": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs",
+      "sha256": "404cdbc3326688944f871a18782b703b648d2c29ae8da98f9dfd8efab154f83d",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs",
+      "sha256": "46a07426260b5338bb690862efcafc21f9d1c751d27afeeee67a091f70034b2f",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "sha256": "8cfab7601e9be9f02ab59308a37f8e351ab800757658f9ebb0e16ef00ece6f8e",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs",
+      "sha256": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs",
+      "sha256": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs",
+      "sha256": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs",
+      "sha256": "bba8eeb8b9366996b489c820d793bb568d47c396127095a18ef45426fd2a164e",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs",
+      "sha256": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs",
+      "sha256": "907772e0d3f688f3b11b0542b79d45e76f098559a0fb99e2ad1395ebdb13112d",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "sha256": "d6ce8980172e278b8ce7eae72fed4f6c89f74e23778a24f93e8524ab0b99c5d9",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+      "sha256": "54c895f4d2ccb95316a7ae3f521022cea3a25e4014d9b22fabaf75a53211625d",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs",
+      "sha256": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "sha256": "a593b0fa0dc498210a20d4669ab68a743a2f13542fe9dbe53aa814ed463f6366",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs",
+      "sha256": "0aeb97aeae8196ed5918ccafb7401cdb2bc6f176c74f9e4b8de89833d8a3d00d",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs",
+      "sha256": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "sha256": "d33d153e2de28609ec362672c5637c97c9bfa95cc2895af236857b0181f7abd0",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "sha256": "98da72d0f863585936f1c9ad702bb3d27b62a7e1d606d0a21f8c8f290c56b4a2",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs",
+      "sha256": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs",
+      "sha256": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs",
+      "sha256": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4",
+      "O_C_snapshot_equal": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceFactory.cs",
+      "sha256": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc",
+      "O_C_snapshot_equal": true
+    }
+  ],
+  "private_exact_review_bridge": {
+    "direct": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-direct-r5-u2-adversarial.json",
+      "sha256": "8093bd86ef7a5a2a7a3ac8283811772576d0a349babb16cea74e29b63109c1a3"
+    },
+    "pending": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-pending-child-r2-adversarial.json",
+      "sha256": "36051455b2f9ecb932fefb4b3804f092b734de942a979e50c5484ce47e0c2591"
+    },
+    "strict_delta": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-direct-r6-pending-r3-strict-delta-adversarial.json",
+      "sha256": "74a9c5547613c81dafbd768ce9429851aeb9abe667454954730985affc8723d9"
+    },
+    "requirements": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-requirements4716-supplement-review-r1.json",
+      "sha256": "525007ca2fc2d37f010c1ebf7a17d90327c7e6647a5489a6f2749125356e1703"
+    }
+  },
+  "original_source18": {
+    "current_O_C_snapshot_exact": true,
+    "Root18_read_bound": "5e59a3d4b0496fd9b3dc07476cb499aad865ad642464c8c0fdd2257382f571d8",
+    "reviewer_personal_whole18_body_read_reused_exact_hashes": true,
+    "cache_product_edits": false
+  },
+  "actual_full_src_tests_tools_graph": {
+    "O": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "C": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original",
+    "count": 6095,
+    "both_pathsets_and_every_bytehash_equal": true,
+    "aggregate_sha256_sorted_json": "b8855c256e85ae343a79fba1a1bf1b6396d0a1e30477d36e971fef479e80da6c",
+    "excluded_generated_runtime_paths": [
+      "bin",
+      "obj",
+      "artifacts",
+      "__pycache__"
+    ],
+    "no_C3_old_tools_comparison": "Fresh originalclone is canonicalO graph; older historical C3 coverage tools are unrelated and not substituted."
+  },
+  "requirements": {
+    "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+    "sha256": "8cfab7601e9be9f02ab59308a37f8e351ab800757658f9ebb0e16ef00ece6f8e",
+    "old_raw_sha256": "6e93640a343c2d9328c9d40b410a060ed2052307a6e6482ee17c3026a26e0503",
+    "old_rows": 4708,
+    "new_rows": 4716,
+    "every_prior4708_ordered_object_equal": true,
+    "literal_previous_record_text_prefix_bytes": 1674598,
+    "closing3bytes_moved_whole_raw_prefix_not_claimed": true,
+    "new_exact8_attrs_mapping": [
+      {
+        "requirementId": "REQ-VSB-CACHE-MULTI-INDEX",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "RemoveRetiresEveryIndexAndReleasesResource",
+        "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+        "variantKey": "secondary-comparer-does-not-break-committed-resource-retirement"
+      },
+      {
+        "requirementId": "REQ-VSB-CACHE-DIRECT-ADD",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "DirectAdmissionPublishesAllIndicesTogether",
+        "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+        "variantKey": "direct-admission-comparer-failure-retains-caller-ownership-and-no-index-ghost"
+      },
+      {
+        "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "FactoryAdmissionPublishesAllIndicesTogether",
+        "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+        "variantKey": "factory-admission-comparer-failure-releases-rejected-value-and-removes-all-index-ghosts"
+      },
+      {
+        "requirementId": "REQ-VSB-CACHE-EXPIRATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "LookupFailureCannotStrandAlreadyExpiredOwnership",
+        "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+        "variantKey": "lookup-failure-after-expiration-still-releases-retired-resource"
+      },
+      {
+        "requirementId": "REQ-VSB-CACHE-MULTI-INDEX",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "CollisionEqualityFailureLeavesExistingOwnershipIntact",
+        "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+        "variantKey": "colliding-equality-preparation-failure-leaves-anchor-and-caller-ownership-intact"
+      },
+      {
+        "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "LateOldFactoryCannotUnlinkPendingReplacement",
+        "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+        "variantKey": "late-invalidated-factory-cleanup-cannot-remove-a-still-pending-replacement-slot"
+      },
+      {
+        "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "HealthyOriginPendingSlotReleasesOwnership",
+        "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests",
+        "variantKey": "healthy-origin-pending-slot-joins-factory-request-and-cache-in-owned-process"
+      },
+      {
+        "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "PersistentOriginComparerFailureReleasesPendingOwnership",
+        "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests",
+        "variantKey": "persistent-origin-comparer-failure-cannot-strand-pending-completion-or-capacity"
+      }
+    ],
+    "all_row_schemas_and_full_mapping_identity_unique": true,
+    "read_credit": "Whole JSON parsed and all prior/new hashes/schema/order checked; new eight semantic purpose rows consumed. No personal full reread of previously consumed4708 unrelated records claimed."
+  },
+  "native_plan_only": {
+    "direct_parent": 11,
+    "pending_parent": 2,
+    "focused_parent": 13,
+    "pending_fresh_children_separate": 2,
+    "planned_wholeCore_parent8125_not_actual": true,
+    "existing_C5_children_separate": 7,
+    "already_completed_compile_or_native_credit_in_this_report": 0,
+    "excluded_first_strict_compiler_errors": 36,
+    "excluded_native_runs": 0
+  },
+  "actual_original_qualification_ready": [
+    "Root strict/native receipts and raw logs must prove actual13 parent identities11Direct+2Pending, two fresh child event/PID/nonce bijection and non-watchdog finite child pending-state cause. Count children separately.",
+    "Capture first finite physical/assertion boundary in each of K1/K2/K3/K5 plus pending child; ordinary original U1 collision twins/U2/healthy controls must be healthy before classifying original product causes.",
+    "Actual K2/K3 captured error StackTrace must bind second CommitKey/CommitValue via true original source; comparer count or generic parent child-exit failure alone is insufficient.",
+    "Pending child original can honestly strand public Completion; markers1/1/dispose1/pending1/throws>=2/unfinished and actual callback source trace must be consumed before accepting finitePending0. Child process joined does not confer product task/slot/cache join.",
+    "Archive complete runtime17/raw/binlogs/source21 BEFORE corrected source sync. Pure-byte PE/portablePDB structural parser should bind actual12 firstparty DLLs/pairedPDB IDs/documents/current source or checksum-verified embedded generated bytes. Actual document count discovered; previous3803 is not automatically reused for new2 files.",
+    "Check compiled CoreRequirements4716 logical ManifestResource bytes/schema and exact8 projection, .deps project runtime libraries, actual12 project.assets/ProjectReferences/output DLL graph, hashes and closed gzip binlogs. No full CLR AssemblyLoad or MSBuild binary event replay claim.",
+    "Per-child runtime7 before/after must match actual archived runtime images with exact apphost selection and native1 fields. Root strict restore/build/test joins use actual .NET PIDs where recorded; unified tool session IDs never mislabeled OS PID.",
+    "No new helper/product writing or .NET/provider execution by reviewer; adapt pure read-only parser only in owned report artifacts after actual archive notification."
+  ],
+  "private_review_body_reuse": "CanonicalDirect439 and Pending249 exactly equal reviewed privateR6/R3. Fullbody qualifications8093/3605 for predecessorR5/R2 are extended only by complete exact41token+2Own delta personally read and bound by74a9. No new root reading credit from reviewer. Old812R1 stale Requirement row and excluded36compiler errors retained, zero native credit.",
+  "findings": [],
+  "limits": [
+    "Original native validation still pending, Root restore/build state is not independently asserted here. No cache correction/fixed acceptance or actual5red8healthy/13discovery claimed.",
+    "CurrentOrder plan-register status wording is a private-before-canonical checkpoint; source authority is exact authorized plan/freeze/Root closure, with no CI reactivation.",
+    "All remaining global cache ordering/failure-channel/RAM policies, coverage/CRAP/whole API/provider/cloud/hardware/release claims stay open.",
+    "No external Developer/RedTeam product role, repo change or remote action by internal reviewer."
+  ],
+  "execution": "Pure read-only actual6095 graphs, source21/snapshot/private/root812/shared84 and JSON schema/order checks. Own immutable preflight JSON report only."
+}

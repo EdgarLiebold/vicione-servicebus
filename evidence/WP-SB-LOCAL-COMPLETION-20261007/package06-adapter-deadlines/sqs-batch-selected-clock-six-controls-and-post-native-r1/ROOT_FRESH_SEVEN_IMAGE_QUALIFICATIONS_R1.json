@@ -1,0 +1,118 @@
+{
+  "kind": "ROOT_OWN_FRESH_SIX_SQS_CONTROL_AND_POST_PHYSICAL_COMPILED_QUALIFICATIONS_R1",
+  "receipts": [
+    {
+      "id": "M1-system-clock",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M1-system-clock/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "22c470c60c7a144542962a71d5d1b5e8434913112f6c9fdd1a20967b53ea7229",
+      "images": 10,
+      "documents": 2999,
+      "METHOD_rows": null
+    },
+    {
+      "id": "M1-system-clock",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M1-system-clock/ROOT_FRESH_COMPILED_REQUIREMENTS_216_R1.json",
+      "sha256": "f236b25a98a2d572a9e795bcfd9a4580b9d9800e6541e0bc8e7b35a9f2ab6d6b",
+      "images": null,
+      "documents": null,
+      "METHOD_rows": 216
+    },
+    {
+      "id": "M2-late-first-capture",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M2-late-first-capture/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "9d930e84a2f8c59a55e5efde4cf07ec31a3fbf70c87d6f273aaf0696d63c75a7",
+      "images": 10,
+      "documents": 2999,
+      "METHOD_rows": null
+    },
+    {
+      "id": "M2-late-first-capture",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M2-late-first-capture/ROOT_FRESH_COMPILED_REQUIREMENTS_216_R1.json",
+      "sha256": "6e0f729520258a78ab91fd482f9f445102770fbce86aef4b1c9f813a45db8268",
+      "images": null,
+      "documents": null,
+      "METHOD_rows": 216
+    },
+    {
+      "id": "M3-reselect-later-owner",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M3-reselect-later-owner/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "841b3cf3fbf166fe032b09709a2e462b04b1526dca06cc665ed43962a29259ff",
+      "images": 10,
+      "documents": 2999,
+      "METHOD_rows": null
+    },
+    {
+      "id": "M3-reselect-later-owner",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M3-reselect-later-owner/ROOT_FRESH_COMPILED_REQUIREMENTS_216_R1.json",
+      "sha256": "7e988c90d007656d8a74c16b41a59ca71e33d71c76d8f797db4e322b117c4419",
+      "images": null,
+      "documents": null,
+      "METHOD_rows": 216
+    },
+    {
+      "id": "M4-two-ms-window",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M4-two-ms-window/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "c6b409215a961f96297ac1cc37b8e565e23b38ce897752e7408f5516112496e0",
+      "images": 10,
+      "documents": 2999,
+      "METHOD_rows": null
+    },
+    {
+      "id": "M4-two-ms-window",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M4-two-ms-window/ROOT_FRESH_COMPILED_REQUIREMENTS_216_R1.json",
+      "sha256": "262e62bcc2fffd27c812086d898feb6a802833e0d08c33a2cefbe0897b95c19a",
+      "images": null,
+      "documents": null,
+      "METHOD_rows": 216
+    },
+    {
+      "id": "M5-no-fatal-drain",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M5-no-fatal-drain/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "55ac7a23f10379f367ed678e74be70c5a10296d58ec7138fe8e3989463528d9c",
+      "images": 10,
+      "documents": 2999,
+      "METHOD_rows": null
+    },
+    {
+      "id": "M5-no-fatal-drain",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M5-no-fatal-drain/ROOT_FRESH_COMPILED_REQUIREMENTS_216_R1.json",
+      "sha256": "855911843f3614431c2dcf671be12039d4cf54664ced0ea1ceb4bccd48901830",
+      "images": null,
+      "documents": null,
+      "METHOD_rows": 216
+    },
+    {
+      "id": "M6-swallow-channel-closed",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M6-swallow-channel-closed/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "8334b55f7e3e4d23197a3e4724ea09fb63a817b05906e27a79a8834e4164fb05",
+      "images": 10,
+      "documents": 2999,
+      "METHOD_rows": null
+    },
+    {
+      "id": "M6-swallow-channel-closed",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/M6-swallow-channel-closed/ROOT_FRESH_COMPILED_REQUIREMENTS_216_R1.json",
+      "sha256": "7f27b87fc82167426be02653cb1321e4ee323beefd0c61beb83480b82db55f48",
+      "images": null,
+      "documents": null,
+      "METHOD_rows": 216
+    },
+    {
+      "id": "restored-post",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/restored-post/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "2e777003f474ca19a9b416f649f9adf1212ad25aae7eaf2ba8c9a27ccac1adff",
+      "images": 10,
+      "documents": 2999,
+      "METHOD_rows": null
+    },
+    {
+      "id": "restored-post",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/restored-post/ROOT_FRESH_COMPILED_REQUIREMENTS_216_R1.json",
+      "sha256": "ba351cfa3d2d77946fcbda98e8b4a44b1d287b8413d86bc112e80ee17aede28e",
+      "images": null,
+      "documents": null,
+      "METHOD_rows": 216
+    }
+  ],
+  "limits": "Each actual immutable image freshly parsed with reviewed purebytes helpers; no peer/native-causality/globalAPI/cloud/HW credit transferred."
+}

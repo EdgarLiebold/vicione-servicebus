@@ -1,0 +1,28 @@
+{
+  "kind": "ROOT_SQS_CLOCK_FRESH_DATA_READ_AND_TRUNCATION_CORRECTIONS_R5",
+  "full_body_reads": [
+    "All6+post focusednative stdout separately untruncated",
+    "nativepeer494 full3938tokens",
+    "canonicalsource/bodypeer28b full2337tokens",
+    "canonicalfinalpeerf3ca separately4811tokens under6200",
+    "postpeer350f whole398tokens",
+    "transferfinalbindingefdff whole860tokens",
+    "docsSourcepeerd80 whole823tokens",
+    "R30full5686token patch andR2one-line API-scope delta"
+  ],
+  "bounded_reads": [
+    "freshphysicalpeer54efe: scalar/top-level counts +all7variant scalar rows",
+    "freshcompiledpeerbe2d8: dependency/postguard projection and7 explicit ID/TestDLL/resource/fourCallerLines metadata; notall216humanbody norallinternalreference rows"
+  ],
+  "excluded_display_claims": [
+    "Initial combined finalgate/postprint truncated4856tokens andwrongguessedPostfilename absent; corrected exactfinalfull andactualpost locatedbySHA350f.",
+    "Initial combined freshcompiled projection includedunbounded refs/events andtruncated7222tokens; nofullbodycredit, corrected explicit whitelists with1335token output."
+  ],
+  "mechanical_own_fresh": {
+    "PE": 70,
+    "PDB_document_checksums": 20993,
+    "METHOD_rows_per_actual_image": 216,
+    "images": 7
+  },
+  "limits": "Qualified personally stated windows only; mutable fallback checks covered exactpost fullsource hold. No transferred reviewer PE/body/canonical-global credit."
+}

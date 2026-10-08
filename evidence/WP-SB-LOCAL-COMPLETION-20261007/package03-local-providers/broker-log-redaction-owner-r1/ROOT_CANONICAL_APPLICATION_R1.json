@@ -1,0 +1,12 @@
+{
+  "kind": "ROOT_EXACT_REVIEWED_BROKER_LOG_REDACTION_TWOFILE_APPLICATION_R1",
+  "source_sha256": {
+    "tools/ci/fixtures/broker_logs.py": "74912fa88d0f1c9929cb2f802a21ee0ffda13e478aa30be4dc1f8ae08af9691f",
+    "tools/ci/contracts/test_broker_log_redaction.py": "b2484937dc1d0bda49b9713cb70fed126adb767a602b5661dc3c4e108a0cc0d3"
+  },
+  "original_preserved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/broker-log-redaction-owner-r1/original/broker_logs.py",
+  "original_sha256": "e93b4d22d7a6218798662b465d208d22fa4f1f3ab803685ab48d9a67ab8b3ec2",
+  "independent_review_sha256": "1e38e2a54dd7dc7230a56877960ceeaf9d043c025b4e986900e4b5376fdd22ea",
+  "first_cause_sha256": "4f8f0876fb1c3ab4cb3cc2389d99788ac10cb189aa0c8a3947cfdb6a4900e077",
+  "limits": "Only collector+focused tool contracts changed. Existing source-bound ASB30 runtime had original collector; no retrospective replay/sourcehash rewrite."
+}

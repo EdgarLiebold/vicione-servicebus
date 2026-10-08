@@ -34,7 +34,7 @@ internal static class ActivityObservation
         }
         finally
         {
-            Activity.Current = previousActivity;
+            TrySetCurrent(previousActivity);
         }
 
         return activity is not null && TryStart(activity) ? activity : null;
@@ -49,7 +49,7 @@ internal static class ActivityObservation
         try
         {
             if (newRoot)
-                Activity.Current = null;
+                TrySetCurrent(null);
             return source.Value.CreateActivity(name, kind, parentContext, links: links);
         }
         catch (Exception exception)
@@ -59,7 +59,7 @@ internal static class ActivityObservation
         }
         finally
         {
-            Activity.Current = previousActivity;
+            TrySetCurrent(previousActivity);
         }
     }
 
@@ -75,23 +75,39 @@ internal static class ActivityObservation
         {
             activity.SetCustomProperty(PreviousActivityProperty, new AmbientActivity(previousActivity));
             if (newRoot)
-                Activity.Current = null;
+                TrySetCurrent(null);
             activity.Start();
             if (activity.IsStopped)
             {
-                Activity.Current = previousActivity;
+                TrySetCurrent(previousActivity);
                 return false;
             }
-            Activity.Current = activity;
+            TrySetCurrent(activity);
             return true;
         }
         catch (Exception exception)
         {
             failure = exception;
             TryLog(exception, "Activity listener faulted while starting an activity");
-            TryDispose(activity);
-            Activity.Current = previousActivity;
+            TryDispose(activity, previousActivity);
             return false;
+        }
+    }
+
+    public static void TrySetCurrent(Activity? activity)
+    {
+        while (activity is { IsStopped: true })
+            activity = activity.Parent;
+
+        try
+        {
+            // The runtime assigns the ambient value before notifying CurrentChanged.
+            // Make one attempt: a reentrant handler may change it again and is not retried.
+            Activity.Current = activity;
+        }
+        catch (Exception exception)
+        {
+            TryLog(exception, "Activity listener faulted while changing the ambient activity");
         }
     }
 
@@ -165,7 +181,7 @@ internal static class ActivityObservation
         }
         finally
         {
-            Activity.Current = expectedActivity;
+            TrySetCurrent(expectedActivity);
         }
     }
 

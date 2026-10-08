@@ -1,0 +1,6 @@
+{
+  "kind": "IMMUTABLE_REVIEW_EXECUTION_SCOPE_CLARIFICATION",
+  "applies_to": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/remote-checkpoint-20261008-actual-archive-index-adversarial-r1.json",
+  "applies_to_sha256": "ec78c219f0a626bcdfd5f540b9618d790d0fb6a125d8b95e7e52cc2b8cb88439",
+  "clarification": "The final limits phrase no reviewer process execution refers only to operational SDK/crypto/archive/restore/provider processes and process-state operations. Reviewer did execute allowed pure standard-library Python byte readers and readonly git cat-file/show/ls-files/ls-tree/diff subprocesses as the main report explicitly describes. No archive scripts, PowerShell/AES, SDK/tests/native/providers, process probes/control, key reads/hashes or Git mutation/push were performed. No evidence or gate disposition changes."
+}

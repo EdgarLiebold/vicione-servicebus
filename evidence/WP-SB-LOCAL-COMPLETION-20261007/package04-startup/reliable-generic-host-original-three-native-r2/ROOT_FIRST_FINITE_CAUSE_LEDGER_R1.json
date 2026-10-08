@@ -1,0 +1,57 @@
+{
+  "kind": "ROOT_ACTUAL_SAME_R2_ORIGINAL_FIRST_FINITE_CAUSE_LEDGER",
+  "native_sha256": "de1516ec95f7322130b2edf9fa2062f32067eb340d623bd307215eda369cd8f4",
+  "physical_binding_sha256": "d18e9df4104b5d0641d4777ae6c06ba939f5484b0fff962d5366de0327cbc9ac",
+  "rows": [
+    {
+      "case": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison",
+      "outcome": "erfolgreich",
+      "first_finite_boundary": null,
+      "primary_options_error": null,
+      "primary_validation_and_endpoint_zero_assertions_reached": false,
+      "cleanup_probe": {
+        "created": 1,
+        "start": 1,
+        "stop": 1,
+        "dispose": 1
+      },
+      "healthy_actual_worker_joined_canceled": true,
+      "lower_cleanup_assertions_extra_credit": 0
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart",
+      "outcome": "fehlerhaft",
+      "first_finite_boundary": "Assert.Null StopFailure at AssertCleanup92",
+      "primary_options_error": "closed typed PollInterval diagnostic",
+      "primary_validation_and_endpoint_zero_assertions_reached": true,
+      "cleanup_probe": {
+        "created": 0,
+        "start": 0,
+        "stop": 0,
+        "dispose": 0
+      },
+      "healthy_actual_worker_joined_canceled": false,
+      "lower_cleanup_assertions_extra_credit": 0
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart",
+      "outcome": "fehlerhaft",
+      "first_finite_boundary": "Assert.Null StopFailure at AssertCleanup92",
+      "primary_options_error": "default RetryJitterFraction diagnostic",
+      "primary_validation_and_endpoint_zero_assertions_reached": true,
+      "cleanup_probe": {
+        "created": 0,
+        "start": 0,
+        "stop": 0,
+        "dispose": 0
+      },
+      "healthy_actual_worker_joined_canceled": false,
+      "lower_cleanup_assertions_extra_credit": 0
+    }
+  ],
+  "confirmed_finding": "RELIABLE-HOST-STARTUP-CLEANUP-01",
+  "unique_new_findings": 1,
+  "repeated_same_finding_reproductions": 2,
+  "root_personal_read": "Complete fresh strict stdout and empty stderr; complete all-three native stdout and empty stderr, each first finite failure and actual state/task/lifecycle outputs personally read. Source whole original73be and fixture original330+lossless R2 delta343 personally read at their bound hashes.",
+  "limits": "Same exact R2 fixture0cc7 against unchanged product73be independently reproduces original cause. Two later Null DisposeFailure/ObserverFailure assertions are unreached and earn zero additional credit. Printed empty disposal errors are observed outputs only. Root physical12PE3810 fresh; independent compiled4730/native qualification separate. No fixed/whole/mutation/canonical/global closure."
+}

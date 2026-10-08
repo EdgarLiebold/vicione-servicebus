@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:77768d33b63ebf5d6b0f6c3cb2b516b73d2e34d46defb9b3bc53cd9382424519",
+  "claims": [
+    {
+      "id": "claim_5eda31cdf0f34d1ca861c4dde927e45f",
+      "statement": "Reliable contract identity excludes CLR assembly details and uses canonical stable-name/major-version representation.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+          "version": "repo-file-v1:sha256:1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb"
+        }
+      ]
+    },
+    {
+      "id": "claim_b3cbff690979441f89abb3becef411e3",
+      "statement": "The catalog is immutable and rejects conflicting type/identity mappings and unsupported runtime types.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Advanced/MessageContractCatalogBuilder.cs",
+          "version": "repo-file-v1:sha256:6c2f205c1e0ead532602c223898b9a390878df6393dbf1fc65352602012fc993"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/DependencyInjection/MessageContractServiceCollectionExtensions.cs",
+          "version": "repo-file-v1:sha256:7d960a48bd2a9829bf7ff090ccbfd6f5e054608ce323230dcc38fd25369d3547"
+        }
+      ]
+    },
+    {
+      "id": "claim_5e3e13bcea174cfdb402244ef658fada",
+      "statement": "Envelope JSON uses the ViciOne media type and immutable JsonSerializerOptions.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Serialization/Serializers/SystemTextJsonMessageSerializer.cs",
+          "version": "repo-file-v1:sha256:c8f2a6751ea1b36431298f544b4e54b4ba8b23faa5e2e0093fa5c0c4d7e36e3d"
+        }
+      ]
+    },
+    {
+      "id": "claim_6dd0508c00ee490e8d888229c613e39d",
+      "statement": "Payload boundary checks operation-owned complete admission evidence and consistent content type/metadata.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Serialization/Admission/PayloadAdmissionTransportBoundary.cs",
+          "version": "repo-file-v1:sha256:5fec403a5b6f03cf6625df0d65904ced6321b29b69553d8be24954c9c25ff6a0"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

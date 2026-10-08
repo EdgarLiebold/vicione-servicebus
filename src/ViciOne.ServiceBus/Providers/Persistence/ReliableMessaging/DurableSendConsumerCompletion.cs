@@ -12,7 +12,7 @@ internal sealed class DurableSendConsumerCompletion<TBus> : IDurableSendConsumer
 {
     readonly Guid _generationToken;
     readonly ServiceBusInstrumentation<TBus> _instrumentation;
-    readonly long _startedTimestamp;
+    readonly long? _startedTimestamp;
     readonly IOutboxStore<TBus> _store;
     readonly TimeProvider _timeProvider;
 
@@ -30,7 +30,14 @@ internal sealed class DurableSendConsumerCompletion<TBus> : IDurableSendConsumer
         _store = store ?? throw new ArgumentNullException(nameof(store));
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _instrumentation = instrumentation ?? throw new ArgumentNullException(nameof(instrumentation));
-        _startedTimestamp = _timeProvider.GetTimestamp();
+        try
+        {
+            _startedTimestamp = _timeProvider.GetTimestamp();
+        }
+        catch
+        {
+            // Optional duration observation cannot prevent the completion capability from being created.
+        }
     }
 
     public DurableSendId DurableSendId { get; }
@@ -40,9 +47,19 @@ internal sealed class DurableSendConsumerCompletion<TBus> : IDurableSendConsumer
         bool retired = await _store
             .CompleteConsumerDeliveryAsync(DurableSendId, _generationToken, _timeProvider.GetUtcNow(), cancellationToken)
             .ConfigureAwait(false);
-        _instrumentation.RecordDurableConsumerCompletion(
-            retired,
-            _timeProvider.GetElapsedTime(_startedTimestamp).TotalSeconds);
+        double? elapsedSeconds = null;
+        if (_startedTimestamp is { } started)
+        {
+            try
+            {
+                elapsedSeconds = _timeProvider.GetElapsedTime(started).TotalSeconds;
+            }
+            catch
+            {
+                // The actual store result remains authoritative when duration observation is unavailable.
+            }
+        }
+        _instrumentation.RecordDurableConsumerCompletion(retired, elapsedSeconds);
         return retired;
     }
 }

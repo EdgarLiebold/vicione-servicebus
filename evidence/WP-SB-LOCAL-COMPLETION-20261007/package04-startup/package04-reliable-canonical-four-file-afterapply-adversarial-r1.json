@@ -1,0 +1,119 @@
+{
+  "kind": "INDEPENDENT_ACTUAL_RELIABLE_CANONICAL_FOUR_FILE_APPLICATION_AFTERAPPLY_R1",
+  "decision": "QUALIFIED_ACTUAL_CANONICAL_FOUR_FILE_APPLICATION_NO_BLOCK",
+  "root_application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_RELIABLE_GENERIC_HOST_CANONICAL_FOUR_FILE_APPLICATION_R1.json",
+    "sha256": "30b470c037dea9e2512d15e989b5ed796a7dd3fa967c72c50e13d0654406450d",
+    "semantic_scope": {
+      "kind": "ROOT_ACTUAL_GUARDED_RELIABLE_CANONICAL_FOUR_FILE_APPLICATION_R1",
+      "gate_sha256": "ce391b05f128dc20fb7cf5b587cd9edf80e0918e4817c8d6c2e172ce966e7bac",
+      "rows": [
+        {
+          "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+          "canonical_before_sha256": "73be8ecd089c5574b404294ee711c4e1dc72f6b44459083a8de484055a10b13a",
+          "candidate_sha256": "5054c4236c84a80c9a7ba3c06fbeee59a2c92ae7988fa7d817c5f265826d6140"
+        },
+        {
+          "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "canonical_before_sha256": null,
+          "candidate_sha256": "0cc7f11efd399ace2e91303f3f866a2b372e27309fe800158edf3addf03efda4"
+        },
+        {
+          "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
+          "canonical_before_sha256": "28abbdaeccc928891ad98e34c4dafe0f7cb8b2c366b4b9b7964b90a59e3ad97a",
+          "candidate_sha256": "375f7bfa7809faabd4bd1697fd6330e3800932453365312045df2ca68e1cb600"
+        },
+        {
+          "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+          "canonical_before_sha256": "a4d0f99c1d388a4ef1afea6d3bd55ea5990f13f63f354d8eaa8d7d9d69596357",
+          "candidate_sha256": "e15c10362be7938ac1453fbb86fb0c06b01d0448dc0e23ef71c43786bdb8193f"
+        }
+      ],
+      "canonical_before_count": 6103,
+      "canonical_after_count": 6104,
+      "after_manifest_equals_qualified_private": true,
+      "configuration14_exact": true,
+      "limits": "Exactly one product file/two test source files/one requirement resource applied. Prior independently qualified fixed13/whole8209/mutant65/post13 bind these bytes; no new canonical native run or globalA+/hardware/cloud/remotecommit claim. Independent afterapply still pending."
+    }
+  },
+  "own_gate": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-reliable-five-mutants-post-thirteen-canonical-four-gate-adversarial-r1.json",
+    "sha256": "ce391b05f128dc20fb7cf5b587cd9edf80e0918e4817c8d6c2e172ce966e7bac"
+  },
+  "full_source_equality": {
+    "canonical_now6104_private6104_root_receipt6104_qualified_private_manifest6104_exact": true,
+    "prior_canonical_dated6103_snapshot_unchanged": true,
+    "dated_INPUTS_sha256": "c3777c5785dc4f715ae1c015f3c4b0483cbe9a999b89bdd111845ccc4204b618",
+    "exact_four_delta_rows": [
+      {
+        "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+        "canonical_before_sha256": "73be8ecd089c5574b404294ee711c4e1dc72f6b44459083a8de484055a10b13a",
+        "candidate_sha256": "5054c4236c84a80c9a7ba3c06fbeee59a2c92ae7988fa7d817c5f265826d6140"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+        "canonical_before_sha256": null,
+        "candidate_sha256": "0cc7f11efd399ace2e91303f3f866a2b372e27309fe800158edf3addf03efda4"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
+        "canonical_before_sha256": "28abbdaeccc928891ad98e34c4dafe0f7cb8b2c366b4b9b7964b90a59e3ad97a",
+        "candidate_sha256": "375f7bfa7809faabd4bd1697fd6330e3800932453365312045df2ca68e1cb600"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+        "canonical_before_sha256": "a4d0f99c1d388a4ef1afea6d3bd55ea5990f13f63f354d8eaa8d7d9d69596357",
+        "candidate_sha256": "e15c10362be7938ac1453fbb86fb0c06b01d0448dc0e23ef71c43786bdb8193f"
+      }
+    ],
+    "other6100_source_files_unchanged": true,
+    "configuration14_exact": true,
+    "SNK": "Blind SHA only; no private components decoded/read into output."
+  },
+  "requirements": {
+    "4730_rows1682667_bytes": true,
+    "old4727_order_literalprefix1681540_exact": true,
+    "new_three_METHOD_rows": [
+      {
+        "requirementId": "REQ-VSB-DURABLE-STARTUP",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart",
+        "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+        "variantKey": "actual-host-default-reliable-nan-jitter"
+      },
+      {
+        "requirementId": "REQ-VSB-DURABLE-STARTUP",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart",
+        "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+        "variantKey": "actual-host-typed-reliable-zero-poll"
+      },
+      {
+        "requirementId": "REQ-VSB-DURABLE-STARTUP",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison",
+        "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+        "variantKey": "actual-host-plain-default-typed-reliable-unused-options-poison"
+      }
+    ],
+    "compiled_method_resource_binding": "Own fresh fixed13 ab13 all4730METHOD resource binding reused solely by accepted same source hashes; no new compiler or canonical native execution claimed."
+  },
+  "own_read_scope": "Full source manifests mechanically hashed and exact compared; four source bytes direct equal with qualified private tree and prior gate. Personally whole193 product and whole343 fixture reads reused at exact hashes, entire changed existing-test method and lossless diff reused, no whole1706 existing-file human claim. Requirements full JSON parse/order/prefix mechanical; no human whole4730 row claim. Root receipt selected semantic fields consumed; giant manifest mechanically checked, no human whole manifest prose credit.",
+  "frozen_STATE": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json",
+    "sha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+    "unchanged": true,
+    "no_fresh234_body_recount": true
+  },
+  "bounded_acceptance": "Accepted current three actualHost cases plus ten registered startup/composition cases; Fixed13/Whole8209/5variants65repeat15firstfiniteRED50healthy/Post13 and exact17runtime previous own chain retained. Four product controls plus one test-quality control, no canonical native execution following application.",
+  "release": {
+    "C17_source_hold_released_for_next_separately_reviewed_isolated_EF_preparation": true,
+    "EF_native_generatedlock_acceptance_not_inherited": true
+  },
+  "limits": [
+    "No .NET/native/process/provider/operational-driver imports or product/test/tool/docs edits by reviewer.",
+    "No whole-mutant module/globalAPI/globalA+/cloud/hardware/remote publication closure.",
+    "Source manifest scope src/tests/tools excludes bin/obj/artifacts; no expanded claim about arbitrary external workspace files.",
+    "Original WholeR1 five legacy boundary failures remain unchanged historical evidence."
+  ]
+}

@@ -1,0 +1,245 @@
+{
+  "status": "READ_ONLY_C1_CANONICAL219_EIGHT_CASES_NO_BLOCK__R3_PROSE_COUNTS_CORRECTED__ROOT804_84_TEST_ONLY_FREEZE_PROVENANCE_VERIFIED__NO_NATIVE_ACCEPTANCE",
+  "reviewer": "/root/continuation_adversarial",
+  "draft_reviewed": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c1-testdraft/MessageProcessingMetricPreparationIsolationTests.cs",
+    "sha256": "b2b43d8b25fecb359c5ec5c4cb35ef28cd33fec087dfa6365240cd7f7bf4c620",
+    "whole_lines_read": 219,
+    "current_sha256_at_report": "b2b43d8b25fecb359c5ec5c4cb35ef28cd33fec087dfa6365240cd7f7bf4c620",
+    "current_same_as_reviewed": true,
+    "methods": 1,
+    "theory_cases": 8,
+    "requirement_purposes": 1
+  },
+  "context_bindings": [
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs",
+      "sha256": "2422998fb8458a9f1916d759b99d523a7d13d9e1b51f9fc5d1d43108d31e5614",
+      "lines": 433
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Monitoring/MetricOperation.cs",
+      "sha256": "f813f52ec2d9db43471027d4de638b14e52762c9c36e5985d7ccb0ad7794560f",
+      "lines": 43
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsState.cs",
+      "sha256": "e46c34249bc9377e971a28e4e7375643f60d7a0987fcfd8b7206ef0ac7c0f135",
+      "lines": 68
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/HandlerMessageFilter.cs",
+      "sha256": "b322fbf344b45bdb50ad02bf45749798100dc8ad8cf486da1686682d80623248",
+      "lines": 82
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumerIngressFailure.cs",
+      "sha256": "70f6a75c0bfa33b5714faef3df94b0fd78c986b30e8512113280b4d8818799e7",
+      "lines": 97
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Context/Consumption/ConsumeContextProxy.cs",
+      "sha256": "8597758ccda665fd6def683861bfdaf5cd0716da441be9c10cdc54d27f744bc7",
+      "lines": 183
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Advanced/LogContext.cs",
+      "sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9",
+      "lines": 325
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContextTimeProviderExtensions.cs",
+      "sha256": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206",
+      "lines": 48
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/RetryContextExtensions.cs",
+      "sha256": "6e0af3738c4c0b30e9c2b91dfd1e022f70bcaf048ca09df2dfc5cfcfbf118fe8",
+      "lines": 38
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs",
+      "sha256": "41c159a7730682a1c30d57d6c7e1c81c430fba11d9a9fb70ff827df85c7fb8ee",
+      "lines": 102
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs",
+      "sha256": "d418b48fcfab4651883083f6cef6a642c076a296fc0dd79758d046e59a17ad12",
+      "lines": 493
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/OpenTelemetryGlobalCollection.cs",
+      "sha256": "bf37ae4bc28f82905a7cbc8663b440ed2d81f6d41247418b717ff3b48ff37df6",
+      "lines": 13
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/ConsumeRetryContext.cs",
+      "sha256": "6801d1a2d0a3584b96c53b963682456800df3172eaa246587e80f5bd6a6df032",
+      "lines": 27,
+      "reviewer_whole_interface_body_read": true,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Middleware/RetryContext.cs",
+      "sha256": "bc5c75a564b118ecbb7ff62e1e120a6010af230b670fa4708d6d2fcd012a6a6c",
+      "lines": 58,
+      "reviewer_whole_interface_body_read": true,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/ApiSurfaceGlobalUsings.cs",
+      "sha256": "92a91807b899850c048356982d623be2d372f1cf2b903612969d07f297b7c0c6",
+      "lines": 16,
+      "reviewer_whole_interface_body_read": true,
+      "root_personal_read_transfer": false
+    }
+  ],
+  "plan": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C1_PROCESS_METRIC_BALANCE_RESEARCH_PLAN_R2.md",
+    "sha256": "76e8e30835227572990eb0f3c1f57fba896dc76977422faf40ed14d5c75086c8",
+    "selected_test_cases": 8,
+    "requirement_purposes": 1,
+    "product_owners": 1,
+    "future_single_cause_mutants": 2
+  },
+  "findings": [],
+  "severity_totals": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0
+  },
+  "signature_dispatch_review": [
+    "Actual public HandlerMessageFilter called through IFilter<ConsumeContext<MetricItem>> executes its real explicit SendAsync; test does not simulate the component by manually invoking handler delegate after a metric call.",
+    "ObservedContext derives public ConsumeContextProxy<MetricItem>. Concrete NotifyConsumedAsync(duration,type,token) and NotifyFaultedAsync(duration,type,exception,token) inherited generic-context methods call generic virtual overload with this actual context. New generic overrides correctly intercept these methods and record count/duration/cause, avoiding unsupported lower test factory invocation.",
+    "Generic override constraints are inherited from base; omission of redundant where T:class is expected for overrides. Strict native compiler remains required confirmation; no source compilation done by reviewer.",
+    "SentTime overrides actual virtual envelope getter while Message/ReceiveContext/PayloadCache/time-provider/cancellation/member forwarding remain real proxy path. Actual next pipe captures received context and increments once only on successful handler; business failure never advances next.",
+    "RetryMarker implements exact current ConsumeRetryContext public RetryAttempt/RetryCount/CreateNext<TContext>(RetryContext) with class,ConsumeRetryContext constraint/NotifyPendingFaultsAsync signatures. Test global import Advanced.Middleware resolves nongeneric RetryContext; canonical project rather than standalone scratch file compilation is required.",
+    "Existing factory GetOrAddPayload stores actual RetryMarker as ConsumeRetryContext; public forwarding proxy payload lookup returns it. GetRetryAttempt invokes the actual RetryAttempt getter. No private reflection invocation of metrics/retry methods or replaced outcome timer. The existing factory uses DispatchProxy internally as disclosed.",
+    "This fixture declares a retry-attempt marker1 for diagnostic processing and executes one actual handler. It does not perform or claim a real retry policy loop; CreateNext explicitly rejects such fixture use."
+  ],
+  "clock_and_cause_review": [
+    "FakeTimeProvider start, context SentTime minus3secs, healthy delivery preparation occurs before actual handler advances7secs. Healthy lag3secs and actual required notification/process elapsed7secs are consistent.",
+    "DiagnosticClock GetTimestamp and TimestampFrequency always use healthy Fake clock; GetUtcNow alone throws in UTC variant. This preserves required HandlerMessageFilter start/elapsed notification timing. Scope does not blanket-catch a required business clock.",
+    "SentTime variant getter throws ordinary InvalidOperationException. Current StartProcess emits +1 before this read; its outer catch returns null and skips Complete. Actual handler1/required success or exact business failure still checked before metric assertions.",
+    "Eight actual scenarios: None/UtcNow/SentTime/RetryAttempt x success/failure. Original predictions: six finite active-sequence reds at line89 for UtcNow/SentTime/RetryAttempt pairs (actual[+1],expected[+1,-1]); two None healthy controls. In-handler+1 snapshot stays green on original, keeping real required business outcomes separate from post-operation metrics failures.",
+    "Normal business InvalidOperationException exactly same object propagated, NotificationFailure same; duration error tag matches its fully qualified type. Generic notification callback Assert.Same(this, context) ensures actual subject context; no broad exception-as-success oracle."
+  ],
+  "oracle_review": [
+    "Actual handler/item/context identity, handler1, successnext1/failnext0, notification consumed1/faulted1, real notification7secs/cause; exact metric sequence[1,-1],sum0, ProcessDuration exactly once7secs and complete bounded tagset checked. Healthy DeliveryDuration one3secs; hostile prep emits no fake0 sample.",
+    "No assertion-free tests, coverage touching, private reflective method invocation, sleeps, arbitrary ordering or skipped variants. All eight cases are one explicit data-driven theory: None/UtcNow/SentTime/RetryAttempt each crossed with actual handler success/exact business failure.",
+    "Actual handler now captures factory-scoped ActiveOperations measurement snapshot before FakeTimeProvider advance. Post-operation assertions require exactly one +1 and exact boundedtags during handler, plus final exact[+1,-1]. This independently rejects both delayed admission and compensating-only-at-completion counter implementations, without changing required business flow into a test-assertion failure.",
+    "Independent retry counter: all non-RetryFault cases require exactly one value1 retry sample with exact process tags even when lag preparation fails; RetryFault cases require zero retry samples but retain exactly one healthy lag3s. These asymmetric oracles reject combining both optional observations under one shared catch or emitting fabricated retry/lag values."
+  ],
+  "nonblocking_strengthening": {
+    "status": "RESOLVED_IN_ROOT_SUCCESSOR_DRAFT",
+    "actual_change": "Root193line predecessor added the actual handler Active+1 snapshot and four post-operation snapshot assertions. Root219line successor additionally adds RetryAttempt success/failure variants and independent retry/lag samples; current total is eight cases. All existing actual business outcome oracles remain unchanged."
+  },
+  "cleanup_review": [
+    "ILogContext previous captured before subject configuration; finally restores same flow-local context even if configuration/operation assertion fails.",
+    "using MetricObservationSession disposes real MeterListener/semaphore; provider using follows it and owns IMeterFactory/Meter/logger. Subject neither disposes host meter nor retains external provider ownership.",
+    "Fake clock creates no timers and public Handler/Next callbacks produce immediately completed tasks. No owned background worker/provider/cloud work to drain or unobserved task introduced. Observer/global collection serialized; no static reset.",
+    "Runtime cancellation/compile/discovery/configuration/timeout/process/cleanup failures cannot qualify any of the six predicted original finite reds across eight selected cases."
+  ],
+  "explicit_adjacent_limits": [
+    "No required notification failure/cancellation behavior added; actual C1 success/exact ordinary handler failure only, earlier business contracts remain required",
+    "Consumer-type string/default notification token not asserted; no full notification wire metadata claim",
+    "Initial GetTimestamp/frequency failure or changing/null SentTime value are adjacent paths outside eight selected cases. Initial timestamp failure before active admission should remain safe-null and must not be broadened into optional business-clock catching. Existing wholeCore timing/argument/disabled metrics contracts required",
+    "Root804/84 receipt and original TestOnlyfreeze exact path/hash lineage independently verified here; Root owns personal full-read attestation, with no reviewer transfer. Original/fixed native outcomes, corrected product review, mutations and acceptance remain pending.",
+    "No A+/wholeP05/currentcoverage/cloud/hardware/release acceptance"
+  ],
+  "next_required": [
+    "Original native eight named events must independently qualify six finite metric reds and two healthy business controls; compile/setup/discovery/runtime/guard failure cannot count",
+    "Adversarial corrected product-source review plus fixed eight focused cases/wholeCore",
+    "Two independently compiled single-cause guard removals with unchanged eight cases: Lag predicts4Red/4Healthy; Retry predicts2Red/6Healthy. Fixed replay and source/package/PE-PDB/runtime artifact review required before bounded acceptance"
+  ],
+  "skills": "Applied existing Microsoft OpenTelemetry ownership/clock/operation isolation guidance and test-anti-patterns with .NET analysis reference, diagnostic role only; not test-authoring.",
+  "reviewer_execution": "Only reviewer report prose correction and read-only current canonical/draft/frozen3/Root804+84/requirements/context hash-lineage validation. Original full219line body already personally consumed and exact bytes unchanged; no product/test/tool/governance edit or .NET execution.",
+  "supersedes": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c1-draft-tests-adversarial-readonly-r3.json",
+    "sha256": "8d8cc698e086eeb020439800e4dedf53f6f421a6469ad3461c63be1980367e61",
+    "reason": "Reviewer R3 retained two stale overall-count phrases from predecessor (six cases/four expected reds). This reviewer-only successor corrects all scenario prose and binds unchanged current canonical219line owner. R3 remains immutable; actual8case table in R3 was correct."
+  },
+  "native_case_predictions_only": {
+    "original": {
+      "total": 8,
+      "failed": 6,
+      "healthy": 2,
+      "skip": 0,
+      "first_expected_red_line": 89
+    },
+    "M1_remove_only_lag_Observe": {
+      "total": 8,
+      "failed": 4,
+      "healthy": 4,
+      "red_variants": [
+        "UtcNow/false",
+        "UtcNow/true",
+        "SentTime/false",
+        "SentTime/true"
+      ],
+      "healthy_variants": [
+        "None/false",
+        "None/true",
+        "RetryAttempt/false",
+        "RetryAttempt/true"
+      ]
+    },
+    "M2_remove_only_retry_Observe": {
+      "total": 8,
+      "failed": 2,
+      "healthy": 6,
+      "red_variants": [
+        "RetryAttempt/false",
+        "RetryAttempt/true"
+      ],
+      "healthy_variants": [
+        "None/false",
+        "None/true",
+        "UtcNow/false",
+        "UtcNow/true",
+        "SentTime/false",
+        "SentTime/true"
+      ]
+    },
+    "precision": "Mutant predictions refer to two future independently compiled single-guard removals from corrected owner, not executed/prepared artifacts. No code/runner/setup/cancellation/timeout/process error may qualify cause."
+  },
+  "root_new_context_action": "Root804 receipt now includes eight extra personally whole-read contexts, including both current retry interface definitions; all current hashes verified. Reviewer validates lineage without replacing Root personal reading. Canonical global imports retained from priorRoot803.",
+  "canonical_original_binding": {
+    "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/MessageProcessingMetricPreparationIsolationTests.cs",
+    "sha256": "b2b43d8b25fecb359c5ec5c4cb35ef28cd33fec087dfa6365240cd7f7bf4c620",
+    "same_exact_complete219line_draft_body": true,
+    "TestOnlyfreeze": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C1_TEST_ONLY_ORIGINAL_FREEZE_R1.json",
+      "sha256": "0864feb60291bd20329152c99c265dee4c4b7812b6e9d48df94173325922510b",
+      "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c1-test-only-original-owner-r1",
+      "native_cases": 8,
+      "new_requirement_rows": 1,
+      "all_frozen3_snapshot_hashes_exact": true
+    },
+    "Root804": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE804_STAGE_C1_READ_CLOSURE_R1.json",
+      "sha256": "fee48418d451623472df9b35c86f8de5ec66f8ca684cb3810268f6776cbda1c4",
+      "current_owner_hashes_verified": 804,
+      "priorRoot803_unchanged_owner_count": 802,
+      "sole_added_path": "tests/ViciOne.ServiceBus.Tests/Monitoring/MessageProcessingMetricPreparationIsolationTests.cs",
+      "sole_old_changed_owner": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "shared84_all_same_current_and_prior": true,
+      "extra_whole_context_hashes_verified": 8,
+      "Root_personal_read_transfer": false
+    },
+    "requirements": {
+      "sha256": "62827310059751585f9d1034e9231b923edb19f2327bf3605450002c1673183b",
+      "ordered4692_prior_rows_exact_semantic_prefix": true,
+      "exact1_appended_row": {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "Handler_PreservesOutcomeAndIndependentMetricsWhenDiagnosticPreparationThrowsAsync",
+        "testType": "ViciOne.ServiceBus.Tests.Monitoring.MessageProcessingMetricPreparationIsolationTests",
+        "variantKey": "process-metric-balance-survives-optional-preparation"
+      },
+      "total_unique_rows": 4693
+    },
+    "native_status": "No native case outcomes independently reviewed/accepted in this correction. Parent-reported strict49152exit0 and active original31738 are context only, not execution credit."
+  }
+}

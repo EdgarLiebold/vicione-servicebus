@@ -10,7 +10,15 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus>
 {
     async Task DeliverAsync(DurableSendDelivery delivery, CancellationToken cancellationToken)
     {
-        long started = _timeProvider.GetTimestamp();
+        long? started = null;
+        try
+        {
+            started = _timeProvider.GetTimestamp();
+        }
+        catch
+        {
+            // Optional duration observation cannot prevent dispatch of an already claimed intent.
+        }
         using SafeActivityScope activity = _instrumentation.StartDurableDelivery(delivery);
 
         if (delivery.Status == DurableSendStatus.AwaitingConsumerCompletion
@@ -137,7 +145,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus>
     async Task QuarantineConsumerCompletionTimeoutAsync(
         DurableSendDelivery delivery,
         SafeActivityScope activity,
-        long started,
+        long? started,
         CancellationToken cancellationToken)
     {
         try

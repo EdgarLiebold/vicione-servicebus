@@ -1,0 +1,2151 @@
+{
+  "kind": "INTERNAL_READONLY_P04_SQS_HOSTING_LOCK_CURRENT_PREFLIGHT_ADVERSARIAL_R1",
+  "utc": "2026-10-07T08:33:59.136400+00:00",
+  "status": "NO_BLOCK_FOR_ORIGINAL_FIXTURE_BUILD_PREPARATION",
+  "reviewer": "todo_reconciliation_review",
+  "findings": [],
+  "input_freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-input-freeze-r2/INPUTS.json",
+    "sha256": "27ac8625ee36bd0c3e4c838eadbabef7fc136c132bd5767f998cbc68a6a241ae",
+    "inputs5": [
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+        "sha256": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973",
+        "bytes": 25099
+      },
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+        "sha256": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f",
+        "bytes": 1476
+      },
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+        "sha256": "074654ee59e1c22a382a702352d2a656c766f08b50f827c83dc5351c9cf698d3",
+        "bytes": 9715
+      },
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+        "sha256": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa",
+        "bytes": 72746
+      },
+      {
+        "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+        "sha256": "460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840",
+        "bytes": 3753
+      }
+    ],
+    "snapshot_and_actual_C9_exact_before_after": true
+  },
+  "prior_scope_reuse": {
+    "private_test_r2_review": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-sqs-private-generic-host-startup-test-requirements-r2-adversarial-r1.json",
+    "sha256": "5162c9aac014a3ac2ca4e4d9eff6ebe45bcc7d48e728180e8ab02c8e9572daf1",
+    "Root57_read": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_STARTUP27_COMPLETE_SOURCE_READ_R1.json",
+    "Root57_sha256": "a382debb187a078bc547704973cd39f609c9e475c69585a5ed8ac9f4e00c180b",
+    "all57_original_O_and_non_delta_C9_hashes_rechecked": true,
+    "no_reviewer_to_Root_read_credit": true
+  },
+  "complete_lock_review": {
+    "original": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+    "original_sha256": "7a2f76b7d2272ee3afcd8f83c2f05dad7c45883fe814efae2c79ff76b6b51ca2",
+    "successor": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+    "successor_sha256": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973",
+    "original_entry_count": 53,
+    "successor_entry_count": 63,
+    "original_all_entries_unchanged": true,
+    "removed": [],
+    "added10": [
+      {
+        "name": "Microsoft.Extensions.Hosting",
+        "entry": {
+          "type": "Direct",
+          "requested": "[10.0.12, )",
+          "resolved": "10.0.12",
+          "contentHash": "dzPj59oALFLu9TA4YUrfxqXEcbJVen/D2kOoitgM1lXBeSvPwPR8rOrrV0NKilCV3K0l4o+TLJJ3a1wmTu40Uw==",
+          "dependencies": {
+            "Microsoft.Extensions.Configuration": "10.0.12",
+            "Microsoft.Extensions.Configuration.Abstractions": "10.0.12",
+            "Microsoft.Extensions.Configuration.Binder": "10.0.12",
+            "Microsoft.Extensions.Configuration.CommandLine": "10.0.12",
+            "Microsoft.Extensions.Configuration.EnvironmentVariables": "10.0.12",
+            "Microsoft.Extensions.Configuration.FileExtensions": "10.0.12",
+            "Microsoft.Extensions.Configuration.Json": "10.0.12",
+            "Microsoft.Extensions.Configuration.UserSecrets": "10.0.12",
+            "Microsoft.Extensions.DependencyInjection": "10.0.12",
+            "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+            "Microsoft.Extensions.Diagnostics": "10.0.12",
+            "Microsoft.Extensions.FileProviders.Abstractions": "10.0.12",
+            "Microsoft.Extensions.FileProviders.Physical": "10.0.12",
+            "Microsoft.Extensions.Hosting.Abstractions": "10.0.12",
+            "Microsoft.Extensions.Logging": "10.0.12",
+            "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+            "Microsoft.Extensions.Logging.Configuration": "10.0.12",
+            "Microsoft.Extensions.Logging.Console": "10.0.12",
+            "Microsoft.Extensions.Logging.Debug": "10.0.12",
+            "Microsoft.Extensions.Logging.EventLog": "10.0.12",
+            "Microsoft.Extensions.Logging.EventSource": "10.0.12",
+            "Microsoft.Extensions.Options": "10.0.12"
+          }
+        },
+        "cache": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/microsoft.extensions.hosting/10.0.12",
+        "nuspec_sha256": "e224419a1cd6579a8088c3f44c88c7fca02f49e170c36595a67d91195c3eb304",
+        "metadata_sha256": "c1dd5da405e57f2685b124d32384103f5a880e0184cfde1a96fea6392f8450e2",
+        "metadata_contentHash": "dzPj59oALFLu9TA4YUrfxqXEcbJVen/D2kOoitgM1lXBeSvPwPR8rOrrV0NKilCV3K0l4o+TLJJ3a1wmTu40Uw==",
+        "net10_dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Configuration.Binder": "10.0.12",
+          "Microsoft.Extensions.Configuration.CommandLine": "10.0.12",
+          "Microsoft.Extensions.Configuration.EnvironmentVariables": "10.0.12",
+          "Microsoft.Extensions.Configuration.FileExtensions": "10.0.12",
+          "Microsoft.Extensions.Configuration.Json": "10.0.12",
+          "Microsoft.Extensions.Configuration.UserSecrets": "10.0.12",
+          "Microsoft.Extensions.Configuration": "10.0.12",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+          "Microsoft.Extensions.DependencyInjection": "10.0.12",
+          "Microsoft.Extensions.Diagnostics": "10.0.12",
+          "Microsoft.Extensions.FileProviders.Abstractions": "10.0.12",
+          "Microsoft.Extensions.FileProviders.Physical": "10.0.12",
+          "Microsoft.Extensions.Hosting.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Logging.Configuration": "10.0.12",
+          "Microsoft.Extensions.Logging.Console": "10.0.12",
+          "Microsoft.Extensions.Logging.Debug": "10.0.12",
+          "Microsoft.Extensions.Logging.EventLog": "10.0.12",
+          "Microsoft.Extensions.Logging.EventSource": "10.0.12",
+          "Microsoft.Extensions.Logging": "10.0.12",
+          "Microsoft.Extensions.Options": "10.0.12"
+        },
+        "nupkg_sha256": "c840afe710ae4a56ed19bf2e47dcca8c24b96e434c8b63442dd3e772cb564767",
+        "raw_nupkg_sha512": "4XPJegPik1S2/1MmfQn1cIhkjWTHojjF1BGqZcHmBpOlnXVd2xWuTNXXCmE7l+yX0Wazgdmfth0sQ2a/lNLS1A==",
+        "raw_sha512_matches_cache_sha512_file": true,
+        "NuGet_metadata_contentHash_equals_raw_nupkg_sha512": false
+      },
+      {
+        "name": "Microsoft.Extensions.Configuration.CommandLine",
+        "entry": {
+          "type": "Transitive",
+          "resolved": "10.0.12",
+          "contentHash": "hWWJzJpmg161rYJ2H6vxqCuFfh6zL2Tp9emOrfu1M4gsmW5BOlW8GldthyFwm2L+beW+0axmkMKRw3HyO1qceQ==",
+          "dependencies": {
+            "Microsoft.Extensions.Configuration": "10.0.12",
+            "Microsoft.Extensions.Configuration.Abstractions": "10.0.12"
+          }
+        },
+        "cache": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/microsoft.extensions.configuration.commandline/10.0.12",
+        "nuspec_sha256": "92156b002dd9f31e48eb6a07b0ee3b0f6eeea72b04a77c56fde6aa8dcbcdddce",
+        "metadata_sha256": "14aee9744d797486c16deede508fdb10837080a1c3d4d8f54eb0ba2e7ee9d326",
+        "metadata_contentHash": "hWWJzJpmg161rYJ2H6vxqCuFfh6zL2Tp9emOrfu1M4gsmW5BOlW8GldthyFwm2L+beW+0axmkMKRw3HyO1qceQ==",
+        "net10_dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Configuration": "10.0.12"
+        },
+        "nupkg_sha256": "638a357b5c95fc75665de36641fdb6d5be81352d1205b50fb8307c23a7ed09aa",
+        "raw_nupkg_sha512": "cyjFso1iEkHCKVOy+PCS3bvEYN2zF89+LyZ91yBlGJEBXCmCu2xP3rZrgsCf0ZgtO24jOJDWMRNxmcIuaHokQA==",
+        "raw_sha512_matches_cache_sha512_file": true,
+        "NuGet_metadata_contentHash_equals_raw_nupkg_sha512": false
+      },
+      {
+        "name": "Microsoft.Extensions.Configuration.EnvironmentVariables",
+        "entry": {
+          "type": "Transitive",
+          "resolved": "10.0.12",
+          "contentHash": "OIFhLxKAdvSrZuecX177ZkN4AcAB6OLlbS8y0MQYL68512aMOZI8cJLb8OeuYe2X+gu5uMqbbCxhzAmSp+Q2ow==",
+          "dependencies": {
+            "Microsoft.Extensions.Configuration": "10.0.12",
+            "Microsoft.Extensions.Configuration.Abstractions": "10.0.12"
+          }
+        },
+        "cache": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/microsoft.extensions.configuration.environmentvariables/10.0.12",
+        "nuspec_sha256": "34d420bc8cad0e36187ec36f8520896fe4077fe907abb177a97253312f83a191",
+        "metadata_sha256": "f17f78569b781e35fe4e641eb9f1fd17a543e7f20c0a4810475f493f505ec061",
+        "metadata_contentHash": "OIFhLxKAdvSrZuecX177ZkN4AcAB6OLlbS8y0MQYL68512aMOZI8cJLb8OeuYe2X+gu5uMqbbCxhzAmSp+Q2ow==",
+        "net10_dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Configuration": "10.0.12"
+        },
+        "nupkg_sha256": "b789356d63f3d533430487b310222bf5eb89869c28e7a7bba1c9edaaf1209d66",
+        "raw_nupkg_sha512": "IoLmJ7bwLXRRULKqDfpCvwGK6AAE4OL7u9LsyjMg9QIyESrortT1fF6Vjvsq4AuejY0y/hEJXFkHG5uvFa8HmA==",
+        "raw_sha512_matches_cache_sha512_file": true,
+        "NuGet_metadata_contentHash_equals_raw_nupkg_sha512": false
+      },
+      {
+        "name": "Microsoft.Extensions.Logging",
+        "entry": {
+          "type": "Transitive",
+          "resolved": "10.0.12",
+          "contentHash": "6I46fTPfgYkrjRYfRXbho9WOvOelTnNjWuZws/hzGHDASH1LEJeA4VKK9k3wJvido8o7jJSB5WkMTonX7HM1bA==",
+          "dependencies": {
+            "Microsoft.Extensions.DependencyInjection": "10.0.12",
+            "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+            "Microsoft.Extensions.Options": "10.0.12"
+          }
+        },
+        "cache": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/microsoft.extensions.logging/10.0.12",
+        "nuspec_sha256": "04e581792606a6cad28ace707a13faf7c7f9a6a88773534257bd4fb510efe31f",
+        "metadata_sha256": "00efb008413ca19e9fb8da034dbafd42f06b18c7231099e09949e8ab5be78658",
+        "metadata_contentHash": "6I46fTPfgYkrjRYfRXbho9WOvOelTnNjWuZws/hzGHDASH1LEJeA4VKK9k3wJvido8o7jJSB5WkMTonX7HM1bA==",
+        "net10_dependencies": {
+          "Microsoft.Extensions.DependencyInjection": "10.0.12",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Options": "10.0.12"
+        },
+        "nupkg_sha256": "539919dc90956d273ac67d24e99ae7d92a893848b6efd368c1d0e61e5bc955a9",
+        "raw_nupkg_sha512": "7Dee3dIOa04MmZo+XN/FjjaVu2Q0ywIEYHJPhqve5hnu/XnXf9aed+8OBVGx93NeVZhLxDo+zeuemG7NlPHHjQ==",
+        "raw_sha512_matches_cache_sha512_file": true,
+        "NuGet_metadata_contentHash_equals_raw_nupkg_sha512": false
+      },
+      {
+        "name": "Microsoft.Extensions.Logging.Configuration",
+        "entry": {
+          "type": "Transitive",
+          "resolved": "10.0.12",
+          "contentHash": "CLHWfKQZWFE6fSzRXfjd4UlGveckkfPtwx/p5yF/o3hEkMSzGsl7MSxNAkI19hjw0rprBqrQC09Dwy6Lh6kweA==",
+          "dependencies": {
+            "Microsoft.Extensions.Configuration": "10.0.12",
+            "Microsoft.Extensions.Configuration.Abstractions": "10.0.12",
+            "Microsoft.Extensions.Configuration.Binder": "10.0.12",
+            "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+            "Microsoft.Extensions.Logging": "10.0.12",
+            "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+            "Microsoft.Extensions.Options": "10.0.12",
+            "Microsoft.Extensions.Options.ConfigurationExtensions": "10.0.12"
+          }
+        },
+        "cache": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/microsoft.extensions.logging.configuration/10.0.12",
+        "nuspec_sha256": "055ccec2edcf66f9e5a7fd9cfe80388b0cee6658dda75bcb4eacbf568d2a8b6d",
+        "metadata_sha256": "3c7301bd98eba3a910bb6d5e51bb069edbc37c493b355f6937b39f5907ab3bc5",
+        "metadata_contentHash": "CLHWfKQZWFE6fSzRXfjd4UlGveckkfPtwx/p5yF/o3hEkMSzGsl7MSxNAkI19hjw0rprBqrQC09Dwy6Lh6kweA==",
+        "net10_dependencies": {
+          "Microsoft.Extensions.Configuration.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Configuration.Binder": "10.0.12",
+          "Microsoft.Extensions.Configuration": "10.0.12",
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Logging": "10.0.12",
+          "Microsoft.Extensions.Options.ConfigurationExtensions": "10.0.12",
+          "Microsoft.Extensions.Options": "10.0.12"
+        },
+        "nupkg_sha256": "41b895b70fa521fe2d3d8c356943f2d2432594dc5b78dee1601ce79ac40b9bb7",
+        "raw_nupkg_sha512": "QrNq2MoHpOzDM85mkbBRJZ9Whv8L1/eqsO1NWES5lWT98WlTz2RUyGM83GrkG3ebOwUuwhA5bcpM+RA0sMQh1A==",
+        "raw_sha512_matches_cache_sha512_file": true,
+        "NuGet_metadata_contentHash_equals_raw_nupkg_sha512": false
+      },
+      {
+        "name": "Microsoft.Extensions.Logging.Console",
+        "entry": {
+          "type": "Transitive",
+          "resolved": "10.0.12",
+          "contentHash": "nHvaR8gO0CdEfG324KdUsP3Hqgdf1licZb+UlNh5pFYw7+o8QYTmiMgFmwayE/LPSpaqND/Qn3xHa1cI9b8x0w==",
+          "dependencies": {
+            "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+            "Microsoft.Extensions.Logging": "10.0.12",
+            "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+            "Microsoft.Extensions.Logging.Configuration": "10.0.12",
+            "Microsoft.Extensions.Options": "10.0.12"
+          }
+        },
+        "cache": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/microsoft.extensions.logging.console/10.0.12",
+        "nuspec_sha256": "14e1663033ec07278de52aea1eee89168902ff8fddc848f702533c4fd5d87d9e",
+        "metadata_sha256": "adbfb0b6c7eb395d226b394dd6765dae29ccd8e57262acce2300b6d45a0e70ab",
+        "metadata_contentHash": "nHvaR8gO0CdEfG324KdUsP3Hqgdf1licZb+UlNh5pFYw7+o8QYTmiMgFmwayE/LPSpaqND/Qn3xHa1cI9b8x0w==",
+        "net10_dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Logging.Configuration": "10.0.12",
+          "Microsoft.Extensions.Logging": "10.0.12",
+          "Microsoft.Extensions.Options": "10.0.12"
+        },
+        "nupkg_sha256": "231e6ad666ce745e0ed4aff26143675461bcfd6722bf3c5bca2457b7e1acba83",
+        "raw_nupkg_sha512": "QagAaqbJ3zzXstoSGV++2isBSO01QyRyOSDkJ6xhYzqkEqragcD37WpJisF6C3gAptiSkjktbChdJvMlFQilhw==",
+        "raw_sha512_matches_cache_sha512_file": true,
+        "NuGet_metadata_contentHash_equals_raw_nupkg_sha512": false
+      },
+      {
+        "name": "Microsoft.Extensions.Logging.Debug",
+        "entry": {
+          "type": "Transitive",
+          "resolved": "10.0.12",
+          "contentHash": "dEvvABq9Qgfu/SgTncXDjCshcJmgO97bLOnMAuqBDSonlk4+VXlKJMHPak+S78TlOxJ47+gY7vPgVukJsr69gg==",
+          "dependencies": {
+            "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+            "Microsoft.Extensions.Logging": "10.0.12",
+            "Microsoft.Extensions.Logging.Abstractions": "10.0.12"
+          }
+        },
+        "cache": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/microsoft.extensions.logging.debug/10.0.12",
+        "nuspec_sha256": "433e2a88d9e5252a0b181fd3bc90379fac33e665b8d731227da93e640d396c75",
+        "metadata_sha256": "da85dc3277d63e8edee043e29c47a86135e3a233f3cc16af12540507a515a67a",
+        "metadata_contentHash": "dEvvABq9Qgfu/SgTncXDjCshcJmgO97bLOnMAuqBDSonlk4+VXlKJMHPak+S78TlOxJ47+gY7vPgVukJsr69gg==",
+        "net10_dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Logging": "10.0.12"
+        },
+        "nupkg_sha256": "19fbbfe99586502a5d05043b3a7c6b6e7b6bcccd94788c721dc5769e50411354",
+        "raw_nupkg_sha512": "du3UAhk9lmug3o9t8J80fL5IXQOqB59ufvpWMMBY3LdaqBmQ7Qoh7P71opZOryqjoE7DMntLcYC+UtjxXT7eZQ==",
+        "raw_sha512_matches_cache_sha512_file": true,
+        "NuGet_metadata_contentHash_equals_raw_nupkg_sha512": false
+      },
+      {
+        "name": "Microsoft.Extensions.Logging.EventLog",
+        "entry": {
+          "type": "Transitive",
+          "resolved": "10.0.12",
+          "contentHash": "Qn0FWPMiQzM4GQEEXxrJbh3vp3I9wrAgpMcsVH36+6FTRGXaqtwHDgf/2030FUJ4OuNSpOeIRh+9kCZGDDsfGg==",
+          "dependencies": {
+            "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+            "Microsoft.Extensions.Logging": "10.0.12",
+            "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+            "Microsoft.Extensions.Options": "10.0.12",
+            "System.Diagnostics.EventLog": "10.0.12"
+          }
+        },
+        "cache": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/microsoft.extensions.logging.eventlog/10.0.12",
+        "nuspec_sha256": "08bbfb22c257d9cf826ced329d55e9d81165708314da581f388c6fe418b52205",
+        "metadata_sha256": "6e956ef5f536b1d35d37f61ef5124b711a4e7572365e167fae86ab2fe6a1e359",
+        "metadata_contentHash": "Qn0FWPMiQzM4GQEEXxrJbh3vp3I9wrAgpMcsVH36+6FTRGXaqtwHDgf/2030FUJ4OuNSpOeIRh+9kCZGDDsfGg==",
+        "net10_dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Logging": "10.0.12",
+          "Microsoft.Extensions.Options": "10.0.12",
+          "System.Diagnostics.EventLog": "10.0.12"
+        },
+        "nupkg_sha256": "856713368f01def91709dbee019eb0634852a5bbd6457198d960653f54875bb1",
+        "raw_nupkg_sha512": "KMlNVkpxvvkkHeCBlWvPpTqBA+sHri6ALp7eDNCJLq4XkhRs1OgEjpWXp0R6gb4ZnYQJahGpqwrb8tx70xriIg==",
+        "raw_sha512_matches_cache_sha512_file": true,
+        "NuGet_metadata_contentHash_equals_raw_nupkg_sha512": false
+      },
+      {
+        "name": "Microsoft.Extensions.Logging.EventSource",
+        "entry": {
+          "type": "Transitive",
+          "resolved": "10.0.12",
+          "contentHash": "nKpYoiUdBu8fdLwDxj/fjjGn//7/VwRLzujtMq99/pExrswMXOz+80hbB98QxrD8qPt9oWlFpEVrN9OBKOP7RQ==",
+          "dependencies": {
+            "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+            "Microsoft.Extensions.Logging": "10.0.12",
+            "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+            "Microsoft.Extensions.Options": "10.0.12",
+            "Microsoft.Extensions.Primitives": "10.0.12"
+          }
+        },
+        "cache": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/microsoft.extensions.logging.eventsource/10.0.12",
+        "nuspec_sha256": "2e48a72b9e373e8679241079d24b37efdcf67a5dce239355ecc041d77f94f27f",
+        "metadata_sha256": "d0db390e5e5d0df306dd963b84206c3dff4196a7292f285440db00dbc022e94f",
+        "metadata_contentHash": "nKpYoiUdBu8fdLwDxj/fjjGn//7/VwRLzujtMq99/pExrswMXOz+80hbB98QxrD8qPt9oWlFpEVrN9OBKOP7RQ==",
+        "net10_dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Logging.Abstractions": "10.0.12",
+          "Microsoft.Extensions.Logging": "10.0.12",
+          "Microsoft.Extensions.Options": "10.0.12",
+          "Microsoft.Extensions.Primitives": "10.0.12"
+        },
+        "nupkg_sha256": "ee969e14349f4d09b06839b3b0e709fea38e88186609c29303c3344a3ebd60e4",
+        "raw_nupkg_sha512": "QYwFklkGF/MxmZ7hIzzqU65dbJjPbD15o8Gq+4ORJ9h/h+22Ik8Dqdlx7VTsZTA3zdZQfdV4ZSCmHNhGh2nNhA==",
+        "raw_sha512_matches_cache_sha512_file": true,
+        "NuGet_metadata_contentHash_equals_raw_nupkg_sha512": false
+      },
+      {
+        "name": "System.Diagnostics.EventLog",
+        "entry": {
+          "type": "Transitive",
+          "resolved": "10.0.12",
+          "contentHash": "sOZM+VyRj1pg/ItlHsvrSbjws6oGqZveTzTNBGZ9ziwRDyKsOF3ub6vhvOdxotCIqtlnyHAIwP5sLNvgiZC+pQ=="
+        },
+        "cache": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/system.diagnostics.eventlog/10.0.12",
+        "nuspec_sha256": "b420e959398cd759ed7d74fe4656b4e8f842a2b78d86782f7884418a5e4c2791",
+        "metadata_sha256": "9111b0684b526beb30d53f2f5e38f01d049d96585eed62e139ace338f8df82fc",
+        "metadata_contentHash": "sOZM+VyRj1pg/ItlHsvrSbjws6oGqZveTzTNBGZ9ziwRDyKsOF3ub6vhvOdxotCIqtlnyHAIwP5sLNvgiZC+pQ==",
+        "net10_dependencies": {},
+        "nupkg_sha256": "da77128a9f15980d115128c98a1b08b3fea67e3f2e54387e4029e0e57e3023c5",
+        "raw_nupkg_sha512": "A2vf1UR1OtWbohL81+nXU56nZr45L5ejhC6XzKnP2SCO85DDdvyIysEipjsQHl624ULs5QWrqKbcihh9BJ/U0g==",
+        "raw_sha512_matches_cache_sha512_file": true,
+        "NuGet_metadata_contentHash_equals_raw_nupkg_sha512": false
+      }
+    ],
+    "central_Hosting10.0.12_test_only": true,
+    "central_sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e",
+    "actual_assets": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/obj/ViciOne.ServiceBus.AmazonSqs.Tests/project.assets.json",
+    "actual_assets_sha256": "e58466527548466e5b871f46cde68831b7d6f9fe160ecbde462f3546000fca8c",
+    "actual_NuGet_cache": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages",
+    "cache_hash_limit": "NuGet lock/assets/.nupkg.metadata contentHash match each other; raw archive SHA512 independently matches its .nupkg.sha512 file. They are distinct observed hash values and are not conflated. Cryptographic package signature verification was not executed."
+  },
+  "current_source_graph": {
+    "O_paths": 6096,
+    "C9_paths": 6097,
+    "O_manifest_sha256": "01e3bc2395e8ad22b017161d10f79eafd221da45d02233746a2293cd520b3f96",
+    "C9_manifest_sha256": "4adde0c0f82976752d71637c0678ccc9ccd7cf81da5cd25ad50973db5fb250c1",
+    "only_actual_deltas": [
+      "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+      "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json"
+    ],
+    "root_source_config_exact_paths": [
+      ".editorconfig",
+      "Directory.Build.props",
+      "Directory.Build.targets",
+      "Directory.Packages.props",
+      "NuGet.config",
+      "ViciOne.ServiceBus.Engineering.slnx",
+      "ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx",
+      "ViciOne.ServiceBus.Tests.LocalIntegration.slnx",
+      "ViciOne.ServiceBus.Tests.RabbitMqLocalIntegration.slnx",
+      "ViciOne.ServiceBus.Tests.SqlServerLocalIntegration.slnx",
+      "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "ViciOne.ServiceBus.slnx",
+      "global.json",
+      "signing.props"
+    ],
+    "original_SQS_product_owner_sha256": "460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840",
+    "all6096_original_paths_unchanged_except3_permitted_test_owner_replacements_plus1_newtest": true
+  },
+  "CurrentOrder": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/vicione-architecture/work/CURRENT_ORDER.yaml",
+    "whole_file_sha256": "41f7b7893fb1f2994ca889c62f01e7f3fcfe06ac0f9a97bd93886b89b41b6de4",
+    "whole_target_block": "  produktpaket_startup_named_sqs:\n    id: WP-SB-LOCAL-COMPLETION-20261007-P04-SQS-A\n    status: REVIEWED_PRIVATE_TESTS__ORIGINAL_NATIVE_CONFIRMATION_NEXT__NO_PRODUCT_FIX_YET\n    authority: Existing_PO_autonomous_ServiceBus_maintenance__Root_sole_author_and_native_executor__independent_readonly_adversarial_review\n    root_source_read: repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_STARTUP27_COMPLETE_SOURCE_READ_R1.json\n    root_source_read_sha256: a382debb187a078bc547704973cd39f609c9e475c69585a5ed8ac9f4e00c180b\n    research: repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-startup-prioritized-current-research-r1.json\n    private_test_preparation: repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/PREPARED.json\n    private_test_preparation_sha256: 9cdd967d24e090bbef0c24331f20eebc99b59599e9bb35334e177dc0c8bf82b6\n    private_test_review_sha256: 5162c9aac014a3ac2ca4e4d9eff6ebe45bcc7d48e728180e8ab02c8e9572daf1\n    candidate_product_owner: repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs\n    candidate_product_owner_original_sha256: 460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840\n    pruefpfade:\n      - repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs\n      - repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj\n      - repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json\n      - repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json\n    grenzen: Five_actual_GenericHost_cases_before_provider_runtime__no_cloud_clients__selected_named_options_and_unused_default_disposition__new_product_change_only_after_finite_original_and_review__Hosting_lock_successor_review_before_final_freeze__no_full18_startup_family41_API_cloud_hardware_A_plus_claim\n",
+    "context_private_R2_and_original_owner_refs_exact": true,
+    "limits": "Current target still names the reviewed R2 private test preparation. This separate successor preflight qualifies the new lock; a final publication/freeze can reference this report. No extra already-published final fixture freeze is inferred."
+  },
+  "Root_restore_evidence": {
+    "root_reported_exec_session_id": 74841,
+    "root_reported_joined_exit": 0,
+    "outer_OS_PID": "not independently captured; no claim",
+    "raw2": [
+      {
+        "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-input-freeze-r2/p04-sqs-original-restore-r1-20261007-082301--94798--pEhR4m.binlog",
+        "actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/local-completion/p04-sqs-original-restore-r1-20261007-082301--94798--pEhR4m.binlog",
+        "sha256": "204fb69d0842d77d488c846e85001cf064d0595600d1d1a7a3bd974442baddf5",
+        "bytes": 739305,
+        "decompressed_bytes": 1864597,
+        "closed_writer_observation": {
+          "returncode": 1,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      {
+        "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-input-freeze-r2/p04-sqs-original-restore-r1.log",
+        "actual": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/local-completion/p04-sqs-original-restore-r1.log",
+        "sha256": "cb206aa1db9bdf073ac8cc405baed94348d60849d3b0baf4d142a205b5ed0aa5",
+        "bytes": 1924,
+        "whole_log": [
+          "  Wiederherzustellende Projekte werden ermittelt...",
+          "  \"/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj\" wiederhergestellt (in 166 ms.).",
+          "  \"/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj\" wiederhergestellt (in 819 ms.).",
+          "  \"/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj\" wiederhergestellt (in 819 ms.).",
+          "  \"/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj\" wiederhergestellt (in 817 ms.).",
+          "  \"/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj\" wiederhergestellt (in 819 ms.).",
+          "  \"/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj\" wiederhergestellt (in 819 ms.).",
+          "  \"/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.AmazonSqs/ViciOne.ServiceBus.AmazonSqs.csproj\" wiederhergestellt (in 819 ms.).",
+          "  \"/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj\" wiederhergestellt (in 819 ms.).",
+          "  \"/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj\" wiederhergestellt (in 820 ms.).",
+          "  \"/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj\" wiederhergestellt (in 957 ms.)."
+        ]
+      }
+    ],
+    "reviewer_native_execution": false,
+    "limits": "Root reported successful joined restore and archived raw10-project restore/closed binlog checked. This preflight does not claim a subsequent locked restore or strict fixture build already passed."
+  },
+  "interrupted_archive_R1": {
+    "partial_copies": [
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+        "sha256": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973"
+      },
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+        "sha256": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f"
+      },
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+        "sha256": "074654ee59e1c22a382a702352d2a656c766f08b50f827c83dc5351c9cf698d3"
+      },
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+        "sha256": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa"
+      }
+    ],
+    "no_receipt": true,
+    "no_source_or_native_credit": true
+  },
+  "checks": [
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-input-freeze-r2/INPUTS.json",
+      "pass": true,
+      "details": {
+        "actual": "27ac8625ee36bd0c3e4c838eadbabef7fc136c132bd5767f998cbc68a6a241ae"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-sqs-private-generic-host-startup-test-requirements-r2-adversarial-r1.json",
+      "pass": true,
+      "details": {
+        "actual": "5162c9aac014a3ac2ca4e4d9eff6ebe45bcc7d48e728180e8ab02c8e9572daf1"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/PREPARED.json",
+      "pass": true,
+      "details": {
+        "actual": "9cdd967d24e090bbef0c24331f20eebc99b59599e9bb35334e177dc0c8bf82b6"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_STARTUP27_COMPLETE_SOURCE_READ_R1.json",
+      "pass": true,
+      "details": {
+        "actual": "a382debb187a078bc547704973cd39f609c9e475c69585a5ed8ac9f4e00c180b"
+      }
+    },
+    {
+      "check": "allowlist exact4 test/project/requirement/lock",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-input-freeze-r2/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "pass": true,
+      "details": {
+        "actual": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973"
+      }
+    },
+    {
+      "check": "frozen exact file size /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-input-freeze-r2/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "pass": true,
+      "details": {
+        "actual": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973"
+      }
+    },
+    {
+      "check": "frozen exact file size /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-input-freeze-r2/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f"
+      }
+    },
+    {
+      "check": "frozen exact file size /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-input-freeze-r2/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f"
+      }
+    },
+    {
+      "check": "frozen exact file size /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-input-freeze-r2/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "074654ee59e1c22a382a702352d2a656c766f08b50f827c83dc5351c9cf698d3"
+      }
+    },
+    {
+      "check": "frozen exact file size /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-input-freeze-r2/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "074654ee59e1c22a382a702352d2a656c766f08b50f827c83dc5351c9cf698d3"
+      }
+    },
+    {
+      "check": "frozen exact file size /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-input-freeze-r2/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "pass": true,
+      "details": {
+        "actual": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa"
+      }
+    },
+    {
+      "check": "frozen exact file size /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-input-freeze-r2/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "pass": true,
+      "details": {
+        "actual": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa"
+      }
+    },
+    {
+      "check": "frozen exact file size /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-input-freeze-r2/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840"
+      }
+    },
+    {
+      "check": "frozen exact file size /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-input-freeze-r2/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840"
+      }
+    },
+    {
+      "check": "frozen exact file size /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "private reviewed test/project/requirements hashes reused",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840"
+      }
+    },
+    {
+      "check": "actual original extension owner460f untouched",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "pass": true,
+      "details": {
+        "actual": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "pass": true,
+      "details": {
+        "actual": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationConfigurator.cs",
+      "pass": true,
+      "details": {
+        "actual": "6f087fb1c501c7325ad43a915b07e5c864390569fc6a6d082523a89e3138e7d2"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationConfigurator.cs",
+      "pass": true,
+      "details": {
+        "actual": "6f087fb1c501c7325ad43a915b07e5c864390569fc6a6d082523a89e3138e7d2"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+      "pass": true,
+      "details": {
+        "actual": "929d35ea91140e697b985c050623fb5c7446e37f87f0199c944cac38bfa7b519"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+      "pass": true,
+      "details": {
+        "actual": "929d35ea91140e697b985c050623fb5c7446e37f87f0199c944cac38bfa7b519"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "pass": true,
+      "details": {
+        "actual": "8659b5f22016823aea26893f10dd0be31fc1f2efa9590f46e0acc6cb5b34972e"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "pass": true,
+      "details": {
+        "actual": "8659b5f22016823aea26893f10dd0be31fc1f2efa9590f46e0acc6cb5b34972e"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+      "pass": true,
+      "details": {
+        "actual": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+      "pass": true,
+      "details": {
+        "actual": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+      "pass": true,
+      "details": {
+        "actual": "458dd4d37b5c7a062c9a47f7b698ce2c8c8230fd97acc5c812e59da0f4bc9214"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+      "pass": true,
+      "details": {
+        "actual": "458dd4d37b5c7a062c9a47f7b698ce2c8c8230fd97acc5c812e59da0f4bc9214"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/BusDepot.cs",
+      "pass": true,
+      "details": {
+        "actual": "b6bb5efbcfa677d316fe18f2dc9c2a829099cd38d9c4dda03e125eca906477b0"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/Transports/Hosting/BusDepot.cs",
+      "pass": true,
+      "details": {
+        "actual": "b6bb5efbcfa677d316fe18f2dc9c2a829099cd38d9c4dda03e125eca906477b0"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/IBusDepot.cs",
+      "pass": true,
+      "details": {
+        "actual": "f10e9cea70b709c5bf671f19cc858d18847fce61496aedc68db7a03094d9f8b2"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/Transports/Hosting/IBusDepot.cs",
+      "pass": true,
+      "details": {
+        "actual": "f10e9cea70b709c5bf671f19cc858d18847fce61496aedc68db7a03094d9f8b2"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/PayloadAdmissionOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "a9c4b474245702ae4fcc537cbf6581b1bd0e55f4b10f7d75dd4477d7c18f93c1"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/Configuration/PayloadAdmissionOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "a9c4b474245702ae4fcc537cbf6581b1bd0e55f4b10f7d75dd4477d7c18f93c1"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Serialization/Admission/PayloadAdmissionPolicy.cs",
+      "pass": true,
+      "details": {
+        "actual": "fccb4ff5aac8ad43ea6a13a1f60ac5fafc4f5caf73e3c59ba7e7d224b8bd6496"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus.Abstractions/Serialization/Admission/PayloadAdmissionPolicy.cs",
+      "pass": true,
+      "details": {
+        "actual": "fccb4ff5aac8ad43ea6a13a1f60ac5fafc4f5caf73e3c59ba7e7d224b8bd6496"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/MessageLimitsConfigurationExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "768c63ce53946add68e49f2616c82760641a589222363d6617872f07a06e5ee0"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/Configuration/MessageLimitsConfigurationExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "768c63ce53946add68e49f2616c82760641a589222363d6617872f07a06e5ee0"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsTransportOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "fca831dd2d3c2a48ebf183630a2181383bb8f71b8331f3392742e82a6ad431a5"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsTransportOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "fca831dd2d3c2a48ebf183630a2181383bb8f71b8331f3392742e82a6ad431a5"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/AmazonSqsRegistrationBusFactory.cs",
+      "pass": true,
+      "details": {
+        "actual": "4565ae7bbea2c655bc529b3a1cde837de11a60965a37755099c2761d4850a8b8"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/AmazonSqsRegistrationBusFactory.cs",
+      "pass": true,
+      "details": {
+        "actual": "4565ae7bbea2c655bc529b3a1cde837de11a60965a37755099c2761d4850a8b8"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "84e652c0237beb05aaf2d7008f49b70b886163650839c0a0ccded02676eeece2"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "84e652c0237beb05aaf2d7008f49b70b886163650839c0a0ccded02676eeece2"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqTransportOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "94fa836e5e64ab17df6eb5fe0fdc53dd1616873fd313dd935c4db2f204cfc801"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqTransportOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "94fa836e5e64ab17df6eb5fe0fdc53dd1616873fd313dd935c4db2f204cfc801"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqSslOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "12451b25b41122100c997b4a7a8645175f934ac29463622db62e2effbd998778"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqSslOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "12451b25b41122100c997b4a7a8645175f934ac29463622db62e2effbd998778"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqRegistrationBusFactory.cs",
+      "pass": true,
+      "details": {
+        "actual": "54dfd3bb3dbebb472997d8bdf063a97acaf171ec1d6707611d9abdbe685b9c19"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqRegistrationBusFactory.cs",
+      "pass": true,
+      "details": {
+        "actual": "54dfd3bb3dbebb472997d8bdf063a97acaf171ec1d6707611d9abdbe685b9c19"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusConfigurationExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "d12135b7ba9ada8671b08a00c12f5cf4c3737ad3bf0fd5fbac5376da11ccaa46"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusConfigurationExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "d12135b7ba9ada8671b08a00c12f5cf4c3737ad3bf0fd5fbac5376da11ccaa46"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/AzureServiceBusTransportOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "48137e32e28bf82e05fc6f134725b9039d97f879d88b3c47b979280430f2bde7"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/AzureServiceBusTransportOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "48137e32e28bf82e05fc6f134725b9039d97f879d88b3c47b979280430f2bde7"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusRegistrationBusFactory.cs",
+      "pass": true,
+      "details": {
+        "actual": "47bc98ab27570fc15126c96ac898e1be2d75c893bc14b2598f0c33ac0100d8dd"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusRegistrationBusFactory.cs",
+      "pass": true,
+      "details": {
+        "actual": "47bc98ab27570fc15126c96ac898e1be2d75c893bc14b2598f0c33ac0100d8dd"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "pass": true,
+      "details": {
+        "actual": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "pass": true,
+      "details": {
+        "actual": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchRuntimeSettings.cs",
+      "pass": true,
+      "details": {
+        "actual": "55f86c6399c0f9ee6f971853a7f05ef58a04f3cd714817ea64c9eef223ed0e29"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/Batching/Runtime/BatchRuntimeSettings.cs",
+      "pass": true,
+      "details": {
+        "actual": "55f86c6399c0f9ee6f971853a7f05ef58a04f3cd714817ea64c9eef223ed0e29"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsTransportOptionsStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "e2a08d5a7445cfb0350bc1be384795019cb8041f7965a222b417ee9216a6e77f"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsTransportOptionsStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "e2a08d5a7445cfb0350bc1be384795019cb8041f7965a222b417ee9216a6e77f"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "967cb99eebbc593bf30429f40983d8dd0022475397535d3b8d9eef5e0075d1a1"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "967cb99eebbc593bf30429f40983d8dd0022475397535d3b8d9eef5e0075d1a1"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqRegistrationOptionsTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "49141a0da272c92e876c7f8786f2bb7b6286933d00fe88b43ca97ae2553f21e8"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqRegistrationOptionsTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "49141a0da272c92e876c7f8786f2bb7b6286933d00fe88b43ca97ae2553f21e8"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusTransportOptionsStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "fe0c3b37ef5d01e9ceeb0d28e76f576a88aedd7009ef3bc3ee2ff200cc7e8f48"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusTransportOptionsStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "fe0c3b37ef5d01e9ceeb0d28e76f576a88aedd7009ef3bc3ee2ff200cc7e8f48"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ViciOneServiceBusHostOptionsValidationTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "fc07f872fbddc3287408e0c56e5243093ba941c60fcbe3675ed4419cdff21ec2"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ViciOneServiceBusHostOptionsValidationTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "fc07f872fbddc3287408e0c56e5243093ba941c60fcbe3675ed4419cdff21ec2"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/BusCompositionStartupValidationTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "613bfc0b93c3bed39323846ed27ede88c2d44f687271c45d18f96a05cd0d382b"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/BusCompositionStartupValidationTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "613bfc0b93c3bed39323846ed27ede88c2d44f687271c45d18f96a05cd0d382b"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "1d2f15b80cd90109bd1b944c789761c019632d23617d9ce4e7547bc3c69c28d1"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "1d2f15b80cd90109bd1b944c789761c019632d23617d9ce4e7547bc3c69c28d1"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/HostedServiceLifecycleOwnershipTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "2abeaa9d7637aabbc3b1bc8cfb57dd0f8d7060c5d1e01ccc4c9b1f02e3defba2"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/HostedServiceLifecycleOwnershipTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "2abeaa9d7637aabbc3b1bc8cfb57dd0f8d7060c5d1e01ccc4c9b1f02e3defba2"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs",
+      "pass": true,
+      "details": {
+        "actual": "2cbd0652ebc77f9defb1bad0fc9deb3c2a125f925e913748b53520366b99fe95"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs",
+      "pass": true,
+      "details": {
+        "actual": "2cbd0652ebc77f9defb1bad0fc9deb3c2a125f925e913748b53520366b99fe95"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/global.json",
+      "pass": true,
+      "details": {
+        "actual": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/global.json",
+      "pass": true,
+      "details": {
+        "actual": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.props",
+      "pass": true,
+      "details": {
+        "actual": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/Directory.Build.props",
+      "pass": true,
+      "details": {
+        "actual": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.targets",
+      "pass": true,
+      "details": {
+        "actual": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/Directory.Build.targets",
+      "pass": true,
+      "details": {
+        "actual": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Packages.props",
+      "pass": true,
+      "details": {
+        "actual": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/Directory.Packages.props",
+      "pass": true,
+      "details": {
+        "actual": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/NuGet.config",
+      "pass": true,
+      "details": {
+        "actual": "3f6cda87abdfbc3e7f7a80906f21b11009ac811c70834dfdbc4840db01a9ce93"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/NuGet.config",
+      "pass": true,
+      "details": {
+        "actual": "3f6cda87abdfbc3e7f7a80906f21b11009ac811c70834dfdbc4840db01a9ce93"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Directory.Build.props",
+      "pass": true,
+      "details": {
+        "actual": "be8359cbeaf46760b90b3755da645aeb7b4a786af8f0fd6db9396d21f6e67911"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Directory.Build.props",
+      "pass": true,
+      "details": {
+        "actual": "be8359cbeaf46760b90b3755da645aeb7b4a786af8f0fd6db9396d21f6e67911"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Directory.Build.props",
+      "pass": true,
+      "details": {
+        "actual": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Directory.Build.props",
+      "pass": true,
+      "details": {
+        "actual": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/signing.props",
+      "pass": true,
+      "details": {
+        "actual": "71a2cc9a5b04a60ea4093aa41824f275ad7cf5d87f4a8866a09990450ec2e411"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/signing.props",
+      "pass": true,
+      "details": {
+        "actual": "71a2cc9a5b04a60ea4093aa41824f275ad7cf5d87f4a8866a09990450ec2e411"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/testconfig.json",
+      "pass": true,
+      "details": {
+        "actual": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/testconfig.json",
+      "pass": true,
+      "details": {
+        "actual": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/testsettings.json",
+      "pass": true,
+      "details": {
+        "actual": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/testsettings.json",
+      "pass": true,
+      "details": {
+        "actual": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "pass": true,
+      "details": {
+        "actual": "382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "pass": true,
+      "details": {
+        "actual": "382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "pass": true,
+      "details": {
+        "actual": "fc0b486dd4aa4c78487b1e0fa9f56c546cf1c27e0499d9e1f403f26923d54fbb"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "pass": true,
+      "details": {
+        "actual": "fc0b486dd4aa4c78487b1e0fa9f56c546cf1c27e0499d9e1f403f26923d54fbb"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/packages.lock.json",
+      "pass": true,
+      "details": {
+        "actual": "d375ff4c06a3b00d9f80a63a8eada1a62bb720261742ad6be7cfbcffc5fdab30"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/ViciOne.ServiceBus.Tests/packages.lock.json",
+      "pass": true,
+      "details": {
+        "actual": "d375ff4c06a3b00d9f80a63a8eada1a62bb720261742ad6be7cfbcffc5fdab30"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/ViciOne.ServiceBus.AmazonSqs.csproj",
+      "pass": true,
+      "details": {
+        "actual": "72bb696dcdaf49509f08d7951edb4a4ccaf76112e4bed6ced4a94b8176031e94"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.AmazonSqs/ViciOne.ServiceBus.AmazonSqs.csproj",
+      "pass": true,
+      "details": {
+        "actual": "72bb696dcdaf49509f08d7951edb4a4ccaf76112e4bed6ced4a94b8176031e94"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "1fa6b10f5273864ee89a9059b9eb6d7d37762a86137744a82ac364dae3241b84"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "pass": true,
+      "details": {
+        "actual": "7a2f76b7d2272ee3afcd8f83c2f05dad7c45883fe814efae2c79ff76b6b51ca2"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "53ac44c04cf794e6ffc05f2b5a8ec47fb6948e1bac181b37155279b0296d3e68"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "53ac44c04cf794e6ffc05f2b5a8ec47fb6948e1bac181b37155279b0296d3e68"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "b12b81a46e099582644c05165ee384fb394431fc36b517e2a980eceac592a6e3"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "b12b81a46e099582644c05165ee384fb394431fc36b517e2a980eceac592a6e3"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs",
+      "pass": true,
+      "details": {
+        "actual": "a8192e1d3b520714ee1a732505a26a740e06ae073a6f303972a17aefaf328206"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs",
+      "pass": true,
+      "details": {
+        "actual": "a8192e1d3b520714ee1a732505a26a740e06ae073a6f303972a17aefaf328206"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "14ec1d7a56de88968a8bbbb25bb578c50fef16bfb9a4dd078780fbd6e6534c83"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "14ec1d7a56de88968a8bbbb25bb578c50fef16bfb9a4dd078780fbd6e6534c83"
+      }
+    },
+    {
+      "check": "C9/O global source/test/tool only exact four permitted deltas",
+      "pass": true,
+      "details": {
+        "O_paths": 6096,
+        "C9_paths": 6097,
+        "actual_deltas": [
+          "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+          "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+          "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+          "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json"
+        ]
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-fixed-source-r3-current-root812-r6-preflight-r1.json",
+      "pass": true,
+      "details": {
+        "actual": "ab859bc6010bc3988d223f8b05c8ffccf1264b603d229ad228e129ca592fcc32"
+      }
+    },
+    {
+      "check": "canonical source6096 accepted graph unchanged",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root source config exact C9/O .editorconfig",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root source config exact C9/O Directory.Build.props",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root source config exact C9/O Directory.Build.targets",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root source config exact C9/O Directory.Packages.props",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root source config exact C9/O NuGet.config",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root source config exact C9/O ViciOne.ServiceBus.Engineering.slnx",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root source config exact C9/O ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root source config exact C9/O ViciOne.ServiceBus.Tests.LocalIntegration.slnx",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root source config exact C9/O ViciOne.ServiceBus.Tests.RabbitMqLocalIntegration.slnx",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root source config exact C9/O ViciOne.ServiceBus.Tests.SqlServerLocalIntegration.slnx",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root source config exact C9/O ViciOne.ServiceBus.Tests.Unit.slnx",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root source config exact C9/O ViciOne.ServiceBus.slnx",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root source config exact C9/O global.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root source config exact C9/O signing.props",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "pass": true,
+      "details": {
+        "actual": "7a2f76b7d2272ee3afcd8f83c2f05dad7c45883fe814efae2c79ff76b6b51ca2"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "pass": true,
+      "details": {
+        "actual": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973"
+      }
+    },
+    {
+      "check": "lock version2/frameworks unchanged",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "all original complete entries unchanged none removed",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact ten additions and exact declared semantic delta",
+      "pass": true,
+      "details": {
+        "original_entries": 53,
+        "current_entries": 63,
+        "added": [
+          "Microsoft.Extensions.Configuration.CommandLine",
+          "Microsoft.Extensions.Configuration.EnvironmentVariables",
+          "Microsoft.Extensions.Hosting",
+          "Microsoft.Extensions.Logging",
+          "Microsoft.Extensions.Logging.Configuration",
+          "Microsoft.Extensions.Logging.Console",
+          "Microsoft.Extensions.Logging.Debug",
+          "Microsoft.Extensions.Logging.EventLog",
+          "Microsoft.Extensions.Logging.EventSource",
+          "System.Diagnostics.EventLog"
+        ]
+      }
+    },
+    {
+      "check": "Hosting direct10.0.12 plus nine transitive10.0.12 only",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "Hosting10.0.12 centrally exists in test-only group",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cached new package identity/dependency metadata Microsoft.Extensions.Hosting",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual resolved asset content hash/target dependency graph Microsoft.Extensions.Hosting",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cache archive SHA512 equals cache .nupkg.sha512 Microsoft.Extensions.Hosting",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual extracted nuspec bytes equal cached archive member Microsoft.Extensions.Hosting",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Configuration.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Configuration.Binder",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Configuration.CommandLine",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Configuration.EnvironmentVariables",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Configuration.FileExtensions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Configuration.Json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Configuration.UserSecrets",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Configuration",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.DependencyInjection.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.DependencyInjection",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Diagnostics",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.FileProviders.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.FileProviders.Physical",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Hosting.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Logging.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Logging.Configuration",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Logging.Console",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Logging.Debug",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Logging.EventLog",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Logging.EventSource",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Logging",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Hosting Microsoft.Extensions.Options",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cached new package identity/dependency metadata Microsoft.Extensions.Configuration.CommandLine",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual resolved asset content hash/target dependency graph Microsoft.Extensions.Configuration.CommandLine",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cache archive SHA512 equals cache .nupkg.sha512 Microsoft.Extensions.Configuration.CommandLine",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual extracted nuspec bytes equal cached archive member Microsoft.Extensions.Configuration.CommandLine",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Configuration.CommandLine Microsoft.Extensions.Configuration.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Configuration.CommandLine Microsoft.Extensions.Configuration",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cached new package identity/dependency metadata Microsoft.Extensions.Configuration.EnvironmentVariables",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual resolved asset content hash/target dependency graph Microsoft.Extensions.Configuration.EnvironmentVariables",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cache archive SHA512 equals cache .nupkg.sha512 Microsoft.Extensions.Configuration.EnvironmentVariables",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual extracted nuspec bytes equal cached archive member Microsoft.Extensions.Configuration.EnvironmentVariables",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Configuration.EnvironmentVariables Microsoft.Extensions.Configuration.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Configuration.EnvironmentVariables Microsoft.Extensions.Configuration",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cached new package identity/dependency metadata Microsoft.Extensions.Logging",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual resolved asset content hash/target dependency graph Microsoft.Extensions.Logging",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cache archive SHA512 equals cache .nupkg.sha512 Microsoft.Extensions.Logging",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual extracted nuspec bytes equal cached archive member Microsoft.Extensions.Logging",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging Microsoft.Extensions.DependencyInjection",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging Microsoft.Extensions.Logging.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging Microsoft.Extensions.Options",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cached new package identity/dependency metadata Microsoft.Extensions.Logging.Configuration",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual resolved asset content hash/target dependency graph Microsoft.Extensions.Logging.Configuration",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cache archive SHA512 equals cache .nupkg.sha512 Microsoft.Extensions.Logging.Configuration",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual extracted nuspec bytes equal cached archive member Microsoft.Extensions.Logging.Configuration",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Configuration Microsoft.Extensions.Configuration.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Configuration Microsoft.Extensions.Configuration.Binder",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Configuration Microsoft.Extensions.Configuration",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Configuration Microsoft.Extensions.DependencyInjection.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Configuration Microsoft.Extensions.Logging.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Configuration Microsoft.Extensions.Logging",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Configuration Microsoft.Extensions.Options.ConfigurationExtensions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Configuration Microsoft.Extensions.Options",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cached new package identity/dependency metadata Microsoft.Extensions.Logging.Console",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual resolved asset content hash/target dependency graph Microsoft.Extensions.Logging.Console",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cache archive SHA512 equals cache .nupkg.sha512 Microsoft.Extensions.Logging.Console",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual extracted nuspec bytes equal cached archive member Microsoft.Extensions.Logging.Console",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Console Microsoft.Extensions.DependencyInjection.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Console Microsoft.Extensions.Logging.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Console Microsoft.Extensions.Logging.Configuration",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Console Microsoft.Extensions.Logging",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Console Microsoft.Extensions.Options",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cached new package identity/dependency metadata Microsoft.Extensions.Logging.Debug",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual resolved asset content hash/target dependency graph Microsoft.Extensions.Logging.Debug",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cache archive SHA512 equals cache .nupkg.sha512 Microsoft.Extensions.Logging.Debug",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual extracted nuspec bytes equal cached archive member Microsoft.Extensions.Logging.Debug",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Debug Microsoft.Extensions.DependencyInjection.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Debug Microsoft.Extensions.Logging.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.Debug Microsoft.Extensions.Logging",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cached new package identity/dependency metadata Microsoft.Extensions.Logging.EventLog",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual resolved asset content hash/target dependency graph Microsoft.Extensions.Logging.EventLog",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cache archive SHA512 equals cache .nupkg.sha512 Microsoft.Extensions.Logging.EventLog",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual extracted nuspec bytes equal cached archive member Microsoft.Extensions.Logging.EventLog",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.EventLog Microsoft.Extensions.DependencyInjection.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.EventLog Microsoft.Extensions.Logging.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.EventLog Microsoft.Extensions.Logging",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.EventLog Microsoft.Extensions.Options",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.EventLog System.Diagnostics.EventLog",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cached new package identity/dependency metadata Microsoft.Extensions.Logging.EventSource",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual resolved asset content hash/target dependency graph Microsoft.Extensions.Logging.EventSource",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cache archive SHA512 equals cache .nupkg.sha512 Microsoft.Extensions.Logging.EventSource",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual extracted nuspec bytes equal cached archive member Microsoft.Extensions.Logging.EventSource",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.EventSource Microsoft.Extensions.DependencyInjection.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.EventSource Microsoft.Extensions.Logging.Abstractions",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.EventSource Microsoft.Extensions.Logging",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.EventSource Microsoft.Extensions.Options",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new dependency closes to actual lock entry Microsoft.Extensions.Logging.EventSource Microsoft.Extensions.Primitives",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cached new package identity/dependency metadata System.Diagnostics.EventLog",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual resolved asset content hash/target dependency graph System.Diagnostics.EventLog",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual cache archive SHA512 equals cache .nupkg.sha512 System.Diagnostics.EventLog",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual extracted nuspec bytes equal cached archive member System.Diagnostics.EventLog",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actual assets project points to C9 SQS project/net10",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "Root restore raw archive equals actual closed bytes p04-sqs-original-restore-r1-20261007-082301--94798--pEhR4m.binlog",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "restore actual binlog closed and CRC complete",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "Root restore raw archive equals actual closed bytes p04-sqs-original-restore-r1.log",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "Root raw restore log ten projects reported restored",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "previous interrupted R1 four partial copies preserved no input receipt",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "CurrentOrder current original/private context reference a382debb187a078bc547704973cd39f609c9e475c69585a5ed8ac9f4e00c180b",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "CurrentOrder current original/private context reference 9cdd967d24e090bbef0c24331f20eebc99b59599e9bb35334e177dc0c8bf82b6",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "CurrentOrder current original/private context reference 5162c9aac014a3ac2ca4e4d9eff6ebe45bcc7d48e728180e8ab02c8e9572daf1",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "CurrentOrder current original/private context reference 460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "CurrentOrder bounds original native next/no product fix",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after O/C9 source graph unchanged",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after frozen/C9 original source exact tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after frozen/C9 original source exact tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after frozen/C9 original source exact tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after frozen/C9 original source exact tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after frozen/C9 original source exact src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-input-freeze-r2/INPUTS.json",
+      "pass": true,
+      "details": {
+        "actual": "27ac8625ee36bd0c3e4c838eadbabef7fc136c132bd5767f998cbc68a6a241ae"
+      }
+    }
+  ],
+  "check_count": 277,
+  "limits": [
+    "Whole successor lock text/semantic additions reviewed; original package nodes preserved; actual cached10 NuGet package ID/version/dependencies/content metadata/archive SHA512 inventory checked without installs or network.",
+    "No fixture compiler/native five-case, compiled requirement projection, whole SQS module read/run, source fix or provider/cloud acceptance. Those remain pending Root executor/author evidence.",
+    "No .NET/MSBuild/native/Docker/SSH processes started; no product/test/tool/doc/frozen/archive mutations. Only this distinct immutable reviewer report written."
+  ]
+}

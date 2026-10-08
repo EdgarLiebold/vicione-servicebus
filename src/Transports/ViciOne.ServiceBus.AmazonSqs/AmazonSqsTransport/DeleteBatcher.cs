@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -15,6 +16,12 @@ sealed class DeleteBatcher :
     readonly string _queueUrl;
 
     public DeleteBatcher(IAmazonSQS client, string queueUrl, CancellationToken cancellationToken)
+        : this(client, queueUrl, cancellationToken, TimeProvider.System)
+    {
+    }
+
+    internal DeleteBatcher(IAmazonSQS client, string queueUrl, CancellationToken cancellationToken, TimeProvider timeProvider)
+        : base(null, timeProvider)
     {
         _client = client;
         _queueUrl = queueUrl;

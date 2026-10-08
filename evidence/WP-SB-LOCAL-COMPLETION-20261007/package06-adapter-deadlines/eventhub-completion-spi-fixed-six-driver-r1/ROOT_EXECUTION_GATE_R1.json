@@ -1,0 +1,22 @@
+{
+  "kind": "ROOT_EVENTHUB_COMPLETION_SPI_FIXED_SIX_EXECUTION_GATE_R1",
+  "driver_sha256": "a99a01a886713b63792ee028c715a16a6e68136450a970ef2c4a5c39a0e908a5",
+  "input_sha256": "31caf1c41eb2956b35e6d4c5ad788bc4b09836b8deb428f60eb6001ccd983291",
+  "fixed_sha256": "f7d7c83cb31373e9236d2c3dab087968be371fb3c86d858b09c23a38028638ec",
+  "whole_sha256": "1f4c848b3a9f4711e1a1631c804e09657397e25556d084a8e4b3fc178a6c21ac",
+  "reviews": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-whole-local-native-adversarial-r1.json",
+      "sha256": "c004d277932a7b691c53d8f89a4c0f334956df19d3ef07ecf69e35a3766760d5"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-completion-spi-source-adversarial-r1.json",
+      "sha256": "8bbaf2c8e582bbd05a4053c4e66c9f9c7f0877d8af77b055842e11ade45d52cc"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-completion-spi-fixed-six-driver-preflight-adversarial-r1.json",
+      "sha256": "a43cc621d2992fbadcb1b56b8a52375e0cc9e91cb0496a5868371f0465869788"
+    }
+  ],
+  "scope": "OnlystrictRebuild/focused6; no restore/provider/mutation/canonical. Finalindependentinput/GATE bindingreview stillrequired beforeSDK execution."
+}

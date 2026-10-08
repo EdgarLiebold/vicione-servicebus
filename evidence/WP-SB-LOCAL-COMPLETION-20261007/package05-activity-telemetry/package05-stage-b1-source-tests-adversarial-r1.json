@@ -1,0 +1,106 @@
+{
+  "status": "SOURCE_TESTS_NO_BLOCK__ROOT802_84_PROVENANCE_VERIFIED__ORIGINAL_NATIVE_LOG_OBSERVED_NOT_FINAL_RUNTIME_QUALIFIED",
+  "reviewer": "/root/continuation_adversarial",
+  "scope": "Frozen B1 R3: one typed ServiceBusInstrumentation product owner; new full167line canonical test owner1Theory/2cases; exactly1Requirements purpose row. No .NET/product/test/tool/provider/governance mutation by reviewer.",
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_B1_FREEZE_R3.json": "9fb62ca5340c1754fc9c81b16a8bdac0b34d9954666f9b9b56b7bc22755da22b",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_B1_PATCH_R2.diff": "23062370a005ed5d9fe5b55b8bcb5014a326a7a68b91360f15c8e9d782ce6a90",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_B1_TYPED_SOURCE_RESEARCH_PLAN.md": "252431c8ea89485288b49839bd16795be1ad5577f3464bddf836456d3cab4064",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE802_STAGE_B1_READ_CLOSURE_R2.json": "2d3018195a6b6bcef722635d7067323a0f3648f95de89063c174b162423e1bc8",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_B1_TEST_ONLY_ORIGINAL_FREEZE_R2.json": "50dcfd365af8a5ce3c512dd7ebf6883d48e5e7e64e43693d092758c70016c7fe",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_TELEMETRY57_COMPLETE_SOURCE_READ_R1.json": "87c47890f03ff587088d3a13d6b17fcefdc2234b9ab0bde6e420b15c39cf9e72",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_A_ACCEPTANCE_R1.json": "624c3a179c34ca29939b489982646515122e67d1f7fbbfb7168644ec08081a1b",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-b1-root802-source3-independent-proof-r1.json": "54639d9bdbfda7a8e0d779231e618767c4d1aa780721315a18fe079091f11668"
+  },
+  "current_three": {
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs": "f825ec82e2e3f71fd8daac77f770a875f2f5172b5d75c1e637dd9ecb635f62b7",
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/ActivitySourceActivationIsolationTests.cs": "b6a17dfa23f716c485cc0a6a152b9037676eb623eb8b74f8a4afbccacd158832",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "be76207e17ad3f949d5a40c6688dfa1718d8058f471608237b47f028d0639c07"
+  },
+  "complete_product_source_review": {
+    "lines": 560,
+    "bound_diff": "nullable readonly ActivitySource; narrow single-attempt ctor helper; source-null early return in2spanentrypoints; nullable source-only Dispose; remaining metrics methods and host Lazy unchanged",
+    "results": [
+      "Required meterFactory argument validation remains before optional source boundary.",
+      "Source helper catches only optional new ActivitySource invocation and in finally restores captured ambient through accepted ordinary CurrentChanged guard. No business clock, operation, factory Create or actual data contract behavior broadly caught.",
+      "Failure returns null source; ctor still establishes independent Lazy<Meter?>. EnsureDurableMetrics/EnsurePayloadMetrics still resolve supplied host factory and preserve existing once-per-instance metric state/schema/tag/atomics.",
+      "Both span entries validate input then return SafeActivityScope.None if source unavailable or instance disposed; healthy activity semantics unchanged.",
+      "Dispose remains idempotent and attempts only returned ActivitySource. It never disposes IMeterFactory or Meter; failure hidden runtime ctor registration is not falsely represented as returned owned handle.",
+      "Per-instance source attempt exactly1; no process/global fallback, implicit retry or claims of static cold initialization/monitor fixes."
+    ]
+  },
+  "complete_test_review": {
+    "lines": 167,
+    "methods": 1,
+    "variants": 2,
+    "whole_method": "Constructor_PreservesCallerAndHostMetricsWhenSourceListenerThrows",
+    "assertion_phases": [
+      "Listener installed unarmed, so preexisting same-name sources do not fault setup; then armed actual typed instance ctor callback count exactly1. Hostile callback mutates Currentnull and throws; expected no escaped error and same original caller.",
+      "Actual host factory observed through Meter reference and tags; one Create; durable accepted counter1/size5, payload inline counter1/body3, exactly4 measurements with expected outcome tags. This rejects silently disabled independent metrics.",
+      "Healthy case creates actual optional admission span, exact name/source/bus tag, stopped state and parent SpanId/TraceId. Hostile case returns exact None and captures no stopped span. Caller restored after scope.",
+      "Dispose twice then invoke instrumentation metric/span methods: no additional observed instrumentation events. Host factory Dispose count0. Host Meter creates a new independent counter and emits exact1 with empty tags; total5 measurements, Create1/ctorcallbacks1 unchanged. This catches direct Meter disposal as well as factory disposal."
+    ],
+    "fields_and_helpers": "Measurement immutable record; RecordingMeterFactory counters per-test; factory-owned Meter explicitly released in scoped fixture teardown. Serialized process-wide OTel collection, reference-identity listener filters and no sleeps/random/provider calls. Message ReadOnlyMemory data uses explicit byte arrays valid for actual DTO.",
+    "cleanup": "finally disarms foreign constructor callback before subject Dispose and ambient restore; scoped listener/meterListener/factory/caller release. No reflection resets, forced type initialization, fake source construction, order-only setup or alternate runner. Failed ctor hidden runtime source registration is framework-limited and no product leak-free claim made.",
+    "findings_by_severity": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "positive_observations": [
+      "Both theory variants observable and nontrivial; exact callback count establishes actual constructor cause despite warm process sources.",
+      "Metrics values/tags/counts and host use after disposal independently protect useful behavior; merely no exception would be insufficient.",
+      "Healthy real Activity parent/source metadata protects regression behavior while source unavailable remains bounded optional."
+    ],
+    "adjacent_boundaries": [
+      "New test uses admission span entry; delivery null guard has same trivial owner check and existing delivery tracing regression suite remains required. No independently expanded delivery case claimed by these2variants.",
+      "Constructor helper ordinary restoring callback guarantee comes from accepted Stage-A helper; arbitrary reentrant ambient mutation, stopped caller parents and foreign event suppression are outside B1 universal claims.",
+      "Cold static TestHarness/Monitor initialization and required disposal-primary caller policies remain separate StageB work; instance source test does not establish them."
+    ]
+  },
+  "root_and_requirements": "Independent proof verifies802 pathset=current800Gittracked+2authored untracked testowners, exactly800 hashes reused unchanged from acceptedRoot801, one complete new167line Root-authored/read owner and one fully read requirement row. All84 shared context hashes equal qualified prior and current.4690 prior row objects/order/byteprefix preserved;4691unique rows and actual method attribute exactly match appended purpose. Root source provenance original542whole Root57 read plus Root-authored/consumed actual frozen delta; no reviewer/agent reading substituted for Root.",
+  "historical_errata": {
+    "compile_r1": "Two CS9174 errors converting collection expression to actual ReadOnlyMemory DTO corrected only with explicit byte arrays; no native counterexample or success credit for compilation failure.",
+    "freeze_r2": "Retained R1 testbody patch metadata corrected by FreezeR3 binding actual PatchR2; current source3/snapshot/read proof unchanged.",
+    "line_precision": "Authoritative current test167 lines; earlier parent notification168 is not used as evidence."
+  },
+  "original_native_log_observation": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/local-completion/p05-b1-original-focused-r2.log",
+    "sha256": "c0c2d75169ce9b212ea4e5c7701daa39b4b7a87eda18897ac86e819d611341ea",
+    "individual_outcomes": {
+      "ViciOne.ServiceBus.Tests.Monitoring.ActivitySourceActivationIsolationTests.Constructor_PreservesCallerAndHostMetricsWhenSourceListenerThrows(hostileSource: False)": "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActivitySourceActivationIsolationTests.Constructor_PreservesCallerAndHostMetricsWhenSourceListenerThrows(hostileSource: True)": "fehlerhaft"
+    },
+    "total": 2,
+    "passed": 1,
+    "failed": 1,
+    "skipped": 0,
+    "console_exit": 2,
+    "finite_cause": "Hostile callback actual Runtime ActivitySource ctor->typed ctor57 escapes, finite Assert.Null at67 fails; healthy variant individually green. No guard/setup/compile/discovery failure in observed native2 log.",
+    "qualification_limit": "Live completed raw log observed read-only. Final acceptance requires immutable Root structured RESULT/runtime/binlogs and source/PE/PDB/package/binary qualification; reviewer does not infer a bound process exit receipt or fixed/mutant success from this observation."
+  },
+  "findings": [],
+  "remaining_before_scoped_acceptance": [
+    "Original immutable receipt/log/binlogs/runtime-source binding; focused individual cases strict compiled exact bytes.",
+    "Corrected strict native same2 all green and fullCore7968 all green, zero skips; actual warnings/errors/exit receipts.",
+    "Three separately compiled single-cause mutants: undo source ctor guard; incorrectly gate independent Meter on source-null; omit captured ambient restoration. Each expected hostile finite red/healthy green with identical test/Requirement bodies.",
+    "Final unchanged fixed2 replay and independent runtime artifact/source graph checks."
+  ],
+  "open_future_stages": [
+    "Batch ambient handoff",
+    "optional timeline static Lazy-null vs required Monitor Lazy-original source/callback/cleanup policy",
+    "durable/EF optional elapsed and StartProcess activecounter balance",
+    "successful monitor action-primary vs subsequent using Dispose errors",
+    "hardware/cloud/provider-dependent work"
+  ],
+  "assurance_limits": [
+    "NO_BLOCK means bounded source/test assurance only; no complete P05/API/coverage/CRAP/A+release claim.",
+    "No public host/exporter/endpoint/IMeterFactory ownership redesign.",
+    "Ordinary observer failure handled; runtime constructor does not return hidden partial source instance, so no universal global registration leak claim."
+  ],
+  "skills_applied": [
+    "dotnet-test:test-anti-patterns + .NET analysis extension reused for full1method/2variant assertion/isolation/resource review",
+    "dotnet-aspnetcore:configuring-opentelemetry-dotnet host Meter/source lifetime/parent/source identity guidance; no host exporter actions"
+  ]
+}

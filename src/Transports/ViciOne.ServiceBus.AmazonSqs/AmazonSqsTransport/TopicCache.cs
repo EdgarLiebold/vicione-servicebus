@@ -15,6 +15,7 @@ public sealed class TopicCache :
 {
     readonly CancellationToken _lifetimeCancellationToken;
     readonly IAmazonSimpleNotificationService _client;
+    readonly Func<TimeProvider> _batchTimeProviderFactory;
     readonly object _loaderSync = new();
     readonly DurableResourceStore<string, TopicInfo> _durableTopics;
     readonly KeyedResourceCache<string, TopicInfo> _ephemeralTopics;
@@ -27,9 +28,16 @@ public sealed class TopicCache :
     /// <param name="lifetimeCancellationToken">The token that ends durable resource ownership and topic discovery.</param>
     public TopicCache(IAmazonSimpleNotificationService client, AmazonSqsClientContextCacheOptions options,
         CancellationToken lifetimeCancellationToken)
+        : this(client, options, lifetimeCancellationToken, () => TimeProvider.System)
+    {
+    }
+
+    internal TopicCache(IAmazonSimpleNotificationService client, AmazonSqsClientContextCacheOptions options,
+        CancellationToken lifetimeCancellationToken, Func<TimeProvider> batchTimeProviderFactory)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         ArgumentNullException.ThrowIfNull(options);
+        _batchTimeProviderFactory = batchTimeProviderFactory ?? throw new ArgumentNullException(nameof(batchTimeProviderFactory));
 
         _lifetimeCancellationToken = lifetimeCancellationToken;
         _durableTopics = new DurableResourceStore<string, TopicInfo>(lifetimeCancellationToken, StringComparer.Ordinal);
@@ -100,6 +108,7 @@ public sealed class TopicCache :
 
     async ValueTask<TopicInfo> CreateMissingTopicAsync(Topology.Topic topic, CancellationToken cancellationToken)
     {
+        TimeProvider timeProvider = _batchTimeProviderFactory();
         var request = new CreateTopicRequest(topic.EntityName)
         {
             Attributes = topic.TopicAttributes.ToDictionary(x => x.Key, x => x.Value.ToString()),
@@ -116,7 +125,7 @@ public sealed class TopicCache :
         var attributesResponse = await _client.GetTopicAttributesAsync(createResponse.TopicArn, cancellationToken).ConfigureAwait(false);
         attributesResponse.EnsureSuccessfulResponse();
 
-        return new TopicInfo(topic.EntityName, createResponse.TopicArn, _client, cancellationToken, false);
+        return new TopicInfo(topic.EntityName, createResponse.TopicArn, _client, cancellationToken, false, timeProvider);
     }
 
     Lazy<Task> CreateExistingTopicsLoader()
@@ -157,6 +166,7 @@ public sealed class TopicCache :
 
     async Task LoadExistingTopicsAsync(CancellationToken cancellationToken)
     {
+        TimeProvider timeProvider = _batchTimeProviderFactory();
         string? cursor = null;
         do
         {
@@ -172,7 +182,7 @@ public sealed class TopicCache :
 
                     string topicName = topic.TopicArn[(index + 1)..];
                     await _durableTopics.GetOrAddAsync(topicName,
-                        (_, ownerToken) => ValueTask.FromResult(new TopicInfo(topicName, topic.TopicArn, _client, ownerToken, true)),
+                        (_, ownerToken) => ValueTask.FromResult(new TopicInfo(topicName, topic.TopicArn, _client, ownerToken, true, timeProvider)),
                         cancellationToken).ConfigureAwait(false);
                 }
             }

@@ -1,0 +1,20 @@
+{
+  "kind": "ROOT_BOUNDED_PACKAGE_ACCEPTANCE",
+  "package": "01",
+  "status": "ACCEPTED_DOCUMENTATION_AND_FRESH_NATIVE_REPRODUCIBILITY",
+  "baseline_receipt": "BASELINE_FINAL_R2.json",
+  "documentation_freeze": "DOCUMENTATION_FREEZE_R2.json",
+  "review": "package01-final-review-r2.json",
+  "review_sha256": "5d9280cbf9cee911427de4320d492047acff13a896e8b27ab9a217a4cef270ab",
+  "unit_total": 13460,
+  "modules": 23,
+  "warning_error_failure_skip_counts": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "closed_deferred_engineering_items": 0,
+  "provider_coverage_hardware_cloud_or_release_accepted": false,
+  "historical_evidence_modified": false
+}

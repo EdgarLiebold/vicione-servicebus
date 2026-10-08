@@ -1,0 +1,27 @@
+{
+  "kind": "ROOT_POST_JOIN_OWN_ASB_RESOURCE_ABSENCE_R1",
+  "native_result_sha256": "4a6d9943a5d2bc02046e26edf7310c8dbadf9de890f5db38553df557a070e25e",
+  "identity": "vicione-b4753c17f691",
+  "read_only_docker_context": "colima",
+  "own_containers": [],
+  "own_volumes": [],
+  "own_networks": [],
+  "docker_probes_all_exit0": true,
+  "own_groups": {
+    "ssh_pid": {
+      "pid": 1761,
+      "group_alive": false
+    },
+    "child_pid": {
+      "pid": 1766,
+      "group_alive": false
+    }
+  },
+  "protected_foreign_container": {
+    "id": "2fd0eab20896",
+    "name": "vicione-07c91d386137-postgres-1",
+    "before": "Up 12 days (healthy)",
+    "after": "Up 12 days (healthy)"
+  },
+  "limits": "Actual label-scoped Docker inventories and Sig0 group probes after helper joined. No global process/container census; no foreign resources modified or retired."
+}

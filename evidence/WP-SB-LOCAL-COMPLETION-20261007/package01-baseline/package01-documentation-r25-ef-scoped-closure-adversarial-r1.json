@@ -1,0 +1,75 @@
+{
+  "kind": "INDEPENDENT_DOCUMENTATION_R25_EF_SCOPED_CLOSURE_ADVERSARIAL_REVIEW_R1",
+  "decision": "NO_BLOCK_EXACT_SIX_DOCUMENTS_AND_SEPARATE_OP64_GUARDED_PUBLICATION",
+  "findings": [],
+  "bindings": {
+    "proposed_freeze_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_PROPOSED_FREEZE_R25.json",
+    "proposed_freeze_sha256": "09855888d62831234dfaade901159ec4c654f3331a5ce94f759ae674dc378d13",
+    "published_prior_R24_sha256": "f4f1b79c35228e7d937472646106cd61ec16a3e8c6b132c0d2f5720fde5290bf",
+    "own_prior_R24_review_sha256": "a8f4991ca4dd3eba9c94b98584e363567ad10cba9179b28428e6e1f96d3b5c5c",
+    "complete_seven_diff_sha256": "1329a41f7bf5dfd156131d8adaf70f7547b05579a086565c1bc603e52ea1aefa",
+    "ef_acceptance_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_EF_GENERIC_HOST_STARTUP_CLEANUP_ACCEPTANCE_R1.json",
+    "ef_acceptance_sha256": "07f77f8207fef5239043ebd46848168ae6170c3f4f6a9927189dbecee8bb069f",
+    "proposed_six_document_sha256": {
+      "CHANGELOG.md": "c0069f4c35dce5e288a41e52cab153b425f5ac4119ce028e871213de008480b6",
+      "TODO.md": "8745ab60b0276ea5a53d0144adaaf3348a4ed30b2075de78adc36c8c89c075ff",
+      ".testagent/status.md": "d631f93eda9ec1ff10c85d91bb8e96fc74b8d0e08cb44b942996d94c72e00412",
+      ".testagent/plan.md": "45b921cc93cf45adef39020ef178c1ab174de77b527205698d3b027f84144079",
+      ".testagent/local-completion-plan.md": "0b45c6bdb1b5b861ce12e66e84afc2d7e7ae53da2e5c68d747a4c63387bfb6d0",
+      "docs/quality-status.md": "e629643a96b3a1f8a104c28eec081e22a8debcad99a3036c7d39194562cb0bc8"
+    },
+    "separate_OP": {
+      "path": "docs/servicebus-local-completion-report.txt",
+      "prior_sha256": "bd967557bb684ee5d01b48afc2fd326e0b539e74b1e290c68134ae2a413d3cae",
+      "proposed_sha256": "71bdc3d34b6794b7e49173a2d4c5ea2b06282e14ad0f9825152406deb1ea8ed7"
+    }
+  },
+  "own_read_provenance": "Complete six-document and OP R24-to-R25 lossless delta personally read untruncated; whole OP64 and whole bounded EF acceptance receipt personally read. Own previously qualified R24 deltas/sections reused only at matched published source hashes. No new human whole-history/six-complete-legacy-body claim. All file/source/ref hashes and row/count preservation mechanical; no Root personal-source/native/PE reading credit transferred.",
+  "factual_reconciliation": {
+    "closed_finding_only": "EF-HOST-STARTUP-CLEANUP-01 Medium",
+    "product_change": "Two previously adversarially qualified worker sources defer selected options/additional-source resolution from DI constructor; required startup validation and direct Start/manual dependency guards remain. Scope is actual GenericHost selected EF/inbox/scoped-delivery options, not all DI-construction or store errors.",
+    "original4": "Three actual first Stop-cleanup reds/one healthy; not four findings.",
+    "fixed5": "Four new unchanged actual Host facts plus one existing renamed direct worker boundary; native5PASS. Existing-method phase/projection update adds no fifth new case.",
+    "whole_EF": "Actual436 passing event slots/435 short labels/one collision group, not436 unique complete argument identities.",
+    "affected_Core": "Separate fresh8209 actual Core passes at changed Core Main; subset and focused cases included, not added to whole count.",
+    "counters": "Three compiled single-cause variants/15 repeated slots/6 first finite failures/9 healthy, not15 newcases/sixbugs. Actual archived focused result counts mechanically reconcile summary and accepted latest ledger.",
+    "post5": "Actual fivePASS; exact19 archived/current runtime restoration permits existing qualified PE/PDB/method reuse, not fresh post parse.",
+    "canonical": "Exact seven applied product/test/project/lock/requirement files after independent final and afterapply receipts, all actual seven canonical hashes checked. Root/colleague qualified application guard reports other6098 unchanged/source6105. No new full6098 human or file-graph proof inferred from documentation."
+  },
+  "accepted_chain": {
+    "all11_reference_hashes_checked": true,
+    "independent_final_gate_sha256": "391752d86218da6045467647b9c57c8d3bd65be1041ce6cfdfe1150b9673af05",
+    "independent_afterapply_sha256": "cfd1eb7392f71cf068d407b547541abce10900dbd2e4dacf69592e6e467e1c33",
+    "post_source_and_native_reviews_reused_as_dependencies_not_fresh": true
+  },
+  "preservation": {
+    "current_canonical_all_seven_files_still_prior_R24": true,
+    "lossless_full_diff_reconstructed_from_actual_prior_and_proposed_bytes": true,
+    "TODO_preamble_exact": true,
+    "TODO_other11_sections_exact": true,
+    "local_plan_total_rows": 8,
+    "local_plan_only04_changed_other7_exact": true,
+    "ordered62_unique_OBL_exact": {
+      "CLOUD": 55,
+      "PER": 6,
+      "BRK": 1
+    },
+    "four_historical_suffixes_including_heading_byteexact": {
+      "CHANGELOG.md": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+      ".testagent/status.md": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+      ".testagent/plan.md": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+      "docs/quality-status.md": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5"
+    },
+    "frozen234_STATE_sha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+    "five_common_new_blocks_identical_sha256": "99b86e38b79206aa33b8c0750f6e149fc4bd89ad0a80722bb8dc5f384547a74a",
+    "all_new_EF_receipt_links_exist": true,
+    "prior13460_23Module_baseline_remains_historical": true
+  },
+  "scope_and_OP": "OP header8October and six new EF bullets accurately summarize selected false-settings startup/cleanup repair, five targeted/436EF/8209Core, three identified controls and seven applied files. Whole64 is explicitly continuing local work. Persisted outbox delivery, sustained SQL polling, all startup/provider profiles, schema/cache/adapter/coverage/API/journeys/benchmarks/CI/cloud/ARM64device/globalA+ remain open; broker-size invariant remains open and known-secret redaction does not close it. Branch progress is local/no new remote commit claimed. Current Cache4 candidate stays unaccepted and is not documented as finished.",
+  "internal_check_note": "Initial local-plan helper mistakenly expected12 package rows (the TODO has12 sections); assertion stopped before any receipt write. Corrected to actual8 local-plan rows and verified only04 changed/all other7 exact. No source/doc/native error or evidence rewrite.",
+  "gate": "Root may publish exactly the six frozen documentation files and separate OP report after prior-hash guard and source-order guard. This is technical documentation review; no SDK/provider/process, source change, new native replay, commit or push authorized by this receipt.",
+  "limits": [
+    "No current total Unit/provider replay/coverage/CRAP/full API/release/CI/device/cloud or globalA+ acceptance inferred from module-specific closure.",
+    "Immutable R25 candidate is accepted for guarded copy only; actual publication needs final copy guards."
+  ]
+}

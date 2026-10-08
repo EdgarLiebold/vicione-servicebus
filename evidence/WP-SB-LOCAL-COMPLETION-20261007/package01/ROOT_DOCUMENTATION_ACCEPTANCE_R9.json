@@ -1,0 +1,16 @@
+{
+  "kind": "ROOT_CURRENT_DOCUMENTATION_R9_ACCEPTANCE",
+  "status": "ACCEPTED",
+  "freeze_sha256": "8dd8e25a6203ed96007d1bf91ae43d7a9073b6c20d0fceb2bd808adddbb06e3a",
+  "independent_review_sha256": "e8a3bd124088b4eb38ab06cb5c1c9cb6fe3a16735b1f37f46b6e0f18c31eedde",
+  "files": {
+    "CHANGELOG.md": "1b54840368624be2363badff03da6e82c333d4310a4949ffe9eabf4bbc23ae31",
+    "TODO.md": "ccd5788111bda00474868957f7d1b0c3b7573ee835f7e9a842c00b489de4dc13",
+    ".testagent/status.md": "8bcb65953a6549d659227a066cd205da562a4cd7ec3b8cd30ebbfa0eff2d627c",
+    ".testagent/plan.md": "486e70a67a911133d9dc9689874f9e27e4cea6e406982d3e16478994d285e89f",
+    ".testagent/local-completion-plan.md": "a70d0ba0bd3925fabfac3b81eacc22d1fc42820599e32a58c5b4c14b0c7255da",
+    "docs/quality-status.md": "e861cccb3a80ef3d987b810b08318aae0ef9ff1f6704e7c7de2e218c038018ba"
+  },
+  "c1_root_acceptance_sha256": "184d9ad51f24761fc5ab42a48225cbbedf8d91a21888cbbba5fe92b7c8685af1",
+  "scope": "Sixdocs boundedC1 acceptance; R8 temporal correction retained and B1/B2 pending tails dated. HistoricalAudit234/62OBL and allremaining local/cloud/hardware gates remain unchanged; C2 unaccepted."
+}

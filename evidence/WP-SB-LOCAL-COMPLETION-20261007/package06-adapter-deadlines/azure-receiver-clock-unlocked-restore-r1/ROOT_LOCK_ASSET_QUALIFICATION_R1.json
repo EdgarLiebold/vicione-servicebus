@@ -1,0 +1,151 @@
+{
+  "kind": "ROOT_ACTUAL_GENERATED_AZURE_CLOCK_LOCK_AND13ASSETS_CACHE_CONTENTHASH_QUALIFICATION_R1",
+  "restore_result_sha256": "b711ea42797dbad333bb74009d86d9d4b73fab5c99973505c172f35bbf436de2",
+  "generated_lock_sha256": "1c112fbd475b572733d61c390250a12b6db19872c41b0782dd76288e830583cc",
+  "one_direct_package_addition": {
+    "type": "Direct",
+    "requested": "[10.9.0, )",
+    "resolved": "10.9.0",
+    "contentHash": "0If8xc915BgRpYmKB9tOOOprvHMt8Tue6kiD8ARgVf8Ok6PNUxkJScKT7QUp7+RllR4RN2DNACgaxioy9BJxeQ=="
+  },
+  "allold_lock_objects_unchanged": true,
+  "asset13_projects": [
+    {
+      "asset": "ViciOne.ServiceBus.Abstractions/project.assets.json",
+      "source_project": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "packages": 0
+    },
+    {
+      "asset": "ViciOne.ServiceBus.Courier/project.assets.json",
+      "source_project": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+      "packages": 15
+    },
+    {
+      "asset": "ViciOne.ServiceBus.Futures/project.assets.json",
+      "source_project": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+      "packages": 15
+    },
+    {
+      "asset": "ViciOne.ServiceBus.AzureServiceBus.Tests/project.assets.json",
+      "source_project": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+      "packages": 67
+    },
+    {
+      "asset": "ViciOne.ServiceBus.AzureServiceBus/project.assets.json",
+      "source_project": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/ViciOne.ServiceBus.AzureServiceBus.csproj",
+      "packages": 27
+    },
+    {
+      "asset": "ViciOne.ServiceBus.Mediator/project.assets.json",
+      "source_project": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+      "packages": 15
+    },
+    {
+      "asset": "ViciOne.ServiceBus.Tests.Infrastructure/project.assets.json",
+      "source_project": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+      "packages": 10
+    },
+    {
+      "asset": "ViciOne.ServiceBus.Testing/project.assets.json",
+      "source_project": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+      "packages": 15
+    },
+    {
+      "asset": "ViciOne.ServiceBus.ActiveMq/project.assets.json",
+      "source_project": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.ActiveMq/ViciOne.ServiceBus.ActiveMq.csproj",
+      "packages": 20
+    },
+    {
+      "asset": "ViciOne.ServiceBus.Tests.InternalAccess/project.assets.json",
+      "source_project": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+      "packages": 15
+    },
+    {
+      "asset": "ViciOne.ServiceBus.AzureServiceBus.Testing/project.assets.json",
+      "source_project": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/ViciOne.ServiceBus.AzureServiceBus.Testing.csproj",
+      "packages": 27
+    },
+    {
+      "asset": "ViciOne.ServiceBus/project.assets.json",
+      "source_project": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "packages": 15
+    },
+    {
+      "asset": "ViciOne.ServiceBus.Sagas/project.assets.json",
+      "source_project": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+      "packages": 15
+    }
+  ],
+  "package_identities": 67,
+  "package_content_hashes": {
+    "FastExpressionCompiler/5.4.1": "nqMykMspK5cQd35Y8ulQzAujxCcCwZVUne32pC5xNpXqrbPCuKOPMWkKHJ3LveAZPm6dsVvump0TJ1SZ9RzfTQ==",
+    "Microsoft.Extensions.Configuration/10.0.12": "e3IPP32CRNL031VZJAUTlCTG0YN7WFh4mN3fsSHTDQCJB+3+f0jGycv4fXk3rrftaY3B85XrQaj7sRthrOsavg==",
+    "Microsoft.Extensions.Configuration.Abstractions/10.0.12": "8xaGcvS/qZ1otoxPQCEJkNva389CVL/plNcvIETZhQTETYdRkYDPEYhUMoAGONo4FU45ufdfE0j29AfWVVj0wA==",
+    "Microsoft.Extensions.Configuration.Binder/10.0.12": "dAgIf1TOr8KLs+aBRIbXUZBjHoSH4rDG8+XkX/Q6AZwkQdMA0+yPDKTHsieeXdZDfpOpZVHzOnuAb5Z2nX3KsA==",
+    "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.12": "9/qymSh7hVDMGTGwrLz8MRp5zRyXy9adGDOs4HwRdnLil3oZGYuWeZjbmHgCQ9BL1qBroVfgUK3U/nb61617Cw==",
+    "Microsoft.Extensions.Diagnostics/10.0.12": "amx0O/R4dReqKlC3T740+CHpX8D8tAIV0f5kAPfFi4XK9jYo9BSepGt9/rWfvvCoSMaZ1+XvnqPp/Vv2fmTdAg==",
+    "Microsoft.Extensions.Diagnostics.Abstractions/10.0.12": "fMp91qlRlMOuHfMyp7LuAnOS+MOeWTF1obJmyFcs4nZCXu6pr+QB1AbFJcl2qpBltBrqF/Y7+Rn9IuNcSuctig==",
+    "Microsoft.Extensions.Diagnostics.HealthChecks/10.0.12": "Ck8nkBxEYPOGtUCp0whKwfE4qAHBnsK0DY1kgZLKvzf7s9xyr4lASa4K4AKNN1VHy7r3Z1Z57U6C0TMzFjD8ig==",
+    "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/10.0.12": "oN4AYFq+50m7a65GgRxRqjdynWS6kVQAH6gHKRTfsrLP/aH7RvxIQ7139fjbnrxBwzfZQtZRhlcjvEIiRzihrg==",
+    "Microsoft.Extensions.FileProviders.Abstractions/10.0.12": "iQseV6HixWzEYQH4i++84ToIroXnM5jC1TJF4EqBz3lWNG1HBTMYDLkRb6Wm3wk5V6WqSfl7NukO/LYsloGyfg==",
+    "Microsoft.Extensions.Hosting.Abstractions/10.0.12": "ZlIxIJtWmrph0Ikj0svSaTkZ+d+ZYpTAhazpf1b3aoFRmlNnNWwkcvqnqT9yKHjKvfBRthvUrkq11OxfItOhpg==",
+    "Microsoft.Extensions.Logging.Abstractions/10.0.12": "+24lC4plfbEDNfLAdTV/SWKS7dW+16X4HdydO3R++134kSNTzcbYA4KpR1Hdh6uWisB8Za3AzwyOn+K+NxWIug==",
+    "Microsoft.Extensions.Options/10.0.12": "TDYD33TSRpXKZWlmTXNlj5kCihxatmv2Ec1u6C+bMYLphCS7PoSLE9Pjd/nunDoE7yETk+LLKjVJX78HYtWjpA==",
+    "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.12": "rqpu4qj5WE9x1IHGXSIgHBKi7IUlQaHyp4aXCYIanG2OghlUMFZpZTgExaXwcvmLAJHsxKQWMPpc7D2WIbCVtA==",
+    "Microsoft.Extensions.Primitives/10.0.12": "dYfCLR52UA+3DL7C4I/pvSaRPkNqxrUAQmbFL2u0zvYKKzqgrFCJl08Df+F1aYc8leu9JvpC9bsURUdpExcBXQ==",
+    "AMQPNetLite.Core/2.4.3": "ScD4522aae8u9pWaREuc0/EmbeYyI52YBoN0/HFfjkiPKH7GhSnUMEKidTCVYsPg+C1wcmLSJWa335OOqEptlw==",
+    "Apache.NMS/2.2.0": "bp6v0CruKIawIOgCiP7+zIvcMo4qFm8E+Xh4pTbL0hq27ccd+mWZSRxox3kOb7eoGgPmmFxX+xRlVj6soxKtAw==",
+    "Apache.NMS.ActiveMQ/2.2.0": "m0EPcmF6JtUuCEAoToy3opPIVmXCKbvgt5/+2tEk+7fROQw7zFsp1lOaPg9tS7vf+cqNbKEhqzhc+j6VRLgPow==",
+    "Apache.NMS.AMQP/2.4.0": "05soAOUmtAuaza0kqNLijs9jdpYpszViLF105q0/26cz9CGRMh8X2hXOUWLnvHvX7HdUphqQU7EyJKnLoyW9kQ==",
+    "Azure.Core/1.60.0": "qCa5DLAq0w14aTl9/bvMZNA/QxPzYj1a4zakrpeudxWd4D4YliRHRfccD3yFECeHkMkvQjMmyWLggb8bzhDVKA==",
+    "Azure.Core.Amqp/1.3.1": "AY1ZM4WwLBb9L2WwQoWs7wS2XKYg83tp3yVVdgySdebGN0FuIszuEqCy3Nhv6qHpbkjx/NGuOTsUbF/oNGBgwA==",
+    "Azure.Identity/1.21.0": "GeFv8sGwRKvDKwI2WFy8r0mhmlxEVZg24Sit2NogTjiSO8RVjllWM65OT6e1sKjOvG8V74y7hAbaELUUPjZQSw==",
+    "Azure.Messaging.ServiceBus/7.20.2": "mwr5c3Qs7FWUtwzlLOtVixYDpUuA+Ln7sNirljTHZR8kDhzdr2grlqx0RRBvGV+IDCRHt1jIRb+hi0MUzjeVmw==",
+    "Microsoft.ApplicationInsights/2.23.0": "nWArUZTdU7iqZLycLKWe0TDms48KKGE6pONH2terYNa8REXiqixrMOkf1sk5DHGMaUTqONU2YkS4SAXBhLStgw==",
+    "Microsoft.Azure.Amqp/2.7.0": "gm/AEakujttMzrDhZ5QpRz3fICVkYDn/oDG9SmxDP+J7R8JDBXYU9WWG7hr6wQy40mY+wjUF0yUGXDPRDRNJwQ==",
+    "Microsoft.Bcl.AsyncInterfaces/10.0.9": "Aq7M8lG6BrHeatqKqncVm9m55ec34k6nnfPRLe/PvGg+b/pAsRM2ejofeKmCLjTXMa+5NGXm382f8CG/D5WDow==",
+    "Microsoft.DiaSymReader/2.2.10": "zmGsm6b2y3STDa/Of7rdkkfTDV8VuGB8aCqIkLoJIQh5tL78K3zJ8OUyFKnfsaORXmGr9iOKwDkZfUjeXi+CwA==",
+    "Microsoft.Extensions.Configuration.CommandLine/10.0.12": "hWWJzJpmg161rYJ2H6vxqCuFfh6zL2Tp9emOrfu1M4gsmW5BOlW8GldthyFwm2L+beW+0axmkMKRw3HyO1qceQ==",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables/10.0.12": "OIFhLxKAdvSrZuecX177ZkN4AcAB6OLlbS8y0MQYL68512aMOZI8cJLb8OeuYe2X+gu5uMqbbCxhzAmSp+Q2ow==",
+    "Microsoft.Extensions.Configuration.FileExtensions/10.0.12": "PNPS7yYH9U2M0dExn0tMkQFVtE53xTlCs/dgTfsWTTFyCF6qwGT3VrTgm2nnnkSRlSmvM9/J+n9xCpyzd9xTpQ==",
+    "Microsoft.Extensions.Configuration.Json/10.0.12": "H4u2ZeIhjmRQvbHj7S7U4MK1kXb0khx3UtOWcir32VHczdFyIVF0lvHew/VVHmCF7Uk0QseAUaO7HyFKOCSiKA==",
+    "Microsoft.Extensions.Configuration.UserSecrets/10.0.12": "2OtyTIt0/tkChr3inq9Y0c34xogxXW//68gvPzIWgKwyVR4x82RSGVSZfV+ZgG13zrKBzqjaI23wpUCfKpY2yQ==",
+    "Microsoft.Extensions.DependencyInjection/10.0.12": "lXyK2O5GoYvfxW8eCFcD16JFbcoSTM1sJkAM0UHS1jZyl9NYMW64Tqm6OQFT0IDBjZi+xHt95/Zg+nxZhGFhZg==",
+    "Microsoft.Extensions.DependencyModel/10.0.10": "rfZA1RjR021RPqSmIPovfz2aOd79TGqJ9BengbjnzIISOVwjLmuSDnhCMmiY/1c6iYvGolQ1iNGzkav0u11XEA==",
+    "Microsoft.Extensions.FileProviders.Physical/10.0.12": "3cY+wo2+Qe65BVwShhr2fFqZv5Ns73h3kX4mpW3WvSgfT3AWCk0hKArKW4TF7Dg3mvbJdA6RhWPW7FR+PS5/1w==",
+    "Microsoft.Extensions.FileSystemGlobbing/10.0.12": "45cV+UeI0chPAIXrx9Wv7K4PJXuuIR2pnOur5MOAo6kOFclBHSLLDrvGAxMfWRMtUvpv/kQZkxlgaUN56jwzSQ==",
+    "Microsoft.Extensions.Hosting/10.0.12": "dzPj59oALFLu9TA4YUrfxqXEcbJVen/D2kOoitgM1lXBeSvPwPR8rOrrV0NKilCV3K0l4o+TLJJ3a1wmTu40Uw==",
+    "Microsoft.Extensions.Logging/10.0.12": "6I46fTPfgYkrjRYfRXbho9WOvOelTnNjWuZws/hzGHDASH1LEJeA4VKK9k3wJvido8o7jJSB5WkMTonX7HM1bA==",
+    "Microsoft.Extensions.Logging.Configuration/10.0.12": "CLHWfKQZWFE6fSzRXfjd4UlGveckkfPtwx/p5yF/o3hEkMSzGsl7MSxNAkI19hjw0rprBqrQC09Dwy6Lh6kweA==",
+    "Microsoft.Extensions.Logging.Console/10.0.12": "nHvaR8gO0CdEfG324KdUsP3Hqgdf1licZb+UlNh5pFYw7+o8QYTmiMgFmwayE/LPSpaqND/Qn3xHa1cI9b8x0w==",
+    "Microsoft.Extensions.Logging.Debug/10.0.12": "dEvvABq9Qgfu/SgTncXDjCshcJmgO97bLOnMAuqBDSonlk4+VXlKJMHPak+S78TlOxJ47+gY7vPgVukJsr69gg==",
+    "Microsoft.Extensions.Logging.EventLog/10.0.12": "Qn0FWPMiQzM4GQEEXxrJbh3vp3I9wrAgpMcsVH36+6FTRGXaqtwHDgf/2030FUJ4OuNSpOeIRh+9kCZGDDsfGg==",
+    "Microsoft.Extensions.Logging.EventSource/10.0.12": "nKpYoiUdBu8fdLwDxj/fjjGn//7/VwRLzujtMq99/pExrswMXOz+80hbB98QxrD8qPt9oWlFpEVrN9OBKOP7RQ==",
+    "Microsoft.Extensions.TimeProvider.Testing/10.9.0": "0If8xc915BgRpYmKB9tOOOprvHMt8Tue6kiD8ARgVf8Ok6PNUxkJScKT7QUp7+RllR4RN2DNACgaxioy9BJxeQ==",
+    "Microsoft.Identity.Client/4.84.2": "Va9FjmABSgj/lcUfHH0pBNQkmS7SNyepz2ERV7Yynp6QgEYpFdSqR6Vzy1WWipN8GS5pBHuXoZbqaDWuARCrHQ==",
+    "Microsoft.Identity.Client.Extensions.Msal/4.84.2": "+D98LaU3dOu/Nzs6kgbBJapMvH7iwYcAeC99XwSkpmEadsPv6rozecOl9P6m4A3RfpOuPt9e6J6TwwUUp3+M4w==",
+    "Microsoft.IdentityModel.Abstractions/8.14.0": "iwbCpSjD3ehfTwBhtSNEtKPK0ICun6ov7Ibx6ISNA9bfwIyzI2Siwyi9eJFCJBwxowK9xcA1mj+jBWiigeqgcQ==",
+    "Microsoft.Testing.Extensions.CodeCoverage/18.10.0": "elUX4tKloHh2VCxagbmhV1039xBuE3lKXITtt/hUYU286hl+ja8poOUsF9OnevKoFKt7+p9vLb1LqqW7rFGi9Q==",
+    "Microsoft.Testing.Extensions.Telemetry/2.3.3": "nY8ceQyPWB9TRE1WE5Oe/sks2e10SxgPv61vBHsFYpgCeDtNwhpMZwmL29GklO3/etTdOsLdrCmNr4zJWaR2fg==",
+    "Microsoft.Testing.Extensions.TrxReport.Abstractions/2.3.3": "dceVNxnfTEjKnrIreLcMfkgrzzBY8kgCCJX5NAv7Lq/6vPlTP4VB5zxKeuYy0yfCoBtWuPkLjUG6qtOBMfpypA==",
+    "Microsoft.Testing.Platform/2.3.3": "ENbH4BQh9riXtOKc25KKITfiGGWhWMBJA7pZuNaF9zxzzSaVkp5AMeZxGQ6sXYaR6xb724NLz985Is6XIYqLSg==",
+    "Microsoft.Testing.Platform.MSBuild/2.3.3": "iVAvNbZ5JPDZSrTcIrCDoCsAkzjDxwDEt2mDuMd8ng1P6e2P2NCd0g0BsoBVG+nJLSmK//V+yeEvjCa3E2fxHw==",
+    "Microsoft.Win32.Registry/5.0.0": "dDoKi0PnDz31yAyETfRntsLArTlVAVzUzCIvvEDsDsucrl33Dl8pIJG06ePTJTI3tGpeyHS9Cq7Foc/s4EeKcg==",
+    "SharpZipLib/1.4.2": "yjj+3zgz8zgXpiiC3ZdF/iyTBbz2fFvMxZFEBPUcwZjIvXOf37Ylm+K58hqMfIBt5JgU/Z2uoUS67JmTLe973A==",
+    "System.ClientModel/1.14.0": "yhIJHDW3Hh5kcvhHv3ww1T8qvya06Nlwo/SR/rke4/fHXtyKiqQV/9b/VDhnVI7QUcMnpfvh4pIEFhNsTDLeKQ==",
+    "System.Diagnostics.EventLog/10.0.12": "sOZM+VyRj1pg/ItlHsvrSbjws6oGqZveTzTNBGZ9ziwRDyKsOF3ub6vhvOdxotCIqtlnyHAIwP5sLNvgiZC+pQ==",
+    "System.Memory.Data/10.0.9": "YweovHiLUoEdbr2Xv8eRqCSkTu1vMms4a6xBHaQiMSFVy32PL+hXv6Vhol2NWOmLHjaVgTyhJ3R52U6JxS6w3Q==",
+    "System.Security.AccessControl/6.0.1": "IQ4NXP/B3Ayzvw0rDQzVTYsCKyy0Jp9KI6aYcK7UnGVlR9+Awz++TIPCQtPYfLJfOpm8ajowMR09V7quD3sEHw==",
+    "System.Security.Cryptography.ProtectedData/4.5.0": "wLBKzFnDCxP12VL9ANydSYhk59fC4cvOr9ypYQLPnAj48NQIhqnjdD2yhP8yEKyBJEjERWS9DisKL7rX5eU25Q==",
+    "xunit.analyzers/2.0.0": "2UtauxWDa9C6bT7MvFfZkNoFulfflb00jnDU2xeVO9Y58l4Ah2Mv/HiMs4b0zdpK/SfAxpajkgKNMN8zBKa+7Q==",
+    "xunit.v3.assert/4.0.0": "QxYfC+98lCMe7Kl9iWDUeUn+gmiPJ2Sz/r+trSdp1mvKyDMXj8S1kYdfkFNJSHyUSQ6KWomenSDgfWhGpR8zEQ==",
+    "xunit.v3.common/4.0.0": "cjaNGmOVA5QJxcp6uuSsDhbt0lNmxezFo226mbYOuXm9E9Owq8bYTKxa9wnAMZRnbvyCmCYhAvc/+UAzf0M2vA==",
+    "xunit.v3.core.mtp-v2/4.0.0": "2I7apws+6HPz5aYi4choAn7c8P4jPAvwbfAtLSy0JPH89oeY/z1Zqz65Cm3HJmput5l56Z1sJOinTxsAQmbyWQ==",
+    "xunit.v3.extensibility.core/4.0.0": "+tTe9VX2vwrUHGI48FE4ly956Ry084wPH4I/7g5D36AkAMGjQRZZDVz8eH2GwX/CLS9PDQRSca534WyrAYsyzw==",
+    "xunit.v3.mtp-v2/4.0.0": "svYjct2c3VbLyUSB2r9VWiIkYwemwXHhOgIVAor8RvupcZBFcdiGdmq8G519ZCu30yjPCr0EP3Hy4mvgEXcXpQ==",
+    "xunit.v3.runner.common/4.0.0": "1IEIAVRgnPo9nihd9D0TvxxsLKVRySa+K0wLy/m0SJ4RMdveRCUj/mICFboruO+ILUJ10fUfCCyp7MC5/y7cGw==",
+    "xunit.v3.runner.inproc.console/4.0.0": "Sp5AALIlZUf2U5pEt2LHs+ebn18eAPSFnXEouJTltLez5p+NQvBm7kzsKSkZOM6iyoS6nuN/wKdsJt2LvixjsQ=="
+  },
+  "raw_read": "Entire restore stdout/stderr/oneactualgenerated lock diff personallyread; source/project/lock/assets graph andcachedmetadata mechanicallychecked, no sourcebodyreadcredit.",
+  "limits": "Actualunlockedrestore graph only; no compiler/native/runtimeproof. Nuget metadata contentHash not raw signednupkgSHA512 or signaturetrust. LockedRestore andsourceboundnative next."
+}

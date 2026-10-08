@@ -1,0 +1,10 @@
+{
+  "kind": "TODO_RECONCILIATION_FREEZE",
+  "baseline": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "file": "TODO.md",
+  "sha256": "d86e206a909e13ef3ccf77a8ffac30f99b0a7f2efb4dd07f78f740be9804ab90",
+  "patch_sha256": "be7d3abdcd982b554b5d066df96136384e2fcc5699eec74fd8d5a6fb4e6dcb3b",
+  "predecessor": "TODO_FREEZE_R1.json",
+  "closed_deferred_items": 0,
+  "runtime_acceptance": false
+}

@@ -1,0 +1,7 @@
+{
+  "kind": "ROOT_SOURCE_LINE_COUNT_ERRATUM_R2",
+  "source": "PipeContextTimeProviderExtensions.cs",
+  "sha256": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206",
+  "actual_lines": 48,
+  "correction": "Rootmessage55 was estimated; actualwhole48body displayed andread, no bytes/source semantics altered; original messages/receipts preserved."
+}

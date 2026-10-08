@@ -1,0 +1,16 @@
+{
+  "kind": "ROOT_BOUNDED_PROFILE_FORWARDING_ENTRY_ACCEPTANCE",
+  "status": "ACCEPTED_FOR_RABBITMQ_AND_MSSQL_NATIVE_EXPERIMENTS",
+  "python_projection_contracts": {
+    "total": 7,
+    "passed": 7,
+    "failed": 0,
+    "exit_code": 0
+  },
+  "unchanged_lifetime_owner": "local_colima_forwarding.py SHAed76a7; prior17 actual process/listener contracts and R4 independent review retained",
+  "independent_review_sha256": "f83a5b4d9988b4e6472152883e389296ceee5759fdc0bd0bdd43fd28f4f874a9",
+  "frozen_source_sha256": "16e3d48f8e6c7fe225e9af5c56b6891bd1ececb453cb090cc2d8a2f535d9e654",
+  "canonical_runner_change": false,
+  "native_profile_result": "NOT_EXECUTED",
+  "main_ownership_and_delegation": "Separately complete source reviewed; future native profile will exercise real valid main handover, SSH and child integration."
+}

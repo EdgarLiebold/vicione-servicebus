@@ -1,0 +1,11 @@
+{
+  "kind": "ROOT_EIGHT_ORIGINAL_R2_PREFLIGHT_SEAL",
+  "gate_sha256": "f95185b261bd016fba53059229b715e1faa457bb457d30850d2a346004497387",
+  "driver_sha256": "c166272746d0e10aa8aab41403750dfe50cb6807e489e65e72db7293c05fcdef",
+  "wrapper_sha256": "22bae5a6e5f28d8f47bf35fcf53c2a71f59401eb3ceeca6249de6f22135eb957",
+  "input_sha256": "0a69f12a4b9d7e2ab6e65f2dcdc3d0b25e133c4315b7c653f458792f0db2de22",
+  "peer_sha256": "f23b30bf7f4fa67efa8bc118a7afcd3697731c69d6a0e0adc3656b76bd073acb",
+  "Root_whole_source_and_report_read": true,
+  "edits_only_peer_fields": true,
+  "limits": "Operational sourceoriginal only, namespacefixturefix; ordinaryRED retained; producedconsumer artifactsarchive beforefuturebuild; no causality/globalclosure."
+}

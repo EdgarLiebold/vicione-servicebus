@@ -1,0 +1,43 @@
+{
+  "kind": "ROOT_HISTORICAL_DOCUMENTATION_SUFFIX_HASH_SCOPE_RECONCILIATION_R1",
+  "prior_R20_peer_sha256": "699e578fe33ce43c58b1c55b87d3ab54088daaf7fe919639a4cf5c69f46f06b2",
+  "rows": [
+    {
+      "path": "CHANGELOG.md",
+      "anchor": "## Unreleased \u2014 API review completion, 6 October 2026",
+      "old_R20_hash_scope": "Bytes strictly after heading text, including following newline",
+      "old_R20_sha256": "4f866cfac66ce8c17e1dfe4ebacbe35d2b0fd9a342e7ff1d9ba5933d5cbf2563",
+      "current_R21_hash_scope": "Heading-inclusive raw UTF8 suffix",
+      "current_R21_sha256": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+      "R19_R20_R21_full_heading_inclusive_suffix_byte_exact": true
+    },
+    {
+      "path": ".testagent/status.md",
+      "anchor": "## Historical checkpoints",
+      "old_R20_hash_scope": "Bytes strictly after heading text, including following newline",
+      "old_R20_sha256": "49895515e913d670f8ea946b8157aa68e17baef60d431fff20b9ed0be8ce79c7",
+      "current_R21_hash_scope": "Heading-inclusive raw UTF8 suffix",
+      "current_R21_sha256": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+      "R19_R20_R21_full_heading_inclusive_suffix_byte_exact": true
+    },
+    {
+      "path": ".testagent/plan.md",
+      "anchor": "## Historical API repair execution notes",
+      "old_R20_hash_scope": "Bytes strictly after heading text, including following newline",
+      "old_R20_sha256": "d4df1e52fff3449d8f395d1610ee3c250232f082f85f56daf1f65f3349b93f07",
+      "current_R21_hash_scope": "Heading-inclusive raw UTF8 suffix",
+      "current_R21_sha256": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+      "R19_R20_R21_full_heading_inclusive_suffix_byte_exact": true
+    },
+    {
+      "path": "docs/quality-status.md",
+      "anchor": "## Historical product-wide coverage and CRAP checkpoint",
+      "old_R20_hash_scope": "Bytes strictly after heading text, including following newline",
+      "old_R20_sha256": "32ee0890dcefc7c3a6d126af6eafbde9784ac976546d0ec1c0f43a231dc70c54",
+      "current_R21_hash_scope": "Heading-inclusive raw UTF8 suffix",
+      "current_R21_sha256": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5",
+      "R19_R20_R21_full_heading_inclusive_suffix_byte_exact": true
+    }
+  ],
+  "disposition": "No data mismatch or source defect: allfour old hashes match same suffix excluding heading text; R21 rawhashes include heading. Full rawtails independentlybyteequal across R19,R20,R21. Historical reports and docs not rewritten."
+}

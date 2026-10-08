@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:a3dc57bfb62f922a6b82fab8ebb7e31d78ae8d0a666bedc813a9ec6000c119e5",
+  "claims": [
+    {
+      "id": "claim_51a2aed5ea594b88b5620ce5e20bb0ba",
+      "statement": "DI registration places bus composition validators before the shared runtime hosted service.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+          "version": "repo-file-v1:sha256:80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+        }
+      ]
+    },
+    {
+      "id": "claim_8b7a5ed976c748d2a292723e7e7153b0",
+      "statement": "The hosted service supports awaited or observed-background startup, serializes lifecycle and disallows restart after stopping begins.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+          "version": "repo-file-v1:sha256:fe1c535c4f61e3bfafed00960937f8e7ee4dde065662cc63fd156099ddc2af14"
+        }
+      ]
+    },
+    {
+      "id": "claim_bcdf3ff6e8a6466c80526f7b3126751e",
+      "statement": "Bus composition requires one transport and one message-limit owner and checks reliable store and dispatcher ownership.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+          "version": "repo-file-v1:sha256:e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

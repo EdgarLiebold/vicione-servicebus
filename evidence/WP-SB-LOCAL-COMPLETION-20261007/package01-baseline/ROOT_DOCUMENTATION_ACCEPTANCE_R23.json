@@ -1,0 +1,9 @@
+{
+  "kind": "ROOT_DOCUMENTATION_PUBLICATION_ACCEPTANCE_R23",
+  "published_freeze_sha256": "e2f122e366e47235762135a82f3475e3b48901c9f5c48f2c04601b1ab9fd7ebd",
+  "review_sha256": "9f186b30247de6c0a509119bec537a52e8f42d8e4b68b3bcf1adb78b823816d3",
+  "root_personal_read": "Own previous6R22wholebody verifiedmatchedsha reuse; all6 complete losslessdeltas plusPOdelta andpriorwholePO45+7newlines personallyread. CurrentfrozenSTATEhash/scalar234verified, not234findingbodyrecount. Peer ownwholelocalplan/PO52 independent proof.",
+  "canonical_six_docs_match_reviewed": true,
+  "canonical_op_report_match_reviewed": true,
+  "limits": "Docs publication boundedCacheclaims; no allremainingwork/globalA+/remotecommitpush/release acceptance."
+}

@@ -1,0 +1,54 @@
+{
+  "kind": "P06_CACHE_PRIVATE_PENDING_R4_TERMINAL_OUTCOME_ORACLE_ADVERSARIAL_REVIEW_R1",
+  "status": "NO_BLOCK_BOUNDED_TERMINAL_FAULT_ORACLE_SUCCESSOR_FIXED_NATIVE_REPLAY_PENDING",
+  "inputs": {
+    "/private/tmp/ResourceCachePendingComparerIsolationTests.draft-r3.cs": "46a07426260b5338bb690862efcafc21f9d1c751d27afeeee67a091f70034b2f",
+    "/private/tmp/ResourceCachePendingComparerIsolationTests.draft-r4.cs": "fd3f1172f759ff7e7531e2d52da73efb570ce72af1db44bbc55479b4aa31e2a6",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs": "46a07426260b5338bb690862efcafc21f9d1c751d27afeeee67a091f70034b2f",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "b1cba734eaa3752541dd6dce522af0b35924b909930609ca17e5676425692750",
+    "/private/tmp/CoreRequirements.cache-proposed-r4.json": "b1cba734eaa3752541dd6dce522af0b35924b909930609ca17e5676425692750",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-original-r4-native-artifact-adversarial-r1.json": "6e153d02d57f667a59fa3219cf216c18d51db52fed5efc3fbb9ca59d21cb8ee1",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-product-r2-lazylookup-adversarial-r1.json": "86670780355d9b2ad61da838fc3b888a882d59b4a9627d28ad9f5d8b4789ccd0",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs": "45bb92aea5df9ed96396604d8ef2b63afc888537ca4f49815f05ea734af41a6a",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs": "a77ab4864f0e44b8692c308371817a831f0a231a40aec57ebcbba7793d7b65d1"
+  },
+  "checks": {
+    "R4_exact250_fd3f": true,
+    "R3_exact249_46a0_currentcanonical_unchanged": true,
+    "sole_move_insert9_delete8_reconstruction_equal": true,
+    "capture_terminal_guard_before_physical_no_nonterminal_await": true,
+    "capture_same_outcome_record_no_oracle_before_physical": true,
+    "validatedstrand_exact_guard_skips_productjoin_unchanged": true,
+    "all2case_attrs_req4719_purposes_unchanged": true,
+    "process_launcher_nonce_runtime7_drain_marker_unchanged": true,
+    "synchronous_fixture_factory_and_resource_disposal_no_timerAdvance_observerConnect": true,
+    "cleanup_observes_exact_recorded_reference_and_stops_actualcache": true,
+    "source_fault_completion_identity_public_request_context": true,
+    "prior_original30_and_D2_reviews_exact_bound_only": true
+  },
+  "findings": [],
+  "exact_delta": {
+    "inserted_lines": 9,
+    "deleted_lines": 8,
+    "line_count_change": 1,
+    "reconstructs_R3_exactly": true,
+    "terminal_capture_before_physical": "            Exception? captured = null;\n            if (request.IsCompleted)\n            {\n                // Observe an already terminal source outcome before assertions, so cleanup\n                // cannot replace a later physical-ownership failure with that known outcome.\n                try { await request.WaitAsync(Bound, TestContext.Current.CancellationToken); }\n                catch (Exception failure) when (request.IsCompleted && failure is not TimeoutException)\n                { observedFailures[request] = failure; captured = failure; }\n            }\n"
+  },
+  "oracle_and_cleanup_analysis": [
+    "An already terminal request is observed through the existing bounded WaitAsync and actual test token before physical assertions. Its exact thrown terminal exception instance is stored in observedFailures and captured. This changes observation order, not cache operation or expected source outcome.",
+    "Physical factoryCalls/Returns, candidate Dispose1, Pending0 and request.IsCompleted remain before chosen source Same assertion. Therefore rejected-disposal mutation with completed source failure preserves its physical Dispose assertion as first red; source Same beyond that red earns no native oracle credit.",
+    "ObserveAllAsync awaits the same terminal request with CancellationToken.None and suppresses only the same recorded reference. The known chosen InvalidOperationException cannot replace a later physical Xunit assertion through ordinary finally. Other failures and Timeout guards still propagate/exclude causality.",
+    "The original persistent corruption request is nonterminal and fails the captured guard; it is never awaited before the validated pending1/throws>=2/nonterminal finite-state branch. Only that validated branch omits impossible request/slot/cache joins; process join is separate and unchanged.",
+    "Synchronous assumption is narrow and explicit: factory ValueTask.FromResult, Owned.DisposeAsync CompletedTask, no connected observers or fake-timer advancement; current CompleteCreation uses no independent task scheduling before the completed-factory/source-fault path. Terminal completion occurs before request.AsTask returns in these controlled healthy/corrected/rejected-disposal routes.",
+    "Healthy success captures null, retains same candidate reference and later joins remove/replacement/cache stop. Hostile corrected success captures exact chosen comparer failure, proves zero live/pending state and later Same after physical state; reference is not fabricated or reconstructed.",
+    "Parent launcher/nonce/depth/exactcase/runtime7before-after/streams/processjoin45s/marker/native summary checks and both Requirement mappings remain unchanged. No new source/test case, process owner or broad cleanup catch."
+  ],
+  "limits": [
+    "This is a static oracle robustness correction, not an actual native mutation kill or repeated fixed30 evidence. Native source/test/PDB/resource bindings must be refreshed after applying R4.",
+    "Does not guarantee primary-assert preservation for arbitrary asynchronous factories, asynchronous resource disposers, new blocked observer routes or deliberately new nonterminal mutants; those would require their own task-ownership/capture policy and actual first-failure qualification.",
+    "Captured identity asserted only after physical/pending/terminal guards; no Same/token/origin credit beyond a native first failed assertion.",
+    "Original R3 archived native30 evidence remains historical and valid under its exact frozen fixture; never relabelled R4.",
+    "No source/test/proposal changes or .NET/provider/Docker/SQLite/process execution; internal read-only review, no external Product role."
+  ]
+}

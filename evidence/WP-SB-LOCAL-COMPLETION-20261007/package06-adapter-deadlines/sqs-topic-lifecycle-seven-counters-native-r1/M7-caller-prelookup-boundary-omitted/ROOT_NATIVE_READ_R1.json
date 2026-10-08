@@ -1,0 +1,15 @@
+{
+  "kind": "ROOT_ACTUAL_COUNTER_NATIVE_FIRST_FINITE_READ_R1",
+  "variant": "M7-caller-prelookup-boundary-omitted",
+  "native_result_sha256": "87c9996246e3b3b58ed1b8be18923f33e35c3c653d29f65d4cd6cbfba00ee8d6",
+  "physical_receipt_sha256": "444ca6c41c1fb8626f3839aa23269af83cd768db8258d93c20b5d189d60c039a",
+  "actual": {
+    "total": 11,
+    "passed": 9,
+    "failed": 2,
+    "skipped": 0
+  },
+  "first_finite": "PreCanceledEqual208 expected0lookupactual1; cancel-after-staleIsAssignable233 expectedOCEactualObjectDisposedException. Lower209..210/234..236unreached0credit.",
+  "personally_read": "Entire11actualnative/error/summaryblocks+strictbuildbody; exactfixture487 andonecause source diff previouslywhole. raw6CRC2verified.",
+  "limits": "Firstfiniteonly,same11repeated. Sourceomissionexposesprelookupboundary, notrealcloud cancellationrace."
+}

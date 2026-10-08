@@ -58,3 +58,8 @@ sw.*
 # run and is written below ignored artifacts/. These patterns are repository hygiene, not a second
 # test verdict or a substitute for review of staged files.
 *.trx
+
+# Raw local review workspaces are retained in hash-verified remote checkpoint archives.
+# Accepted entry-point receipts are explicitly tracked; archive manifests cover ignored files.
+/evidence/WP-SB-LOCAL-COMPLETION-20261007/
+/evidence/SERVICEBUS_API_REVIEW_AND_REPAIR/

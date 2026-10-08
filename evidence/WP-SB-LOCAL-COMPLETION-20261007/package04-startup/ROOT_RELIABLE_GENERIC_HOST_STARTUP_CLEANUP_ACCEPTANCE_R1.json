@@ -1,0 +1,114 @@
+{
+  "kind": "ROOT_BOUNDED_RELIABLE_GENERIC_HOST_STARTUP_CLEANUP_ACCEPTANCE_R1",
+  "disposition": "ACCEPTED_EXACT_FOUR_CANONICAL_FILES",
+  "closed_findings": [
+    {
+      "id": "RELIABLE-HOST-STARTUP-CLEANUP-01",
+      "severity": "Medium",
+      "cause": "Optional public DI constructor resolved frozen policy and options before GenericHost retained hosted-service list; invalid selected options caused secondary Stop Reverse(null).",
+      "correction": "Defer DI policy lookup until runtime RequirePolicy; retain registered startup validation and internal explicit-policy construction."
+    },
+    {
+      "id": "RELIABLE_EXISTING_STATIC_STARTUP_TEST_BOUNDARY_01",
+      "severity": "Warning/test-quality",
+      "cause": "Existing unit theory relied on incidental options resolution during service enumeration and caught its own assertion failure.",
+      "correction": "Explicit registered IStartupValidator phase before composition enumeration; exact options/composition type, closedowner, name and full typed diagnostic assertions outside the captured product action."
+    }
+  ],
+  "canonical_rows": [
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "canonical_before_sha256": "73be8ecd089c5574b404294ee711c4e1dc72f6b44459083a8de484055a10b13a",
+      "candidate_sha256": "5054c4236c84a80c9a7ba3c06fbeee59a2c92ae7988fa7d817c5f265826d6140"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+      "canonical_before_sha256": null,
+      "candidate_sha256": "0cc7f11efd399ace2e91303f3f866a2b372e27309fe800158edf3addf03efda4"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
+      "canonical_before_sha256": "28abbdaeccc928891ad98e34c4dafe0f7cb8b2c366b4b9b7964b90a59e3ad97a",
+      "candidate_sha256": "375f7bfa7809faabd4bd1697fd6330e3800932453365312045df2ca68e1cb600"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "canonical_before_sha256": "a4d0f99c1d388a4ef1afea6d3bd55ea5990f13f63f354d8eaa8d7d9d69596357",
+      "candidate_sha256": "e15c10362be7938ac1453fbb86fb0c06b01d0448dc0e23ef71c43786bdb8193f"
+    }
+  ],
+  "actual_cases": {
+    "new_host_facts": 3,
+    "existing_theory_slots": 10,
+    "focused": 13,
+    "whole_core": 8209,
+    "failed": 0,
+    "skipped": 0
+  },
+  "original_same_R2_fixture": {
+    "total": 3,
+    "failed": 2,
+    "healthy": 1
+  },
+  "historical_first_whole": {
+    "total": 8209,
+    "passed": 8204,
+    "legacy_test_boundary_failed": 5,
+    "retained": true
+  },
+  "counters": {
+    "variants": 5,
+    "product_variants": 4,
+    "test_quality_variants": 1,
+    "repeated_same13_slots": 65,
+    "first_finite_failures": 15,
+    "healthy_controls": 50
+  },
+  "post": {
+    "focused_pass": 13,
+    "strict_warnings": 0,
+    "strict_errors": 0,
+    "exact17_runtime_restored": true
+  },
+  "evidence": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/reliable-generic-host-original-three-native-r2/RESULT.json",
+      "sha256": "de1516ec95f7322130b2edf9fa2062f32067eb340d623bd307215eda369cd8f4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/reliable-generic-host-fixed-thirteen-native-r1/RESULT.json",
+      "sha256": "0b19510a284de83a69390b0ce4e4f5602e24b31e56ad5efe53ed1d4461412ff7"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/reliable-generic-host-whole-core-native-r2/RESULT.json",
+      "sha256": "26f33d78e06e5f14d683e2215ffce5af5f9a4a30cdde9f672137fd900692d63c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_RELIABLE_FIVE_COUNTERPROOFS_FINITE_CAUSE_LEDGER_R1.json",
+      "sha256": "686aa5fdd63367b019dbdd85161a20a0927abb6c594e18d891a9672573cc4bc0"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/reliable-generic-host-restored-post-thirteen-native-r1/RESULT.json",
+      "sha256": "5ec645f91ba6b3552500f50a608e001e149b3b2a27c7ba5c14f57c712b6edd7b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/reliable-generic-host-restored-post-thirteen-native-r1/ROOT_EXACT_FIXED13_IMAGE_SOURCE_PHYSICAL_REUSE_R1.json",
+      "sha256": "ffb1d6f6f21232686c30d8ee378f36261dbd20fa84ac38061d36c020f8a83769"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_RELIABLE_GENERIC_HOST_CANONICAL_FOUR_FILE_APPLICATION_R1.json",
+      "sha256": "30b470c037dea9e2512d15e989b5ed796a7dd3fa967c72c50e13d0654406450d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-reliable-canonical-four-file-afterapply-adversarial-r1.json",
+      "sha256": "b7811159e5519fda8bcc208420b0770a6b3836d63ab1410dfa55445a1f83b268"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-reliable-five-mutants-post-thirteen-canonical-four-gate-adversarial-r1.json",
+      "sha256": "ce391b05f128dc20fb7cf5b587cd9edf80e0918e4817c8d6c2e172ce966e7bac"
+    }
+  ],
+  "frozen_state_sha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+  "root_review": "Whole193 product/whole343 fixture and whole lossless existingmethod change owned at exact hashes. All65 native bodies/buildlogs/finite-first oracles and restored13 personally read; root fresh60PE/19050 checksum parse plus exact17post reuse. Independent source, peractualimage all4730METHOD/resource/35refs, native/post/canonical/afterapply accepted. No borrowed peer human read credit.",
+  "limits": "Bounded selected defaultNaN/typedzeroPoll, normal two-bus nonce/lifecycle/ownedworkerjoin/unusedpoison only. No durable persisted-record delivery/recovery, all startup/partialstart/concurrent lifecycle, fullcurrentUnit/provider, currentcoverage/CRAP, globalpackedAPI, globalA+/release, hardware/cloud or newremotecommit claim. Frozen234 audit unchanged; this continuation finding remains separate. Original red/firstWholeRED histories preserved."
+}

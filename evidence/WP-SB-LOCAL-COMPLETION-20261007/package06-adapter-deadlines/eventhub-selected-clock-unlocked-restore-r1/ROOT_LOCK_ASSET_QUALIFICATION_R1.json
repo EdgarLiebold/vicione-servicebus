@@ -1,0 +1,29 @@
+{
+  "kind": "ROOT_ACTUAL_EVENTHUB_TEST_SINGLE_DIRECT_FAKE_CLOCK_LOCK_AND_ELEVEN_ASSETS_QUALIFICATION_R1",
+  "restore_sha256": "90c43f5fa311a949d42cddc3e7fabb3b313fce94a58c672da4d766c8e90732a5",
+  "inputs_sha256": "d9925321e563010fcd28eadecf2b1ca6323177cdc2191c65af010d9107fbe523",
+  "actual_sdk_pid": 69636,
+  "joined": true,
+  "old_lock_sha256": "ddca799ea3d91af9c6447df3f3e766d78be38b7586d660c7f58c45e7a30ed361",
+  "generated_lock_sha256": "867dc383dfd15437809d479308c98be9182b05030749cd47520721a23d78dd9b",
+  "single_added_package": {
+    "name": "Microsoft.Extensions.TimeProvider.Testing",
+    "tfm": "net10.0",
+    "type": "Direct",
+    "requested": "[10.9.0, )",
+    "resolved": "10.9.0",
+    "contentHash": "0If8xc915BgRpYmKB9tOOOprvHMt8Tue6kiD8ARgVf8Ok6PNUxkJScKT7QUp7+RllR4RN2DNACgaxioy9BJxeQ=="
+  },
+  "all_preexisting_lock_objects_direct_equal": true,
+  "asset_count": 11,
+  "assets_archive_live_direct_equal": true,
+  "actual_eventhub_sdk_versions": [
+    "Azure.Messaging.EventHubs.Processor/5.12.2",
+    "Azure.Messaging.EventHubs/5.12.2"
+  ],
+  "hosting_abstractions": "10.0.12",
+  "configs15_equal": true,
+  "raw3_hash_and_one_closed_gzip_crc": true,
+  "personal_read": "Whole13line lock diff and small actual result fields read. Full before/after lock JSON objects and assets package graph mechanically validated; no new human wholeasset/lock reading or semantic binlog claim.",
+  "limits": "Restore-only qualification. Independent actual lock review and final native gate remain required before build/test; no product finding/canonical change/physical/API/cloud credit."
+}

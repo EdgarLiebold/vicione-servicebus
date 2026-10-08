@@ -1,0 +1,43 @@
+{
+  "kind": "ROOT_EXCLUDED_RESTORE_BINLOG_DIAGNOSIS_R1",
+  "tool_session": 98501,
+  "root_driver_joined_exit": 1,
+  "stage": {
+    "command": [
+      "dotnet",
+      "restore",
+      "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "--locked-mode",
+      "-nodeReuse:false",
+      "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-original-native-r1/locked-restore-r1-{}.binlog"
+    ],
+    "joined": true,
+    "budget_seconds": 300,
+    "pid": 84720,
+    "process_group": 84720,
+    "group_absent": true,
+    "returncode": 1,
+    "deadline_exceeded": false,
+    "seconds": 184.96052643500002,
+    "raw_sha256": {
+      "locked-restore.stdout.log": "657deb1096ef32e81234399a2d709077b54eae178d29de284d1b76adf90bab15",
+      "locked-restore.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "locked-restore-r1-20261008-082706--84720--eDKubX.binlog": "53a6d9afe85b06353a65895230b9b0f1ed2c09f364b60ab5b6dce98467a952bf"
+    }
+  },
+  "binlog_crc_verified": true,
+  "semantic_replay": {
+    "joined_exit": 0,
+    "full_log_sha256": "cb6f1e625de99537013f7144e46a54086a60c76ddcb49fb26198ce297a8483fa",
+    "errors_log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "error_log_empty": true,
+    "failed_targets": [
+      "_GenerateRestoreProjectPathWalk",
+      "_GetAllRestoreProjectPathItems"
+    ],
+    "reported_errors": 0,
+    "reported_warnings": 0
+  },
+  "inference": "Failed parallel restore project walk before NuGet graph. Default sandbox ps also denied; process/IPC restriction suspected, not proven. Retry same inputs/commands with execution permission and new output paths.",
+  "limits": "No compiler/discovery/native/product failure credit. MSB4276 SDK resolver diagnostic is not an accepted root cause; closed input/raw logs retained."
+}

@@ -1,0 +1,556 @@
+{
+  "status": "READ_ONLY_C3_BOUNDED_RESEARCH_COMPLETE__NO_NATIVE_C3_CREDIT_OR_PRODUCT_CHANGE",
+  "reviewer": "/root/telemetry_adversarial",
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_TELEMETRY57_COMPLETE_SOURCE_READ_R1.json": "87c47890f03ff587088d3a13d6b17fcefdc2234b9ab0bde6e420b15c39cf9e72",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE805_STAGE_C2_READ_CLOSURE_R1.json": "c17b0e732d723f904ff05a9562615d15ac96e67ddd59c46f917ce2b184435d69",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C2_FREEZE_R1.json": "983ead8fea14aa633138bb87bd31a34d33888aae2104c58dbe3950c7e4b42cf5",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C2_PATCH_R1.diff": "3e74348fa168147648e2e1108da49f3a760efbd36ed64d88c080674772b52aa2",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C1_ACCEPTANCE_R1.json": "184d9ad51f24761fc5ab42a48225cbbedf8d91a21888cbbba5fe92b7c8685af1"
+  },
+  "source_inventory": [
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "sha256": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+      "lines": 191,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "sha256": "551075235d378635bc7a9ffc7729cc9b348cd1b7b1b53fd662bf9bd7452ccb2f",
+      "lines": 194,
+      "Root_read_reuse_basis": "ROOT57_EXACT_PRIOR_FULL_OWNER"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "sha256": "158dceacfcfe2a05effc59b02c79efa67e6664a02fd80bad29ecb00715d96ba8",
+      "lines": 84,
+      "Root_read_reuse_basis": "ROOT57_EXACT_PRIOR_FULL_OWNER"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "sha256": "0658c31e41c2cc96aeae7f33948a046b49189c263580df97a1fe71414594dcb9",
+      "lines": 202,
+      "Root_read_reuse_basis": "ROOT57_EXACT_PRIOR_FULL_OWNER"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs",
+      "sha256": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21",
+      "lines": 134,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+      "sha256": "8a01e6f31430b513cea4f35072778ae70a3927d7e71eb6837fc858d9bd2c6404",
+      "lines": 65,
+      "Root_read_reuse_basis": "CURRENT_C2_FIXED_PRODUCT_READ_ATTESTATION_PENDING_NATIVE_ACCEPTANCE"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingProviderGuard.cs",
+      "sha256": "0c3a96b9115fef19f138533be24b111265b66508d03998d7ea4d808f34fb9b4d",
+      "lines": 128,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.cs",
+      "sha256": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc",
+      "lines": 127,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Outbox.cs",
+      "sha256": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72",
+      "lines": 320,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "18bcafb43ebe38b70e004864d7efd2e997426f180d29967402d4b754df808302",
+      "lines": 561,
+      "Root_read_reuse_basis": "CURRENT_C2_FIXED_PRODUCT_READ_ATTESTATION_PENDING_NATIVE_ACCEPTANCE"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/SafeActivityScope.cs",
+      "sha256": "542b4841562b4445fc89ad0d06ae121633b51375d9ab241378ec0aece767b2eb",
+      "lines": 65,
+      "Root_read_reuse_basis": "ROOT57_EXACT_PRIOR_FULL_OWNER"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/DurableSendDeliveryOutcome.cs",
+      "sha256": "a2e7a8b5e75f9bfad968743804c3666bd50597471f8281bbfa3fa82619660840",
+      "lines": 23,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingPolicy.cs",
+      "sha256": "8641f388275391cc57c72dc9fc9a49b860a3c98edde716ebc6a639a1db82c5a9",
+      "lines": 16,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs",
+      "sha256": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417",
+      "lines": 119,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IOutboxStore.cs",
+      "sha256": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6",
+      "lines": 155,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendDispatcher.cs",
+      "sha256": "47f679ff9cf7564b4bd1a57dcc7ae661f1336a54acf243613173e179c0a18b4c",
+      "lines": 24,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDelivery.cs",
+      "sha256": "4345e43534aa1b6da7753e1723b81cae3067d6e4708edd4fb372012142365e2d",
+      "lines": 46,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchContext.cs",
+      "sha256": "6a9b7e31ae5a53d4321d28b953287f790d0fe1841ebdb9fafd9b9fbf2f24c94f",
+      "lines": 50,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchResult.cs",
+      "sha256": "c893789c5529d7629cc9bdee017221e218285254e63da661597da074d70544a9",
+      "lines": 27,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendCompletionMode.cs",
+      "sha256": "7a14471296d353916f2b2349cfec1aabcaa3a79024451c2a72bfa1ef31d697a3",
+      "lines": 20,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendFailureKind.cs",
+      "sha256": "020874905a000f23311fdc7e7c33613d26ab64013fb3adb75cc6b68d805786b5",
+      "lines": 26,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs",
+      "sha256": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74",
+      "lines": 86,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs",
+      "sha256": "4ff7066cdd86cda1ea8e3890e4e6e437be99c4690192aeae750e392133ac2f96",
+      "lines": 25,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderDeliveryTests.cs",
+      "sha256": "d1a2553111cf63c9d272266a5d2644e76f7060e1e8a34fc7fa7aa9a19e432029",
+      "lines": 874,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs",
+      "sha256": "41c159a7730682a1c30d57d6c7e1c81c430fba11d9a9fb70ff827df85c7fb8ee",
+      "lines": 102,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY"
+    },
+    {
+      "path": "tests/Directory.Build.props",
+      "sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8",
+      "lines": 51,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21",
+      "lines": 46,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+      "sha256": "f79459b8d6dc2fd119935f425fa0284caa4592a8cb04fb79fd2e732d8db76f2d",
+      "lines": 14,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY"
+    }
+  ],
+  "typed_delivery_exact_callers": [
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "line": 21,
+      "source": "_instrumentation.RecordDurableDelivery("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "line": 39,
+      "source": "_instrumentation.RecordDurableDelivery("
+    }
+  ],
+  "all_delivery_observation_entry_inventory": [
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 44,
+      "source": "RecordCanceled(activity, started);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 66,
+      "source": "RecordOutcome(activity, DurableSendDeliveryOutcome.Delivered, failureKind: null, started);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 82,
+      "source": "RecordOutcome("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 104,
+      "source": "RecordOutcome(activity, DurableSendDeliveryOutcome.Delivered, failureKind: null, started);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 109,
+      "source": "RecordOutcome("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 122,
+      "source": "RecordCanceled(activity, started);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 127,
+      "source": "RecordStatePersistenceFailure("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 156,
+      "source": "RecordOutcome(activity, DurableSendDeliveryOutcome.Delivered, failureKind: null, started);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 162,
+      "source": "RecordCanceled(activity, started);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 167,
+      "source": "RecordStatePersistenceFailure("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 180,
+      "source": "RecordOutcome("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "line": 12,
+      "source": "void RecordOutcome("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "line": 21,
+      "source": "_instrumentation.RecordDurableDelivery("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "line": 27,
+      "source": "void RecordCanceled(SafeActivityScope activity, long started)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "line": 28,
+      "source": "=> RecordOutcome(activity, DurableSendDeliveryOutcome.Canceled, failureKind: null, started);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "line": 30,
+      "source": "void RecordStatePersistenceFailure("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "line": 39,
+      "source": "_instrumentation.RecordDurableDelivery("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "line": 24,
+      "source": "RecordOutcome(activity, outcome.Outcome, outcome.FailureKind, started);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "line": 28,
+      "source": "RecordCanceled(activity, started);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "line": 33,
+      "source": "RecordStatePersistenceFailure("
+    }
+  ],
+  "UTC_policy_inventory": [
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "line": 91,
+      "policy": "REQUIRED_CLAIM_OR_STATE_TIMESTAMP_UNCHANGED",
+      "source": "DateTimeOffset now = _timeProvider.GetUtcNow();"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "line": 128,
+      "policy": "SEPARATE_OBSERVATIONAL_SNAPSHOT_CADENCE_PREPARATION_OUTSIDE_C3",
+      "source": "await RefreshTelemetrySnapshotIfDueAsync(_timeProvider.GetUtcNow(), cancellationToken).ConfigureAwait(false);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 62,
+      "policy": "REQUIRED_CLAIM_OR_STATE_TIMESTAMP_UNCHANGED",
+      "source": "_timeProvider.GetUtcNow(),"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 71,
+      "policy": "REQUIRED_CLAIM_OR_STATE_TIMESTAMP_UNCHANGED",
+      "source": "DateTimeOffset dispatchedAt = _timeProvider.GetUtcNow();"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 99,
+      "policy": "REQUIRED_CLAIM_OR_STATE_TIMESTAMP_UNCHANGED",
+      "source": "_timeProvider.GetUtcNow(),"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 151,
+      "policy": "REQUIRED_CLAIM_OR_STATE_TIMESTAMP_UNCHANGED",
+      "source": "_timeProvider.GetUtcNow(),"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "line": 48,
+      "policy": "REQUIRED_CLAIM_OR_STATE_TIMESTAMP_UNCHANGED",
+      "source": "DateTimeOffset now = _timeProvider.GetUtcNow();"
+    }
+  ],
+  "ranked_candidates": [
+    {
+      "rank": 1,
+      "owner": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 13,
+      "candidate": "Initial diagnostic timestamp GetTimestamp escapes before Activity/completioncapability/real dispatch, after authoritative claim has already leased record. It can strand eligible work until lease replay.",
+      "causal_test": "Healthy UTC always; arm only first subsequent GetTimestamp throw, later captures healthy. Direct real driver delivery original must fail before Dispatch; fix must perform real required dispatch/store outcome. Isolate completioncapability second timestamp owner, already separately corrected by C2."
+    },
+    {
+      "rank": 2,
+      "owner": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "lines": [
+        24,
+        42
+      ],
+      "candidate": "Elapsed expression evaluated before entering typed instrumentation catch. Can turn committed delivery into false state persistence failure, replace real persistence exception or replace caller cancellation.",
+      "causal_test": "Healthy GetTimestamp/UTC and Fake clock progression; throwing TimestampFrequency solely during diagnostic elapsed keeps initial captures/required store timestamps valid. Observe actual required store outcome/error/token; duration absent but counter/outcome/error schema correct."
+    }
+  ],
+  "minimal_complete_product_policy": {
+    "owners": [
+      "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs"
+    ],
+    "change": "Guard initial diagnostic capture once -> long? started; propagate nullable private start through Delivery timeout, FailureHandling and Telemetry signatures. Guard whole elapsed computation once per observation -> double? seconds (skip if no start); use it in both RecordOutcome and RecordStatePersistenceFailure. Change internal typed RecordDurableDelivery(double) to (double?) so real delivery counter remains, histogram emits only known duration.",
+    "required_constraints": [
+      "No timestamp0 or duration0 fallback for unknown measurement. Preserve valid healthy duration, including any existing zero/negative behavior; do not invent unrelated clamp/schema changes.",
+      "All required Claim/MarkDelivered/AwaitConsumerCompletion/Quarantine/ScheduleRetry GetUtcNow and required awaits remain exactly outside new diagnostic guards. Business classifying/attempt/deadline/lease/store return false races stay unchanged.",
+      "Activity tags/failure and independent delivery counter remain available when duration unknown. No generic try around DeliverAsync or consumerCompletion/store work.",
+      "Keep C2 RecordDurableConsumerCompletion(bool,double?) and C2 capability clock guards unchanged; same internal typed owner is reused but distinct method contract.",
+      "FailureHandling.cs only needs private started parameter nullability, not classification/retry/store timestamp/error flow changes. .cs and Diagnostics.cs are complete read-only context owners."
+    ]
+  },
+  "preferred_bounded_same_fixture": {
+    "optional_matrix": "3 diagnostic modes None/InitialTimestamp/ElapsedFrequency x 6 real outcome scenarios =18 cases in one canonical real driver fixture",
+    "scenarios": [
+      {
+        "id": "TransportAccepted",
+        "expected": "Dispatch1; real MarkDelivered1 at exact healthy UTC, retained0; return true; delivered counter1 no error tag"
+      },
+      {
+        "id": "AwaitConsumerCompletion",
+        "expected": "Dispatch1; real Await1 attempt1/deadline exact UTC+policy, retained1/awaiting1; return true; awaiting counter1 no error tag"
+      },
+      {
+        "id": "ClassifiedTransient",
+        "expected": "Dispatch1 throws exact dispatcher cause; classifier sees same cause; real ScheduleRetry1 with Transient/attempt1/dueAt/failuretype exact, retained1/retry1; return true; retry-scheduled/error transient counter1"
+      },
+      {
+        "id": "ClassifiedPermanent",
+        "expected": "Dispatch1 throws exact dispatcher cause; classifier sees same cause; real Quarantine1 with NonRetryable/attempt1/failuretype exact, retained1/quarantined1; return true; quarantined/error non-retryable counter1"
+      },
+      {
+        "id": "MarkDeliveredFailure",
+        "expected": "Dispatch1; wrapper records actual healthy UTC and fails real MarkDelivered await with chosen persistence exception; Assert.Same chosen exception escapes, inner retained1/lease retained; state-persistence-failed/error durable-state-persistence-failure counter1"
+      },
+      {
+        "id": "DispatchCancellation",
+        "expected": "Dispatch1 cancels owned callerCTS then signals chosen OCE with same token; original OCE-derived terminal cancellation/token preserved, no terminal store transition, inner retained1; canceled counter1 no error tag"
+      }
+    ],
+    "predictions_only": {
+      "original": {
+        "total": 18,
+        "finite_red": 12,
+        "healthy": 6
+      },
+      "fixed": {
+        "total": 18,
+        "pass": 18
+      },
+      "M1_restore_initial_capture_escape_only": {
+        "total": 18,
+        "finite_red": 6,
+        "healthy": 12,
+        "failset": "InitialTimestamp x all6 outcomes"
+      },
+      "M2_remove_elapsed_guard_only": {
+        "total": 18,
+        "finite_red": 6,
+        "healthy": 12,
+        "failset": "ElapsedFrequency x all6 outcomes"
+      },
+      "fixed_post": {
+        "total": 18,
+        "pass": 18
+      }
+    },
+    "ordinary_faults": "Captured specific InvalidOperationException for diagnostic initial/elapsed. Initial mode affects only first subsequent GetTimestamp; Frequency mode getter throws while timestamp values and required UTC are healthy. Monotonic healthy timing advances7 seconds during real dispatcher, known histogram7; unknown duration no sample.",
+    "full_required_assertions": [
+      "Real inner in-memory admission/claim/fenced state, exact id/lease/attempt/body/context, dispatcher/classifier/store call counts, actual state snapshot, independent snapshot token for caller-canceled cases.",
+      "Assert.Null for successful persisted outcomes, Same exact primary persistence exception, OCE-derived terminal exception with exact caller token; dispatcher failure is persisted/classified, not incorrectly expected to escape when persistence succeeds.",
+      "One DurableSenderDelivery counter value1 and exact bounded outcome/error tags with bus dimension on meter. Known duration one7seconds with same tags; unknown empty histogram, no fake0.",
+      "Owned driver not started as BackgroundService; one actual DeliverDueBatchAsync invocation, all awaited tasks finite; no polling/sleeps/timers/private reflection. Listener scoped to driver.MeterScope and disposed before driver-owned instruments/factory."
+    ]
+  },
+  "required_UTC_negative_controls": {
+    "mandatory_if_policy_preservation_is_claimed": "Add controls with healthy diagnostics where UTC failure alone is armed at each required provider entry: Claim, Transport MarkDelivered, AwaitConsumerCompletion deadline, invalid-mode Quarantine, classifiedfailure timestamp, timeoutQuarantine timestamp. Expected exact UTC exception propagation and no corresponding transition; already-dispatched paths retain intent and record state-persistence-failed only when the existing catch does so. Do not convert controls into causal reds.",
+    "claim_control": "First GetUtcNow failure before Claim -> Dispatch0, Claim0, retainedintent1, no delivery metric; exact clock error escapes.",
+    "post_dispatch_control": "Arm required UTC error only after actual dispatch; required call not invoked; exact clock error escapes, intent remains; healthy elapsed counter state-persistence-failed preserved.",
+    "consumer_timeout_setup": "Seed awaiting state through real Admit/Claim/Await APIs with maximumattempt1 and due deadline, or healthy actual first dispatch; then arm desired fault. Never fabricate invalid delivery DTO or call private DeliverAsync."
+  },
+  "additional_runtime_contexts_if_Root_intends_all_caller_context_closure": [
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "contexts": [
+        "PersistTransportFailure successful RecordOutcome, persistence-failure RecordStatePersistenceFailure, caller cancellation RecordCanceled"
+      ],
+      "note": "ClassifiedTransient/Permanent cover success. Add exact store failure/cancellation after classified dispatcher failure to cover remaining two catch owners."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "contexts": [
+        "QuarantineConsumerCompletionTimeout success/failure/cancellation",
+        "post-dispatch state-transition cancellation",
+        "invalid completion mode and real completion-winning false transitions"
+      ],
+      "note": "These are source-read and share guarded observation helper; six preferred outcomes do not separately provide hostile-clock native proof for every such invocation. Add distinct public real-store scenarios if acceptance wording spans all runtime contexts."
+    }
+  ],
+  "Root_extra_fullread_bound_list": [
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "sha256": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+      "lines": 191,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs",
+      "sha256": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21",
+      "lines": 134,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingProviderGuard.cs",
+      "sha256": "0c3a96b9115fef19f138533be24b111265b66508d03998d7ea4d808f34fb9b4d",
+      "lines": 128,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/DurableSendDeliveryOutcome.cs",
+      "sha256": "a2e7a8b5e75f9bfad968743804c3666bd50597471f8281bbfa3fa82619660840",
+      "lines": 23,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingPolicy.cs",
+      "sha256": "8641f388275391cc57c72dc9fc9a49b860a3c98edde716ebc6a639a1db82c5a9",
+      "lines": 16,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs",
+      "sha256": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417",
+      "lines": 119,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendDispatcher.cs",
+      "sha256": "47f679ff9cf7564b4bd1a57dcc7ae661f1336a54acf243613173e179c0a18b4c",
+      "lines": 24,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchContext.cs",
+      "sha256": "6a9b7e31ae5a53d4321d28b953287f790d0fe1841ebdb9fafd9b9fbf2f24c94f",
+      "lines": 50,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchResult.cs",
+      "sha256": "c893789c5529d7629cc9bdee017221e218285254e63da661597da074d70544a9",
+      "lines": 27,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendCompletionMode.cs",
+      "sha256": "7a14471296d353916f2b2349cfec1aabcaa3a79024451c2a72bfa1ef31d697a3",
+      "lines": 20,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendFailureKind.cs",
+      "sha256": "020874905a000f23311fdc7e7c33613d26ab64013fb3adb75cc6b68d805786b5",
+      "lines": 26,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND"
+    }
+  ],
+  "Root_reuse_precision": "Delivery/Telemetry/FailureHandling match exact original Root57 full bodies. Driver/factory/build/shared fixtures match Root805/84 and canonical DurableSenderDeliveryTests874 match Root805. Real in-memory store and IOutboxStore match Root805 extra fullreads. Current C2 typed561/completion65 require C2 corrected read/acceptance binding; no agent reading transfer.",
+  "primary_Runtime_API_confirmation": {
+    "url": "https://github.com/dotnet/runtime/blob/v10.0.0/src/libraries/Common/src/System/TimeProvider.cs",
+    "facts": "GetElapsedTime(start) calls virtual GetTimestamp; elapsed calculation calls virtual TimestampFrequency. This supports a frequency-only diagnostic failure with healthy required UTC and initial timestamp capture.",
+    "version": "Official Microsoft dotnet/runtime v10.0.0 source, not a claim about every deployed runtime patch."
+  },
+  "ambiguities_and_limits": [
+    "Post-store RefreshTelemetrySnapshotIfDueAsync GetUtcNow argument at .cs128 is observational cadence preparation outside existing refresh catch. It can still escape after store success if UTC fails; leave outside this C3 scope and do not claim universal delivery/UTC no-throw. Separate policy/causal work needed.",
+    "C2 corrected current sources already present but native C2 qualification pending at research time; freeze exact accepted C2 baseline before C3 mutation, do not mix original C2 clocks.",
+    "Preferred18 matrix closes six selected real outcomes under two diagnostic phases, not every classifiedfailure kind/race/timeout/error/cancel runtime invocation. Source full correction boundary covers all observation helpers; acceptance must match chosen native cases.",
+    "No initial Capture/elapsed mutation compiled or native C3 test executed; predictions never evidence.",
+    "No .NET/MSBuild/Docker/provider/SSH process execution or product/test/tool edit; only own research JSON."
+  ],
+  "findings": [
+    {
+      "severity": "High",
+      "classification": "SOURCE_CAUSAL_CANDIDATE_NATIVE_PENDING",
+      "owner": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "entry": "unguarded optional diagnostic initial GetTimestamp blocks dispatch"
+    },
+    {
+      "severity": "High",
+      "classification": "SOURCE_CAUSAL_CANDIDATE_NATIVE_PENDING",
+      "owner": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "entry": "unguarded elapsed argument can replace committed/failed/canceled required outcome"
+    }
+  ]
+}

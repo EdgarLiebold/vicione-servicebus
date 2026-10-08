@@ -1,0 +1,16 @@
+{
+  "status": "7_PYTHON_CONTRACT_PASS_PENDING_REVIEW_NO_NATIVE_PROVIDER_ACCEPTANCE",
+  "family": [
+    "rabbitmq",
+    "mssql"
+  ],
+  "lifetime_helper": "Unchanged accepted17-contract owner; not duplicated or widened",
+  "source_bundle": "Two actual source file hashes exclusive run-owned JSON; helper execution receipt continues to bind its own source only",
+  "files": {
+    "profile-owner-r1/contracts.log": "bf8f5d231a0249cae4381abd9cc0925f9549c7b8dbff69cd068e65d699e3b1b9",
+    "profile-owner-r1/local_colima_forwarding.py": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d",
+    "profile-owner-r1/test_local_colima_profile_forwarding.py": "6d09a53cd756e2dd3ebe08862f403d624c3a035c0d87d2a9a1f48ceefc13ed03",
+    "profile-owner-r1/local_colima_profile_forwarding.py": "6dabf694e6e22fb292a2d6dabf50d5b48f000c3fa346f2b183cbfa5ea5303399",
+    "profile-owner-r1/PROFILE_FORWARDING_RESEARCH_PLAN.md": "1721b5de3a062931f1070a97903d25ec78cca8a369bd18b1c6c0fb84b7b96d35"
+  }
+}

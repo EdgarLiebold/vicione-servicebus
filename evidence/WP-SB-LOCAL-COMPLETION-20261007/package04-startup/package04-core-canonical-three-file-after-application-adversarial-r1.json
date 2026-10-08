@@ -1,0 +1,148 @@
+{
+  "kind": "INDEPENDENT_READONLY_CORE_CANONICAL_THREE_FILE_AFTER_APPLICATION_AND_BOUNDED_ACCEPTANCE_CHAIN_R1",
+  "status": "QUALIFIED_CANONICAL_THREE_FILE_APPLICATION_AND_NARROW_CORE_ACCEPTANCE__NO_BLOCK_RELEASE_CURRENT_SOURCE_HOLD",
+  "findings": [],
+  "root_application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_CORE_HOST_CANONICAL_THREE_FILE_APPLICATION_R1.json",
+    "sha256": "e56bbc9e214355ec6b25b74e426f895ec2ac1e19fdb61c58712d51cd28d2d8b3",
+    "root_application_tool_session_id": 25298,
+    "actual_canonical6100_to6101": true,
+    "exact_three_files": [
+      {
+        "path": "src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+        "old_sha256": "458dd4d37b5c7a062c9a47f7b698ce2c8c8230fd97acc5c812e59da0f4bc9214",
+        "new_sha256": "fe1c535c4f61e3bfafed00960937f8e7ee4dde065662cc63fd156099ddc2af14"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/CoreGenericHostStartupTests.cs",
+        "old_sha256": null,
+        "new_sha256": "54aea94c20f35fc3cd5bd6d2702202a496331fa272cd090b4c90879b76b8d1f8"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+        "old_sha256": "b1cba734eaa3752541dd6dce522af0b35924b909930609ca17e5676425692750",
+        "new_sha256": "32b49b44106cef7b305183d0885ec53276c96f7ce16f4e522ee07c1574cd61bf"
+      }
+    ],
+    "whole_current_canonical6101_equals_qualified_private6101_and_frozen_input": true,
+    "all_other_src_tests_tools_bytes_unchanged": true,
+    "root_configs14_unchanged": true,
+    "private_assets12_unchanged": true,
+    "current_runtime17_exact_qualified_fixed_post": true,
+    "no_new_native_execution_by_this_transfer_review": true
+  },
+  "root_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_CORE_HOST_STARTUP_CLEANUP_ACCEPTANCE_R1.json",
+    "sha256": "8a7c566768f479bb3ae33c9b60ccdb071f366f8eaa36d020e3ed6271033a4830",
+    "all14reference_paths_existing_and_sha_equal": [
+      {
+        "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-original-three-native-r2/RESULT.json",
+        "sha256": "336a2db032f9d8bf9b204e8f1d162bdbceb39e7d79e5bbcbcf8c7fed60da5cfd"
+      },
+      {
+        "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-original-three-native-r2/package04-core-original-three-native-adversarial-r1.json",
+        "sha256": "77d5c88aefdab979b908f105c2dbd3f3af0d122b61b6cdfdc8a308f5b8486981"
+      },
+      {
+        "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-fixed-five-native-r1/RESULT.json",
+        "sha256": "fdc5f4711d20006c31886ef6bbc21273c821ac1136c781cfcd6aead9e6e90f2c"
+      },
+      {
+        "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-fixed-five-native-r1/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+        "sha256": "b58b84c843f0e9dd65fdbc49915fc7b0414e0b07d5472a9393ad3b135bcb033e"
+      },
+      {
+        "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-fixed-five-native-r1/package04-core-fixed-five-native-adversarial-r1.json",
+        "sha256": "a6625e4e546da1c2114d8ee209be278e1c8db2b6a3e91572ccf05829db3cadb9"
+      },
+      {
+        "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-whole-module-native-r1/RESULT.json",
+        "sha256": "cc2751ce0ea63a2bca29d4d6306317c76811065fb3c80f40ab6f17202005660f"
+      },
+      {
+        "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-whole-module-native-r1/package04-core-whole-8146-native-adversarial-r1.json",
+        "sha256": "02bb4d156430f505c2cdfd4bbdf93f43a45102cdc08bf346a4c28453c5e7f2e3"
+      },
+      {
+        "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-mutants-native-r1/ROOT_FIRST_FINITE_CAUSE_LEDGER_R1.json",
+        "sha256": "42559319020be8c3cac2bc0876b92da839a26ec2d789f536c02291840d29e818"
+      },
+      {
+        "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-mutants-native-r1/ROOT_MUTANTS_PHYSICAL_BINDING_AGGREGATE_R1.json",
+        "sha256": "9063915beed466cca4e18a44d431bd71978c884e70d15e6e3af0f860e57b0caf"
+      },
+      {
+        "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-mutants-native-r1/package04-core-four-mutants-native-adversarial-r1.json",
+        "sha256": "ad6776bcc382dcdcb8b81a8c1fd858045f8ee3e7c02f2fea1b571548755ebbe3"
+      },
+      {
+        "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-restored-fixed-five-native-r1/RESULT.json",
+        "sha256": "61fd303ea9fdbe2dbf875d53353fe647b6c11a605c68c49819b3271705d7f95f"
+      },
+      {
+        "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-restored-fixed-five-native-r1/ROOT_RESTORED_RUNTIME_BINDING_REUSE_R1.json",
+        "sha256": "ff82eb5202aa7ccf7ffa5bd7f385243beba7ff30b7f692777e46bf0a6a9da67e"
+      },
+      {
+        "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-restored-fixed-five-native-r1/package04-core-restored-fixed-five-final-adversarial-r1.json",
+        "sha256": "d8a2349ad0a5a08346a91f4bbc304c4a2f3808f8ef98b7f58e0e7029b2b8b098"
+      },
+      {
+        "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_CORE_HOST_CANONICAL_THREE_FILE_APPLICATION_R1.json",
+        "sha256": "e56bbc9e214355ec6b25b74e426f895ec2ac1e19fdb61c58712d51cd28d2d8b3"
+      }
+    ],
+    "copies_of_own_reviews_exact_private_originals": true,
+    "actual_counts_crosschecked_against_own_prior_chain": {
+      "original_cases": 3,
+      "original_first_finite_RED": 2,
+      "original_healthy": 1,
+      "new_fixture_methods": 3,
+      "new_fixture_cases": 4,
+      "corrected_focused_including_neighbor_PASS": 5,
+      "whole_module_PASS": 8146,
+      "whole_unique_display_labels": 8146,
+      "whole_failed": 0,
+      "whole_skipped": 0,
+      "causal_variants": 4,
+      "mutant_repeated_slots": 20,
+      "mutant_first_finite_RED": 6,
+      "mutant_healthy_controls": 14,
+      "restored_focused_PASS": 5,
+      "compiled_requirement_method_rows": 4722
+    },
+    "finding_disposition": {
+      "id": "CORE-HOST-STARTUP-CLEANUP-01",
+      "status": "CLOSED_FOR_NEVER_STARTED_RUNTIME",
+      "scope": "One cleanup defect reproduced by two invalid startup-policy cases: Stop/Dispose re-read rejected options before any depot/start task exists. Seven added lines under the existing state lock avoid that options read. Invalid startup remains rejected. Pre-canceled unstarted Stop preserves exact caller token and remains retryable; started and completed-stop paths retain existing behavior."
+    },
+    "narrow_status_appropriate": true,
+    "physical_counts12_3807_48_15228_and_post_reuse_only_match_own_reviews": true
+  },
+  "historical_chain": {
+    "old_core_original_input_sha256": "5d26c02a487907df9bc523f6e4580497be8a3192307ed2161197d48258a92ba3",
+    "old_core_canonical6099_preserved": true,
+    "azure_application_sha256": "06e8edd3ef0dab344ceb154d3abbb534acec3eaeda99f059392bee6a650fbee5",
+    "exact_azure_four_deltas_reconstruct6099_to6100": true,
+    "exact_core_three_deltas_reconstruct6100_to6101": true,
+    "no_silent_redating_original_inputs_or_native_runs": true
+  },
+  "evidence_reuse": {
+    "own_final_post_transfer_gate_sha256": "d8a2349ad0a5a08346a91f4bbc304c4a2f3808f8ef98b7f58e0e7029b2b8b098",
+    "own_fixed5_physical_and_all4722_metadata_sha256": "a6625e4e546da1c2114d8ee209be278e1c8db2b6a3e91572ccf05829db3cadb9",
+    "own_whole8146_sha256": "02bb4d156430f505c2cdfd4bbdf93f43a45102cdc08bf346a4c28453c5e7f2e3",
+    "own_four_compiled_mutants_sha256": "ad6776bcc382dcdcb8b81a8c1fd858045f8ee3e7c02f2fea1b571548755ebbe3",
+    "fresh_pe_pdb_or4722_attribute_parse_in_this_after_apply_review": false,
+    "reason": "Actualcanonical/private source all6101 hashes equal qualifiedprivategraph. All17 current/archivedpostruntime bytes equal previouslyownqualifiedfixed5; all12assets unchanged. Exact source/compiled/native prior evidence reused, not reexecuted or freshly decoded."
+  },
+  "read_provenance": "Personally read complete bounded rootacceptance14refs/counts/scope/provenance/limits and complete application semantic fields outside large manifests. Initial display of application manifests truncated; repaired all bounded fields through JSON projection, full6100/6101 manifest maps compared mechanically only. No human whole-manifest/source-body credit, no Root personal-read credit transfer. Three actual canonical source bodies are exact earlier whole195/211 and4722delta/compiledmetadata-qualified bytes; hash reuse only.",
+  "release": "Current O/C14 hold for this after-application review can be released. Narrow never-started cleanup correction is implemented canonically with verified source-equivalence and qualified original/fixed/whole/mutants/restoredpost chain. Further Root work uses currentcanonical6101 baseline; earlier6099/6100 evidence remains datedimmutable. No additional permission required by this technical review.",
+  "limits": [
+    "ScopedCore-host never-startedcleanup defect closure only, not wholeP04/currentfullSolution/APIRelease/provider/cloud/hardware/performance/RSS/coverage/CRAP/globalA+ closure.",
+    "Newfixture4 is included in5focus andwhole8146; fourmutants20 andpost5 repeatidentities. Tokenidentitycountercase is lifecycle assurance, not separate globalproductionfinding. No repeatednativecounts as newdistinct tests.",
+    "This afterapplyreview performed no .NET/MSBuild/native/test/driver import, process/provider or canonical/product/test/tool/doc operations. Pure file/hash/JSON checks and immutable own report only.",
+    "Source-equivalent canonical transfer does not claim a canonicalnative rerun, remotecommit/push/merge/deployment or futureSDKassemblyidentity. Existing authority outside this review retained.",
+    "Root application session25298 is a tool session, not asserted OS PID. No universal resource/descendant absence, absoluteDispose deadline or concurrent/partial-start closure.",
+    "All14referenced evidencehashes checked; earlier rawlogs/CRCclosedbins/PE/PDB/resource/methodchecks reused by exact ownqualifiedreports rather than rerun. Root acceptance wording separates mechanical8146 from focusedhumanreading and does not transfer independentreading credit."
+  ]
+}

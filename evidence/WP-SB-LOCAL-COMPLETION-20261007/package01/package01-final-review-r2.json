@@ -1,0 +1,137 @@
+{
+  "kind": "INTERNAL_READ_ONLY_PACKAGE01_FINAL_REVIEW",
+  "reviewer": "todo_reconciliation_review",
+  "utc": "2026-10-06T22:41:17.215490+00:00",
+  "verdict": "PASS_BOUNDED_DOCUMENTATION_AND_NATIVE_REPRODUCIBILITY_EVIDENCE",
+  "freeze_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/DOCUMENTATION_FREEZE_R2.json",
+  "freeze_sha256": "df7a40c9624d9bef63f83d50142c1859526bbd58eed23d0986d04c778e34ab23",
+  "baseline_receipt_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/BASELINE_FINAL_R2.json",
+  "baseline_receipt_sha256": "fa2f696dc7f59157e20d9cecd2918afeec07ebb52438c722ba59edc41466444c",
+  "root_authored_changes": true,
+  "external_product_team_or_model_independent_assurance": false,
+  "reviewed_whole_document_hashes": {
+    ".testagent/local-completion-plan.md": "a0a2e5823c5e93dbfa104338445b24aefb5270151234458b9c46f13f4b425ba2",
+    ".testagent/plan.md": "89252a79064bfc6ad51aa9a8ea00d24ab7aeabb7ab4745e88c3f50083d6ba3b6",
+    ".testagent/status.md": "0c93a0cc41aa64d7ce61eddf99a8ef3087b7ba9648ac4203f753a00ff1ad60a3",
+    "docs/quality-status.md": "f7cdbc8d8fade5f3706ac5567d2f82cf971383c9dbc4c7c208f79419005c551f",
+    "TODO.md": "d86e206a909e13ef3ccf77a8ffac30f99b0a7f2efb4dd07f78f740be9804ab90",
+    "CHANGELOG.md": "bd458d76d9c9a69754e325e2ee8b807335414158ea75d1f057e495c1b83f4055"
+  },
+  "checks": {
+    "six_document_hashes_match": true,
+    "documentation_patch_hash_matches": true,
+    "documentation_patch_matches_current_tracked_diff": true,
+    "new_plan_whole_file_hash_bound": true,
+    "baseline_receipt_hash_matches": true,
+    "actual_fresh_head_matches": true,
+    "actual_fresh_tree_matches": true,
+    "actual_fresh_git_clean": true,
+    "fresh_clone_reflog_present": true,
+    "raw_log_hashes_match": true,
+    "exact_23_native_module_start_paths": true,
+    "exact_23_native_module_success_paths": true,
+    "native_summary13460_0_0": true,
+    "seven_binlog_paths_exact_hash_and_size": true,
+    "seven_complete_gzip_binlogs": true,
+    "seven_binlogs_not_currently_open": true,
+    "r1_raw_log_hashes_preserved": true,
+    "r2_explicitly_supersedes_r1": true,
+    "r1_historical_engineering_still_running": true,
+    "coverage_attempt_exit130_nonaccepting": true,
+    "coverage_raw_aborted_not_pass": true,
+    "current_coverage_not_measured": true,
+    "external_hardware_unexecuted": true,
+    "whole_release_not_accepted": true,
+    "strict_release_engineering-build-20261006-223532--57541--OW6v55.binlog": true,
+    "locked_engineering-restore-20261006-222001--55549--wMHSVG.binlog": true,
+    "locked_engineering-restore-network-20261006-222040--55839--++Rdmr.binlog": true,
+    "strict_release_unit-build-20261006-222210--55982--StIlC2.binlog": true,
+    "locked_unit-restore-20261006-222149--55935--ZOaT61.binlog": true,
+    "terminal_zero_build_engineering-build.log": true,
+    "terminal_zero_build_unit-build.log": true,
+    "historical_status_suffix_unchanged": true,
+    "historical_plan_suffix_unchanged": true,
+    "sql_missing_delivery_finding_byte_unchanged": true,
+    "todo_previous_r2_exact": true,
+    "local_provider_not_accepted": true
+  },
+  "strict_release_command_fragments": {
+    "engineering-build-20261006-223532--57541--OW6v55.binlog": "--property:Configuration=Release --property:NuGetInteractive=false --nologo -restore:false ViciOne.ServiceBus.Engineering.slnx -warnaserror",
+    "unit-build-20261006-222210--55982--StIlC2.binlog": "--property:Configuration=Release --property:NuGetInteractive=false --nologo -restore:false ViciOne.ServiceBus.Tests.Unit.slnx -warnaserror"
+  },
+  "native_modules": [
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Architecture.Tests/release/ViciOne.ServiceBus.Architecture.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests/release/ViciOne.ServiceBus.Analyzers.CodeFixes.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Analyzers.Tests/release/ViciOne.ServiceBus.Analyzers.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Storage.Tests/release/ViciOne.ServiceBus.Azure.Storage.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack.Tests/release/ViciOne.ServiceBus.MessagePack.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.StateMachineVisualizer.Tests/release/ViciOne.ServiceBus.StateMachineVisualizer.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.DynamoDb.Tests/release/ViciOne.ServiceBus.DynamoDb.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonS3.Tests/release/ViciOne.ServiceBus.AmazonS3.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Diagnostics.Tests/release/ViciOne.ServiceBus.Diagnostics.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.Tests/release/ViciOne.ServiceBus.Azure.Table.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Benchmark.Tests/release/ViciOne.ServiceBus.Benchmark.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq.Tests/release/ViciOne.ServiceBus.ActiveMq.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Quartz.Tests/release/ViciOne.ServiceBus.Quartz.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests/release/ViciOne.ServiceBus.Roslyn.Tests.Infrastructure.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.Tests/release/ViciOne.ServiceBus.SqlTransport.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.Tests/release/ViciOne.ServiceBus.Abstractions.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release/ViciOne.ServiceBus.AmazonSqs.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.AzureServiceBus.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.RabbitMq.Tests/release/ViciOne.ServiceBus.RabbitMq.Tests.dll",
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SignalR.Tests/release/ViciOne.ServiceBus.SignalR.Tests.dll"
+  ],
+  "native_summary": {
+    "modules": 23,
+    "total": 13460,
+    "passed": 13460,
+    "failed": 0,
+    "skipped": 0
+  },
+  "recorded_closed_binlogs": {
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/local-completion/baseline/engineering-build-20261006-223532--57541--OW6v55.binlog": {
+      "bytes": 5451491,
+      "sha256": "fb22a76a7e0bb30c7428d23e2d8736d2e70220bdc70b1322a8c6c23450775490"
+    },
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/local-completion/baseline/engineering-restore-20261006-222001--55549--wMHSVG.binlog": {
+      "bytes": 3224095,
+      "sha256": "297c8a266efaac6d56641117c2e6b2fba50e620bf344b0f1f6f22d680c775ec9"
+    },
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/local-completion/baseline/engineering-restore-network-20261006-222040--55839--++Rdmr.binlog": {
+      "bytes": 4234837,
+      "sha256": "dac14fea1ef775d1a181e6c813e091f0af4e6a96a3c2b556f3516067fd96e44a"
+    },
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/local-completion/baseline/unit-build-20261006-222210--55982--StIlC2.binlog": {
+      "bytes": 4574041,
+      "sha256": "273c8395d63a6d691b33dc31e198b42a7d9805661b761cd701d2fc07fbda5736"
+    },
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/local-completion/baseline/unit-native-20261006-222902--56684--Z1Hq4L-dotnet-test.binlog": {
+      "bytes": 6880599,
+      "sha256": "571fdc9d92e666d516384201c2abea82bf224c17ef9fc3311d215f6dc693724f"
+    },
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/local-completion/baseline/unit-restore-20261006-222149--55935--ZOaT61.binlog": {
+      "bytes": 3236873,
+      "sha256": "59196065ff462fc0fa154b63dfff58cec6f6335c662acae8c4a9c0da0bbb849a"
+    },
+    "/private/tmp/vicione-servicebus-local-completion-20261007/artifacts/local-completion/baseline/unit-tests-20261006-222714--56462--fFcfhQ-dotnet-test.binlog": {
+      "bytes": 6834610,
+      "sha256": "971cb22077015cc564eb36a8ab7cde4cb590afd9354f362fb7c9be6965bb427e"
+    }
+  },
+  "preserved_r1_receipt_sha256": "1e1ed788432576a5cba9fce46dd5b1cefecef29cbec996a516daf6139d2c548d",
+  "findings": [],
+  "acceptance_scope": "Only six frozen documentation files, actual baseline checkout identity/cleanliness, seven rawlogs/closed-binlog bindings, locked restore and strict Release/native Unit results. No product behavior re-audit, new whole-owner assurance or release acceptance.",
+  "limitations": [
+    "Reviewer started no dotnet/MSBuild/Docker/provider/network runtime commands. Only read-only Git, Python artifact hashing/decompression and lsof inspection were used.",
+    "Raw native summary and exact module paths are independently checked; fresh clone observed via Git reflog/current clean tree. Prior empty artifacts is Root-attested and not independently reconstructed as a past filesystem event.",
+    "Coverage exit130 remains nonaccepting; nonproduct modules report exit5/no tests and abort. No current full coverage or CRAP verdict supplied.",
+    "Earlier sandbox engineering restore exit1 remains nonaccepting; separately recorded locked network retry supplies the successful restore.",
+    "R1 partially written Engineering snapshot is retained as erroneous historical snapshot; current closed R2 hashes alone qualify this invocation.",
+    "Local provider work is separate and unaccepted; any new RUNNING local-tests binlog is outside these seven recorded invocations.",
+    "Cloud/device/target ARM64 512MiB no-swap, whole API/runtime owner closure and global A+ release remain open.",
+    "Historical plan/status suffixes and SQL999/1000 loss finding are byte-identical; successful retry does not close cause."
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:e449d47cc8b2e2697cdddcb348d410e5ed76c0891110ca9c76c19e9aedc0f548",
+  "claims": [
+    {
+      "id": "claim_e1865b3c6e20460b9ed03ed84b73d42c",
+      "statement": "ConsumeContext exposes outgoing operations, request/response operations, message metadata and tracked consume completion.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Abstractions/ConsumeContext.cs",
+          "version": "repo-file-v1:sha256:794be20f8ca3e1aa76d3641938f91d8045b80b44b732d6fdd629d5ba96cd3d24"
+        }
+      ]
+    },
+    {
+      "id": "claim_829cd23cfafc4cfe9f6f07e570295499",
+      "statement": "Endpoint completion semantics depend on direct, buffered, volatile-outbox or transactional-outbox configuration.",
+      "evidence": [
+        {
+          "resource": "repo://docs/api/completion-boundaries.md",
+          "version": "repo-file-v1:sha256:589c15bf447df6dbf93a7465571cc673715ce7a6ee1ed23f91076d218f83365f"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Abstractions/IOutgoingMessages.cs",
+          "version": "repo-file-v1:sha256:e81ef024d0fb4f352131469f69fe796ec337413f3b057ed67ff7e3c145ee1e46"
+        }
+      ]
+    },
+    {
+      "id": "claim_a17dbc3173f6438c87ab17640f96009b",
+      "statement": "Stable reliable contract identity excludes CLR assembly identity and records a stable name plus major version.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+          "version": "repo-file-v1:sha256:1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

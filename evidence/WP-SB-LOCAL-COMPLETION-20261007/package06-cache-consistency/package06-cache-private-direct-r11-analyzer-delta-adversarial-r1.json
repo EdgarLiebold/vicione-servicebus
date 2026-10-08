@@ -1,0 +1,68 @@
+{
+  "kind": "P06_CACHE_PRIVATE_DIRECT_R11_ANALYZER_SUCCESSOR_DELTA_ADVERSARIAL_REVIEW_R1",
+  "status": "NO_BLOCK_BOUNDED_R11_TWO_LINE_ANALYZER_CORRECTION_NATIVE_PENDING",
+  "inputs": {
+    "/private/tmp/ResourceCacheComparerIsolationTests.draft-r10.cs": "8ee7f881107ccb1cf5e67275bf5f9476845d24cca0a0bb9817ac80a05cb44087",
+    "/private/tmp/ResourceCacheComparerIsolationTests.draft-r11.cs": "0162159c1324fc18093618ceb25b9055be204a4a18b3f6d8e5505738dd814bb6",
+    "/private/tmp/CoreRequirements.cache-proposed-r4.json": "b1cba734eaa3752541dd6dce522af0b35924b909930609ca17e5676425692750",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-direct-r10-collisions-adversarial-r1.json": "3216c4b2b8c036fae051929bfcdaaf2c2ccd006728df8dd558b541f26fa351d4",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/excluded-original-build-r3/EXCLUDED_RESULT.json": "5b88682491e5d72a3980413416a092026db04c4996b385d70df0ec249e3f077f",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/ROOT_CACHE18_COMPLETE_SOURCE_READ_R1.json": "5e59a3d4b0496fd9b3dc07476cb499aad865ad642464c8c0fdd2257382f571d8",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs": "8ee7f881107ccb1cf5e67275bf5f9476845d24cca0a0bb9817ac80a05cb44087"
+  },
+  "checks": {
+    "R11_exact710_hash0162": true,
+    "R10_exact_prior710_8ee7_review_bound": true,
+    "exact_two_line_replacement_only_allother708lines_equal": true,
+    "sole_predicate_literal_equal_AssertSingle_preserved": true,
+    "threeDistinctOwners_removeTwo_leavesOne_same_nonnullOwned_oracles": true,
+    "Req4719_R4_exact_b1cb_mapping_unchanged": true,
+    "excludedR3_receipt_exact5b88_joined1_summary0warn1err": true,
+    "excluded2raw_hash_nonemptyclosed_1completebinlog": true,
+    "actual_analyzer_xUnit2031_line519_not_nativeCause": true,
+    "canonical_stillR10_productOriginal18_not_proposalApplied": true
+  },
+  "findings": [],
+  "delta": {
+    "kind": "replace",
+    "old_start_line": 519,
+    "new_start_line": 519,
+    "line_count": 2,
+    "before": "        Owned survivor = Assert.Single(resources.Where(resource => !ReferenceEquals(resource, removed)\n            && !ReferenceEquals(resource, secondRemoval)));\n",
+    "after": "        Owned survivor = Assert.Single(resources, resource => !ReferenceEquals(resource, removed)\n            && !ReferenceEquals(resource, secondRemoval));\n",
+    "literal_same_predicate": "resource => !ReferenceEquals(resource, removed)\n            && !ReferenceEquals(resource, secondRemoval)"
+  },
+  "oracle_equivalence": "Both forms assert exactly one element among resources satisfying the same ReferenceEquals exclusion predicate. They return the same required Owned survivor; two distinct removed original owners from a three-distinct-object array imply exactly one original survivor. Nonnull returned Owned drives identical disposal/reference/snapshot/cleanup oracles. No task, cancellation, process, comparer, resource, attribute or helper change.",
+  "analyzer_qualification": "Actual strict compiler reports xUnit2031 requiring Assert.Single(collection,predicate) instead of filtering with Where first. R11 adopts the diagnostic-prescribed shape without changing filtering meaning. Prior static R10 review did not detect this analyzer restriction; actual compiler R3 remains excluded and earns no original/fixed/kill credit. Future strict/native success remains required.",
+  "excluded_original_build": {
+    "tool_session": 11212,
+    "joined_exit": 1,
+    "raw2": [
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/excluded-original-build-r3/raw/p06-cache-original-build-r3.log",
+        "expected_sha256": "0f71363da559022cac1c2177ead94fa177d99089a0627bc0b3b2daf90586c608",
+        "actual_sha256": "0f71363da559022cac1c2177ead94fa177d99089a0627bc0b3b2daf90586c608",
+        "bytes": 3263,
+        "closed": true
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/excluded-original-build-r3/raw/p06-cache-original-build-r3-20261007-065715--89654--NjjKzN.binlog",
+        "expected_sha256": "710313891c0771bc9e5cf6c17a7293c50769b96c190ca61545018f643998f5d4",
+        "actual_sha256": "710313891c0771bc9e5cf6c17a7293c50769b96c190ca61545018f643998f5d4",
+        "bytes": 1084045,
+        "closed": true
+      }
+    ],
+    "binlog_sha256": "710313891c0771bc9e5cf6c17a7293c50769b96c190ca61545018f643998f5d4",
+    "binlog_uncompressed_bytes": 4199215,
+    "native_events": 0,
+    "causal_credit": 0
+  },
+  "counts": "Previous30 parent cases/two separate pending children and Requirements4719 are unchanged. Core8142 remains a prediction, not native evidence.",
+  "limits": [
+    "Review reads complete two-line delta and unchanged full60-line collision method context; prior R10 requirement/method/helper review is hash-bound. No transferred whole-source/native execution credit.",
+    "Only exact selected survivor semantics and preserved assertions are qualified; malformed-state diagnostic message wording need not be identical.",
+    "No broader callback-count/phase, exceptional Misses stats, RAM/API/coverage/provider/cloud/hardware acceptance.",
+    "No proposal/product/test/tool changes or .NET/provider/process execution by reviewer."
+  ]
+}

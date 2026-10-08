@@ -1,0 +1,29 @@
+{
+  "kind": "ROOT_COMMIT_PUSH_READY",
+  "date": "2026-10-08",
+  "reviewed_index_tree": "710c189711a8b407a29fd9a17962ce352ea583e3",
+  "independent_reports": {
+    "evidence/WP-SB-REMOTE-CHECKPOINT-20261008/independent-review/remote-checkpoint-20261008-archive-byte-audit-adversarial-r1.json": "26af4ac4719dd78405ade9d6c273789514fc734a12e9b02f801f2f67cc11faf0",
+    "evidence/WP-SB-REMOTE-CHECKPOINT-20261008/independent-review/remote-checkpoint-20261008-index-byte-audit-adversarial-r1.json": "27d4f7b9a767795d4c9a222aea90d7973667b06f89a24d3598dc4fd238eea480",
+    "evidence/WP-SB-REMOTE-CHECKPOINT-20261008/independent-review/remote-checkpoint-20261008-actual-archive-index-adversarial-r1.json": "ec78c219f0a626bcdfd5f540b9618d790d0fb6a125d8b95e7e52cc2b8cb88439",
+    "evidence/WP-SB-REMOTE-CHECKPOINT-20261008/independent-review/remote-checkpoint-20261008-actual-archive-index-review-scope-clarification-r1.json": "bbd2e224166355bd3b82f37df5f50688de243bb724faaf3081a4bb9ad1bdac2f"
+  },
+  "status": "ACCEPTED_UNRELEASED_CHECKPOINT_READY_FOR_AUTHORIZED_MAIN_PUSH",
+  "authorization": "User explicitly authorized saving the current state remotely, preferably directly to main.",
+  "target": "git@github.com:EdgarLiebold/vicione-servicebus.git refs/heads/main",
+  "expected_remote_parent": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "canonical_source_files_unchanged_since_independent_review": 6110,
+  "new_encrypted_archive_parts_unchanged_since_independent_review": 35,
+  "full_restore_files_checked": 19465,
+  "source_freeze_sha256": "a8ad8670aa2241b32eb72c2dc178af62a87660865aa4a37044dd2862841e9705",
+  "encrypted_manifest_sha256": "7462ecd3e34abbc5e9ec0911295a3c22fa8dbae11ec7e213c26b117001b2bae8",
+  "api_baseline_sha256": "e9616090b09c593c8a53cdb24c3404570076706ba8044684d72f3431ea797e5e",
+  "key_recovery": "The new raw evidence archive requires the separately held local 32-byte key. Offsite key backup is not performed or claimed; source/tests/changelog are directly recoverable from Git.",
+  "open_scope": [
+    "Aggregate tests and current coverage/CRAP",
+    "Consumer-lock R2 finalization and execution",
+    "Runtime retry fixture correction and remaining runtime journeys",
+    "CI, provider, cloud and target-device qualification"
+  ],
+  "limits": "This checkpoint is not a release or global A+ acceptance. This receipt precedes commit/push and does not claim remote success. Final delta is limited to four exact independent report copies and this acceptance receipt."
+}

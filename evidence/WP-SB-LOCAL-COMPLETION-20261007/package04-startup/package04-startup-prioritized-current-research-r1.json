@@ -1,0 +1,616 @@
+{
+  "F030Distinct": {
+    "line": 97,
+    "meaning": "Accepted System-timer-range guard runs when CollectIntoBatchAsync obtains actual ConsumeContext.TimeProvider and creates batch, applies only ReferenceEquals(TimeProvider.System), preserves custom-provider interval. BatchRuntimeSettings validates basic static options earlier. Do not move/claim this late provider-specific guard as Host.StartAsync validation or reopen amended policy.",
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs"
+  },
+  "RootSoleWriter": true,
+  "RootWholeReadingList": {
+    "buildTestContext": [
+      {
+        "bytes": 63,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/global.json",
+        "relative": "global.json",
+        "sha256": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93"
+      },
+      {
+        "bytes": 2886,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.props",
+        "relative": "Directory.Build.props",
+        "sha256": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf"
+      },
+      {
+        "bytes": 10658,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.targets",
+        "relative": "Directory.Build.targets",
+        "sha256": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1"
+      },
+      {
+        "bytes": 5677,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Packages.props",
+        "relative": "Directory.Packages.props",
+        "sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e"
+      },
+      {
+        "bytes": 838,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/NuGet.config",
+        "relative": "NuGet.config",
+        "sha256": "3f6cda87abdfbc3e7f7a80906f21b11009ac811c70834dfdbc4840db01a9ce93"
+      },
+      {
+        "bytes": 1400,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Directory.Build.props",
+        "relative": "src/Directory.Build.props",
+        "sha256": "be8359cbeaf46760b90b3755da645aeb7b4a786af8f0fd6db9396d21f6e67911"
+      },
+      {
+        "bytes": 3303,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Directory.Build.props",
+        "relative": "tests/Directory.Build.props",
+        "sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8"
+      },
+      {
+        "bytes": 293,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/signing.props",
+        "relative": "signing.props",
+        "sha256": "71a2cc9a5b04a60ea4093aa41824f275ad7cf5d87f4a8866a09990450ec2e411"
+      },
+      {
+        "bytes": 66,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/testconfig.json",
+        "relative": "tests/testconfig.json",
+        "sha256": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f"
+      },
+      {
+        "bytes": 1300,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/testsettings.json",
+        "relative": "tests/testsettings.json",
+        "sha256": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7"
+      },
+      {
+        "bytes": 9852,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "relative": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "sha256": "382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3"
+      },
+      {
+        "bytes": 9185,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+        "relative": "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+        "sha256": "fc0b486dd4aa4c78487b1e0fa9f56c546cf1c27e0499d9e1f403f26923d54fbb"
+      },
+      {
+        "bytes": 2378,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+        "relative": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+        "sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21"
+      },
+      {
+        "bytes": 25067,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/packages.lock.json",
+        "relative": "tests/ViciOne.ServiceBus.Tests/packages.lock.json",
+        "sha256": "d375ff4c06a3b00d9f80a63a8eada1a62bb720261742ad6be7cfbcffc5fdab30"
+      },
+      {
+        "bytes": 1309,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/ViciOne.ServiceBus.AmazonSqs.csproj",
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/ViciOne.ServiceBus.AmazonSqs.csproj",
+        "sha256": "72bb696dcdaf49509f08d7951edb4a4ccaf76112e4bed6ced4a94b8176031e94"
+      },
+      {
+        "bytes": 1412,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+        "relative": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+        "sha256": "1fa6b10f5273864ee89a9059b9eb6d7d37762a86137744a82ac364dae3241b84"
+      },
+      {
+        "bytes": 18869,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+        "relative": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+        "sha256": "7a2f76b7d2272ee3afcd8f83c2f05dad7c45883fe814efae2c79ff76b6b51ca2"
+      },
+      {
+        "bytes": 1267,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+        "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+        "sha256": "53ac44c04cf794e6ffc05f2b5a8ec47fb6948e1bac181b37155279b0296d3e68"
+      },
+      {
+        "bytes": 1635,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "relative": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+        "sha256": "b12b81a46e099582644c05165ee384fb394431fc36b517e2a980eceac592a6e3"
+      },
+      {
+        "bytes": 10901,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs",
+        "relative": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs",
+        "sha256": "a8192e1d3b520714ee1a732505a26a740e06ae073a6f303972a17aefaf328206"
+      },
+      {
+        "bytes": 18211,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs",
+        "relative": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs",
+        "sha256": "14ec1d7a56de88968a8bbbb25bb578c50fef16bfb9a4dd078780fbd6e6534c83"
+      }
+    ],
+    "existingNamedTestAndFixtureBodies": [
+      {
+        "bytes": 2007,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsTransportOptionsStartupTests.cs",
+        "relative": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsTransportOptionsStartupTests.cs",
+        "sha256": "e2a08d5a7445cfb0350bc1be384795019cb8041f7965a222b417ee9216a6e77f"
+      },
+      {
+        "bytes": 2784,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs",
+        "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs",
+        "sha256": "967cb99eebbc593bf30429f40983d8dd0022475397535d3b8d9eef5e0075d1a1"
+      },
+      {
+        "bytes": 5829,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqRegistrationOptionsTests.cs",
+        "relative": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqRegistrationOptionsTests.cs",
+        "sha256": "49141a0da272c92e876c7f8786f2bb7b6286933d00fe88b43ca97ae2553f21e8"
+      },
+      {
+        "bytes": 1528,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusTransportOptionsStartupTests.cs",
+        "relative": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusTransportOptionsStartupTests.cs",
+        "sha256": "fe0c3b37ef5d01e9ceeb0d28e76f576a88aedd7009ef3bc3ee2ff200cc7e8f48"
+      },
+      {
+        "bytes": 3774,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ViciOneServiceBusHostOptionsValidationTests.cs",
+        "relative": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ViciOneServiceBusHostOptionsValidationTests.cs",
+        "sha256": "fc07f872fbddc3287408e0c56e5243093ba941c60fcbe3675ed4419cdff21ec2"
+      },
+      {
+        "bytes": 28339,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/BusCompositionStartupValidationTests.cs",
+        "relative": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/BusCompositionStartupValidationTests.cs",
+        "sha256": "613bfc0b93c3bed39323846ed27ede88c2d44f687271c45d18f96a05cd0d382b"
+      },
+      {
+        "bytes": 13961,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs",
+        "relative": "tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs",
+        "sha256": "1d2f15b80cd90109bd1b944c789761c019632d23617d9ce4e7547bc3c69c28d1"
+      },
+      {
+        "bytes": 10419,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/HostedServiceLifecycleOwnershipTests.cs",
+        "relative": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/HostedServiceLifecycleOwnershipTests.cs",
+        "sha256": "2abeaa9d7637aabbc3b1bc8cfb57dd0f8d7060c5d1e01ccc4c9b1f02e3defba2"
+      },
+      {
+        "bytes": 5371,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs",
+        "relative": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs",
+        "sha256": "2cbd0652ebc77f9defb1bad0fc9deb3c2a125f925e913748b53520366b99fe95"
+      }
+    ],
+    "knownRootCoreReadReuse": {
+      "exactRelevantOwnerMatches": {
+        "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/BusCompositionStartupValidationTests.cs": true,
+        "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/HostedServiceLifecycleOwnershipTests.cs": true,
+        "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ViciOneServiceBusHostOptionsValidationTests.cs": true,
+        "tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs": true
+      },
+      "laterAcceptedBy": "package06 ROOT_CORE_DEADLINE_ACCEPTANCE_R1 and root800-product-canonical-source-review-r1",
+      "oldConservativeInventory": "R/core-owner-root-read-qualified-current-r2 initially17/85 qualifies only earlierstage; later complete Root800 receipt supersedes pending68 at its exact hash boundary. This is not copied reviewer read credit.",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/ROOT_CORE_OWNER_COMPLETE_READ_R1.json",
+      "sha256": "5e807c7f46275c714dcb6e8c3b6f478f5f6846299510c58a2fcac60b763c6b08"
+    },
+    "productBodies": [
+      {
+        "bytes": 10520,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+        "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+        "sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+      },
+      {
+        "bytes": 16603,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+        "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+        "sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+      },
+      {
+        "bytes": 529,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationConfigurator.cs",
+        "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationConfigurator.cs",
+        "sha256": "6f087fb1c501c7325ad43a915b07e5c864390569fc6a6d082523a89e3138e7d2"
+      },
+      {
+        "bytes": 504,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+        "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+        "sha256": "929d35ea91140e697b985c050623fb5c7446e37f87f0199c944cac38bfa7b519"
+      },
+      {
+        "bytes": 14777,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+        "relative": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+        "sha256": "8659b5f22016823aea26893f10dd0be31fc1f2efa9590f46e0acc6cb5b34972e"
+      },
+      {
+        "bytes": 12780,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+        "relative": "src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+        "sha256": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b"
+      },
+      {
+        "bytes": 5882,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+        "relative": "src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+        "sha256": "458dd4d37b5c7a062c9a47f7b698ce2c8c8230fd97acc5c812e59da0f4bc9214"
+      },
+      {
+        "bytes": 3334,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/BusDepot.cs",
+        "relative": "src/ViciOne.ServiceBus/Transports/Hosting/BusDepot.cs",
+        "sha256": "b6bb5efbcfa677d316fe18f2dc9c2a829099cd38d9c4dda03e125eca906477b0"
+      },
+      {
+        "bytes": 246,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/IBusDepot.cs",
+        "relative": "src/ViciOne.ServiceBus/Transports/Hosting/IBusDepot.cs",
+        "sha256": "f10e9cea70b709c5bf671f19cc858d18847fce61496aedc68db7a03094d9f8b2"
+      },
+      {
+        "bytes": 2641,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+        "relative": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+        "sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+      },
+      {
+        "bytes": 1550,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+        "relative": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+        "sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+      },
+      {
+        "bytes": 3934,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+        "relative": "src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+        "sha256": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08"
+      },
+      {
+        "bytes": 1790,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/PayloadAdmissionOptions.cs",
+        "relative": "src/ViciOne.ServiceBus/Configuration/PayloadAdmissionOptions.cs",
+        "sha256": "a9c4b474245702ae4fcc537cbf6581b1bd0e55f4b10f7d75dd4477d7c18f93c1"
+      },
+      {
+        "bytes": 2988,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Serialization/Admission/PayloadAdmissionPolicy.cs",
+        "relative": "src/ViciOne.ServiceBus.Abstractions/Serialization/Admission/PayloadAdmissionPolicy.cs",
+        "sha256": "fccb4ff5aac8ad43ea6a13a1f60ac5fafc4f5caf73e3c59ba7e7d224b8bd6496"
+      },
+      {
+        "bytes": 5015,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/MessageLimitsConfigurationExtensions.cs",
+        "relative": "src/ViciOne.ServiceBus/Configuration/MessageLimitsConfigurationExtensions.cs",
+        "sha256": "768c63ce53946add68e49f2616c82760641a589222363d6617872f07a06e5ee0"
+      },
+      {
+        "bytes": 3753,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+        "sha256": "460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840"
+      },
+      {
+        "bytes": 429,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsTransportOptions.cs",
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsTransportOptions.cs",
+        "sha256": "fca831dd2d3c2a48ebf183630a2181383bb8f71b8331f3392742e82a6ad431a5"
+      },
+      {
+        "bytes": 2656,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/AmazonSqsRegistrationBusFactory.cs",
+        "relative": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/AmazonSqsRegistrationBusFactory.cs",
+        "sha256": "4565ae7bbea2c655bc529b3a1cde837de11a60965a37755099c2761d4850a8b8"
+      },
+      {
+        "bytes": 5337,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs",
+        "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs",
+        "sha256": "84e652c0237beb05aaf2d7008f49b70b886163650839c0a0ccded02676eeece2"
+      },
+      {
+        "bytes": 1992,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqTransportOptions.cs",
+        "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqTransportOptions.cs",
+        "sha256": "94fa836e5e64ab17df6eb5fe0fdc53dd1616873fd313dd935c4db2f204cfc801"
+      },
+      {
+        "bytes": 1078,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqSslOptions.cs",
+        "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqSslOptions.cs",
+        "sha256": "12451b25b41122100c997b4a7a8645175f934ac29463622db62e2effbd998778"
+      },
+      {
+        "bytes": 3588,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqRegistrationBusFactory.cs",
+        "relative": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqRegistrationBusFactory.cs",
+        "sha256": "54dfd3bb3dbebb472997d8bdf063a97acaf171ec1d6707611d9abdbe685b9c19"
+      },
+      {
+        "bytes": 5116,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusConfigurationExtensions.cs",
+        "relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusConfigurationExtensions.cs",
+        "sha256": "d12135b7ba9ada8671b08a00c12f5cf4c3737ad3bf0fd5fbac5376da11ccaa46"
+      },
+      {
+        "bytes": 354,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/AzureServiceBusTransportOptions.cs",
+        "relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/AzureServiceBusTransportOptions.cs",
+        "sha256": "48137e32e28bf82e05fc6f134725b9039d97f879d88b3c47b979280430f2bde7"
+      },
+      {
+        "bytes": 3171,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusRegistrationBusFactory.cs",
+        "relative": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusRegistrationBusFactory.cs",
+        "sha256": "47bc98ab27570fc15126c96ac898e1be2d75c893bc14b2598f0c33ac0100d8dd"
+      },
+      {
+        "bytes": 13959,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+        "relative": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+        "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+      },
+      {
+        "bytes": 1680,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchRuntimeSettings.cs",
+        "relative": "src/ViciOne.ServiceBus/Batching/Runtime/BatchRuntimeSettings.cs",
+        "sha256": "55f86c6399c0f9ee6f971853a7f05ef58a04f3cd714817ea64c9eef223ed0e29"
+      }
+    ],
+    "rule": "Exact full-file list below is prerequisite context for this bounded case owner; team research/hash inventory is not Root reading credit. Read every newly authored native test/runner/project/lock and explicit imports fully before execution. If canonical projects are edited, their complete owner/import closure must be personally qualified separately; this report does not grant transport whole-suite read credit.",
+    "smallestOwnerChoice": "A separate bounded native MTP owner using public Core/Abstractions/SQS/Rabbit/Azure packages plus pinned Microsoft.Extensions.Hosting10.0.12 avoids editing three canonical transport suites or adding internal access. Root selects its concrete path/project/source files and freezes full owner before compilation; no invented static-analyzer suggested paths. Existing canonical test paths above are discovered current owners, not classifications from missing parser output."
+  },
+  "boundedNativePlan": {
+    "avoidUnnecessaryInternals": "IBusDepot is internal; Rabbit/SQS native unit projects lack friend access. Existing HostedServiceLifecycleTestDriver constructs service directly with Options.Create and is not a Generic Host startup fixture. Public barrier avoids new internal helper/friend changes.",
+    "boundaryProbe": "Use actual Generic Host.StartAsync; leave original IStartupValidator, per-bus composition hosted services and ServiceBusHostedService intact. Insert exactly one public IHostedService barrier immediately before unique descriptor ImplementationType.FullName ViciOne.ServiceBus.Hosting.ServiceBusHostedService. Assert original validators/order/runtime descriptor are retained. Barrier records entry and throws a unique sentinel instance. Invalid cases must produce own specific cause with barrier count0; coherent/unselected transport controls must produce that exact sentinel instance with barrier count1. This is an intentional no-I/O terminal barrier, not a completed provider-host start.",
+    "caseGroups": {
+      "1_AmazonSqs_named": [
+        {
+          "arrange": "Only typed IOrdersBus selects SQS; configure AmazonSqsTransportOptions under typeof(IOrdersBus).Name with Region=\" \", Scope=null; callback declares coherent local synthetic host configuration.",
+          "executed": false,
+          "id": "SQS1",
+          "oracle": "Host.StartAsync must reject selected named Region before barrier0 with own named OptionsName and bus identity/corrective reason. Frozen source likely reaches barrier instead; confirm original finite exception mismatch first."
+        },
+        {
+          "arrange": "Typed selected SQS, named Scope=\"orders\", Region=null, same coherent callback host.",
+          "executed": false,
+          "id": "SQS2",
+          "oracle": "Host.StartAsync must reject Scope requires Region before barrier0; no timeout or credential/network fault counts."
+        },
+        {
+          "arrange": "Typed named selected SQS coherent eu-central-1/orders, but unused default SQS options Region=\" \". No default SQS bus selected.",
+          "executed": false,
+          "id": "SQS3",
+          "oracle": "Host.StartAsync must reach exact barrier sentinel once; selecting typed SQS must not validate unrelated default options. Current default validator may reject wrongly; confirm causally."
+        },
+        {
+          "arrange": "Default selected SQS options Region=\" \"; coherent unused named options.",
+          "executed": false,
+          "id": "SQS4",
+          "oracle": "Specific default SQS Region validation failure before barrier0. Healthy existing default-path negative control must remain unchanged."
+        },
+        {
+          "arrange": "Typed selected SQS with coherent named region/scope and unpoisoned defaults.",
+          "executed": false,
+          "id": "SQS5",
+          "oracle": "Exact barrier sentinel observed once; proves fixture can traverse current selected registration and real bus materialization without provider startup."
+        }
+      ],
+      "2_RabbitMq_named_TLS": [
+        {
+          "arrange": "Named selected RabbitMQ Host=\" \", valid default options; explicit Limits.",
+          "executed": false,
+          "id": "RMQ1",
+          "oracle": "Host.StartAsync rejects RabbitMQ/Host with owning full bus name and OptionsName equal typed short options key, barrier0."
+        },
+        {
+          "arrange": "Named selected RabbitMQ TLS CertPassphrase supplied and CertPath absent.",
+          "executed": false,
+          "id": "RMQ2",
+          "oracle": "Own RabbitMQ TLS/CertPassphrase conflict rejected before barrier0; preserve anonymous empty-credential contract rather than inventing required nonempty credentials."
+        },
+        {
+          "arrange": "Named selected RabbitMQ coherent; unused default and unregistered other-name Rabbit options invalid.",
+          "executed": false,
+          "id": "RMQ3",
+          "oracle": "Exact barrier once; optional/unselected names must not be eagerly validated."
+        },
+        {
+          "arrange": "Two selected distinct named Rabbit buses: A coherent, B Host=\" \".",
+          "executed": false,
+          "id": "RMQ4",
+          "oracle": "Only selected B option failure identifies B, not A; no bus runtime starts and barrier0."
+        }
+      ],
+      "3_AzureServiceBus_named": [
+        {
+          "arrange": "Selected typed Azure bus ConnectionString=\" \".",
+          "executed": false,
+          "id": "AZB1",
+          "oracle": "Own ConnectionString failure with typed options name/full bus name before barrier0."
+        },
+        {
+          "arrange": "Selected typed Azure bus ConnectionString=null, valid explicit host callback with harmless synthetic complete local URI/credential coordinates; unused default options whitespace.",
+          "executed": false,
+          "id": "AZB2",
+          "oracle": "Exact barrier once; null is deliberately allowed when callback provides the host. No real Azure resource/identity validation claimed."
+        },
+        {
+          "arrange": "Two selected distinct named Azure buses: A coherent callback, B whitespace connection string.",
+          "executed": false,
+          "id": "AZB3",
+          "oracle": "Own B validation error before barrier0; no unselected/default override or accidental wrong-name attribution."
+        }
+      ],
+      "4_Core_host_lifecycle": [
+        {
+          "arrange": "Real Generic Host with normal public InMemory registration/Limits; StartTimeout=TimeSpan.Zero.",
+          "executed": false,
+          "id": "HOST1",
+          "oracle": "Host.StartAsync rejects Host lifecycle for bus all / StartTimeout before lifecycle or receive-endpoint start."
+        },
+        {
+          "arrange": "Same registered host; StopTimeout=5s, ConsumerStopTimeout=6s.",
+          "executed": false,
+          "id": "HOST2",
+          "oracle": "Specific conflict ConsumerStopTimeout <= StopTimeout before any endpoint starts."
+        },
+        {
+          "arrange": "Same normal InMemory host with WaitUntilStarted=true and positive coherent10s intervals.",
+          "executed": false,
+          "id": "HOST3",
+          "oracle": "Actual Host.StartAsync and StopAsync complete; record exact owned bus/endpoint lifecycle entry and terminal events, then join/dispose. This control really starts local InMemory bus; transport barrier controls do not."
+        }
+      ],
+      "5_Core_composition_payload": [
+        {
+          "arrange": "Public AddViciOneServiceBus empty bus block (no transport and no Limits); real Generic Host startup.",
+          "executed": false,
+          "id": "CORE1",
+          "oracle": "ConfigurationException reports exact two missing transport/limits causes for default before barrier0; not direct CompositionValidator.StartAsync."
+        },
+        {
+          "arrange": "Typed public InMemory bus with declared Limits, then normal Configure<PayloadAdmissionOptions<IOrdersBus>> override makes MaximumTransportEnvelopeBytes null.",
+          "executed": false,
+          "id": "CORE2",
+          "oracle": "Actual Host.StartAsync rejects selected missing hard limit with exact owning assembly/full-type bus identity and property, barrier0."
+        },
+        {
+          "arrange": "Healthy default+typed InMemory buses with explicit Limits; configure invalid PayloadAdmissionOptions<IUnusedBus> without selecting that feature/bus.",
+          "executed": false,
+          "id": "CORE3",
+          "oracle": "Actual normal Host.StartAsync/StopAsync succeeds with finite owned lifecycle/message controls; unused options remain unmaterialized and cannot fail selected buses."
+        }
+      ]
+    },
+    "cases": 18,
+    "cleanup": "Store primary startup failure, attempt all owned stop/dispose actions, join every task; report cleanup failure distinctly without replacing the primary cause. In particular invalid host options may be revalidated during DisposeAsync and must not turn the original failure into an unrelated guard result.",
+    "executionOrder": "Begin SQS1/SQS2/SQS3 candidate originals plus SQS4/SQS5 controls; only after original causality choose minimal correction. Rabbit/Azure/Core remaining cases extend bounded registration-path evidence without assuming product defects.",
+    "meaningfulCounterMutations": [
+      "After a confirmed named-SQS correction: change typed option registration back to default slot; named invalid and unused-default controls must fail finitely.",
+      "Remove only Scope-requires-Region predicate; SQS2 must reach sentinel and fail its exact validation oracle while SQS5 stays healthy.",
+      "For other evidence packages mutate exact selected validator registration/order or predicate only after its native baseline is meaningful. No compiler failure, zero discovery, timeout, cleanup guard or unrelated provider fault is causal credit."
+    ],
+    "missingMalformedConflictHealthyUnselectedNamed": "Missing limits/transport/payloadhardlimit, malformed selected region/host/connection whitespace, conflict TLS and stop budgets, coherent controls, unused invalid default/named/generic options and selected named siblings included.",
+    "normalPositiveControls": "HOST3 and CORE3 use genuine public InMemory bus start/stop rather than the barrier; collect exact start/stop and finite message-terminal observations, no sleeps/polling-as-success.",
+    "notInFirstPackage": [
+      "Arbitrary nonempty malformed Azure connection string parsing requires the complete actual host/parser chain and exact native error oracle; whitespace invariant is prioritized here.",
+      "Two namespaces with same short TBus.Name may share transport option slots; inventory/compatibility policy before any broad renaming.",
+      "Other20host-start families, EF/job/schedulers, every41model registration path and provider-crossing lifecycle remain later bounded packages."
+    ],
+    "owners": 5
+  },
+  "currentRegistrationPaths": [
+    "GenericHost.StartAsync invokes registered startup options validation and hosted services; app registration adds options plus one BusCompositionStartupValidator per bus before runtime ServiceBusHostedService.",
+    "BusCompositionStartupValidator rejects missing/conflicting owner metadata, otherwise materializes selected bus through TBus public registration before runtime start.",
+    "Rabbit and Azure default options key is empty; typed key is typeof(TBus).Name; diagnostic bus text full type name.",
+    "Core payload options are generic per bus, and diagnostic identity uses assembly:full-type, default key default. Host lifecycle policy is global default options, diagnostic all; do not invent per-bus host policy isolation.",
+    "ServiceBusHostedService resolves IBusDepot lazily inside StartAsync; constructor does not materialize runtime buses. BusDepot.StartAsync starts all selected controls."
+  ],
+  "highestPriorityCandidate": {
+    "boundary": "Not an accepted defect or code permission conclusion from rg match; complete selected source bodies support candidate, native original must supply finite specific failure.",
+    "chain": [
+      {
+        "evidence": "IBusRegistrationConfigurator<TBus> inherits untyped IBusRegistrationConfigurator.",
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationConfigurator.cs"
+      },
+      {
+        "evidence": "Only untyped UsingAmazonSqs exists; registers named options string.Empty and ValidateOnStart diagnostics for default.",
+        "line": 26,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs"
+      },
+      {
+        "evidence": "Typed CreateBus passes typeof(TBus).Name to transport factory.",
+        "line": 298,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs"
+      },
+      {
+        "evidence": "IOptionsMonitor<AmazonSqsTransportOptions>.Get(busName) consumes that typed slot.",
+        "line": 43,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/AmazonSqsRegistrationBusFactory.cs"
+      }
+    ],
+    "consequencesToProve": [
+      "Invalid selected named options can be skipped by the default-name validator.",
+      "Unused invalid default options can fail a coherent typed-only SQS bus."
+    ],
+    "id": "P04-SQS-NAMED-DEFAULT-SLOT",
+    "minimalRepairOnlyIfConfirmed": "Mirror Rabbit/Azure pattern: generic UsingAmazonSqs<TBus> registration, central AddTransportOptions(services, optionsName, owningBus) reused by default and typed entry points, preserve current predicates/default semantics and named factory read. Additive public overload requires package/API comparison; do not change product policy or promote arbitrary region validity beyond existing invariant.",
+    "status": "SOURCE_DERIVED_CANDIDATE_CONFIRM_ORIGINAL_NATIVE_BEFORE_FIX"
+  },
+  "inputs": {
+    ".testagent/local-completion-plan.md": {
+      "bytes": 4051,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/local-completion-plan.md",
+      "relative": ".testagent/local-completion-plan.md",
+      "sha256": "a593939735f907c84a67d6c77f23bbfee6d0f0380ab1fc0267877c42c2188400"
+    },
+    "TODO.md": {
+      "bytes": 21398,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/TODO.md",
+      "relative": "TODO.md",
+      "sha256": "3b3169e531d888cf4a4caa680a2b5ce721437b0a0513ac06d73a629ced9f05c8"
+    },
+    "docs/static-configuration-validation.json": {
+      "bytes": 34351,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/static-configuration-validation.json",
+      "relative": "docs/static-configuration-validation.json",
+      "sha256": "42d60d7d6ec844fb67d9843bfb91b93b71344fe6114b340e69bf13eef429baf8"
+    }
+  },
+  "inventoryTruth": {
+    "boundaries": {
+      "configuration-materialization": 11,
+      "construction": 8,
+      "host-start": 20,
+      "registration": 2
+    },
+    "concreteModels": 41,
+    "excluded": "One abstract inheritance base and one validator, not two abstract models.",
+    "lexicalPublicDeclarations": 43,
+    "qualification": "Current matrix labels intended boundary and points to tests; the inspected named transport and host tests use IStartupValidator.Validate directly, payload tests IOptions.Value, composition tests directly selected IHostedService.StartAsync. These do not supply a Generic Host.StartAsync before-endpoint proof."
+  },
+  "kind": "PACKAGE04_PRIORITIZED_CURRENT_STARTUP_READ_ONLY_RESEARCH_R1",
+  "limits": [
+    "Read-only source/config/Git/hash/Python static-analysis dependency probe only; no .NET/MSBuild/Docker/provider/test execution or product/test writes.",
+    "Case-plan native outcomes, exact host exception shape and source repair remain unexecuted, not accepted runtime facts.",
+    "Guard/sentinel transport controls qualify no-I/O Host.StartAsync registration and composition boundary, not actual provider/endpoint ready/start or real cloud/hardware behavior.",
+    "Scoped searches and inspected tests do not establish that no other tests exercise Generic Host.StartAsync across repository.",
+    "No full retained startup matrix, generic current coverage, API audit234 reopened, whole-owner/globalA+ or release closure."
+  ],
+  "priorReportsInspected": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/todo-review-r2.json",
+      "sha256": "9c8171fbfad94735e648314870d90ac1dfef96a5b68b331e0d104730dd2a48ef"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-owner-root-read-current-reconciliation-r1.json",
+      "sha256": "6e977ccf7c50e973d7bba29592c780a3ac745e565d9eb2f86f7c5c94c6ad4dfa"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-owner-root-read-qualified-current-r2.json",
+      "sha256": "cf715d45f5dfcc2e9e63166a0e24448a44a1eedf41b9bd06763e144a313c3230"
+    }
+  ],
+  "reviewer": "todo_reconciliation_review",
+  "scope": "Current TODO/local completion plan; exact current static configuration inventory and prior read reconciliation; selected five representative startup owners. No exhaustive startup closure or untested-source classification.",
+  "sourceRepository": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+  "staticPairingSkill": {
+    "analyzer": "tree-sitter scripts/find_untested_sources.py",
+    "attempt": "python3 -B script repo --lang csharp --include-tested --limit-untested5",
+    "classification": "No analyzer JSON, no paired/unpaired or absence-of-tests claims. This is actual selected caller/test-body gap research, not line/branch coverage.",
+    "exit": 2,
+    "reason": "tree-sitter-language-pack not installed; Python3system3.9; .NETRoslyn fallback forbidden by task. No package installation/network attempted.",
+    "skill": "dotnet-test:find-untested-sources"
+  },
+  "status": "BOUNDED_CASE_PLAN_SOURCE_CANDIDATE_NO_NATIVE_OR_PRODUCT_ACCEPTANCE"
+}

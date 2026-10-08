@@ -1,0 +1,189 @@
+{
+  "kind": "ROOT_OWN_SQS_CONTROLS_WHOLE_NATIVE_BODY_AND_FIRST_FINITE_QUALIFICATION_R1",
+  "aggregate_sha256": "88168e02341902ded91762ca55b7e84e549c2b573d38eae2d6778c47232b4692",
+  "rows": [
+    {
+      "id": "M1-system-clock",
+      "result_sha256": "fac8dc050bcc79208d3ddd587f87fe0aa09a286e78fb540c6e5c20e117edb44f",
+      "actual": {
+        "total": 9,
+        "passed": 1,
+        "failed": 8,
+        "skipped": 0
+      },
+      "first_finite": [
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_FlushesPartialBatchAsync(path: \"delete-existing\") (196ms)",
+          "first_finite_line": 178,
+          "assertion": "Assert.Single() Failure: The collection was empty"
+        },
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_FlushesPartialBatchAsync(path: \"send-existing\") (7ms)",
+          "first_finite_line": 178,
+          "assertion": "Assert.Single() Failure: The collection was empty"
+        },
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_FlushesPartialBatchAsync(path: \"publish-existing\") (14ms)",
+          "first_finite_line": 178,
+          "assertion": "Assert.Single() Failure: The collection was empty"
+        },
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_FlushesPartialBatchAsync(path: \"delete-created\") (5ms)",
+          "first_finite_line": 178,
+          "assertion": "Assert.Single() Failure: The collection was empty"
+        },
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_FlushesPartialBatchAsync(path: \"publish-created\") (7ms)",
+          "first_finite_line": 178,
+          "assertion": "Assert.Single() Failure: The collection was empty"
+        },
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_FlushesPartialBatchAsync(path: \"send-created\") (1ms)",
+          "first_finite_line": 178,
+          "assertion": "Assert.Single() Failure: The collection was empty"
+        },
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_RemainsFixedAfterPayloadAndScopeUpdatesAsync (12ms)",
+          "first_finite_line": 178,
+          "assertion": "Assert.Single() Failure: The collection was empty"
+        },
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.TimerCreationFailure_FaultsAdmittedWorkAndKeepsDisposalJoinableAsync (5ms)",
+          "first_finite_line": 126,
+          "assertion": "Assert.True() Failure"
+        }
+      ]
+    },
+    {
+      "id": "M2-late-first-capture",
+      "result_sha256": "61fe2e3c074a7283a2066943a379b24f577908fdd18dfc46714fc9568540ca8a",
+      "actual": {
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0
+      },
+      "first_finite": [
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_RemainsFixedAfterPayloadAndScopeUpdatesAsync (40ms)",
+          "first_finite_line": 178,
+          "assertion": "Assert.Single() Failure: The collection was empty"
+        }
+      ]
+    },
+    {
+      "id": "M3-reselect-later-owner",
+      "result_sha256": "e0435ea13cae6ef9780b25927da8063b738ff6f2b3ab3d50abe549d5714fe8b1",
+      "actual": {
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0
+      },
+      "first_finite": [
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_RemainsFixedAfterPayloadAndScopeUpdatesAsync (50ms)",
+          "first_finite_line": 178,
+          "assertion": "Assert.Single() Failure: The collection was empty"
+        }
+      ]
+    },
+    {
+      "id": "M4-two-ms-window",
+      "result_sha256": "082eb388ee9339fc7b1dcae109ab7128181b90bbc12c0b6ed2b6329d803f0b4f",
+      "actual": {
+        "total": 9,
+        "passed": 2,
+        "failed": 7,
+        "skipped": 0
+      },
+      "first_finite": [
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_FlushesPartialBatchAsync(path: \"delete-existing\") (203ms)",
+          "first_finite_line": 180,
+          "assertion": "Assert.Equal() Failure: Values differ"
+        },
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_FlushesPartialBatchAsync(path: \"send-existing\") (7ms)",
+          "first_finite_line": 180,
+          "assertion": "Assert.Equal() Failure: Values differ"
+        },
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_FlushesPartialBatchAsync(path: \"publish-existing\") (14ms)",
+          "first_finite_line": 180,
+          "assertion": "Assert.Equal() Failure: Values differ"
+        },
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_FlushesPartialBatchAsync(path: \"delete-created\") (4ms)",
+          "first_finite_line": 180,
+          "assertion": "Assert.Equal() Failure: Values differ"
+        },
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_FlushesPartialBatchAsync(path: \"publish-created\") (7ms)",
+          "first_finite_line": 180,
+          "assertion": "Assert.Equal() Failure: Values differ"
+        },
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_FlushesPartialBatchAsync(path: \"send-created\") (0ms)",
+          "first_finite_line": 180,
+          "assertion": "Assert.Equal() Failure: Values differ"
+        },
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_RemainsFixedAfterPayloadAndScopeUpdatesAsync (13ms)",
+          "first_finite_line": 180,
+          "assertion": "Assert.Equal() Failure: Values differ"
+        }
+      ]
+    },
+    {
+      "id": "M5-no-fatal-drain",
+      "result_sha256": "71a09bdd59260fdd37fa01004898d6a52e4146d7ce4dd88c96c162d3764b04c2",
+      "actual": {
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0
+      },
+      "first_finite": [
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.TimerCreationFailure_FaultsAdmittedWorkAndKeepsDisposalJoinableAsync (23ms)",
+          "first_finite_line": 148,
+          "assertion": "Assert.True() Failure"
+        }
+      ]
+    },
+    {
+      "id": "M6-swallow-channel-closed",
+      "result_sha256": "d3a5e0d5605b592b6c4785978814ae6e53fe25271987f624fc584609da9ef3c2",
+      "actual": {
+        "total": 2,
+        "passed": 1,
+        "failed": 1,
+        "skipped": 0
+      },
+      "first_finite": [
+        {
+          "label": "fehlerhaft ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.TimerCreationFailure_FaultsAdmittedWorkAndKeepsDisposalJoinableAsync (24ms)",
+          "first_finite_line": 148,
+          "assertion": "Assert.True() Failure"
+        }
+      ]
+    },
+    {
+      "id": "restored-post",
+      "result_sha256": "0695ab5321a556a5cb4135406d3c059bb03284006579874904cb9fa269cb5442",
+      "actual": {
+        "total": 9,
+        "passed": 9,
+        "failed": 0,
+        "skipped": 0
+      },
+      "first_finite": []
+    }
+  ],
+  "personally_whole_read": "Each seven complete focused native logs separately read without truncation; M1 first7Single178/negative126, M2first178caller60, M3first178caller63 (firsthelper passed), M4firstEqual180 1msvs2ms, M5/6firstTrue148false afterpositiveadmission+workerjoin; Postall9PASS.",
+  "strict_actual14stages_joined_no_deadline": true,
+  "actual_raw42hashes_CRC14_verified": true,
+  "full15_fixed_post_archive_live_equal": true,
+  "limits": "Firstfinite only; later assertions remainunreached in RED cases. Run208/212/finally are primaryreobservations notextra failures. Laterneutralrescue no productdrain credit. No PE/CLI/peer/canonical/global/cloud/HW conclusion transferred."
+}

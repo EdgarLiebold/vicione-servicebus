@@ -1,0 +1,111 @@
+{
+  "kind": "INTERNAL_READ_ONLY_FORWARDING_TOOL_REVIEW_R3",
+  "reviewer": "todo_reconciliation_review",
+  "utc": "2026-10-06T23:24:27.151078+00:00",
+  "verdict": "CHANGES_REQUIRED_MIXED_TERMINAL_FAILURE_STATUS",
+  "root_authored_owner": true,
+  "external_product_team_or_model_independent_assurance": false,
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/tool-owner-r3/local_colima_forwarding.py": {
+      "sha256": "7a9dca34a26e23a04bdd1475cab5143fa120e99b81b3381ffacdd8bc2fd7377e",
+      "bytes": 10783
+    },
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/tool-owner-r3/test_local_colima_forwarding.py": {
+      "sha256": "8f12100aa0973db1542412fdd2304deb39567d9c8e1c96b7fd3a5ae572c29c62",
+      "bytes": 10194
+    },
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/tool-owner-r3/FORWARDING_RESEARCH_PLAN.md": {
+      "sha256": "86806129fe926f1962b9ee1eca4e9e8d968c9e24f7f78282d324d7b9e4fdbd8e",
+      "bytes": 1887
+    },
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tools/ci/fixtures/run_scope.py": {
+      "sha256": "1ef7d3cb955828937ec1adb31fcbd4a0a6bcbbc16fbb354388b582e30005f095",
+      "bytes": 3747
+    },
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tools/ci/fixtures/compose_fixture.py": {
+      "sha256": "cc2b92ddc68377c2af3cf398c6a5ec041f858cdba42c30a886af51a413e3fe6d",
+      "bytes": 14046
+    }
+  },
+  "binding_note": "Current root owner began new edits; reviewed snapshot tool-owner-r3 matches exact previously read source/test/plan hashes and closed R5 log. Live successor files are not accepted by this report.",
+  "runtime_evidence": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/tool-owner-r3/contracts.log",
+    "sha256": "376f4a743ab5ff9c54c1751d5d96964007fd39d4706a5432e86ecf0b527cb352",
+    "same_as_closed_R5_log": true,
+    "source_test_names_exact": true,
+    "total": 15,
+    "passed": 15,
+    "failed": 0,
+    "skipped": 0,
+    "limits": "Toolcontracts only, with static/mocked negatives and actual owned subprocess/listener cases; no native provider execution credited."
+  },
+  "prior_findings_disposition": [
+    {
+      "id": "FORWARD-R1-001",
+      "status": "CORRECTED_SOURCE_AND_R5_SIGTERM_CONTRACT",
+      "evidence": "SIGINT/SIGTERM handlers retain130/143; finally ignores repeats while retiring and restores handlers afterward."
+    },
+    {
+      "id": "FORWARD-R1-002",
+      "status": "CORRECTED_SOURCE_AND_BOUNDED_R5_DESCENDANT_CONTRACT",
+      "evidence": "retire polls/reaps leader and observes PGID beyond leader termination; actual exited-leader descendant PID/group absence assertions pass."
+    },
+    {
+      "id": "FORWARD-R1-003",
+      "status": "CORRECTED_FINALLY_CLEANUP_ROUTE_SOURCE_AND_R5_CONTRACT",
+      "evidence": "Cleanupfault only changes otherwise0; native29 and interrupt130 remain, with real retirement plus injected postretirement failure."
+    }
+  ],
+  "findings": [
+    {
+      "id": "FORWARD-R3-001",
+      "severity": "Medium",
+      "status": "SOURCE_CONFIRMED_CAUSAL_REGRESSION_NOT_YET_EXECUTED",
+      "issue": "After actual child29 is captured in outcome and receipt.child_exit, final tunnel.poll may report terminal. RuntimeError then enters generic except and outcome=1 replaces child29. This distinct mixed terminal route bypasses the corrected finally-cleanup preservation.",
+      "trace": [
+        "child.poll terminal29",
+        "outcome=29 and child_exit=29",
+        "final tunnel.poll terminal",
+        "generic except outcome=1",
+        "public1 replaces actual29"
+      ],
+      "required_fix": "Retain already-observed nonzero childprimary while recording tunnelfailure; child0+tunnelterminal must become1. Activechild tunnelloss or prechild failure remains infrastructurefailure1.",
+      "required_test": "Real child29 plus controlled finaltunnelterminal result, visible tunnelfailure, actual ownedgroup cleanup; zero-child control must return1."
+    }
+  ],
+  "positive_checks": [
+    "Canonical run-root token/name/containment adoption and matching composeidentity; mainroute Source-qualified only.",
+    "Complete projected endpoint families, exact environment equality, unique valid IPv4loopback ports.",
+    "SSH command explicitly ControlMaster=no ControlPath=none ControlPersist=no; no-f/no-O, noVMrestart/globalsettings/masterchanges.",
+    "Exact liveSSH-pid lsof listener set prevents unowned-port substitution; TCP readiness is not provider acceptance.",
+    "Runtime tunnelmonitor plus own new-session processgroups cleanup; all direct PID and PGID absence assertions retained.",
+    "killpg0 PermissionError conservatively meansalive; process.poll reaps terminating leader. Persistent actualsignal denial remains visible cleanupfailure, never acceptedabsence.",
+    "Receipt omits canonical ownershiptoken and credential environment; stores endpoints/source/config hashes/status only.",
+    "Bounded six-provider experiment excludes pre-child ServiceBus health, cloud/device/product transport acceptance."
+  ],
+  "retained_failures": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/local-forwarding-contracts-r1.log",
+      "sha256": "97b0e89daed33bdc975ba9b7f169f098f27fd04baeb8f09b0677f80b93e774d0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/local-forwarding-contracts-r2.log",
+      "sha256": "a62b49e1aac71df48b199b6dc30c00e20cf484cfd82bc84525afcd23d4911fa5"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/local-forwarding-contracts-r3-unsandboxed.log",
+      "sha256": "aaf8a60a7b20337c51332fa6e08fb754e55185fb2eb1010fe31a335606f485d1"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/local-forwarding-diagnostic-r4.log",
+      "sha256": "53b4c8e2ca46b83a5d7d6a362defa29fee45e1b715b8e7d82d3c1b17df2ed08f"
+    }
+  ],
+  "limitations": [
+    "No dotnet/Docker/SSH/tests/signals or runtime process started by reviewer. Read-only source/log/hash/AST/lsof checks only.",
+    "New mixed-terminal counterexample is a Source trace; no invented executed causal native credit.",
+    "TERM/KILL escalation for deliberate ignored signals is Source-qualified; R5 does not separately execute each escalation stage.",
+    "Cleanup signals only wrapper-created sessionPGIDs; no universal guarantee for escaped descendants creating other sessions or arbitrary PIDreuse churn.",
+    "Require new corrected freeze and independent review before provider runtime."
+  ]
+}

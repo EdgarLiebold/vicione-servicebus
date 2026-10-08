@@ -1,0 +1,181 @@
+{
+  "status": "NO_BLOCK_FIVE_ACTUAL_SINGLE_CAUSE_PREPARATIONS__NO_MUTANT_NATIVE_CREDIT",
+  "reviewer": "continuation_adversarial internal read-only independent reviewer",
+  "canonical_fixed_freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C5_FREEZE_R1.json",
+    "sha256": "8fabb9e58e19ef233ebb4b023a05cf23d53123495f70cce90ffd4a9abf1117cf",
+    "owners_current_and_snapshot_same": {
+      "tests/ViciOne.ServiceBus.Tests/Monitoring/ColdTelemetrySourceIsolationTests.cs": "b70774d05b7d4bba088e0f2f0266bc0807fb1435b927077b2720ebd1a79d8eb6",
+      "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "00913637eafb82610ecbdd3a1a11a2e7c30d62bbe2ad81ce9ca0325287c52db4",
+      "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs": "05e403b9ff64a86e7828b08103837c7bd631e935890b089c63fe58eeb454abb5",
+      "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs": "d71cd6088adf54b5ab5e544b1bfc61ce4abfbd4028e4fdf1f53207e91f8b718a"
+    }
+  },
+  "test_and_requirements": "Exact test b70774d05b7d4bba088e0f2f0266bc0807fb1435b927077b2720ebd1a79d8eb6, Req00913637eafb82610ecbdd3a1a11a2e7c30d62bbe2ad81ce9ca0325287c52db4; 4706 rows; all clones unchanged, seven parent Facts/seven corresponding fresh child cases.",
+  "source_review": "Whole current optional TestActivityListener and required TrackedActivity bodies personally consumed untruncated this turn, all five complete actual unified diffs personally consumed. Full graph hashing validates provenance and does not transfer Root personal reading. Root808 exact owner rows/shared84 source hashes reused only for unchanged files. Product source Root57 originally read + authored successor remains Root personal attestation; this report is mutation prep qualification, not replacement source/native acceptance.",
+  "actual_mutants": [
+    {
+      "name": "m1-optional-cold-source-required",
+      "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c5-mutants/m1-optional-cold-source-required",
+      "prep_sha256": "6a517d86c4d5b1ef5bf44a6661a7c8dacf59ae232cfd1989fa06926bfe6fa2b5",
+      "diff_sha256": "68bc1b7b29ac64673d0fc646279fff45d65a682a7165ff7cfa24bc3d408cd897",
+      "canonical_and_clone_paths": 6090,
+      "pathsets_equal": true,
+      "differing_paths": [
+        "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs"
+      ],
+      "unchanged_paths": 6089,
+      "canonical_graph_sha256": "88674209ee0960f7dc59d8a1aeb0908d3a69d2d74de47743d78787df38fe4bbb",
+      "mutant_graph_sha256": "2f9d6b9567199c0ffac60f24a049e12d8397e985de9d86b1b76b7d553bb38b95",
+      "fixed_owner_sha256": "05e403b9ff64a86e7828b08103837c7bd631e935890b089c63fe58eeb454abb5",
+      "mutant_owner_sha256": "33f0482874cb417c80e8d5d3131505c39d63783d56e5befa644a31e2e019e0b3",
+      "exact_diff_matches_current_actual_bytes": true,
+      "all84_shared_same": true,
+      "other_owner3_same": true,
+      "full_actual_diff": "--- fixed/src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs\n+++ mutant/src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs\n@@ -62,8 +62,7 @@\n         }\n         catch (Exception)\n         {\n-            // The optional timeline remains inert after a failed cold activation.\n-            return null;\n+            throw;\n         }\n         finally\n         {\n"
+    },
+    {
+      "name": "m2-optional-no-ambient-restoration",
+      "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c5-mutants/m2-optional-no-ambient-restoration",
+      "prep_sha256": "964b35d71c21373c294aeea6ab1d62da6c616910d6c167a41767bc4440fad35e",
+      "diff_sha256": "770b499bacadca90a203cea279888f6807202015f65500dd6f8cfca23f76c301",
+      "canonical_and_clone_paths": 6090,
+      "pathsets_equal": true,
+      "differing_paths": [
+        "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs"
+      ],
+      "unchanged_paths": 6089,
+      "canonical_graph_sha256": "88674209ee0960f7dc59d8a1aeb0908d3a69d2d74de47743d78787df38fe4bbb",
+      "mutant_graph_sha256": "5f53ea70e0ce3aa97871a9e08ed667d870c00ab454fb4b99ff946b545ec5e316",
+      "fixed_owner_sha256": "05e403b9ff64a86e7828b08103837c7bd631e935890b089c63fe58eeb454abb5",
+      "mutant_owner_sha256": "763098ffd895367a7048f3f37f97a5545a18d4a940b004080cacf5bae1945c7a",
+      "exact_diff_matches_current_actual_bytes": true,
+      "all84_shared_same": true,
+      "other_owner3_same": true,
+      "full_actual_diff": "--- fixed/src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs\n+++ mutant/src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs\n@@ -67,7 +67,7 @@\n         }\n         finally\n         {\n-            ActivityObservation.TrySetCurrent(previousActivity);\n+            GC.KeepAlive(previousActivity);\n         }\n     }\n \n"
+    },
+    {
+      "name": "m3-required-source-failure-not-cached",
+      "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c5-mutants/m3-required-source-failure-not-cached",
+      "prep_sha256": "28c1e1103db6840f36c9f1008cffd00e4257d9778b327e0e5b91626fc4a3afbc",
+      "diff_sha256": "b63a900d3b46eb8255d4780da07c3f9680c41031fd001e5280eade35c8fa59e0",
+      "canonical_and_clone_paths": 6090,
+      "pathsets_equal": true,
+      "differing_paths": [
+        "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs"
+      ],
+      "unchanged_paths": 6089,
+      "canonical_graph_sha256": "88674209ee0960f7dc59d8a1aeb0908d3a69d2d74de47743d78787df38fe4bbb",
+      "mutant_graph_sha256": "3eaee4f2420efe9b4d13c91613134d8db3926011b52fa17ff62715074c57b01a",
+      "fixed_owner_sha256": "d71cd6088adf54b5ab5e544b1bfc61ce4abfbd4028e4fdf1f53207e91f8b718a",
+      "mutant_owner_sha256": "27d2c6d873d9da2e47926e5be58fbf89f0337ede0f6529055ef51dd1df195f6b",
+      "exact_diff_matches_current_actual_bytes": true,
+      "all84_shared_same": true,
+      "other_owner3_same": true,
+      "full_actual_diff": "--- fixed/src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs\n+++ mutant/src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs\n@@ -12,7 +12,7 @@\n sealed class TrackedActivity :\n     IDisposable\n {\n-    static readonly Lazy<ActivitySource> _source = new Lazy<ActivitySource>(CreateSource);\n+    static readonly Lazy<ActivitySource> _source = new Lazy<ActivitySource>(CreateSource, System.Threading.LazyThreadSafetyMode.PublicationOnly);\n \n     readonly HashSet<string> _activeSpans = new HashSet<string>(StringComparer.Ordinal);\n     readonly TaskCompletionSource<bool> _completed;\n"
+    },
+    {
+      "name": "m4-required-no-factory-ambient-restoration",
+      "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c5-mutants/m4-required-no-factory-ambient-restoration",
+      "prep_sha256": "da8afb923cc949e5e29f123c7253e6582e9ba2b31961808f140e4cf2f9f87a3b",
+      "diff_sha256": "ec5e0089d3687c815889d4cf4055fb517ab5d4e7e43fdc887707a9cd2941dbb8",
+      "canonical_and_clone_paths": 6090,
+      "pathsets_equal": true,
+      "differing_paths": [
+        "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs"
+      ],
+      "unchanged_paths": 6089,
+      "canonical_graph_sha256": "88674209ee0960f7dc59d8a1aeb0908d3a69d2d74de47743d78787df38fe4bbb",
+      "mutant_graph_sha256": "3960190d20eadc892e413cce406cb701551e0d06ad0559c937a98dc05d6d98a0",
+      "fixed_owner_sha256": "d71cd6088adf54b5ab5e544b1bfc61ce4abfbd4028e4fdf1f53207e91f8b718a",
+      "mutant_owner_sha256": "a7df9e2f68a4da33c053f82de680716a04f57252f1d204be7698fe536a48b5e2",
+      "exact_diff_matches_current_actual_bytes": true,
+      "all84_shared_same": true,
+      "other_owner3_same": true,
+      "full_actual_diff": "--- fixed/src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs\n+++ mutant/src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs\n@@ -99,7 +99,7 @@\n         }\n         finally\n         {\n-            ActivityObservation.TrySetCurrent(previousActivity);\n+            GC.KeepAlive(previousActivity);\n         }\n     }\n \n"
+    },
+    {
+      "name": "m5-constructor-cleanup-replaces-primary",
+      "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c5-mutants/m5-constructor-cleanup-replaces-primary",
+      "prep_sha256": "d61e69fb711d6998adde57034fa5ccd3e63a8ea21735f485459298bb62ffa71f",
+      "diff_sha256": "ac1d10d8e08ec02cb1f51875a6b3b9d33b206f26f4804b8a5341f669ebaa998b",
+      "canonical_and_clone_paths": 6090,
+      "pathsets_equal": true,
+      "differing_paths": [
+        "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs"
+      ],
+      "unchanged_paths": 6089,
+      "canonical_graph_sha256": "88674209ee0960f7dc59d8a1aeb0908d3a69d2d74de47743d78787df38fe4bbb",
+      "mutant_graph_sha256": "88b3c382a0776a5181e39685cf8c084f16d8ceb6885cc6dabad5afd2e2303e90",
+      "fixed_owner_sha256": "d71cd6088adf54b5ab5e544b1bfc61ce4abfbd4028e4fdf1f53207e91f8b718a",
+      "mutant_owner_sha256": "e4daf878bfcd2aae4b3198440be5f6d63abbeb49c5187b444de25d972c2e43cd",
+      "exact_diff_matches_current_actual_bytes": true,
+      "all84_shared_same": true,
+      "other_owner3_same": true,
+      "full_actual_diff": "--- fixed/src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs\n+++ mutant/src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs\n@@ -78,10 +78,6 @@\n             {\n                 Dispose();\n             }\n-            catch (Exception)\n-            {\n-                // Constructor cleanup must preserve the primary activation failure.\n-            }\n             finally\n             {\n                 ActivityObservation.TrySetCurrent(previousActivity);\n"
+    }
+  ],
+  "causal_predictions_only": [
+    {
+      "name": "m1-optional-cold-source-required",
+      "single_cause": "Optional cold source constructor guard catch returns null changed to throw; ambient finally retained. Lazy failure now cached and public activation required instead of inert.",
+      "expected_case": "OptionalTimeline_ColdSourceFailureRemainsInertAcrossPublicActivations",
+      "expected_finite_failure": "Actual activation escaped exception before Assert.Null(escaped); physical source1 checked first; no constructor/module/discovery failure credit.",
+      "expected_red": 1,
+      "expected_healthy": 6
+    },
+    {
+      "name": "m2-optional-no-ambient-restoration",
+      "single_cause": "Optional factory final ambient assignment changed to GC.KeepAlive; nullable catch/cache/inert listener path retained.",
+      "expected_case": "OptionalTimeline_ColdSourceFailureRemainsInertAcrossPublicActivations",
+      "expected_finite_failure": "Hostile observer sets Current=null then throws; cachednull successful public activation must still retain callerCurrent; actual Same(caller) failure, no fake inert source success.",
+      "expected_red": 1,
+      "expected_healthy": 6
+    },
+    {
+      "name": "m3-required-source-failure-not-cached",
+      "single_cause": "Required Lazy mode ExecutionAndPublication default changed to PublicationOnly; factory/root/unwind remain fixed.",
+      "expected_case": "RequiredMonitor_ColdSourceFailurePreservesOriginalAndCachesOneAttempt",
+      "expected_finite_failure": "Actual first activation selected original cause preserved, second public activation after throw disarmed reruns constructor; counter2 vs required1. No hidden failed source universal leak claim.",
+      "expected_red": 1,
+      "expected_healthy": 6
+    },
+    {
+      "name": "m4-required-no-factory-ambient-restoration",
+      "single_cause": "Required CreateSource finally ambient assignment changed to GC.KeepAlive only; per-instance surrounding CreateActivity finally and constructor unwind cleanup retained.",
+      "expected_case": "RequiredMonitor_NonthrowingSourceObserverCannotChangeRootParent",
+      "expected_finite_failure": "New lazy source Value executes inside CreateActivity argument while Tracked constructor previously captured caller. Normally returning source observer sets Current=null; CreateActivity captures missing parent before retained outer finally restores Current. Actual action root.ParentId expected caller.Id should fail, operation fault awaited before timer oracle.",
+      "expected_red": 1,
+      "expected_healthy": 6,
+      "original_control_limit": "This public case ACTUALLY PASSED original eager static source implementation; it is a healthy original control. Only actual compiled mutant stack/source/test result can establish new lazy-factory restoration sensitivity. No old original kill claim."
+    },
+    {
+      "name": "m5-constructor-cleanup-replaces-primary",
+      "single_cause": "Only constructor-unwind Dispose secondary exception guard removed; Dispose itself and caller/ambient finally still retained.",
+      "expected_case": "RequiredMonitor_StartFailureKeepsPrimaryWhenOwnedTimerDisposeThrows",
+      "expected_finite_failure": "Actual root-start observer creates related child and one owned timer then selected primary; timer releases and selected secondary escapes, final Same(primary) fails after resource oracles. Standalone normal cleanup failure remains required healthy control.",
+      "expected_red": 1,
+      "expected_healthy": 6
+    }
+  ],
+  "fixed_native_context": {
+    "receipt": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-fixed-r2/RESULT.json",
+    "sha256": "03460ebdfcc48c87b07337cfd6ddcbdd455228eb314b8f6cf7d597ffe09fd08c",
+    "Root_reported": "strict86187 exit0/0warnings/0errors; focused39841 seven parents/seven owned children all PASS. WholeCore8074 forthcoming; no wholeCore claim from this report.",
+    "qualification": "Receipt read; entire raw runtime/PE/PDB native graph separate telemetry review. This report does not execute or infer any mutant result."
+  },
+  "findings": [],
+  "limits": [
+    "Clone equality checked against canonical O src/tests/tools graph, not C3 older coverage tools.",
+    "6090 complete physical source/test/tool paths, bin/obj excluded; every clone 6089 unchanged and one changed owner; shared84 frozen actual bytes unchanged.",
+    "35 planned mutant parent events and35 child events are not double-counted; each prediction1red6healthy remains pending native execution.",
+    "No universal parallel PublicationOnly/source-leak/callback-reentrancy guarantee; actual finite single-case contracts only.",
+    "No public caller cleanup/EF elapsed/wholeP05/provider/cloud/device/release/A+ acceptance."
+  ],
+  "execution": {
+    "reviewer_process_provider_dotnet_docker_started": false,
+    "product_test_tool_governance_written": false,
+    "only_own_report_written": true,
+    "mutant_native_credit": 0
+  }
+}

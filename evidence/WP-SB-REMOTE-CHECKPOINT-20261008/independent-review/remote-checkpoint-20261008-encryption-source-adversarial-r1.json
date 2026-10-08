@@ -1,0 +1,83 @@
+{
+  "kind": "READONLY_PUBLIC_REMOTE_CHECKPOINT_ENCRYPTION_SOURCE_PREFLIGHT_R1",
+  "disposition": "NO_BLOCK_ROOT_PRIVATE_ENCRYPTION_AND_ENCRYPTED_RESTORE_ONLY",
+  "role_scope": "Root sole crypto/archive/process executor. Reviewer reads complete source/AST and hashes only; no PowerShell/.NET/SDK/crypto/archive execution, no key read or hash, no canonical edits.",
+  "whole_sources": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-REMOTE-CHECKPOINT-20261008/archive_crypto.ps1",
+      "sha256": "ae48f834947de28d3ed91accf078dd63a796afcd2eb00eef90586b3a0e1b2233",
+      "lines": 51
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-REMOTE-CHECKPOINT-20261008/encrypted_archive.py",
+      "sha256": "0281b8e8ea2bbe9f4e243fe97850203952a3e51b13c68be8d348816c4caf4733",
+      "lines": 95
+    }
+  ],
+  "local_gitignore": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-REMOTE-CHECKPOINT-20261008/.gitignore",
+    "sha256": "cda574464e8c4ee9c354f33ab4e5ed11f17cdd65de04dc4a5eed6db283c5beb7",
+    "exact_pattern": "review-evidence.tar.gz.part-*",
+    "effect": "Only plaintext chunk naming excluded here; ciphertext naming does not match. Actual index audit remains mandatory because force-add could override ignores."
+  },
+  "findings": [],
+  "independent_source_checks": {
+    "key": "encrypt mode resolves key path outside this repository, requires absent file, exclusive os.open 0600 and CSPRNG os.urandom32, verifies size32/mode0600. Key value never included in command arguments, receipts or prints. Runtime owns secret read; reviewer never does.",
+    "cipher": "Standard AesGcm with explicit16-byte tag and32-byte key; fresh CSPRNG12-byte nonce per chunk. Python tracks all generated nonces and rejects collision before creating successful encrypted manifest. Fixed magic/nonce/tag/cipher framing has explicit four writes in finalPS51 rather than ambiguous array iteration.",
+    "AAD": "PS UTF8 associated data prefixes fixed format magic. Python constructs archive=<fullcompressedSHA>;part=<orderedindex>;plain=<plainchunkSHA>. This is the exact recorded AAD fed to authenticated decrypt. Restore also binds ordered plaintext row filename/hash/size and plaintext manifestSHA.",
+    "files": "Encrypt/decrypt output CreateNew. At decrypt, validate length/header, then authenticate in memory before opening plaintext output. Invalid tag/AAD causes no output file. Chunk maximum40MiB, fixed framing bounds; secret-key array cleared and AES disposed in finally.",
+    "actual_checks_planned": "Every chunk is immediately decrypted into private temporary work and matched by hash/size. First chunk tampered-cipher and wrong-AAD tests require nonzero crypto exit and absent rejected output. All successful ciphertext files are hashed/sized and manifest binds original plaintext manifest. These are code-path checks only, no actual PASS inferred.",
+    "full_restore": "Decrypt verifies cipher hashes/sizes, plaintext metadata row alignment and resultant plaintext hash/size before invoking previously reviewed restore71 against temporary assembled chunks. Destination must be absent. Existing restore validates original manifest/input references, complete archive hash, member pathset, size/hash/mode and safe backward hardlinks.",
+    "ownership": "Crypt child timeout120s and restore subprocess timeout600s are bounded Root calls. This preflight does not execute or probe child/group state.",
+    "trust": "Trusted pinned Git manifests/previous sourcegate and normal Python assertion execution without optimization required. This is authenticated confidentiality of the new evidence payload, not a signature/publication-origin protocol. Public metadata/source/docs remain public.",
+    "key_recovery": "One separately held local key is an actual recovery dependency. Owner must back it up separately and acknowledge that requirement; no offsite/key-escrow backup is claimed by source or reviewer."
+  },
+  "primary_API_sources": [
+    {
+      "title": "AesGcm explicit-tag constructor",
+      "url": "https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.aesgcm.-ctor?view=net-10.0",
+      "review": "Explicit tag size and32-byte supported key shape checked."
+    },
+    {
+      "title": "AesGcm.Encrypt",
+      "url": "https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.aesgcm.encrypt?view=net-10.0",
+      "review": "Nonce must not repeat with same key; matching associated data supplied."
+    },
+    {
+      "title": "AesGcm.Decrypt",
+      "url": "https://learn.microsoft.com/en-us/dotnet/api/system.security.cryptography.aesgcm.decrypt?view=net-10.0",
+      "review": "Authentication mismatch throws; plaintext buffer cleared on failed tag validation. Code opens output only after successful return."
+    }
+  ],
+  "visibility_correction": {
+    "current_repository_public": "Root live GitHub metadata attestation; reviewer did not query connector independently. Treat current checkpoint as PUBLIC.",
+    "historical_manifest": "6Oct PRIVATE field remains historical; current sourcegate does not reuse it as present visibility. Previously public plaintext archive is not altered or retroactively protected by this encryption."
+  },
+  "prior_sourcegate": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/remote-checkpoint-20261008-source-adversarial-r1.json",
+    "sha256": "783eb372935dcd98737f2061b77ab37f291e7d314bedf8060e57a522a2177e37"
+  },
+  "guards": {
+    "source6110_hashes_exact": true,
+    "frozen_STATE_ebbed_exact": true,
+    "final_crypto_source_hashes_exact": true
+  },
+  "gate": {
+    "Root_private_encrypt_restore_execution": true,
+    "actual_crypto_results_accepted": false,
+    "public_index_or_push_accepted": false,
+    "mandatory_next": [
+      "Actual35cipherpart decrypt/hash/size, nonce-uniqueness and first-part tamper/wrong-AAD rejection receipts.",
+      "Actual encrypted full19465-member restore comparison to original logical rows and mode/hash/size.",
+      "Actual staged Git index bytes exclude key and every new plaintext chunk/archive while retaining all required ciphertext and source/manifest/entrypoint/previous-archive dependencies.",
+      "Explicit owner acknowledgement of separately backed-up key dependency, with no unsupported offsite backup claim.",
+      "This post-archive source review receipt must be retained as a normal checkpoint sidecar; do not claim it was inside the already completed tar snapshot."
+    ]
+  },
+  "limits": [
+    "No key contents or key fingerprint inspected, logged or retained by reviewer.",
+    "No actual cryptographic roundtrip, tamper rejection or restore performed by reviewer.",
+    "No independence transfer from Root actual archive/crypto/AesGcm.IsSupported receipts.",
+    "No blanket secret absence, globalGreen/Release/cloud/hardware/API/SDK qualification."
+  ]
+}

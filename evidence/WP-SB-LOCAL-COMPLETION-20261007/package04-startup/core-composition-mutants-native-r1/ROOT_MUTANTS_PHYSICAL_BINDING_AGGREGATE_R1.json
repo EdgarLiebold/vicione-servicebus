@@ -1,0 +1,95 @@
+{
+  "kind": "ROOT_FOUR_ACTUAL_COMPOSITION_MUTANTS_FRESH_PHYSICAL_BINDING_AGGREGATE_R1",
+  "rows": [
+    {
+      "name": "M1-drop-limits-cardinality",
+      "native_sha256": "4621ddf594a3b99af5ffe365d5d0f8dc6b7e1fb0e1aa53876d2619378db1c898",
+      "root_physical_sha256": "30e03d9b845e73f7fb112d78e88ec361b7b70eaf8b807d8933f4a42d9098da5a",
+      "PE_images": 12,
+      "PDB_checksum_occurrences": 3808,
+      "actual_changed_runtime_files": [
+        "ViciOne.ServiceBus.dll"
+      ],
+      "unchanged_runtime_files_count": 16,
+      "test_DLL_PDB_exact_qualifiedOriginal3": true,
+      "compiled4725_method_resource_policy": "IndependentOriginalff46/b784 exacttestDLL/PDB reuse possible",
+      "owner_path": "src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+      "compiled_owner_sha256": "eaaf3e601fe30bd424803899f25f80adf4e8dbd666d8dc079bb00f306d987344",
+      "generated_sources_count": 39
+    },
+    {
+      "name": "M2-defer-selected-payload-validation",
+      "native_sha256": "55a62ad9db56e392083c681f446238b4d6d38c57bbb3e10c4299d9741d0b3937",
+      "root_physical_sha256": "c498e5abd2c0f1bf55814aea45c523a37797ffad3f027dfc2ad4d2e7eaac1560",
+      "PE_images": 12,
+      "PDB_checksum_occurrences": 3808,
+      "actual_changed_runtime_files": [
+        "ViciOne.ServiceBus.dll"
+      ],
+      "unchanged_runtime_files_count": 16,
+      "test_DLL_PDB_exact_qualifiedOriginal3": true,
+      "compiled4725_method_resource_policy": "IndependentOriginalff46/b784 exacttestDLL/PDB reuse possible",
+      "owner_path": "src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+      "compiled_owner_sha256": "646121303592f4f105340495b9fe994130f36963e32a94cd89baf8d9c1b648a8",
+      "generated_sources_count": 39
+    },
+    {
+      "name": "M3-start-only-default-instance",
+      "native_sha256": "8cb1a2e0417c0259844efd50aa2a08683109b0f0626a66377ed6b9325f156719",
+      "root_physical_sha256": "121a5b400e5406cbe7988602e744a15fe85124975d4b3d8247054c533adc7abb",
+      "PE_images": 12,
+      "PDB_checksum_occurrences": 3808,
+      "actual_changed_runtime_files": [
+        "ViciOne.ServiceBus.Courier.dll",
+        "ViciOne.ServiceBus.Futures.dll",
+        "ViciOne.ServiceBus.Initializers.dll",
+        "ViciOne.ServiceBus.JobService.dll",
+        "ViciOne.ServiceBus.Mediator.dll",
+        "ViciOne.ServiceBus.Sagas.dll",
+        "ViciOne.ServiceBus.Testing.dll",
+        "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+        "ViciOne.ServiceBus.Tests.dll",
+        "ViciOne.ServiceBus.Tests.pdb",
+        "ViciOne.ServiceBus.dll"
+      ],
+      "unchanged_runtime_files_count": 6,
+      "test_DLL_PDB_exact_qualifiedOriginal3": false,
+      "compiled4725_method_resource_policy": "Requires fresh independent metadata/resource decode; originalTestDLL/PDB changed, no prior byte-reuse claim",
+      "owner_path": "src/ViciOne.ServiceBus/Transports/Hosting/BusDepot.cs",
+      "compiled_owner_sha256": "60c2c965ba007096d2331164b153d69292eece4e950a89dacc70cba59582eb83",
+      "generated_sources_count": 39
+    },
+    {
+      "name": "M4-stop-only-default-instance",
+      "native_sha256": "3a55e627552bf0edc278b619fbd5cfbf4675bc2694ec8f7f7b3476343954185b",
+      "root_physical_sha256": "d1a898a0455563e46ce698df002a70b9c5cdd899cea78a45edfeb1db6011b012",
+      "PE_images": 12,
+      "PDB_checksum_occurrences": 3808,
+      "actual_changed_runtime_files": [
+        "ViciOne.ServiceBus.Courier.dll",
+        "ViciOne.ServiceBus.Futures.dll",
+        "ViciOne.ServiceBus.Initializers.dll",
+        "ViciOne.ServiceBus.JobService.dll",
+        "ViciOne.ServiceBus.Mediator.dll",
+        "ViciOne.ServiceBus.Sagas.dll",
+        "ViciOne.ServiceBus.Testing.dll",
+        "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+        "ViciOne.ServiceBus.Tests.dll",
+        "ViciOne.ServiceBus.Tests.pdb",
+        "ViciOne.ServiceBus.dll"
+      ],
+      "unchanged_runtime_files_count": 6,
+      "test_DLL_PDB_exact_qualifiedOriginal3": false,
+      "compiled4725_method_resource_policy": "Requires fresh independent metadata/resource decode; originalTestDLL/PDB changed, no prior byte-reuse claim",
+      "owner_path": "src/ViciOne.ServiceBus/Transports/Hosting/BusDepot.cs",
+      "compiled_owner_sha256": "4e2dd7038a6a78f279ec03f6c988133958f8142cd641c3752584264b4528f19a",
+      "generated_sources_count": 39
+    }
+  ],
+  "fresh_PE_occurrences": 48,
+  "fresh_PDB_document_checksum_occurrences": 15232,
+  "missing_or_mismatch": 0,
+  "first_finite_ledger_sha256": "4d015fe2a662c89a314abf7683ac8129aa771e7c14bd2fee1bdbddb668268af3",
+  "corrected_static_assumption": "Initial aggregate attempt incorrectly required ONLYCoreDLL changed for all4. Guard stopped BEFORE receipt write. ActualM1/M2 onlyCoreDLL differs; M3/M4 each11runtimefiles includingtestDLL/PDB differ. All4 freshlyparsed12PE/PDB3808actualsourcechecksum proof; M3/M4 require new4725metadata/resource decode. No compiler/runtime/source defect inferred from broader binary propagation of one approved source delta.",
+  "limits": "Rootpurefresh48PE/15232checksum binding withimmutableactualowner+generatedarchives; not48distinctassemblies orhumanallSourceFileRead. Sourcefullyrestoredafter65526; runtimeM4stillneedsfreshpost. Independentactualmutantsfinite/physical/compiledM3M4metadata review pending; no globalP04/API/coverage/performance/cloud/HW/A+ claim."
+}

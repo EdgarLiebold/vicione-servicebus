@@ -1,0 +1,58 @@
+{
+  "status": "SOURCE_NO_BLOCK_BOUNDED_CORE_DEADLINE_PRODUCT2__CURRENT_NATIVE_AND_MUTATION_ACCEPTANCE_PENDING",
+  "role": "Separate internal read-only adversarial reviewer; not external team or universal release assurance",
+  "scope": "Exact current two-file Git delta and full two product owners with time-provider/agent/context/retained-delivery dependency reads. No canonical test edits accepted.",
+  "source_files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "sha256": "e4b191aef095e8f9480f1b6b7cfbbfb069196909628130b96a73260a593cea72",
+      "baseline_sha256": "e91101c1cf3bd5209a468542353c41a1fc87b1c40764fec4733dce84072008de"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+      "sha256": "ee1afc2cf94e4d8f4c9ef24edf7dc3ae559d68371db2f5668225e273a7392088",
+      "baseline_sha256": "ced3f8eab359980762604d3df6fc09a69678ba48134c1e7a6e6fb0dc0a3ada8c"
+    }
+  ],
+  "git_diff_sha256": "4003cdfad10f50328960870b809e6328eee227e9938f5dbc9ef9b2dd50b452f3",
+  "findings": [],
+  "analysis": [
+    "Outbox selects TimeProvider once in SendAsync before any awaited processing/load. Passing it through private delivery method binds every per-message CTS to that exact operation snapshot even if payload changes during LoadOutboxMessagesAsync.",
+    "The new provider-aware CTS retains the existing per-message timeout start after load; it does not claim to bound loading or the whole outbox iteration.",
+    "Linked caller/deadline token still governs both GetSendEndpointAsync and actual endpoint SendAsync. Progress acknowledgement occurs only after send success; exact failure/rethrow and ambient restoration aggregation are unchanged.",
+    "Consumer unexpected-loop StopTimeout timer reads existing endpoint context provider at automatic shutdown admission. Retained-consumer ConsumerStopTimeout timer reads that endpoint provider at its distinct graceful-stop owner. Existing null-timeout branches introduce no timed CTS and no provider lookup.",
+    "Cancellation callback failure queue and all-retained-delivery traversal are unchanged. Registration disposal remains before deadline CTS disposal and joins timeout callback before observing queue faults.",
+    "Normal graceful stop still owns its existing dispatcher/consume-task waits; existing cancellation budgets may end those waits via OrCanceledAsync. This patch does not promise to drain arbitrary uncooperative providers beyond cancellation.",
+    "No public API declaration is changed. The new private parameter avoids a second context lookup during outbox delivery; the three timed CTS sites are changed and no unrelated timeout policy is edited."
+  ],
+  "original_native_log": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-original/artifacts/original-tests-r2.log",
+    "sha256": "31df9db6840e862d01e33c00614ee85e8089d92ce34fb65740a41da7211bf436",
+    "full_log_personally_read": true,
+    "discovered": 13,
+    "failed": 6,
+    "passed": 7,
+    "skipped": 0,
+    "exit_code": 2,
+    "qualification": "Six finite assertions show absent selected-provider timers at the named sites, not watchdog/compiler/discovery failures. Healthy controls remain7. They do not prove corrected runtime behavior."
+  },
+  "original_fixture_binding": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/ORIGINAL_DRAFT_BINDING_R4.json",
+    "sha256": "baa47dd05507e90aee165afbb5215e69f0a867e86774ca4a6fd674bf4723ab7f",
+    "fixture_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/fixture/CoreDeadlineTests.cs",
+    "fixture_sha256": "911d97e8259f3b9b6a364b977d61eac8c93e9a3f5387812c0fdbc0e79a083b7c",
+    "important_status_precision": "R4 binding is original draft NOT_EXECUTED; actual later original log supplies execution result, and R4 is not retroactively relabelled."
+  },
+  "required_remaining_acceptance": [
+    "Parent personally finishes hash-bound complete current800canonical testowner reading before any canonical proxy adaptation.",
+    "Strict fresh corrected package build and complete13-case native owner with exact package/cache/loadedDLL/PDB identities.",
+    "Four compiled one-cause counterproofs: individually revert each of3provider-aware CTS sites and separately reread clock after awaited load; matching causal reds with green controls and full rollback.",
+    "Affected unchanged native Unit and feasible local provider profiles, code+fixture/evidence independent review after final freeze; no skipped or zero-discovery acceptance."
+  ],
+  "limits": [
+    "Only selected clock ownership code delta reviewed; no whole time-normalization/startup/cache/cloud/hardware acceptance.",
+    "Custom TimeProvider/ITimer implementations remain collaborators; arbitrary failing CreateTimer/Dispose or nonreturning callbacks are not universally guaranteed.",
+    "Existing ConsumeLoopObserver StopFaulted logger and caller-cancellation ownership behavior are not changed by this patch.",
+    "No .NET/Docker/provider/cloud processes and no product/test writes by reviewer."
+  ]
+}

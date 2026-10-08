@@ -17,7 +17,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
     readonly object _compositionLock = new();
     readonly IReadOnlyList<IDurableSendDispatcher<TBus>>? _dispatchers;
     readonly IReadOnlyList<ITransportSendFailureClassifier> _failureClassifiers;
-    readonly IReadOnlyList<IReliableDeliverySource<TBus>> _additionalSources;
+    IReadOnlyList<IReliableDeliverySource<TBus>> _additionalSources = Array.Empty<IReliableDeliverySource<TBus>>();
     readonly ServiceBusInstrumentation<TBus> _instrumentation;
     readonly ILogger<ReliableMessagingDeliveryService<TBus>> _logger;
     readonly ReliableMessagingPolicy<TBus>? _policy;
@@ -28,22 +28,19 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
     IOutboxStore<TBus> _store = null!;
     bool _compositionResolved;
     long _nextTelemetrySnapshotUtcTicks;
+    int _telemetrySnapshotHasNoSuccessor;
 
+    // Let ValidateOnStart reject options after the Host has materialized its hosted-service list.
     public ReliableMessagingDeliveryService(
         IServiceProvider provider,
         IEnumerable<ITransportSendFailureClassifier> failureClassifiers,
-        IEnumerable<IReliableDeliverySource<TBus>> additionalSources,
         TimeProvider timeProvider,
         ILogger<ReliableMessagingDeliveryService<TBus>> logger,
-        ServiceBusInstrumentation<TBus> instrumentation,
-        ReliableMessagingPolicy<TBus>? policy = null)
+        ServiceBusInstrumentation<TBus> instrumentation)
     {
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         ArgumentNullException.ThrowIfNull(failureClassifiers);
-        ArgumentNullException.ThrowIfNull(additionalSources);
         _failureClassifiers = failureClassifiers.ToArray();
-        _additionalSources = additionalSources.ToArray();
-        _policy = policy;
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _instrumentation = instrumentation ?? throw new ArgumentNullException(nameof(instrumentation));
@@ -86,9 +83,11 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
     {
         EnsureCompositionResolved();
         IReadOnlyList<DurableSendDelivery> batch = [];
+        DateTimeOffset? claimTime = null;
         if (_store != null)
         {
             DateTimeOffset now = _timeProvider.GetUtcNow();
+            claimTime = now;
             ReliableMessagingPolicy<TBus> policy = RequirePolicy();
             // Claim no more work than can begin immediately. A durable lease is ownership, not a local work buffer:
             // pre-claiming a larger batch would leave later records leased-but-idle behind a slow provider send.
@@ -124,8 +123,8 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
             additionalWork |= await source.DeliverDueBatchAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        if (_store != null)
-            await RefreshTelemetrySnapshotIfDueAsync(_timeProvider.GetUtcNow(), cancellationToken).ConfigureAwait(false);
+        if (claimTime is { } anchor)
+            await RefreshTelemetrySnapshotIfDueAsync(anchor, cancellationToken).ConfigureAwait(false);
         return batch.Count > 0 || additionalWork;
     }
 
@@ -166,6 +165,11 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
             if (_compositionResolved)
                 return;
 
+            // Provider sources can resolve validated options and a bus while being materialized.
+            // Resolve them only after ValidateOnStart, when the Host owns all hosted services.
+            if (_provider is not null)
+                _additionalSources = _provider.GetServices<IReliableDeliverySource<TBus>>().ToArray();
+
             IOutboxStore<TBus>[] stores = (_stores ?? _provider!.GetServices<IOutboxStore<TBus>>()).ToArray();
             IDurableSendDispatcher<TBus>[] dispatchers = (_dispatchers ?? _provider!.GetServices<IDurableSendDispatcher<TBus>>()).ToArray();
             if (stores.Length == 0 && _additionalSources.Count > 0)
@@ -182,7 +186,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus> : Backgroun
     }
 
     ReliableMessagingPolicy<TBus> RequirePolicy() =>
-        _policy ?? throw new ConfigurationException(
+        _policy ?? _provider?.GetService<ReliableMessagingPolicy<TBus>>() ?? throw new ConfigurationException(
             global::ViciOne.ServiceBus.Providers.Configuration.ConfigurationMessages.Create(
                 "Reliable messaging",
                 "unknown",

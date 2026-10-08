@@ -1,0 +1,76 @@
+{
+  "kind": "P05_C7_PRIVATE_REQUIREMENTS282_APPEND_ONLY_SUPPLEMENT_REVIEW_R1",
+  "status": "NO_BLOCK_EXACT_PRIVATE_TEST405_AND_REQUIREMENTS282_CANONICAL_TEST_ONLY_PREPARATION",
+  "reviewer": "/root/telemetry_adversarial internal read-only",
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Requirements/EntityFrameworkRequirements.json": "78c39c3b14e5701391527eb1e13ed89f256130f63d29009126a88ded089b4bb4",
+    "/private/tmp/EntityFrameworkRequirements.c7-proposed-r1.json": "deb0aec314803b9701ef9bbeff1ee2fa544d6fed9b2c71838363d964d0652e57",
+    "/private/tmp/ClassicEfOutboxClockIsolationTests.c7-draft-r3.cs": "6602e22ab00adc38880880312ec0ffb45ad6c5d34ffa825e7db6b517c08ae6d2",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs": "152d185032cee3ade09fdb1d83af32a8d14e778b68968224fd0d5579725b6079",
+    "/private/tmp/EntityFrameworkOutboxContextFactory.c7-fix-draft.cs": "b6a957d494e84e3c082066d2f886157147c04ff3ee9bef4d28877cc2a3a81917",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-private-test-source-adversarial-review-r3.json": "2c0b58f0f93102bb85713a2de3fdd65e6df8ba7efc19a5512cd595077cb1e7f4"
+  },
+  "checks": {
+    "proposed282_exact_requestedSHA": true,
+    "original277_exact_baselineSHA": true,
+    "all277_ordered_objects_equal": true,
+    "literal277_record_text_bytes_preserved_appendonly": true,
+    "five_purpose_records_exact_R3_attrs": true,
+    "no_new_requirements_IDs_no_duplicate_newidentity": true,
+    "test405_R3_exact_NO_BLOCK_prior": true,
+    "factory218_original_unchanged_product246_onlyprivate": true,
+    "canonicalnewtest_not_yet_applied": true
+  },
+  "findings": [],
+  "prior_R3_full_review_bound": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-private-test-source-adversarial-review-r3.json",
+    "sha256": "2c0b58f0f93102bb85713a2de3fdd65e6df8ba7efc19a5512cd595077cb1e7f4"
+  },
+  "literal_prefix": {
+    "original_bytes": 109423,
+    "proposed_bytes": 111377,
+    "exact_record_prefix_bytes": 109420,
+    "old_removed_terminator": "newline + closing array bracket + newline (3bytes)",
+    "append_only_explanation": "All original277 record text bytes from opening array through closing final record object are byte-identical. A comma and five records are inserted before array terminator; complete original JSON is not itself a full byteprefix because its closing bracket must move. No normalization/reordering/old-record change."
+  },
+  "new_rows5": [
+    {
+      "requirementId": "REQ-VSB-EF-RECEIVE-OUTBOX",
+      "variantKey": "optional-duration-failure-preserves-real-transaction-and-store-outcome",
+      "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+      "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests",
+      "testMethod": "DiagnosticClockPreservesTransactionAndRequiredFaultNotification"
+    },
+    {
+      "requirementId": "REQ-VSB-EF-RECEIVE-OUTBOX",
+      "variantKey": "required-fault-notification-failure-still-rolls-back-and-propagates",
+      "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+      "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests",
+      "testMethod": "RequiredFaultNotificationFailureRemainsAuthoritative"
+    },
+    {
+      "requirementId": "REQ-VSB-EF-RECEIVE-OUTBOX",
+      "variantKey": "commit-fault-notification-is-awaited-before-original-failure-and-rollback",
+      "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+      "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests",
+      "testMethod": "CommitFaultNotificationIsActuallyAwaited"
+    },
+    {
+      "requirementId": "REQ-VSB-EF-RECEIVE-OUTBOX",
+      "variantKey": "required-consumption-utc-failure-remains-authoritative",
+      "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+      "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests",
+      "testMethod": "AuthoritativeUtcFailureStillRollsBack"
+    },
+    {
+      "requirementId": "REQ-VSB-EF-RECEIVE-OUTBOX",
+      "variantKey": "precanceled-delivery-retains-original-token-without-transaction",
+      "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+      "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests",
+      "testMethod": "PrecanceledDeliveryDoesNotStartTransactionOrDiagnostics"
+    }
+  ],
+  "requirements_scope": "One existing REQ-VSB-EF-RECEIVE-OUTBOX ID, exactfive method-purpose identities matching13 runtime cases in405-line R3. No new requirement IDs or duplicate new purpose identities. JSON parsed fully with duplicate-key rejection, all282 ordered objects compared. This supplement claims full manifest-byte parsing/identity verification, not independent whole-read ownership of all277 prior test bodies.",
+  "next_boundaries": "Root applies test+Requirements only, leaves original218 factory unchanged, then creates canonical35/source/test/282 authoritative full-read/freeze and actual originalnative archive before product application. Factory246 correction stays private until original evidence. Root retains own author/read/SDK execution; no transfer.",
+  "limits": "NO_BLOCK only for exact proposed282/test405 identity and prior static source review. No compiler/native/mutation/Core/EF/provider/coverage/cloud/hardware acceptance. Reviewer performed read-only Python and wrote only own immutable report."
+}

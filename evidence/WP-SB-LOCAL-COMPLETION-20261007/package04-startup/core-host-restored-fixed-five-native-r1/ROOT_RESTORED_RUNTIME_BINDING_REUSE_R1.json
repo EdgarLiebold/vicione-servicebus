@@ -1,0 +1,14 @@
+{
+  "kind": "ROOT_CORE_RESTORED_FIXED_RUNTIME_EXACT_BYTE_PRIOR_FRESH_PHYSICAL_BINDING_REUSE_R1",
+  "native_sha256": "61fd303ea9fdbe2dbf875d53353fe647b6c11a605c68c49819b3271705d7f95f",
+  "fixed5_baseline_sha256": "fdc5f4711d20006c31886ef6bbc21273c821ac1136c781cfcd6aead9e6e90f2c",
+  "prior_root_fresh_binding_sha256": "b58b84c843f0e9dd65fdbc49915fc7b0414e0b07d5472a9393ad3b135bcb033e",
+  "actual_runtime17_archive_bytes_exact_fixed5": true,
+  "actual_assets12_exact_fixed5": true,
+  "actual_generated39_document_hashes_exact_fixed5": true,
+  "root_prior_pe_images": 12,
+  "root_prior_pdb_checksums": 3807,
+  "fresh_PE_parse_this_receipt": false,
+  "independent_compiled4722_method_resource_metadata_reuse_sha256": "a6625e4e546da1c2114d8ee209be278e1c8db2b6a3e91572ccf05829db3cadb9",
+  "limits": "Newactualpost5PASS/strictrebuild+sourceguard, byte-exact actualprior12PE3807/17runtime/PDB proof reused atall17files, notfreshparse. Actualcompiled4722 allmethodattribute decodingbelongspriorindependentreviewer a662; Rootdoesnotborrowhumanbodyread/ownfreshdecodecredit. Independentnewpostqualification andcanonical3transferpending, no globalA+/coverage/Cloud/HW."
+}

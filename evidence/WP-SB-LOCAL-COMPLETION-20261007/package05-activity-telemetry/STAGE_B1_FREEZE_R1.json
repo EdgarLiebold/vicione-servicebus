@@ -1,0 +1,18 @@
+{
+  "kind": "P05_STAGE_B1_TYPED_SOURCE_PRODUCT_TEST_DELTA_FREEZE",
+  "status": "PENDING_ORIGINAL_NATIVE_AND_REVIEW",
+  "owner_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b1-owner-r1",
+  "source_sha256": {
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs": "f825ec82e2e3f71fd8daac77f770a875f2f5172b5d75c1e637dd9ecb635f62b7",
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/ActivitySourceActivationIsolationTests.cs": "3e187280fbc5884109601a99fb9d6ab92b7e65ff73492b04ae78cda8c1f5e8f7",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "be76207e17ad3f949d5a40c6688dfa1718d8058f471608237b47f028d0639c07"
+  },
+  "research_plan_sha256": "252431c8ea89485288b49839bd16795be1ad5577f3464bddf836456d3cab4064",
+  "root802_read_sha256": "43c418597f7a5910cb8e5467731f5565ba287b6d3581412d17f68bb00a07ffc2",
+  "patch_sha256": "05c62894623bc12d42fe6c7237d9bd2d6096697cfc64137060a3fd7ab23bec83",
+  "native_cases": 2,
+  "new_requirement_rows": 1,
+  "source_read_basis": "Unchanged542line typedowner whollyRootreadinRoot57; currentdeltafullyRootauthored/consumed applypatch",
+  "original_checkout": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed",
+  "limits": "Single typed-source owner only; no static monitor/Batch/durableelapsed/sourcewideP05acceptance"
+}

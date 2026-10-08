@@ -1,0 +1,20 @@
+{
+  "kind": "ROOT_RESTORED_CACHE_ORIGINAL59_EXACT_IMAGE_SOURCE_BINDING_REUSE_R1",
+  "post_sha256": "bd58547a4dcafc8abea37dee9f0625c2074b78cbe0a0959d1f89eab3536b3825",
+  "original59_sha256": "440532083d6fa627c02bf95c78dcb5e17e0fa7ce12ca9efde5d62d11e285df0a",
+  "reference_sha256": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-observer-failure-channel-original-59-native-r2/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "071bc4eacb1ccdb0f7da3fc4567e251e6c94faec8adaa2f1a4e53cfdace8fc30",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-observer-failure-channel-original-59-native-r2/package06-cache-observer-failure-channel-original59-native-adversarial-r1.json": "d7bdfc23371f1a22ebef778b616c077dbc658006c5369894fb09b795be776aab",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-observer-failure-channel-mutants-native-r1/ROOT_FIRST_FINITE_CAUSE_LEDGER_R2.json": "bd73d9b23ffc70aab6fb68c11b937190b6d1c3758d381ce8840dbe1808732e45"
+  },
+  "runtime17_post_archive_live_original_byteexact": true,
+  "assets12_byteexact": true,
+  "generated39_byteexact": true,
+  "canonical6102_private6103_config14_equal": true,
+  "fresh_root_PE_parse": false,
+  "own_prior_root_fresh_original_physical": "12PE3809 checksum/PE-PDB IDs exact archive/source reused only because all runtime bytes and generated/source checks exact; no Root METHOD decode transferred",
+  "independent_prior_compiled": "Original59 peer fresh all4727METHODattrs/resource+35refs/deps remains peer proof, not Root owndecode. Future independent finalpost transfer gate pending.",
+  "root_personal_read": "Whole freshpost59 stdout127lines and strict whole stdout18lines plus both empty stderr read. Driver originalwholebody/final156 exactbinGlobdelta Root whole reviewed. All JSON guards/hash/CRC mechanically checked; not semanticbinlog decode.",
+  "history": "Actual historical lockedrestore23714/3945 explicitlyreused; freshstrict27002 andfocused27052 actualjoined0/no deadlines. No newrestore. R1CS8604 excluded. Latest ledgerR2 corrects only proseFalse110/141, frames/counts unchanged; no newnative.",
+  "limits": "Exactimage reuse notfreshparse; no canonical3apply/product/globalcache/ordering/retirement/memory/currentcoverage/cloud/device/globalA+ closure."
+}

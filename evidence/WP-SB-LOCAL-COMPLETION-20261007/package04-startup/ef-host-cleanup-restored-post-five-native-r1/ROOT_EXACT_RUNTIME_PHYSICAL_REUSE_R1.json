@@ -1,0 +1,19 @@
+{
+  "kind": "ROOT_ACTUAL_POST5_EXACT19_RUNTIME_SOURCE_PHYSICAL_REUSE_R1",
+  "post_result_sha256": "db2e20b4f3b9b6b7fdcf9f15e0fdfc9852c0d894e47cbee43efcef235cc02cf3",
+  "post_focused": {
+    "total": 5,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0
+  },
+  "runtime19_directbytes_fixed_archive_post_archive_live_equal": true,
+  "assets14_byteexact": true,
+  "owners5_generated44_byteexact_fixed_post": true,
+  "root_prior_fresh14PE3155_binding": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-fixed-five-native-r1/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+    "sha256": "a6377359f00b7d20aa49908954c52640be1195835f1c8e4e4ef7bc1956273c58"
+  },
+  "fresh_post_PE_parse": false,
+  "limits": "Wholeactual strict39.04s/complete5native2.881s/summary/emptyerr personallyread;raw6CRC2 checked. Exactly19 directbyteequal permits own Fixed5 fresh14PE/3155 and independentFixed5 full286/ref43/deps14 reuse. No new post parse/method/resource credit. Canonical7application pending final independent gate."
+}

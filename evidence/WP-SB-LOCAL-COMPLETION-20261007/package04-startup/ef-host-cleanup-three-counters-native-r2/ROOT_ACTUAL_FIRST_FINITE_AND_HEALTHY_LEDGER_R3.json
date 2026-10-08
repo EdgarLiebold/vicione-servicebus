@@ -1,0 +1,107 @@
+{
+  "kind": "ROOT_ACTUAL_EF_THREE_COUNTERS_FIRST_FINITE_LEDGER_R3",
+  "parent_sha256": "c28ebd59de63c2554e0cfef02ad00cea25491948ce6e372725e7fc8940533715",
+  "variants": [
+    {
+      "variant": "M1_EagerInboxConstructor",
+      "native_sha256": "5a5f9d3ddd7ca95408452316842572eeca5e74b4529e506c64f5d08a40303482",
+      "focused": {
+        "total": 5,
+        "passed": 2,
+        "failed": 3,
+        "skipped": 0
+      },
+      "first_finite": [
+        {
+          "case_id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.InboxCleanupServiceTests.ConstructorAndStart_RejectMissingDependenciesAndInvalidPersistenceOptionsAsync",
+          "first_oracle": "Unhandled constructor ArgumentException at constructor call source40/native40; StartAndJoin46 and firstAssert47 unreached",
+          "line": 40
+        },
+        {
+          "case_id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests.SelectedInboxZeroQueryDelayFailsBeforeEndpointStart",
+          "first_oracle": "Assert.Null StopFailure at110; Host.StopAsync Reverse(null source), lower disposal111/observer112 not credited",
+          "line": 110
+        },
+        {
+          "case_id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests.SelectedEfLockProviderNullFailsBeforeEndpointStart",
+          "first_oracle": "Assert.Null StopFailure at110; Host.StopAsync Reverse(null source), lower disposal111/observer112 not credited",
+          "line": 110
+        }
+      ],
+      "healthy_controls": [
+        "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests.SelectedScopedDeliveryReversedRetryFailsBeforeEndpointStart",
+        "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests.PlainAndTypedEfBusesDeliverAndStopWithUnusedPersistencePoison"
+      ],
+      "root_fresh_physical_sha256": "5f0b97786d461f0e0e07ec2726aa2c88e498f165d67c79dd0ebef4d4cf461b74",
+      "whole_strict_and_all_five_event_bodies_personally_read": true,
+      "stderr_empty": true
+    },
+    {
+      "variant": "M2_EagerCoreSourceParameter",
+      "native_sha256": "281bdf0b24747c215813ab2d5d2bdf215680425f96130d12ea3313d82b8f6e7b",
+      "focused": {
+        "total": 5,
+        "passed": 3,
+        "failed": 2,
+        "skipped": 0
+      },
+      "first_finite": [
+        {
+          "case_id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests.SelectedScopedDeliveryReversedRetryFailsBeforeEndpointStart",
+          "first_oracle": "Assert.Null StopFailure at110; Host.StopAsync Reverse(null source), lower disposal111/observer112 not credited",
+          "line": 110
+        },
+        {
+          "case_id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests.SelectedEfLockProviderNullFailsBeforeEndpointStart",
+          "first_oracle": "Assert.Null StopFailure at110; Host.StopAsync Reverse(null source), lower disposal111/observer112 not credited",
+          "line": 110
+        }
+      ],
+      "healthy_controls": [
+        "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.InboxCleanupServiceTests.ConstructorAndStart_RejectMissingDependenciesAndInvalidPersistenceOptionsAsync",
+        "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests.SelectedInboxZeroQueryDelayFailsBeforeEndpointStart",
+        "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests.PlainAndTypedEfBusesDeliverAndStopWithUnusedPersistencePoison"
+      ],
+      "root_fresh_physical_sha256": "325de98b651e071a9bfaa0d845e0d93e7b954797cf9579e84e636d1c0f7b5870",
+      "whole_strict_and_all_five_event_bodies_personally_read": true,
+      "stderr_empty": true
+    },
+    {
+      "variant": "M3_SkipDirectWorkerStartValidation",
+      "native_sha256": "e959c8b4fe98c962a60dd412341c0feedb2063a4fc91ebbe1f1758e0412aa9a5",
+      "focused": {
+        "total": 5,
+        "passed": 4,
+        "failed": 1,
+        "skipped": 0
+      },
+      "first_finite": [
+        {
+          "case_id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.InboxCleanupServiceTests.ConstructorAndStart_RejectMissingDependenciesAndInvalidPersistenceOptionsAsync",
+          "first_oracle": "Assert.IsType<ArgumentException> actual null startFailure; native stack46, exact source assertion47; lower ParamName48/Execution49/StopFailure50/WorkerFailure51/terminal52 not reached",
+          "line": 46,
+          "source_assertion_line": 47,
+          "native_reported_line": 46
+        }
+      ],
+      "healthy_controls": [
+        "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests.SelectedInboxZeroQueryDelayFailsBeforeEndpointStart",
+        "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests.SelectedScopedDeliveryReversedRetryFailsBeforeEndpointStart",
+        "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests.PlainAndTypedEfBusesDeliverAndStopWithUnusedPersistencePoison",
+        "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests.SelectedEfLockProviderNullFailsBeforeEndpointStart"
+      ],
+      "root_fresh_physical_sha256": "f513865cb94aabb27eea784c5a2ea40bdd7b0e154c9cc2588bacf345c296fd48",
+      "whole_strict_and_all_five_event_bodies_personally_read": true,
+      "stderr_empty": true
+    }
+  ],
+  "repeated_case_slots": 15,
+  "distinct_cases": 5,
+  "finite_red_occurrences": 6,
+  "healthy_occurrences": 9,
+  "fresh_root_images": 42,
+  "fresh_root_PDB_document_checks": 9465,
+  "limits": "Actual source/restored fixed/archive owner binding. M2 has2RED notearlier1prediction; retry failure actualNotification26/NullLockEFSource71. M3native reported46 while exact source firstassert47; source47 prediction is not replaced by an invented46source assertion. M1directctor40 notanassertion, skips intendedStart assertions. Ownwholebuild/allnative5 pervariant/emptyerr, originalfirstbatchedM1/M2truncatedre-readcompletely separately. Compiler45025 no native0credit; no sixbugs/15newcases/cloud/globalA+claim.",
+  "prior_ledger_sha256": "af9106752574039dfeebeb699a44987e3644a29279a203666154355625d06e41",
+  "correction": "Native M3 stack reports46; exact archived source Assert.IsType is47. Preserve both observations without inventing a sequencepoint mechanism. R1/R2 textual lower-line annotations are superseded, not native logs or images."
+}

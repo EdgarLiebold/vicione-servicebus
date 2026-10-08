@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:2df4fa43c450c044cd3c6915e50542a903eaca42462eefcfea55c43994c89a3d",
+  "claims": [
+    {
+      "id": "claim_4c53b90262814f3b9519722dd1cfd3bf",
+      "statement": "The writer invokes an explicit policy, filters null projections, rejects oversized entries and contains capture/policy/store/timeout failures.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+          "version": "repo-file-v1:sha256:504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+        }
+      ]
+    },
+    {
+      "id": "claim_3c2e5bf8163e46e68b573842a684f76a",
+      "statement": "The example composes a metadata-only policy with EF journal storage and finite options.",
+      "evidence": [
+        {
+          "resource": "repo://samples/DeveloperJourneys/Journey15MessageJournal.cs",
+          "version": "repo-file-v1:sha256:609c1c5150eb727c39243942a1c9ed0363de589a8218c2fac682ba4a95131363"
+        }
+      ]
+    },
+    {
+      "id": "claim_7d3a2b921f3b42258d50686db31dee2b",
+      "statement": "Inherited message-audit surface is removed and superseded by policy-controlled MessageJournal without compatibility aliases.",
+      "evidence": [
+        {
+          "resource": "repo://docs/changelog/removed-capabilities.md",
+          "version": "repo-file-v1:sha256:cd30f2775c3ce97eb79d7418995c570533587c8f3bae46e125dd48869c856a0a"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

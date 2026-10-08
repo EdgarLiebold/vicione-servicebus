@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -15,7 +16,13 @@ class PublishBatcher :
     readonly string _topicArn;
 
     public PublishBatcher(IAmazonSimpleNotificationService client, string topicArn, CancellationToken cancellationToken)
-        : base(PublishBatchSettings.GetBatchSettings())
+        : this(client, topicArn, cancellationToken, TimeProvider.System)
+    {
+    }
+
+    internal PublishBatcher(IAmazonSimpleNotificationService client, string topicArn, CancellationToken cancellationToken,
+        TimeProvider timeProvider)
+        : base(PublishBatchSettings.GetBatchSettings(), timeProvider)
     {
         _client = client;
         _topicArn = topicArn;

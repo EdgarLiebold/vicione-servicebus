@@ -1,0 +1,316 @@
+{
+  "status": "NO_BLOCK_STATIC_C6_M2_M5_FRESH_SUCCESSOR_PREEXECUTION_NATIVE_PENDING",
+  "utc": "2026-10-07T04:48:35.001532+00:00",
+  "reviewer": "Internal readonly adversarial preparation review; no external product role or Root personal reading transfer.",
+  "scope": "Exactly two fresh isolated successor clones after M2 strict compiler failure and unexecuted M5 predecessor; canonical source/test/Req/shared context preservation and unchanged operational suffix handling.",
+  "checks": [
+    {
+      "name": "Canonical C6 fixed freeze retained",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Canonical and snapshot unchanged tests/ViciOne.ServiceBus.Tests/Monitoring/PublicTelemetryCleanupIsolationTests.cs",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Canonical and snapshot unchanged tests/ViciOne.ServiceBus.Tests/Monitoring/ActiveTelemetryCleanupIsolationTests.cs",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Canonical and snapshot unchanged tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Canonical and snapshot unchanged src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Canonical and snapshot unchanged src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Core810 and shared84 exact",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Req4708 retained",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Canonical graph6092",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Exact pathsets6092 and onlyone delta m2-endpoint-required-cleanup-muted-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Actual sorted graph manifests match m2-endpoint-required-cleanup-muted-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Exact actual archived single predicate diff m2-endpoint-required-cleanup-muted-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "All other fixed4 owners unchanged m2-endpoint-required-cleanup-muted-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Shared84 and canonical810 tests unchanged in clone m2-endpoint-required-cleanup-muted-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Fresh successor artifact/runtime/receipt roots m2-endpoint-required-cleanup-muted-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Suffix maps same numeric stage prefix distinct actual roots m2-endpoint-required-cleanup-muted-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Only null to non-null Type target changed from predecessor m2-endpoint-required-cleanup-muted-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Exact pathsets6092 and onlyone delta m5-act-required-owner-aggregate-lost-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Actual sorted graph manifests match m5-act-required-owner-aggregate-lost-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Exact actual archived single predicate diff m5-act-required-owner-aggregate-lost-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "All other fixed4 owners unchanged m5-act-required-owner-aggregate-lost-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Shared84 and canonical810 tests unchanged in clone m5-act-required-owner-aggregate-lost-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Fresh successor artifact/runtime/receipt roots m5-act-required-owner-aggregate-lost-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Suffix maps same numeric stage prefix distinct actual roots m5-act-required-owner-aggregate-lost-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Only null to non-null Type target changed from predecessor m5-act-required-owner-aggregate-lost-r2",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Excluded predecessor has zero native cases and actual joined compiler failure",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Preserved excluded artifact p05-c6-m2-build-r1.log",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Preserved excluded artifact p05-c6-m2-restore-r1-20261007-044255--83906--fwQIlR.binlog",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Excluded binlog gzip完整 p05-c6-m2-restore-r1-20261007-044255--83906--fwQIlR.binlog",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Preserved excluded artifact p05-c6-m2-restore-r1.log",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Preserved excluded artifact p05-c6-m2-build-r1-20261007-044258--83914--eCzCsn.binlog",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Excluded binlog gzip完整 p05-c6-m2-build-r1-20261007-044258--83914--eCzCsn.binlog",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Actual excluded build diagnostic confirms CS8602",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Operational code and accepted bounded review unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Runner resolves full suffix clone and archive name, local prefixes unchanged",
+      "passed": true,
+      "evidence": null
+    }
+  ],
+  "findings": [],
+  "canonical_freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C6_FREEZE_R1.json",
+    "sha256": "77f915ff6878f953fb940f704d843c1899485fe751991b57755f8dcc69f95896",
+    "owner_sha256": {
+      "tests/ViciOne.ServiceBus.Tests/Monitoring/PublicTelemetryCleanupIsolationTests.cs": "cd45b4f583f32312ba3eb8f58aa18eaf2b8f115fa3f4c831fbfab7405f30126c",
+      "tests/ViciOne.ServiceBus.Tests/Monitoring/ActiveTelemetryCleanupIsolationTests.cs": "4ba3b7f61891cfff983161224666d108ef776aaa4cad00675a395928affdd635",
+      "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "6e93640a343c2d9328c9d40b410a060ed2052307a6e6482ee17c3026a26e0503",
+      "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs": "5d87f3120de34a96403e05378a1d0b5f9e834aedb45cf526b4b131281f864849",
+      "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs": "8c7532245dc15130c4adf8d06e6b4434061c6a3a60a57f682621d7489e407a34"
+    },
+    "Root810_read_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE810_STAGE_C6_READ_CLOSURE_R2.json",
+    "Root810_sha256": "0398e2960671b582484cca755d5467b6284ec45862053a89ac8d93734e2fdb3a"
+  },
+  "actual_successor_mutants": [
+    {
+      "name": "m2-endpoint-required-cleanup-muted-r2",
+      "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c6-mutants/m2-endpoint-required-cleanup-muted-r2",
+      "prepared_sha256": "1a7d68b9ad4e1a0b5d037a02527e9de9601c1d266c6075dc1f08b499af601c4e",
+      "diff_sha256": "c4b5c1ae6f4ab0b00a5ecd4c99e7efa77b349d8bd4162779fbad098ef0e33647",
+      "mutated_owner": "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "mutant_sha256": "ed543c88352a5064e433a2001b25ca0c237d7d890bddfd183c3f6b8df5331e9c",
+      "actual_single_cause_diff": "--- fixed/src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs\n+++ mutant/src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs\n@@ -325,7 +325,7 @@\n \n     static void DisposeTracker(TrackedActivity tracker, bool bodyCompleted)\n     {\n-        if (bodyCompleted)\n+        if (bodyCompleted && ReferenceEquals(tracker, typeof(TrackedActivity)))\n         {\n             tracker.Dispose();\n             return;\n",
+      "source_path_count": 6092,
+      "canonical_manifest_sha256": "756d6ba243f302dcdce201e6c8a90c0b30352f3c9bbfee70cb83674507807e69",
+      "mutant_manifest_sha256": "c6574c9a9926d33dc111edbe14eada0c8142255631857136076b35dd5894c714",
+      "both_tests_Req4708_other_owner_shared84_unchanged": true,
+      "fresh_native_roots": true,
+      "previous_mutant": {
+        "name": "m2-endpoint-required-cleanup-muted",
+        "prepared_sha256": "109d5c7d9614d9782b8461b0dc252f8ecd922965c55df22f1eabb7a1e711c6fe",
+        "source_sha256": "5ee56575d18b6d15410fafe74724687d6621694c0c98e58398425c876e425459",
+        "native_credit": 0
+      }
+    },
+    {
+      "name": "m5-act-required-owner-aggregate-lost-r2",
+      "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c6-mutants/m5-act-required-owner-aggregate-lost-r2",
+      "prepared_sha256": "7c276a135441f8f2fdea7322282155a8862e541b4fd6fa722978277e3fe2fe91",
+      "diff_sha256": "53cb8bb640a4f2753e4b65077636e65e02e67ca0bf64a7d5c126c202133f2733",
+      "mutated_owner": "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+      "mutant_sha256": "ac3c20e9744d12164c94e5895ba204c27d422c5578b93a3b108e6d65dc32e98e",
+      "actual_single_cause_diff": "--- fixed/src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs\n+++ mutant/src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs\n@@ -73,7 +73,7 @@\n         {\n             if (bodyCompleted)\n             {\n-                if (observationFailure is not null)\n+                if (observationFailure is not null && ReferenceEquals(observationFailure, typeof(Exception)))\n                     throw new AggregateException(\"Active test observation and tracker cleanup both failed.\", observationFailure, exception);\n                 throw;\n             }\n",
+      "source_path_count": 6092,
+      "canonical_manifest_sha256": "756d6ba243f302dcdce201e6c8a90c0b30352f3c9bbfee70cb83674507807e69",
+      "mutant_manifest_sha256": "6a2d5acba0f65b4491513d7acd57619aa8223c6472e29114fbf2d13c6a1c66ae",
+      "both_tests_Req4708_other_owner_shared84_unchanged": true,
+      "fresh_native_roots": true,
+      "previous_mutant": {
+        "name": "m5-act-required-owner-aggregate-lost",
+        "prepared_sha256": "48d70eed73506dfde047f494c90999a468a20f6ab0f094b42d402754d1772105",
+        "source_sha256": "29234567b89ebda086ca13b64d92987f06fda06a06a2a5406048823e9aed3960",
+        "native_credit": 0
+      }
+    }
+  ],
+  "causal_prediction_only": [
+    {
+      "mutant": "M2-r2",
+      "mechanism": "Valid non-null TrackedActivity instance cannot be ReferenceEquals to the System.Type object typeof(TrackedActivity). bodyCompleted success therefore follows the swallowing exceptional-cleanup path; selected required standalone cleanup should become observable missing error. No null predicate is retained to create a compiler nullable-flow premise.",
+      "predicted_native_first_contract": "Five endpoint-family StandaloneCleanupFailure cases; actual compiler/native source binding and first finite oracles are pending."
+    },
+    {
+      "mutant": "M5-r2",
+      "mechanism": "A selected observationFailure Exception instance cannot be ReferenceEquals to System.Type typeof(Exception), so the normal double-owner aggregation branch is bypassed; tracker cleanup throw should replace the nested observation owner aggregate. The nonnull pattern still protects static use of observationFailure.",
+      "predicted_native_first_contract": "Active StandaloneBothFailure nested owner aggregate contract; no native result is inferred."
+    }
+  ],
+  "excluded_compiler_attempt": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m2-endpoint-required-cleanup-muted/excluded-compiler-attempt-r1/EXCLUDED_RESULT.json",
+    "sha256": "a8f7fac7fece2b90b2f7aca42d86b7887889b32f73aa6b5a1da68a6ef12c45e4",
+    "record": {
+      "status": "EXCLUDED_MUTANT_COMPILER_NULLABLE_ERROR_ZERO_NATIVE_TEST_KILL_CREDIT",
+      "root_driver_session": 68676,
+      "root_driver_joined_exit": 1,
+      "stages": [
+        {
+          "stage": "restore",
+          "pid": 83906,
+          "exit": 0
+        },
+        {
+          "stage": "build",
+          "pid": 83914,
+          "exit": 1
+        }
+      ],
+      "first_error": "CS8602 nullable dereference TelemetryActivityExtensions.cs330 from ReferenceEquals(tracker,null) guard",
+      "native_cases": 0,
+      "artifacts": {
+        "p05-c6-m2-build-r1.log": "79d9a9bcc1ec1b23ee1b28bf279e966bcc05af22bb582f93f1d004fdba2bbc0d",
+        "p05-c6-m2-restore-r1-20261007-044255--83906--fwQIlR.binlog": "f7033a9957f6bd6aa26e2912150602e09e0d30997a86d172f805cbc4310e2f36",
+        "p05-c6-m2-restore-r1.log": "a27f1a2386c62b9d63653a9eb7343305a03c749129f2ddb10d8205494effa012",
+        "p05-c6-m2-build-r1-20261007-044258--83914--eCzCsn.binlog": "d46188cf1791e3e2d88c1a226112c47cdc78c6c3485d93661d1e4ac34c336f1a"
+      }
+    },
+    "actual_four_artifact_bindings": [
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m2-endpoint-required-cleanup-muted/excluded-compiler-attempt-r1/p05-c6-m2-build-r1.log",
+        "sha256": "79d9a9bcc1ec1b23ee1b28bf279e966bcc05af22bb582f93f1d004fdba2bbc0d"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m2-endpoint-required-cleanup-muted/excluded-compiler-attempt-r1/p05-c6-m2-restore-r1-20261007-044255--83906--fwQIlR.binlog",
+        "sha256": "f7033a9957f6bd6aa26e2912150602e09e0d30997a86d172f805cbc4310e2f36"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m2-endpoint-required-cleanup-muted/excluded-compiler-attempt-r1/p05-c6-m2-restore-r1.log",
+        "sha256": "a27f1a2386c62b9d63653a9eb7343305a03c749129f2ddb10d8205494effa012"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m2-endpoint-required-cleanup-muted/excluded-compiler-attempt-r1/p05-c6-m2-build-r1-20261007-044258--83914--eCzCsn.binlog",
+        "sha256": "d46188cf1791e3e2d88c1a226112c47cdc78c6c3485d93661d1e4ac34c336f1a"
+      }
+    ],
+    "native_cases": 0,
+    "kill_credit": 0,
+    "scope": "Compiler failure, not a product causal regression. Old raw/binlogs and source/preparation retained; distinct fresh successor roots preserve it."
+  },
+  "unchanged_operational_driver": {
+    "path": "/private/tmp/run_c6_mutants.py",
+    "sha256": "7f40c6ac4043360659577d5de828903011cc24c37c88c550949aaccb260064d0",
+    "operational_review_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-native-driver-operational-review-r1.json",
+    "operational_review_sha256": "5cbb3cb0682cfa24d55b5100563bf27dcd3621c839692f2fcb399175b45e3462",
+    "suffix_suitability": "name[1] gives2/5 and full suffix is retained in clone/archive path. Prefix m2/m5 filenames are reused only inside separate fresh roots; full binlog paths remain unique. Exact38 display-case set and zero-skip checks remain unchanged; survivor archive precedes finite diagnostic printing."
+  },
+  "limits": [
+    "Static valid-source prediction is not proof of successful strict compile. Runtime .NET compilation must still show0warnings/errors; no compiler/native execution by reviewer.",
+    "Actual future PE/PDB/source/Req/deps/archive/output graphs and finite native case IDs/errors require separate evidence review. No causal/native mutant acceptance here.",
+    "Root concurrently executes already reviewed unrelated M3/M4/M6 in separate clones. This review does not reinterpret their hypotheses as results or modify active runtime evidence.",
+    "No canonical source/test/Req/product scope changes; accepted C5 cold owners and historical exclusions remain separate. No broader P05/current coverage/provider/CI/cloud/hardware acceptance.",
+    "Operational limits from unchanged runner review apply: Root owns interruption retirement, assertions must remain enabled, unexpected infrastructure attempts remain excluded until preserved/qualified."
+  ],
+  "execution": "Read-only Python file/hash/full6092 graph/diff/AST/gzip/JSON inspection; no .NET/MSBuild/Docker/SSH/provider/test/process-control execution or product/test/tool/evidence edits. One new immutable reviewer report only."
+}

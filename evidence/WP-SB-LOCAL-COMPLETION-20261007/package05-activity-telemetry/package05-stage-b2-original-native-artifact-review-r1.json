@@ -1,0 +1,755 @@
+{
+  "status": "QUALIFIED_B2_ORIGINAL_6_NAMED_CASES_3_FINITE_HOSTILE_RED_3_HEALTHY__FIXED_MUTANT_POST_PENDING",
+  "reviewer": "/root/telemetry_adversarial",
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/RESULT.json": "bc889c57c0d3b872ee7fc118f13701853d7c2872a4ab0134c97b880c8daa932c",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_B2_TEST_ONLY_ORIGINAL_FREEZE_R1.json": "4979737dcc3e5493c1c6a0fee5c0807e2dd094b37324191486a744e7bd1ce3c9",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_B2_FREEZE_R1.json": "08babf3223a56a0e053c3e1f53ea7ef090d91589e5a7200b671f3e8b958efb7d",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-b2-root803-testonly-closure-adversarial-r1.json": "3435a02cdbb7c60140bcb43d2c5ccd7473b0ef7316eddc79cd9075b4989c2509",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-b1-final-native-artifact-review-r2.json": "e6b0aa2b8f2a9b732986c7767f99749103291d54657a77174f8e5a8c6fcef416",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_B1_ACCEPTANCE_R1.json": "d1cf2ea7423dbca3acbb448db9d0f6d1089fc531473c74c1e8af5301f19dacf9"
+  },
+  "checks": {
+    "original_frozen_result_Source_test_req_hashes_bound": true,
+    "corrected_freeze_binds_original_result": true,
+    "originalBatch_PDB_snapshot_Gitbaseline_same": true,
+    "new140test_PDB_current_O_C3_snapshot_original_fixedfreeze_same": true,
+    "Req4692_payload_exact_O_C3_snapshot_freezes": true,
+    "all4_raw_hashes": true,
+    "all16_runtime_archive_hashes": true,
+    "all12PE_PDB_identifiers": true,
+    "all3796_documentchecksums_actual_or_immutableoldsource_embedded": true,
+    "all12_firstparty_archived_deps_selected": true,
+    "all11_product_shared_DLL_bytes_prior_qualified_B1_fixed_exact": true,
+    "accepted_B1_typedsource_PDB_preserved": true,
+    "exact6_native_individualevents_named_allset": true,
+    "exact3hostileFAIL3healthyPASS": true,
+    "finite_success_Null78_failure_Same81_observer_stack_direct371_changed57": true,
+    "finite_cancel_IsAssignable84_expectedOCE_actualInvalidOp_typeonly": true,
+    "no_timeout_fatal_implicit_contextswitch_setup_credit": true,
+    "native6summary_failed3_pass3_skip0": true,
+    "strictbuild_0warning_error_parent0_nativeparent2": true,
+    "two_unique_nonempty_complete_closed_binlogs": true
+  },
+  "rawhashchecks": {
+    "p05-b2-original-build-r1.log": true,
+    "p05-b2-original-build-r1-20261007-010338--69790--eZ4z1c.binlog": true,
+    "p05-b2-original-focused-r1.log": true,
+    "p05-b2-original-focused-r1-20261007-010550--69972--Ej9aYm-dotnet-test.binlog": true
+  },
+  "runtimehashchecks": {
+    "ViciOne.ServiceBus.Tests.runtimeconfig.json": true,
+    "ViciOne.ServiceBus.Mediator.dll": true,
+    "ViciOne.ServiceBus.JobService.dll": true,
+    "ViciOne.ServiceBus.Tests.testconfig.json": true,
+    "ViciOne.ServiceBus.Testing.dll": true,
+    "ViciOne.ServiceBus.Courier.dll": true,
+    "ViciOne.ServiceBus.Futures.dll": true,
+    "ViciOne.ServiceBus.Abstractions.dll": true,
+    "ViciOne.ServiceBus.Initializers.dll": true,
+    "ViciOne.ServiceBus.Sagas.dll": true,
+    "ViciOne.ServiceBus.Tests.pdb": true,
+    "ViciOne.ServiceBus.Tests.Infrastructure.dll": true,
+    "ViciOne.ServiceBus.dll": true,
+    "ViciOne.ServiceBus.Tests.dll": true,
+    "ViciOne.ServiceBus.Tests.InternalAccess.dll": true,
+    "ViciOne.ServiceBus.Tests.deps.json": true
+  },
+  "assemblies": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/runtime/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "a28e0008303678d3638e39626955583ca3b3cc21c8ea59041a07365f6a09d26c",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4274475132,
+          "guid": "3cbb930b-7da8-4168-960c-f946f40fc97c",
+          "path": "ViciOne.ServiceBus.Abstractions.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "0b93bb3ca87d6841960cf946f40fc97c7c50c7fe",
+        "sha256": "7c89b67e5857032ebe37b36360d319986712d35fb7cfd665fa3d8fc59452350b",
+        "documents": 700,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 700
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "defb9383f38577b507584af212fd30787dc5817c4f2d5a19c0ad9ab63c0ab966",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/runtime/ViciOne.ServiceBus.Courier.dll",
+      "sha256": "bbcf043371c6764a35631d17da0a5f441effe35da93367b39423688effc3b2e0",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2348400348,
+          "guid": "e93d29b8-a4d7-41d6-bf6d-8e61ef7046ea",
+          "path": "ViciOne.ServiceBus.Courier.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "b8293de9d7a4d641bf6d8e61ef7046eadcbef98b",
+        "sha256": "3c27680ab115ab4fce9f8dd062f2b660a0e0159c5ee31bda4a777ecb89765390",
+        "documents": 146,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 146
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "03e1e0b0173596b24497ad8a53727daa328d6255889d92e88bf2cd50b017dfd3",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/runtime/ViciOne.ServiceBus.Futures.dll",
+      "sha256": "7007c625e9c905ceb330265988df834452087a27ade4c2ae5d7b53427657f17d",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4142199080,
+          "guid": "1c7bac65-e63e-4dda-bdc9-ae1e66577f03",
+          "path": "ViciOne.ServiceBus.Futures.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "65ac7b1c3ee6da4dbdc9ae1e66577f0328f1e4f6",
+        "sha256": "b3a219974ee4df28611ef7ea5e70f398921ffcec4446f3549d02315763cbfaec",
+        "documents": 61,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 61
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "fd9f454f7b44ca7af65540b0eacc67d98e65c1fd43c22580bf22f5e3bf70df1d",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/runtime/ViciOne.ServiceBus.Initializers.dll",
+      "sha256": "8dee1b9cab8d17d32535afbb78712779da9cd1914adda41af541681b191b3bb7",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3772314328,
+          "guid": "d6358925-b8b5-4790-82b9-83003c1cec71",
+          "path": "ViciOne.ServiceBus.Initializers.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "258935d6b5b8904782b983003c1cec71d8f2d8e0",
+        "sha256": "9db8974ee2e7959ea94df57e2ec79efb62d4c9d50ea3963c926a3d9747101293",
+        "documents": 11,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 11
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "8eb152b1f4b6add5262ca0457d3066de75c39660b09bdd32af4f49e2a497e5db",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/runtime/ViciOne.ServiceBus.JobService.dll",
+      "sha256": "b88d333aae737f81462e9ff1602bf12a2b0077c0cfb7d9d91a6072e7257366b7",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3250261292,
+          "guid": "4fb22308-65eb-49c9-8898-268819a5c1df",
+          "path": "ViciOne.ServiceBus.JobService.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "0823b24feb65c9498898268819a5c1df2c0dbbc1",
+        "sha256": "9e9f6ed633ac88dc95e98e3761cc26b49693066ee96c88f082f0590e45765b20",
+        "documents": 175,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 175
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "7b5df0d54aea99ac22258ce0706992df1eb88fd8791954e24c7ecd1615eadd64",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/runtime/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "2d2c23b3a14a701478c5b4fa9adaddbd42311b6c36f63412bdc4b43d25487ccc",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3608177445,
+          "guid": "8f90897f-5f64-4bce-ba0f-a25d7a4214d7",
+          "path": "ViciOne.ServiceBus.Mediator.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "7f89908f645fce4bba0fa25d7a4214d7256b10d7",
+        "sha256": "9e9fa9987507df599b2b1b80eb8b4d53a436ae4a3edfe79c49464aad05a7e93d",
+        "documents": 31,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 31
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "95d80554b380bd4c92b7dff52977a8541956f862a0632dd8296f4168a6fbac0d",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/runtime/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "f6848360539c09f2f443b9494b95cb010aa2a4d0db83b02aa861464420232068",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2976348805,
+          "guid": "fc648340-48d6-45cd-9f25-d9e6a7ea7ae8",
+          "path": "ViciOne.ServiceBus.Sagas.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "408364fcd648cd459f25d9e6a7ea7ae8857a67b1",
+        "sha256": "aef7ee003f4dd511bc2686b5ad9868c927fc74fedd56da24d2bc4b483fdb0661",
+        "documents": 374,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 374
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "f224463786968110e7bb284636bb74d7e180d29243f4d69b7905fe91396f3b5d",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/runtime/ViciOne.ServiceBus.Testing.dll",
+      "sha256": "3cd7536668ac69c02a7d9ffbf6c97e3de76b43511e868a4daa4a59a25245b95e",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4138663062,
+          "guid": "4e7f046f-f400-4e32-8f36-31b2295946d0",
+          "path": "ViciOne.ServiceBus.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "6f047f4e00f4324e8f3631b2295946d096fcaef6",
+        "sha256": "45c832690039ec7e547e11057a45ef7e6cbcf7a5a8238caab552e715a201ca98",
+        "documents": 104,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 104
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "c361aa2cabf34278210b75bb53bb24408ac89159e4407db5734f30a6cee40a80",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "a80ecbeadeb3f179dcbdc44b19253a46e8575aaefa0f35b586bddf0e6af77cc9",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3584832143,
+          "guid": "27b306cc-c92a-4f5a-81bc-b22c33955e7b",
+          "path": "ViciOne.ServiceBus.Tests.Infrastructure.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "cc06b3272ac95a4f81bcb22c33955e7b8f32acd5",
+        "sha256": "58411e4352baa551fc3c5b6506dada7487710382f759cb554567f49fbf454978",
+        "documents": 9,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 9
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "7e3ccd6af526efd9be798fd0ab19eae50e25bf9142108f4ffb1cd32e833847d8",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/runtime/ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "sha256": "a23cbc1da063e2ee8c23fc84559754b5576174a5c3eb1e380d20d74b11561c53",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2318306657,
+          "guid": "669b9167-7ee2-4ce9-9615-9d0e004e0eff",
+          "path": "ViciOne.ServiceBus.Tests.InternalAccess.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "67919b66e27ee94c96159d0e004e0eff618d2e8a",
+        "sha256": "9cdb8faa3c5ba27cbfcce0c70459d0ae4fb294022b2e8b5ee4f5cc08d85b9686",
+        "documents": 38,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 38
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "a622c2ddc60864fefe0c1a6e43023f809d4ca9f4542b0121757631e9904d2e8f",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/runtime/ViciOne.ServiceBus.Tests.dll",
+      "sha256": "e5b78f1491e379c2140645d3f723a00c0521070263d68408d52be639a4becaf4",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3085348557,
+          "guid": "4f14a707-df12-420a-b73a-79dcb30d7c73",
+          "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "07a7144f12df0a42b73a79dcb30d7c73cdaee6b7",
+        "sha256": "d0f3d1de563789e276926df1817f184fa6ef1af512588f645d01dc3d51600550",
+        "documents": 807,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 807
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "b440d0c6eb356bf5ca1d2ca3cb855eccaafd0f0c2201aa28db65978ec0bb7ef5",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchActivityHandoffIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "f097715bd98b8d9fbbfd516733f8aba4a17de24f57de3ac9c73ba9db2921e213",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "f097715bd98b8d9fbbfd516733f8aba4a17de24f57de3ac9c73ba9db2921e213"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "e6a0563a8a2584d08b9bed6f0b6ef6b78f7fac2888f7344d9ec6ad562a709a13",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "e6a0563a8a2584d08b9bed6f0b6ef6b78f7fac2888f7344d9ec6ad562a709a13"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Monitoring/ActivitySourceActivationIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "b6a17dfa23f716c485cc0a6a152b9037676eb623eb8b74f8a4afbccacd158832",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "b6a17dfa23f716c485cc0a6a152b9037676eb623eb8b74f8a4afbccacd158832"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/runtime/ViciOne.ServiceBus.dll",
+      "sha256": "2407c52a92e90191b0f8731bb8519b4b028e7e6d5efa4a3164e330e6ab54c5aa",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2250888836,
+          "guid": "015af2d0-9464-4533-b060-5c9e18e4d7a8",
+          "path": "ViciOne.ServiceBus.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "d0f25a0164943345b0605c9e18e4d7a884d62986",
+        "sha256": "8d6226d078a57f25b349b94e846a4ed94becffcdf7ef3fc51d48f0fa440955bd",
+        "documents": 1340,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 1295,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 1,
+          "EMBEDDED_SOURCE": 44
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "925a96800fc15dca783000676c9c5b46d1cdeecfb1871db5d18d6f572b8fb39a",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "4d008ca99020815d1453376e277cc06ea57ca2db75d0a7ffb6fea279a4ab64c4",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "4d008ca99020815d1453376e277cc06ea57ca2db75d0a7ffb6fea279a4ab64c4"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "c206f81c611584f1982f03f55b1044cae4613d3775650fa291b43a910134d625",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "c206f81c611584f1982f03f55b1044cae4613d3775650fa291b43a910134d625"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "77d371f9f003e617a6f2fa250c3b170fa2cc9a3dd1fe98c44d6b2e8f70e40fb2",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "77d371f9f003e617a6f2fa250c3b170fa2cc9a3dd1fe98c44d6b2e8f70e40fb2"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "f825ec82e2e3f71fd8daac77f770a875f2f5172b5d75c1e637dd9ecb635f62b7",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "f825ec82e2e3f71fd8daac77f770a875f2f5172b5d75c1e637dd9ecb635f62b7"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Util/TaskExecutor.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    }
+  ],
+  "originalsource_and_newtest_PDB_targets": {
+    "src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "4d008ca99020815d1453376e277cc06ea57ca2db75d0a7ffb6fea279a4ab64c4",
+      "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+      "bound_sha256": "4d008ca99020815d1453376e277cc06ea57ca2db75d0a7ffb6fea279a4ab64c4"
+    },
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchActivityHandoffIsolationTests.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchActivityHandoffIsolationTests.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "f097715bd98b8d9fbbfd516733f8aba4a17de24f57de3ac9c73ba9db2921e213",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "f097715bd98b8d9fbbfd516733f8aba4a17de24f57de3ac9c73ba9db2921e213"
+    }
+  },
+  "archived_deps_bindings": [
+    {
+      "dependency": "ViciOne.ServiceBus.Tests/1.0.0",
+      "asset": "ViciOne.ServiceBus.Tests.dll",
+      "archive_present": true,
+      "archive_sha256": "e5b78f1491e379c2140645d3f723a00c0521070263d68408d52be639a4becaf4",
+      "prior_B1_fixed_product_or_shared_runtime_byteequal": null
+    },
+    {
+      "dependency": "ViciOne.ServiceBus/1.0.0",
+      "asset": "ViciOne.ServiceBus.dll",
+      "archive_present": true,
+      "archive_sha256": "2407c52a92e90191b0f8731bb8519b4b028e7e6d5efa4a3164e330e6ab54c5aa",
+      "prior_B1_fixed_product_or_shared_runtime_byteequal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Abstractions/1.0.0",
+      "asset": "ViciOne.ServiceBus.Abstractions.dll",
+      "archive_present": true,
+      "archive_sha256": "a28e0008303678d3638e39626955583ca3b3cc21c8ea59041a07365f6a09d26c",
+      "prior_B1_fixed_product_or_shared_runtime_byteequal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Courier/1.0.0",
+      "asset": "ViciOne.ServiceBus.Courier.dll",
+      "archive_present": true,
+      "archive_sha256": "bbcf043371c6764a35631d17da0a5f441effe35da93367b39423688effc3b2e0",
+      "prior_B1_fixed_product_or_shared_runtime_byteequal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Futures/1.0.0",
+      "asset": "ViciOne.ServiceBus.Futures.dll",
+      "archive_present": true,
+      "archive_sha256": "7007c625e9c905ceb330265988df834452087a27ade4c2ae5d7b53427657f17d",
+      "prior_B1_fixed_product_or_shared_runtime_byteequal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Initializers/1.0.0",
+      "asset": "ViciOne.ServiceBus.Initializers.dll",
+      "archive_present": true,
+      "archive_sha256": "8dee1b9cab8d17d32535afbb78712779da9cd1914adda41af541681b191b3bb7",
+      "prior_B1_fixed_product_or_shared_runtime_byteequal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.JobService/1.0.0",
+      "asset": "ViciOne.ServiceBus.JobService.dll",
+      "archive_present": true,
+      "archive_sha256": "b88d333aae737f81462e9ff1602bf12a2b0077c0cfb7d9d91a6072e7257366b7",
+      "prior_B1_fixed_product_or_shared_runtime_byteequal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Mediator/1.0.0",
+      "asset": "ViciOne.ServiceBus.Mediator.dll",
+      "archive_present": true,
+      "archive_sha256": "2d2c23b3a14a701478c5b4fa9adaddbd42311b6c36f63412bdc4b43d25487ccc",
+      "prior_B1_fixed_product_or_shared_runtime_byteequal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Sagas/1.0.0",
+      "asset": "ViciOne.ServiceBus.Sagas.dll",
+      "archive_present": true,
+      "archive_sha256": "f6848360539c09f2f443b9494b95cb010aa2a4d0db83b02aa861464420232068",
+      "prior_B1_fixed_product_or_shared_runtime_byteequal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Testing/1.0.0",
+      "asset": "ViciOne.ServiceBus.Testing.dll",
+      "archive_present": true,
+      "archive_sha256": "3cd7536668ac69c02a7d9ffbf6c97e3de76b43511e868a4daa4a59a25245b95e",
+      "prior_B1_fixed_product_or_shared_runtime_byteequal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Tests.Infrastructure/1.0.0",
+      "asset": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "archive_present": true,
+      "archive_sha256": "a80ecbeadeb3f179dcbdc44b19253a46e8575aaefa0f35b586bddf0e6af77cc9",
+      "prior_B1_fixed_product_or_shared_runtime_byteequal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Tests.InternalAccess/1.0.0",
+      "asset": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "archive_present": true,
+      "archive_sha256": "a23cbc1da063e2ee8c23fc84559754b5576174a5c3eb1e380d20d74b11561c53",
+      "prior_B1_fixed_product_or_shared_runtime_byteequal": true
+    }
+  ],
+  "embedded_requirements4692": {
+    "sha256": "cf28573d00c8b37459c630a708c8a98a20da16b2a781f26c35799dd79fb3a136",
+    "payload_bytes": 1668816,
+    "offset": 16725896,
+    "prefix_length_matches": true,
+    "logical_name_present": true
+  },
+  "native_individual_events": [
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchActivityHandoffIsolationTests.Delivery_PreservesPipelineOutcomeWhenActivityHandoffObserverThrowsAsync(hostileHandoff: False, outcome: Failure)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchActivityHandoffIsolationTests.Delivery_PreservesPipelineOutcomeWhenActivityHandoffObserverThrowsAsync(hostileHandoff: True, outcome: Cancellation)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchActivityHandoffIsolationTests.Delivery_PreservesPipelineOutcomeWhenActivityHandoffObserverThrowsAsync(hostileHandoff: True, outcome: Failure)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchActivityHandoffIsolationTests.Delivery_PreservesPipelineOutcomeWhenActivityHandoffObserverThrowsAsync(hostileHandoff: True, outcome: Success)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchActivityHandoffIsolationTests.Delivery_PreservesPipelineOutcomeWhenActivityHandoffObserverThrowsAsync(hostileHandoff: False, outcome: Cancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchActivityHandoffIsolationTests.Delivery_PreservesPipelineOutcomeWhenActivityHandoffObserverThrowsAsync(hostileHandoff: False, outcome: Success)"
+    }
+  ],
+  "binlogs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/raw/p05-b2-original-build-r1-20261007-010338--69790--eZ4z1c.binlog",
+      "sha256": "7291e1c05a077b483d5f7ca8d416263ec464a9ee757356e5b1c3892b5ce535fe",
+      "uncompressed_bytes": 3289825,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/raw/p05-b2-original-focused-r1-20261007-010550--69972--Ej9aYm-dotnet-test.binlog",
+      "sha256": "75710f62e2a489e44bd718116774a80c16f802a02fff107ef9a7d4c1cce80697",
+      "uncompressed_bytes": 3237284,
+      "closed": true
+    }
+  ],
+  "parent_records": {
+    "strict_build": {
+      "parent_session": 25945,
+      "parent_exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "parent_session": 79269,
+      "parent_exit": 2,
+      "total": 6,
+      "passed": 3,
+      "failed": 3,
+      "skipped": 0
+    },
+    "attribution": "Root structured25945exit0strict0/0 and79269exit2; reviewer independently qualifies immutable native evidence only."
+  },
+  "failure_qualification": {
+    "Success": "Finite Assert.Null78 actual observer InvalidOperationException; own Changed57 directly next to original BatchConsumer.DeliverAsync371, whose bound source line371 is explicit Activity.Current setter. Runtime optimized setter frame is inlined, not falsely claimed present.",
+    "Failure": "Finite Assert.Same81 required business InvalidOperationException replaced by actual observer failure; direct Changed57\u2192Deliver371 source-bound provenance independently shown for this variant.",
+    "Cancellation": "Finite Assert.IsAssignableFrom84 expected OperationCanceledException, actual InvalidOperationException. This variant log proves wrong actual type only. No own exact observer object reference or originating Changed/Deliver stack claim. Same fixture/source/fault boundary is qualified context; any stronger causal classification is inference from the other independently stack-qualified variants."
+  },
+  "findings": [],
+  "assessment": "Archived originalCore equals previously qualified B1 fixed actualCore and binds immutable originalBatch4d008ca via portablePDB/checksum/Gitbaseline, without substituting current correctedBatchda6a9cb. Actual newtest140 and full compiled requirements4692 bind archivePEPDB/source/snapshot. Native exact6 identities3finite hostile assertion failures/3 healthy worker pipeline controls. Two source-bound native original variants directly show explicit setter callback provenance; Cancellation wrongtype is qualified with its narrower evidence limit.",
+  "limits": [
+    "No correctedB2, whole-Core originalB2, mutant or postfixed native acceptance yet.",
+    "Cancellation variant log has type-level failure only; no exact actual error reference or own-origin stack claimed.",
+    "Runtime inlined Activity.Current setter frame absent; actual bound BatchConsumer source371 plus Changed57\u2192Deliver371 supports explicit setter location for Success/Failure.",
+    "Native workers/timers drained in frozenfixture; timeout, process death, setup/discovery/cleanup red or implicit context callback receives no causal credit.",
+    "CurrentC3 Batchsource changed only after archive; this report uses immutable original snapshot for originalPDB document. Historical B1 Req4691/PE evidence stays immutable.",
+    "Standard native host/deps/output archive/PEPDB/source/resource binding; no general runtime AssemblyLoadtrace.",
+    "No invented explicit finally-restoration, allP05/fullUnit/provider/currentpackage/cloud/hardware or malicious global mutation guarantee.",
+    "No.NET/MSBuild/Docker/provider/SSH/test process execution or product/test/tool edits; own report only."
+  ]
+}

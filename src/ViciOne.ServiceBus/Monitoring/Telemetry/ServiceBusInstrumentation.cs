@@ -18,7 +18,7 @@ namespace ViciOne.ServiceBus.Monitoring.Telemetry;
 internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
     where TBus : class
 {
-    readonly ActivitySource _activitySource;
+    readonly ActivitySource? _activitySource;
     readonly object _metricInitializationLock = new();
     readonly Lazy<Meter?> _meter;
     Counter<long>? _durableAdmission;
@@ -54,14 +54,32 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
             new(ServiceBusTelemetry.Attributes.Bus, typeof(TBus).FullName ?? typeof(TBus).Name),
         ];
 
-        _activitySource = new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);
+        _activitySource = TryCreateActivitySource(version);
         _meter = new Lazy<Meter?>(() => TryCreateMeter(meterFactory, version, meterTags), LazyThreadSafetyMode.ExecutionAndPublication);
+    }
+
+    static ActivitySource? TryCreateActivitySource(string? version)
+    {
+        Activity? parent = Activity.Current;
+        try
+        {
+            return new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);
+        }
+        catch
+        {
+            // A host listener can reject source creation without disabling independent metrics.
+            return null;
+        }
+        finally
+        {
+            ActivityObservation.TrySetCurrent(parent);
+        }
     }
 
     public SafeActivityScope StartDurableAdmission(SerializedDurableSend message)
     {
         ArgumentNullException.ThrowIfNull(message);
-        if (Volatile.Read(ref _disposed) != 0)
+        if (_activitySource is null || Volatile.Read(ref _disposed) != 0)
             return SafeActivityScope.None;
 
         Activity? activity = null;
@@ -94,7 +112,7 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
     public SafeActivityScope StartDurableDelivery(DurableSendDelivery delivery)
     {
         ArgumentNullException.ThrowIfNull(delivery);
-        if (Volatile.Read(ref _disposed) != 0)
+        if (_activitySource is null || Volatile.Read(ref _disposed) != 0)
             return SafeActivityScope.None;
 
         Activity? activity = null;
@@ -156,7 +174,7 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
     public void RecordDurableDelivery(
         DurableSendDeliveryOutcome outcome,
         DurableSendFailureKind? failureKind,
-        double elapsedSeconds)
+        double? elapsedSeconds)
     {
         try
         {
@@ -173,7 +191,8 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
                 tags.Add(ServiceBusTelemetry.Attributes.ErrorType, "durable-state-persistence-failure");
 
             _durableDelivery?.Add(1, in tags);
-            _durableDeliveryDuration?.Record(elapsedSeconds, in tags);
+            if (elapsedSeconds is { } duration)
+                _durableDeliveryDuration?.Record(duration, in tags);
         }
         catch
         {
@@ -181,7 +200,7 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
         }
     }
 
-    public void RecordDurableConsumerCompletion(bool retired, double elapsedSeconds)
+    public void RecordDurableConsumerCompletion(bool retired, double? elapsedSeconds)
     {
         try
         {
@@ -193,7 +212,8 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
                 { ServiceBusTelemetry.Attributes.Outcome, retired ? "retired" : "not-retired" },
             };
             _durableConsumerCompletion?.Add(1, in tags);
-            _durableConsumerCompletionDuration?.Record(elapsedSeconds, in tags);
+            if (elapsedSeconds is { } duration)
+                _durableConsumerCompletionDuration?.Record(duration, in tags);
         }
         catch
         {
@@ -479,7 +499,7 @@ internal sealed class ServiceBusInstrumentation<TBus> : IDisposable
 
         try
         {
-            _activitySource.Dispose();
+            _activitySource?.Dispose();
         }
         catch
         {

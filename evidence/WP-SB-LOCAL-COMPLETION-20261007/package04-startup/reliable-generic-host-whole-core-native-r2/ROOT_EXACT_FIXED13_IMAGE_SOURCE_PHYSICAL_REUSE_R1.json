@@ -1,0 +1,17 @@
+{
+  "kind": "ROOT_RELIABLE_WHOLE_R2_EXACT_FIXED13_IMAGE_SOURCE_PHYSICAL_REUSE",
+  "whole_sha256": "26f33d78e06e5f14d683e2215ffce5af5f9a4a30cdde9f672137fd900692d63c",
+  "fixed13_sha256": "0b19510a284de83a69390b0ce4e4f5602e24b31e56ad5efe53ed1d4461412ff7",
+  "own_fresh_fixed13_physical_sha256": "3ebf8e047eab523a70c174e2c671af78c6ee925e3a2887e333a577c1cde9ef5e",
+  "exact_direct_bytes_runtime17_assets12_live_fixed_whole": true,
+  "generated39_live_fixed_exact": true,
+  "whole_pass": {
+    "total": 8209,
+    "passed": 8209,
+    "failed": 0,
+    "skipped": 0
+  },
+  "selected13_plusProjection1_personal_read": true,
+  "cache199_mechanical_green_subset": true,
+  "limits": "Root whole-run 13 complete selected bodies plus Projectionbody/summary/emptyerr personallyread; full8209header/summary scan mechanical only, not whole5MB-body humanread. Root ownfreshfixed12PE3810 reuseONLY at all17 runtime+source/config/assets/generated exactmatches, no newWholePEparse or borrowed owncompiled4730 decode claim. Independentcombined gate pending; no mutants/post/canonical/globalclosure."
+}

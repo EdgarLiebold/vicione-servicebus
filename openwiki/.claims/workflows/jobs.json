@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:0097e1231671f1fbd6e94992c5ce7916520951f1abde58a9d97a6ebd27dc1f3e",
+  "claims": [
+    {
+      "id": "claim_701fdc7eaa4a43579e3d8e0e4c1e8934",
+      "statement": "JobService separates overall job state, one attempt's supervision, and job-type allocation state into cooperating sagas.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.JobService/JobService/JobAttemptSaga.cs",
+          "version": "repo-file-v1:sha256:9eb223383552beb2f0a2cda0be5ce28c63b4a23b0e48b09586cc69bbb5c5bf1f"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.JobService/JobService/JobSaga.cs",
+          "version": "repo-file-v1:sha256:d08dc1261a25c5f8cbefccea43936bc19a2f65c39138b87edb01eabf2c4bd466"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.JobService/JobService/JobTypeSaga.cs",
+          "version": "repo-file-v1:sha256:56035846100625d54d1fb6ad15c160291b88c41b7fbaee103d0c44eb1a6208da"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

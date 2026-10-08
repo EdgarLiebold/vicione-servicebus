@@ -1,0 +1,8 @@
+{
+  "kind": "ROOT_POST_ARCHIVE_SIDECAR_RETENTION",
+  "files": {
+    "independent-review/remote-checkpoint-20261008-encryption-source-adversarial-r1.json": "c5e24fcbcd029afc6ba20221cd628b07d7b289afc15e2b0902088bdce065f8f0",
+    "independent-review/remote-checkpoint-20261008-source-adversarial-r1.json": "783eb372935dcd98737f2061b77ab37f291e7d314bedf8060e57a522a2177e37"
+  },
+  "limits": "These independentreviews were completed around/aftercapture and are normalGit sidecars. No claim both wereinsidealreadyfrozen19465member archive."
+}

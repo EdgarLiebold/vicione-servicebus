@@ -1,0 +1,1534 @@
+{
+  "kind": "READONLY_PROPOSED_SIX_DOCUMENTATION_ASB30_AND_KNOWN_LOG_REPAIR_R19",
+  "utc": "2026-10-07T11:22:19.175591+00:00",
+  "status": "NO_BLOCK_FOR_EXACT_SIX_DOCUMENTATION_R19_PUBLICATION",
+  "reviewer": "Internal read-only reviewer, not external product team; Root sole writer/executor/publisher",
+  "findings": [],
+  "proposed_freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_PROPOSED_FREEZE_R19.json",
+    "sha256": "318fc0d072d458364037519f1fc04a03239663383055224467826e506efa8869"
+  },
+  "prior_published_R18": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_FREEZE_R18.json",
+    "sha256": "ad155868be56a20055842c452f9d64cfd6b753a190e96e47bf9df8483d7efdd4",
+    "acceptance_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/ROOT_DOCUMENTATION_ACCEPTANCE_R18.json",
+    "acceptance_sha256": "59a90cd5048194aafa98c9092c681b1bcc72f154489c87efd2f40c960c8bc08e",
+    "prior_whole_six_review": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/documentation-reconciliation-proposed-review-r18.json",
+    "prior_whole_six_review_sha256": "b08dc9b0753072cd5b5cdd22941843a314b2387ddf0ddc541283aae94f9a2bbd",
+    "canonicalSixStillR18": true
+  },
+  "exact_six_documents": [
+    {
+      "relative": "CHANGELOG.md",
+      "canonical_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/CHANGELOG.md",
+      "accepted_R18_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18/CHANGELOG.md",
+      "accepted_R18_sha256": "a95593e5d5528b798fbccd02dfe7ea8ba98b1907a8b59b8548f2a2ec3137146d",
+      "proposed_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r19/CHANGELOG.md",
+      "proposed_sha256": "6acdc3e48220b554fa38312ffa1524ae20d82a7806a6fdeb2bb7cd06a63a23ca",
+      "proposed_bytes": 17312,
+      "canonical_still_R18": true
+    },
+    {
+      "relative": "TODO.md",
+      "canonical_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/TODO.md",
+      "accepted_R18_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18/TODO.md",
+      "accepted_R18_sha256": "9b7db19f97678ccf1630890aff3777c09a34392494e774c1911b061c2178bd2b",
+      "proposed_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r19/TODO.md",
+      "proposed_sha256": "2a450034162d953f610577485d968d1efc4a33b4f99710b117e2a0023fa51d1e",
+      "proposed_bytes": 30321,
+      "canonical_still_R18": true
+    },
+    {
+      "relative": ".testagent/status.md",
+      "canonical_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/status.md",
+      "accepted_R18_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18/.testagent/status.md",
+      "accepted_R18_sha256": "5868f99cfda21c635e8e92d9adb0cf8bfe3d545c017a79bf66b728558e0aab9b",
+      "proposed_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r19/.testagent/status.md",
+      "proposed_sha256": "5a28e0dfb369102357b8681f34cf6d8c4c888f4005a212325a75d7d7461234c4",
+      "proposed_bytes": 18623,
+      "canonical_still_R18": true
+    },
+    {
+      "relative": ".testagent/plan.md",
+      "canonical_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/plan.md",
+      "accepted_R18_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18/.testagent/plan.md",
+      "accepted_R18_sha256": "6d35325ff148daf752ccfcf4d9fefd8aac38941eaa1df066e127e2d2e83a8fca",
+      "proposed_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r19/.testagent/plan.md",
+      "proposed_sha256": "2b81b39f77418a2df0d970feb13ae7031c2df9e853c2920701a92134462d7dc8",
+      "proposed_bytes": 24595,
+      "canonical_still_R18": true
+    },
+    {
+      "relative": ".testagent/local-completion-plan.md",
+      "canonical_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/local-completion-plan.md",
+      "accepted_R18_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18/.testagent/local-completion-plan.md",
+      "accepted_R18_sha256": "ac4b5610c5616b707820797cd7a03d46af90edf1607aaac89c2663c0bfeb2f25",
+      "proposed_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r19/.testagent/local-completion-plan.md",
+      "proposed_sha256": "efef30efb10cca300f0195ebf3fc11e150f98d39a74ac8227dee5db20cf1e9fc",
+      "proposed_bytes": 7383,
+      "canonical_still_R18": true
+    },
+    {
+      "relative": "docs/quality-status.md",
+      "canonical_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/quality-status.md",
+      "accepted_R18_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18/docs/quality-status.md",
+      "accepted_R18_sha256": "128ed40aa1d89bcc68d755c856f6c7632f95671cdf077ef0f4d30d88aa0e1d62",
+      "proposed_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r19/docs/quality-status.md",
+      "proposed_sha256": "c3b6167d014a4c69d5ea35c3bbd4852ca2ec4e3596ba57430f1240adb3f8918c",
+      "proposed_bytes": 16801,
+      "canonical_still_R18": true
+    }
+  ],
+  "complete_six_diffs": {
+    "CHANGELOG.md": "--- acceptedR18/CHANGELOG.md\n+++ proposedR19/CHANGELOG.md\n@@ -146,6 +146,18 @@\n   Other startup owners and the global packed API baseline remain open; these cases stop at a\n   sentinel before actual ServiceBus/AWS runtime startup.\n \n+- Passed all 30 current local Azure Service Bus emulator cases with zero failures/skips,\n+  source-bound runtime evidence and complete own-resource teardown. The separately reviewed\n+  pre-health forwarding tool has 18 passing contracts, five finite counterproof failures with\n+  four healthy controls, and 18 unchanged postchecks. Its tool slots are not native product cases.\n+  See the [bounded current ASB receipt](evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/ROOT_CURRENT_ASB30_FUNCTIONAL_ACCEPTANCE_R1.json).\n+- Prevented known run credentials from reaching persisted broker logs or collection warnings.\n+  All nine focused contracts and all nine canonical postchecks pass after independent review.\n+  The original affected broker log remains private, with a separately hashed redacted copy.\n+  See the [bounded log repair receipt](evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/broker-log-redaction-owner-r1/ROOT_BROKER_LOG_REDACTION_ACCEPTANCE_R1.json).\n+  Three negative broker entity-size diagnostics remain a new open local investigation; the\n+  passing native cases do not resolve their cause. Cloud and hardware acceptance remain open.\n+\n ## Unreleased — API review completion, 6 October 2026\n \n The source API review and repairs are complete within their recorded contract and\n",
+    "TODO.md": "--- acceptedR18/TODO.md\n+++ proposedR19/TODO.md\n@@ -67,6 +67,17 @@\n recovery, lock/session-lock renewal and loss, and TTL/lock-expiry exception classification. It must\n use provider state or service acknowledgements as terminal barriers, never sleeps, polling success,\n shared resources or a local-emulator result presented as cloud evidence.\n+\n+The current local emulator replay passes all 30 native cases with independently bound build,\n+runtime and own-resource cleanup evidence. Its credential-log finding is repaired and separately\n+postchecked. These local results close none of the cloud obligations above. The new local finding\n+`ASB-BROKER-INVARIANT-01` still needs a cause-qualified investigation: three negative entity-size\n+records occur during passed dead-letter cases. Isolate those cases with a normal Complete control\n+against the pinned local emulator, retain exact entity/operation evidence and determine whether\n+an SDK, product or emulator response is required. Test success alone does not close the finding.\n+The diagnostic inventory also retains partially correlated post-deletion/session/link errors,\n+an unmatched internal missing entity and the emulator's disabled Server GC configuration.\n+Evidence: `evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/ROOT_CURRENT_ASB30_FUNCTIONAL_ACCEPTANCE_R1.json`.\n \n The same profile owns the remaining management-plane and namespace-boundary contracts: topology-only\n deployment, dynamic and multi-bus subscription endpoints, unchanged-subscription idempotence,\n",
+    ".testagent/status.md": "--- acceptedR18/.testagent/status.md\n+++ proposedR19/.testagent/status.md\n@@ -126,6 +126,27 @@\n Other startup owners, current coverage, full Unit/provider replay, adapter deadlines, observer\n contracts, broader telemetry schema, CI, real cloud and device qualification remain open.\n \n+The current local Azure Service Bus emulator profile is accepted for its 30 unique native\n+functional cases (zero failures/skips), with locked restore, a forced warning/error-free rebuild,\n+source-bound runtime evidence and removal of its own processes and Compose resources. This is\n+current source evidence, separate from the earlier 645/RabbitMQ38/SQLServer99 baseline. Acceptance:\n+`evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/ROOT_CURRENT_ASB30_FUNCTIONAL_ACCEPTANCE_R1.json`.\n+\n+A temporary SQL password echoed in the broker log was repaired at the shared log producer.\n+Known run credentials are masked before persistence and failed-collection console output;\n+nine focused contracts and nine canonical postchecks pass, with independent adversarial review.\n+The original log remains private and byte-identical, with a separately hashed redacted derivative.\n+The native 30-case run used the original collector; its history is not rewritten as a new run.\n+Acceptance: `evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/broker-log-redaction-owner-r1/ROOT_BROKER_LOG_REDACTION_ACCEPTANCE_R1.json`.\n+\n+A new local diagnostic finding, `ASB-BROKER-INVARIANT-01`, remains open: three broker records\n+report negative entity sizes during passed dead-letter cases. Their cause and operational impact\n+are unqualified. Other deletion/session/link diagnostics are only partly correlated; Server GC\n+is disabled in this emulator and gives no performance acceptance. Passing tests do not make\n+these diagnostics harmless. The historical 234 audit repairs remain frozen; this new finding\n+belongs to the continuation. Current coverage, other provider replays, startup/adapter/observer/\n+telemetry/CI work, real cloud and hardware acceptance remain open.\n+\n ## Historical checkpoints\n \n The following text is retained verbatim as the earlier repair chronicle. Its counts, open decisions\n",
+    ".testagent/plan.md": "--- acceptedR18/.testagent/plan.md\n+++ proposedR19/.testagent/plan.md\n@@ -116,6 +116,27 @@\n Other startup owners, current coverage, full Unit/provider replay, adapter deadlines, observer\n contracts, broader telemetry schema, CI, real cloud and device qualification remain open.\n \n+The current local Azure Service Bus emulator profile is accepted for its 30 unique native\n+functional cases (zero failures/skips), with locked restore, a forced warning/error-free rebuild,\n+source-bound runtime evidence and removal of its own processes and Compose resources. This is\n+current source evidence, separate from the earlier 645/RabbitMQ38/SQLServer99 baseline. Acceptance:\n+`evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/ROOT_CURRENT_ASB30_FUNCTIONAL_ACCEPTANCE_R1.json`.\n+\n+A temporary SQL password echoed in the broker log was repaired at the shared log producer.\n+Known run credentials are masked before persistence and failed-collection console output;\n+nine focused contracts and nine canonical postchecks pass, with independent adversarial review.\n+The original log remains private and byte-identical, with a separately hashed redacted derivative.\n+The native 30-case run used the original collector; its history is not rewritten as a new run.\n+Acceptance: `evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/broker-log-redaction-owner-r1/ROOT_BROKER_LOG_REDACTION_ACCEPTANCE_R1.json`.\n+\n+A new local diagnostic finding, `ASB-BROKER-INVARIANT-01`, remains open: three broker records\n+report negative entity sizes during passed dead-letter cases. Their cause and operational impact\n+are unqualified. Other deletion/session/link diagnostics are only partly correlated; Server GC\n+is disabled in this emulator and gives no performance acceptance. Passing tests do not make\n+these diagnostics harmless. The historical 234 audit repairs remain frozen; this new finding\n+belongs to the continuation. Current coverage, other provider replays, startup/adapter/observer/\n+telemetry/CI work, real cloud and hardware acceptance remain open.\n+\n ## Historical API repair execution notes\n \n The entries below preserve the plans as written during the repair work. Their pending/open wording\n",
+    ".testagent/local-completion-plan.md": "--- acceptedR18/.testagent/local-completion-plan.md\n+++ proposedR19/.testagent/local-completion-plan.md\n@@ -13,7 +13,7 @@\n |---|---|---|---|\n | 01 | Fresh-checkout reproducibility; reconcile stale plan/status pages | Locked Engineering and Unit restores, strict Release builds, complete native Unit run, exact modules and raw evidence; independent documentation review | Accepted: fresh 13,460 Unit cases / 23 modules, strict locked builds and independent final evidence review |\n | 02 | Current coverage and method risk | Fresh source-bound coverage for current unit/local profiles and portability modes; partial if any required provider is unavailable | Binlog producer/aggregator correction accepted after 10 Python tool contracts and causal negative tests; native measurement pending |\n-| 03 | Local provider integration and historical SQL missing-delivery investigation | Native provider profiles against isolated local resources, exact message accounting and cleanup; success on retry alone does not close the historical failure | Baseline evidence accepted: 645 cases / 10 modules, RabbitMQ38 and SQLServer99; reviewed own forwarding/cleanup; historical SQL cause and post-correction replay open |\n+| 03 | Local provider integration and historical SQL missing-delivery investigation | Native provider profiles against isolated local resources, exact message accounting and cleanup; success on retry alone does not close the historical failure | Earlier baseline accepted: 645 / ten modules, RabbitMQ38 and SQLServer99. Current ASB30 functional profile and known-credential log correction accepted; new broker-size anomaly, historical SQL cause and other current provider replays open |\n | 04 | Startup validation inventory | All selected static invalid options fail before endpoint start; missing/conflicting/unselected and named multi-bus cases | Bounded named SQS stage A accepted: six actual Generic Host cases / 417 local SQS / six mutants (15 finite first failures, 21 healthy controls) / unchanged final six; other startup owners and full runtime startup open |\n | 05 | Activity telemetry isolation | Complete emission/lifetime/context inventory, hostile listeners, exact messaging outcome and schema, causal counter-mutations | Shared Activity A, typed source B1, batch handoff B2, process metrics C1, consumer completion C2, delivery clocks C3, snapshots C4, cold sources C5 and public caller cleanup C6 accepted; C6: 38 cases / 8,112 Core / 6 compiled mutations (34 finite failures, 194 healthy controls) / final38; classic EF duration C7 accepted: 13 SQLite / 432 EF / 5 compiled mutations (19 finite failures, 46 healthy controls) / final13; broader schema and aggregate closure open |\n | 06 | Cache observer/index and deterministic time TODO reconciliation | Inspect current owners and prior accepted implementation before altering code; close only demonstrated contracts, implement genuine remaining gaps | Three Core deadlines accepted with 13 contracts / 7,958 Core / four mutants; cache comparer/retirement accepted with 30 contracts / 142 Cache / 8,142 Core / eight mutants (12 finite failures, 228 healthy controls) / unchanged final30; remaining observer and adapter contracts open |\n@@ -29,6 +29,27 @@\n selection and actual healthy full-host startup remain next. The scoped additive generic SQS\n API comparison is accepted; the global packed API baseline remains open.\n \n+The current local Azure Service Bus emulator profile is accepted for its 30 unique native\n+functional cases (zero failures/skips), with locked restore, a forced warning/error-free rebuild,\n+source-bound runtime evidence and removal of its own processes and Compose resources. This is\n+current source evidence, separate from the earlier 645/RabbitMQ38/SQLServer99 baseline. Acceptance:\n+`evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/ROOT_CURRENT_ASB30_FUNCTIONAL_ACCEPTANCE_R1.json`.\n+\n+A temporary SQL password echoed in the broker log was repaired at the shared log producer.\n+Known run credentials are masked before persistence and failed-collection console output;\n+nine focused contracts and nine canonical postchecks pass, with independent adversarial review.\n+The original log remains private and byte-identical, with a separately hashed redacted derivative.\n+The native 30-case run used the original collector; its history is not rewritten as a new run.\n+Acceptance: `evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/broker-log-redaction-owner-r1/ROOT_BROKER_LOG_REDACTION_ACCEPTANCE_R1.json`.\n+\n+A new local diagnostic finding, `ASB-BROKER-INVARIANT-01`, remains open: three broker records\n+report negative entity sizes during passed dead-letter cases. Their cause and operational impact\n+are unqualified. Other deletion/session/link diagnostics are only partly correlated; Server GC\n+is disabled in this emulator and gives no performance acceptance. Passing tests do not make\n+these diagnostics harmless. The historical 234 audit repairs remain frozen; this new finding\n+belongs to the continuation. Current coverage, other provider replays, startup/adapter/observer/\n+telemetry/CI work, real cloud and hardware acceptance remain open.\n+\n Per code package: complete source/test-owner read → Research/Plan → causal original regression\n where applicable → minimal correction → meaningful native tests and one-cause counterproofs →\n hash-bound freeze → separate read-only adversarial review → resolve findings → affected aggregate\n",
+    "docs/quality-status.md": "--- acceptedR18/docs/quality-status.md\n+++ proposedR19/docs/quality-status.md\n@@ -146,6 +146,27 @@\n Other startup owners, current coverage, full Unit/provider replay, adapter deadlines, observer\n contracts, broader telemetry schema, CI, real cloud and device qualification remain open.\n \n+The current local Azure Service Bus emulator profile is accepted for its 30 unique native\n+functional cases (zero failures/skips), with locked restore, a forced warning/error-free rebuild,\n+source-bound runtime evidence and removal of its own processes and Compose resources. This is\n+current source evidence, separate from the earlier 645/RabbitMQ38/SQLServer99 baseline. Acceptance:\n+`evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/ROOT_CURRENT_ASB30_FUNCTIONAL_ACCEPTANCE_R1.json`.\n+\n+A temporary SQL password echoed in the broker log was repaired at the shared log producer.\n+Known run credentials are masked before persistence and failed-collection console output;\n+nine focused contracts and nine canonical postchecks pass, with independent adversarial review.\n+The original log remains private and byte-identical, with a separately hashed redacted derivative.\n+The native 30-case run used the original collector; its history is not rewritten as a new run.\n+Acceptance: `evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/broker-log-redaction-owner-r1/ROOT_BROKER_LOG_REDACTION_ACCEPTANCE_R1.json`.\n+\n+A new local diagnostic finding, `ASB-BROKER-INVARIANT-01`, remains open: three broker records\n+report negative entity sizes during passed dead-letter cases. Their cause and operational impact\n+are unqualified. Other deletion/session/link diagnostics are only partly correlated; Server GC\n+is disabled in this emulator and gives no performance acceptance. Passing tests do not make\n+these diagnostics harmless. The historical 234 audit repairs remain frozen; this new finding\n+belongs to the continuation. Current coverage, other provider replays, startup/adapter/observer/\n+telemetry/CI work, real cloud and hardware acceptance remain open.\n+\n ## Historical product-wide coverage and CRAP checkpoint\n \n The latest complete 33-profile measurement ran against commit\n"
+  },
+  "historical_suffixes_byte_preserved": [
+    {
+      "relative": "CHANGELOG.md",
+      "anchor": "## Unreleased — API review completion, 6 October 2026",
+      "bytes": 2306,
+      "sha256": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+      "byte_exact": true
+    },
+    {
+      "relative": ".testagent/status.md",
+      "anchor": "## Historical checkpoints",
+      "bytes": 6160,
+      "sha256": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+      "byte_exact": true
+    },
+    {
+      "relative": ".testagent/plan.md",
+      "anchor": "## Historical API repair execution notes",
+      "bytes": 13058,
+      "sha256": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+      "byte_exact": true
+    },
+    {
+      "relative": "docs/quality-status.md",
+      "anchor": "## Historical product-wide coverage and CRAP checkpoint",
+      "bytes": 3174,
+      "sha256": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5",
+      "byte_exact": true
+    }
+  ],
+  "TODO_preservation": {
+    "headings12_order": [
+      "## Verify startup validation across retained capabilities",
+      "## Complete Azure Service Bus validation against the real cloud service",
+      "## Separate cache index projection from external observation",
+      "## Continue deterministic time normalization beyond envelope materialization",
+      "## Complete external benchmark scenarios",
+      "## Make Activity telemetry observationally no-throw",
+      "## Complete MessageJournal external provider validation",
+      "## Complete Azure Table persistence validation against the real cloud service",
+      "## Complete Entity Framework SQL Server and Azure SQL external variant validation",
+      "## AWS real-service closure",
+      "## Complete Event Hubs validation against the real cloud service",
+      "## Complete RabbitMQ validation against Amazon MQ"
+    ],
+    "allother11_sections_byte_exact": [
+      {
+        "heading": "## Verify startup validation across retained capabilities",
+        "bytes": 2397,
+        "sha256": "ea9c723a4eefcaee616c20b8bcbdeba6110918c388c3c15209ddddf9528c3eb2"
+      },
+      {
+        "heading": "## Separate cache index projection from external observation",
+        "bytes": 2021,
+        "sha256": "1e72dd4c7e4b4d1a07e04dc1edabe6239aa69a868ffc27e7dca5b95dc9cd7afe"
+      },
+      {
+        "heading": "## Continue deterministic time normalization beyond envelope materialization",
+        "bytes": 4010,
+        "sha256": "5492681adce6e3869d1e8a95ca8d9c54e930af414fde6cfbc5de5ad60f85db52"
+      },
+      {
+        "heading": "## Complete external benchmark scenarios",
+        "bytes": 282,
+        "sha256": "ad94a2fc4505b25478cf256f0b9578be5178fde6ca89c5842c2bee6e7da5f6dd"
+      },
+      {
+        "heading": "## Make Activity telemetry observationally no-throw",
+        "bytes": 8010,
+        "sha256": "e82735949dd0d8b1f990d90b1aebdf967cc1ad037879a0d12ea69b8e9442bc5b"
+      },
+      {
+        "heading": "## Complete MessageJournal external provider validation",
+        "bytes": 828,
+        "sha256": "7004d3dd9f288e9cdc5d9bd39fbb41cf4d9cca2470959aef0d773b2ccdf08e44"
+      },
+      {
+        "heading": "## Complete Azure Table persistence validation against the real cloud service",
+        "bytes": 2254,
+        "sha256": "cb88b3a863d609d5d52d9e306049091bd2753539c93739dc2e41a00b6c18bd5c"
+      },
+      {
+        "heading": "## Complete Entity Framework SQL Server and Azure SQL external variant validation",
+        "bytes": 1745,
+        "sha256": "514b7682cff5b750129f59f967204a995e764b1f6c365fe06689c0f6e71011e5"
+      },
+      {
+        "heading": "## AWS real-service closure",
+        "bytes": 2648,
+        "sha256": "25b7df4df7fc790caa0c9ad8ca43df69c6fb7aa4fdbd9a8a4f15cc319ca461d7"
+      },
+      {
+        "heading": "## Complete Event Hubs validation against the real cloud service",
+        "bytes": 1116,
+        "sha256": "714f6494487dc039c7e8eb79d632a694f1e03f81919f07b23c8b2a5fbbcfef1c"
+      },
+      {
+        "heading": "## Complete RabbitMQ validation against Amazon MQ",
+        "bytes": 830,
+        "sha256": "d592562bd69b5747702059ac03a45e7cd07ab7ebda2f2fcff2db3a040f414415"
+      }
+    ],
+    "ordered62_OBL_tokens": [
+      "OBL-R0-CLOUD-0005",
+      "OBL-R0-CLOUD-0019",
+      "OBL-R0-CLOUD-0020",
+      "OBL-R0-CLOUD-0021",
+      "OBL-R0-CLOUD-0025",
+      "OBL-R0-CLOUD-0026",
+      "OBL-R0-CLOUD-0027",
+      "OBL-R0-CLOUD-0028",
+      "OBL-R0-CLOUD-0044",
+      "OBL-R0-CLOUD-0057",
+      "OBL-R0-CLOUD-0058",
+      "OBL-R0-CLOUD-0059",
+      "OBL-R0-CLOUD-0066",
+      "OBL-R0-CLOUD-0067",
+      "OBL-R0-CLOUD-0068",
+      "OBL-R0-CLOUD-0069",
+      "OBL-R0-CLOUD-0072",
+      "OBL-R0-CLOUD-0079",
+      "OBL-R0-CLOUD-0080",
+      "OBL-R0-CLOUD-0086",
+      "OBL-R0-CLOUD-0088",
+      "OBL-R0-CLOUD-0089",
+      "OBL-R0-CLOUD-0095",
+      "OBL-R0-CLOUD-0096",
+      "OBL-R0-CLOUD-0098",
+      "OBL-R0-CLOUD-0099",
+      "OBL-R0-CLOUD-0105",
+      "OBL-R0-CLOUD-0108",
+      "OBL-R0-CLOUD-0109",
+      "OBL-R0-CLOUD-0117",
+      "OBL-R0-CLOUD-0122",
+      "OBL-R0-CLOUD-0124",
+      "OBL-R0-CLOUD-0125",
+      "OBL-R0-CLOUD-0130",
+      "OBL-R0-CLOUD-0131",
+      "OBL-R0-CLOUD-0132",
+      "OBL-R0-CLOUD-0137",
+      "OBL-R0-CLOUD-0138",
+      "OBL-R0-CLOUD-0247",
+      "OBL-R0-CLOUD-0248",
+      "OBL-R0-CLOUD-0250",
+      "OBL-R0-CLOUD-0251",
+      "OBL-R0-CLOUD-0254",
+      "OBL-R0-CLOUD-0255",
+      "OBL-R0-CLOUD-0256",
+      "OBL-R0-CLOUD-0257",
+      "OBL-R0-PER-0455",
+      "OBL-R0-PER-0456",
+      "OBL-R0-PER-0457",
+      "OBL-R0-CLOUD-0216",
+      "OBL-R0-CLOUD-0217",
+      "OBL-R0-CLOUD-0265",
+      "OBL-R0-CLOUD-0266",
+      "OBL-R0-CLOUD-0268",
+      "OBL-R0-CLOUD-0272",
+      "OBL-R0-PER-0523",
+      "OBL-R0-PER-0524",
+      "OBL-R0-PER-0603",
+      "OBL-R0-CLOUD-0258",
+      "OBL-R0-CLOUD-0261",
+      "OBL-R0-CLOUD-0262",
+      "OBL-R0-BRK-0004"
+    ],
+    "removal_until_committed_rule_retained": true,
+    "no_deferred_item_removed": true
+  },
+  "evidence_authority": {
+    "asb30": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/ROOT_CURRENT_ASB30_FUNCTIONAL_ACCEPTANCE_R1.json",
+      "sha256": "e750c4d37f81c86d1b129c7c6f1f5d5195b9b767056b61725624404b6a1b1036"
+    },
+    "logrepair": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/broker-log-redaction-owner-r1/ROOT_BROKER_LOG_REDACTION_ACCEPTANCE_R1.json",
+      "sha256": "d2a42f437ac2c735f54fce9b70f4709ee70dd23874cb04c48b55252b001acb4a"
+    },
+    "bootstraptool": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/ROOT_ASB_PREHEALTH_BOOTSTRAP_TOOL_CHAIN_ACCEPTANCE_R1.json",
+      "sha256": "59b8616112b6bedd2977b26ad03321de6d68379dd6005b54a579aa226e09e7aa"
+    }
+  },
+  "supporting_records": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/RESULT.json",
+      "sha256": "4a6d9943a5d2bc02046e26edf7310c8dbadf9de890f5db38553df557a070e25e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/package03-asb-current-native30-r3-adversarial-r1.json",
+      "sha256": "c132c074dd587f2811ca07a8555996e1629019e7d824fb22a5b465d13a752298"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/ROOT_OWN_RESOURCE_ABSENCE_R1.json",
+      "sha256": "f566e289884d03870929e53c880bf3a38fbc9f9b4bb99b4d7527ee36c70ae65d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/package03-asb-current-redacted-broker-diagnostic-classification-r1.json",
+      "sha256": "3e5db72197140da04f0f1ac5115e87fcdd317ddb942cbe5218e0447ba7794307"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/broker-log-redaction-owner-r1/ROOT_CANONICAL_APPLICATION_R1.json",
+      "sha256": "66003473fca75e0811ef9de1dcecc9e0be7318bb98317f55bfa59d40c504a09c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/broker-log-redaction-owner-r1/canonical-post9/RESULT.json",
+      "sha256": "30e31e196fa3abbefa80297863c9ac6b1e1ff2d0f239b3efaa3503a2f42a3ba9"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/broker-log-redaction-owner-r1/package03-broker-log-redaction-canonical-post9-diag01-disposition-adversarial-r1.json",
+      "sha256": "fbc3c6c3cff29db892f0888af6698a892dec8d43d197e41a23e295c0c11b40da"
+    }
+  ],
+  "semantic_assessment": {
+    "ASB": "Only 30 actual unique local official emulator/SQL native cases accepted with no failures/skips; separate earlier645/Rabbit38/SQL99 evidence not inflated. Named owned process groups and label-scoped containers/volumes/networks absent according to accepted Root receipt. Neither universal process census nor full P03/currentUnit/coverage/global cloud/hardware acceptance follows.",
+    "tool": "18 unique fake-process bootstrap contracts, counter9 five finite first failures/four healthy and unchanged18post accepted independently. They are tool slots, not native CLR/provider cases. Counter errors2+fails3 are deliberate finite counterproof boundaries, not positive18 test failures.",
+    "log": "Known literal run credential producer/failure-console masking scope accepted, nine fixed and nine canonical post green. Shared current collector749/newfocusedtest proves correction separately; actual ASB30 used original collector e93 and is not retroactively rerun/rewritten. Private original raw remains separate; no private raw log or credential value read by this review. No universal encoded/derived/all-artifact secret cleanliness claim.",
+    "newInvariant": "ASB-BROKER-INVARIANT-01 Medium remains open: three Error30048 negative entity sizes with recorded active/scheduled/dead-letter zero counts during source-correlated passing dead-letter cases. Cause, persistence, delivery loss, quota/operational impact and product-versus-SDK-versus-emulator owner remain unqualified. Passed native cases do not assert nonnegative entity size or prove harmlessness.",
+    "otherDiagnostics": "95Error/1108Warning/1Critical inventory retained. Post-deletion session churn and link/missing-entity events only partly correlated, unmatched internal entity unqualified. Server GC disabled is emulator configuration/performance limit, not no-GC/performance/device acceptance.",
+    "history": "234 historical audit authority/counts, historical product coverage/SQL999/1000 chronology and all prior bounded package conclusions preserved by exact older text/suffixes. All62 external IDs remain in original order; no cloud obligations removed. New diagnostic belongs to continuation, not rewritten234 ledger.",
+    "remaining": "Other provider replays/historical SQL cause/current coverage/allUnit/other Startup/adapters/cache observers/telemetry schema/CI/real cloud/hardware remain open; proposed localplan03 row qualifies only accepted current ASB30 plus bounded known log repair.",
+    "references": "All newly added evidence links resolve to exact current accepted Root receipts; newer producer proof is explicitly separated from historical native collector. Both Root receipts exist, so conditional publication is satisfied only for exact six frozen documentation bytes."
+  },
+  "personal_read_scope": {
+    "prior_complete_six_bodies_exact_R18_reuse": true,
+    "all_six_new_deltas_whole_read": true,
+    "current_canonical_six_unchanged_machine_checked": true,
+    "historical_suffixes_and_other11_TODO_sections_machine_byte_exact": true,
+    "root_receipts_ASB_log_tool_whole_read": true,
+    "supporting_peer_reports_substantive_selected_fields_read": "Native/doc proof reuse, no new full peer artifact-index/PE/PDB/native raw/allowner/body reading claim; classification print had truncation, required substantive fields independently selected thereafter.",
+    "noRootCreditTransfer": true
+  },
+  "checks": [
+    {
+      "name": "proposedFreezeExpectedHash",
+      "actual": "318fc0d072d458364037519f1fc04a03239663383055224467826e506efa8869",
+      "expected": "318fc0d072d458364037519f1fc04a03239663383055224467826e506efa8869",
+      "pass": true
+    },
+    {
+      "name": "priorFreezeAuthority",
+      "actual": "ad155868be56a20055842c452f9d64cfd6b753a190e96e47bf9df8483d7efdd4",
+      "expected": "ad155868be56a20055842c452f9d64cfd6b753a190e96e47bf9df8483d7efdd4",
+      "pass": true
+    },
+    {
+      "name": "priorSourceMapMatchesPublishedR18",
+      "actual": {
+        "CHANGELOG.md": "a95593e5d5528b798fbccd02dfe7ea8ba98b1907a8b59b8548f2a2ec3137146d",
+        "TODO.md": "9b7db19f97678ccf1630890aff3777c09a34392494e774c1911b061c2178bd2b",
+        ".testagent/status.md": "5868f99cfda21c635e8e92d9adb0cf8bfe3d545c017a79bf66b728558e0aab9b",
+        ".testagent/plan.md": "6d35325ff148daf752ccfcf4d9fefd8aac38941eaa1df066e127e2d2e83a8fca",
+        ".testagent/local-completion-plan.md": "ac4b5610c5616b707820797cd7a03d46af90edf1607aaac89c2663c0bfeb2f25",
+        "docs/quality-status.md": "128ed40aa1d89bcc68d755c856f6c7632f95671cdf077ef0f4d30d88aa0e1d62"
+      },
+      "expected": {
+        "CHANGELOG.md": "a95593e5d5528b798fbccd02dfe7ea8ba98b1907a8b59b8548f2a2ec3137146d",
+        "TODO.md": "9b7db19f97678ccf1630890aff3777c09a34392494e774c1911b061c2178bd2b",
+        ".testagent/status.md": "5868f99cfda21c635e8e92d9adb0cf8bfe3d545c017a79bf66b728558e0aab9b",
+        ".testagent/plan.md": "6d35325ff148daf752ccfcf4d9fefd8aac38941eaa1df066e127e2d2e83a8fca",
+        ".testagent/local-completion-plan.md": "ac4b5610c5616b707820797cd7a03d46af90edf1607aaac89c2663c0bfeb2f25",
+        "docs/quality-status.md": "128ed40aa1d89bcc68d755c856f6c7632f95671cdf077ef0f4d30d88aa0e1d62"
+      },
+      "pass": true
+    },
+    {
+      "name": "priorAcceptanceBindsPublishedR18",
+      "actual": "ad155868be56a20055842c452f9d64cfd6b753a190e96e47bf9df8483d7efdd4",
+      "expected": "ad155868be56a20055842c452f9d64cfd6b753a190e96e47bf9df8483d7efdd4",
+      "pass": true
+    },
+    {
+      "name": "priorWholeSixReviewHash",
+      "actual": "b08dc9b0753072cd5b5cdd22941843a314b2387ddf0ddc541283aae94f9a2bbd",
+      "expected": "b08dc9b0753072cd5b5cdd22941843a314b2387ddf0ddc541283aae94f9a2bbd",
+      "pass": true
+    },
+    {
+      "name": "CHANGELOG.md priorSnapshot",
+      "actual": "a95593e5d5528b798fbccd02dfe7ea8ba98b1907a8b59b8548f2a2ec3137146d",
+      "expected": "a95593e5d5528b798fbccd02dfe7ea8ba98b1907a8b59b8548f2a2ec3137146d",
+      "pass": true
+    },
+    {
+      "name": "CHANGELOG.md canonicalStillR18",
+      "actual": "a95593e5d5528b798fbccd02dfe7ea8ba98b1907a8b59b8548f2a2ec3137146d",
+      "expected": "a95593e5d5528b798fbccd02dfe7ea8ba98b1907a8b59b8548f2a2ec3137146d",
+      "pass": true
+    },
+    {
+      "name": "CHANGELOG.md proposedSHA",
+      "actual": "6acdc3e48220b554fa38312ffa1524ae20d82a7806a6fdeb2bb7cd06a63a23ca",
+      "expected": "6acdc3e48220b554fa38312ffa1524ae20d82a7806a6fdeb2bb7cd06a63a23ca",
+      "pass": true
+    },
+    {
+      "name": "TODO.md priorSnapshot",
+      "actual": "9b7db19f97678ccf1630890aff3777c09a34392494e774c1911b061c2178bd2b",
+      "expected": "9b7db19f97678ccf1630890aff3777c09a34392494e774c1911b061c2178bd2b",
+      "pass": true
+    },
+    {
+      "name": "TODO.md canonicalStillR18",
+      "actual": "9b7db19f97678ccf1630890aff3777c09a34392494e774c1911b061c2178bd2b",
+      "expected": "9b7db19f97678ccf1630890aff3777c09a34392494e774c1911b061c2178bd2b",
+      "pass": true
+    },
+    {
+      "name": "TODO.md proposedSHA",
+      "actual": "2a450034162d953f610577485d968d1efc4a33b4f99710b117e2a0023fa51d1e",
+      "expected": "2a450034162d953f610577485d968d1efc4a33b4f99710b117e2a0023fa51d1e",
+      "pass": true
+    },
+    {
+      "name": ".testagent/status.md priorSnapshot",
+      "actual": "5868f99cfda21c635e8e92d9adb0cf8bfe3d545c017a79bf66b728558e0aab9b",
+      "expected": "5868f99cfda21c635e8e92d9adb0cf8bfe3d545c017a79bf66b728558e0aab9b",
+      "pass": true
+    },
+    {
+      "name": ".testagent/status.md canonicalStillR18",
+      "actual": "5868f99cfda21c635e8e92d9adb0cf8bfe3d545c017a79bf66b728558e0aab9b",
+      "expected": "5868f99cfda21c635e8e92d9adb0cf8bfe3d545c017a79bf66b728558e0aab9b",
+      "pass": true
+    },
+    {
+      "name": ".testagent/status.md proposedSHA",
+      "actual": "5a28e0dfb369102357b8681f34cf6d8c4c888f4005a212325a75d7d7461234c4",
+      "expected": "5a28e0dfb369102357b8681f34cf6d8c4c888f4005a212325a75d7d7461234c4",
+      "pass": true
+    },
+    {
+      "name": ".testagent/plan.md priorSnapshot",
+      "actual": "6d35325ff148daf752ccfcf4d9fefd8aac38941eaa1df066e127e2d2e83a8fca",
+      "expected": "6d35325ff148daf752ccfcf4d9fefd8aac38941eaa1df066e127e2d2e83a8fca",
+      "pass": true
+    },
+    {
+      "name": ".testagent/plan.md canonicalStillR18",
+      "actual": "6d35325ff148daf752ccfcf4d9fefd8aac38941eaa1df066e127e2d2e83a8fca",
+      "expected": "6d35325ff148daf752ccfcf4d9fefd8aac38941eaa1df066e127e2d2e83a8fca",
+      "pass": true
+    },
+    {
+      "name": ".testagent/plan.md proposedSHA",
+      "actual": "2b81b39f77418a2df0d970feb13ae7031c2df9e853c2920701a92134462d7dc8",
+      "expected": "2b81b39f77418a2df0d970feb13ae7031c2df9e853c2920701a92134462d7dc8",
+      "pass": true
+    },
+    {
+      "name": ".testagent/local-completion-plan.md priorSnapshot",
+      "actual": "ac4b5610c5616b707820797cd7a03d46af90edf1607aaac89c2663c0bfeb2f25",
+      "expected": "ac4b5610c5616b707820797cd7a03d46af90edf1607aaac89c2663c0bfeb2f25",
+      "pass": true
+    },
+    {
+      "name": ".testagent/local-completion-plan.md canonicalStillR18",
+      "actual": "ac4b5610c5616b707820797cd7a03d46af90edf1607aaac89c2663c0bfeb2f25",
+      "expected": "ac4b5610c5616b707820797cd7a03d46af90edf1607aaac89c2663c0bfeb2f25",
+      "pass": true
+    },
+    {
+      "name": ".testagent/local-completion-plan.md proposedSHA",
+      "actual": "efef30efb10cca300f0195ebf3fc11e150f98d39a74ac8227dee5db20cf1e9fc",
+      "expected": "efef30efb10cca300f0195ebf3fc11e150f98d39a74ac8227dee5db20cf1e9fc",
+      "pass": true
+    },
+    {
+      "name": "docs/quality-status.md priorSnapshot",
+      "actual": "128ed40aa1d89bcc68d755c856f6c7632f95671cdf077ef0f4d30d88aa0e1d62",
+      "expected": "128ed40aa1d89bcc68d755c856f6c7632f95671cdf077ef0f4d30d88aa0e1d62",
+      "pass": true
+    },
+    {
+      "name": "docs/quality-status.md canonicalStillR18",
+      "actual": "128ed40aa1d89bcc68d755c856f6c7632f95671cdf077ef0f4d30d88aa0e1d62",
+      "expected": "128ed40aa1d89bcc68d755c856f6c7632f95671cdf077ef0f4d30d88aa0e1d62",
+      "pass": true
+    },
+    {
+      "name": "docs/quality-status.md proposedSHA",
+      "actual": "c3b6167d014a4c69d5ea35c3bbd4852ca2ec4e3596ba57430f1240adb3f8918c",
+      "expected": "c3b6167d014a4c69d5ea35c3bbd4852ca2ec4e3596ba57430f1240adb3f8918c",
+      "pass": true
+    },
+    {
+      "name": "sixExactProposedDocuments",
+      "actual": 6,
+      "expected": 6,
+      "pass": true
+    },
+    {
+      "name": "CHANGELOG.md completeHistoricalSuffixByteEqual",
+      "actual": {
+        "bytes": 2306,
+        "sha256": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21"
+      },
+      "expected": {
+        "bytes": 2306,
+        "sha256": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21"
+      },
+      "pass": true
+    },
+    {
+      "name": "CHANGELOG.md priorHistoricalSuffixProof",
+      "actual": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+      "expected": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+      "pass": true
+    },
+    {
+      "name": ".testagent/status.md completeHistoricalSuffixByteEqual",
+      "actual": {
+        "bytes": 6160,
+        "sha256": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a"
+      },
+      "expected": {
+        "bytes": 6160,
+        "sha256": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a"
+      },
+      "pass": true
+    },
+    {
+      "name": ".testagent/status.md priorHistoricalSuffixProof",
+      "actual": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+      "expected": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+      "pass": true
+    },
+    {
+      "name": ".testagent/plan.md completeHistoricalSuffixByteEqual",
+      "actual": {
+        "bytes": 13058,
+        "sha256": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc"
+      },
+      "expected": {
+        "bytes": 13058,
+        "sha256": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc"
+      },
+      "pass": true
+    },
+    {
+      "name": ".testagent/plan.md priorHistoricalSuffixProof",
+      "actual": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+      "expected": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+      "pass": true
+    },
+    {
+      "name": "docs/quality-status.md completeHistoricalSuffixByteEqual",
+      "actual": {
+        "bytes": 3174,
+        "sha256": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5"
+      },
+      "expected": {
+        "bytes": 3174,
+        "sha256": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5"
+      },
+      "pass": true
+    },
+    {
+      "name": "docs/quality-status.md priorHistoricalSuffixProof",
+      "actual": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5",
+      "expected": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5",
+      "pass": true
+    },
+    {
+      "name": "TODO12HeadingsSameOrder",
+      "actual": [
+        "## Verify startup validation across retained capabilities",
+        "## Complete Azure Service Bus validation against the real cloud service",
+        "## Separate cache index projection from external observation",
+        "## Continue deterministic time normalization beyond envelope materialization",
+        "## Complete external benchmark scenarios",
+        "## Make Activity telemetry observationally no-throw",
+        "## Complete MessageJournal external provider validation",
+        "## Complete Azure Table persistence validation against the real cloud service",
+        "## Complete Entity Framework SQL Server and Azure SQL external variant validation",
+        "## AWS real-service closure",
+        "## Complete Event Hubs validation against the real cloud service",
+        "## Complete RabbitMQ validation against Amazon MQ"
+      ],
+      "expected": [
+        "## Verify startup validation across retained capabilities",
+        "## Complete Azure Service Bus validation against the real cloud service",
+        "## Separate cache index projection from external observation",
+        "## Continue deterministic time normalization beyond envelope materialization",
+        "## Complete external benchmark scenarios",
+        "## Make Activity telemetry observationally no-throw",
+        "## Complete MessageJournal external provider validation",
+        "## Complete Azure Table persistence validation against the real cloud service",
+        "## Complete Entity Framework SQL Server and Azure SQL external variant validation",
+        "## AWS real-service closure",
+        "## Complete Event Hubs validation against the real cloud service",
+        "## Complete RabbitMQ validation against Amazon MQ"
+      ],
+      "pass": true
+    },
+    {
+      "name": "TODO12Headings",
+      "actual": 12,
+      "expected": 12,
+      "pass": true
+    },
+    {
+      "name": "TODO other section ## Verify startup validation across retained capabilities",
+      "actual": {
+        "bytes": 2397,
+        "sha256": "ea9c723a4eefcaee616c20b8bcbdeba6110918c388c3c15209ddddf9528c3eb2"
+      },
+      "expected": {
+        "bytes": 2397,
+        "sha256": "ea9c723a4eefcaee616c20b8bcbdeba6110918c388c3c15209ddddf9528c3eb2"
+      },
+      "pass": true
+    },
+    {
+      "name": "TODO other section ## Separate cache index projection from external observation",
+      "actual": {
+        "bytes": 2021,
+        "sha256": "1e72dd4c7e4b4d1a07e04dc1edabe6239aa69a868ffc27e7dca5b95dc9cd7afe"
+      },
+      "expected": {
+        "bytes": 2021,
+        "sha256": "1e72dd4c7e4b4d1a07e04dc1edabe6239aa69a868ffc27e7dca5b95dc9cd7afe"
+      },
+      "pass": true
+    },
+    {
+      "name": "TODO other section ## Continue deterministic time normalization beyond envelope materialization",
+      "actual": {
+        "bytes": 4010,
+        "sha256": "5492681adce6e3869d1e8a95ca8d9c54e930af414fde6cfbc5de5ad60f85db52"
+      },
+      "expected": {
+        "bytes": 4010,
+        "sha256": "5492681adce6e3869d1e8a95ca8d9c54e930af414fde6cfbc5de5ad60f85db52"
+      },
+      "pass": true
+    },
+    {
+      "name": "TODO other section ## Complete external benchmark scenarios",
+      "actual": {
+        "bytes": 282,
+        "sha256": "ad94a2fc4505b25478cf256f0b9578be5178fde6ca89c5842c2bee6e7da5f6dd"
+      },
+      "expected": {
+        "bytes": 282,
+        "sha256": "ad94a2fc4505b25478cf256f0b9578be5178fde6ca89c5842c2bee6e7da5f6dd"
+      },
+      "pass": true
+    },
+    {
+      "name": "TODO other section ## Make Activity telemetry observationally no-throw",
+      "actual": {
+        "bytes": 8010,
+        "sha256": "e82735949dd0d8b1f990d90b1aebdf967cc1ad037879a0d12ea69b8e9442bc5b"
+      },
+      "expected": {
+        "bytes": 8010,
+        "sha256": "e82735949dd0d8b1f990d90b1aebdf967cc1ad037879a0d12ea69b8e9442bc5b"
+      },
+      "pass": true
+    },
+    {
+      "name": "TODO other section ## Complete MessageJournal external provider validation",
+      "actual": {
+        "bytes": 828,
+        "sha256": "7004d3dd9f288e9cdc5d9bd39fbb41cf4d9cca2470959aef0d773b2ccdf08e44"
+      },
+      "expected": {
+        "bytes": 828,
+        "sha256": "7004d3dd9f288e9cdc5d9bd39fbb41cf4d9cca2470959aef0d773b2ccdf08e44"
+      },
+      "pass": true
+    },
+    {
+      "name": "TODO other section ## Complete Azure Table persistence validation against the real cloud service",
+      "actual": {
+        "bytes": 2254,
+        "sha256": "cb88b3a863d609d5d52d9e306049091bd2753539c93739dc2e41a00b6c18bd5c"
+      },
+      "expected": {
+        "bytes": 2254,
+        "sha256": "cb88b3a863d609d5d52d9e306049091bd2753539c93739dc2e41a00b6c18bd5c"
+      },
+      "pass": true
+    },
+    {
+      "name": "TODO other section ## Complete Entity Framework SQL Server and Azure SQL external variant validation",
+      "actual": {
+        "bytes": 1745,
+        "sha256": "514b7682cff5b750129f59f967204a995e764b1f6c365fe06689c0f6e71011e5"
+      },
+      "expected": {
+        "bytes": 1745,
+        "sha256": "514b7682cff5b750129f59f967204a995e764b1f6c365fe06689c0f6e71011e5"
+      },
+      "pass": true
+    },
+    {
+      "name": "TODO other section ## AWS real-service closure",
+      "actual": {
+        "bytes": 2648,
+        "sha256": "25b7df4df7fc790caa0c9ad8ca43df69c6fb7aa4fdbd9a8a4f15cc319ca461d7"
+      },
+      "expected": {
+        "bytes": 2648,
+        "sha256": "25b7df4df7fc790caa0c9ad8ca43df69c6fb7aa4fdbd9a8a4f15cc319ca461d7"
+      },
+      "pass": true
+    },
+    {
+      "name": "TODO other section ## Complete Event Hubs validation against the real cloud service",
+      "actual": {
+        "bytes": 1116,
+        "sha256": "714f6494487dc039c7e8eb79d632a694f1e03f81919f07b23c8b2a5fbbcfef1c"
+      },
+      "expected": {
+        "bytes": 1116,
+        "sha256": "714f6494487dc039c7e8eb79d632a694f1e03f81919f07b23c8b2a5fbbcfef1c"
+      },
+      "pass": true
+    },
+    {
+      "name": "TODO other section ## Complete RabbitMQ validation against Amazon MQ",
+      "actual": {
+        "bytes": 830,
+        "sha256": "d592562bd69b5747702059ac03a45e7cd07ab7ebda2f2fcff2db3a040f414415"
+      },
+      "expected": {
+        "bytes": 830,
+        "sha256": "d592562bd69b5747702059ac03a45e7cd07ab7ebda2f2fcff2db3a040f414415"
+      },
+      "pass": true
+    },
+    {
+      "name": "allOtherElevenTODOSections",
+      "actual": 11,
+      "expected": 11,
+      "pass": true
+    },
+    {
+      "name": "orderedExternalOBLExact",
+      "actual": [
+        "OBL-R0-CLOUD-0005",
+        "OBL-R0-CLOUD-0019",
+        "OBL-R0-CLOUD-0020",
+        "OBL-R0-CLOUD-0021",
+        "OBL-R0-CLOUD-0025",
+        "OBL-R0-CLOUD-0026",
+        "OBL-R0-CLOUD-0027",
+        "OBL-R0-CLOUD-0028",
+        "OBL-R0-CLOUD-0044",
+        "OBL-R0-CLOUD-0057",
+        "OBL-R0-CLOUD-0058",
+        "OBL-R0-CLOUD-0059",
+        "OBL-R0-CLOUD-0066",
+        "OBL-R0-CLOUD-0067",
+        "OBL-R0-CLOUD-0068",
+        "OBL-R0-CLOUD-0069",
+        "OBL-R0-CLOUD-0072",
+        "OBL-R0-CLOUD-0079",
+        "OBL-R0-CLOUD-0080",
+        "OBL-R0-CLOUD-0086",
+        "OBL-R0-CLOUD-0088",
+        "OBL-R0-CLOUD-0089",
+        "OBL-R0-CLOUD-0095",
+        "OBL-R0-CLOUD-0096",
+        "OBL-R0-CLOUD-0098",
+        "OBL-R0-CLOUD-0099",
+        "OBL-R0-CLOUD-0105",
+        "OBL-R0-CLOUD-0108",
+        "OBL-R0-CLOUD-0109",
+        "OBL-R0-CLOUD-0117",
+        "OBL-R0-CLOUD-0122",
+        "OBL-R0-CLOUD-0124",
+        "OBL-R0-CLOUD-0125",
+        "OBL-R0-CLOUD-0130",
+        "OBL-R0-CLOUD-0131",
+        "OBL-R0-CLOUD-0132",
+        "OBL-R0-CLOUD-0137",
+        "OBL-R0-CLOUD-0138",
+        "OBL-R0-CLOUD-0247",
+        "OBL-R0-CLOUD-0248",
+        "OBL-R0-CLOUD-0250",
+        "OBL-R0-CLOUD-0251",
+        "OBL-R0-CLOUD-0254",
+        "OBL-R0-CLOUD-0255",
+        "OBL-R0-CLOUD-0256",
+        "OBL-R0-CLOUD-0257",
+        "OBL-R0-PER-0455",
+        "OBL-R0-PER-0456",
+        "OBL-R0-PER-0457",
+        "OBL-R0-CLOUD-0216",
+        "OBL-R0-CLOUD-0217",
+        "OBL-R0-CLOUD-0265",
+        "OBL-R0-CLOUD-0266",
+        "OBL-R0-CLOUD-0268",
+        "OBL-R0-CLOUD-0272",
+        "OBL-R0-PER-0523",
+        "OBL-R0-PER-0524",
+        "OBL-R0-PER-0603",
+        "OBL-R0-CLOUD-0258",
+        "OBL-R0-CLOUD-0261",
+        "OBL-R0-CLOUD-0262",
+        "OBL-R0-BRK-0004"
+      ],
+      "expected": [
+        "OBL-R0-CLOUD-0005",
+        "OBL-R0-CLOUD-0019",
+        "OBL-R0-CLOUD-0020",
+        "OBL-R0-CLOUD-0021",
+        "OBL-R0-CLOUD-0025",
+        "OBL-R0-CLOUD-0026",
+        "OBL-R0-CLOUD-0027",
+        "OBL-R0-CLOUD-0028",
+        "OBL-R0-CLOUD-0044",
+        "OBL-R0-CLOUD-0057",
+        "OBL-R0-CLOUD-0058",
+        "OBL-R0-CLOUD-0059",
+        "OBL-R0-CLOUD-0066",
+        "OBL-R0-CLOUD-0067",
+        "OBL-R0-CLOUD-0068",
+        "OBL-R0-CLOUD-0069",
+        "OBL-R0-CLOUD-0072",
+        "OBL-R0-CLOUD-0079",
+        "OBL-R0-CLOUD-0080",
+        "OBL-R0-CLOUD-0086",
+        "OBL-R0-CLOUD-0088",
+        "OBL-R0-CLOUD-0089",
+        "OBL-R0-CLOUD-0095",
+        "OBL-R0-CLOUD-0096",
+        "OBL-R0-CLOUD-0098",
+        "OBL-R0-CLOUD-0099",
+        "OBL-R0-CLOUD-0105",
+        "OBL-R0-CLOUD-0108",
+        "OBL-R0-CLOUD-0109",
+        "OBL-R0-CLOUD-0117",
+        "OBL-R0-CLOUD-0122",
+        "OBL-R0-CLOUD-0124",
+        "OBL-R0-CLOUD-0125",
+        "OBL-R0-CLOUD-0130",
+        "OBL-R0-CLOUD-0131",
+        "OBL-R0-CLOUD-0132",
+        "OBL-R0-CLOUD-0137",
+        "OBL-R0-CLOUD-0138",
+        "OBL-R0-CLOUD-0247",
+        "OBL-R0-CLOUD-0248",
+        "OBL-R0-CLOUD-0250",
+        "OBL-R0-CLOUD-0251",
+        "OBL-R0-CLOUD-0254",
+        "OBL-R0-CLOUD-0255",
+        "OBL-R0-CLOUD-0256",
+        "OBL-R0-CLOUD-0257",
+        "OBL-R0-PER-0455",
+        "OBL-R0-PER-0456",
+        "OBL-R0-PER-0457",
+        "OBL-R0-CLOUD-0216",
+        "OBL-R0-CLOUD-0217",
+        "OBL-R0-CLOUD-0265",
+        "OBL-R0-CLOUD-0266",
+        "OBL-R0-CLOUD-0268",
+        "OBL-R0-CLOUD-0272",
+        "OBL-R0-PER-0523",
+        "OBL-R0-PER-0524",
+        "OBL-R0-PER-0603",
+        "OBL-R0-CLOUD-0258",
+        "OBL-R0-CLOUD-0261",
+        "OBL-R0-CLOUD-0262",
+        "OBL-R0-BRK-0004"
+      ],
+      "pass": true
+    },
+    {
+      "name": "62OBLTokens",
+      "actual": 62,
+      "expected": 62,
+      "pass": true
+    },
+    {
+      "name": "62DistinctOBLTokens",
+      "actual": 62,
+      "expected": 62,
+      "pass": true
+    },
+    {
+      "name": "TODORemovalRulePreserved",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "CHANGELOG.md noPriorLineRemoved",
+      "actual": [],
+      "expected": [],
+      "pass": true
+    },
+    {
+      "name": "TODO.md noPriorLineRemoved",
+      "actual": [],
+      "expected": [],
+      "pass": true
+    },
+    {
+      "name": ".testagent/status.md noPriorLineRemoved",
+      "actual": [],
+      "expected": [],
+      "pass": true
+    },
+    {
+      "name": ".testagent/plan.md noPriorLineRemoved",
+      "actual": [],
+      "expected": [],
+      "pass": true
+    },
+    {
+      "name": "soleReplacedLocalPlanRow",
+      "actual": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "name": "soleReplacedLocalPlanRowIs03",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "singleRowLength",
+      "actual": 1,
+      "expected": 1,
+      "pass": true
+    },
+    {
+      "name": "docs/quality-status.md noPriorLineRemoved",
+      "actual": [],
+      "expected": [],
+      "pass": true
+    },
+    {
+      "name": "receipt asb30",
+      "actual": "e750c4d37f81c86d1b129c7c6f1f5d5195b9b767056b61725624404b6a1b1036",
+      "expected": "e750c4d37f81c86d1b129c7c6f1f5d5195b9b767056b61725624404b6a1b1036",
+      "pass": true
+    },
+    {
+      "name": "receipt logrepair",
+      "actual": "d2a42f437ac2c735f54fce9b70f4709ee70dd23874cb04c48b55252b001acb4a",
+      "expected": "d2a42f437ac2c735f54fce9b70f4709ee70dd23874cb04c48b55252b001acb4a",
+      "pass": true
+    },
+    {
+      "name": "receipt bootstraptool",
+      "actual": "59b8616112b6bedd2977b26ad03321de6d68379dd6005b54a579aa226e09e7aa",
+      "expected": "59b8616112b6bedd2977b26ad03321de6d68379dd6005b54a579aa226e09e7aa",
+      "pass": true
+    },
+    {
+      "name": "ASBActualResultBindsRootAcceptance",
+      "actual": "4a6d9943a5d2bc02046e26edf7310c8dbadf9de890f5db38553df557a070e25e",
+      "expected": "4a6d9943a5d2bc02046e26edf7310c8dbadf9de890f5db38553df557a070e25e",
+      "pass": true
+    },
+    {
+      "name": "ASBNativePeerBindsRootAcceptance",
+      "actual": "c132c074dd587f2811ca07a8555996e1629019e7d824fb22a5b465d13a752298",
+      "expected": "c132c074dd587f2811ca07a8555996e1629019e7d824fb22a5b465d13a752298",
+      "pass": true
+    },
+    {
+      "name": "ASB30UniqueActualMethods",
+      "actual": 30,
+      "expected": 30,
+      "pass": true
+    },
+    {
+      "name": "ASBResultCounts",
+      "actual": [
+        30,
+        0,
+        0,
+        0,
+        true
+      ],
+      "expected": [
+        30,
+        0,
+        0,
+        0,
+        true
+      ],
+      "pass": true
+    },
+    {
+      "name": "ASBActual30EventStatuses",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "ASBRootCaseCounts",
+      "actual": {
+        "passed_unique": 30,
+        "failed": 0,
+        "skipped": 0
+      },
+      "expected": {
+        "passed_unique": 30,
+        "failed": 0,
+        "skipped": 0
+      },
+      "pass": true
+    },
+    {
+      "name": "ASBBootstrapSeparateAcceptedToolHash",
+      "actual": "59b8616112b6bedd2977b26ad03321de6d68379dd6005b54a579aa226e09e7aa",
+      "expected": "59b8616112b6bedd2977b26ad03321de6d68379dd6005b54a579aa226e09e7aa",
+      "pass": true
+    },
+    {
+      "name": "ASBCompleteOwnCleanupBound",
+      "actual": "f566e289884d03870929e53c880bf3a38fbc9f9b4bb99b4d7527ee36c70ae65d",
+      "expected": "f566e289884d03870929e53c880bf3a38fbc9f9b4bb99b4d7527ee36c70ae65d",
+      "pass": true
+    },
+    {
+      "name": "ownContainerVolumeNetworkAbsence",
+      "actual": [
+        [],
+        [],
+        []
+      ],
+      "expected": [
+        [],
+        [],
+        []
+      ],
+      "pass": true
+    },
+    {
+      "name": "ownGroupAbsence",
+      "actual": [
+        false,
+        false
+      ],
+      "expected": [
+        false,
+        false
+      ],
+      "pass": true
+    },
+    {
+      "name": "labelScopeDockerProbesExit0",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "diagnosticClassificationBound",
+      "actual": "3e5db72197140da04f0f1ac5115e87fcdd317ddb942cbe5218e0447ba7794307",
+      "expected": "3e5db72197140da04f0f1ac5115e87fcdd317ddb942cbe5218e0447ba7794307",
+      "pass": true
+    },
+    {
+      "name": "actualInvariantFindingSame",
+      "actual": [
+        {
+          "id": "ASB-BROKER-INVARIANT-01",
+          "severity": "Medium",
+          "state": "UNRESOLVED_DIAGNOSTIC_ANOMALY__ROOT_DISPOSITION_REQUIRED",
+          "separate_from_secret_hygiene_finding": "ASB-DIAG-01 from the native artifact review is credential-log redaction; this is a separate broker accounting invariant anomaly. The private raw log was never opened in this review.",
+          "evidence": "Exactly three Error30048 records claim negative entity sizes while all recorded active/scheduled/dead-letter counts are zero. Exact safe identities/coordinates/numeric values are in reproduction_records.",
+          "impact_limit": "Actual invariant diagnostic is established. Its server/product/SDK origin, persistence, delivery loss, quota effect and operational severity beyond this run are not established; no product defect or correctness-loss claim is invented.",
+          "native_pass_disposition": "The named message/terminal assertions passed and remain evidence of those tested contracts. They do not assert nonnegative SizeInBytes, prevent the server diagnostic or close its cause. No blanket harmless/error-free classification is defensible.",
+          "reproduction_records": [
+            {
+              "line": 53,
+              "xml_record_ordinal": 17,
+              "event_id": "30048",
+              "level": "Error",
+              "utc": "2026-10-07T10:24:45.191Z",
+              "exact_nonsecret_entity_identity": "sbemulatorns:Queue:vsb-skipped-dlq-047f2563628a48d2bb8a89a429d6602a-input",
+              "numeric_diagnostic_fields": {
+                "EntitySize": -118,
+                "Incoming size": -1314,
+                "ActiveMessageCount": 0,
+                "ScheduledMessageCount": 0,
+                "DeadLetterMessageCount": 0
+              },
+              "matched_fixture_purpose": "skipped-dlq",
+              "native_PASS_FQN": "ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.AzureServiceBusDeadLetterTransportTests.SkippedMessage_UsesNativeDeadLetterQueueWithoutCreatingSkippedQueueAsync",
+              "passed_assertion_limit": "skipped/fault: exact message/reason/fault-header or attempt identity, absence of alternate queue, helper terminal ActiveMessageCount=0/DeadLetterMessageCount=0 after Complete and Stop. Capability deadletter: exact message/body/reason/description and awaited Complete only; no runtime-count or entity-size assertion in that method."
+            },
+            {
+              "line": 82,
+              "xml_record_ordinal": 46,
+              "event_id": "30048",
+              "level": "Error",
+              "utc": "2026-10-07T10:24:52.747Z",
+              "exact_nonsecret_entity_identity": "sbemulatorns:Queue:vsb-fault-dlq-a58354587c784bd1b174e2085718631e-input",
+              "numeric_diagnostic_fields": {
+                "EntitySize": -1664,
+                "Incoming size": -2857,
+                "ActiveMessageCount": 0,
+                "ScheduledMessageCount": 0,
+                "DeadLetterMessageCount": 0
+              },
+              "matched_fixture_purpose": "fault-dlq",
+              "native_PASS_FQN": "ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.AzureServiceBusDeadLetterTransportTests.FaultedMessage_UsesNativeDeadLetterQueueWithExactFaultHeadersAsync",
+              "passed_assertion_limit": "skipped/fault: exact message/reason/fault-header or attempt identity, absence of alternate queue, helper terminal ActiveMessageCount=0/DeadLetterMessageCount=0 after Complete and Stop. Capability deadletter: exact message/body/reason/description and awaited Complete only; no runtime-count or entity-size assertion in that method."
+            },
+            {
+              "line": 707,
+              "xml_record_ordinal": 671,
+              "event_id": "30048",
+              "level": "Error",
+              "utc": "2026-10-07T10:26:00.267Z",
+              "exact_nonsecret_entity_identity": "sbemulatorns:Queue:vsb-deadletter-b79d951f32564c1f81f8d1164237282f",
+              "numeric_diagnostic_fields": {
+                "EntitySize": -175,
+                "Incoming size": -347,
+                "ActiveMessageCount": 0,
+                "ScheduledMessageCount": 0,
+                "DeadLetterMessageCount": 0
+              },
+              "matched_fixture_purpose": "deadletter",
+              "native_PASS_FQN": "ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.Infrastructure.AzureServiceBusEmulatorCapabilityTests.DeadLettering_PreservesTheExactReasonAndMessageAsync",
+              "passed_assertion_limit": "skipped/fault: exact message/reason/fault-header or attempt identity, absence of alternate queue, helper terminal ActiveMessageCount=0/DeadLetterMessageCount=0 after Complete and Stop. Capability deadletter: exact message/body/reason/description and awaited Complete only; no runtime-count or entity-size assertion in that method."
+            }
+          ],
+          "small_followup": "Root can isolate/repeat the three exact native FQNs against the same pinned local image/dependency/source, preserve generated entity mapping and broker records around dead-letter transfer and Complete, and compare a non-dead-letter Complete control. Qualify any exposed provider-size measurements separately if available; no assumption that an added assertion/API is already proven. No reviewer execution or new code here."
+        }
+      ],
+      "expected": [
+        {
+          "id": "ASB-BROKER-INVARIANT-01",
+          "severity": "Medium",
+          "state": "UNRESOLVED_DIAGNOSTIC_ANOMALY__ROOT_DISPOSITION_REQUIRED",
+          "separate_from_secret_hygiene_finding": "ASB-DIAG-01 from the native artifact review is credential-log redaction; this is a separate broker accounting invariant anomaly. The private raw log was never opened in this review.",
+          "evidence": "Exactly three Error30048 records claim negative entity sizes while all recorded active/scheduled/dead-letter counts are zero. Exact safe identities/coordinates/numeric values are in reproduction_records.",
+          "impact_limit": "Actual invariant diagnostic is established. Its server/product/SDK origin, persistence, delivery loss, quota effect and operational severity beyond this run are not established; no product defect or correctness-loss claim is invented.",
+          "native_pass_disposition": "The named message/terminal assertions passed and remain evidence of those tested contracts. They do not assert nonnegative SizeInBytes, prevent the server diagnostic or close its cause. No blanket harmless/error-free classification is defensible.",
+          "reproduction_records": [
+            {
+              "line": 53,
+              "xml_record_ordinal": 17,
+              "event_id": "30048",
+              "level": "Error",
+              "utc": "2026-10-07T10:24:45.191Z",
+              "exact_nonsecret_entity_identity": "sbemulatorns:Queue:vsb-skipped-dlq-047f2563628a48d2bb8a89a429d6602a-input",
+              "numeric_diagnostic_fields": {
+                "EntitySize": -118,
+                "Incoming size": -1314,
+                "ActiveMessageCount": 0,
+                "ScheduledMessageCount": 0,
+                "DeadLetterMessageCount": 0
+              },
+              "matched_fixture_purpose": "skipped-dlq",
+              "native_PASS_FQN": "ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.AzureServiceBusDeadLetterTransportTests.SkippedMessage_UsesNativeDeadLetterQueueWithoutCreatingSkippedQueueAsync",
+              "passed_assertion_limit": "skipped/fault: exact message/reason/fault-header or attempt identity, absence of alternate queue, helper terminal ActiveMessageCount=0/DeadLetterMessageCount=0 after Complete and Stop. Capability deadletter: exact message/body/reason/description and awaited Complete only; no runtime-count or entity-size assertion in that method."
+            },
+            {
+              "line": 82,
+              "xml_record_ordinal": 46,
+              "event_id": "30048",
+              "level": "Error",
+              "utc": "2026-10-07T10:24:52.747Z",
+              "exact_nonsecret_entity_identity": "sbemulatorns:Queue:vsb-fault-dlq-a58354587c784bd1b174e2085718631e-input",
+              "numeric_diagnostic_fields": {
+                "EntitySize": -1664,
+                "Incoming size": -2857,
+                "ActiveMessageCount": 0,
+                "ScheduledMessageCount": 0,
+                "DeadLetterMessageCount": 0
+              },
+              "matched_fixture_purpose": "fault-dlq",
+              "native_PASS_FQN": "ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.AzureServiceBusDeadLetterTransportTests.FaultedMessage_UsesNativeDeadLetterQueueWithExactFaultHeadersAsync",
+              "passed_assertion_limit": "skipped/fault: exact message/reason/fault-header or attempt identity, absence of alternate queue, helper terminal ActiveMessageCount=0/DeadLetterMessageCount=0 after Complete and Stop. Capability deadletter: exact message/body/reason/description and awaited Complete only; no runtime-count or entity-size assertion in that method."
+            },
+            {
+              "line": 707,
+              "xml_record_ordinal": 671,
+              "event_id": "30048",
+              "level": "Error",
+              "utc": "2026-10-07T10:26:00.267Z",
+              "exact_nonsecret_entity_identity": "sbemulatorns:Queue:vsb-deadletter-b79d951f32564c1f81f8d1164237282f",
+              "numeric_diagnostic_fields": {
+                "EntitySize": -175,
+                "Incoming size": -347,
+                "ActiveMessageCount": 0,
+                "ScheduledMessageCount": 0,
+                "DeadLetterMessageCount": 0
+              },
+              "matched_fixture_purpose": "deadletter",
+              "native_PASS_FQN": "ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.Infrastructure.AzureServiceBusEmulatorCapabilityTests.DeadLettering_PreservesTheExactReasonAndMessageAsync",
+              "passed_assertion_limit": "skipped/fault: exact message/reason/fault-header or attempt identity, absence of alternate queue, helper terminal ActiveMessageCount=0/DeadLetterMessageCount=0 after Complete and Stop. Capability deadletter: exact message/body/reason/description and awaited Complete only; no runtime-count or entity-size assertion in that method."
+            }
+          ],
+          "small_followup": "Root can isolate/repeat the three exact native FQNs against the same pinned local image/dependency/source, preserve generated entity mapping and broker records around dead-letter transfer and Complete, and compare a non-dead-letter Complete control. Qualify any exposed provider-size measurements separately if available; no assumption that an added assertion/API is already proven. No reviewer execution or new code here."
+        }
+      ],
+      "pass": true
+    },
+    {
+      "name": "invariantIDSeverity",
+      "actual": [
+        "ASB-BROKER-INVARIANT-01",
+        "Medium"
+      ],
+      "expected": [
+        "ASB-BROKER-INVARIANT-01",
+        "Medium"
+      ],
+      "pass": true
+    },
+    {
+      "name": "threeInvariantRecords",
+      "actual": 3,
+      "expected": 3,
+      "pass": true
+    },
+    {
+      "name": "negativeSizeRecords",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "knownZeroCountsAllThree",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "diagnosticTotals",
+      "actual": {
+        "Warning": 1108,
+        "Critical": 1,
+        "Error": 95
+      },
+      "expected": {
+        "Warning": 1108,
+        "Critical": 1,
+        "Error": 95
+      },
+      "pass": true
+    },
+    {
+      "name": "GCDisabledOnlyConfiguration",
+      "actual": "Server GC is disabled",
+      "expected": "Server GC is disabled",
+      "pass": true
+    },
+    {
+      "name": "redactionApplicationReceipt",
+      "actual": "66003473fca75e0811ef9de1dcecc9e0be7318bb98317f55bfa59d40c504a09c",
+      "expected": "66003473fca75e0811ef9de1dcecc9e0be7318bb98317f55bfa59d40c504a09c",
+      "pass": true
+    },
+    {
+      "name": "redactionPostResult",
+      "actual": "30e31e196fa3abbefa80297863c9ac6b1e1ff2d0f239b3efaa3503a2f42a3ba9",
+      "expected": "30e31e196fa3abbefa80297863c9ac6b1e1ff2d0f239b3efaa3503a2f42a3ba9",
+      "pass": true
+    },
+    {
+      "name": "redactionPostPeer",
+      "actual": "fbc3c6c3cff29db892f0888af6698a892dec8d43d197e41a23e295c0c11b40da",
+      "expected": "fbc3c6c3cff29db892f0888af6698a892dec8d43d197e41a23e295c0c11b40da",
+      "pass": true
+    },
+    {
+      "name": "post9MethodsPass",
+      "actual": 9,
+      "expected": 9,
+      "pass": true
+    },
+    {
+      "name": "post9HealthyNoSkips",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "post9ActualJoinReturncode",
+      "actual": [
+        true,
+        0
+      ],
+      "expected": [
+        true,
+        0
+      ],
+      "pass": true
+    },
+    {
+      "name": "ASBDIAG01BoundedClosed",
+      "actual": "ASB-DIAG-01",
+      "expected": "ASB-DIAG-01",
+      "pass": true
+    },
+    {
+      "name": "sameRedactionRootASBReceipt",
+      "actual": "d2a42f437ac2c735f54fce9b70f4709ee70dd23874cb04c48b55252b001acb4a",
+      "expected": "d2a42f437ac2c735f54fce9b70f4709ee70dd23874cb04c48b55252b001acb4a",
+      "pass": true
+    },
+    {
+      "name": "canonicalTool tools/ci/fixtures/broker_logs.py",
+      "actual": "74912fa88d0f1c9929cb2f802a21ee0ffda13e478aa30be4dc1f8ae08af9691f",
+      "expected": "74912fa88d0f1c9929cb2f802a21ee0ffda13e478aa30be4dc1f8ae08af9691f",
+      "pass": true
+    },
+    {
+      "name": "canonicalTool tools/ci/contracts/test_broker_log_redaction.py",
+      "actual": "b2484937dc1d0bda49b9713cb70fed126adb767a602b5661dc3c4e108a0cc0d3",
+      "expected": "b2484937dc1d0bda49b9713cb70fed126adb767a602b5661dc3c4e108a0cc0d3",
+      "pass": true
+    },
+    {
+      "name": "historicalOriginalCollectorPreserved",
+      "actual": "e93b4d22d7a6218798662b465d208d22fa4f1f3ab803685ab48d9a67ab8b3ec2",
+      "expected": "e93b4d22d7a6218798662b465d208d22fa4f1f3ab803685ab48d9a67ab8b3ec2",
+      "pass": true
+    },
+    {
+      "name": "historicalOriginalCollectorExact",
+      "actual": "e93b4d22d7a6218798662b465d208d22fa4f1f3ab803685ab48d9a67ab8b3ec2",
+      "expected": "e93b4d22d7a6218798662b465d208d22fa4f1f3ab803685ab48d9a67ab8b3ec2",
+      "pass": true
+    },
+    {
+      "name": "currentCollectorExact",
+      "actual": "74912fa88d0f1c9929cb2f802a21ee0ffda13e478aa30be4dc1f8ae08af9691f",
+      "expected": "74912fa88d0f1c9929cb2f802a21ee0ffda13e478aa30be4dc1f8ae08af9691f",
+      "pass": true
+    },
+    {
+      "name": "tool18InitialHealthy",
+      "actual": {
+        "finite_red": 0,
+        "healthy": 18
+      },
+      "expected": {
+        "finite_red": 0,
+        "healthy": 18
+      },
+      "pass": true
+    },
+    {
+      "name": "toolCounter9",
+      "actual": {
+        "finite_red": 5,
+        "healthy": 4,
+        "ERROR": 2,
+        "FAIL": 3
+      },
+      "expected": {
+        "finite_red": 5,
+        "healthy": 4,
+        "ERROR": 2,
+        "FAIL": 3
+      },
+      "pass": true
+    },
+    {
+      "name": "tool18PostHealthy",
+      "actual": {
+        "finite_red": 0,
+        "healthy": 18
+      },
+      "expected": {
+        "finite_red": 0,
+        "healthy": 18
+      },
+      "pass": true
+    },
+    {
+      "name": "tool18UniqueNot45",
+      "actual": 18,
+      "expected": 18,
+      "pass": true
+    },
+    {
+      "name": "toolNoProviderCLRCredit",
+      "actual": 0,
+      "expected": 0,
+      "pass": true
+    },
+    {
+      "name": "bootstrapFrozen source_candidate",
+      "actual": "d37c2eb0c1424f088cd675e4c033d904bf82886f9d084747882bc774540a340a",
+      "expected": "d37c2eb0c1424f088cd675e4c033d904bf82886f9d084747882bc774540a340a",
+      "pass": true
+    },
+    {
+      "name": "bootstrapFrozen tests_candidate",
+      "actual": "e535b233fb7e1b004cf8e28ae0e5fbd48ac3d0217d57acda104ff28decaea5ab",
+      "expected": "e535b233fb7e1b004cf8e28ae0e5fbd48ac3d0217d57acda104ff28decaea5ab",
+      "pass": true
+    },
+    {
+      "name": "newEvidencePathExists CHANGELOG.md evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/ROOT_CURRENT_ASB30_FUNCTIONAL_ACCEPTANCE_R1.json",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "newEvidencePathExists CHANGELOG.md evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/broker-log-redaction-owner-r1/ROOT_BROKER_LOG_REDACTION_ACCEPTANCE_R1.json",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "newEvidencePathExists TODO.md evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/ROOT_CURRENT_ASB30_FUNCTIONAL_ACCEPTANCE_R1.json",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "newEvidencePathExists .testagent/status.md evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/ROOT_CURRENT_ASB30_FUNCTIONAL_ACCEPTANCE_R1.json",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "newEvidencePathExists .testagent/status.md evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/broker-log-redaction-owner-r1/ROOT_BROKER_LOG_REDACTION_ACCEPTANCE_R1.json",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "newEvidencePathExists .testagent/plan.md evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/ROOT_CURRENT_ASB30_FUNCTIONAL_ACCEPTANCE_R1.json",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "newEvidencePathExists .testagent/plan.md evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/broker-log-redaction-owner-r1/ROOT_BROKER_LOG_REDACTION_ACCEPTANCE_R1.json",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "newEvidencePathExists .testagent/local-completion-plan.md evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/ROOT_CURRENT_ASB30_FUNCTIONAL_ACCEPTANCE_R1.json",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "newEvidencePathExists .testagent/local-completion-plan.md evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/broker-log-redaction-owner-r1/ROOT_BROKER_LOG_REDACTION_ACCEPTANCE_R1.json",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "newEvidencePathExists docs/quality-status.md evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/ROOT_CURRENT_ASB30_FUNCTIONAL_ACCEPTANCE_R1.json",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "newEvidencePathExists docs/quality-status.md evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/broker-log-redaction-owner-r1/ROOT_BROKER_LOG_REDACTION_ACCEPTANCE_R1.json",
+      "actual": true,
+      "expected": true,
+      "pass": true
+    },
+    {
+      "name": "final canonical still R18 CHANGELOG.md",
+      "actual": "a95593e5d5528b798fbccd02dfe7ea8ba98b1907a8b59b8548f2a2ec3137146d",
+      "expected": "a95593e5d5528b798fbccd02dfe7ea8ba98b1907a8b59b8548f2a2ec3137146d",
+      "pass": true
+    },
+    {
+      "name": "final proposed unchanged CHANGELOG.md",
+      "actual": "6acdc3e48220b554fa38312ffa1524ae20d82a7806a6fdeb2bb7cd06a63a23ca",
+      "expected": "6acdc3e48220b554fa38312ffa1524ae20d82a7806a6fdeb2bb7cd06a63a23ca",
+      "pass": true
+    },
+    {
+      "name": "final canonical still R18 TODO.md",
+      "actual": "9b7db19f97678ccf1630890aff3777c09a34392494e774c1911b061c2178bd2b",
+      "expected": "9b7db19f97678ccf1630890aff3777c09a34392494e774c1911b061c2178bd2b",
+      "pass": true
+    },
+    {
+      "name": "final proposed unchanged TODO.md",
+      "actual": "2a450034162d953f610577485d968d1efc4a33b4f99710b117e2a0023fa51d1e",
+      "expected": "2a450034162d953f610577485d968d1efc4a33b4f99710b117e2a0023fa51d1e",
+      "pass": true
+    },
+    {
+      "name": "final canonical still R18 .testagent/status.md",
+      "actual": "5868f99cfda21c635e8e92d9adb0cf8bfe3d545c017a79bf66b728558e0aab9b",
+      "expected": "5868f99cfda21c635e8e92d9adb0cf8bfe3d545c017a79bf66b728558e0aab9b",
+      "pass": true
+    },
+    {
+      "name": "final proposed unchanged .testagent/status.md",
+      "actual": "5a28e0dfb369102357b8681f34cf6d8c4c888f4005a212325a75d7d7461234c4",
+      "expected": "5a28e0dfb369102357b8681f34cf6d8c4c888f4005a212325a75d7d7461234c4",
+      "pass": true
+    },
+    {
+      "name": "final canonical still R18 .testagent/plan.md",
+      "actual": "6d35325ff148daf752ccfcf4d9fefd8aac38941eaa1df066e127e2d2e83a8fca",
+      "expected": "6d35325ff148daf752ccfcf4d9fefd8aac38941eaa1df066e127e2d2e83a8fca",
+      "pass": true
+    },
+    {
+      "name": "final proposed unchanged .testagent/plan.md",
+      "actual": "2b81b39f77418a2df0d970feb13ae7031c2df9e853c2920701a92134462d7dc8",
+      "expected": "2b81b39f77418a2df0d970feb13ae7031c2df9e853c2920701a92134462d7dc8",
+      "pass": true
+    },
+    {
+      "name": "final canonical still R18 .testagent/local-completion-plan.md",
+      "actual": "ac4b5610c5616b707820797cd7a03d46af90edf1607aaac89c2663c0bfeb2f25",
+      "expected": "ac4b5610c5616b707820797cd7a03d46af90edf1607aaac89c2663c0bfeb2f25",
+      "pass": true
+    },
+    {
+      "name": "final proposed unchanged .testagent/local-completion-plan.md",
+      "actual": "efef30efb10cca300f0195ebf3fc11e150f98d39a74ac8227dee5db20cf1e9fc",
+      "expected": "efef30efb10cca300f0195ebf3fc11e150f98d39a74ac8227dee5db20cf1e9fc",
+      "pass": true
+    },
+    {
+      "name": "final canonical still R18 docs/quality-status.md",
+      "actual": "128ed40aa1d89bcc68d755c856f6c7632f95671cdf077ef0f4d30d88aa0e1d62",
+      "expected": "128ed40aa1d89bcc68d755c856f6c7632f95671cdf077ef0f4d30d88aa0e1d62",
+      "pass": true
+    },
+    {
+      "name": "final proposed unchanged docs/quality-status.md",
+      "actual": "c3b6167d014a4c69d5ea35c3bbd4852ca2ec4e3596ba57430f1240adb3f8918c",
+      "expected": "c3b6167d014a4c69d5ea35c3bbd4852ca2ec4e3596ba57430f1240adb3f8918c",
+      "pass": true
+    }
+  ],
+  "check_count": 123,
+  "limits": [
+    "Only exact proposed documentation R19 acceptance; Root owns publication/freeze, no doc written by reviewer.",
+    "No .NET/MSBuild/import of product/tool code/test/native/Docker/SSH/provider/process-control/network or source/test/tool/doc mutation; only own immutable JSON.",
+    "No private raw log/credential/payload read or native/global P03/currentcoverage/CI/cloud/device re-audit; accepted independent scoped native/tool/diagnostic receipts reused at exact hashes."
+  ]
+}

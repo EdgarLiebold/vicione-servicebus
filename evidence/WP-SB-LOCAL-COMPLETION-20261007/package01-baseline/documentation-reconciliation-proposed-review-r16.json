@@ -1,0 +1,2276 @@
+{
+  "kind": "INDEPENDENT_PROPOSED_DOCUMENTATION_RECONCILIATION_R16",
+  "utc": "2026-10-07T05:51:47.004261+00:00",
+  "verdict": "NO_BLOCK_PROPOSED_SIX_DOCUMENTS__ROOT_C7_ACCEPTANCE_AND_FINAL_REVIEW_HASH_QUALIFIED",
+  "reviewer": "/root/todo_reconciliation_review",
+  "findings": [],
+  "proposal": {
+    "path": "/private/tmp/vicione-servicebus-documentation-c7-r16/PROPOSED_DOCUMENTATION_FREEZE_R16.json",
+    "sha256": "a794c2cd89c71efdf4c7ef1c2f6e5efa9db48576c25c2502b35f68d21210d4ff",
+    "kind": "ROOT_PROPOSED_C7_DOCUMENTATION_R16",
+    "condition": "Publish accepted C7 text only after ROOT_STAGE_C7_ACCEPTANCE_R1.json exists and independent final review is accepted."
+  },
+  "accepted_R15": {
+    "freeze_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_FREEZE_R15.json",
+    "freeze_sha256": "9059f9276b9023d61de4948d6567512f7b8d9ec449a11f92414c8b286ee0a2f5",
+    "acceptance_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/ROOT_DOCUMENTATION_ACCEPTANCE_R15.json",
+    "acceptance_sha256": "a0f6bdc641bc9d97fec68ebfeba578005b4264106210d4d55c6c7d10f67bff19",
+    "independent_prior_review_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/documentation-reconciliation-proposed-review-r15.json",
+    "independent_prior_review_sha256": "7f1f8c7daf6b5a6d693bcba6761e98d8089be6a52108f0300f977ef7900d560f"
+  },
+  "six_whole_doc_bindings": {
+    "CHANGELOG.md": {
+      "proposed_path": "/private/tmp/vicione-servicebus-documentation-c7-r16/CHANGELOG.md",
+      "proposed_sha256": "d2722fa021b4dd136b62cc0dc104cc7ec95c9302e3a3be175785eacb3c90a018",
+      "bytes": 14066,
+      "canonical_R15_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/CHANGELOG.md",
+      "canonical_R15_sha256": "d96b048fa2f5f8a19b801bc57e7deb6f1f9b197402c5bee7f75dd313053c7ca6",
+      "prior_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r15/CHANGELOG.md",
+      "canonical_unchanged": true
+    },
+    "TODO.md": {
+      "proposed_path": "/private/tmp/vicione-servicebus-documentation-c7-r16/TODO.md",
+      "proposed_sha256": "835a1804e7b98486d1a02a600e08fb3c382c835a74bdba69f90d9e839b7ecf46",
+      "bytes": 27973,
+      "canonical_R15_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/TODO.md",
+      "canonical_R15_sha256": "3a192fa0847270482d6846bed8b34ebca9d4be3cc06f0297e34bc22c9ef13a9a",
+      "prior_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r15/TODO.md",
+      "canonical_unchanged": true
+    },
+    ".testagent/status.md": {
+      "proposed_path": "/private/tmp/vicione-servicebus-documentation-c7-r16/.testagent/status.md",
+      "proposed_sha256": "fc2ff85c08bc036c43c0cfd1910e50b533752c6d6136c93d234d3b84a315efe6",
+      "bytes": 13694,
+      "canonical_R15_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/status.md",
+      "canonical_R15_sha256": "60805f80b638e47b2bb42def17c7c852fd05b8af682526b614c13539f580520d",
+      "prior_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r15/.testagent/status.md",
+      "canonical_unchanged": true
+    },
+    ".testagent/plan.md": {
+      "proposed_path": "/private/tmp/vicione-servicebus-documentation-c7-r16/.testagent/plan.md",
+      "proposed_sha256": "bca79a74ac887919e5f998260b525d14bc66165a4a8660ff4e562ab692c60a82",
+      "bytes": 19679,
+      "canonical_R15_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/plan.md",
+      "canonical_R15_sha256": "3cf7ee4174ac22ae871a21443be16edd15d527cd6c2bbf96d4bffb398227f00b",
+      "prior_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r15/.testagent/plan.md",
+      "canonical_unchanged": true
+    },
+    ".testagent/local-completion-plan.md": {
+      "proposed_path": "/private/tmp/vicione-servicebus-documentation-c7-r16/.testagent/local-completion-plan.md",
+      "proposed_sha256": "060453899bb767169776cdb584ba1a8f00d9efa51bb1f840ac05d9136448f37a",
+      "bytes": 4500,
+      "canonical_R15_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/local-completion-plan.md",
+      "canonical_R15_sha256": "8342918de3e372c9dd2bdcd8f4b6d2a144608d7855ff960e47fedfdf3c57a2c3",
+      "prior_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r15/.testagent/local-completion-plan.md",
+      "canonical_unchanged": true
+    },
+    "docs/quality-status.md": {
+      "proposed_path": "/private/tmp/vicione-servicebus-documentation-c7-r16/docs/quality-status.md",
+      "proposed_sha256": "e17516acc4d94d551a2dfcc32fdbd2e70a45b2002fd25e0649aee11ed7a539d8",
+      "bytes": 11892,
+      "canonical_R15_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/quality-status.md",
+      "canonical_R15_sha256": "344ac74709a59573af4a7afd0297a7113a080b9cea7ad059fb1420f91eae2f92",
+      "prior_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r15/docs/quality-status.md",
+      "canonical_unchanged": true
+    }
+  },
+  "complete_R15_to_proposed_R16_diffs": {
+    "CHANGELOG.md": "--- accepted-current-R15/CHANGELOG.md\n+++ private-proposed-R16/CHANGELOG.md\n@@ -110,7 +110,16 @@\n   and 21 healthy controls. Discovery and compiler failures are excluded from product proof.\n   Independent source/test and native reviews are bound in the\n   [public caller cleanup receipt](evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C6_ACCEPTANCE_R1.json).\n-  EF optional duration preparation continues in stage C7; broader aggregate gates remain open.\n+  At stage-C6 acceptance, EF optional duration preparation remained next.\n+- Kept classic EF receive-outbox transactions and database failures authoritative when optional\n+  selected-clock measurement fails. Required fault notification remains forwarded and awaited;\n+  its fallback is the actual System-clock duration of the current attempt. All 13 new SQLite\n+  cases and all 432 local EF cases pass. Five compiled single-cause mutants yield 19 finite\n+  failures and 46 healthy controls; all 13 unchanged postchecks pass. The original has five\n+  finite failures and eight healthy controls. A forced rebuild binds the correction; stale\n+  incremental-build attempts receive no corrected-source credit. Separate source/test and native\n+  reviews are accepted in the [bounded classic EF duration receipt](evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json).\n+  Current coverage and broader Unit/provider/schema/CI gates remain open.\n - Continued locally feasible work under the [local completion plan](.testagent/local-completion-plan.md).\n   Real cloud resources and target-device hardware are unavailable; GitHub workflow activation\n   remains gated by local acceptance and separate CI qualification.\n",
+    "TODO.md": "--- accepted-current-R15/TODO.md\n+++ private-proposed-R16/TODO.md\n@@ -207,13 +207,25 @@\n stops. The original has 17 finite failures and 21 healthy controls. One zero-discovery attempt\n and one mutant compiler failure receive no product-counterexample credit.\n The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C6_ACCEPTANCE_R1.json`.\n-EF optional duration preparation continues in stage C7. Current coverage, full Unit/provider\n-replay, cache/startup/adapters, CI, real cloud and hardware remain open.\n-\n-\n-Remaining optional preparation includes EF elapsed arguments; public caller cleanup is accepted above. Process-metric balance stage C1 is accepted: eight new cases, 7,982 Core cases, two compiled\n+At stage-C6 acceptance, EF optional duration preparation remained next.\n+\n+Classic EF receive-outbox duration stage C7 is accepted: 13 new SQLite cases / 432 complete\n+local EF cases / five compiled single-cause mutants with 19 finite failures and 46 healthy\n+controls / 13 unchanged green postchecks. Optional selected-clock measurement cannot prevent\n+the transaction or replace its database failure. Required fault notification is still forwarded\n+and awaited; if selected duration measurement fails, it receives the actual System-clock duration\n+of this attempt. Required UTC and delivery cancellation remain authoritative. The original has\n+five finite failures and eight healthy controls. Stale incremental-build attempts receive no\n+corrected-source credit; the accepted correction uses a forced rebuild. Whole EF display labels\n+include one existing truncated-argument collision; all 432 native events are retained.\n+The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json`.\n+Current coverage, full Unit/provider replay, cache/startup/adapters, CI, real cloud and hardware\n+remain open.\n+\n+\n+Recorded optional preparation and public caller cleanup stages A through C7 are accepted above. Process-metric balance stage C1 is accepted: eight new cases, 7,982 Core cases, two compiled\n guard mutants (six finite failures / ten healthy controls) and eight unchanged green postchecks.\n-The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C1_ACCEPTANCE_R1.json`. This TODO remains open until those owners and affected aggregate gates\n+The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C1_ACCEPTANCE_R1.json`. This TODO remains open until the complete emitted-schema inventory and affected aggregate gates\n are accepted.\n A throwing or otherwise hostile listener must never change message delivery, persistence,\n retry, scheduling, outbox or transport semantics. Do not patch only the Entity Framework outbox\n",
+    ".testagent/status.md": "--- accepted-current-R15/.testagent/status.md\n+++ private-proposed-R16/.testagent/status.md\n@@ -68,15 +68,26 @@\n stops. The original has 17 finite failures and 21 healthy controls. One zero-discovery attempt\n and one mutant compiler failure receive no product-counterexample credit.\n The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C6_ACCEPTANCE_R1.json`.\n-EF optional duration preparation continues in stage C7. Current coverage, full Unit/provider\n-replay, cache/startup/adapters, CI, real cloud and hardware remain open.\n+At stage-C6 acceptance, EF optional duration preparation remained next.\n+\n+Classic EF receive-outbox duration stage C7 is accepted: 13 new SQLite cases / 432 complete\n+local EF cases / five compiled single-cause mutants with 19 finite failures and 46 healthy\n+controls / 13 unchanged green postchecks. Optional selected-clock measurement cannot prevent\n+the transaction or replace its database failure. Required fault notification is still forwarded\n+and awaited; if selected duration measurement fails, it receives the actual System-clock duration\n+of this attempt. Required UTC and delivery cancellation remain authoritative. The original has\n+five finite failures and eight healthy controls. Stale incremental-build attempts receive no\n+corrected-source credit; the accepted correction uses a forced rebuild. Whole EF display labels\n+include one existing truncated-argument collision; all 432 native events are retained.\n+The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json`.\n+Current coverage, full Unit/provider replay, cache/startup/adapters, CI, real cloud and hardware\n+remain open.\n \n \n Process-metric balance stage C1 is accepted: eight new cases / 7,982 Core cases / two compiled\n guard mutants with six finite failures and ten healthy controls / eight unchanged green postchecks.\n \n-Current coverage, cache/startup and EF elapsed preparation,\n-adapter deadlines and aggregate replay remain open.\n+Current coverage, cache/startup, adapter deadlines and aggregate replay remain open.\n Real cloud resources and device hardware are unavailable; their evidence remains open. Native\n GitHub workflow activation remains gated by local acceptance and separate CI qualification.\n \n",
+    ".testagent/plan.md": "--- accepted-current-R15/.testagent/plan.md\n+++ private-proposed-R16/.testagent/plan.md\n@@ -63,11 +63,23 @@\n stops. The original has 17 finite failures and 21 healthy controls. One zero-discovery attempt\n and one mutant compiler failure receive no product-counterexample credit.\n The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C6_ACCEPTANCE_R1.json`.\n-EF optional duration preparation continues in stage C7. Current coverage, full Unit/provider\n-replay, cache/startup/adapters, CI, real cloud and hardware remain open.\n+At stage-C6 acceptance, EF optional duration preparation remained next.\n+\n+Classic EF receive-outbox duration stage C7 is accepted: 13 new SQLite cases / 432 complete\n+local EF cases / five compiled single-cause mutants with 19 finite failures and 46 healthy\n+controls / 13 unchanged green postchecks. Optional selected-clock measurement cannot prevent\n+the transaction or replace its database failure. Required fault notification is still forwarded\n+and awaited; if selected duration measurement fails, it receives the actual System-clock duration\n+of this attempt. Required UTC and delivery cancellation remain authoritative. The original has\n+five finite failures and eight healthy controls. Stale incremental-build attempts receive no\n+corrected-source credit; the accepted correction uses a forced rebuild. Whole EF display labels\n+include one existing truncated-argument collision; all 432 native events are retained.\n+The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json`.\n+Current coverage, full Unit/provider replay, cache/startup/adapters, CI, real cloud and hardware\n+remain open.\n \n \n-EF optional-clock preparation proceeds next; current coverage and broader aggregate gates remain pending.\n+Cache consistency and remaining adapter/startup packages proceed next; current coverage and broader aggregate gates remain pending.\n \n ## Historical API repair execution notes\n \n",
+    ".testagent/local-completion-plan.md": "--- accepted-current-R15/.testagent/local-completion-plan.md\n+++ private-proposed-R16/.testagent/local-completion-plan.md\n@@ -15,7 +15,7 @@\n | 02 | Current coverage and method risk | Fresh source-bound coverage for current unit/local profiles and portability modes; partial if any required provider is unavailable | Binlog producer/aggregator correction accepted after 10 Python tool contracts and causal negative tests; native measurement pending |\n | 03 | Local provider integration and historical SQL missing-delivery investigation | Native provider profiles against isolated local resources, exact message accounting and cleanup; success on retry alone does not close the historical failure | Baseline evidence accepted: 645 cases / 10 modules, RabbitMQ38 and SQLServer99; reviewed own forwarding/cleanup; historical SQL cause and post-correction replay open |\n | 04 | Startup validation inventory | All selected static invalid options fail before endpoint start; missing/conflicting/unselected and named multi-bus cases | Pending |\n-| 05 | Activity telemetry isolation | Complete emission/lifetime/context inventory, hostile listeners, exact messaging outcome and schema, causal counter-mutations | Shared Activity A, typed source B1, batch handoff B2, process metrics C1, consumer completion C2, delivery clocks C3, snapshots C4, cold sources C5 and public caller cleanup C6 accepted; C6: 38 cases / 8,112 Core / 6 compiled mutations (34 finite failures, 194 healthy controls) / final38; EF optional duration C7 active |\n+| 05 | Activity telemetry isolation | Complete emission/lifetime/context inventory, hostile listeners, exact messaging outcome and schema, causal counter-mutations | Shared Activity A, typed source B1, batch handoff B2, process metrics C1, consumer completion C2, delivery clocks C3, snapshots C4, cold sources C5 and public caller cleanup C6 accepted; C6: 38 cases / 8,112 Core / 6 compiled mutations (34 finite failures, 194 healthy controls) / final38; classic EF duration C7 accepted: 13 SQLite / 432 EF / 5 compiled mutations (19 finite failures, 46 healthy controls) / final13; broader schema and aggregate closure open |\n | 06 | Cache observer/index and deterministic time TODO reconciliation | Inspect current owners and prior accepted implementation before altering code; close only demonstrated contracts, implement genuine remaining gaps | Three Core deadlines accepted with 13 package contracts, 7,958 Core regressions and four compiled mutations; cache and adapter packages remain |\n | 07 | Package-only developer journeys and local benchmarks | Execute supported journeys and real local infrastructure scenarios with full message counts; no target-device performance claim | Pending |\n | 08 | CI qualification | Review workflow against the accepted local commands and evidence; retain operational disable until the local acceptance prerequisite is met | Pending |\n",
+    "docs/quality-status.md": "--- accepted-current-R15/docs/quality-status.md\n+++ private-proposed-R16/docs/quality-status.md\n@@ -92,11 +92,23 @@\n stops. The original has 17 finite failures and 21 healthy controls. One zero-discovery attempt\n and one mutant compiler failure receive no product-counterexample credit.\n The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C6_ACCEPTANCE_R1.json`.\n-EF optional duration preparation continues in stage C7. Current coverage, full Unit/provider\n-replay, cache/startup/adapters, CI, real cloud and hardware remain open.\n+At stage-C6 acceptance, EF optional duration preparation remained next.\n+\n+Classic EF receive-outbox duration stage C7 is accepted: 13 new SQLite cases / 432 complete\n+local EF cases / five compiled single-cause mutants with 19 finite failures and 46 healthy\n+controls / 13 unchanged green postchecks. Optional selected-clock measurement cannot prevent\n+the transaction or replace its database failure. Required fault notification is still forwarded\n+and awaited; if selected duration measurement fails, it receives the actual System-clock duration\n+of this attempt. Required UTC and delivery cancellation remain authoritative. The original has\n+five finite failures and eight healthy controls. Stale incremental-build attempts receive no\n+corrected-source credit; the accepted correction uses a forced rebuild. Whole EF display labels\n+include one existing truncated-argument collision; all 432 native events are retained.\n+The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json`.\n+Current coverage, full Unit/provider replay, cache/startup/adapters, CI, real cloud and hardware\n+remain open.\n \n \n-EF elapsed preparation remains open. These results do not update historical\n+These bounded results do not update historical\n coverage/CRAP values or qualify a new full Unit/provider/package replay.\n \n ## Historical product-wide coverage and CRAP checkpoint\n"
+  },
+  "historical_preservation": {
+    "four_suffixes": {
+      ".testagent/plan.md": {
+        "marker": "## Historical API repair execution notes",
+        "sha256": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+        "bytes": 13058,
+        "unchanged": true
+      },
+      ".testagent/status.md": {
+        "marker": "## Historical checkpoints",
+        "sha256": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+        "bytes": 6160,
+        "unchanged": true
+      },
+      "CHANGELOG.md": {
+        "marker": "## Unreleased — API review completion, 6 October 2026",
+        "sha256": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+        "bytes": 2306,
+        "unchanged": true
+      },
+      "docs/quality-status.md": {
+        "marker": "## Historical product-wide coverage and CRAP checkpoint",
+        "sha256": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5",
+        "bytes": 3174,
+        "unchanged": true
+      }
+    },
+    "nonActivity_TODO_sections": {
+      "## Verify startup validation across retained capabilities": {
+        "sha256": "f413caed47f2b994ebb37f749a5f851786076b9b9cfcf752656b192f13107452",
+        "unchanged": true
+      },
+      "## Complete Azure Service Bus validation against the real cloud service": {
+        "sha256": "0d8a955773998f64fdeabf5e3f0c659477ebe6eff1ec727f4d4177e9781aeeb2",
+        "unchanged": true
+      },
+      "## Separate cache index projection from external observation": {
+        "sha256": "7f02f9b9b7f9f65da224a7038b4d1aa3a625510d0858aaffc758acf79d59873f",
+        "unchanged": true
+      },
+      "## Continue deterministic time normalization beyond envelope materialization": {
+        "sha256": "5492681adce6e3869d1e8a95ca8d9c54e930af414fde6cfbc5de5ad60f85db52",
+        "unchanged": true
+      },
+      "## Complete external benchmark scenarios": {
+        "sha256": "ad94a2fc4505b25478cf256f0b9578be5178fde6ca89c5842c2bee6e7da5f6dd",
+        "unchanged": true
+      },
+      "## Complete MessageJournal external provider validation": {
+        "sha256": "7004d3dd9f288e9cdc5d9bd39fbb41cf4d9cca2470959aef0d773b2ccdf08e44",
+        "unchanged": true
+      },
+      "## Complete Azure Table persistence validation against the real cloud service": {
+        "sha256": "cb88b3a863d609d5d52d9e306049091bd2753539c93739dc2e41a00b6c18bd5c",
+        "unchanged": true
+      },
+      "## Complete Entity Framework SQL Server and Azure SQL external variant validation": {
+        "sha256": "514b7682cff5b750129f59f967204a995e764b1f6c365fe06689c0f6e71011e5",
+        "unchanged": true
+      },
+      "## AWS real-service closure": {
+        "sha256": "25b7df4df7fc790caa0c9ad8ca43df69c6fb7aa4fdbd9a8a4f15cc319ca461d7",
+        "unchanged": true
+      },
+      "## Complete Event Hubs validation against the real cloud service": {
+        "sha256": "714f6494487dc039c7e8eb79d632a694f1e03f81919f07b23c8b2a5fbbcfef1c",
+        "unchanged": true
+      },
+      "## Complete RabbitMQ validation against Amazon MQ": {
+        "sha256": "d592562bd69b5747702059ac03a45e7cd07ab7ebda2f2fcff2db3a040f414415",
+        "unchanged": true
+      }
+    },
+    "ordered_OBL62": [
+      "OBL-R0-CLOUD-0005",
+      "OBL-R0-CLOUD-0019",
+      "OBL-R0-CLOUD-0020",
+      "OBL-R0-CLOUD-0021",
+      "OBL-R0-CLOUD-0025",
+      "OBL-R0-CLOUD-0026",
+      "OBL-R0-CLOUD-0027",
+      "OBL-R0-CLOUD-0028",
+      "OBL-R0-CLOUD-0044",
+      "OBL-R0-CLOUD-0057",
+      "OBL-R0-CLOUD-0058",
+      "OBL-R0-CLOUD-0059",
+      "OBL-R0-CLOUD-0066",
+      "OBL-R0-CLOUD-0067",
+      "OBL-R0-CLOUD-0068",
+      "OBL-R0-CLOUD-0069",
+      "OBL-R0-CLOUD-0072",
+      "OBL-R0-CLOUD-0079",
+      "OBL-R0-CLOUD-0080",
+      "OBL-R0-CLOUD-0086",
+      "OBL-R0-CLOUD-0088",
+      "OBL-R0-CLOUD-0089",
+      "OBL-R0-CLOUD-0095",
+      "OBL-R0-CLOUD-0096",
+      "OBL-R0-CLOUD-0098",
+      "OBL-R0-CLOUD-0099",
+      "OBL-R0-CLOUD-0105",
+      "OBL-R0-CLOUD-0108",
+      "OBL-R0-CLOUD-0109",
+      "OBL-R0-CLOUD-0117",
+      "OBL-R0-CLOUD-0122",
+      "OBL-R0-CLOUD-0124",
+      "OBL-R0-CLOUD-0125",
+      "OBL-R0-CLOUD-0130",
+      "OBL-R0-CLOUD-0131",
+      "OBL-R0-CLOUD-0132",
+      "OBL-R0-CLOUD-0137",
+      "OBL-R0-CLOUD-0138",
+      "OBL-R0-CLOUD-0247",
+      "OBL-R0-CLOUD-0248",
+      "OBL-R0-CLOUD-0250",
+      "OBL-R0-CLOUD-0251",
+      "OBL-R0-CLOUD-0254",
+      "OBL-R0-CLOUD-0255",
+      "OBL-R0-CLOUD-0256",
+      "OBL-R0-CLOUD-0257",
+      "OBL-R0-PER-0455",
+      "OBL-R0-PER-0456",
+      "OBL-R0-PER-0457",
+      "OBL-R0-CLOUD-0216",
+      "OBL-R0-CLOUD-0217",
+      "OBL-R0-CLOUD-0265",
+      "OBL-R0-CLOUD-0266",
+      "OBL-R0-CLOUD-0268",
+      "OBL-R0-CLOUD-0272",
+      "OBL-R0-PER-0523",
+      "OBL-R0-PER-0524",
+      "OBL-R0-PER-0603",
+      "OBL-R0-CLOUD-0258",
+      "OBL-R0-CLOUD-0261",
+      "OBL-R0-CLOUD-0262",
+      "OBL-R0-BRK-0004"
+    ],
+    "completed234_authorities": {
+      "RootReceipt": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE551_FINAL234_CURRENT18600_LOCAL_GATES_ROOT_ACCEPTANCE_R1.json",
+        "sha256": "83f7abba93ae4cc1eaf06cb9c1c26e565454ede6701c50fc777c7e5bb908e885"
+      },
+      "State": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json",
+        "sha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c"
+      },
+      "individual234": {
+        "path": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package529-final234-placeholder44-current-scope-precision-overlay-r1/CORRECTED_CURRENT234_INDIVIDUAL_BOUNDED_DISPOSITIONS.json",
+        "sha256": "171c4cc759707a20f328a7746f03bb1909359c502aac67c0240d916e472ce1ac"
+      }
+    }
+  },
+  "C7_publication_condition": {
+    "satisfied": true,
+    "receipt_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json",
+    "receipt_sha256": "b21f05f4e01a0140161265bdc784bb51c37263f74b35cdbf4d26876063401f6d",
+    "status": "ROOT_ACCEPTED_BOUNDED_LOCAL_C7",
+    "independent_final_review_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-final-bounded-native-chain-review-r1.json",
+    "independent_final_review_sha256": "519a5352bfe18907532a1db416f315c0ec4ef82438b98082ab9aac303acc910c",
+    "canonical_docs_still_R15": true
+  },
+  "C7_actual_bound_evidence": {
+    "Root_native_results": {
+      "original": {
+        "total": 13,
+        "finite_failed": 5,
+        "healthy": 8
+      },
+      "fixed": 13,
+      "whole_local_ef": {
+        "total": 432,
+        "passed": 432,
+        "skipped": 0,
+        "visible_display_labels": 431,
+        "display_collision": "Two existing long MemberData rows share truncated visible labels; both native events retained."
+      },
+      "five_compiled_mutants": {
+        "slots": 65,
+        "finite_failed": 19,
+        "healthy": 46
+      },
+      "unchanged_post": 13,
+      "focused_total": {
+        "slots": 104,
+        "finite_failed": 24,
+        "healthy": 80,
+        "skipped": 0,
+        "distinct_test_ids": 13
+      }
+    },
+    "direct_eight13event_native_log_projections": [
+      {
+        "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-original-r1",
+        "result_sha256": "3f6d201757c861b1b570b4a76f602c8349466a9b769e9f3ff4cd1b1d59fe2246",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-original-r1/raw/p05-c7-original-focused-r1.log",
+        "log_sha256": "678789436fd5c98b2c39b33e8ab934513d7091d1f446efb69aa8718fec481c2b",
+        "total": 13,
+        "failed": 5,
+        "passed": 8,
+        "skipped": 0
+      },
+      {
+        "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-r2",
+        "result_sha256": "bb9fda42c98004f3e6231c8bf1fbb806536f951357b5fceef2f4e3a4822068ea",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-r2/raw/p05-c7-fixed-focused-r2.log",
+        "log_sha256": "88b58acbab04b46a2ea4bee1c5932a5446f87eaa52ff7b60208e8efd988c9990",
+        "total": 13,
+        "failed": 0,
+        "passed": 13,
+        "skipped": 0
+      },
+      {
+        "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m1-initial-measurement-escapes",
+        "result_sha256": "885cbc84c8774f6d438aebf44de9002ba0dab006be15360d172a497514b6889d",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m1-initial-measurement-escapes/raw/p05-c7-m1-initial-measurement-escapes-focused-r1.log",
+        "log_sha256": "3451e59e745b96cbbf6ec967388cafb0fa0fca6b9f55bb0d21a272004fa7fdbd",
+        "total": 13,
+        "failed": 3,
+        "passed": 10,
+        "skipped": 0
+      },
+      {
+        "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m2-elapsed-measurement-escapes",
+        "result_sha256": "7829f5a63571a3282aefe5829e7093b283aeccbe09bb7b49a34b3fa99d72cd0a",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m2-elapsed-measurement-escapes/raw/p05-c7-m2-elapsed-measurement-escapes-focused-r1.log",
+        "log_sha256": "de3568e58ea2849b1faa84c55badcbd42dbb8311cf3e81a375e38b487884f0cf",
+        "total": 13,
+        "failed": 2,
+        "passed": 11,
+        "skipped": 0
+      },
+      {
+        "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m3-zero-duration-fabricated",
+        "result_sha256": "76ad50643d46905389cc4b466fc77328e66c6fa406d20f12ab7dea4b17fd4a47",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m3-zero-duration-fabricated/raw/p05-c7-m3-zero-duration-fabricated-focused-r1.log",
+        "log_sha256": "52674f7cd64d17aa8810d7451f8276d346b7752887d7ce8cfb5d818bff8663ed",
+        "total": 13,
+        "failed": 4,
+        "passed": 9,
+        "skipped": 0
+      },
+      {
+        "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m4-required-notification-skipped-r2",
+        "result_sha256": "facb8e5b87a6877313169f12d3715ff2c4b5f6b2867d6f9833fb85b7b046e8b1",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m4-required-notification-skipped-r2/raw/p05-c7-m4-required-notification-skipped-r2-focused-r1.log",
+        "log_sha256": "f1a56ef3038ab14959ed90932ec18612c2f9c5d24d1a38751e5658e976bbe1f9",
+        "total": 13,
+        "failed": 8,
+        "passed": 5,
+        "skipped": 0
+      },
+      {
+        "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m5-required-notification-not-awaited",
+        "result_sha256": "79693f6fdb69972f266cade2d695dfe81e1389e0332bca68032d877538f2702c",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m5-required-notification-not-awaited/raw/p05-c7-m5-required-notification-not-awaited-focused-r1.log",
+        "log_sha256": "e55a098ed397c2e52089e2cb6100d7930a44ff1085a226f4f6a3d16f7889dcf4",
+        "total": 13,
+        "failed": 2,
+        "passed": 11,
+        "skipped": 0
+      },
+      {
+        "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-post-r1",
+        "result_sha256": "5ca00cd59b41e4352a043790f8c2c128d2dccf34463d132dd10767cd20a8a6a0",
+        "log": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-post-r1/raw/p05-c7-fixed-post-r1.log",
+        "log_sha256": "4e3a12415eee0152881b65ba56dea6e6629153e292857b28d8f9d6210d0d2d8e",
+        "total": 13,
+        "failed": 0,
+        "passed": 13,
+        "skipped": 0
+      }
+    ],
+    "qualified_inputs": {
+      "STAGE_C7_TEST_ONLY_ORIGINAL_FREEZE_R1.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C7_TEST_ONLY_ORIGINAL_FREEZE_R1.json",
+        "sha256": "792987b9c3db0d7b8322890447576cca17dd888385d97785af3401405465836b"
+      },
+      "ROOT_EF35_STAGE_C7_TEST_ONLY_READ_CLOSURE_R1.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_EF35_STAGE_C7_TEST_ONLY_READ_CLOSURE_R1.json",
+        "sha256": "8bd1aa0aa3c6fc4646627eea90f83d526f0d8baee2612cf42eec67a41d368082"
+      },
+      "STAGE_C7_FIXED_FREEZE_R1.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C7_FIXED_FREEZE_R1.json",
+        "sha256": "764b8067d7817dfb2f503a3297e09130a6c2eb39253ec67b43581c139bb4e944"
+      },
+      "ROOT_EF35_STAGE_C7_FIXED_READ_CLOSURE_R1.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_EF35_STAGE_C7_FIXED_READ_CLOSURE_R1.json",
+        "sha256": "484c9a9a7dddbfb18310de8366f1f6f68605273fb8a2195a25b297697805ec9c"
+      },
+      "ROOT_STAGE_C7_PE_PDB_BINDING_R1.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_PE_PDB_BINDING_R1.json",
+        "sha256": "b569289326167cc659cc9d97ca1999f419a7c6ba643ec455b44766de3461c196"
+      },
+      "ROOT_STAGE_C7_FIVE_MUTANTS_COMPILED_BINDING_R1.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_FIVE_MUTANTS_COMPILED_BINDING_R1.json",
+        "sha256": "ae3eaefc7f3b7fb062c3bfcf81f4f185009cc96a431f39bc518fdbedb3a55bf2"
+      },
+      "stage-c7-original-r1/RESULT.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-original-r1/RESULT.json",
+        "sha256": "3f6d201757c861b1b570b4a76f602c8349466a9b769e9f3ff4cd1b1d59fe2246"
+      },
+      "stage-c7-fixed-r2/RESULT.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-r2/RESULT.json",
+        "sha256": "bb9fda42c98004f3e6231c8bf1fbb806536f951357b5fceef2f4e3a4822068ea"
+      },
+      "stage-c7-fixed-owner-r2/RESULT.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-owner-r2/RESULT.json",
+        "sha256": "8be7e8b95bd9ddfc4736f3cbe1518f53d6be49f08ae5ac58ea479d9eda5aea8e"
+      },
+      "stage-c7-fixed-post-r1/RESULT.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-post-r1/RESULT.json",
+        "sha256": "5ca00cd59b41e4352a043790f8c2c128d2dccf34463d132dd10767cd20a8a6a0"
+      },
+      "stage-c7-driver-r1/ROOT_RUNNER_ACCEPTANCE_R3.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-driver-r1/ROOT_RUNNER_ACCEPTANCE_R3.json",
+        "sha256": "b7c75769a2c02812107389bd2673c4ad04524aa3c835c0631d7aa2582de0402c"
+      },
+      "package05-stage-c7-original-r1-native-artifact-review-r2.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-original-r1-native-artifact-review-r2.json",
+        "sha256": "cab04322683b12ec1a139b9c6ba46b096c9979628bdaeb7f26f08093be7fd43b"
+      },
+      "package05-stage-c7-fixed-r2-and-whole-ef432-native-artifact-review-r1.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-fixed-r2-and-whole-ef432-native-artifact-review-r1.json",
+        "sha256": "78aefd754b7f46b0a0ba33e0e090178238c952c081adb5cfef8e7807b5027e6b"
+      },
+      "package05-stage-c7-five-mutants-combined-native-artifact-review-r2.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-five-mutants-combined-native-artifact-review-r2.json",
+        "sha256": "ad18424d7942746915ced58ce4e840b468435e24c3622c173666bd7270565ca7"
+      },
+      "package05-stage-c7-fixed-post-native-artifact-review-r1.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-fixed-post-native-artifact-review-r1.json",
+        "sha256": "7a01ce01f78e838af5046a3f7d63220704e750c614fee780ee3466a91c5f002b"
+      },
+      "package05-stage-c7-final-bounded-native-chain-review-r1.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-final-bounded-native-chain-review-r1.json",
+        "sha256": "519a5352bfe18907532a1db416f315c0ec4ef82438b98082ab9aac303acc910c"
+      },
+      "package05-stage-c7-mutant-m1-native-artifact-review-r1.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-mutant-m1-native-artifact-review-r1.json",
+        "sha256": "17c845b66c7f365b3b8167dc3e29f3d7df046422b18abf85efa8f468649ca010"
+      },
+      "package05-stage-c7-mutant-m2-native-artifact-review-r1.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-mutant-m2-native-artifact-review-r1.json",
+        "sha256": "5c2770985c6c8d98ee910f98cb05de4dfd7271650faeb6f0c4404cd45f3e8fde"
+      },
+      "package05-stage-c7-mutant-m3-native-artifact-review-r1.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-mutant-m3-native-artifact-review-r1.json",
+        "sha256": "52d97daa85512368df446f8043057731df3fe72be8c35b25470150897113de04"
+      },
+      "package05-stage-c7-mutant-m4-native-artifact-review-r1.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-mutant-m4-native-artifact-review-r1.json",
+        "sha256": "7bd75c9e0419e5fe1d7ac0963ec835abf6b7d3e899471a38dc07a407cc59c078"
+      },
+      "package05-stage-c7-mutant-m5-native-artifact-review-r1.json": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-mutant-m5-native-artifact-review-r1.json",
+        "sha256": "f3ddf3d4aba4e8f2213f621a95b4f6e4122b7a8be5e1cdaea938d8b4580ff131"
+      }
+    },
+    "required_behavior": "Actual transactions, database rollback/failure, consumption UTC and original delivery cancellation remain authoritative. Required fault notification remains forwarded and awaited. Optional selected duration measurement falls back to actual independent System monotonic duration of the current attempt; no fabricated zero.",
+    "independent_source_contract": "Factory optional measurement alone guarded. System fallback starts within the actual attempt before selected timestamp and measures real duration. Required UTC/Begin/Save/Commit/rollback, notification forwarding/await/failure and cancellation policies remain required. Native normal selected7s/optional actual positive duration/physical SQLite state assertions pass. No invented zero or public nullable API change.",
+    "existing_432_display_collision": {
+      "total": 432,
+      "passed": 432,
+      "failed": 0,
+      "skipped": 0,
+      "visible_display_labels": 431,
+      "collision": {
+        "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.OutboxMessageTests.Deserialize_RejectsMalformedPersistedAdmissionProof(storedHeaders: \"VOSB-EF-OUTBOX-ADMISSION/1:1:0:AAAAAAAAAAAAAAAAAAA\"···)": 2
+      },
+      "peer_review_sha256": "78aefd754b7f46b0a0ba33e0e090178238c952c081adb5cfef8e7807b5027e6b",
+      "claim": "Local EF module aggregate regression proof; exact focused13 IDs are separate. Two existing malformed-admission rows share a truncated display label; native text does not distinguish full argument values."
+    },
+    "excluded_attempts": "Stale incremental build/focus/fullowner R1 retain3binlogs6raw with zero corrected-source credit. Original M4 prepared unused catch is never executed; successor M4r2 strict0/0 is sole native M4. Earlier metadata-only reviewer precursors retained.",
+    "scope_limits": "Local classic receive-side EF factory only. Required Notify forwarding/await/error measured via controlled public ConsumeContext proxy, not a cloud fault-publication proof. FourteenPE/3153docs runtime binding is not general CLRload tracing. No entire telemetry emitted-schema, currentcoverage/CRAP, repo-wide Unit/provider, CI, realcloud, device or global A+ release acceptance."
+  },
+  "relative_markdown_links": {
+    "CHANGELOG.md -> license/repository_diff.py": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/license/repository_diff.py",
+      "exists": true
+    },
+    "CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/ROOT_CORE_DEADLINE_ACCEPTANCE_R1.json": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/ROOT_CORE_DEADLINE_ACCEPTANCE_R1.json",
+      "exists": true
+    },
+    "CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_A_ACCEPTANCE_R1.json": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_A_ACCEPTANCE_R1.json",
+      "exists": true
+    },
+    "CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_B1_ACCEPTANCE_R1.json": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_B1_ACCEPTANCE_R1.json",
+      "exists": true
+    },
+    "CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_B2_ACCEPTANCE_R1.json": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_B2_ACCEPTANCE_R1.json",
+      "exists": true
+    },
+    "CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C1_ACCEPTANCE_R1.json": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C1_ACCEPTANCE_R1.json",
+      "exists": true
+    },
+    "CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C2_ACCEPTANCE_R1.json": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C2_ACCEPTANCE_R1.json",
+      "exists": true
+    },
+    "CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C3_ACCEPTANCE_R1.json": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C3_ACCEPTANCE_R1.json",
+      "exists": true
+    },
+    "CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C4_ACCEPTANCE_R1.json": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C4_ACCEPTANCE_R1.json",
+      "exists": true
+    },
+    "CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C5_ACCEPTANCE_R1.json": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C5_ACCEPTANCE_R1.json",
+      "exists": true
+    },
+    "CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C6_ACCEPTANCE_R1.json": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C6_ACCEPTANCE_R1.json",
+      "exists": true
+    },
+    "CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json",
+      "exists": true
+    },
+    "CHANGELOG.md -> .testagent/local-completion-plan.md": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/local-completion-plan.md",
+      "exists": true
+    },
+    "CHANGELOG.md -> docs/changelog/product-fixes.md#api-review-completion-6-october-2026": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "exists": true
+    },
+    "CHANGELOG.md -> evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE551_FINAL234_CURRENT18600_LOCAL_GATES_ROOT_ACCEPTANCE_R1.json": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE551_FINAL234_CURRENT18600_LOCAL_GATES_ROOT_ACCEPTANCE_R1.json",
+      "exists": true
+    },
+    "CHANGELOG.md -> docs/changelog/source-areas.md": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/source-areas.md",
+      "exists": true
+    },
+    "CHANGELOG.md -> docs/changelog/product-fixes.md": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/product-fixes.md",
+      "exists": true
+    },
+    "CHANGELOG.md -> docs/changelog/verification-history.md": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/verification-history.md",
+      "exists": true
+    },
+    "CHANGELOG.md -> docs/changelog/removed-capabilities.md": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/removed-capabilities.md",
+      "exists": true
+    },
+    "CHANGELOG.md -> docs/changelog/other-changes.md": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/other-changes.md",
+      "exists": true
+    },
+    "CHANGELOG.md -> docs/changelog/migration-from-masstransit.md": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/changelog/migration-from-masstransit.md",
+      "exists": true
+    },
+    "CHANGELOG.md -> docs/quality-status.md": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/quality-status.md",
+      "exists": true
+    },
+    "TODO.md -> benchmarks/ToDo.md": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/benchmarks/ToDo.md",
+      "exists": true
+    },
+    ".testagent/status.md -> local-completion-plan.md": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/local-completion-plan.md",
+      "exists": true
+    },
+    ".testagent/plan.md -> local-completion-plan.md": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/local-completion-plan.md",
+      "exists": true
+    },
+    "docs/quality-status.md -> ../.testagent/local-completion-plan.md": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/local-completion-plan.md",
+      "exists": true
+    },
+    "docs/quality-status.md -> quality/t176-aggregate.json": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/quality/t176-aggregate.json",
+      "exists": true
+    },
+    "docs/quality-status.md -> quality/t176-receipts/": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/quality/t176-receipts",
+      "exists": true
+    },
+    "docs/quality-status.md -> api/roslyn-all-repos-api-2026-10-01.md": {
+      "resolved": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/api/roslyn-all-repos-api-2026-10-01.md",
+      "exists": true
+    }
+  },
+  "semantic_assessment": [
+    "Classic EF C7 alone is recorded as accepted:13newSQLite,432localEF,fivecompiledonecauseexperiments19finiteRed46healthy,post13,original5finiteRed8healthy. No new Core/currentUnit/coverage result claimed.",
+    "Selected optional clock measurement is guarded. Required fault notification still forwards and awaits actual independent System monotonic duration of current attempt, preserving required UTC/cancellation/database state and failures; this is controlled public ConsumeContext proxy proof, not cloud fault-publication acceptance.",
+    "One existing visible truncated argument collision is disclosed, both events retained. Native432 event count does not invent432 fullargument distinguishable display identities.",
+    "C6 EF-next words are explicitly dated, current EF-open prose removed. Broader emitted-schema inventory and affected aggregate gates remain open, as do cache/startup/adapters/currentcoverage/UnitproviderCIcloudhardware.",
+    "All12TODO item headers retained with no removal. The11unrelatedsections,ordered62externaltokens,TODOpreamble,234authorities and four dated historical suffixes remain byte-identical; historicalSQL999/1000 and coverage are not promoted."
+  ],
+  "reading_basis": "Whole six-document review uses exact whole acceptedR15 prior body reuse, verified canonical/frozen hashes and Root acceptance, plus personally consumed complete six R15→R16 diffs covering every changed byte. Historical/unrelated sections reused only after byte equality. Native8focused logs are parsed against exact phase receipts and count projections, while finite first-cause/compiled runtime assurance remains bound to already-qualified independent chain (including own532check fixed13/EF432 review). Large earlier finalraw projection truncated and confers no fullraw/native-stack personal-read credit. No transfer of Root source/test reading.",
+  "checks": [
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-documentation-c7-r16/PROPOSED_DOCUMENTATION_FREEZE_R16.json",
+      "pass": true,
+      "details": {
+        "sha256": "a794c2cd89c71efdf4c7ef1c2f6e5efa9db48576c25c2502b35f68d21210d4ff",
+        "bytes": 1059
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_FREEZE_R15.json",
+      "pass": true,
+      "details": {
+        "sha256": "9059f9276b9023d61de4948d6567512f7b8d9ec449a11f92414c8b286ee0a2f5",
+        "bytes": 1292
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-reviews-20261007/documentation-reconciliation-proposed-review-r15.json",
+      "pass": true,
+      "details": {
+        "sha256": "7f1f8c7daf6b5a6d693bcba6761e98d8089be6a52108f0300f977ef7900d560f",
+        "bytes": 115337
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/ROOT_DOCUMENTATION_ACCEPTANCE_R15.json",
+      "pass": true,
+      "details": {
+        "sha256": "a0f6bdc641bc9d97fec68ebfeba578005b4264106210d4d55c6c7d10f67bff19",
+        "bytes": 541
+      }
+    },
+    {
+      "check": "Root R15 accepted exact prior reviewed six files",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact six doc paths",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-documentation-c7-r16/CHANGELOG.md",
+      "pass": true,
+      "details": {
+        "sha256": "d2722fa021b4dd136b62cc0dc104cc7ec95c9302e3a3be175785eacb3c90a018",
+        "bytes": 14066
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/CHANGELOG.md",
+      "pass": true,
+      "details": {
+        "sha256": "d96b048fa2f5f8a19b801bc57e7deb6f1f9b197402c5bee7f75dd313053c7ca6",
+        "bytes": 13184
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r15/CHANGELOG.md",
+      "pass": true,
+      "details": {
+        "sha256": "d96b048fa2f5f8a19b801bc57e7deb6f1f9b197402c5bee7f75dd313053c7ca6",
+        "bytes": 13184
+      }
+    },
+    {
+      "check": "exact prior reviewed whole doc CHANGELOG.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-documentation-c7-r16/TODO.md",
+      "pass": true,
+      "details": {
+        "sha256": "835a1804e7b98486d1a02a600e08fb3c382c835a74bdba69f90d9e839b7ecf46",
+        "bytes": 27973
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/TODO.md",
+      "pass": true,
+      "details": {
+        "sha256": "3a192fa0847270482d6846bed8b34ebca9d4be3cc06f0297e34bc22c9ef13a9a",
+        "bytes": 26968
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r15/TODO.md",
+      "pass": true,
+      "details": {
+        "sha256": "3a192fa0847270482d6846bed8b34ebca9d4be3cc06f0297e34bc22c9ef13a9a",
+        "bytes": 26968
+      }
+    },
+    {
+      "check": "exact prior reviewed whole doc TODO.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-documentation-c7-r16/.testagent/status.md",
+      "pass": true,
+      "details": {
+        "sha256": "fc2ff85c08bc036c43c0cfd1910e50b533752c6d6136c93d234d3b84a315efe6",
+        "bytes": 13694
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/status.md",
+      "pass": true,
+      "details": {
+        "sha256": "60805f80b638e47b2bb42def17c7c852fd05b8af682526b614c13539f580520d",
+        "bytes": 12734
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r15/.testagent/status.md",
+      "pass": true,
+      "details": {
+        "sha256": "60805f80b638e47b2bb42def17c7c852fd05b8af682526b614c13539f580520d",
+        "bytes": 12734
+      }
+    },
+    {
+      "check": "exact prior reviewed whole doc .testagent/status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-documentation-c7-r16/.testagent/plan.md",
+      "pass": true,
+      "details": {
+        "sha256": "bca79a74ac887919e5f998260b525d14bc66165a4a8660ff4e562ab692c60a82",
+        "bytes": 19679
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/plan.md",
+      "pass": true,
+      "details": {
+        "sha256": "3cf7ee4174ac22ae871a21443be16edd15d527cd6c2bbf96d4bffb398227f00b",
+        "bytes": 18666
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r15/.testagent/plan.md",
+      "pass": true,
+      "details": {
+        "sha256": "3cf7ee4174ac22ae871a21443be16edd15d527cd6c2bbf96d4bffb398227f00b",
+        "bytes": 18666
+      }
+    },
+    {
+      "check": "exact prior reviewed whole doc .testagent/plan.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-documentation-c7-r16/.testagent/local-completion-plan.md",
+      "pass": true,
+      "details": {
+        "sha256": "060453899bb767169776cdb584ba1a8f00d9efa51bb1f840ac05d9136448f37a",
+        "bytes": 4500
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/local-completion-plan.md",
+      "pass": true,
+      "details": {
+        "sha256": "8342918de3e372c9dd2bdcd8f4b6d2a144608d7855ff960e47fedfdf3c57a2c3",
+        "bytes": 4361
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r15/.testagent/local-completion-plan.md",
+      "pass": true,
+      "details": {
+        "sha256": "8342918de3e372c9dd2bdcd8f4b6d2a144608d7855ff960e47fedfdf3c57a2c3",
+        "bytes": 4361
+      }
+    },
+    {
+      "check": "exact prior reviewed whole doc .testagent/local-completion-plan.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-documentation-c7-r16/docs/quality-status.md",
+      "pass": true,
+      "details": {
+        "sha256": "e17516acc4d94d551a2dfcc32fdbd2e70a45b2002fd25e0649aee11ed7a539d8",
+        "bytes": 11892
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/quality-status.md",
+      "pass": true,
+      "details": {
+        "sha256": "344ac74709a59573af4a7afd0297a7113a080b9cea7ad059fb1420f91eae2f92",
+        "bytes": 10934
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r15/docs/quality-status.md",
+      "pass": true,
+      "details": {
+        "sha256": "344ac74709a59573af4a7afd0297a7113a080b9cea7ad059fb1420f91eae2f92",
+        "bytes": 10934
+      }
+    },
+    {
+      "check": "exact prior reviewed whole doc docs/quality-status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact historical suffix acceptedR2-R15 .testagent/plan.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact historical suffix acceptedR2-R15 .testagent/status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact historical suffix acceptedR2-R15 CHANGELOG.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact historical suffix acceptedR2-R15 docs/quality-status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "all twelve TODO item headers retained",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "TODO preamble and committed-removal guidance retained",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "other TODO byte preserved ## Verify startup validation across retained capabilities",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "other TODO byte preserved ## Complete Azure Service Bus validation against the real cloud service",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "other TODO byte preserved ## Separate cache index projection from external observation",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "other TODO byte preserved ## Continue deterministic time normalization beyond envelope materialization",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "other TODO byte preserved ## Complete external benchmark scenarios",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "other TODO byte preserved ## Complete MessageJournal external provider validation",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "other TODO byte preserved ## Complete Azure Table persistence validation against the real cloud service",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "other TODO byte preserved ## Complete Entity Framework SQL Server and Azure SQL external variant validation",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "other TODO byte preserved ## AWS real-service closure",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "other TODO byte preserved ## Complete Event Hubs validation against the real cloud service",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "other TODO byte preserved ## Complete RabbitMQ validation against Amazon MQ",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "ordered62 external tokens byte-preserved",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE551_FINAL234_CURRENT18600_LOCAL_GATES_ROOT_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": {
+        "sha256": "83f7abba93ae4cc1eaf06cb9c1c26e565454ede6701c50fc777c7e5bb908e885",
+        "bytes": 14949
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json",
+      "pass": true,
+      "details": {
+        "sha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+        "bytes": 3624096
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-api-review-20261001/repair-research/package529-final234-placeholder44-current-scope-precision-overlay-r1/CORRECTED_CURRENT234_INDIVIDUAL_BOUNDED_DISPOSITIONS.json",
+      "pass": true,
+      "details": {
+        "sha256": "171c4cc759707a20f328a7746f03bb1909359c502aac67c0240d916e472ce1ac",
+        "bytes": 418182
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": {
+        "sha256": "b21f05f4e01a0140161265bdc784bb51c37263f74b35cdbf4d26876063401f6d",
+        "bytes": 11968
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-final-bounded-native-chain-review-r1.json",
+      "pass": true,
+      "details": {
+        "sha256": "519a5352bfe18907532a1db416f315c0ec4ef82438b98082ab9aac303acc910c",
+        "bytes": 43875
+      }
+    },
+    {
+      "check": "Root and independent bounded C7 accepted status",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs",
+      "pass": true,
+      "details": {
+        "sha256": "b6a957d494e84e3c082066d2f886157147c04ff3ee9bef4d28877cc2a3a81917",
+        "bytes": 11363
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/ClassicEfOutboxClockIsolationTests.cs",
+      "pass": true,
+      "details": {
+        "sha256": "6602e22ab00adc38880880312ec0ffb45ad6c5d34ffa825e7db6b517c08ae6d2",
+        "bytes": 20654
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Requirements/EntityFrameworkRequirements.json",
+      "pass": true,
+      "details": {
+        "sha256": "deb0aec314803b9701ef9bbeff1ee2fa544d6fed9b2c71838363d964d0652e57",
+        "bytes": 111377
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C7_TEST_ONLY_ORIGINAL_FREEZE_R1.json",
+      "pass": true,
+      "details": {
+        "sha256": "792987b9c3db0d7b8322890447576cca17dd888385d97785af3401405465836b",
+        "bytes": 1287
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_EF35_STAGE_C7_TEST_ONLY_READ_CLOSURE_R1.json",
+      "pass": true,
+      "details": {
+        "sha256": "8bd1aa0aa3c6fc4646627eea90f83d526f0d8baee2612cf42eec67a41d368082",
+        "bytes": 27681
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C7_FIXED_FREEZE_R1.json",
+      "pass": true,
+      "details": {
+        "sha256": "764b8067d7817dfb2f503a3297e09130a6c2eb39253ec67b43581c139bb4e944",
+        "bytes": 1079
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_EF35_STAGE_C7_FIXED_READ_CLOSURE_R1.json",
+      "pass": true,
+      "details": {
+        "sha256": "484c9a9a7dddbfb18310de8366f1f6f68605273fb8a2195a25b297697805ec9c",
+        "bytes": 28427
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_PE_PDB_BINDING_R1.json",
+      "pass": true,
+      "details": {
+        "sha256": "b569289326167cc659cc9d97ca1999f419a7c6ba643ec455b44766de3461c196",
+        "bytes": 42764
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_FIVE_MUTANTS_COMPILED_BINDING_R1.json",
+      "pass": true,
+      "details": {
+        "sha256": "ae3eaefc7f3b7fb062c3bfcf81f4f185009cc96a431f39bc518fdbedb3a55bf2",
+        "bytes": 108975
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-original-r1/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "3f6d201757c861b1b570b4a76f602c8349466a9b769e9f3ff4cd1b1d59fe2246",
+        "bytes": 6496
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-r2/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "bb9fda42c98004f3e6231c8bf1fbb806536f951357b5fceef2f4e3a4822068ea",
+        "bytes": 6200
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-owner-r2/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "8be7e8b95bd9ddfc4736f3cbe1518f53d6be49f08ae5ac58ea479d9eda5aea8e",
+        "bytes": 99004
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-post-r1/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "5ca00cd59b41e4352a043790f8c2c128d2dccf34463d132dd10767cd20a8a6a0",
+        "bytes": 5755
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-driver-r1/ROOT_RUNNER_ACCEPTANCE_R3.json",
+      "pass": true,
+      "details": {
+        "sha256": "b7c75769a2c02812107389bd2673c4ad04524aa3c835c0631d7aa2582de0402c",
+        "bytes": 620
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-original-r1-native-artifact-review-r2.json",
+      "pass": true,
+      "details": {
+        "sha256": "cab04322683b12ec1a139b9c6ba46b096c9979628bdaeb7f26f08093be7fd43b",
+        "bytes": 113235
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-fixed-r2-and-whole-ef432-native-artifact-review-r1.json",
+      "pass": true,
+      "details": {
+        "sha256": "78aefd754b7f46b0a0ba33e0e090178238c952c081adb5cfef8e7807b5027e6b",
+        "bytes": 389500
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-five-mutants-combined-native-artifact-review-r2.json",
+      "pass": true,
+      "details": {
+        "sha256": "ad18424d7942746915ced58ce4e840b468435e24c3622c173666bd7270565ca7",
+        "bytes": 37465
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-fixed-post-native-artifact-review-r1.json",
+      "pass": true,
+      "details": {
+        "sha256": "7a01ce01f78e838af5046a3f7d63220704e750c614fee780ee3466a91c5f002b",
+        "bytes": 109749
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-final-bounded-native-chain-review-r1.json",
+      "pass": true,
+      "details": {
+        "sha256": "519a5352bfe18907532a1db416f315c0ec4ef82438b98082ab9aac303acc910c",
+        "bytes": 43875
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-mutant-m1-native-artifact-review-r1.json",
+      "pass": true,
+      "details": {
+        "sha256": "17c845b66c7f365b3b8167dc3e29f3d7df046422b18abf85efa8f468649ca010",
+        "bytes": 120098
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-mutant-m2-native-artifact-review-r1.json",
+      "pass": true,
+      "details": {
+        "sha256": "5c2770985c6c8d98ee910f98cb05de4dfd7271650faeb6f0c4404cd45f3e8fde",
+        "bytes": 120166
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-mutant-m3-native-artifact-review-r1.json",
+      "pass": true,
+      "details": {
+        "sha256": "52d97daa85512368df446f8043057731df3fe72be8c35b25470150897113de04",
+        "bytes": 117107
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-mutant-m4-native-artifact-review-r1.json",
+      "pass": true,
+      "details": {
+        "sha256": "7bd75c9e0419e5fe1d7ac0963ec835abf6b7d3e899471a38dc07a407cc59c078",
+        "bytes": 124375
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-mutant-m5-native-artifact-review-r1.json",
+      "pass": true,
+      "details": {
+        "sha256": "f3ddf3d4aba4e8f2213f621a95b4f6e4122b7a8be5e1cdaea938d8b4580ff131",
+        "bytes": 115931
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-original-r1-native-artifact-review-r2.json",
+      "pass": true,
+      "details": {
+        "sha256": "cab04322683b12ec1a139b9c6ba46b096c9979628bdaeb7f26f08093be7fd43b",
+        "bytes": 113235
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c7-fixed-r2-and-whole-ef432-native-artifact-review-r1.json",
+      "pass": true,
+      "details": {
+        "sha256": "78aefd754b7f46b0a0ba33e0e090178238c952c081adb5cfef8e7807b5027e6b",
+        "bytes": 389500
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-five-mutants-combined-native-artifact-review-r2.json",
+      "pass": true,
+      "details": {
+        "sha256": "ad18424d7942746915ced58ce4e840b468435e24c3622c173666bd7270565ca7",
+        "bytes": 37465
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-fixed-post-native-artifact-review-r1.json",
+      "pass": true,
+      "details": {
+        "sha256": "7a01ce01f78e838af5046a3f7d63220704e750c614fee780ee3466a91c5f002b",
+        "bytes": 109749
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-private-test-source-adversarial-review-r3.json",
+      "pass": true,
+      "details": {
+        "sha256": "2c0b58f0f93102bb85713a2de3fdd65e6df8ba7efc19a5512cd595077cb1e7f4",
+        "bytes": 19189
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-private-requirements282-supplement-review-r1.json",
+      "pass": true,
+      "details": {
+        "sha256": "013d2e4c724a91e030f6c1ffe118f8e55d6ead73988ac1cec32e06de59ba953e",
+        "bytes": 5800
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-mutants-driver-preexecution-review-r3.json",
+      "pass": true,
+      "details": {
+        "sha256": "68dabbc23c9b3ab1e9ba5157a2b727020fc277f4e4491135a9aa3ecd6d0b5bc0",
+        "bytes": 10569
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_FIVE_MUTANTS_COMPILED_BINDING_R1.json",
+      "pass": true,
+      "details": {
+        "sha256": "ae3eaefc7f3b7fb062c3bfcf81f4f185009cc96a431f39bc518fdbedb3a55bf2",
+        "bytes": 108975
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-driver-r1/INPUTS_R2.json",
+      "pass": true,
+      "details": {
+        "sha256": "fb7c11713ec04bcb81a7280938c6c247aaf09dbd878e5a6651f60e743c490c3c",
+        "bytes": 971067
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m4-required-notification-skipped/NOT_EXECUTED_COMPILER_RISK.json",
+      "pass": true,
+      "details": {
+        "sha256": "80d9d283af7f5c0c42caff9b2ee165cf130455d22a02c4e17b65fffc741cf695",
+        "bytes": 193
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C7_FIXED_FREEZE_R1.json",
+      "pass": true,
+      "details": {
+        "sha256": "764b8067d7817dfb2f503a3297e09130a6c2eb39253ec67b43581c139bb4e944",
+        "bytes": 1079
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_EF35_STAGE_C7_FIXED_READ_CLOSURE_R1.json",
+      "pass": true,
+      "details": {
+        "sha256": "484c9a9a7dddbfb18310de8366f1f6f68605273fb8a2195a25b297697805ec9c",
+        "bytes": 28427
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-original-r1/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "3f6d201757c861b1b570b4a76f602c8349466a9b769e9f3ff4cd1b1d59fe2246",
+        "bytes": 6496
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-r2/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "bb9fda42c98004f3e6231c8bf1fbb806536f951357b5fceef2f4e3a4822068ea",
+        "bytes": 6200
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m1-initial-measurement-escapes/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "885cbc84c8774f6d438aebf44de9002ba0dab006be15360d172a497514b6889d",
+        "bytes": 7790
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m2-elapsed-measurement-escapes/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "7829f5a63571a3282aefe5829e7093b283aeccbe09bb7b49a34b3fa99d72cd0a",
+        "bytes": 7791
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m3-zero-duration-fabricated/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "76ad50643d46905389cc4b466fc77328e66c6fa406d20f12ab7dea4b17fd4a47",
+        "bytes": 7764
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m4-required-notification-skipped-r2/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "facb8e5b87a6877313169f12d3715ff2c4b5f6b2867d6f9833fb85b7b046e8b1",
+        "bytes": 7824
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m5-required-notification-not-awaited/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "79693f6fdb69972f266cade2d695dfe81e1389e0332bca68032d877538f2702c",
+        "bytes": 7839
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-post-r1/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "5ca00cd59b41e4352a043790f8c2c128d2dccf34463d132dd10767cd20a8a6a0",
+        "bytes": 5755
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-owner-r2/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "8be7e8b95bd9ddfc4736f3cbe1518f53d6be49f08ae5ac58ea479d9eda5aea8e",
+        "bytes": 99004
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/shared-restore/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "60cba26e7ebff98fe2e0f40d7b597029096f7171d8e7df88de6ff0bf5b0ae08f",
+        "bytes": 627
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-excluded-stale-build-r1/EXCLUDED_RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "a3f9269596d94cd730dae2177733c1d4dc631eedb40be482d19426c809546563",
+        "bytes": 3438
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-excluded-stale-build-r1/owner/EXCLUDED_RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "ed04fa6163ff81ac558e841fdcd384ee6d4a9b138d43b5be5cfd8f086630002c",
+        "bytes": 828
+      }
+    },
+    {
+      "check": "fixed own qualified532 review bound",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-original-r1/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "3f6d201757c861b1b570b4a76f602c8349466a9b769e9f3ff4cd1b1d59fe2246",
+        "bytes": 6496
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-original-r1/raw/p05-c7-original-build-r1-20261007-051520--85739--GGsCmi.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "d48ccda2b9b27608657ffcb3a44e335b6ca450690c2f5c0033b405685344c39e",
+        "bytes": 1170880
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-original-r1/raw/p05-c7-original-restore-r1-20261007-051022--85561--8b21zi.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "76ed6047190d3e9e535c4db78da5f6b7b17f720e939b758235ab89563f19fc9a",
+        "bytes": 903508
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-original-r1/raw/p05-c7-original-build-r1.log",
+      "pass": true,
+      "details": {
+        "sha256": "5328da3a16c400db5028d56f0652bf806691d77e3ea27c3f5c60d5a7e985ac4a",
+        "bytes": 3002
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-original-r1/raw/p05-c7-original-restore-r1.log",
+      "pass": true,
+      "details": {
+        "sha256": "11ae36c1fdbd99e4ca44f43654491088fb9a77baf870ba938661ba513453f325",
+        "bytes": 2714
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-original-r1/raw/p05-c7-original-focused-r1-20261007-051614--85829--2Bk7Xw-dotnet-test.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "f7641958ea6bf41c9ad4a9aeda47400ccbc125d5c58b357f9545c9a497e7bdc4",
+        "bytes": 703279
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-original-r1/raw/p05-c7-original-focused-r1.log",
+      "pass": true,
+      "details": {
+        "sha256": "678789436fd5c98b2c39b33e8ab934513d7091d1f446efb69aa8718fec481c2b",
+        "bytes": 21513
+      }
+    },
+    {
+      "check": "single complete13 focused log stage-c7-original-r1",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact13 unique actual identities stage-c7-original-r1",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-r2/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "bb9fda42c98004f3e6231c8bf1fbb806536f951357b5fceef2f4e3a4822068ea",
+        "bytes": 6200
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-r2/raw/p05-c7-fixed-focused-r2-20261007-052226--86077--Qs+v5K-dotnet-test.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "819278d4a13d09e9d2a8b613c8019991ba8ccba30556629e0a7434010ba6d7fe",
+        "bytes": 703062
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-r2/raw/p05-c7-fixed-build-r2-20261007-052112--86004--zxm4Sy.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "e001c9f634522010e35e38a626ae1d02f0f397b9f203f48770bd43e502c4936d",
+        "bytes": 1182877
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-r2/raw/p05-c7-fixed-focused-r2.log",
+      "pass": true,
+      "details": {
+        "sha256": "88b58acbab04b46a2ea4bee1c5932a5446f87eaa52ff7b60208e8efd988c9990",
+        "bytes": 5856
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-r2/raw/p05-c7-fixed-build-r2.log",
+      "pass": true,
+      "details": {
+        "sha256": "f4b47a1b6a87861eebc3cced194bfa32209468fef0a011472411043d4bbfbfd9",
+        "bytes": 3002
+      }
+    },
+    {
+      "check": "single complete13 focused log stage-c7-fixed-r2",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact13 unique actual identities stage-c7-fixed-r2",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m1-initial-measurement-escapes/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "885cbc84c8774f6d438aebf44de9002ba0dab006be15360d172a497514b6889d",
+        "bytes": 7790
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m1-initial-measurement-escapes/raw/p05-c7-m1-initial-measurement-escapes-focused-r1-20261007-053623--86589--ZI2o1d-dotnet-test.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "6a1b8a300df7d84f6370636eb53fc43ba75ce77d7c12856c159596f896cf2201",
+        "bytes": 703276
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m1-initial-measurement-escapes/raw/p05-c7-m1-initial-measurement-escapes-build-r1-20261007-053552--86529--n0l0G4.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "ec91a13938e3b16cff0c1a819ef9c29950e2873c1b320fe6f32a32043ecc00f9",
+        "bytes": 1184186
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m1-initial-measurement-escapes/raw/p05-c7-m1-initial-measurement-escapes-build-r1.log",
+      "pass": true,
+      "details": {
+        "sha256": "28a3aab781f1b6c352c644dd9d07acf4d22b503e8de9c69696adae4eb86caf52",
+        "bytes": 2988
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m1-initial-measurement-escapes/raw/p05-c7-m1-initial-measurement-escapes-focused-r1.log",
+      "pass": true,
+      "details": {
+        "sha256": "3451e59e745b96cbbf6ec967388cafb0fa0fca6b9f55bb0d21a272004fa7fdbd",
+        "bytes": 13560
+      }
+    },
+    {
+      "check": "single complete13 focused log m1-initial-measurement-escapes",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact13 unique actual identities m1-initial-measurement-escapes",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m2-elapsed-measurement-escapes/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "7829f5a63571a3282aefe5829e7093b283aeccbe09bb7b49a34b3fa99d72cd0a",
+        "bytes": 7791
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m2-elapsed-measurement-escapes/raw/p05-c7-m2-elapsed-measurement-escapes-build-r1.log",
+      "pass": true,
+      "details": {
+        "sha256": "cbc1628c3a29a31cde506bd627823e463aaeca7f8f25d0a46eb54ca0431d4c45",
+        "bytes": 2988
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m2-elapsed-measurement-escapes/raw/p05-c7-m2-elapsed-measurement-escapes-focused-r1.log",
+      "pass": true,
+      "details": {
+        "sha256": "de3568e58ea2849b1faa84c55badcbd42dbb8311cf3e81a375e38b487884f0cf",
+        "bytes": 14560
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m2-elapsed-measurement-escapes/raw/p05-c7-m2-elapsed-measurement-escapes-focused-r1-20261007-053659--86616--d6dnJ+-dotnet-test.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "a7878f000da06563ef2b712ae09453638178f561e32adc0c15c168e0a84bc9ce",
+        "bytes": 703433
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m2-elapsed-measurement-escapes/raw/p05-c7-m2-elapsed-measurement-escapes-build-r1-20261007-053643--86601--cuVvzV.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "9a2e5785f699827930f26688f014b79800f3a473c4a28ba47ece2d48e4970783",
+        "bytes": 1194297
+      }
+    },
+    {
+      "check": "single complete13 focused log m2-elapsed-measurement-escapes",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact13 unique actual identities m2-elapsed-measurement-escapes",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m3-zero-duration-fabricated/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "76ad50643d46905389cc4b466fc77328e66c6fa406d20f12ab7dea4b17fd4a47",
+        "bytes": 7764
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m3-zero-duration-fabricated/raw/p05-c7-m3-zero-duration-fabricated-focused-r1-20261007-053730--86627--5wClbj-dotnet-test.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "db586f481bbb9151e62423034a61329846d89abeb806aa6447db5451d204cf4f",
+        "bytes": 703091
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m3-zero-duration-fabricated/raw/p05-c7-m3-zero-duration-fabricated-build-r1-20261007-053719--86626--u5Cast.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "6eb2874b865424b016a5d43abaf9c9cf6b26143f643994e6c18a5e5bc15bae02",
+        "bytes": 1193197
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m3-zero-duration-fabricated/raw/p05-c7-m3-zero-duration-fabricated-focused-r1.log",
+      "pass": true,
+      "details": {
+        "sha256": "52674f7cd64d17aa8810d7451f8276d346b7752887d7ce8cfb5d818bff8663ed",
+        "bytes": 9698
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m3-zero-duration-fabricated/raw/p05-c7-m3-zero-duration-fabricated-build-r1.log",
+      "pass": true,
+      "details": {
+        "sha256": "aed1e4171090e8cec924a12798f0c99902f10a11dfba3282e72d5fe82a412835",
+        "bytes": 2988
+      }
+    },
+    {
+      "check": "single complete13 focused log m3-zero-duration-fabricated",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact13 unique actual identities m3-zero-duration-fabricated",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m4-required-notification-skipped-r2/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "facb8e5b87a6877313169f12d3715ff2c4b5f6b2867d6f9833fb85b7b046e8b1",
+        "bytes": 7824
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m4-required-notification-skipped-r2/raw/p05-c7-m4-required-notification-skipped-r2-focused-r1-20261007-053758--86687--0gYSvq-dotnet-test.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "d3b47f75cfbe19ff29a75f46837d135cb5b82124ee02eb65f2f301ae0f47690b",
+        "bytes": 703835
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m4-required-notification-skipped-r2/raw/p05-c7-m4-required-notification-skipped-r2-focused-r1.log",
+      "pass": true,
+      "details": {
+        "sha256": "f1a56ef3038ab14959ed90932ec18612c2f9c5d24d1a38751e5658e976bbe1f9",
+        "bytes": 13044
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m4-required-notification-skipped-r2/raw/p05-c7-m4-required-notification-skipped-r2-build-r1-20261007-053747--86638--8_UjRb.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "ad2b29bd6906c88b261d25d0f025ba394bfdb097665dc2264b9089f4c3046f99",
+        "bytes": 1187483
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m4-required-notification-skipped-r2/raw/p05-c7-m4-required-notification-skipped-r2-build-r1.log",
+      "pass": true,
+      "details": {
+        "sha256": "34c15a9364b9e2093167e7eb8a802aa6e7e9259ba9392d7bd6c1e0a6e6cf2f05",
+        "bytes": 2988
+      }
+    },
+    {
+      "check": "single complete13 focused log m4-required-notification-skipped-r2",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact13 unique actual identities m4-required-notification-skipped-r2",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m5-required-notification-not-awaited/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "79693f6fdb69972f266cade2d695dfe81e1389e0332bca68032d877538f2702c",
+        "bytes": 7839
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m5-required-notification-not-awaited/raw/p05-c7-m5-required-notification-not-awaited-focused-r1-20261007-053827--86741--RCi0bB-dotnet-test.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "45f0ddab9893e4ec95e95a1be7a0aad018ca03efe16aea99bf75002a39fd0734",
+        "bytes": 703429
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m5-required-notification-not-awaited/raw/p05-c7-m5-required-notification-not-awaited-focused-r1.log",
+      "pass": true,
+      "details": {
+        "sha256": "e55a098ed397c2e52089e2cb6100d7930a44ff1085a226f4f6a3d16f7889dcf4",
+        "bytes": 10154
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m5-required-notification-not-awaited/raw/p05-c7-m5-required-notification-not-awaited-build-r1-20261007-053818--86735--44udTd.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "ed0af9dbc808a56ec4541932de10369a3ae0c547903fbb8ac6f317943d251f5f",
+        "bytes": 1182213
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m5-required-notification-not-awaited/raw/p05-c7-m5-required-notification-not-awaited-build-r1.log",
+      "pass": true,
+      "details": {
+        "sha256": "834e50c7f5c49dcc87fa4f15fafc88c6732410af90dcf8e54f21b92edf843e05",
+        "bytes": 2988
+      }
+    },
+    {
+      "check": "single complete13 focused log m5-required-notification-not-awaited",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact13 unique actual identities m5-required-notification-not-awaited",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-post-r1/RESULT.json",
+      "pass": true,
+      "details": {
+        "sha256": "5ca00cd59b41e4352a043790f8c2c128d2dccf34463d132dd10767cd20a8a6a0",
+        "bytes": 5755
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-post-r1/raw/p05-c7-fixed-post-r1-20261007-053943--86786--A3QOkz-dotnet-test.binlog",
+      "pass": true,
+      "details": {
+        "sha256": "1abc87f6b5bb9139fca09fc330604f8ec3b007d90866538d9452adc3295279c6",
+        "bytes": 703129
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-fixed-post-r1/raw/p05-c7-fixed-post-r1.log",
+      "pass": true,
+      "details": {
+        "sha256": "4e3a12415eee0152881b65ba56dea6e6629153e292857b28d8f9d6210d0d2d8e",
+        "bytes": 5852
+      }
+    },
+    {
+      "check": "single complete13 focused log stage-c7-fixed-post-r1",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact13 unique actual identities stage-c7-fixed-post-r1",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "five actual compiled experiments19red46healthy",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "original5red8healthy and fixed/post13",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "Root native counts exact",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "wholeEF432/431visible display precision retained",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "complete bounded C7 block TODO.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "C6 EF-next checkpoint now dated TODO.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "no stale current EF-open/active line TODO.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "complete bounded C7 block .testagent/status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "C6 EF-next checkpoint now dated .testagent/status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "no stale current EF-open/active line .testagent/status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "complete bounded C7 block .testagent/plan.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "C6 EF-next checkpoint now dated .testagent/plan.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "no stale current EF-open/active line .testagent/plan.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "complete bounded C7 block docs/quality-status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "C6 EF-next checkpoint now dated docs/quality-status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "no stale current EF-open/active line docs/quality-status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "Changelog bounded C7/new actual System fallback",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "all TODO open schema and full affected aggregates retained",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "P05 C7 bounded and broader gates explicit",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> license/repository_diff.py",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/ROOT_CORE_DEADLINE_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_A_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_B1_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_B2_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C1_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C2_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C3_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C4_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C5_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C6_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> .testagent/local-completion-plan.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> docs/changelog/product-fixes.md#api-review-completion-6-october-2026",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE551_FINAL234_CURRENT18600_LOCAL_GATES_ROOT_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> docs/changelog/source-areas.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> docs/changelog/product-fixes.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> docs/changelog/verification-history.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> docs/changelog/removed-capabilities.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> docs/changelog/other-changes.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> docs/changelog/migration-from-masstransit.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link CHANGELOG.md -> docs/quality-status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/ROOT_CORE_DEADLINE_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_A_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_B1_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_B2_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C1_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C2_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C3_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C4_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C5_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C6_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists CHANGELOG.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link TODO.md -> benchmarks/ToDo.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists TODO.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/ROOT_CORE_DEADLINE_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists TODO.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_A_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists TODO.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_B1_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists TODO.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_B2_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists TODO.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C2_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists TODO.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C3_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists TODO.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C4_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists TODO.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C5_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists TODO.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C6_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists TODO.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists TODO.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C1_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link .testagent/status.md -> local-completion-plan.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists .testagent/status.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C2_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists .testagent/status.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C3_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists .testagent/status.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C4_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists .testagent/status.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C5_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists .testagent/status.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C6_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists .testagent/status.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link .testagent/plan.md -> local-completion-plan.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists .testagent/plan.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C2_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists .testagent/plan.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C3_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists .testagent/plan.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C4_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists .testagent/plan.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C5_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists .testagent/plan.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C6_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists .testagent/plan.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link docs/quality-status.md -> ../.testagent/local-completion-plan.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link docs/quality-status.md -> quality/t176-aggregate.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link docs/quality-status.md -> quality/t176-receipts/",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "eventual canonical markdown link docs/quality-status.md -> api/roslyn-all-repos-api-2026-10-01.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists docs/quality-status.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C2_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists docs/quality-status.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C3_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists docs/quality-status.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C4_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists docs/quality-status.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C5_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists docs/quality-status.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C6_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "root-relative receipt exists docs/quality-status.md -> evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-documentation-c7-r16/CHANGELOG.md",
+      "pass": true,
+      "details": {
+        "sha256": "d2722fa021b4dd136b62cc0dc104cc7ec95c9302e3a3be175785eacb3c90a018",
+        "bytes": 14066
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/CHANGELOG.md",
+      "pass": true,
+      "details": {
+        "sha256": "d96b048fa2f5f8a19b801bc57e7deb6f1f9b197402c5bee7f75dd313053c7ca6",
+        "bytes": 13184
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-documentation-c7-r16/TODO.md",
+      "pass": true,
+      "details": {
+        "sha256": "835a1804e7b98486d1a02a600e08fb3c382c835a74bdba69f90d9e839b7ecf46",
+        "bytes": 27973
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/TODO.md",
+      "pass": true,
+      "details": {
+        "sha256": "3a192fa0847270482d6846bed8b34ebca9d4be3cc06f0297e34bc22c9ef13a9a",
+        "bytes": 26968
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-documentation-c7-r16/.testagent/status.md",
+      "pass": true,
+      "details": {
+        "sha256": "fc2ff85c08bc036c43c0cfd1910e50b533752c6d6136c93d234d3b84a315efe6",
+        "bytes": 13694
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/status.md",
+      "pass": true,
+      "details": {
+        "sha256": "60805f80b638e47b2bb42def17c7c852fd05b8af682526b614c13539f580520d",
+        "bytes": 12734
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-documentation-c7-r16/.testagent/plan.md",
+      "pass": true,
+      "details": {
+        "sha256": "bca79a74ac887919e5f998260b525d14bc66165a4a8660ff4e562ab692c60a82",
+        "bytes": 19679
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/plan.md",
+      "pass": true,
+      "details": {
+        "sha256": "3cf7ee4174ac22ae871a21443be16edd15d527cd6c2bbf96d4bffb398227f00b",
+        "bytes": 18666
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-documentation-c7-r16/.testagent/local-completion-plan.md",
+      "pass": true,
+      "details": {
+        "sha256": "060453899bb767169776cdb584ba1a8f00d9efa51bb1f840ac05d9136448f37a",
+        "bytes": 4500
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/local-completion-plan.md",
+      "pass": true,
+      "details": {
+        "sha256": "8342918de3e372c9dd2bdcd8f4b6d2a144608d7855ff960e47fedfdf3c57a2c3",
+        "bytes": 4361
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-documentation-c7-r16/docs/quality-status.md",
+      "pass": true,
+      "details": {
+        "sha256": "e17516acc4d94d551a2dfcc32fdbd2e70a45b2002fd25e0649aee11ed7a539d8",
+        "bytes": 11892
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/quality-status.md",
+      "pass": true,
+      "details": {
+        "sha256": "344ac74709a59573af4a7afd0297a7113a080b9cea7ad059fb1420f91eae2f92",
+        "bytes": 10934
+      }
+    },
+    {
+      "check": "distinct immutable destination absent",
+      "pass": true,
+      "details": null
+    }
+  ],
+  "check_count": 260,
+  "limits": [
+    "Proposal doc review only; Root owns exact publication, finalR16freeze and documentation acceptance. No canonical doc edits by reviewer.",
+    "No product/test/tool changes or .NET/Docker/SSH/SQLite/provider/processcontrol execution.",
+    "No broadP05/globalA+/release/currentcoverage/CI/realcloud/device/provider durability or fullUnit/aggregate acceptance."
+  ],
+  "execution": "Read-only Python hashing/text/JSON/archived log inspection; own immutable JSON only."
+}

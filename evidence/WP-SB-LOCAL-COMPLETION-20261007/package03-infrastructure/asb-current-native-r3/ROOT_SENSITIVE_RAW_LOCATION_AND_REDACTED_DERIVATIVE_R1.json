@@ -1,0 +1,17 @@
+{
+  "kind": "ROOT_ASB_DIAG01_PRIVATE_RAW_LOCATION_SUCCESSOR_AND_SAFE_DERIVATIVE_R1",
+  "native_result_sha256": "4a6d9943a5d2bc02046e26edf7310c8dbadf9de890f5db38553df557a070e25e",
+  "independent_native_review_sha256": "c132c074dd587f2811ca07a8555996e1629019e7d824fb22a5b465d13a752298",
+  "prior_repository_raw_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/vicione-b4753c17f691/servicebus-broker.log",
+  "private_raw_path": "/private/tmp/vicione-servicebus-local-completion-private-sensitive-20261007/asb-native-r3/servicebus-broker.raw.log",
+  "private_raw_sha256": "9b907b34ae2a6ea3d813a1bdf9451bc320891365a9b62148d81d843606710a5b",
+  "private_raw_byte_identity_unchanged": true,
+  "private_permissions": "parent0700/file0600",
+  "derived_redacted_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/vicione-b4753c17f691/servicebus-broker.redacted.log",
+  "derived_redacted_sha256": "f20b917fc14dd7352e45f16ff3a55836bda401ae7a1728c8436b48d0d2696271",
+  "lines1240_preserved": true,
+  "known_SQL_credential_assignments": 4,
+  "unique_known_SQL_credential_values": 1,
+  "status": "PRIVATE_RAW_PRESERVED__SHAREABLE_DERIVATIVE_AVAILABLE__CANONICAL_LOG_PRODUCER_REPAIR_NEXT",
+  "limits": "Original native/fixture hashes remain historical raw authority; do not reinterpret original hash as sanitized bytes. Immutable report refers to pre-relocation path; this successor binds exact same private raw and different sanitized derivative. No credential/token values in receipt. No upload/push of raw."
+}

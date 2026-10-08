@@ -1,0 +1,16 @@
+{
+  "kind": "LOCAL_COMPLETION_DOCUMENTATION_FREEZE_SUCCESSOR_R14",
+  "source_sha256": {
+    "CHANGELOG.md": "8286200969e289b3b5c1be8554040f68e7e4899b890802e810ada687d641624b",
+    "TODO.md": "731c52e5a8fae5ab08f74c2210b94b624479c0d150287d190e886bd9b7b2ca7d",
+    ".testagent/status.md": "3503d43cc36955ad0678b182a1d8acf1619380c46ca4256c6b5c530f7e1ba1ef",
+    ".testagent/plan.md": "afd0bb3465cefa2798e44b3d4937f49358d2134d010b0205d5272b9e4ffd81b6",
+    ".testagent/local-completion-plan.md": "56455098d0a4350e0a7ba18961b88c0ad95eb54f3c252fe26aa8446683a6022d",
+    "docs/quality-status.md": "796f49c9739f94961be46ed204ff4719836381c9cc8607a405d864ddccf4de03"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r14",
+  "c5_acceptance_sha256": "20995730c2e3bd017045ba1a3d81c7ff08f3328a445d0ab23b58965a042b9a94",
+  "limits": "C5 only bounded acceptance; C6/EF/cache/startup/currentcoverage/providerreplay/CI/cloud/hardware remain open. Historical234 audit and prior checkpoints untouched.",
+  "prior_freeze_sha256": "09f819667d8f8b5bfddefc7eb71e1b3f09f1887a8166c7e0a8ccd7b93e70faea",
+  "correction": "Four repeated statements corrected: actual native timer control releases physical inner timer then throws chosen disposal error, not underlying release failure."
+}

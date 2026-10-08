@@ -1,0 +1,38 @@
+{
+  "kind": "P06_CACHE_TEST_ONLY_ORIGINAL_FREEZE_R3",
+  "sources": {
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs": "8ee7f881107ccb1cf5e67275bf5f9476845d24cca0a0bb9817ac80a05cb44087",
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs": "46a07426260b5338bb690862efcafc21f9d1c751d27afeeee67a091f70034b2f",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "b1cba734eaa3752541dd6dce522af0b35924b909930609ca17e5676425692750",
+    "src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12",
+    "src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69",
+    "src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c",
+    "src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs": "bba8eeb8b9366996b489c820d793bb568d47c396127095a18ef45426fd2a164e",
+    "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4",
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs": "907772e0d3f688f3b11b0542b79d45e76f098559a0fb99e2ad1395ebdb13112d",
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs": "d6ce8980172e278b8ce7eae72fed4f6c89f74e23778a24f93e8524ab0b99c5d9",
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs": "54c895f4d2ccb95316a7ae3f521022cea3a25e4014d9b22fabaf75a53211625d",
+    "src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs": "a593b0fa0dc498210a20d4669ab68a743a2f13542fe9dbe53aa814ed463f6366",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs": "0aeb97aeae8196ed5918ccafb7401cdb2bc6f176c74f9e4b8de89833d8a3d00d",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs": "d33d153e2de28609ec362672c5637c97c9bfa95cc2895af236857b0181f7abd0",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.cs": "98da72d0f863585936f1c9ad702bb3d27b62a7e1d606d0a21f8c8f290c56b4a2",
+    "src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7",
+    "src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76",
+    "src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4",
+    "src/ViciOne.ServiceBus/Caching/ResourceFactory.cs": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/test-only-original-snapshot-r3",
+  "root812_read_closure_sha256": "7e4899c86f7072d40865b0ec6bb20586f56f270d3c445ed4d92fb6b1ce5c42e3",
+  "predecessor_sha256": "aaf0a7d823eb7de0a2f8ca26f73768d6dced905aa4891d89391b17bdfa216d7e",
+  "original13_native_receipt_sha256": "b1b7211f57bea30a9218d8f8877b8b05a21182847a269129957f9c5113b93891",
+  "research_plan_sha256": "8329cff96e05e777376fad42fde583dd9495245d8e6214d226dd02866d2f3e89",
+  "control_plan_supplement_sha256": "3a9c0d872b925b57e340ac3b06877779dd38dff77ae30cce3f74eb78b941c397",
+  "private_reviews": {
+    "package06-cache-private-direct-r10-collisions-adversarial-r1.json": "3216c4b2b8c036fae051929bfcdaaf2c2ccd006728df8dd558b541f26fa351d4",
+    "package06-cache-private-direct-r8-clock-adversarial-r1.json": "b60a1f610267a086039a23cde36eb36daa5f69baaf0c2fb68f40c37759e50fee",
+    "package06-cache-private-direct-r9-bulk-oracle-followup-r1.json": "2b073faa26caba184620c0e4ee696b3b82b6a0529a1b4bfad46840669a0f7c09"
+  },
+  "limits": "18 original cache product owners unchanged. Root direct710/Pending249 exact, Requirement4719 ordered4716+3. Planned30parent/2separateChild; no native result from metadata."
+}

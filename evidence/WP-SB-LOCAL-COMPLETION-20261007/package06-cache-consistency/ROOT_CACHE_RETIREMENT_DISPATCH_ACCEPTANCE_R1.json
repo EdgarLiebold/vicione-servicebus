@@ -1,0 +1,175 @@
+{
+  "kind": "ROOT_CACHE_RETIREMENT_DISPATCH_BOUNDED_ACCEPTANCE_R1",
+  "status": "ACCEPTED_SCOPED_CANONICAL_TWO_AFTER_INDEPENDENT_AFTERAPPLY",
+  "scope": [
+    "Retired resource admission remains charged at both separately observed held Removed observer and held async-disposal phases",
+    "Snapshot selected after dispatch admission retains observers already in an active snapshot",
+    "Entire awaited observer batch serialized before next committed batch callbacks",
+    "Active inherited same-cache observer mutation rejected; separate cache mutation succeeds"
+  ],
+  "references": {
+    "original_native": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-original-four-native-r1/RESULT.json",
+      "sha256": "6294dc9f39421de02763b7c00c60438902cada7a855dd760dccfd203d320f334"
+    },
+    "original_root_physical": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-original-four-native-r1/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "972c16da572ea1beb41e71e458f0b85eb69f98d3417c4a4e23747e647fc10649"
+    },
+    "original_peer": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-retirement-dispatch-original-four-native-adversarial-r1.json",
+      "sha256": "0330367b0b2e86419aa8ceeccaa4caeb547e6d33a7efe7db190e229c240be140",
+      "retained_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-final-independent-retention-r1/package06-cache-retirement-dispatch-original-four-native-adversarial-r1.json"
+    },
+    "original_peer_physical": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-retirement-dispatch-original-four-fresh-physical-binding-adversarial-r1.json",
+      "sha256": "1fbc438463214791044d5c97cbf4eff8ae27e5283895fa09e016b494965c463c",
+      "retained_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-final-independent-retention-r1/package06-cache-retirement-dispatch-original-four-fresh-physical-binding-adversarial-r1.json"
+    },
+    "original_peer_compiled": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-retirement-dispatch-original-four-fresh-compiled-requirements-adversarial-r1.json",
+      "sha256": "921efb245843c2a18e16421457feb475eb1a8282ad74159fd912d77722f47e5a",
+      "retained_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-final-independent-retention-r1/package06-cache-retirement-dispatch-original-four-fresh-compiled-requirements-adversarial-r1.json"
+    },
+    "whole_core": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-whole-core-native-r1/RESULT.json",
+      "sha256": "3305ea0594216a80789af04e424046e6f9d4e67eb25251815b7f7f9db290b26f"
+    },
+    "whole_root_reuse": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-whole-core-native-r1/ROOT_EXACT_RUNTIME_PHYSICAL_REUSE_R1.json",
+      "sha256": "1da52098303132be83d2f5f6bf4219aedb18141d8aeedf0e58e05ee0d7204378"
+    },
+    "whole_peer": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-retirement-dispatch-whole-core-native-adversarial-r1.json",
+      "sha256": "2a78caea888458d943406f54e9b26a56e44b85cf3eb802ae72beabe3f3bd1021",
+      "retained_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-final-independent-retention-r1/package06-cache-retirement-dispatch-whole-core-native-adversarial-r1.json"
+    },
+    "counter_source_peer": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-retirement-dispatch-four-counter-source-adversarial-r1.json",
+      "sha256": "380441756820ec4de899850af4283611b944370aa2906b3fefaff717643048a7",
+      "retained_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-final-independent-retention-r1/package06-cache-retirement-dispatch-four-counter-source-adversarial-r1.json"
+    },
+    "counter_aggregate": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-four-counters-native-r1/RESULT.json",
+      "sha256": "ebdce6ed7e638f030f46ada08ba170fe9a1b0ed19fde2bb79cb6a8861d02f586"
+    },
+    "counter_root_latest_ledger": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-four-counters-native-r1/ROOT_ACTUAL_FIRST_FINITE_AND_HEALTHY_LEDGER_R2.json",
+      "sha256": "90607d2e19ad6c46c83f1e6a823f2353ffe3868a2540ead547c5c0168323c29f"
+    },
+    "counter_peer_physical": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-retirement-dispatch-four-counters-fresh-physical-binding-adversarial-r1.json",
+      "sha256": "677a2c39d20874275ca7a6e96cacb1b467a9a0227749602083c537f2db29e359",
+      "retained_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-final-independent-retention-r1/package06-cache-retirement-dispatch-four-counters-fresh-physical-binding-adversarial-r1.json"
+    },
+    "counter_peer_compiled": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-retirement-dispatch-four-counters-fresh-compiled-requirements-adversarial-r1.json",
+      "sha256": "eb56a4c1b153efed3d5693752fc222045f9cff8cec9aa111431d153a7fedf3cb",
+      "retained_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-final-independent-retention-r1/package06-cache-retirement-dispatch-four-counters-fresh-compiled-requirements-adversarial-r1.json"
+    },
+    "counter_peer_native": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-retirement-dispatch-four-counters-native-adversarial-r1.json",
+      "sha256": "57fc430ac814628c2c998341b5a6005c0dbc14f71b36c4a553ea150d36bd230a",
+      "retained_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-final-independent-retention-r1/package06-cache-retirement-dispatch-four-counters-native-adversarial-r1.json"
+    },
+    "counter_peer_finite_ledger": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-retirement-dispatch-four-counters-finite-native-ledger-adversarial-r1.json",
+      "sha256": "dd8b1f2cea373e9c5c8b790a7c9111de2f97d0b46b631f63744d11637de893f8",
+      "retained_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-final-independent-retention-r1/package06-cache-retirement-dispatch-four-counters-finite-native-ledger-adversarial-r1.json"
+    },
+    "post_draft_peer": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-retirement-dispatch-restored-post-four-driver-draft-preflight-adversarial-r1.json",
+      "sha256": "078337d78305eb476d9aa858049958f6f44f97ee5c0ce6443341fa99fb0f723e",
+      "retained_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-final-independent-retention-r1/package06-cache-retirement-dispatch-restored-post-four-driver-draft-preflight-adversarial-r1.json"
+    },
+    "root_physical_M1_OmitAddRetirementCharge": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-four-counters-native-r1/M1_OmitAddRetirementCharge/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "e59f67e9239b31729ddbb643ae4332dbc54079373891714cbc8c5ca14d61958b"
+    },
+    "root_physical_M2_SnapshotBeforeDispatchAdmission": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-four-counters-native-r1/M2_SnapshotBeforeDispatchAdmission/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "f1bbbd479aa3934318511b215e7908477d2b438333b8d91d3027311707e73230"
+    },
+    "root_physical_M3_ReleaseDispatchGateBeforeCallbacks": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-four-counters-native-r1/M3_ReleaseDispatchGateBeforeCallbacks/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "36237a89c8a43a1d2198005bb5c5bd8a3a6c67de69a308cddf8ce503a0480dc7"
+    },
+    "root_physical_M4_InvertActiveInheritedScopeGuard": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-four-counters-native-r1/M4_InvertActiveInheritedScopeGuard/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "9a0e72a7881f4a0bd6dbc6fba14aad2d0eef85738b9b371336c87a4c79c5b658"
+    },
+    "post_native": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-restored-post-four-native-r1/RESULT.json",
+      "sha256": "06a2b06c4244741281ba2cdd2b065e6f1693d707fc49d9cd6c98b8f9e3801a5f"
+    },
+    "post_root_reuse": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-restored-post-four-native-r1/ROOT_EXACT_RUNTIME_PHYSICAL_REUSE_R1.json",
+      "sha256": "5430cd042da4c476c7f270f54a3729512ff2494d21791594c5dc907354ac44c4"
+    },
+    "proposal": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-canonical-two-file-preparation-r1/PREPARED.json",
+      "sha256": "866a90267b1b4157b15b3e9c738d6403a72d1c0b81170378ec8a7bd34bd47f5c"
+    },
+    "application": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-canonical-two-file-application-r1/RESULT.json",
+      "sha256": "bf118726a8e75224994656e9c8340d6feba12a27e956b70d6309616011ec274d"
+    },
+    "post_final_gate": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-retirement-dispatch-post4-final-two-canonical-gate-adversarial-r1.json",
+      "sha256": "862c0fc9b850a7b332433349734a6eafa09fc33e5276750f1f2f962785d4d435",
+      "retained_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-final-independent-retention-r1/package06-cache-retirement-dispatch-post4-final-two-canonical-gate-adversarial-r1.json"
+    },
+    "afterapply": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-retirement-dispatch-canonical-two-afterapply-adversarial-r1.json",
+      "sha256": "6428fec2d840aa5befea3278df0a8e96eb0336067eaf701174a9091e7cc0b153",
+      "retained_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-final-independent-retention-r1/package06-cache-retirement-dispatch-canonical-two-afterapply-adversarial-r1.json"
+    }
+  },
+  "counts": {
+    "new_Facts": 4,
+    "new_METHOD_rows": 4,
+    "original_focus_PASS": 4,
+    "whole_Core_PASS": 8213,
+    "whole_Cache_included": 203,
+    "counter_variants": 4,
+    "repeated_same_four_slots": 16,
+    "counter_firstfinite_RED": 5,
+    "counter_healthy": 11,
+    "restored_post_PASS": 4,
+    "failures_or_skips_in_original_whole_post": 0
+  },
+  "first_finite_oracles": {
+    "M1": "Equal83 expected1 actual2, lowerassertions uncredited",
+    "M2": "Equal162 expectedCtwo actualBtwo",
+    "M3": [
+      "False147 in C2 beforetry Bdisconnect/Cconnect, finally joins still reached",
+      "Equal227 in C3 expectedB:one actualA:two"
+    ],
+    "M4": "IsType285 expectedInvalidOperationException actualnull"
+  },
+  "physical": "Own fresh original12PE3811PDB and counter48PE15244PDB; independent full4734METHOD/resource graph freshly decoded original+eachcounter. Whole/post reuse exact17Original=archived=live withassets12/owners10/generated39 equality; no freshpostparse or canonical SDK execution.",
+  "application": {
+    "files": [
+      {
+        "canonical_relative_path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheRetirementAndDispatchTests.cs",
+        "source_path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-retirement-dispatch-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheRetirementAndDispatchTests.cs",
+        "before_sha256": null,
+        "after_sha256": "fce87e33c7087c13ef1d5ae890cd521f648e8d4bc914ea93ecb77e3f915a89a9"
+      },
+      {
+        "canonical_relative_path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+        "source_path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-retirement-dispatch-original/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+        "before_sha256": "e15c10362be7938ac1453fbb86fb0c06b01d0448dc0e23ef71c43786bdb8193f",
+        "after_sha256": "194242cb349ee3c1c08c6b9873914c1e2da0373947b6e8b68f200878e16bbea2"
+      }
+    ],
+    "source_before": 6105,
+    "source_after": 6106,
+    "allother6104_source_files_unchanged": true,
+    "product_changes": 0,
+    "config14_unchanged": true,
+    "frozen234_unchanged": true
+  },
+  "root_read_provenance": "Prior own wholeFixtureR3 plusentire6lineR4delta, original4/strict/whole4selected andProjection/summary, all16counterbodies/strictlogs/finiteledger, actualPost4logs and allpeer finalreceipts personally read. Huge manifests mechanically compared; truncated dumps confer zero whole-read credit. No peer-toRoot source/body read credit.",
+  "limits": "Four finite existing public contracts; no productbugfix claim. Counts overlap, no 16newtests/5bugs. No continuous temporal trace/FIFOcommit/fairness/heap/RSS measured memory/cacheperformance/globalcache/currentAPI/coverage/providers/CI/cloud/HW/A+ closure. Broader local work continues; no new commit or push."
+}

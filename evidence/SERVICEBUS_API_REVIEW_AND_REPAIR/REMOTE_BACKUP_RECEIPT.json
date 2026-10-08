@@ -1,0 +1,19 @@
+{
+  "utc": "2026-10-06T22:01:10.427391+00:00",
+  "status": "LOCAL_BACKUP_COMPLETE_REMOTE_PUSH_REJECTED_PENDING_EXPLICIT_TARGET_PAYLOAD_APPROVAL",
+  "commit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "tree": "63fdebaeeca2442d95bd48c42fb9eaef45768c11",
+  "branch": "backup/servicebus-api-review-20261006",
+  "destination": "git@github.com:EdgarLiebold/vicione-servicebus.git",
+  "local_worktree_clean": true,
+  "archive_files": 11601,
+  "archive_original_bytes": 1220855711,
+  "archive_compressed_bytes": 100800092,
+  "archive_independently_restored_and_hash_verified": true,
+  "requested_action": "git push --set-upstream origin backup/servicebus-api-review-20261006",
+  "push_executed": false,
+  "auto_review_rejected": true,
+  "reason_summary": "Automatic approval review rejected the outbound commit transfer as potentially sensitive and considered concrete payload and destination branch insufficiently explicit in the existing user authorization. No workaround or indirect push was attempted.",
+  "code_and_tests_unchanged_since_qualified_review": true,
+  "next_required_input": "Explicit user approval to push this exact commit and included source/test/documentation/review archive to the named repository and branch."
+}

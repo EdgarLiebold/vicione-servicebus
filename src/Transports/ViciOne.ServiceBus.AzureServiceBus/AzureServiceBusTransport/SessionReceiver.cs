@@ -48,7 +48,7 @@ public class SessionReceiver :
             {
                 if (_context.ConsumerStopTimeout.HasValue)
                 {
-                    cancellationTokenSource = new CancellationTokenSource(_context.ConsumerStopTimeout.Value);
+                    cancellationTokenSource = new CancellationTokenSource(_context.ConsumerStopTimeout.Value, _context.GetTimeProvider());
                     timeoutRegistration = cancellationTokenSource.Token.Register(context.Cancel);
                 }
                 else
@@ -68,8 +68,9 @@ public class SessionReceiver :
         }
         finally
         {
-            timeoutRegistration.Dispose();
+            // Join the broker callback before disposing the timeout registration it may publish.
             registration.Dispose();
+            timeoutRegistration.Dispose();
 
             cancellationTokenSource?.Dispose();
 

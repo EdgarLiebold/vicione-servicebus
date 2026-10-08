@@ -1,0 +1,65 @@
+{
+  "kind": "INDEPENDENT_PRIVATE_CACHE_R9_BULK_SNAPSHOT_FOLLOWUP",
+  "utc": "2026-10-07T06:43:24.874842+00:00",
+  "status": "NO_BLOCK_BOUNDED_BULK_FOUR_LINE_SUCCESSOR__CLOCK_SCOPE_SEPARATE",
+  "reviewer": "/root/todo_reconciliation_review",
+  "findings": [],
+  "prior_immutable_changes_required": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-direct-r7-bulk-adversarial-r1.json",
+    "sha256": "8bb555dbd797d041353ceb1815338515165272ddbced51c4fe5ef4b73bf632eb",
+    "finding": "CACHE-R7-BULK-SNAPSHOT-01"
+  },
+  "source_inputs": {
+    "R7": {
+      "path": "/private/tmp/ResourceCacheComparerIsolationTests.draft-r7.cs",
+      "sha256": "942822ea902be9dd4e88df7ce1d61966fae26a4252484d55f3214b79c5d63a24",
+      "lines": 537
+    },
+    "R9": {
+      "path": "/private/tmp/ResourceCacheComparerIsolationTests.draft-r9.cs",
+      "sha256": "f56d46d3aa74810d3148b6aea6a90cf601b198e6d107956e96b1331acf155817",
+      "lines": 650
+    }
+  },
+  "resolved_oracle": {
+    "exact_four_added_lines": "        var snapshotBeforeRemoval = fixture.Cache.GetValues(TestContext.Current.CancellationToken);\n        Assert.Equal(2, snapshotBeforeRemoval.Count);\n        Assert.Contains(snapshotBeforeRemoval, value => ReferenceEquals(first, value));\n        Assert.Contains(snapshotBeforeRemoval, value => ReferenceEquals(second, value));\n",
+    "location": "Immediately after both healthy primary reads, before hostile/healthy branch and first retirement.",
+    "assessment": "One public snapshot capture under current test token; count2 plus each exact reference gives order-independent complete two-resource membership. Distinct first/second objects and count2 reject missing, duplicate or substituted resources. Both healthy and hostile cases execute the same oracle.",
+    "complete_bulk_delta": "--- R7bulk\n+++ R9bulk\n@@ -20,6 +20,10 @@\n         Assert.Equal(2, fixture.Observer.Added);\n         Assert.Same(first, await fixture.RunAsync(primary.GetAsync(first.Id, TestContext.Current.CancellationToken).AsTask()));\n         Assert.Same(second, await fixture.RunAsync(primary.GetAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n+        var snapshotBeforeRemoval = fixture.Cache.GetValues(TestContext.Current.CancellationToken);\n+        Assert.Equal(2, snapshotBeforeRemoval.Count);\n+        Assert.Contains(snapshotBeforeRemoval, value => ReferenceEquals(first, value));\n+        Assert.Contains(snapshotBeforeRemoval, value => ReferenceEquals(second, value));\n         if (hostile)\n         {\n             Assert.Null(added);\n",
+    "whole_current_bulk_body": "    public async Task FailedBulkIndexCannotCorruptExistingRetirement(bool hostile)\n    {\n        await using var fixture = new Fixture(capacity: 2);\n        var primary = fixture.Cache.AddIndex(\"primary\", x => x.Id);\n        var first = fixture.New(\"first\");\n        var second = fixture.New(\"second\");\n        await fixture.RunAsync(fixture.Cache.AddAsync(first, TestContext.Current.CancellationToken).AsTask());\n        await fixture.RunAsync(fixture.Cache.AddAsync(second, TestContext.Current.CancellationToken).AsTask());\n        var comparer = new BulkComparer(output) { FailSecondHash = hostile };\n        IResourceCacheIndex<string, Owned>? added = null;\n        Exception? additionFailure = Record.Exception(() =>\n            added = fixture.Cache.AddIndex(\"bulk\", x => x.Id, comparer: comparer));\n        output.WriteLine(\"ACTUAL_BULK_ADDITION_FAILURE: \" + additionFailure);\n        comparer.FailSecondHash = false;\n        Assert.Equal(0, first.DisposeCalls);\n        Assert.Equal(0, second.DisposeCalls);\n        Assert.Equal(2, fixture.Cache.Statistics.Count);\n        Assert.Equal(2, fixture.Cache.Statistics.TotalCreated);\n        Assert.Equal(0, fixture.Cache.Statistics.PendingCreations);\n        Assert.Equal(2, fixture.Observer.Added);\n        Assert.Same(first, await fixture.RunAsync(primary.GetAsync(first.Id, TestContext.Current.CancellationToken).AsTask()));\n        Assert.Same(second, await fixture.RunAsync(primary.GetAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n        var snapshotBeforeRemoval = fixture.Cache.GetValues(TestContext.Current.CancellationToken);\n        Assert.Equal(2, snapshotBeforeRemoval.Count);\n        Assert.Contains(snapshotBeforeRemoval, value => ReferenceEquals(first, value));\n        Assert.Contains(snapshotBeforeRemoval, value => ReferenceEquals(second, value));\n        if (hostile)\n        {\n            Assert.Null(added);\n            Assert.Same(comparer.Failure, additionFailure);\n            Assert.Equal(2, comparer.SecondCalls);\n            Assert.Throws<KeyNotFoundException>(() => fixture.Cache.GetIndex<string>(\"bulk\"));\n        }\n        else\n        {\n            Assert.Null(additionFailure);\n            Assert.Same(added, fixture.Cache.GetIndex<string>(\"bulk\"));\n            Assert.Same(first, await fixture.RunAsync(added!.GetAsync(first.Id, TestContext.Current.CancellationToken).AsTask()));\n            Assert.Same(second, await fixture.RunAsync(added!.GetAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n        }\n\n        bool removed = false;\n        Exception? removalFailure;\n        comparer.ThrowFirst = hostile;\n        try\n        {\n            removalFailure = await Record.ExceptionAsync(async () =>\n                removed = await fixture.RunAsync(primary.RemoveAsync(first.Id, TestContext.Current.CancellationToken).AsTask()));\n            output.WriteLine(\"ACTUAL_BULK_RETIREMENT_FAILURE: \" + removalFailure);\n        }\n        finally { comparer.ThrowFirst = false; }\n        // Physical ownership is checked before reference/error oracles or fixture rescue.\n        Assert.Equal(1, first.DisposeCalls);\n        Assert.Equal(0, second.DisposeCalls);\n        Assert.Equal(1, fixture.Cache.Statistics.Count);\n        Assert.Equal(1, fixture.Observer.Removed);\n        Assert.Equal(hostile ? 1 : 0, comparer.Throws);\n        Assert.Null(removalFailure);\n        Assert.True(removed);\n        (_, Exception? missing) = await fixture.ReadAsync(primary, first.Id);\n        Assert.IsType<KeyNotFoundException>(missing);\n        Assert.Same(second, await fixture.RunAsync(primary.GetAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n        Assert.Same(second, Assert.Single(fixture.Cache.GetValues(TestContext.Current.CancellationToken)));\n        if (hostile)\n            added = fixture.Cache.AddIndex(\"bulk\", x => x.Id, comparer: comparer);\n        Assert.Same(second, await fixture.RunAsync(added!.GetAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n        Assert.True(await fixture.RunAsync(primary.RemoveAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n        Assert.Equal(1, second.DisposeCalls);\n        Assert.Equal(0, fixture.Cache.Statistics.Count);\n        Assert.Equal(2, fixture.Observer.Removed);\n        var replacement = fixture.New(\"replacement\");\n        await fixture.RunAsync(fixture.Cache.AddAsync(replacement, TestContext.Current.CancellationToken).AsTask());\n        Assert.Same(replacement, await fixture.RunAsync(added!.GetAsync(replacement.Id, TestContext.Current.CancellationToken).AsTask()));\n        await fixture.StopAsync();\n        Assert.Equal(1, first.DisposeCalls);\n        Assert.Equal(1, second.DisposeCalls);\n        Assert.Equal(1, replacement.DisposeCalls);\n    }\n",
+    "remove_exact_four_lines_recovers_entire_R7_bulk_body": true
+  },
+  "preserved_context": {
+    "BulkComparer_entire_body_exact_R7": true,
+    "Comparer_Owned_Observer_entire_bodies_exact_R7": true,
+    "Fixture_full_body_exact_after_only_optional_constructor_and_timeProvider_coalesce_normalization": true,
+    "bulk_default_clock": "Bulk still constructs Fixture(capacity:2) with optional timeProvidernull; timeProvider??Time selects same existing FakeTimeProvider property. RunAsync/Own/ObserveAll/Stop/Dispose unchanged.",
+    "retirement_PhysicalDispose_assert_precedes_retirement_failure_oracles": true,
+    "same_name_retry_survivor_capacity_stop_and_exact_resource_disposal_unchanged": true
+  },
+  "requirements_bulk_correspondence": {
+    "R2_path": "/private/tmp/CoreRequirements.cache-proposed-r2.json",
+    "R2_sha256": "2b6d88aa4853e7d543e5fa2b710c13ad27a83b1fc5bdf09d5baf4137e4ea4f1d",
+    "R2_rows": 4717,
+    "R3_path": "/private/tmp/CoreRequirements.cache-proposed-r3.json",
+    "R3_sha256": "6046b6f8ff42ab23d28258b40d2fd6f85215ed27f7988fcb29a02ac36e673f37",
+    "R3_rows": 4718,
+    "exact_prior4717_ordered_objects_preserved": true,
+    "bulk_single_purpose_record_unchanged": {
+      "requirementId": "REQ-VSB-CACHE-MULTI-INDEX",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "FailedBulkIndexCannotCorruptExistingRetirement",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "variantKey": "failed-bulk-index-cannot-attach-unpublished-retirement-metadata"
+    },
+    "clock_append_not_qualified_here": true
+  },
+  "scope": "Exact four-line bulk oracle successor only. Other R8/R9 clock cases/product proposals and their requirement purpose handled by continuation reviewer; no full650line clock suite or native/compiler acceptance.",
+  "compiler_static": "Four lines use existing public GetValues.Count and existing predicate Assert.Contains/ReferenceEquals APIs; no new concrete bounded API/flow issue found. Strict compilation/native required separately.",
+  "read_statement": "Complete current bulk body, its complete4line delta, whole unchanged BulkComparer and fixture default-clock successor context personally consumed; exact hashes and helper equality checked. R7 full537 read remains cited immutable predecessor. No claim to personally review complete R9 clock scope.",
+  "limits": [
+    "Only narrow private bulk oracle finding resolved. New bulk original/fixed native cases have not run. No new native pass, mutationkill, wholecache/globalA+/coverage/policy claim.",
+    "No canonical code/test/requirement/source edits or .NET/provider/process execution by reviewer; own immutable JSON only.",
+    "R7 changes-required report preserved; Root retains all product/test writer/native-executor and personal-read authority."
+  ]
+}

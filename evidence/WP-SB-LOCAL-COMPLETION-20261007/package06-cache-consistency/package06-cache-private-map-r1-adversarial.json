@@ -1,0 +1,550 @@
+{
+  "kind": "P06_CACHE_PRIVATE_MAP_R1_INTERNAL_ADVERSARIAL_ALGORITHM_REVIEW",
+  "status": "NO_CODE_BLOCK_UNDER_FROZEN_CONTRACT_ACCEPTANCE_EVIDENCE_GAPS_MANDATORY",
+  "findings": [],
+  "inputs": {
+    "/private/tmp/vicione-servicebus-cache-fix-draft-r1/PRIVATE_CACHE_PRODUCT_FREEZE_R1.json": "0aa4a03e8b6091f65bad87ec48f357e6767beada84bc90f1a229092029020f8d",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/ROOT_CACHE18_COMPLETE_SOURCE_READ_R1.json": "5e59a3d4b0496fd9b3dc07476cb499aad865ad642464c8c0fdd2257382f571d8",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/RESULT.json": "b1b7211f57bea30a9218d8f8877b8b05a21182847a269129957f9c5113b93891",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/CACHE_COMPARER_AND_RETIREMENT_IMPLEMENTATION_PLAN_R1.md": "8329cff96e05e777376fad42fde583dd9495245d8e6214d226dd02866d2f3e89",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs": "404cdbc3326688944f871a18782b703b648d2c29ae8da98f9dfd8efab154f83d",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs": "46a07426260b5338bb690862efcafc21f9d1c751d27afeeee67a091f70034b2f",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs": "fe08a94c9d3339cc2a83c85bfcc19c90e3b4f6decd3d55810d9147811062d5db",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheGenerationAndLockingTests.cs": "56e5e5b8ba01517ba221441930ecfdd9c50f8c6d1279c29220d626d96da63fdf"
+  },
+  "checks": {
+    "exact_frozen_private_manifest_0aa4": true,
+    "all19_complete_bodies_frozenhash_lines_match": true,
+    "canonical_original18_unchanged_Rootbaseline": true,
+    "newMap_only_newfile_8modified_10unchanged": true,
+    "map151_actualwholebody_not156_shorthand": true,
+    "original13_receipt_exactfreeze_link_counts": true,
+    "source19_expectedinventory_no_missing_extra": true
+  },
+  "inventory19": [
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs",
+      "frozen_sha256": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12",
+      "actual_private_sha256": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12",
+      "actual_lines": 32,
+      "canonical_baseline_sha256": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12",
+      "change": "unchanged",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs",
+      "frozen_sha256": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69",
+      "actual_private_sha256": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69",
+      "actual_lines": 32,
+      "canonical_baseline_sha256": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69",
+      "change": "unchanged",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs",
+      "frozen_sha256": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c",
+      "actual_private_sha256": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c",
+      "actual_lines": 13,
+      "canonical_baseline_sha256": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c",
+      "change": "unchanged",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs",
+      "frozen_sha256": "4c94c5a3c336a4d90f40079265e5391604641e80ee93ecc2f7517b32430f10c3",
+      "actual_private_sha256": "4c94c5a3c336a4d90f40079265e5391604641e80ee93ecc2f7517b32430f10c3",
+      "actual_lines": 25,
+      "canonical_baseline_sha256": "bba8eeb8b9366996b489c820d793bb568d47c396127095a18ef45426fd2a164e",
+      "change": "modified",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs",
+      "frozen_sha256": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4",
+      "actual_private_sha256": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4",
+      "actual_lines": 24,
+      "canonical_baseline_sha256": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4",
+      "change": "unchanged",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceMap.cs",
+      "frozen_sha256": "b3ee80b4cbe599994267d720519ed404f207e5a42f1271d4d54a4062375ed4fd",
+      "actual_private_sha256": "b3ee80b4cbe599994267d720519ed404f207e5a42f1271d4d54a4062375ed4fd",
+      "actual_lines": 151,
+      "canonical_baseline_sha256": null,
+      "change": "new",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs",
+      "frozen_sha256": "686047b3c5af1ce34adca10173a4c668cd8ba17726fc126adb0f4ddbd7b3ff4d",
+      "actual_private_sha256": "686047b3c5af1ce34adca10173a4c668cd8ba17726fc126adb0f4ddbd7b3ff4d",
+      "actual_lines": 27,
+      "canonical_baseline_sha256": "907772e0d3f688f3b11b0542b79d45e76f098559a0fb99e2ad1395ebdb13112d",
+      "change": "modified",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "frozen_sha256": "84f6d67e2e3724120b394367b413325f353f7a9423a713431e8a6f4449b78f18",
+      "actual_private_sha256": "84f6d67e2e3724120b394367b413325f353f7a9423a713431e8a6f4449b78f18",
+      "actual_lines": 134,
+      "canonical_baseline_sha256": "d6ce8980172e278b8ce7eae72fed4f6c89f74e23778a24f93e8524ab0b99c5d9",
+      "change": "modified",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+      "frozen_sha256": "a129973c648355c3a05efe9f8531632db97d1c78a0ef9474e127705ae6f171de",
+      "actual_private_sha256": "a129973c648355c3a05efe9f8531632db97d1c78a0ef9474e127705ae6f171de",
+      "actual_lines": 26,
+      "canonical_baseline_sha256": "54c895f4d2ccb95316a7ae3f521022cea3a25e4014d9b22fabaf75a53211625d",
+      "change": "modified",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs",
+      "frozen_sha256": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743",
+      "actual_private_sha256": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743",
+      "actual_lines": 82,
+      "canonical_baseline_sha256": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743",
+      "change": "unchanged",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "frozen_sha256": "45bb92aea5df9ed96396604d8ef2b63afc888537ca4f49815f05ea734af41a6a",
+      "actual_private_sha256": "45bb92aea5df9ed96396604d8ef2b63afc888537ca4f49815f05ea734af41a6a",
+      "actual_lines": 324,
+      "canonical_baseline_sha256": "a593b0fa0dc498210a20d4669ab68a743a2f13542fe9dbe53aa814ed463f6366",
+      "change": "modified",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs",
+      "frozen_sha256": "fcb891b5e80f4249002a3871fbdb318842b70972e7b7537d9d36f73d8d97b441",
+      "actual_private_sha256": "fcb891b5e80f4249002a3871fbdb318842b70972e7b7537d9d36f73d8d97b441",
+      "actual_lines": 163,
+      "canonical_baseline_sha256": "0aeb97aeae8196ed5918ccafb7401cdb2bc6f176c74f9e4b8de89833d8a3d00d",
+      "change": "modified",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs",
+      "frozen_sha256": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+      "actual_private_sha256": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+      "actual_lines": 102,
+      "canonical_baseline_sha256": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+      "change": "unchanged",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "frozen_sha256": "a77ab4864f0e44b8692c308371817a831f0a231a40aec57ebcbba7793d7b65d1",
+      "actual_private_sha256": "a77ab4864f0e44b8692c308371817a831f0a231a40aec57ebcbba7793d7b65d1",
+      "actual_lines": 357,
+      "canonical_baseline_sha256": "d33d153e2de28609ec362672c5637c97c9bfa95cc2895af236857b0181f7abd0",
+      "change": "modified",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "frozen_sha256": "9a23ca99892af8349c960056c26b8969c2b677f7c8634a1518f8b3e1dbc43925",
+      "actual_private_sha256": "9a23ca99892af8349c960056c26b8969c2b677f7c8634a1518f8b3e1dbc43925",
+      "actual_lines": 382,
+      "canonical_baseline_sha256": "98da72d0f863585936f1c9ad702bb3d27b62a7e1d606d0a21f8c8f290c56b4a2",
+      "change": "modified",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs",
+      "frozen_sha256": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7",
+      "actual_private_sha256": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7",
+      "actual_lines": 11,
+      "canonical_baseline_sha256": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7",
+      "change": "unchanged",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs",
+      "frozen_sha256": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76",
+      "actual_private_sha256": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76",
+      "actual_lines": 75,
+      "canonical_baseline_sha256": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76",
+      "change": "unchanged",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs",
+      "frozen_sha256": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4",
+      "actual_private_sha256": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4",
+      "actual_lines": 16,
+      "canonical_baseline_sha256": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4",
+      "change": "unchanged",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceFactory.cs",
+      "frozen_sha256": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc",
+      "actual_private_sha256": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc",
+      "actual_lines": 13,
+      "canonical_baseline_sha256": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc",
+      "change": "unchanged",
+      "read": "Complete private source body independently read; complete baseline diff read for every modified owner."
+    }
+  ],
+  "canonical_original18_hashguard": {
+    "src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs": {
+      "frozen_original": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12",
+      "actualcanonical": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12"
+    },
+    "src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs": {
+      "frozen_original": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69",
+      "actualcanonical": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69"
+    },
+    "src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs": {
+      "frozen_original": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c",
+      "actualcanonical": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c"
+    },
+    "src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs": {
+      "frozen_original": "bba8eeb8b9366996b489c820d793bb568d47c396127095a18ef45426fd2a164e",
+      "actualcanonical": "bba8eeb8b9366996b489c820d793bb568d47c396127095a18ef45426fd2a164e"
+    },
+    "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs": {
+      "frozen_original": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4",
+      "actualcanonical": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4"
+    },
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs": {
+      "frozen_original": "907772e0d3f688f3b11b0542b79d45e76f098559a0fb99e2ad1395ebdb13112d",
+      "actualcanonical": "907772e0d3f688f3b11b0542b79d45e76f098559a0fb99e2ad1395ebdb13112d"
+    },
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs": {
+      "frozen_original": "d6ce8980172e278b8ce7eae72fed4f6c89f74e23778a24f93e8524ab0b99c5d9",
+      "actualcanonical": "d6ce8980172e278b8ce7eae72fed4f6c89f74e23778a24f93e8524ab0b99c5d9"
+    },
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs": {
+      "frozen_original": "54c895f4d2ccb95316a7ae3f521022cea3a25e4014d9b22fabaf75a53211625d",
+      "actualcanonical": "54c895f4d2ccb95316a7ae3f521022cea3a25e4014d9b22fabaf75a53211625d"
+    },
+    "src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs": {
+      "frozen_original": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743",
+      "actualcanonical": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs": {
+      "frozen_original": "a593b0fa0dc498210a20d4669ab68a743a2f13542fe9dbe53aa814ed463f6366",
+      "actualcanonical": "a593b0fa0dc498210a20d4669ab68a743a2f13542fe9dbe53aa814ed463f6366"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs": {
+      "frozen_original": "0aeb97aeae8196ed5918ccafb7401cdb2bc6f176c74f9e4b8de89833d8a3d00d",
+      "actualcanonical": "0aeb97aeae8196ed5918ccafb7401cdb2bc6f176c74f9e4b8de89833d8a3d00d"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs": {
+      "frozen_original": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+      "actualcanonical": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs": {
+      "frozen_original": "d33d153e2de28609ec362672c5637c97c9bfa95cc2895af236857b0181f7abd0",
+      "actualcanonical": "d33d153e2de28609ec362672c5637c97c9bfa95cc2895af236857b0181f7abd0"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.cs": {
+      "frozen_original": "98da72d0f863585936f1c9ad702bb3d27b62a7e1d606d0a21f8c8f290c56b4a2",
+      "actualcanonical": "98da72d0f863585936f1c9ad702bb3d27b62a7e1d606d0a21f8c8f290c56b4a2"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs": {
+      "frozen_original": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7",
+      "actualcanonical": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs": {
+      "frozen_original": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76",
+      "actualcanonical": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs": {
+      "frozen_original": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4",
+      "actualcanonical": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceFactory.cs": {
+      "frozen_original": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc",
+      "actualcanonical": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc"
+    }
+  },
+  "complete_relevant_callsite_inventory": [
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "line": 83,
+      "source": "public object PreparePending(TKey key, PendingResourceCreation<TValue> pending)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "line": 88,
+      "source": "public void PublishPending(object slot, PendingResourceCreation<TValue> pending)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "line": 95,
+      "source": "public override object PrepareEntry(ResourceCacheEntry<TValue> entry, object key)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "line": 100,
+      "source": "public override void PublishEntry(object slot)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "line": 105,
+      "source": "public override void RemoveEntrySlot(object slot)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "line": 110,
+      "source": "public void ResetEntries()"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "line": 120,
+      "source": "public override void RemovePending(PendingResourceCreation<TValue> pending)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+      "line": 21,
+      "source": "public abstract object PrepareEntry(ResourceCacheEntry<TValue> entry, object key);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+      "line": 22,
+      "source": "public abstract void PublishEntry(object slot);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+      "line": 23,
+      "source": "public abstract void RemoveEntrySlot(object slot);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+      "line": 25,
+      "source": "public abstract void RemovePending(PendingResourceCreation<TValue> pending);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "line": 27,
+      "source": "CollectExpired_NoLock(now, removed);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "line": 85,
+      "source": "CollectExpired_NoLock(now, removed);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "line": 109,
+      "source": "object slot = index.PreparePending(key, pending);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "line": 118,
+      "source": "index.PublishPending(slot, pending);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "line": 181,
+      "source": "CollectExpired_NoLock(now, removed);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "line": 239,
+      "source": "committed = CommitValue_NoLock(value, prepared, timestamp, pending);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "line": 278,
+      "source": "pending.Index.RemovePending(pending);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "line": 289,
+      "source": "pending.Index.RemovePending(pending);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "line": 302,
+      "source": "pending.Index.RemovePending(pending);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "line": 315,
+      "source": "pending.Index.RemovePending(pending);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs",
+      "line": 42,
+      "source": "creation.Index.RemovePending(creation);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "line": 38,
+      "source": "CollectExpired_NoLock(now, removed);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "line": 91,
+      "source": "ResourceCacheEntry<TValue>? CommitValue_NoLock(TValue value, PreparedResourceKeys<TValue> prepared,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "line": 98,
+      "source": "entry.Slots.Add(pair.Key, pair.Key.PrepareEntry(entry, pair.Value));"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "line": 105,
+      "source": "pair.Key.PublishEntry(pair.Value);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "line": 133,
+      "source": "void CollectExpired_NoLock(long now, List<ResourceCacheEntry<TValue>> removed)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "line": 202,
+      "source": "pair.Key.RemoveEntrySlot(pair.Value);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "line": 126,
+      "source": "index.ResetEntries();"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "line": 135,
+      "source": "object slot = index.PrepareEntry(snapshot[i], key);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "line": 136,
+      "source": "index.PublishEntry(slot); // This index is still private and unpublished."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "line": 215,
+      "source": "CollectExpired_NoLock(now, removed);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "line": 228,
+      "source": "committed = CommitValue_NoLock(value, prepared, now);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "line": 304,
+      "source": "CollectExpired_NoLock(now, removed);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "line": 335,
+      "source": "pending.Index.RemovePending(pending);"
+    }
+  ],
+  "attack_matrix": [
+    {
+      "attack": "Signed int.MinValue and equal-hash unequal stable keys",
+      "owners": "PreparedResourceMap.TryGetValue/Prepare/Publish; index entry/pending maps",
+      "assessment": "Original comparer hash is retained as signed int; no absolute-value overflow or key normalization. Dictionary<int,Bucket> routes equal hashes; user equality resolves collision within linked slots. Prepare rejects only actual equal keys.",
+      "credit": "STATIC_SUPPORTED; current collision-equality pair uses constant int.MinValue, native corrected run pending."
+    },
+    {
+      "attack": "Later secondary hash/equality preparation throws after a primary slot is prepared",
+      "owners": "ResourceCache.Resources.CommitValue_NoLock\u2192eachIndex.PrepareEntry\u2192allPublishEntry",
+      "assessment": "Every index slot, entry slot-dictionary capacity and owner entry capacity are prepared before any live index publication. A later callback failure leaves no linked slot in earlier live index; direct caller retains value, failed factory disposes uncommitted value.",
+      "credit": "STATIC_SUPPORTED; existing new admission pairs provide finite original source-specific failures, corrected native pending."
+    },
+    {
+      "attack": "Publication invokes user comparison or allocation after irreversible first publication",
+      "owners": "PreparedResourceMap.Publish; CommitValue_NoLock; pending reservation; AddIndex final metadata loop",
+      "assessment": "Publication uses only prepared slot links and int/reference/string-ordinal owner dictionaries with preallocated capacity. Current ordinary callbacks complete first. Under frozen integration and excluded fatal/OOM/reentrant/mutable-key contract, no remaining fallible user hash/equality/selector callback occurs during publication.",
+      "credit": "STATIC_SUPPORTED, not universal no-throw under arbitrary internal misuse."
+    },
+    {
+      "attack": "Bulk AddIndex fails after processing first existing entry",
+      "owners": "ResourceCache.AddIndex snapshot\u2192ResetEntries\u2192private prepare/publish\u2192version guard\u2192metadata publication",
+      "assessment": "The new index is still private during every comparer call. No existing entry.Slots references it until all private preparation and all metadata capacity preparation complete. Duplicate-key/preparation/version failure therefore cannot attach unpublished index metadata. ResetEntries clears abandoned prior projection slots before a retry.",
+      "credit": "STATIC_SUPPORTED; dedicated hostile comparator AFTER first projected entry lacks current13 causal coverage; Root additional paired fixture pending."
+    },
+    {
+      "attack": "Required clock/lookup fails after an earlier expired resource has already been retired",
+      "owners": "Get/GetOrAdd/Remove/Add/CleanupExpired/CompleteTimedCleanup\u2192CollectExpired_NoLock\u2192ReleaseEntriesAsync",
+      "assessment": "Operation-owned removed list exists before changes and is released in finally. Required public timestamp/elapsed errors remain caller errors; timed cleanup records/logs ordinary required-clock failure while tracked cleanup task and flag complete. Callback/disposal logging remains isolated.",
+      "credit": "STATIC_SUPPORTED; current lookup-after-expiration pair covers one public comparer failure; third TimestampFrequency read after first expired retirement and per-owner/periodic tests are pending mandatory acceptance proof."
+    },
+    {
+      "attack": "Hostile secondary comparer during committed retirement",
+      "owners": "RemoveEntry_NoLock\u2192entry.Slots\u2192index.RemoveEntrySlot\u2192PreparedResourceMap.Remove",
+      "assessment": "Exact linked slot is removed by identity without calling user hash/equality. Parent entry bookkeeping, key/value references and slot dictionary are cleared.",
+      "credit": "STATIC_SUPPORTED; current hostile Remove pair targets this, corrected native pending."
+    },
+    {
+      "attack": "Old invalidated factory cleanup deletes a new same-key pending replacement",
+      "owners": "ClearAsync/DisposeAsync/CompletePending/Invalidated/Canceled/Faulted\u2192RemovePending(pending)",
+      "assessment": "Each pending owner stores its exact slot. First removal nulls pending.Slot; later cleanup is idempotent. Replacement has another linked slot and cannot be located/removed by old key cleanup. Empty old bucket removal is harmless because old linked flag prevents second removal.",
+      "credit": "STATIC_SUPPORTED; LateOldFactory public gate case targets pending map after old cleanup, not only previously captured waiter tasks."
+    },
+    {
+      "attack": "Persistent originating comparer fails while pending factory completes",
+      "owners": "PreparePending/PublishPending/CompleteCreationAsync/CompleteFaultedPending",
+      "assessment": "Initial reservation failure disposes only created linked CTS before any creation operation count is incremented. After successful reservation, final cleanup removes by slot without further comparer calls, completes request/release TCS and disposes CTS. Rejected factory value is disposed once before terminal fault completion.",
+      "credit": "STATIC_SUPPORTED; owned original child can establish finite irreversible corruption only, no original task/cache join credit."
+    },
+    {
+      "attack": "Historical rejected keys/dead slots accumulate or retain resource/key graphs",
+      "owners": "PreparedResourceMap.Prepare/Remove/Clear; Entry.Slots.Clear; pending.Slot=null",
+      "assessment": "Rejected new-hash preparation does not insert a bucket. Last removal drops live bucket; every retired slot clears neighbors/key/value, entry slot references clear and pending slot nulls. Dictionary backing capacity can retain a historical peak but peak is bounded by configured live capacity plus preparation, not failed-attempt key history. Caller-owned attempts/index count/GC/RSS are not device RAM guarantees.",
+      "credit": "STATIC_SUPPORTED; no runtime heap/RSS or arbitrary-index-count claim."
+    },
+    {
+      "attack": "Middle/head/tail removal under collisions preserves remaining lookup identities",
+      "owners": "PreparedResourceMap.Remove",
+      "assessment": "Both neighboring links plus first/last are updated, removed links clear, and only an empty bucket is dropped. Current collision pair reaches head/tail disposal; a public three-distinct-key equal-hash middle-removal/reinsert case would strengthen branch evidence.",
+      "credit": "NONBLOCKING_TEST_GAP; no concrete defect identified."
+    },
+    {
+      "attack": "Treat generic prepared map as a multiple-outstanding-slot transaction",
+      "owners": "PreparedResourceMap.Prepare/Publish and all actual call sites",
+      "assessment": "Two unpublished same-hash new-bucket slots would reference different buckets; second publication is rejected. Two same-key unlinked preparations can pass duplicate checks before either links. Current integration avoids both: each live map has one prepared slot before publication under cache monitor; private bulk AddIndex prepares and publishes one row at a time. Do not generalize this helper to batching without revisiting preparation reservation semantics.",
+      "credit": "INTERNAL_CALLER_PRECONDITION, not an actual frozen-callsite defect."
+    }
+  ],
+  "test_and_acceptance_limits": [
+    {
+      "id": "CACHE-MAP-PROOF-BULK",
+      "priority": "mandatory_for_plan_acceptance",
+      "target": "ResourceCache.AddIndex failure during comparator preparation of later existing row",
+      "why_current_tests_do_not_prove": "Existing DuplicateProjection rejects in early duplicate preparation and merely checks GetIndex/count; successful projection and current13 direct/factory admission do not exercise failed bulk late comparer metadata.",
+      "recommended_public_oracle": "Two committed values; chosen stable comparator throws on later row preparation; prove chosen exception, absent named new index, both primary values/count/caller ownership, no subsequent unpublished-index callback on retirement, retry same index name healthy and exact disposal counts. Preserve original-native finite failure and corrected/native one-cause proof separately.",
+      "status": "Root is authoring/reviewing private paired R7; no code/native credit here."
+    },
+    {
+      "id": "CACHE-MAP-PROOF-CLOCK",
+      "priority": "mandatory_for_plan_acceptance",
+      "target": "Get/GetOrAdd/Remove/Add/CleanupExpired/periodic cleanup after first retirement in CollectExpired",
+      "why_current_tests_do_not_prove": "Current lookup comparer-after-expiration tests one later failure; existing clock-lockorder test invokes a nonthrowing timestamp callback. Neither proves partial multi-entry expiry release on later required elapsed-clock error or tracked periodic recovery.",
+      "recommended_public_oracle": "Two expired owned resources, required TimestampFrequency fails third read after first entry has passed MinAge/MaxAge and retired. Before primary-reference assertion, prove exactly one actual disposal/removal/eviction, remaining second undisposed and indexed/snapshot intact. Public callers preserve chosen source exception, incoming direct candidate stays caller-owned and factory never runs when fault precedes creation; healthy pairs and cache-owner joins. Controlled TimeProvider actual timer callback path must finish tracked cleanup and allow a later healthy pass.",
+      "status": "Root acknowledges and is authoring separate public/clock/timer fixtures; native pending."
+    },
+    {
+      "id": "CACHE-MAP-PROOF-COLLISION-LINKS",
+      "priority": "nonblocking_strengthening",
+      "target": "PreparedResourceMap linked middle removal/reinsert plus hash-boundary extremes",
+      "recommended_public_oracle": "Public secondary index with three distinct equal-hash keys, remove middle, both survivor references retained; then reinsert key and remove remaining ends. Existing int.MinValue equality pair covers one hash extreme but not all unlink positions.",
+      "status": "No runtime proof credited; static links inspected."
+    }
+  ],
+  "read_statement": "All19 private source bodies read completely, all eight modified-owner complete diffs to original canonical code read, all preparation/publication/identity retirement/partial-expiry integration callers inspected. New Direct439/Pending249 bodies were already fully read for requirement supplement and are re-bound here. Existing Contract duplicate/projection bodies and Generation timed-cleanup nonthrowing-clock body inspected specifically; oversized general test grep/generation print was truncated and earns no whole-fixture/read-closure credit.",
+  "native_credit": "Zero new native/correction/mutation credit: frozen status explicitly PRIVATE_DRAFT_NOT_CANONICAL_NOT_COMPILED_NOT_ACCEPTED. Original13 receipt/hash is context-only; its independent native review remains separate.",
+  "limits": [
+    "Ordinary stable key hash/equality; excludes fatal/OOM, changing key semantics and reentrant comparer guarantees.",
+    "Only frozen current integration supports callback-free publication/retirement; helper is not a general multiple-outstanding-slot transactional map.",
+    "Required clocks, observer serialization/await/fan-out/isolation/reentrancy rule and capacity/lifetime remain source-preserved; extra finite public/timer evidence is mandatory before plan acceptance.",
+    "No total caller RAM/device RSS, currentcoverage/CRAP/fullAPI A+/provider/cloud/hardware/CI/global acceptance.",
+    "Reviewer is internal read-only, no external product-team role, no source/test/proposal changes, no .NET/provider/process execution."
+  ]
+}

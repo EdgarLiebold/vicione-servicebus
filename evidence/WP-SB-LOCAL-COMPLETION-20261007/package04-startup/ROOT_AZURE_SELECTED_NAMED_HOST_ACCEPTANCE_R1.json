@@ -1,0 +1,40 @@
+{
+  "kind": "ROOT_BOUNDED_AZURE_SELECTED_NAMED_GENERIC_HOST_STARTUP_TEST_GAP_ACCEPTANCE_R1",
+  "status": "ACCEPTED_ORIGINAL3_WHOLE607_MUTANTS5_RESTORED6_AND_CANONICAL_FOUR_FILES",
+  "evidence_sha256": {
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-original-three-native-r2/RESULT.json": "418fbb273e29bb0671c5d95a31987a849f11e34e1c0281da337d8845c3735ed7",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-original-three-native-r2/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "a2e40c0a1614cc45da4ffd3bc0a1bc31e75812cb5add8615ca17a9a426532ccf",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-original-three-native-r2/package04-azure-original-three-native-r2-adversarial-r1.json": "8a6c37a9e2517e36deae8c17d9d8ec995f9a8a713dd1bd70dca8d73990bb69fb",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-whole-module-native-r1/ANALYZED_RESULT_R1.json": "93a9bc5e6ecf64b80d4bcad92aa5784272aaacfc32e6399458811282685a3790",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-whole-module-native-r1/package04-azure-whole-module-native-adversarial-r1.json": "d7cc7579208c7fe93ac89da1a5053871051cf51ac036c5f7996e369f5f0d353f",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-mutants-native-r1/ROOT_MUTANTS_PHYSICAL_BINDING_AGGREGATE_R1.json": "540a3d710c875fe5a237497773da4fdf69c1f873dd78fb328db4d7f4fd6fb99a",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-mutants-native-r1/ROOT_FIRST_FINITE_CAUSE_LEDGER_R1.json": "2cdd2802ce4dbf419c9769829dba88828c3373ac1516f6abd2ac97ccea88367e",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-mutants-native-r1/package04-azure-five-mutants-native-adversarial-r1.json": "0cad5335276401f97830c6086bd7bec8449fdd485a87f77c0da553a3253bdb7c",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-restored-original-native-r1/RESULT.json": "c255280912c0debe24edaa01c356f2a131e33b5090790bc52719ec7af29f55c8",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-restored-original-native-r1/ROOT_RESTORED_RUNTIME_BINDING_REUSE_R1.json": "b6716e4d900ba53dfbb10c198e2f254a86f00a8a92cd5a6ceb70ea7afeccf1ef",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-restored-original-native-r1/package04-azure-restored-original-six-native-final-adversarial-r1.json": "583e3ded4c6035e7adb15c1bcdda23506da0c38a510dcb23e8fce7ef185f8d33",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_AZURE_CANONICAL_FOUR_FILE_APPLICATION_R1.json": "06e8edd3ef0dab344ceb154d3abbb534acec3eaeda99f059392bee6a650fbee5"
+  },
+  "counts": {
+    "new_host_methods3_cases3": true,
+    "whole_module_reported_PASS": 607,
+    "whole_native_event_slots": 607,
+    "whole_unique_shortened_display_labels": 604,
+    "whole_failures": 0,
+    "whole_skips": 0,
+    "selected_original_neighbors": 6,
+    "repeated_mutant_slots": 30,
+    "first_finite_mutant_red": 14,
+    "healthy_mutant_controls": 16,
+    "restored_original_PASS": 6
+  },
+  "scope": "Selected named null/blank validation at actualGenericHostStart; default+otherinvalidunused names isolation and invalid second selectedbus beforebothcallbacks. PositiveURIhostcallback reaches exactownedpre-runtime sentinel. Existing Azureproduct registration alreadycorrect;4test infrastructure files only.",
+  "root_read_provenance": "Rootown full source fixture179/currentRegistration82/neighbor41/Hostingproject33/generatedlock693 andnew3Requirementrows read, entire5focusedmutantstdoutlogs +original3 +post6 +strictNativebuild logs untruncated. Whole607 raw mechanically scanned, bounded6startup/projection/collision/summary spans and2collisionmethodInlineData source personally consumed. Root13PE3256PDB original and65PE16280mutant proofs;post13PE exactRootownbyte/source-reuse explicitlynotfreshparse. IndependentreadingdoesnottransferRootreadcredit.",
+  "limits": [
+    "No607uniqueactualparameter-IDclaim; twoTheorydisplaycollisiongroups explain604labels",
+    "New3 includedwithin607/selected6, repeated30not30distincttests",
+    "No successfulAzurebroker/runtime/clientconstructorcensus/cloud/hardware/currentcoverage/globalAPI/globalA+grade",
+    "SDK/compiler/discovery/deadline/source-guard failedpreparations not productkills",
+    "OriginalCorecleanupfinding independently witnessed andopenuntilseparatefixnativequalification; frozen234auditrepairs/62externalobligations unchanged"
+  ]
+}

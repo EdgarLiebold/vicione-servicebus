@@ -1,0 +1,16 @@
+{
+  "kind": "ROOT_SQS_WHOLE428_NATIVE_QUALIFICATION_R1",
+  "actual_result_sha256": "e6b350971c1964afee847cdf977f65c567d4d2a5ce377def1def2e317c44c56f",
+  "native_pid": 63135,
+  "joined_exit0": true,
+  "actual_slots": 428,
+  "pass_slots": 428,
+  "skip_slots": 0,
+  "complete_focused11_labels_equal_fixed": true,
+  "projection_present_once": true,
+  "raw3_hashes_and_gzip_crc1": true,
+  "exact_fixed_runtime15_assets10_owners13_generated32_reuse": true,
+  "canonical6107_private6108_configuration14_guards": true,
+  "personally_read": "Selected native11 bodies, projection and actual native summary; no whole428 human body reread or fresh PE claim. Whole events mechanically parsed in entirety. Source/design and full117 counterdriver personally read separately; actual mutations still pending peer operational gate.",
+  "limits": "Bounded local module only; no cloud/HW/release/global closure."
+}

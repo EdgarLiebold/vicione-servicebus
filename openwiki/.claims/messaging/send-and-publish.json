@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:990ec50c30d4d2f48de395dc4e7d9dd188b74a4209394b54bebc8a24acf9017f",
+  "claims": [
+    {
+      "id": "claim_d6f4c37db6a04b2e911e5db01a1374ce",
+      "statement": "SendEndpoint wraps transport send with source/destination addressing, serializer selection and the send pipeline.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Transports/Sending/SendEndpoint.cs",
+          "version": "repo-file-v1:sha256:f94ac75798b406c4bf15da3df7e6a93679eec6ca6f765025270a28b8f961d2a6"
+        }
+      ]
+    },
+    {
+      "id": "claim_01a0e1b881004149bda8ac9a7864bc7d",
+      "statement": "SendOptions supplies message/correlation/conversation/request identity, headers, TTL and partition metadata.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Abstractions/SendOptions.cs",
+          "version": "repo-file-v1:sha256:cdb100f2729d4ceb000f0c3c0671547ed39696e9328c69162271be3b721f5f76"
+        }
+      ]
+    },
+    {
+      "id": "claim_45cd1ac5bf0341ab80729732b7b33c39",
+      "statement": "Receive-scoped outgoing operations follow active endpoint policy, including buffered/volatile/persistent capture boundaries.",
+      "evidence": [
+        {
+          "resource": "repo://docs/api/completion-boundaries.md",
+          "version": "repo-file-v1:sha256:589c15bf447df6dbf93a7465571cc673715ce7a6ee1ed23f91076d218f83365f"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Abstractions/IOutgoingMessages.cs",
+          "version": "repo-file-v1:sha256:e81ef024d0fb4f352131469f69fe796ec337413f3b057ed67ff7e3c145ee1e46"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

@@ -1,0 +1,560 @@
+{
+  "status": "ROOT_CURRENT_EF34_PLUS277_REQUIREMENTS_COMPLETE_OWNER_READ",
+  "prior_root_whole_read_sha256": "7d4b3ddbff54fc94318e39d6870a96462c00143bf0c543feda334e849b3bec93",
+  "current_rows": [
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ApiSurfaceGlobalUsings.cs",
+      "sha256": "1db6c20c1e230044ab8cd65cc0987439f583c726a4f03504fe6ca5dabeb782b9",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkJobServiceConfigurationTests.cs",
+      "sha256": "399622ffb3d049e88279e2579a4053a650c33db2c5cfbc1f61b850c3889b6f55",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkOptionsStartupValidationTests.cs",
+      "sha256": "6eeb77d6adc60f95abb344aa271d462495fba602f823a56918da82693abe10e8",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkOutboxObserverAdmissionTests.cs",
+      "sha256": "663cddd4406c450786782ffa34800e031cfc55193726859bcf0017d76d5f8ea8",
+      "read_by": "/root",
+      "basis": "Current Root entire text read untruncated this continuation"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkProviderConfigurationTests.cs",
+      "sha256": "cc13bf4f970c8f166b0e26b9285c3a63292beddd85242def538ff6297ad48d40",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkPublicArgumentValidationTests.cs",
+      "sha256": "065dce00e9fa5dac2d5e0470f0b80040dccf0acf3ddfbc4a8d1df4fb1a800e56",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkTestDatabaseNameTests.cs",
+      "sha256": "32708cd4a79feae8734c499bc3ae0969ba72de051b15d499535db6236a39879f",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkTimeProviderTests.cs",
+      "sha256": "bcddbd9dcc1f4cda31350ba2dd17783fa9609bf7b072ee74fc1d2ab2ff8feeec",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/JsonConversionContractTests.cs",
+      "sha256": "de7e0134a8627915730a75c647fff940f1e9fd4c79cbe04b95a60593c692d3ae",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/DurableSend/EntityFrameworkDurableSendDurabilityTests.cs",
+      "sha256": "3bf352027da460cc6a4871ab4cfd9f1fe160fd81ee5c0aaa2c9cba89bd3ef6b8",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/DurableSend/EntityFrameworkReliableStoreTests.cs",
+      "sha256": "bb6697997d80ec287b3671ffcb2576450853358c60ad05a10440dfefcb9f2ea6",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/EntityFrameworkCoreIntegration/EntityFrameworkExecutionStrategyTests.cs",
+      "sha256": "31ccd19879c7ed675498412408d8c5ebde58e5790beb0645822e6e8f2b03ed46",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/MessageJournal/EntityFrameworkMessageJournalModelTests.cs",
+      "sha256": "a2ec9c00423bb8ef966ef7e338615e0b1cfd2492be2d2410525d2df2393d5782",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/BusOutboxDeliveryTelemetryTests.cs",
+      "sha256": "2c746bb1071327ae4af830f20d3008204af0889fd8366bc6f1d208f240857f01",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/BusOutboxReliabilityStateTests.cs",
+      "sha256": "37e4b1839ceb5457871ad570fc67975dfca4a5aa6ae102bf5642c2dc490665ce",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/ClassicEfOutboxCancellationTests.cs",
+      "sha256": "0c266ad56e231a700e0dc839b254a5f3bd1ed1a71a4c70087a16f322ba40f68e",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkOutboxOperationsTests.cs",
+      "sha256": "9dc3428bb806943ef9e6b4b9175797eb7b678e8c593f82fdb1fe9e86ec3d39be",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkOutboxWriteCoordinatorTests.cs",
+      "sha256": "a10b06255690d70fcd6969dd22beb8e234c1831b347ca5425f4e3958c7bba3fa",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkReliableInboxPipelineTests.cs",
+      "sha256": "ffd9cdcd8d15d97fd049f4a69a842b6c516139055fc5c06bcbfe33dd76ccf04e",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkReliableMessagingRegistrationTests.cs",
+      "sha256": "ec11dff5eeae15f3d43339037fd646e8c36b6fd1b186fe7d662f82049fc637a4",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkScopedBusContextProviderTests.cs",
+      "sha256": "eda9456ad244db864f04b8d5003853f810dbdb9523274fa742503c066fb11eac",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkTransactionalOutboxSourceTests.cs",
+      "sha256": "d565057bfd90899d368bc16669895d8a91725e932f316018037f8ed12e91a689",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/EntityFrameworkTransactionalScopedBusContextTests.cs",
+      "sha256": "d7f02a27a67ffcdddd8c7783bd20f9797190c183c4da0be0be17869ea420a670",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/InboxCleanupServiceTests.cs",
+      "sha256": "ac9151e911cd0117cf680383fdee255cad48b74d30dd16e32191345cdbee641a",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/MessagePackOutboxReplayTests.cs",
+      "sha256": "ecca53658b2793b4736bff71d2d4192c9724fb6aa9dd23224d9dd8f526abc4fe",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/OutboxMessageFactoryTests.cs",
+      "sha256": "4e2cb25a0d0d2285f88b8728f713f23acb7a470f7fb845b02f72efe10892708d",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/OutboxMessageTests.cs",
+      "sha256": "c5f3753c5744ea8ac9d5e579ea427ccf591bf58a411e91db14c815a8ed69bf20",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+      "sha256": "eecd0f7428421a48bf2c9f104820723764154af8ab61f18fb84240e95f1d6711",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/DbContextSagaRepositoryContextTests.cs",
+      "sha256": "b63be48a54517886059c42ff6b7e658e46f0a09d13913638ae66eb131bfbb561",
+      "read_by": "/root",
+      "basis": "Current Root entire text read untruncated this continuation"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/EntityFrameworkSagaRepositoryFactoryTests.cs",
+      "sha256": "e2ba79021011bd50a55f492d74d56e5bb9200b3bdbc2a9ca7f01378d85b66e3f",
+      "read_by": "/root",
+      "basis": "Current Root entire text read untruncated this continuation"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/EntityFrameworkSagaRollbackFailureTests.cs",
+      "sha256": "e82bb899fc49f571f26d7f310d476e49729d513204db0aa4a5c52e57619c1330",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/SagaClassMapTests.cs",
+      "sha256": "c6d4ac87e2551f1de5337de754f3ac2d94f71a937ab83280d61bfbf52012c064",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Saga/SqliteOptimisticSagaConcurrencyTests.cs",
+      "sha256": "c3690aea62dd525bf966aa0346dd9f54eeb31d8e5e7d9d757eb7d64f0bd5aec3",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    },
+    {
+      "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/SqlLockStatementProviderTests.cs",
+      "sha256": "2a562f5604fce0c227c4c07548523cefb0cb28009dcbca607fe82c49cb006903",
+      "read_by": "/root",
+      "basis": "Prior Root whole read exact current hash reuse"
+    }
+  ],
+  "required_manifest": {
+    "path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Requirements/EntityFrameworkRequirements.json",
+    "sha256": "78c39c3b14e5701391527eb1e13ed89f256130f63d29009126a88ded089b4bb4",
+    "rows": 277,
+    "read_by": "/root",
+    "basis": "All277 indexed five-field records lossless compact read; shared assembly/typeprefix stated"
+  },
+  "shared84_exact_current_hash_reuse": [
+    {
+      "path": ".editorconfig",
+      "sha256": "620cf8f37fd9c45ae51dccf0ddadca145d1bb44daacd3b092e1a910444646f66"
+    },
+    {
+      "path": ".gitattributes",
+      "sha256": "c17b2e3401aac308943eefaffa5316a3110445858bf848917a7a774e232020aa"
+    },
+    {
+      "path": ".github/workflows/native-tests.yml",
+      "sha256": "2cd77f10f95e87fea7c5bbefcae9908adadb5dd27f7add3e289898100a10406d"
+    },
+    {
+      "path": "Directory.Build.props",
+      "sha256": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf"
+    },
+    {
+      "path": "Directory.Build.targets",
+      "sha256": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1"
+    },
+    {
+      "path": "Directory.Packages.props",
+      "sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e"
+    },
+    {
+      "path": "NuGet.config",
+      "sha256": "3f6cda87abdfbc3e7f7a80906f21b11009ac811c70834dfdbc4840db01a9ce93"
+    },
+    {
+      "path": "README.md",
+      "sha256": "1a6fb626c4b2d2523298a62e8f2c148e969fc21df3d8a058d3a4a2dfe069a83a"
+    },
+    {
+      "path": "ViciOne.ServiceBus.Engineering.slnx",
+      "sha256": "bc11986b349179fc182a6cf8ef222f269d09d8f3361b27a72c2db675ec3fee72"
+    },
+    {
+      "path": "ViciOne.ServiceBus.Tests.Unit.slnx",
+      "sha256": "ac102688f92ab8ee214af159e05703a6d0bc43dde268efe78c4ca41e82f45091"
+    },
+    {
+      "path": "ViciOne.ServiceBus.slnx",
+      "sha256": "1977742d6c335f003ea6d556a61b8c725993dae81abfe2b81432da9128d8f070"
+    },
+    {
+      "path": "ViciOne.ServiceBus.snk",
+      "sha256": "d8556825164fad48714aa53b243a704787add3646fcaef42c1740eba37e9f303"
+    },
+    {
+      "path": "global.json",
+      "sha256": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93"
+    },
+    {
+      "path": "signing.props",
+      "sha256": "71a2cc9a5b04a60ea4093aa41824f275ad7cf5d87f4a8866a09990450ec2e411"
+    },
+    {
+      "path": "src/Directory.Build.props",
+      "sha256": "be8359cbeaf46760b90b3755da645aeb7b4a786af8f0fd6db9396d21f6e67911"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "sha256": "fc0b486dd4aa4c78487b1e0fa9f56c546cf1c27e0499d9e1f403f26923d54fbb"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/packages.lock.json",
+      "sha256": "03eeadc5ef377c17f787ab65f41fb4c8a9c936bb7f7f4171111fdeec8a81cb46"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+      "sha256": "3f04063a3393b887bc0d1b666c73e7f4375e73860b8d6b7640960d559913adad"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/packages.lock.json",
+      "sha256": "86765fee52d3b678b0284dcb4e4b3ce29040f0f50ef2cbd06b34d1768396c1d0"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+      "sha256": "8fe3e90f79ab15806ba2fd38e37e717f02a75eafa5b4c05f08b9ee63dd57ea18"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Futures/packages.lock.json",
+      "sha256": "9f0d542ac05088157738f3a4e312168895e97f0b758b7998d2c11107280dad02"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj",
+      "sha256": "16d4e0c3ae2688b32231a0139ef2c6a47baefe670d260703054d73d83eb1d443"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Initializers/packages.lock.json",
+      "sha256": "86765fee52d3b678b0284dcb4e4b3ce29040f0f50ef2cbd06b34d1768396c1d0"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj",
+      "sha256": "8212a7535e1eb020e3b0a4f52d4e49443976acd30b7c0a5a3339d1610fb91f01"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.JobService/packages.lock.json",
+      "sha256": "af5e5dbd69748d534f399e6d87afb9285147054a8b3df4094015e9423d3dd239"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+      "sha256": "5594cd1825e0998de96fa6d78a5995ad36e949fa54cdcd75cf02de181877d023"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Mediator/packages.lock.json",
+      "sha256": "86765fee52d3b678b0284dcb4e4b3ce29040f0f50ef2cbd06b34d1768396c1d0"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+      "sha256": "a6d0faa1c1f4065a2a95f49d92ff643cab6de89f9b5c62bb30980b60009e7a77"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/packages.lock.json",
+      "sha256": "eae729ac7ee049d15a83ac5e54dbc26cc4c148b252db538609c1303c07f758ab"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+      "sha256": "1e90e8eedf73e374ffb0a4bb145fd4d1cf4a94cdd05b65c29d440a41f8b90603"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/packages.lock.json",
+      "sha256": "8e91f165afa3f9fdfd56e070b75a25061222765e992e9caf27d64713a1ab815b"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "sha256": "382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/packages.lock.json",
+      "sha256": "9e662b8bebadccac8b2e96c2db3a2694e922596877fcb1de9b95e4721f6c61cd"
+    },
+    {
+      "path": "tests/Directory.Build.props",
+      "sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8"
+    },
+    {
+      "path": "tests/Directory.Build.targets",
+      "sha256": "3a866a9a26434dcca1aaf6d61a8d2afc84960f21ceee810b5b825f1ecdd7fdb1"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers/BrokerOutageControlClient.cs",
+      "sha256": "fcc2f6f41067c741561876cd1c7f21554397849303358de2907f9e3b0e2a1370"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs",
+      "sha256": "a8192e1d3b520714ee1a732505a26a740e06ae073a6f303972a17aefaf328206"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs",
+      "sha256": "14ec1d7a56de88968a8bbbb25bb578c50fef16bfb9a4dd078780fbd6e6534c83"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Databases/TestDatabaseName.cs",
+      "sha256": "0cbef22e6e824fbf72de4b7d16cea1fab71fe4c59c03966cf04edd853daeee18"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs",
+      "sha256": "d78d054d54468692e35500dca6c90e706e6a77bfcbb7d1878bcb4bc97fba4e9e"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs",
+      "sha256": "130f488a8ff8ddc7d43561f77f6188e5d3088de109aef1ba588c454e73180c66"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+      "sha256": "954d1e414f5ad15239213b69d4d6e0dd7bb71fff95d8ce81616f49f991d11656"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json",
+      "sha256": "aef4c037696049b2f689024c6407dab31fe6d8d65594580bde74917261ac7d76"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ApiSurfaceGlobalUsings.cs",
+      "sha256": "35832a2f279237fbe0e7adc762bbeb566d3f5b1b998389ceb04e3d0b9777c8e1"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs",
+      "sha256": "ab5934a4fb8e642f631ceb9f1c7cb5593565c5efca1131041e9a6dbcad744e02"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs",
+      "sha256": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs",
+      "sha256": "4ff7066cdd86cda1ea8e3890e4e6e437be99c4690192aeae750e392133ac2f96"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryConsumerCommitTestDriver.cs",
+      "sha256": "d85c1411aa5107ffde60c9dced298e16c3ecc862d4c9aee96d3817f47900703d"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryInboxPipelineTestDriver.cs",
+      "sha256": "6a9919dae8a87bac8ba04e921d6dd504afa16712c8e20534d9cabf6c76e8229d"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Events/HostReadyEventTestDriver.cs",
+      "sha256": "c19ec68977034c7fed3736c0ad3bbe7aa0c01a454b00f64537153a7f740f3c18"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxCheckpointDriver.cs",
+      "sha256": "5298150f303bc6b4d0fa30ff9a68dea14fa4334c72299e53988121c4139011e4"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs",
+      "sha256": "d418b48fcfab4651883083f6cef6a642c076a296fc0dd79758d046e59a17ad12"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/OutboxConsumerIdentityTestDriver.cs",
+      "sha256": "2e4ae978decb1f63b3456a77f3c08d38e3e083b9cd40131b9f7c58001fff221d"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Initializers/InitializerConventionRegistryTestDriver.cs",
+      "sha256": "4d44deb119926f67ca14b3ce7a944cea5cfaa6b9098078b80d51f87ff2878cb4"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Internals/ReflectionImplementationTestDrivers.cs",
+      "sha256": "a23bbb90452db6f9a76b8e168b48bcafece435260daee7f1c2cb554659cbe6a7"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs",
+      "sha256": "06c55acde94dca39c78655175fd381f55488a348ae46ed9f3858be657a7d7960"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalEntryTestFactory.cs",
+      "sha256": "ac018f767c496f22a58fc529d53b773176e0471141f7954dcb7f2b7cab6dbd0a"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs",
+      "sha256": "789980d42226b6c1938dd5c0222ee1057d42bea3fabd6e7f98249515cef480bd"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs",
+      "sha256": "80587a0e121646e103d4700c6707919e748dd5d1635e90eac3ec98ba9d2d0c08"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/OutboxTelemetryTestDriver.cs",
+      "sha256": "ac51a79581afbe888d74a0c12245d66fbb428f105a5c309f1dff93767a7c0be2"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Operations/ProbeResultBuilderTestDriver.cs",
+      "sha256": "0657cc0ce032c70257ca95fd18d3cf1fa7b3c80cb4a77c198699298cef86ead7"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Rescue/RescueContextTestFactory.cs",
+      "sha256": "672c8bd230b4f0ac01574f52e559a7dc4f93ef48c328301de0b26dec10b21b74"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Retry/RetryFilterTestFactory.cs",
+      "sha256": "c230acd666687c6e70319de6aa581ce20add2c455e0f2c7e1761775d97509055"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Runtime/ServiceBusRuntimeLifecycleTestDriver.cs",
+      "sha256": "155a66607a8c85646bea342904e86fe7606dd8cea017b175328f93bc4391dee4"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/SagaStateMachine/SagaStateMachineExecutionTestDriver.cs",
+      "sha256": "79f741e8b9fc718c86fda5c8a333c7da0ba55e507d0b2645d378b1aa9193d98f"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs",
+      "sha256": "ac92cde6bf4efc46451bb85f8ec514fca7afafbb982feaaac8aa8328f1625f22"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/PayloadAdmissionSerializationTestDriver.cs",
+      "sha256": "c0699d7fa459b2fbf9cdb7bccc05fccfbdb8f5d73a1f284a25fa08615c306ec1"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Topology/GlobalTopologyTestDriver.cs",
+      "sha256": "32db4639f1d698578cbe75bea5f94d43ccfe2927163290dc4dd33d4b9850f392"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionBusTestDriver.cs",
+      "sha256": "faa22502a108b193f1592ba1f1f9eda5320c254bc07da3007d9d943b265a94a4"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionNotificationTestDriver.cs",
+      "sha256": "8e36b57dae4f54a9399f99827b9308414bc8a948a35c7db79966055dca9342c1"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/BufferedBusTestDriver.cs",
+      "sha256": "6e7f2318d2f2afbaa7acee1867842145db4f883751c8a6eb08939127f6ae218d"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs",
+      "sha256": "bad849fbe21adccb3bbc1a16bfa700ff90bf1203110f6650041e746f030db9b0"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/UnusedBus.cs",
+      "sha256": "f689f18d739607feac64adf96c1ad112a33cdc167a5dc05f51a0b09d5fe89596"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/AsyncBusHandleLifecycleTestDriver.cs",
+      "sha256": "29fe423859ac06922d90c0e4d00a186a0de7f123f279963361a674bfb2a4bddf"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/BusDepotTestDriver.cs",
+      "sha256": "2501d5e0fe70942b4539158d711bf9aa17326237248b70574dc72c2e087fc72e"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs",
+      "sha256": "2cbd0652ebc77f9defb1bad0fc9deb3c2a125f925e913748b53520366b99fe95"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/ReceiveMessageLimitsTestContext.cs",
+      "sha256": "d36b449f057befd98796a4c361ec5d42ecbd6651ddfcf6baa069feb047fe6f64"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/RiderCollectionTestDriver.cs",
+      "sha256": "ea4d9d5fcb7451746683f6f4d924e12b249964bcdae23d99dbeb74442fb6db6c"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+      "sha256": "f79459b8d6dc2fd119935f425fa0284caa4592a8cb04fb79fd2e732d8db76f2d"
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json",
+      "sha256": "43949251eee801841536031e9d9f8405b562e4db8d409b84bb73e217e54226ef"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/packages.lock.json",
+      "sha256": "d375ff4c06a3b00d9f80a63a8eada1a62bb720261742ad6be7cfbcffc5fdab30"
+    },
+    {
+      "path": "tests/testconfig.json",
+      "sha256": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f"
+    },
+    {
+      "path": "tests/testsettings.json",
+      "sha256": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7"
+    }
+  ],
+  "project_current_entire_read": [
+    "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ViciOne.ServiceBus.EntityFrameworkCore.Tests.csproj",
+    "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj"
+  ],
+  "limits": "Owner author read only; no EF native newtest/fix acceptance. Research exact factory/transactional source wholeRoot57 reuse and required notification context inspected separately. No agent reading transfer."
+}

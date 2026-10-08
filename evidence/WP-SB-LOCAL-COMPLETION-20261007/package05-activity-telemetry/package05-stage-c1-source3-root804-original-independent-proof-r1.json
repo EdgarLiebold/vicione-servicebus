@@ -1,0 +1,33 @@
+{
+  "status": "READ_ONLY_CURRENT_SOURCE3_ROOT804_84_REQUIREMENT_PREFIX_AND_ORIGINAL_ARTIFACT_HASHES_VERIFIED",
+  "freeze_sha256": "2dd0aaecb248a1b5595289a50a6bc8db8a10866806422ce332550db44defec58",
+  "corrected_owner": {
+    "path": "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs",
+    "sha256": "a69ec12a095f6201e603e1ff5be0128ec0d4bfec4202a0f03243666b1f8c6802",
+    "whole_lines": 442,
+    "original_sha256": "2422998fb8458a9f1916d759b99d523a7d13d9e1b51f9fc5d1d43108d31e5614",
+    "original_lines": 433,
+    "only_StartProcess_changed": true,
+    "exact_generated_patch_matches_frozen": true
+  },
+  "current_Core_owner_rows": 804,
+  "priorRoot803_unchanged_rows": 802,
+  "one_added_whole219line_owner": "tests/ViciOne.ServiceBus.Tests/Monitoring/MessageProcessingMetricPreparationIsolationTests.cs",
+  "one_changed_requirements_owner": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+  "unchanged_shared84": true,
+  "extra_context_hashes_all_match": true,
+  "ordered4692_prior_semantic_rows_preserved": true,
+  "one_appended_purpose_row": {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "Handler_PreservesOutcomeAndIndependentMetricsWhenDiagnosticPreparationThrowsAsync",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.MessageProcessingMetricPreparationIsolationTests",
+    "variantKey": "process-metric-balance-survives-optional-preparation"
+  },
+  "unique_rows": 4693,
+  "unchanged_test219_and_requirement_hash_from_original_freeze": true,
+  "Root804_receipt_sha256": "fee48418d451623472df9b35c86f8de5ec66f8ca684cb3810268f6776cbda1c4",
+  "original_raw_hashes_count": 4,
+  "original_runtime_hashes_count": 16,
+  "no_PE_PDB_graph_qualification_or_Root_personal_read_transfer": true
+}

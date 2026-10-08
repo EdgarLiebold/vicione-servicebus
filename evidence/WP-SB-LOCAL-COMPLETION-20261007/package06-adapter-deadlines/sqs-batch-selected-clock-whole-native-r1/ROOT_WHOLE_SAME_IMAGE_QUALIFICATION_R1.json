@@ -1,0 +1,19 @@
+{
+  "kind": "ROOT_WHOLE_SQS437_ACTUAL_QUALIFICATION_R1",
+  "result_sha256": "1a79ed933d065582364065a145772512f4d405da9856cc290c29ab8970c66a44",
+  "actual": {
+    "total": 437,
+    "passed": 437,
+    "failed": 0,
+    "skipped": 0
+  },
+  "unique_labels": 437,
+  "fixed_nine_exact_label_subset": true,
+  "all15runtime_fixed_archive_live_exact": true,
+  "assets10_source3_config15_original_runtime_guarded": true,
+  "physical_references": [
+    "291d13acf5313c152f9b6e025c5604329e7c0cf53302b0965e2974cf3fb0bb24",
+    "0a41460dd4e80c3ff93225f5528495bbc8276fc5b2f643d44648519e9b0492da"
+  ],
+  "limits": "Qualified byte-identical fixed10PE2999/216 reuse, no fresh Whole PE parse; no controls/post/canonical/global/cloud/HW claim."
+}

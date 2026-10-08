@@ -1,0 +1,61 @@
+{
+  "kind": "ROOT_EF_NEXT_PACKET_BOUNDED_SOURCE_READ_NAVIGATION",
+  "whole": {
+    "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurator.cs": {
+      "sha256": "a362a802130391ba6da74d6b666f223f082ea7500cd73ddd97d9776a5fd55704",
+      "content_lines": 173
+    },
+    "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkBusOutboxConfigurator.cs": {
+      "sha256": "08908a05eece71591d80f8414d3374fab9b0e6449dbe8ed1af2a5c5a5dde0084",
+      "content_lines": 195
+    },
+    "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/InboxCleanupService.cs": {
+      "sha256": "073288c25cf1c2acebed89cf420cfa761b7fe432dc41c71d09ca30232fdc5651",
+      "content_lines": 181
+    },
+    "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxOptions.cs": {
+      "sha256": "5092d2a77dabb407f9ad1e909737860b639ca49ff63e5bfd705a85976f8a49e8",
+      "content_lines": 16
+    },
+    "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ViciOne.ServiceBus.EntityFrameworkCore.Tests.csproj": {
+      "sha256": "9bd99c90560e9786a2f4a147d052acaa1628a636c8d9c1e4f7cbec5f51d52ecc",
+      "content_lines": 36
+    }
+  },
+  "partial": {
+    "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkTransactionalOutboxSource.cs": {
+      "sha256": "67aa72ab20c2f4789975e1c77c503fd614ebce2e5a736f0771e1a4fe9dad28bd",
+      "personally_read_spans": [
+        [
+          1,
+          180
+        ]
+      ]
+    },
+    "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurationExtensions.cs": {
+      "sha256": "9f446ca009eea0316734cee21dd6081791d880f535abfba1a7a7a46f8db38388",
+      "personally_read_spans": [
+        [
+          1,
+          165
+        ]
+      ]
+    },
+    "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkProviderConfigurationTests.cs": {
+      "sha256": "cc13bf4f970c8f166b0e26b9285c3a63292beddd85242def538ff6297ad48d40",
+      "personally_read_spans": [
+        [
+          210,
+          330
+        ],
+        [
+          525,
+          585
+        ]
+      ]
+    }
+  },
+  "research_reference_sha256": "8bded594d53586cfccf3b1fec5540fa8b8946d65f806e3242071ec888b58ec36",
+  "next_scope": "Actual GenericHost EF selected lock-provider/inbox poll/scoped retry three invalid overrides plus actualSQLite healthy typed owner/unusedpoison. Host.Stop remains separate primarycleanup oracle. Eager selected hosted/source constructors may reveal additional cleanup failure; no predeclared absence.",
+  "limits": "Source navigation while OriginalR2 independentreview is pending. No design acceptance/new fixture/code/native/EF closure. Partial bodies confer only selected-span read credit, no peer source-read credit transfer. More transitive owners/helpers/model/task ownership and required test skill plan must be read before authorship."
+}

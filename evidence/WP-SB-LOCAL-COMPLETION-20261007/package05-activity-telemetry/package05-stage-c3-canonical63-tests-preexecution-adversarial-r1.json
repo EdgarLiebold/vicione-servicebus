@@ -1,0 +1,582 @@
+{
+  "status": "READ_ONLY_C3_CANONICAL_436LINE_63CASE_SUCCESSOR_FIXTURE_PREEXECUTION_NO_BLOCK__NO_NATIVE_OR_PRODUCT_FIX_CREDIT",
+  "reviewer": "/root/telemetry_adversarial",
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs": "9485f801ae7070c88bf19ecc7f9c31e7a9b98bb40bf4a17d443fdcf769d190c6",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C3_DELIVERY_CLOCK_RESEARCH_PLAN_R1.md": "ee65a8e2c376aa9be2071fd91080e37675619e03415de7e01b87dbc555eb39ec",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c3-bounded-delivery-research-adversarial-r1.json": "709ab57e155b12f3cdcb4809c98b89e64c8c9d559c5a12aa021ce28e919edc5c",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C2_ACCEPTANCE_R1.json": "2b235155ea2dfb43d8aac04179aca1e8f98f9f71a11148b7bc50f5d8fa3a726d",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c2-final-native-artifact-review-r1.json": "85a2536118e1325e17614d1817d236d04bceed780799596e7ff983dd60ee3788",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C3_TEST_ONLY_ORIGINAL_FREEZE_R1.json": "84b4854b32d7067e7e697ab988d6706b32b7a3820cc7e5d2c941ccef02d256d8",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE806_STAGE_C3_READ_CLOSURE_R1.json": "c5e1ffad7cc33701ee453539c5ae7f79b45a0e2b282cd41223d8b4d8e19d48a6"
+  },
+  "checks": {
+    "prior28_source_API_build_fullread_hashes_unchanged": true,
+    "whole_current_fixture436_read_bound": true,
+    "57_diagnostic_plus6requiredUTC_63cases": true,
+    "realSPI_forwarder_no_reflection": true,
+    "captured_actual_inner_bool_asserted": true,
+    "exact_transition_identity_lease_token_fields": true,
+    "retry_failedAt_now_preserved": true,
+    "actual_race_public_C2_completion": true,
+    "actual_timeout_await_state_dueEpoch_attempt1": true,
+    "chosen_initial_reference_pre_dispatch_retainedstate_checks": true,
+    "actual_transition_and_snapshot_before_final_elapsed_outcome": true,
+    "requiredUTC_exactprimary_control_no_transition": true,
+    "timeout_requiredUTC_valid0_other5known7": true,
+    "counter1_exact_tags_known7_or_no_histogram": true,
+    "all_async_batch_promises_awaited_no_worker_timer_wait": true,
+    "meter_observation_disposes_before_driver": true
+  },
+  "prior_fullread_inventory28": [
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "sha256": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+      "lines": 191,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND",
+      "current_sha256": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "sha256": "551075235d378635bc7a9ffc7729cc9b348cd1b7b1b53fd662bf9bd7452ccb2f",
+      "lines": 194,
+      "Root_read_reuse_basis": "ROOT57_EXACT_PRIOR_FULL_OWNER",
+      "current_sha256": "551075235d378635bc7a9ffc7729cc9b348cd1b7b1b53fd662bf9bd7452ccb2f",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "sha256": "158dceacfcfe2a05effc59b02c79efa67e6664a02fd80bad29ecb00715d96ba8",
+      "lines": 84,
+      "Root_read_reuse_basis": "ROOT57_EXACT_PRIOR_FULL_OWNER",
+      "current_sha256": "158dceacfcfe2a05effc59b02c79efa67e6664a02fd80bad29ecb00715d96ba8",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "sha256": "0658c31e41c2cc96aeae7f33948a046b49189c263580df97a1fe71414594dcb9",
+      "lines": 202,
+      "Root_read_reuse_basis": "ROOT57_EXACT_PRIOR_FULL_OWNER",
+      "current_sha256": "0658c31e41c2cc96aeae7f33948a046b49189c263580df97a1fe71414594dcb9",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs",
+      "sha256": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21",
+      "lines": 134,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND",
+      "current_sha256": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+      "sha256": "8a01e6f31430b513cea4f35072778ae70a3927d7e71eb6837fc858d9bd2c6404",
+      "lines": 65,
+      "Root_read_reuse_basis": "CURRENT_C2_FIXED_PRODUCT_READ_ATTESTATION_PENDING_NATIVE_ACCEPTANCE",
+      "current_sha256": "8a01e6f31430b513cea4f35072778ae70a3927d7e71eb6837fc858d9bd2c6404",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingProviderGuard.cs",
+      "sha256": "0c3a96b9115fef19f138533be24b111265b66508d03998d7ea4d808f34fb9b4d",
+      "lines": 128,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND",
+      "current_sha256": "0c3a96b9115fef19f138533be24b111265b66508d03998d7ea4d808f34fb9b4d",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.cs",
+      "sha256": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc",
+      "lines": 127,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY",
+      "current_sha256": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Outbox.cs",
+      "sha256": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72",
+      "lines": 320,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY",
+      "current_sha256": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "18bcafb43ebe38b70e004864d7efd2e997426f180d29967402d4b754df808302",
+      "lines": 561,
+      "Root_read_reuse_basis": "CURRENT_C2_FIXED_PRODUCT_READ_ATTESTATION_PENDING_NATIVE_ACCEPTANCE",
+      "current_sha256": "18bcafb43ebe38b70e004864d7efd2e997426f180d29967402d4b754df808302",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/SafeActivityScope.cs",
+      "sha256": "542b4841562b4445fc89ad0d06ae121633b51375d9ab241378ec0aece767b2eb",
+      "lines": 65,
+      "Root_read_reuse_basis": "ROOT57_EXACT_PRIOR_FULL_OWNER",
+      "current_sha256": "542b4841562b4445fc89ad0d06ae121633b51375d9ab241378ec0aece767b2eb",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/DurableSendDeliveryOutcome.cs",
+      "sha256": "a2e7a8b5e75f9bfad968743804c3666bd50597471f8281bbfa3fa82619660840",
+      "lines": 23,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND",
+      "current_sha256": "a2e7a8b5e75f9bfad968743804c3666bd50597471f8281bbfa3fa82619660840",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingPolicy.cs",
+      "sha256": "8641f388275391cc57c72dc9fc9a49b860a3c98edde716ebc6a639a1db82c5a9",
+      "lines": 16,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND",
+      "current_sha256": "8641f388275391cc57c72dc9fc9a49b860a3c98edde716ebc6a639a1db82c5a9",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs",
+      "sha256": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417",
+      "lines": 119,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND",
+      "current_sha256": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IOutboxStore.cs",
+      "sha256": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6",
+      "lines": 155,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY",
+      "current_sha256": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendDispatcher.cs",
+      "sha256": "47f679ff9cf7564b4bd1a57dcc7ae661f1336a54acf243613173e179c0a18b4c",
+      "lines": 24,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND",
+      "current_sha256": "47f679ff9cf7564b4bd1a57dcc7ae661f1336a54acf243613173e179c0a18b4c",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDelivery.cs",
+      "sha256": "4345e43534aa1b6da7753e1723b81cae3067d6e4708edd4fb372012142365e2d",
+      "lines": 46,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY",
+      "current_sha256": "4345e43534aa1b6da7753e1723b81cae3067d6e4708edd4fb372012142365e2d",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchContext.cs",
+      "sha256": "6a9b7e31ae5a53d4321d28b953287f790d0fe1841ebdb9fafd9b9fbf2f24c94f",
+      "lines": 50,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND",
+      "current_sha256": "6a9b7e31ae5a53d4321d28b953287f790d0fe1841ebdb9fafd9b9fbf2f24c94f",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchResult.cs",
+      "sha256": "c893789c5529d7629cc9bdee017221e218285254e63da661597da074d70544a9",
+      "lines": 27,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND",
+      "current_sha256": "c893789c5529d7629cc9bdee017221e218285254e63da661597da074d70544a9",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendCompletionMode.cs",
+      "sha256": "7a14471296d353916f2b2349cfec1aabcaa3a79024451c2a72bfa1ef31d697a3",
+      "lines": 20,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND",
+      "current_sha256": "7a14471296d353916f2b2349cfec1aabcaa3a79024451c2a72bfa1ef31d697a3",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendFailureKind.cs",
+      "sha256": "020874905a000f23311fdc7e7c33613d26ab64013fb3adb75cc6b68d805786b5",
+      "lines": 26,
+      "Root_read_reuse_basis": "ROOT_PERSONAL_EXTRA_FULL_READ_NEEDED_IF_NOT_ELSEWHERE_BOUND",
+      "current_sha256": "020874905a000f23311fdc7e7c33613d26ab64013fb3adb75cc6b68d805786b5",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs",
+      "sha256": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74",
+      "lines": 86,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY",
+      "current_sha256": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs",
+      "sha256": "4ff7066cdd86cda1ea8e3890e4e6e437be99c4690192aeae750e392133ac2f96",
+      "lines": 25,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY",
+      "current_sha256": "4ff7066cdd86cda1ea8e3890e4e6e437be99c4690192aeae750e392133ac2f96",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderDeliveryTests.cs",
+      "sha256": "d1a2553111cf63c9d272266a5d2644e76f7060e1e8a34fc7fa7aa9a19e432029",
+      "lines": 874,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY",
+      "current_sha256": "d1a2553111cf63c9d272266a5d2644e76f7060e1e8a34fc7fa7aa9a19e432029",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs",
+      "sha256": "41c159a7730682a1c30d57d6c7e1c81c430fba11d9a9fb70ff827df85c7fb8ee",
+      "lines": 102,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY",
+      "current_sha256": "41c159a7730682a1c30d57d6c7e1c81c430fba11d9a9fb70ff827df85c7fb8ee",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "tests/Directory.Build.props",
+      "sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8",
+      "lines": 51,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY",
+      "current_sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21",
+      "lines": 46,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY",
+      "current_sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21",
+      "unchanged_prior_fullread": true
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+      "sha256": "f79459b8d6dc2fd119935f425fa0284caa4592a8cb04fb79fd2e732d8db76f2d",
+      "lines": 14,
+      "Root_read_reuse_basis": "ROOT805_SHARED_OWNER_OR_EXTRA_EXACT_PRIOR_FULL_BODY",
+      "current_sha256": "f79459b8d6dc2fd119935f425fa0284caa4592a8cb04fb79fd2e732d8db76f2d",
+      "unchanged_prior_fullread": true
+    }
+  ],
+  "additional_fullread_API4": [
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Transports/ITransportSendFailureClassifier.cs",
+      "sha256": "53133b7b9b87ead3d361c718e96b82ba17696cd2fcd217a1547e6652ff2b945a",
+      "lines": 27,
+      "read_basis": "Entire body independently read this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendLease.cs",
+      "sha256": "82ecace9c57247e84c10a68a3f2105f05f35754fdf5b17ea2adf2efddbb1e0d8",
+      "lines": 26,
+      "read_basis": "Entire body independently read this turn"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendStoreSnapshot.cs",
+      "sha256": "1578782accb4f5fc0a2bcfd902ba2c1dbe762255bca61abb9ec8816fe14d4a58",
+      "lines": 72,
+      "read_basis": "Entire body independently read this turn"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/OpenTelemetryGlobalCollection.cs",
+      "sha256": "bf37ae4bc28f82905a7cbc8663b440ed2d81f6d41247418b717ff3b48ff37df6",
+      "lines": 13,
+      "read_basis": "Entire body independently read this turn"
+    }
+  ],
+  "fixture": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs",
+    "sha256": "9485f801ae7070c88bf19ecc7f9c31e7a9b98bb40bf4a17d443fdcf769d190c6",
+    "lines": 436,
+    "wholebody_read": "Entire current strengthened successor consumed independently",
+    "route": "Signed public friend driver invokes real internal DeliverDueBatchAsync and actual public SPI/dispatcher/consumer-completion APIs. No actual hosted service/bus adapter/provider integration credit."
+  },
+  "case_matrix19": [
+    {
+      "scenario": "TransportAccepted",
+      "dispatches": 1,
+      "classifier_calls": 0,
+      "real_completion_race": false,
+      "transition": "mark",
+      "actual_transition_bool_expected": true,
+      "required_escaped_cause": null,
+      "outcome": "delivered",
+      "error_type": null,
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "AwaitConsumerCompletion",
+      "dispatches": 1,
+      "classifier_calls": 0,
+      "real_completion_race": false,
+      "transition": "await",
+      "actual_transition_bool_expected": true,
+      "required_escaped_cause": null,
+      "outcome": "awaiting-consumer-completion",
+      "error_type": null,
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "ClassifiedTransient",
+      "dispatches": 1,
+      "classifier_calls": 1,
+      "real_completion_race": false,
+      "transition": "retry",
+      "actual_transition_bool_expected": true,
+      "required_escaped_cause": null,
+      "outcome": "retry-scheduled",
+      "error_type": "transient",
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "ClassifiedPermanent",
+      "dispatches": 1,
+      "classifier_calls": 1,
+      "real_completion_race": false,
+      "transition": "quarantine",
+      "actual_transition_bool_expected": true,
+      "required_escaped_cause": null,
+      "outcome": "quarantined",
+      "error_type": "non-retryable",
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "Unclassified",
+      "dispatches": 1,
+      "classifier_calls": 1,
+      "real_completion_race": false,
+      "transition": "quarantine",
+      "actual_transition_bool_expected": true,
+      "required_escaped_cause": null,
+      "outcome": "quarantined",
+      "error_type": "unclassified",
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "RetryExhausted",
+      "dispatches": 1,
+      "classifier_calls": 1,
+      "real_completion_race": false,
+      "transition": "quarantine",
+      "actual_transition_bool_expected": true,
+      "required_escaped_cause": null,
+      "outcome": "quarantined",
+      "error_type": "retry-limit-exceeded",
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "InvalidMode",
+      "dispatches": 1,
+      "classifier_calls": 0,
+      "real_completion_race": false,
+      "transition": "quarantine",
+      "actual_transition_bool_expected": true,
+      "required_escaped_cause": null,
+      "outcome": "quarantined",
+      "error_type": "invariant-violation",
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "PersistenceFailure",
+      "dispatches": 1,
+      "classifier_calls": 0,
+      "real_completion_race": false,
+      "transition": "mark",
+      "actual_transition_bool_expected": null,
+      "required_escaped_cause": "Exact selected SPI persistence exception reference",
+      "outcome": "state-persistence-failed",
+      "error_type": "durable-state-persistence-failure",
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "DispatchCancellation",
+      "dispatches": 1,
+      "classifier_calls": 0,
+      "real_completion_race": false,
+      "transition": null,
+      "actual_transition_bool_expected": null,
+      "required_escaped_cause": "OperationCanceledException with exact owned caller token",
+      "outcome": "canceled",
+      "error_type": null,
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "StateCancellation",
+      "dispatches": 1,
+      "classifier_calls": 0,
+      "real_completion_race": false,
+      "transition": "mark",
+      "actual_transition_bool_expected": null,
+      "required_escaped_cause": "OperationCanceledException with exact owned caller token",
+      "outcome": "canceled",
+      "error_type": null,
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "FailurePersistenceFailure",
+      "dispatches": 1,
+      "classifier_calls": 1,
+      "real_completion_race": false,
+      "transition": "quarantine",
+      "actual_transition_bool_expected": null,
+      "required_escaped_cause": "Exact selected SPI persistence exception reference",
+      "outcome": "state-persistence-failed",
+      "error_type": "durable-state-persistence-failure",
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "FailurePersistenceCancellation",
+      "dispatches": 1,
+      "classifier_calls": 1,
+      "real_completion_race": false,
+      "transition": "quarantine",
+      "actual_transition_bool_expected": null,
+      "required_escaped_cause": "OperationCanceledException with exact owned caller token",
+      "outcome": "canceled",
+      "error_type": null,
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "ConsumerTimeout",
+      "dispatches": 0,
+      "classifier_calls": 0,
+      "real_completion_race": false,
+      "transition": "quarantine",
+      "actual_transition_bool_expected": true,
+      "required_escaped_cause": null,
+      "outcome": "quarantined",
+      "error_type": "consumer-completion-timeout",
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "TimeoutPersistenceFailure",
+      "dispatches": 0,
+      "classifier_calls": 0,
+      "real_completion_race": false,
+      "transition": "quarantine",
+      "actual_transition_bool_expected": null,
+      "required_escaped_cause": "Exact selected SPI persistence exception reference",
+      "outcome": "state-persistence-failed",
+      "error_type": "durable-state-persistence-failure",
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "TimeoutCancellation",
+      "dispatches": 0,
+      "classifier_calls": 0,
+      "real_completion_race": false,
+      "transition": "quarantine",
+      "actual_transition_bool_expected": null,
+      "required_escaped_cause": "OperationCanceledException with exact owned caller token",
+      "outcome": "canceled",
+      "error_type": null,
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "CompleteBeforeMark",
+      "dispatches": 1,
+      "classifier_calls": 0,
+      "real_completion_race": true,
+      "transition": "mark",
+      "actual_transition_bool_expected": false,
+      "required_escaped_cause": null,
+      "outcome": "delivered",
+      "error_type": null,
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "CompleteBeforeAwait",
+      "dispatches": 1,
+      "classifier_calls": 0,
+      "real_completion_race": true,
+      "transition": "await",
+      "actual_transition_bool_expected": false,
+      "required_escaped_cause": null,
+      "outcome": "delivered",
+      "error_type": null,
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "CompleteBeforeRetry",
+      "dispatches": 1,
+      "classifier_calls": 1,
+      "real_completion_race": true,
+      "transition": "retry",
+      "actual_transition_bool_expected": false,
+      "required_escaped_cause": null,
+      "outcome": "delivered",
+      "error_type": null,
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    },
+    {
+      "scenario": "CompleteBeforeQuarantine",
+      "dispatches": 1,
+      "classifier_calls": 1,
+      "real_completion_race": true,
+      "transition": "quarantine",
+      "actual_transition_bool_expected": false,
+      "required_escaped_cause": null,
+      "outcome": "delivered",
+      "error_type": null,
+      "healthy_duration_seconds": 7,
+      "diagnostic_unknown_duration": "No delivery histogram measurement"
+    }
+  ],
+  "diagnostic_modes": [
+    "None",
+    "InitialTimestamp",
+    "ElapsedFrequency"
+  ],
+  "requiredUTC_controls": [
+    "Claim",
+    "Mark",
+    "Await",
+    "InvalidMode",
+    "ClassifiedFailure",
+    "Timeout"
+  ],
+  "predictions_only": {
+    "original": "38 finite diagnostic reds +25 healthy =63",
+    "fixed": "63 PASS",
+    "M1_initial_guard_removed": "19 selected finite red +44 healthy",
+    "M2_elapsed_guard_removed": "19 selected finite red +44 healthy",
+    "post": "63 PASS",
+    "restriction": "Native exact IDs/first finite assertions must be observed. Compiler/setup/precondition/timeout/discovery errors receive no causal credit."
+  },
+  "assessment": [
+    "All nineteen service runtime contexts use actual retained-state transitions and correct required identities, leases, timestamps, attempt counts, failure metadata, exact dispatch primary error and actual transition bool. Four completion races remove the real intent through accepted C2 public capability before Mark/Await/Retry/Quarantine returns actualfalse.",
+    "Initialfailure is one chosen ordinary exception instance. ReferenceEquals branch proves claim1/dispatch0/no transition/real retained1bytes3 before finite Null; it runs only if optional initialclock escapes. No setupguard red counted. After corrected capture, this branch is skipped and complete normal business oracles execute.",
+    "All other variants assert actual dispatcher context and SPI call arguments/result and complete real state snapshot before final required outcome Null/Same/OCE-token oracle. Thus original/mutant elapsed red can support prior state proof but cannot support later metrics; late metrics get credit only on named PASS.",
+    "Cancellation is owned caller CTS and reaches actual inner store after capturedargs; exacttoken retained. Persistence failure is deliberately injected collaborator exception before chosen transition apply, exactreference preserved when optional timing is guarded; no database/media failure simulation claim.",
+    "Real timeout setup is admission at Epoch-1minute, realclaim/Await attempt1dueEpoch, then actualworkerclaim with maxattempt1. Captured requiredtimeout UTC staysEpoch; timeouttransition advances Fakeclock7 before actual apply/failure/cancel, yielding real7 duration. RequiredtimeoutUTC throws beforetransition/advance, yielding valid0 duration rather than missingduration fallback.",
+    "Retry failedAt retained as now and nextAttemptAt=now+15seconds with jitter0. Known deliveryhist7/exactoutcome_error tags; missing diagnostic duration emits no histogram while counter1 remains. ElapsedFrequency getter fault does not alter requiredUTC or initialtimestamp; accepted C2 race capability independently suppresses its optionalduration failure.",
+    "Six requiredUTC controls preserve samechosenerror, no related state transition/classification/completion, retained1bytes3/pending1, correct awaitingstate. Claim emits no metrics; otherfive emit statefailure counter with duration7 except actualtimeout0.",
+    "One explicit awaited single-record batch, no BackgroundService start or worker/timer/wait loop. Metriclistener/semaphore disposed before driver/service/instrumentation/hostfactory then CTS; OpenTelemetry serialized collection and factoryscope avoid siblingmeter observations."
+  ],
+  "findings": [],
+  "remaining": [
+    "Root806/current shared84/API extra-context and full Requirements4697 ordered-prefix+two-row final freeze needs independent qualification; presence here is input hashing only unless separately checked.",
+    "Strict original native build/events/archivePE/PDB/resource binding, corrected four-owner patch/source review, two compiled onecause native mutants, fixed Core regression, unchanged post replay and bounded Root acceptance remain pending."
+  ],
+  "limits": [
+    "No compiler/test/.NET/MSBuild/Docker/provider/SSH execution and no product/test/tool edits; ownreport only.",
+    "No multi-message batch/concurrency/cloud/persistentprovider/restart/fullP05 or arbitrary maliciousglobalobserver no-throw claim.",
+    "Postbatch snapshot cadence GetUtcNow argument remains separate open observation owner; all business/store UTC policies remain required.",
+    "425-line body was read as precursor but not written as accepted review; failed own binding attempt noticed source changed before report output. No nativecredit exists for that precursor.",
+    "Source review and hashing are independent provenance, never Root personalread credit transfer."
+  ]
+}

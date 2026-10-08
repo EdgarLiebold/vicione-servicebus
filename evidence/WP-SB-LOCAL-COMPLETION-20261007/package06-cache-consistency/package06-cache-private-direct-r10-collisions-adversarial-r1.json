@@ -1,0 +1,180 @@
+{
+  "kind": "P06_CACHE_PRIVATE_DIRECT_R10_COLLISION_THEORY_REQUIREMENTS_R4_ADVERSARIAL_REVIEW_R1",
+  "status": "NO_BLOCK_BOUNDED_R10_COLLISION3_REQ4719_CANONICAL_NATIVE_PENDING",
+  "inputs": {
+    "/private/tmp/ResourceCacheComparerIsolationTests.draft-r9.cs": "f56d46d3aa74810d3148b6aea6a90cf601b198e6d107956e96b1331acf155817",
+    "/private/tmp/ResourceCacheComparerIsolationTests.draft-r10.cs": "8ee7f881107ccb1cf5e67275bf5f9476845d24cca0a0bb9817ac80a05cb44087",
+    "/private/tmp/CoreRequirements.cache-proposed-r3.json": "6046b6f8ff42ab23d28258b40d2fd6f85215ed27f7988fcb29a02ac36e673f37",
+    "/private/tmp/CoreRequirements.cache-proposed-r4.json": "b1cba734eaa3752541dd6dce522af0b35924b909930609ca17e5676425692750",
+    "/private/tmp/ResourceCachePendingComparerIsolationTests.draft-r3.cs": "46a07426260b5338bb690862efcafc21f9d1c751d27afeeee67a091f70034b2f",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/CACHE_ADVERSARIAL_CONTROL_PLAN_SUPPLEMENT_R1.md": "3a9c0d872b925b57e340ac3b06877779dd38dff77ae30cce3f74eb78b941c397",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/ROOT_CACHE18_COMPLETE_SOURCE_READ_R1.json": "5e59a3d4b0496fd9b3dc07476cb499aad865ad642464c8c0fdd2257382f571d8",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "8cfab7601e9be9f02ab59308a37f8e351ab800757658f9ebb0e16ef00ece6f8e",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-map-r1-adversarial.json": "384d706350071c0355f9ba56fd9f320b9c35f6d30b457b0cab2d2576cbcc59bf",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-direct-r8-clock-adversarial-r1.json": "b60a1f610267a086039a23cde36eb36daa5f69baaf0c2fb68f40c37759e50fee",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-direct-r9-bulk-oracle-followup-r1.json": "2b073faa26caba184620c0e4ee696b3b82b6a0529a1b4bfad46840669a0f7c09"
+  },
+  "checks": {
+    "R10_exact710_8ee7": true,
+    "R9_exact650_f56d": true,
+    "exact60line_insert_only_prior650_identity": true,
+    "newTheory_exact0_1_2_one_existingREQattr": true,
+    "ReqR4_exact4719_b1cb_one_newpurpose_matches": true,
+    "ReqR3_exact4718_ordered_and_literal_recordprefix_closing3bytes_moved": true,
+    "4719_schema_nonemptyString_uniqueIdentity_noJSONduplicateKeys": true,
+    "physicalDispose1_survivors0_bothIndex_refs_missingkey": true,
+    "sameKey_newIdentity_secondaryRemoval_unorderedSnapshot2_refs": true,
+    "actualClear_fourDispose1_before_rescue_capacityReuse_actualStop": true,
+    "all_new_public_mutations_lookups_snapshot_testToken_or_OwnedHelper": true,
+    "static_direct28_unchanged_pending2_total30_separate2child": true,
+    "prior_R9_peers_exact_noBlock_findingsEmpty": true,
+    "plan_fullread_exact3a9c_static30_Core8142_limits": true,
+    "canonicalReq4716_productOriginal18_still_exact": true
+  },
+  "findings": [],
+  "exact_delta": {
+    "kind": "insert",
+    "old_insertion_line": 487,
+    "new_start_line": 487,
+    "new_last_line": 546,
+    "added_lines": 60,
+    "prior650_body_reconstructed_byteidentity": true,
+    "new_method": "CollidingResourceRemovalPreservesEveryOtherOwnedResource",
+    "new_positions": [
+      0,
+      1,
+      2
+    ]
+  },
+  "mapping": {
+    "requirementId": "REQ-VSB-CACHE-MULTI-INDEX",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+    "testMethod": "CollidingResourceRemovalPreservesEveryOtherOwnedResource",
+    "variantKey": "colliding-head-middle-tail-retirement-preserves-survivors-and-key-reuse"
+  },
+  "requirement_prefix": {
+    "prior4718_ordered_objects_preserved": true,
+    "literal_recordtext_prefix_bytes": 1678219,
+    "old_moved_closing_bytes_repr": "b'\\n]\\n'",
+    "entire_prior_rawJSON_is_prefix": false
+  },
+  "static_parent_expansion": [
+    {
+      "method": "RemoveRetiresEveryIndexAndReleasesResource",
+      "inline_values": [
+        "false",
+        "true"
+      ],
+      "parent_count": 2
+    },
+    {
+      "method": "DirectAdmissionPublishesAllIndicesTogether",
+      "inline_values": [
+        "false",
+        "true"
+      ],
+      "parent_count": 2
+    },
+    {
+      "method": "FactoryAdmissionPublishesAllIndicesTogether",
+      "inline_values": [
+        "false",
+        "true"
+      ],
+      "parent_count": 2
+    },
+    {
+      "method": "LookupFailureCannotStrandAlreadyExpiredOwnership",
+      "inline_values": [
+        "false",
+        "true"
+      ],
+      "parent_count": 2
+    },
+    {
+      "method": "CollisionEqualityFailureLeavesExistingOwnershipIntact",
+      "inline_values": [
+        "false",
+        "true"
+      ],
+      "parent_count": 2
+    },
+    {
+      "method": "LateOldFactoryCannotUnlinkPendingReplacement",
+      "inline_values": [],
+      "parent_count": 1
+    },
+    {
+      "method": "FailedBulkIndexCannotCorruptExistingRetirement",
+      "inline_values": [
+        "false",
+        "true"
+      ],
+      "parent_count": 2
+    },
+    {
+      "method": "PartialExpirationClockFailureCannotLoseRetiredOwnership",
+      "inline_values": [
+        "\"get\", false",
+        "\"get\", true",
+        "\"get-or-add\", false",
+        "\"get-or-add\", true",
+        "\"remove\", false",
+        "\"remove\", true",
+        "\"add\", false",
+        "\"add\", true",
+        "\"cleanup\", false",
+        "\"cleanup\", true",
+        "\"timer\", false",
+        "\"timer\", true"
+      ],
+      "parent_count": 12
+    },
+    {
+      "method": "CollidingResourceRemovalPreservesEveryOtherOwnedResource",
+      "inline_values": [
+        "0",
+        "1",
+        "2"
+      ],
+      "parent_count": 3
+    }
+  ],
+  "case_matrix": [
+    {
+      "position": 0,
+      "first_removed": "first/new-map head",
+      "second_removed": "last old resource/middle after reinsertion",
+      "survivor": "middle old resource"
+    },
+    {
+      "position": 1,
+      "first_removed": "middle",
+      "second_removed": "last old resource/middle after reinsertion",
+      "survivor": "first old resource"
+    },
+    {
+      "position": 2,
+      "first_removed": "last/new-map tail",
+      "second_removed": "middle old resource/middle after reinsertion",
+      "survivor": "first old resource"
+    }
+  ],
+  "oracle_analysis": [
+    "Secondary comparer returns actual int.MinValue for all three distinct stable ordinal keys. Primary removal exercises cross-index unlink; secondary second removal exercises collision lookup and unlink. Healthy comparison has no armed throwing key or changing semantics.",
+    "First awaited public removal proves selected Dispose1/Count2/Removed1 and both survivor Dispose0 and exact BOTH-index references. Removed key is missing on secondary; same-key replacement is a new object and exact BOTH-index reference is checked.",
+    "Second awaited removal proves actual Dispose1/Count2/Removed2 and exact surviving old/new objects in BOTH indices plus unordered snapshot of exactly2 references. TotalCreated4/Added4/Pending0 distinguish four real commits from eviction/reservation artifacts.",
+    "Actual public Clear completes before four original/replacement Dispose1 assertions. Fresh after-clear admission/read proves capacity reuse; actual cache Stop precedes fifth Dispose1. Outer Fixture rescue runs after these assertions and earns no product-release credit.",
+    "All actual operation tasks are owned/bounded. Expected terminal lookup-miss is recorded by unchanged fixture and observed again by exact identity in cleanup. No new process owner, pending gate, timer advance or shared global state. Sequential awaited operations justify plain DisposeCalls counters.",
+    "Uses established xUnit Same/Single/Contains/IsType APIs, existing implicit LINQ and net10 collection-expression context. Integer InlineData values match signature; locals used; test tokens flow through all new direct public asynchronous calls. No expected compiler/discovery/watchdog red."
+  ],
+  "contract_precision": "PreparedResourceMap.TryGetValue calls user hash even when empty; prior Dictionary may skip on never-allocated empty state. No exact callback-count/phase or exceptional Misses-statistics invariance is claimed. Required chosen failures may occur earlier before reservation/commit; these three healthy side-effect-free comparison controls assert physical ownership/reference invariants, not callback timing.",
+  "limits": [
+    "New3 are healthy strengthening controls, not an inferred original defect or kill. Native30/Core8142 are predictions until actual runtime binding.",
+    "Previous27 parent cases and all helpers are byte-identical R9; peer R9 bulk/clock reviews are bound without transfer of whole-source/read credit.",
+    "Read scope: full60-line diff/newcase body, complete comparer/Owned/Observer/Fixture and clock/bulk helper context, complete plan supplement; complete4718/4719 JSON schema/identity/semantic and literal-prefix comparison.",
+    "Static MapR1 collision-link test suggestion is addressed; original/fixed/mutant runtime and mandatory bulk/clock acceptance proof remain separate.",
+    "No source/test/proposal edits, .NET/Docker/provider/SQLite/process execution, external product-team role or broader coverage/API/RAM/cloud/hardware acceptance."
+  ]
+}

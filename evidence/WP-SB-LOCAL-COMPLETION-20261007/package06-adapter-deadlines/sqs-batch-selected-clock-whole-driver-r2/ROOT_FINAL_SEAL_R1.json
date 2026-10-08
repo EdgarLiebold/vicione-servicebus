@@ -1,0 +1,7 @@
+{
+  "peer_sha256": "8d03d753ceda7cca70a09ca4a606bec2117065d0f7303fbfe12d74c3ff644f56",
+  "gate_sha256": "ed7de668645f8d53282cb62bd5e835fa1396df22f1165d1a07c090837586c2c4",
+  "driver_sha256": "848b22f3b04916799baf6f4a349aa00f4843636fddcf17c7038a9e7ce60eb744",
+  "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+  "action": "Root whole actual one noBuild/noRestore SQS module; observed counts, exact fixed15image guards before+after; no controls or canonical acceptance."
+}

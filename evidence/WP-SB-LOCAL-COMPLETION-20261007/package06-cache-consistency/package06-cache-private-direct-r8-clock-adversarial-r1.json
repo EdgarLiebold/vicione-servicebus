@@ -1,0 +1,133 @@
+{
+  "kind": "PRIVATE_DIRECT_R8_CLOCK_REVIEW_R9_SNAPSHOT_SUCCESSOR",
+  "status": "NO_BLOCK_PRIVATE_R9_AND_REQ_R3__CANONICAL_NATIVE_PENDING",
+  "inputs": {
+    "/private/tmp/ResourceCacheComparerIsolationTests.draft-r6.cs": {
+      "sha256": "404cdbc3326688944f871a18782b703b648d2c29ae8da98f9dfd8efab154f83d",
+      "lines": 439
+    },
+    "/private/tmp/ResourceCacheComparerIsolationTests.draft-r8.cs": {
+      "sha256": "f5e4ffdbd92879ec2c7b1ab18db5494bdfa216fde10bd367dc56ab3fc6abe27f",
+      "lines": 646
+    },
+    "/private/tmp/ResourceCacheComparerIsolationTests.draft-r9.cs": {
+      "sha256": "f56d46d3aa74810d3148b6aea6a90cf601b198e6d107956e96b1331acf155817",
+      "lines": 650
+    }
+  },
+  "product_overlay_R1_unchanged_sha256": "0aa4a03e8b6091f65bad87ec48f357e6767beada84bc90f1a229092029020f8d",
+  "personal_read": {
+    "complete_R6_to_R8_diff_new_bulk_and_clock_bodies_helpers_fixture_delta": true,
+    "complete_R8_to_R9_four_snapshot_lines": true,
+    "old_direct11_exact_prefix_priorwhole_read_reuse": true,
+    "Fixture_recursive_ownedtask_cleanup_priorwholebody_plus_optional_TimeProvider_delta_reuse": true,
+    "new_two_requirement_rows_personally_consumed_all4718parsed": true,
+    "Root_read_credit_Root_only": true
+  },
+  "new_case_expansion": {
+    "bulk": 2,
+    "clock": 12,
+    "prior_direct": 11,
+    "proposed_direct": 25,
+    "pending_parent": 2,
+    "proposed_focused_parent": 27,
+    "separate_pending_children": 2,
+    "Core8139_prediction_only": true
+  },
+  "clock12_matrix": [
+    [
+      "get",
+      "false"
+    ],
+    [
+      "get",
+      "true"
+    ],
+    [
+      "get-or-add",
+      "false"
+    ],
+    [
+      "get-or-add",
+      "true"
+    ],
+    [
+      "remove",
+      "false"
+    ],
+    [
+      "remove",
+      "true"
+    ],
+    [
+      "add",
+      "false"
+    ],
+    [
+      "add",
+      "true"
+    ],
+    [
+      "cleanup",
+      "false"
+    ],
+    [
+      "cleanup",
+      "true"
+    ],
+    [
+      "timer",
+      "false"
+    ],
+    [
+      "timer",
+      "true"
+    ]
+  ],
+  "phase": {
+    "required_third_frequency_read": "ScanClock getter throws chosen exception only at read3 afterArm; intended first expiry MinAge+MaxAge elapsed reads precede first retirement. Actual3/output and original source trace must qualify runtime, no .NET implementation or native success inferred from source plan.",
+    "physical_first": "SumDispose1hostile/2healthy first, no scan-order assumption; survivor reference constrained to either oldowner andDispose0. Later realCleanup individuallyDispose1each prevents sum masking double release.",
+    "ownership": "CandidateDispose0,Count1hostile,Pending0,TotalCreated2,Added2,Removed1,Factory0 before Same; recovery uses realcleanup, candidateadmission, exactlookup andcacheStop.",
+    "public_error": "All five public operations require exact chosen clock E after physical oracles. HealthyGet expects KeyNotFound; other healthy paths nullfailure. HealthyAdd/GetOrAdd candidate snapshot+created3 andFactory1onlyGetOrAdd.",
+    "timer": "Fire calls actual captured cache callback and cache owns returned actualFakeTimeProvider timer. This fixture Observer/Owned disposal and free observerGate complete synchronously, so fixedcleanup is observable before Fire returns; no universal async observer/callback completion promise. Original direct callback fault vs fixed logged/null needs actual finite native proof.",
+    "cleanup": "Clockdisarmed finally; async public tasks recorded byRunAsync before boundedWait. Actualtask/cachejoins beforerescue, cleanupNone unchanged. No task orphan added."
+  },
+  "bulk": {
+    "meaningful_boundary": "Secondhash secondresource selects original HashSet projection then CommitKey; fixed HashSet then privatePrepareEntry. Actual original stack plus later hidden metadata retirement fault needed, no public scan-order guarantee assumed.",
+    "R9": "Snapshot before removal exactcount2 andbothreference members added4lines; earlier missing snapshot corrected byRoot.",
+    "physical": "After caughtAddIndex failure armfirstkey, healthyprimaryRemove thenDispose1/survivor0/Count1/Removed1 beforeerror. Failedindexnameabsent, survivorintact, same-name retry andcapacityreuse covered."
+  },
+  "requirements": {
+    "path": "/private/tmp/CoreRequirements.cache-proposed-r3.json",
+    "sha256": "6046b6f8ff42ab23d28258b40d2fd6f85215ed27f7988fcb29a02ac36e673f37",
+    "rows": 4718,
+    "previous4716_sha256": "8cfab7601e9be9f02ab59308a37f8e351ab800757658f9ebb0e16ef00ece6f8e",
+    "ordered_objects_and_record_bytes_prefix_preserved_excluding_moved_closing3bytes": true,
+    "new2_exact_attrs": [
+      {
+        "requirementId": "REQ-VSB-CACHE-MULTI-INDEX",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "FailedBulkIndexCannotCorruptExistingRetirement",
+        "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+        "variantKey": "failed-bulk-index-cannot-attach-unpublished-retirement-metadata"
+      },
+      {
+        "requirementId": "REQ-VSB-CACHE-EXPIRATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "PartialExpirationClockFailureCannotLoseRetiredOwnership",
+        "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+        "variantKey": "partial-expiration-clock-fault-releases-retired-owners-across-public-and-timed-cleanup"
+      }
+    ],
+    "all_schema_and_mapping_unique": true
+  },
+  "compile_shape": "Record.Exception(clock.Fire) usesAction; conditionalawait failuredefiniteassignment coherent; virtualTimeProvider overrides and actualtimer registration shape coherent; explicit publicAPItesttoken andcleanupNone unchanged. No compiled success credit.",
+  "findings": [],
+  "limits": [
+    "Private successor only; canonicalR6/cacheproducts unchanged.",
+    "Original27/corrected27/Core8139/mutation/post/wholecache remain unexecuted predictions.",
+    "Only actual first assertion reaches credit; no crossed Same/origin claims.",
+    "No reviewer .NET/provider/process execution or source/test/tool edits."
+  ],
+  "execution": "Read-only source/diff/hash/JSON checks; own immutable report only."
+}

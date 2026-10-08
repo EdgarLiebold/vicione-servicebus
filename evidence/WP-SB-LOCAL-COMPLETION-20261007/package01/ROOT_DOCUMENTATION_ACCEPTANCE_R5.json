@@ -1,0 +1,7 @@
+{
+  "kind": "ROOT_DOCUMENTATION_SUCCESSOR_ACCEPTANCE",
+  "status": "ACCEPTED_BOUNDED_DOCUMENTATION_R5",
+  "freeze_sha256": "023a7c6d62e51a5db082a35418555dd351cad7e9e9331f47fd33d818e962eb5c",
+  "review_sha256": "5503b039485bed9008e0c5a36a6cf98f1b059a4ec1f4e3ad334ac54b4c8d51a6",
+  "limits": "DatedStageA/SQLoriginalbaseline, B1unacceptedReqsuccessor qualified separately; allbroadremainingopen."
+}

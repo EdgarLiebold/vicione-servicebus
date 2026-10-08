@@ -1,0 +1,12 @@
+{
+  "kind": "ROOT_FINAL_FIVE_CLOCK_CONTROL_AND_FORCED_POST_EXECUTION_SEAL_R1",
+  "driver_sha256": "ce55ee95821d85158b38628bc067f29780c3223cb9017fb4c8c608c0c65663eb",
+  "gate_sha256": "a383e9fabf6cc7287d1ccbbc357d244862cd664017bb01e09e206661c45a6e9b",
+  "final_peer_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-five-controls-final-binding-adversarial-r1.json",
+  "final_peer_sha256": "34a9b2465650f385ed57f2a280ca606eae4d996e32f91a88dd4282507fa01c89",
+  "parallel_source_review_completed": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-canonical-source-preflight-adversarial-r1.json",
+    "sha256": "d8a97be02a1676f0eb45494bc6aff827d2f5de2522bd4221f022aead7de1f0e1"
+  },
+  "scope": "Rootalone5isolated controls privateF afteractualWHOLEgreen. Sourcesrestore6 each, finalforcedPOST2full16restoration required. Earlyfailure separatelygatedrecovery, no canonical/global outcome granted."
+}

@@ -1,0 +1,17 @@
+{
+  "kind": "ROOT_ACTUAL_CACHE4_POST_ORIGINAL17_EXACT_PHYSICAL_REUSE_R1",
+  "native_sha256": "06a2b06c4244741281ba2cdd2b065e6f1693d707fc49d9cd6c98b8f9e3801a5f",
+  "own_fresh_original_physical_sha256": "972c16da572ea1beb41e71e458f0b85eb69f98d3417c4a4e23747e647fc10649",
+  "focused": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0
+  },
+  "runtime17_original_post_live_directbytes_exact": true,
+  "assets12_equal": true,
+  "owners10_generated39_equal": true,
+  "raw6_crc2_exact": true,
+  "root_personally_read": "Whole strict rebuild stdout/stderr and all4 native bodies/summary/stderr; exact same original image permits own fresh12PE3811 proof reuse. No freshpostparse.",
+  "limits": "Canonical2 and independent post acceptance pending; four finite bounded contracts, no productfix, globalcache/API/coverage/providers/CI/cloud/HW/A+ closure."
+}

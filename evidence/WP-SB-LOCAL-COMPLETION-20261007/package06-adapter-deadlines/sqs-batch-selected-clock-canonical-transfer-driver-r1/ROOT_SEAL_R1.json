@@ -1,0 +1,7 @@
+{
+  "peer_sha256": "efdff865fbddadbf2cce75a9ceedf83a319c485fadafac35de887b2f178f0f1e",
+  "gate_sha256": "c987eb8fbc7a0c8007cffad86ed0733d458717135ea4341508b2ccd012022623",
+  "driver_sha256": "fbad0219e1e5c831b2fd2ee339f47951af2a5a86b6d0510bc07aac839950af4c",
+  "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+  "action": "Exact11source transfer only; noSDK/commit/push/docs before actualaftercopyreview."
+}

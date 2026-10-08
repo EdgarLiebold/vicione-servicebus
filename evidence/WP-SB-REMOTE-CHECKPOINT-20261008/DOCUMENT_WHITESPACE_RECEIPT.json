@@ -1,0 +1,9 @@
+{
+  "kind": "EXACT_DOCUMENT_WHITESPACE_CORRECTION",
+  "path": ".testagent/local-completion-plan.md",
+  "before_index_blob": "ef9672be4ea1afa78ced30d0ff070b9175b9a009",
+  "before_sha256": "58fb6350f4fc36b7c19bc54379d8e493d105aafdf2b9a794cdb97b63a0919178",
+  "after_sha256": "162a80b0c0c2692a6f913f803fe5ec05c9e8823612d8d914e902f846eb641aa1",
+  "delta": "Remove exactlyone surplus trailingLF; all228 formertextlines otherwisebyteexact. No test/source/semanticchange.",
+  "generated_wiki": "Two intentional Markdownhardbreaks preserved byteexact; exactpath attribute handles blank-at-eol only, no manual wiki edit."
+}

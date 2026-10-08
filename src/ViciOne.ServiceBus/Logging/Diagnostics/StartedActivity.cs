@@ -49,18 +49,27 @@ internal sealed class StartedActivity : IDisposable
             // Exception diagnostics cannot replace the operation failure.
         }
 
-        var exceptionMessage = ExceptionUtil.GetMessage(exception);
-
-        var tags = new ActivityTagsCollection
+        string? exceptionMessage = null;
+        try
         {
-            { ServiceBusTelemetry.Attributes.ExceptionMessage, exceptionMessage },
-            { ServiceBusTelemetry.Attributes.ExceptionType, TypeCache.GetShortName(exception.GetType()) },
-            { ServiceBusTelemetry.Attributes.ExceptionStackTrace, ExceptionUtil.GetStackTrace(exception) }
-        };
+            exceptionMessage = ExceptionUtil.GetMessage(exception);
 
-        var activityEvent = new ActivityEvent(ServiceBusTelemetry.Events.Exception, _timeProvider.GetUtcNow(), tags);
+            var tags = new ActivityTagsCollection
+            {
+                { ServiceBusTelemetry.Attributes.ExceptionMessage, exceptionMessage },
+                { ServiceBusTelemetry.Attributes.ExceptionType, TypeCache.GetShortName(exception.GetType()) },
+                { ServiceBusTelemetry.Attributes.ExceptionStackTrace, ExceptionUtil.GetStackTrace(exception) }
+            };
 
-        ActivityObservation.TryAddEvent(Activity, activityEvent);
+            var activityEvent = new ActivityEvent(ServiceBusTelemetry.Events.Exception, _timeProvider.GetUtcNow(), tags);
+            ActivityObservation.TryAddEvent(Activity, activityEvent);
+        }
+        catch
+        {
+            // Diagnostic preparation and clocks cannot replace the operation failure.
+        }
+
+        // Error status is still available when the event timestamp or details are not.
         ActivityObservation.TrySetStatus(Activity, ActivityStatusCode.Error, exceptionMessage);
     }
 

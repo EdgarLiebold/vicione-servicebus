@@ -95,6 +95,13 @@ internal sealed class ServiceBusHostedService :
         {
             if (_stopped)
                 return;
+
+            if (_depot is null && _startTask is null)
+            {
+                cancellationToken.ThrowIfCancellationRequested();
+                _stopped = true;
+                return;
+            }
         }
 
         await ExecuteWithTimeoutAsync(StopDepotAsync, _options.Value.StopTimeout, cancellationToken).ConfigureAwait(false);

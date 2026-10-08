@@ -14,36 +14,41 @@ public sealed partial class ResourceCache<TValue>
     {
         cancellationToken.ThrowIfCancellationRequested();
         using var operation = EnterOperation();
-        List<ResourceCacheEntry<TValue>> removed;
-        ResourceCacheEntry<TValue>? entry;
-        PendingResourceCreation<TValue>? pending;
+        var removed = new List<ResourceCacheEntry<TValue>>();
+        ResourceCacheEntry<TValue>? entry = null;
+        PendingResourceCreation<TValue>? pending = null;
         long now = _options.TimeProvider.GetTimestamp();
 
-        lock (_sync)
+        try
         {
-            ThrowIfDisposed_NoLock();
-            removed = CollectExpired_NoLock(now);
+            lock (_sync)
+            {
+                ThrowIfDisposed_NoLock();
+                CollectExpired_NoLock(now, removed);
 
-            if (index.TryGetEntry(key, out entry))
-            {
-                _hits++;
-                Touch_NoLock(entry, now);
-                pending = null;
-            }
-            else if (index.TryGetPending(key, out pending))
-            {
-                _hits++;
-                entry = null;
-            }
-            else
-            {
-                _misses++;
-                entry = null;
-                pending = null;
+                if (index.TryGetEntry(key, out entry))
+                {
+                    _hits++;
+                    Touch_NoLock(entry, now);
+                    pending = null;
+                }
+                else if (index.TryGetPending(key, out pending))
+                {
+                    _hits++;
+                    entry = null;
+                }
+                else
+                {
+                    _misses++;
+                    entry = null;
+                    pending = null;
+                }
             }
         }
-
-        await ReleaseEntriesAsync(removed, true, _lifetimeCancellationToken).ConfigureAwait(false);
+        finally
+        {
+            await ReleaseEntriesAsync(removed, true, _lifetimeCancellationToken).ConfigureAwait(false);
+        }
 
         if (entry is not null)
             return entry.Value;
@@ -63,7 +68,7 @@ public sealed partial class ResourceCache<TValue>
 
         while (true)
         {
-            List<ResourceCacheEntry<TValue>> removed;
+            var removed = new List<ResourceCacheEntry<TValue>>();
             ResourceCacheEntry<TValue>? entry = null;
             PendingResourceCreation<TValue>? pending = null;
             Task? waitForPendingCapacity = null;
@@ -72,43 +77,67 @@ public sealed partial class ResourceCache<TValue>
             bool startCreation = false;
             long now = _options.TimeProvider.GetTimestamp();
 
-            lock (_sync)
+            try
             {
-                ThrowIfDisposed_NoLock();
-                removed = CollectExpired_NoLock(now);
+                lock (_sync)
+                {
+                    ThrowIfDisposed_NoLock();
+                    CollectExpired_NoLock(now, removed);
 
-                if (index.TryGetEntry(key, out entry))
-                {
-                    _hits++;
-                    Touch_NoLock(entry, now);
-                }
-                else if (index.TryGetPending(key, out pending))
-                {
-                    _hits++;
-                }
-                else if (factory is null)
-                {
-                    _misses++;
-                    missingWithoutFactory = true;
-                }
-                else if (_entries.Count + _pendingCreations.Count + _retiringEntries < _options.Capacity)
-                {
-                    _misses++;
-                    pending = new PendingResourceCreation<TValue>(index, key!, _lifetimeCancellationSource.Token);
-                    index.AddPending(key, pending);
-                    _pendingCreations.Add(pending);
-                    _activeOperations++;
-                    creationOperation = new OperationLease(this);
-                    startCreation = true;
-                }
-                else if (!TryEvictCapacityCandidate_NoLock(removed))
-                {
-                    // Pending creations and removed resources retain their slots until ownership is released.
-                    waitForPendingCapacity = WaitForCapacityChange_NoLockAsync();
+                    if (index.TryGetEntry(key, out entry))
+                    {
+                        _hits++;
+                        Touch_NoLock(entry, now);
+                    }
+                    else if (index.TryGetPending(key, out pending))
+                    {
+                        _hits++;
+                    }
+                    else if (factory is null)
+                    {
+                        _misses++;
+                        missingWithoutFactory = true;
+                    }
+                    else if (_entries.Count + _pendingCreations.Count + _retiringEntries < _options.Capacity)
+                    {
+                        _misses++;
+                        pending = new PendingResourceCreation<TValue>(index, key!, _lifetimeCancellationSource.Token);
+                        try
+                        {
+                            _pendingCreations.EnsureCapacity(_pendingCreations.Count + 1);
+                            long version = _indexVersion;
+                            object slot = index.PreparePending(key, pending);
+                            if (version != _indexVersion || _disposed)
+                            {
+                                pending.CreationCancellationSource.Dispose();
+                                pending = null;
+                            }
+                            else
+                            {
+                                creationOperation = new OperationLease(this);
+                                index.PublishPending(slot, pending);
+                                _pendingCreations.Add(pending);
+                                _activeOperations++;
+                                startCreation = true;
+                            }
+                        }
+                        catch
+                        {
+                            pending?.CreationCancellationSource.Dispose();
+                            throw;
+                        }
+                    }
+                    else if (!TryEvictCapacityCandidate_NoLock(removed))
+                    {
+                        // Pending creations and removed resources retain their slots until ownership is released.
+                        waitForPendingCapacity = WaitForCapacityChange_NoLockAsync();
+                    }
                 }
             }
-
-            await ReleaseEntriesAsync(removed, true, _lifetimeCancellationToken).ConfigureAwait(false);
+            finally
+            {
+                await ReleaseEntriesAsync(removed, true, _lifetimeCancellationToken).ConfigureAwait(false);
+            }
 
             if (entry is not null)
                 return entry.Value;
@@ -140,23 +169,28 @@ public sealed partial class ResourceCache<TValue>
     {
         cancellationToken.ThrowIfCancellationRequested();
         using var operation = EnterOperation();
-        List<ResourceCacheEntry<TValue>> removed;
+        var removed = new List<ResourceCacheEntry<TValue>>();
         ResourceCacheEntry<TValue>? requested = null;
         long now = _options.TimeProvider.GetTimestamp();
 
-        lock (_sync)
+        try
         {
-            ThrowIfDisposed_NoLock();
-            removed = CollectExpired_NoLock(now);
+            lock (_sync)
+            {
+                ThrowIfDisposed_NoLock();
+                CollectExpired_NoLock(now, removed);
 
-            if (!index.TryGetPending(key, out _) && index.TryGetEntry(key, out requested))
-                RemoveEntry_NoLock(requested, false);
+                if (!index.TryGetPending(key, out _) && index.TryGetEntry(key, out requested))
+                {
+                    RemoveEntry_NoLock(requested, false);
+                    removed.Add(requested);
+                }
+            }
         }
-
-        if (requested is not null)
-            removed.Add(requested);
-
-        await ReleaseEntriesAsync(removed, true, _lifetimeCancellationToken).ConfigureAwait(false);
+        finally
+        {
+            await ReleaseEntriesAsync(removed, true, _lifetimeCancellationToken).ConfigureAwait(false);
+        }
         return requested is not null;
     }
 
@@ -202,7 +236,10 @@ public sealed partial class ResourceCache<TValue>
                     }
 
                     EnsureKeysAvailable_NoLock(prepared);
-                    committed = CommitValue_NoLock(value, prepared, timestamp);
+                    committed = CommitValue_NoLock(value, prepared, timestamp, pending);
+                    if (committed is null)
+                        continue;
+
                     CompletePending_NoLock(pending);
                 }
 
@@ -238,7 +275,7 @@ public sealed partial class ResourceCache<TValue>
 
     void CompletePending_NoLock(PendingResourceCreation<TValue> pending)
     {
-        pending.Index.RemovePending(pending.RequestedKey, pending);
+        pending.Index.RemovePending(pending);
         _pendingCreations.Remove(pending);
         SignalCapacityChanged_NoLock();
         pending.OwnershipReleased.TrySetResult();
@@ -249,7 +286,7 @@ public sealed partial class ResourceCache<TValue>
     {
         lock (_sync)
         {
-            pending.Index.RemovePending(pending.RequestedKey, pending);
+            pending.Index.RemovePending(pending);
             _pendingCreations.Remove(pending);
             SignalCapacityChanged_NoLock();
             pending.Completion.TrySetException(new OperationCanceledException("Resource creation was invalidated by the cache owner."));
@@ -262,7 +299,7 @@ public sealed partial class ResourceCache<TValue>
     {
         lock (_sync)
         {
-            pending.Index.RemovePending(pending.RequestedKey, pending);
+            pending.Index.RemovePending(pending);
             _pendingCreations.Remove(pending);
             SignalCapacityChanged_NoLock();
             pending.Completion.TrySetCanceled(_lifetimeCancellationToken);
@@ -275,7 +312,7 @@ public sealed partial class ResourceCache<TValue>
     {
         lock (_sync)
         {
-            pending.Index.RemovePending(pending.RequestedKey, pending);
+            pending.Index.RemovePending(pending);
             _pendingCreations.Remove(pending);
             SignalCapacityChanged_NoLock();
             _creationFaults++;

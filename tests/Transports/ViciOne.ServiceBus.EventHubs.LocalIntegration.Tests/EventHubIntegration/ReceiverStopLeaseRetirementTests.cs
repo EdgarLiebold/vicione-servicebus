@@ -63,13 +63,18 @@ public sealed class ReceiverStopLeaseRetirementTests
                 "get_DispatchCount" => 0L,
                 _ => throw new NotSupportedException(method.ToString())
             });
-            ReceiveEndpointContext endpoint = InterfaceProxy<ReceiveEndpointContext>.Create((method, _) => method.Name switch
+            ReceiveEndpointContext endpoint = InterfaceProxy<ReceiveEndpointContext>.Create((method, args) =>
             {
-                "CreateReceivePipeDispatcher" => dispatcher,
-                "get_InputAddress" => new Uri("sb://unit.servicebus.invalid/orders"),
-                "get_LogContext" => log,
-                "get_ConsumerStopTimeout" or "get_StopTimeout" => null,
-                _ => throw new NotSupportedException(method.ToString())
+                if (method.Name == "TryGetPayload" && method.IsGenericMethod && method.GetGenericArguments()[0] == typeof(TimeProvider))
+                { args![0] = null; return false; }
+                return method.Name switch
+                {
+                    "CreateReceivePipeDispatcher" => dispatcher,
+                    "get_InputAddress" => new Uri("sb://unit.servicebus.invalid/orders"),
+                    "get_LogContext" => log,
+                    "get_ConsumerStopTimeout" or "get_StopTimeout" => null,
+                    _ => throw new NotSupportedException(method.ToString())
+                };
             });
             receiver = new EventHubDataReceiver(new Settings(), endpoint, forwarding);
             await client.StartEntered.Task.WaitAsync(Bound, CancellationToken.None);

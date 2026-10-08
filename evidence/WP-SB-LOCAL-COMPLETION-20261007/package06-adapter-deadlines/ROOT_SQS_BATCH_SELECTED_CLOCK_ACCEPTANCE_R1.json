@@ -1,0 +1,146 @@
+{
+  "kind": "ROOT_BOUNDED_SQS_SNS_BATCH_SELECTED_CLOCK_ACCEPTANCE_R1",
+  "disposition": "ACCEPTED_LOCAL_BOUNDED_CANONICAL_AFTERCOPY",
+  "finding": {
+    "id": "SQS-SNS-BATCH-SELECTED-CLOCK-01",
+    "severity": "Medium",
+    "status": "CLOSED_BOUNDED",
+    "cause": "Batch partial-window CTS previously bypassed the selected connection owner and used process clock.",
+    "correction": "Capture connection provider once before entity resolution awaits; propagate to real send/delete/publish batchers; preserve legacy System constructors/cacheTTLclock. Terminate admission andfaultstillqueuedwork with original ordinary owner failure; optional logging cannot replace the cause."
+  },
+  "actual": {
+    "matched_original": {
+      "total": 9,
+      "first_finite_RED": 8,
+      "healthy_legacy": 1
+    },
+    "fixed": {
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0
+    },
+    "whole": {
+      "total": 437,
+      "unique_labels": 437,
+      "passed": 437,
+      "failed": 0,
+      "skipped": 0
+    },
+    "controls": {
+      "variants": 6,
+      "repeated_slots": 26,
+      "first_finite_RED": 19,
+      "healthy": 7,
+      "distinct_fixture_cases": 9
+    },
+    "forced_corrected_post": {
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "full15_fixed_archive_post_archive_live_byteequal": true
+    },
+    "fresh_control_post": {
+      "PE": 70,
+      "PDB_document_checksums": 20993,
+      "images": 7,
+      "compiled_METHOD_rows_each": 216,
+      "actual_METHOD_decodes": 1512
+    },
+    "canonical": {
+      "exact_changed_files": 11,
+      "product_files": 9,
+      "new650_fixture": 1,
+      "requirements212to216": 1,
+      "source_files_before": 6109,
+      "source_files_after": 6110,
+      "other6099_existing_sources_unchanged": true,
+      "configuration15_protected92_build11_unchanged": true
+    }
+  },
+  "references": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-canonical-transfer-driver-r1/ROOT_APPLICATION_R1.json",
+      "sha256": "2e24787fa699d170e6271e585a4b6e5f8ea09e05a30df844f428592d76d2ded2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-batch-selected-clock-canonical-eleven-afterapply-adversarial-r1.json",
+      "sha256": "4a0e4883816593da7521e4674bac15d9f8ff41c97a3a41d44a0f150b85afda5e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-clock-final-independent-retention-r3/MANIFEST.json",
+      "sha256": "7bf37c4f5131118e9dbe5cae25e5f84dc8da56b68524b7cdf8dc14fd59bf9e72"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-fixed-preparation-r1/INPUTS.json",
+      "sha256": "28bf5e6e9f36a379de57948bd5a655631d44a8ffa5e02ce24b7a00069aca36c8"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-original-native-r4/RESULT.json",
+      "sha256": "0a6fe965ef48086ec491fac6d9fb95038ff02082870802c9a968f82d13f67a0e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-fixed-native-r1/RESULT.json",
+      "sha256": "8beb273152986324bee571c279f45df797cd6304d887ec6708f8498ebd5baff3"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-whole-native-r1/RESULT.json",
+      "sha256": "1a79ed933d065582364065a145772512f4d405da9856cc290c29ab8970c66a44"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/RESULT.json",
+      "sha256": "88168e02341902ded91762ca55b7e84e549c2b573d38eae2d6778c47232b4692"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/restored-post/RESULT.json",
+      "sha256": "0695ab5321a556a5cb4135406d3c059bb03284006579874904cb9fa269cb5442"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/ROOT_FRESH_SEVEN_IMAGE_QUALIFICATIONS_R1.json",
+      "sha256": "1c19c88cc1a2f4e98f635673b2832bc2561870cb6d43a5b1dff2bbffd6a4856a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/ROOT_ACTUAL_NATIVE_FIRST_FINITE_AND_POST_R1.json",
+      "sha256": "6141e47bfb0b034403115a99c429db1b565ef1df6ff6aa6092379e6bf07a72d9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-batch-selected-clock-final-eleven-canonical-gate-adversarial-r1.json",
+      "sha256": "f3ca8b3e40da0b55974fba5b09c39af318a81fe02eb0e16bfafa5ff49490c284"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-batch-selected-clock-six-controls-and-post-finite-native-adversarial-r1.json",
+      "sha256": "4941016923137eaa1c632726fe7622e24632a8580203c5efd95980e2394d107b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-batch-selected-clock-six-controls-post-fresh-physical-adversarial-r1.json",
+      "sha256": "54efe6c2bbb2a61b802722ca97dbc1a37cc04b1716b2fd4c18cdb83292318537"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-batch-selected-clock-six-controls-post-fresh-compiled-adversarial-r1.json",
+      "sha256": "be2d8b2cce233440fc68f36b651ef48023f1e9fe2451d18cf40c315271bd885b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-batch-selected-clock-fixed-public-api-metadata-adversarial-r1.json",
+      "sha256": "26b473c28228fef7ddf92639d435ae5130f82f73158d5b32b11afda10eefef15"
+    }
+  ],
+  "owned_provenance": {
+    "native": "Root executed/joined bounded SDK stages, personally read whole selected logs, independently validated firstfinite/rawCRC andaftercopy fullgraphs.",
+    "physical": "Root fresh reviewedpurehelper10PE/216 per each7; separate technical reviewer fresh70PE/216, no peercredittransfer. Outsideowner23/gen32 document bindings use actualpath/embedded source underfullsourcehold, notall2999 archivalowners.",
+    "source": "Ownwhole9product/R2diff+650fixture previous642body andexactcompleteR3/R5 deltas, separatelyadversarial reviewed each change. SourceReadR3/R4/R5 preserve output/truncation boundaries."
+  },
+  "retained_attempt_limits": [
+    "Default-sandbox restore84720 exit1 excluded; ambiguous MSBuild targetwalk/IPC cause notestablished from resolverInfo MSB4276.",
+    "Strict attempt85182 failed2xUnit1051, no native credit; fixture adds CT onThrowsWait without oracle relaxation.",
+    "OlderqualifiedoriginalR3nine retained as repeat ofsame9, not18newtests.",
+    "Unexecuted old source/helper/fixtureR4 andunboundgateR1 holds retained; INPUTpin fixedbeforeControlsSDK.",
+    "19 mutantfailures are firstfinite slots, not19bugs; lowerunreached checks/neutralfixture rescue/Run208and212 duplicateframes add0 causalcredit."
+  ],
+  "remaining": [
+    "SQSvisibility-renewal caller andorphan-admission paths source-only nextinventory, no matchednativefinding yet.",
+    "BroaderFIFO/fairness/cancellation/lifetime/backpressure/memory contracts, liveAWS/realCloud62obligations andARM64/512MiB/noSwap pending.",
+    "CurrentaggregateUnit/provider replay, coverage/CRAP, packedAPI30, developerjourneys/benchmarks/CI/localcompletion andnewremotecommit remainopen.",
+    "Frozen234auditSTATE unchanged; no globalA+/productionrelease/hardware/cloud claim."
+  ]
+}

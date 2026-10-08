@@ -1,0 +1,341 @@
+{
+  "kind": "ROOT_ACTUAL_FRESH31_PACKAGES_TO_RESTORED30_DLL_BYTES",
+  "rows": [
+    {
+      "package": "ViciOne.ServiceBus.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus/1.0.0/lib/net10.0/ViciOne.ServiceBus.dll",
+          "sha256": "c67e2a9528d1b08387dcda856b58883c8f4611ac9e3a74c70a49b8ab5d90ff81"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.Abstractions.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.abstractions/1.0.0/lib/net10.0/ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "89bad9c2dbae3dab3b215d5b23bb81c327d8481be9e5f309110461cf6a6a3112"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.ActiveMq.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.ActiveMq.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.activemq/1.0.0/lib/net10.0/ViciOne.ServiceBus.ActiveMq.dll",
+          "sha256": "36b83330193635ee62b0b160351dab4abc68bfba443ffaf2584dfea2d17c2227"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.AmazonS3.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.AmazonS3.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.amazons3/1.0.0/lib/net10.0/ViciOne.ServiceBus.AmazonS3.dll",
+          "sha256": "48022e69fea6dab7ab0c7d25d54d517e1bf0b8f8d64338914d84c82aa6c23130"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.AmazonSqs.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.AmazonSqs.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.amazonsqs/1.0.0/lib/net10.0/ViciOne.ServiceBus.AmazonSqs.dll",
+          "sha256": "0f4d6e4c86692217c7e4c93472857370d1d5a1113f07841a8f079ac4c0a6e9f2"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.Analyzers.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": []
+    },
+    {
+      "package": "ViciOne.ServiceBus.Azure.Storage.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Azure.Storage.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.azure.storage/1.0.0/lib/net10.0/ViciOne.ServiceBus.Azure.Storage.dll",
+          "sha256": "6728c5365847e8fe2c913c2db1ef6d6d7a27b2a63c996c01a9b75de726e34e15"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.Azure.Table.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Azure.Table.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.azure.table/1.0.0/lib/net10.0/ViciOne.ServiceBus.Azure.Table.dll",
+          "sha256": "5cb51504c61a4c97001ff83306e81b9e5cd5cb6269085530bc0838b619617986"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.AzureServiceBus.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.AzureServiceBus.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.azureservicebus/1.0.0/lib/net10.0/ViciOne.ServiceBus.AzureServiceBus.dll",
+          "sha256": "7eec8d2eebd9c17b75f7c961bc1ad87d2806fb2a845a28fe5d995f34d0cf6705"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.AzureServiceBus.Testing.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.AzureServiceBus.Testing.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.azureservicebus.testing/1.0.0/lib/net10.0/ViciOne.ServiceBus.AzureServiceBus.Testing.dll",
+          "sha256": "723121eb7e461b5c001a9ca62478a4a277eca8ecd18aed85cee75cdb14d4d986"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.Courier.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.courier/1.0.0/lib/net10.0/ViciOne.ServiceBus.Courier.dll",
+          "sha256": "b6aa78a6074588ef5b334200cc170351b5956414b4b8432279c799c86403345f"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.DynamoDb.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.DynamoDb.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.dynamodb/1.0.0/lib/net10.0/ViciOne.ServiceBus.DynamoDb.dll",
+          "sha256": "c6618e68909937ef402ca5c1d6a2c8bd5261c4c549034515d2f59ab8dbd3bca8"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.entityframeworkcore/1.0.0/lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+          "sha256": "575b557436bcaf3d9b3a76f2a3d1aca268e7f73c0b1138622e64eae169bf6663"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.entityframeworkcore.sagas/1.0.0/lib/net10.0/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+          "sha256": "ad11988c18e0183881a5dbab2adaec0eedbef19503fbf744ab6663dd88c7c121"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.EventHubs.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.EventHubs.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.eventhubs/1.0.0/lib/net10.0/ViciOne.ServiceBus.EventHubs.dll",
+          "sha256": "8f5be08ae15d5d9a0e6decba76c9e92e4aae28c15d455c12708c3ffc81feb0e6"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.EventHubs.Testing.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.EventHubs.Testing.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.eventhubs.testing/1.0.0/lib/net10.0/ViciOne.ServiceBus.EventHubs.Testing.dll",
+          "sha256": "523ac97fbeaee255e0a14cfd320627812abe89e3ba50fa5f64c3523d67fe8050"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.Futures.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.futures/1.0.0/lib/net10.0/ViciOne.ServiceBus.Futures.dll",
+          "sha256": "5bad4e802ff5a76cdad36e94deacb84661378e8ad01c226b43ea6f0ae6edbf91"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.Initializers.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Initializers.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.initializers/1.0.0/lib/net10.0/ViciOne.ServiceBus.Initializers.dll",
+          "sha256": "5d42e51fc8108d2d0ae408ed9e8d60b3a8d087e71d87ace93f06bc04854417fc"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.JobService.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.jobservice/1.0.0/lib/net10.0/ViciOne.ServiceBus.JobService.dll",
+          "sha256": "169fec030b595d31201d012617d0b0feb4d8da757de351325ae380e391ca4b37"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.Mediator.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Mediator.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.mediator/1.0.0/lib/net10.0/ViciOne.ServiceBus.Mediator.dll",
+          "sha256": "db5184862fc8e9a35874552e6287a221aa4b5cb5899343f34d1abc62ee0969b2"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.MessagePack.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.MessagePack.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.messagepack/1.0.0/lib/net10.0/ViciOne.ServiceBus.MessagePack.dll",
+          "sha256": "b11025e9af566174cd74f48bfec6138e3409b67e804c7c91108bf7fcdc49e2ca"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.Quartz.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Quartz.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.quartz/1.0.0/lib/net10.0/ViciOne.ServiceBus.Quartz.dll",
+          "sha256": "8496d49e8ebea33ad62a06a43b77311957ef459da667c5609f4febee7c2421a9"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.RabbitMq.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.RabbitMq.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.rabbitmq/1.0.0/lib/net10.0/ViciOne.ServiceBus.RabbitMq.dll",
+          "sha256": "f4c7d19e05aa0e232c65e31d50f12dda618034a867fb3f203e8a8e9a997de780"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.RabbitMq.Testing.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.RabbitMq.Testing.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.rabbitmq.testing/1.0.0/lib/net10.0/ViciOne.ServiceBus.RabbitMq.Testing.dll",
+          "sha256": "84c6f3bc84de73ee1110c90bda2cae50c7c17b4d594b107b34594e91bdfc550e"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.Sagas.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.sagas/1.0.0/lib/net10.0/ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "ecc51e0a177776cc69e69f35d35d0e0c91ad203684d8b26dd6276bbbcd202279"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.SignalR.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.SignalR.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.signalr/1.0.0/lib/net10.0/ViciOne.ServiceBus.SignalR.dll",
+          "sha256": "0197bc4a2577c338c2593a4db892aaf2bb4abed9957e6fbe4c34a78fd54932b7"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.SqlTransport.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.SqlTransport.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.sqltransport/1.0.0/lib/net10.0/ViciOne.ServiceBus.SqlTransport.dll",
+          "sha256": "e6682b8b67916f8c08d23d37c0c578036254df1107c98e114f0515a02b198b55"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.SqlTransport.PostgreSql.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.sqltransport.postgresql/1.0.0/lib/net10.0/ViciOne.ServiceBus.SqlTransport.PostgreSql.dll",
+          "sha256": "a40a021fd6736503820c656c51f9fefccfe607dcd0d79e7cda68a2cb64167664"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.SqlTransport.SqlServer.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.SqlTransport.SqlServer.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.sqltransport.sqlserver/1.0.0/lib/net10.0/ViciOne.ServiceBus.SqlTransport.SqlServer.dll",
+          "sha256": "dd892ab576123d29f83f011e3bc2907f830ff37a726a769f5c6f75613782ded3"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.StateMachineVisualizer.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.StateMachineVisualizer.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.statemachinevisualizer/1.0.0/lib/net10.0/ViciOne.ServiceBus.StateMachineVisualizer.dll",
+          "sha256": "ad788d6dba79aae02c4d58ad40922ac7c272cfafbb17d67aa96964d53f4e9a85"
+        }
+      ]
+    },
+    {
+      "package": "ViciOne.ServiceBus.Testing.1.0.0.nupkg",
+      "zip_crc_valid": true,
+      "dlls": [
+        {
+          "entry": "lib/net10.0/ViciOne.ServiceBus.Testing.dll",
+          "cache_path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages/vicione.servicebus.testing/1.0.0/lib/net10.0/ViciOne.ServiceBus.Testing.dll",
+          "sha256": "41448453a66420ff17c7535b964d274bc7f0bc58f5cef4e791078f87d35bd951"
+        }
+      ]
+    }
+  ],
+  "limits": "All31ZIPCRC/all30actualruntimeDLLbyteequal to freshfeed; no allmethods/sourcePDB/currentcoverage or ABI proof inferred."
+}

@@ -1,0 +1,96 @@
+{
+  "kind": "INDEPENDENT_R29_SEVEN_DOCS_ACTUAL_EVENTHUB_ACCEPTANCE_PUBLICATION_GATE_R1",
+  "disposition": "NO_BLOCK_EXACT_SEVEN_R29_PUBLICATION_ONLY",
+  "findings": [],
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_PROPOSED_FREEZE_R29_WITH_ACCEPTANCE_R1.json",
+    "sha256": "4595fd719b1a3e9544ecf24fa22227252d273c6b98ffc90671b3c6829495e9ff"
+  },
+  "source_proposal": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_PROPOSED_FREEZE_R29.json",
+    "sha256": "0210407a7bdfdcfecee739674e82cbd81f9b1ae0753bfdaa66d26739083e6660"
+  },
+  "full_lossless264": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r28-to-r29-lossless.patch",
+    "sha256": "2c0e14a3d2efe4faa7180005f47255f88f929524acae8746e829fc3266a144b8"
+  },
+  "prior_R28_freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_FREEZE_R28.json",
+    "sha256": "790a91aa92d0736fed02a20c5167fc384d7e59feb2c7976d0e83fbe8a3327960"
+  },
+  "approved_exact_seven_source_sha256": {
+    "CHANGELOG.md": "bb1c8da614f6356c8df83e93df07506df0e9107ccf55656947eec472458dc835",
+    "TODO.md": "4de196f160f0bdcd27a2a1d8efab40d1cad304d3ff1c6aab149bf93d7aecd532",
+    ".testagent/status.md": "b5f85f2cb4438c11567613de24ed3b499d997608f0f9d7c46a535d48eee8f8c1",
+    ".testagent/plan.md": "5866b99cef22a0c9e9b37119b263d38b6011fa7cf75c80d2cc871a37bbee72cd",
+    ".testagent/local-completion-plan.md": "e6069be4afc80990ac7f363d60112b60a7b624d48e785f01d044407615ebc82a",
+    "docs/quality-status.md": "2c6d9497162ae6d1375136d512d83659a08e7f81d440378637263ede3a1dabf7",
+    "docs/servicebus-local-completion-report.txt": "9293421b432e757aeb00513163894a4a9989a527e833f2d1043f273bb0c93c94"
+  },
+  "current_canonical_R28_seven_hashes_exact": true,
+  "actual_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/ROOT_EVENTHUB_SELECTED_CLOCK_ACCEPTANCE_R1.json",
+    "sha256": "4ae989894f447e10039797d156ac7a86ed2afd0e7d02a18f7aea1949d78fa360"
+  },
+  "bound_acceptance_refs_all_hashes_current": 53,
+  "own_actual_afterapply_controls_whole_six": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-canonical-afterapply-adversarial-r1.json",
+      "sha256": "ed73843bd507f8eff4df95a992023af7c79cdbcfc1bc15567326457ab17887d7"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-five-controls-and-post-native-adversarial-r1.json",
+      "sha256": "325666aec674b394a2655274ba361456c7950f5720a5768d46fe8879b458b723"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-whole-completion-spi-native-adversarial-r1.json",
+      "sha256": "f047e8bf2bd595d9b0674ae4a3974c6e046ca39123f36e215c2b9cbeddd62de8"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-completion-spi-fixed-six-native-adversarial-r1.json",
+      "sha256": "0fb65af1321715e5ed10ca4967536bc41d13a0b35e4b11f202c724fd108ce68e"
+    }
+  ],
+  "actual_claim_reconciliation": {
+    "closed": "Selected endpoint checkpoint clock forwarding and selected legacy fullbatch public constructor boundary; two strict SPI proxy setup adaptations preserve assertions.",
+    "selected_cases": "New2FactsPASS, affected6PASS, actualWhole196slots196PASS0RED0skip/194visiblelabels one inheritedURItriplicate3. No196uniqueIDs claim.",
+    "controls": "Five source-one-cause variants repeat same2Facts=10slots5firstfiniteRED5Legacyhealthy. Fresh11PE/all100METHOD pervariant qualified; lowerpartialphase0controlcredit, no5bugs/10newtests.",
+    "post": "Actual2PASS forced corrected rebuild; complete16acceptedSIX/archive/post/live exactbytes plus11assets/14owners/35gen; no new post parse or canonical native rerun.",
+    "canonical": "Actual exact10 files1new9changed, full6109qualifiedsource; Rootacceptance created after own afterapplyed738.",
+    "API_lock_requirements": "Only bounded original public signatures preserved, internalprovider overloads; old98ordered/prefix42209 and all65lockobjects preserved+1DirectTesting10.9.0. No globalAPI/ABI closure.",
+    "historical_red": "Original finite selected-clock regression and oldwhole2SPI failures retained, not relabelled as green."
+  },
+  "preservation": {
+    "history_four_including_heading_byteexact": {
+      "CHANGELOG.md": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+      ".testagent/status.md": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+      ".testagent/plan.md": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+      "docs/quality-status.md": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5"
+    },
+    "TODO_preamble_other11blocks_exact": true,
+    "changed_TODO_only": "Deterministic time normalization block with bounded clock completion; further work remains.",
+    "ordered_OBL62_exact": true,
+    "OBL_categories": {
+      "CLOUD": 55,
+      "PER": 6,
+      "BRK": 1
+    },
+    "localplan_table_only06_changed": true,
+    "other07_08_external_Hardware_pending_exact": true,
+    "frozen_STATE_sha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+    "frozen234_scope": "Unchanged accepted historicalaudit at matchedSTATEhash; no new234bodyrecount."
+  },
+  "remaining_open": "SQS/SNS batching, broader operative timers, cache/resource/schema/startup/composition, current provider aggregate replay, SQL/ASB diagnostics, coverage/method risk/API30/journeys/benchmarks/CI, all62externalcontracts, realCloud and ARM64 hardware remain open. No newglobalA+/commit/push certification.",
+  "read_provenance": {
+    "own_fresh_whole_read": "Full264losslessdiff, complete205line newlocalplan, whole91line GermanPO, all added/changed seven-file prose inspected.",
+    "prior_unchanged_doc_scope": "Own R28full bodies are not freshly claimed here: old seven files source hashes and four complete historical tails checked bytewise; unchanged text outside diff preserved.",
+    "acceptance": "Own exact current actual source/native/compiled receipts; Rootacceptance semantic count/limit fields reviewed and all boundrefs hashchecked, no Root human body/parse credit inherited. Initial fullJSON print truncated only reference list; complete reference list mechanically read/hashchecked.",
+    "conditional_source_peer": "Otherpeer6f526 hash checked, body credit not transferred; this report supplies independent finalactual claim/publication review.",
+    "PO_quality": "Plain German progress reporting, virtual time/constructor/lifecycle outcomes explained; no credentials or unnecessary implementation evidence dumped."
+  },
+  "release": {
+    "publication": "Root may copy ONLY these exact seven proposed bytes after rechecking currentR28seven and snapshotSHAs; source/code/runtime unaffected.",
+    "after_copy": "Separate actual published-byte audit/freezereceipt required; this gate grants no already-published claim.",
+    "scope": "No reviewer docwrites/SDK/native/provider/process/operational imports."
+  }
+}

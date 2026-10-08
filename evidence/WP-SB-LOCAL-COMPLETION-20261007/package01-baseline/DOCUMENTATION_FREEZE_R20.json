@@ -1,0 +1,29 @@
+{
+  "kind": "ROOT_PUBLISHED_SIX_DOCUMENTATION_FREEZE_R20",
+  "prior_freeze_sha256": "febd96b5a763973309c9de598210a58aea80faf41b1a4574ab50515dacdd6162",
+  "prior_source_sha256": {
+    "CHANGELOG.md": "6acdc3e48220b554fa38312ffa1524ae20d82a7806a6fdeb2bb7cd06a63a23ca",
+    "TODO.md": "2a450034162d953f610577485d968d1efc4a33b4f99710b117e2a0023fa51d1e",
+    ".testagent/status.md": "5a28e0dfb369102357b8681f34cf6d8c4c888f4005a212325a75d7d7461234c4",
+    ".testagent/plan.md": "2b81b39f77418a2df0d970feb13ae7031c2df9e853c2920701a92134462d7dc8",
+    ".testagent/local-completion-plan.md": "efef30efb10cca300f0195ebf3fc11e150f98d39a74ac8227dee5db20cf1e9fc",
+    "docs/quality-status.md": "c3b6167d014a4c69d5ea35c3bbd4852ca2ec4e3596ba57430f1240adb3f8918c"
+  },
+  "source_sha256": {
+    "CHANGELOG.md": "9d2f6ebd12d4b58a0c80ee5a3d31063c25bba843e5a5e1e09ce35b0f45e22c41",
+    "TODO.md": "a37d0ace93fa3a55a27672226141b06bb3aa58b211fc759fb7b3b77a82f7b334",
+    ".testagent/status.md": "6af9cdc35cb023639506d48a7729fe28fceb37f837fa7f8544251d4239c25649",
+    ".testagent/plan.md": "50f2db1b4b1447740527d498b57ef85e3a7364012fc12c8871257c4baf4fca47",
+    ".testagent/local-completion-plan.md": "a963410119c0c13f6c20e18b12d2be4b0b75f15068020753361f71589f6805bd",
+    "docs/quality-status.md": "541c4c968da57de3b5c379965a5d3247f6d87c9d3c0fbe9e1d0d301c9ef716f8"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r20",
+  "receipt_sha256": {
+    "rabbit_startup": "e2c9de4d5f2cfecc2b15344008d6fc8cd4ca045cce180a9f3a73ab739814062d",
+    "rabbit_application": "e8e5e0c70c8024ca9990fe93062f5fc1ae51df0f00b36d7a988d722e8c534692"
+  },
+  "preservation": "Published exact6reviewedR20candidate files;canonical nowR20. Other11TODOsections/all62orderedOBL IDs/history4suffixes originalexact. Frozen234audit retained;P04boundedRabbitprogressonly. HistoricalR19freezeretainedunchanged.",
+  "limits": "Rabbit scoped startup regression evidence/canonical4test files only; no productdefect inferred/noCloud/broker/wholeP04/coverage/Unitaggregate/globalA+ acceptance. ASBBrokerInvariant findingopen. FutureAzure3private has noacceptednativeevidenceinthis freeze.",
+  "proposed_freeze_sha256": "c568acf3ff4b2672b56275b69562a264395bc16b3626e85a1940f735b4caca2c",
+  "independent_review_sha256": "699e578fe33ce43c58b1c55b87d3ab54088daaf7fe919639a4cf5c69f46f06b2"
+}

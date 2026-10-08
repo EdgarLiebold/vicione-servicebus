@@ -1,0 +1,46 @@
+{
+  "kind": "ROOT_NEXT_ADAPTER_OWNER_RESEARCH_READ_R1",
+  "files": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ClientContextBatchSettings.cs",
+      "sha256": "19a723e45f8cfba8b915d51214a38cc38ef2b80bcbd580f4ff596f067749d43e",
+      "lines": 32,
+      "scope": "Root whole body read this logical continuation; no independent credit transferred"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/PublishBatcher.cs",
+      "sha256": "54c3110613a8ccdfbb9843b6fc7d6b19f70a0bfb999c2f25f366add8b531d0fe",
+      "lines": 48,
+      "scope": "Root whole body read this logical continuation; no independent credit transferred"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+      "sha256": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+      "lines": 64,
+      "scope": "Root whole body read this logical continuation; no independent credit transferred"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Batcher.cs",
+      "sha256": "2539ec46704400fb75596c69b1162cc620f487691bc227d0bca1aeefa5c6d9f9",
+      "lines": 220,
+      "scope": "Root whole body read this logical continuation; no independent credit transferred"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/PartitionCheckpointData.cs",
+      "sha256": "86a4814e69d78eb6171b8d12426f66b0f7dcf3bb21d436bb74e101625e407eba",
+      "lines": 59,
+      "scope": "Root whole body read this logical continuation; no independent credit transferred"
+    },
+    {
+      "path": ".testagent/local-completion-plan.md",
+      "sha256": "109ecc99a31b8dc8800e376ea0d628428fe1212aa2ce749d98eee98127b99ae4",
+      "lines": 171,
+      "scope": "Root whole body read this logical continuation; no independent credit transferred"
+    }
+  ],
+  "hypotheses": [
+    "TopicInfo lacks lifecycle lock/postdispose admission guard present in QueueInfo; investigate actual public finite regression before claiming finding.",
+    "SQS and EventHub batch deadlines still system clock; public compatibility and endpoint/provider propagation require design, not blind substitution of cache clock."
+  ],
+  "limits": "Read-only research; no test/product/native verification or closure."
+}

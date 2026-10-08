@@ -1,0 +1,177 @@
+{
+  "status": "SOURCE_AND_TESTS_NO_BLOCK__ROOT801_84_AND57_PROVENANCE_VERIFIED__ORIGINAL_R3_8_CASES_CAUSALLY_QUALIFIED__FIXED_AND_MUTATIONS_PENDING",
+  "reviewer": "/root/continuation_adversarial",
+  "scope": "Frozen Stage A R2 only: two optional Activity product owners, complete new canonical owner231 lines/5 methods/8 expanded cases, exact five Requirement rows. Read-only review, no .NET/tool/provider/product/test/governance mutations.",
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_A_FREEZE_R2.json": "962ee505e8b8340dfa06324e984785ddabcdb28e1ca3d14c1b6e2c221c80a496",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_A_PATCH_R2.diff": "eb7fee65c0e9da61f09294e6a75a96c491f1619c4568b73d70307145f921d560",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_A_RESEARCH_PLAN.md": "0acec8d749bf307dd0f42bd05f71cb35a9e751df271d83d739ebfe40072ef4c8",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE801_STAGE_A_READ_CLOSURE_R3.json": "9e1242a8e5d8e149df746afd8e24357bdcb3d0368e071568ee0abfe4acff868e",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_TELEMETRY57_COMPLETE_SOURCE_READ_R1.json": "87c47890f03ff587088d3a13d6b17fcefdc2234b9ab0bde6e420b15c39cf9e72",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_A_TEST_ONLY_ORIGINAL_FREEZE_R3.json": "1bc311db82677373e9fffad60da10b725eb4b2d368685f35563ccc9bc0cb611e",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-a-r2-root-provenance-independent-proof-r1.json": "4817f8b8c0e468662b0308449946cdb3f423664a8cf10ef9d9f2283942593278",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-a-original-r3/RESULT.json": "e9d3ccd9e5c04fff184e26cd8307b106806b93111426023fb5ac40a09a2e891e",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-a-original-r2/RESULT.json": "8425a20705b89db04f475d13085e5e3fd547047233372bb40079315984e74aa9"
+  },
+  "current_four_file_sha256": {
+    "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs": "c206f81c611584f1982f03f55b1044cae4613d3775650fa291b43a910134d625",
+    "src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs": "77d371f9f003e617a6f2fa250c3b170fa2cc9a3dd1fe98c44d6b2e8f70e40fb2",
+    "tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs": "e6a0563a8a2584d08b9bed6f0b6ef6b78f7fac2888f7344d9ec6ad562a709a13",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "d25a434309bd395ff5b34a3864ea292a9ec2eff4f63c3e30ebca0cff486638a1"
+  },
+  "source_review": [
+    "Every former explicit Activity.Current assignment in ActivityObservation now uses one guarded setter; skip stopped Parent chain to nearest live/null. No recursive callback retries or global event/listener disable.",
+    "Activity.Start itself remains inside TryStart catch, so original failure is stored in out failure. Failed-start cleanup now directly restores the captured original ambient; no secondary dispose/restore error escapes over original startup failure.",
+    "TryDispose still attempts Activity.Dispose and always bounded guarded restore. Existing unrelated-current selection is preserved. StartedActivity Stop remains idempotent; Error status is retained; healthy Unset status becomes Ok exactly as before.",
+    "AddExceptionEvent preserves null argument validation and prior GetBaseException fallback; tags/type/stack/event/UTC preparation now guarded. Separate Error status attempt runs even without event. No fake timestamp/event is emitted.",
+    "Only two product files changed in 57 source receipt; no Batch/source-factory/required monitor/durable/business-clock operation change. Shared helper callable future scope is not implemented in this Stage."
+  ],
+  "test_review": {
+    "framework": "xUnit4/MTP2; existing internal API visibility used, no reflection/private implementation invocation",
+    "all_methods_accounted": [
+      {
+        "method": "TryCreate_RestoresCallerDespiteOrdinaryCurrentChangedFailure",
+        "variants": 2,
+        "assertions": "Exact no escaped error, null unsampled activity, parent identity, one sample and one restore; true ordinary CurrentChanged failure isolated; false healthy restore",
+        "global_cleanup": "Handler removed before restoring parent; listener/source/parent disposed in scoped order."
+      },
+      {
+        "method": "Stop_PreservesBusinessFailureWhenStopAndRestoreObserversThrow",
+        "variants": 1,
+        "assertions": "Exact original business exception object retained, caller restored, activity stopped, status Ok, one stop and restore, second Dispose changes neither count",
+        "global_cleanup": "Unregister CurrentChanged before parent restore and final activity disposal; source listener scoped."
+      },
+      {
+        "method": "TryStart_RetainsOriginalStartFailureWhenCleanupObserversThrow",
+        "variants": 1,
+        "assertions": "No escaped secondary error, started false, out failure same original ActivityStarted failure, parent identity, stopped activity, exactly one start/stop callback",
+        "global_cleanup": "Unregister handler before restore; using disposes stopped owned activity without repeat callbacks."
+      },
+      {
+        "method": "AddExceptionEvent_PreservesBusinessFailureAndStatusWhenDiagnosticClockThrows",
+        "variants": 2,
+        "assertions": "Exact business exception identity, Error status+description even when clock fails, stopped activity and one UTC read; hostile branch has zero events; healthy branch one exact event timestamp/name/message",
+        "global_cleanup": "Activity scoped; no mutable process listener state in this method; deterministic injected provider."
+      },
+      {
+        "method": "Stop_RestoresNearestLiveAncestorWhenCapturedParentStopped",
+        "variants": 2,
+        "assertions": "Explicit public live-child ambient after parent.Stop; post-TryDispose child and captured parent stopped, grandparent alive, nearest live ancestor when owned current or exact unrelated current preserved",
+        "global_cleanup": "All four activity scopes disposed; no installed listener/event; assertion tests helper restoration rather than universal runtime Stop behavior."
+      }
+    ],
+    "method_count": 5,
+    "expanded_native_case_count": 8,
+    "field_and_resource_review": "DiagnosticClock.Instant immutable exact timestamp; Reads is per-test counter. Listener/reference source filters and existing collection DisableParallelization=true bound process-global callbacks; event handlers always removed in finally before fixture disposal. No waits/random/network/empty assertions.",
+    "findings_by_severity": {
+      "critical": 0,
+      "high": 0,
+      "medium": 0,
+      "low": 0
+    },
+    "positive_observations": [
+      "Exact primary exception reference checks prevent replacement false confidence.",
+      "Expected callback counts plus stopped status check lifecycle/idempotence while healthy variants distinguish ordinary observer isolation from blanket no-work behavior.",
+      "Deterministic clock asserts exact healthy event data and absent hostile event rather than accepting fabricated timestamp.",
+      "Corrected stopped-parent fixture uses supported public ambient setter and checks unrelated live current separately."
+    ],
+    "adjacent_validation_boundaries": [
+      "These new eight cases do not independently enumerate every TryStartSource/newRoot implicit Activity.Start CurrentChanged combination; existing message-activity regressions/full Core and later targeted mutations must complete before package acceptance.",
+      "GetBaseException null/throw API guard behavior unchanged; broad ActivitySource constructor/monitor/business timing not reviewed as fixed.",
+      "Reentrant handler that changes ambient repeatedly can defeat exact restoration; the documented contract is one ordinary throwing callback, no universal hostile-state recovery guarantee."
+    ]
+  },
+  "provenance": "Separate computational proof verifies801=current tracked800+one new test;798 prior owner hashes reused unchanged,3 explicit Root personal deltas bound;84 shared current hashes identical prior Root-qualified set.37 ordered source packs reconstruct exact57 whole bodies/512603 bytes, only two old sources changed after frozen read. Root personal read attestation remains Root-only, no team reader transfer.",
+  "requirements": "4685 prior ordered row objects preserved exactly and byte prefix preserved aside from appended comma/closing bracket;4690 unique rows, appended five purposes exactly match new method annotations.",
+  "historical_fixture_correction": {
+    "r1_compile": "Two CS0619 compile errors corrected using explicit synchronous Action overload; no native credit for compile failure.",
+    "r2_native": {
+      "total": 7966,
+      "failed": 6,
+      "passed": 7960,
+      "skipped": 0,
+      "parent_exit": 2
+    },
+    "r2_four_product_causal_vs_two_setup": {
+      "causal": 4,
+      "setup": 2,
+      "excluded_setup_line": 208
+    },
+    "r3_successor": "Only two setup lines added: comment+Activity.Current=child after actual parent.Stop. All assertions preserved. New full body231 Root read/hash bound; old R1/R2 evidence remains immutable."
+  },
+  "original_r3_qualification": {
+    "whole_core": {
+      "total": 7966,
+      "failed": 5,
+      "passed": 7961,
+      "skipped": 0,
+      "parent_exit": 2,
+      "parent_session": 44612
+    },
+    "focused": {
+      "total": 8,
+      "failed": 5,
+      "passed": 3,
+      "skipped": 0,
+      "parent_exit": 2,
+      "parent_session": 31027
+    },
+    "eight_exact_native_events": {
+      "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests.TryCreate_RestoresCallerDespiteOrdinaryCurrentChangedFailure(hostileRestore: True)": "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests.TryCreate_RestoresCallerDespiteOrdinaryCurrentChangedFailure(hostileRestore: False)": "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests.TryStart_RetainsOriginalStartFailureWhenCleanupObserversThrow": "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests.Stop_PreservesBusinessFailureWhenStopAndRestoreObserversThrow": "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests.AddExceptionEvent_PreservesBusinessFailureAndStatusWhenDiagnosticClockThrows(hostileClock: True)": "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests.AddExceptionEvent_PreservesBusinessFailureAndStatusWhenDiagnosticClockThrows(hostileClock: False)": "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests.Stop_RestoresNearestLiveAncestorWhenCapturedParentStopped(unrelatedCurrent: False)": "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests.Stop_RestoresNearestLiveAncestorWhenCapturedParentStopped(unrelatedCurrent: True)": "erfolgreich"
+    },
+    "failed_cases_same_full_and_focused": true,
+    "five_finite_product_causes": "Ordinary restore callback(trycreate), secondary cleanup restore(failed start), original business failure replaced on stop, original business failure replaced by UTC clock, stopped captured parent installed instead of nearest live ancestor at post-product line218.",
+    "three_individually_green_controls": "Healthy restore sampler; healthy diagnostic clock exact event; unrelated ambient preserved.",
+    "compile_discovery_watchdog_setup_failure_credit": false,
+    "raw6_hashes_verified": {
+      "p05-a-original-tests-r3-20261007-001325--65790--W6RD56-dotnet-test.binlog": "32a4325a7746c5d01637d8dca701039a03994d6287310da69ba02483c06be16c",
+      "p05-a-original-build-r3.log": "b3ee38c4c1db611060449724570d4bc55b58d02b26931fecce7231a8de3a3696",
+      "p05-a-original-tests-r3.log": "710ce057f413dc82fe104ad2a6307b502629fff1d136e330b8c3f6b439bac30d",
+      "p05-a-original-focused-r3-20261007-001424--65840--IDgrqB-dotnet-test.binlog": "0945c594bbad54773099c41cfe0e180334e41bbce8d1511142498af0c2dd78f4",
+      "p05-a-original-build-r3-20261007-001208--65695--mYvnf7.binlog": "48df480024ba16bec495c83f4f0541488185af032f9336f68b9f13af8d3ed8c0",
+      "p05-a-original-focused-r3.log": "ba4c923afc1e6c411c7489b2089b95d499b2de4ae6d4de9748aec4a5869a9b88"
+    },
+    "runtime16_archive_hashes_verified": {
+      "ViciOne.ServiceBus.Tests.runtimeconfig.json": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+      "ViciOne.ServiceBus.Mediator.dll": "32a8f2ebc78610eddcd733bda236caa9d9324dfeddb63c03c53e634d724eb54b",
+      "ViciOne.ServiceBus.JobService.dll": "c6497ea7ae19dc988b7975da8ed63fced49b3ac45fc5e9aed42b58088a26ab28",
+      "ViciOne.ServiceBus.Tests.testconfig.json": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+      "ViciOne.ServiceBus.Testing.dll": "ecd9b1e66b87075b45f910000b3a9d29e3233a65a961e23b21be493012d4531c",
+      "ViciOne.ServiceBus.Courier.dll": "25e3ed47f882a8297b85816ed4bd778f43461b13cfe4161e97317f0b807e64a9",
+      "ViciOne.ServiceBus.Futures.dll": "8241fb91e7f7cf9e2f2ead15e89eceed353194b183469656c2b609d84780b775",
+      "ViciOne.ServiceBus.Abstractions.dll": "a28e0008303678d3638e39626955583ca3b3cc21c8ea59041a07365f6a09d26c",
+      "ViciOne.ServiceBus.Initializers.dll": "e8d9726f3b8f9e6463b4209153e5610661dde747d1ef8e755443b3cc4c771df9",
+      "ViciOne.ServiceBus.Sagas.dll": "185cfd0159a3af50126d5baae716a85476a648df6fc4b53feb675998445c633b",
+      "ViciOne.ServiceBus.Tests.pdb": "a8f959ccdb0a0c01ff960f3fbc53adfe9e6b812bb506416f27b5c196a25038f0",
+      "ViciOne.ServiceBus.Tests.Infrastructure.dll": "a80ecbeadeb3f179dcbdc44b19253a46e8575aaefa0f35b586bddf0e6af77cc9",
+      "ViciOne.ServiceBus.dll": "1cf05afc5e0de9fcc38a1f3ef63e81e5365425d8817c922e887fc552f51a0f3d",
+      "ViciOne.ServiceBus.Tests.dll": "8be4b53786681a96df4946b611daa4a238ab43d94b7a5fb3136b02b9a78355f0",
+      "ViciOne.ServiceBus.Tests.InternalAccess.dll": "83334910c11ed828ac59160d54a3a955aa082671d92f68a8baac1e33658316da",
+      "ViciOne.ServiceBus.Tests.deps.json": "ebd7e9743b85cadf35d729ceb9e51687088d9e1a60a6f25d8f8c8a09de8ed223"
+    },
+    "runtime_binding_precision": "Read-only checks archived hashes and receipt/log identity only; PE/PDB document graph and loaded module provenance require separate reviewer evidence. No live process AssemblyLoad trace claimed.",
+    "remaining7958_green": "Full-suite aggregate, no individual named7958 pass claim."
+  },
+  "findings": [],
+  "remaining_before_stage_acceptance": [
+    "Fresh strict fixed build and native Detailed8 all green plus fullCore7966 all green bound to frozen corrected Source2/test/Req bytes.",
+    "Separately compiled single-cause undo: ambient setter exception guard=>3 affected red; stopped-parent skip=>1 red; exception preparation guard=>1 red; all remaining eight-case controls green, same assertion bodies, no cleanup/watchdog/discovery/compile kill credit.",
+    "Final fixed replay and independent source/PE-PDB/module/artifact qualification; future P05 stages remain open."
+  ],
+  "assurance_limits": [
+    "No overall P05/comprehensive API/coverage/CRAP/release completion claim.",
+    "Does not fix static ActivitySource initialization, typed instrumentation ctor, BatchConsumer, optional timeline/required monitor, durable/EF duration or StartProcess active-counter leak.",
+    "No hardware/cloud/provider operations performed."
+  ],
+  "skills_applied": [
+    "dotnet-test:test-anti-patterns + test-analysis-extensions/extensions/dotnet.md for complete five-method assertion/resource/isolation review; no test writing by reviewer.",
+    "Prior dotnet-aspnetcore:configuring-opentelemetry-dotnet library Activity/parent/host-lifetime guidance; no exporter/host configuration action."
+  ]
+}

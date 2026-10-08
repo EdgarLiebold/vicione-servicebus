@@ -1,0 +1,306 @@
+{
+  "status": "READONLY_RESEARCH_PLAN__UNVERIFIED_STATIC_CAUSAL_CANDIDATES__NO_NATIVE_OR_C5_ACCEPTANCE",
+  "reviewer": "continuation_adversarial internal independent reviewer",
+  "scope": "Next public operation callers only: five explicit-provider TelemetryActivityExtensions families and ActAsync lifetime boundary. Root has sole code/test/tool/run ownership.",
+  "manifest": [
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "sha256": "8647373561a105ff543247438d3239f869009b6e2efc829f533d45bdfb235291",
+      "lines": 316,
+      "Root57_exact_unchanged_reuse": true,
+      "Root808_exact_unchanged_reuse": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+      "sha256": "d941d74bc5ac55af42d7c2abde5537489cd2850dcc325ecadfd7e93ff80931b9",
+      "lines": 54,
+      "Root57_exact_unchanged_reuse": true,
+      "Root808_exact_unchanged_reuse": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Internal/Observations/ActiveTestObservationScope.cs",
+      "sha256": "676b3732bd05212d1196a7fbd59fa6a3d8268df88d9a2e30539197e3c27a9ec3",
+      "lines": 201,
+      "Root57_exact_unchanged_reuse": true,
+      "Root808_exact_unchanged_reuse": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "d71cd6088adf54b5ab5e544b1bfc61ce4abfbd4028e4fdf1f53207e91f8b718a",
+      "lines": 232,
+      "Root57_exact_unchanged_reuse": false,
+      "Root808_exact_unchanged_reuse": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Util/RollingTimer.cs",
+      "sha256": "58b73f24ebf7a6115065a0c8d7fbcb226ca0404b3ff70f1888f62e0c9d55acee",
+      "lines": 115,
+      "Root57_exact_unchanged_reuse": false,
+      "Root808_exact_unchanged_reuse": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Harnesses/IBaseTestHarness.cs",
+      "sha256": "de679bca81fc7cafe3d5fda0ee2542c300f483c57831fafb7565beb297f1dc94",
+      "lines": 45,
+      "Root57_exact_unchanged_reuse": false,
+      "Root808_exact_unchanged_reuse": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestResult.cs",
+      "sha256": "6f1268640e301f9702dce5388cb3b4ad2197158d81bfa30c5da14c307b4cdfa0",
+      "lines": 36,
+      "Root57_exact_unchanged_reuse": false,
+      "Root808_exact_unchanged_reuse": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Harnesses/InMemoryTestHarness.cs",
+      "sha256": "d77e7f0b33882abf2e71facc73e98c8ca672307c3bfdd278cd3ad71d0ae87262",
+      "lines": 132,
+      "Root57_exact_unchanged_reuse": false,
+      "Root808_exact_unchanged_reuse": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/ConnectHandle.cs",
+      "sha256": "c0f43d3c38e2fab39a7ef1a85b5a7f69562799e4f9980cb2c2a8898d6622f161",
+      "lines": 23,
+      "Root57_exact_unchanged_reuse": false,
+      "Root808_exact_unchanged_reuse": false
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/ObservableTimeProvider.cs",
+      "sha256": "e3bf439b800f4f8cf7b96dc8a9a21be05d637157104efa4c72514eadb59c6f5c",
+      "lines": 285,
+      "Root57_exact_unchanged_reuse": false,
+      "Root808_exact_unchanged_reuse": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessObservationPolicyTests.cs",
+      "sha256": "4a8343b4152a0f0a5234609173fa93ba997d8f295085861abd9125e884d929fa",
+      "lines": 362,
+      "Root57_exact_unchanged_reuse": false,
+      "Root808_exact_unchanged_reuse": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/TelemetryActivityExtensionsTests.cs",
+      "sha256": "52473ed8659559b5bfb03f459364f7af56bb18bc924342f631635dfb7be5e348",
+      "lines": 508,
+      "Root57_exact_unchanged_reuse": false,
+      "Root808_exact_unchanged_reuse": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/OpenTelemetryGlobalCollection.cs",
+      "sha256": "bf37ae4bc28f82905a7cbc8663b440ed2d81f6d41247418b717ff3b48ff37df6",
+      "lines": 13,
+      "Root57_exact_unchanged_reuse": false,
+      "Root808_exact_unchanged_reuse": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21",
+      "lines": 46,
+      "Root57_exact_unchanged_reuse": false,
+      "Root808_exact_unchanged_reuse": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+      "sha256": "1e90e8eedf73e374ffb0a4bb145fd4d1cf4a94cdd05b65c29d440a41f8b90603",
+      "lines": 29,
+      "Root57_exact_unchanged_reuse": false,
+      "Root808_exact_unchanged_reuse": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Clients/IRequestClient.cs",
+      "sha256": "6db7403527e640c75aa66a35f9ca24d07b014af421d55c46cf04ce1657715c91",
+      "lines": 28,
+      "Root57_exact_unchanged_reuse": false,
+      "Root808_exact_unchanged_reuse": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Clients/Response.cs",
+      "sha256": "ffff2c639a268c4fc732b489445343d6888a485e6702cdf93035849a1879b468",
+      "lines": 340,
+      "Root57_exact_unchanged_reuse": false,
+      "Root808_exact_unchanged_reuse": false
+    }
+  ],
+  "author_read_provenance": {
+    "Root57": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_TELEMETRY57_COMPLETE_SOURCE_READ_R1.json",
+      "sha256": "87c47890f03ff587088d3a13d6b17fcefdc2234b9ab0bde6e420b15c39cf9e72"
+    },
+    "Root808": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE808_STAGE_C5_READ_CLOSURE_R4.json",
+      "sha256": "a7ef18b7dbf6d015f10a0873f4f771d1fc0568701e4c9ff8fbc49b7c5ebbbd0c"
+    },
+    "rule": "Reuse author personal complete reading only for exact matching owner/context hash. Manifest hashing and reviewer reading are not Root personal read. Core808 full prerequisite and84context are already frozen; new test must be personally fully read and purpose projection explicitly appended before authored canonical application.",
+    "extra_context_Root_readlist": [
+      "Whole ActiveTestObservationScope, IBaseTestHarness, ActiveTestResult and ConnectHandle if not already closed by Root proof; actual computed manifest lengths are authoritative.",
+      "Response and IRequestClient complete current owners before response-fixture authoring; request multi wrappers must use actual branch construction and assert branch/task/result identity.",
+      "Choose direct strict public SPI fixture or real started in-memory harness; if real harness chosen, full BaseTestHarness/BusTestHarness/InMemoryTestHarness and owned startup/timer/dispose graph require qualified Root reading."
+    ]
+  },
+  "reviewer_read": {
+    "full_this_turn": [
+      "TelemetryActivityExtensions316",
+      "ActiveTestHarnessExtensions54",
+      "ActiveTestObservationScope201",
+      "IBaseTestHarness",
+      "ActiveTestResult",
+      "InMemoryTestHarness",
+      "ConnectHandle",
+      "ObservableTimeProvider",
+      "TestHarnessObservationPolicyTests entire1..end complementarysections",
+      "OpenTelemetryGlobalCollection",
+      "RollingTimer",
+      "current TrackedActivity full (already C5 authored successor, not accepted here)"
+    ],
+    "partial_only": [
+      "TelemetryActivityExtensionsTests1..210: action failure and wait cancellation examples reviewed; no claim wholebody read in this turn.",
+      "Response/IRequestClient combined output was truncated; no full current human-read credit from that attempt."
+    ],
+    "no_execution": "No reviewer .NET/process/provider/mutation; research only."
+  },
+  "source_findings_static_only": [
+    {
+      "owner": "TelemetryActivityExtensions",
+      "locations": {
+        "explicit_provider_async_signature_lines": [
+          37,
+          85,
+          140,
+          202,
+          268
+        ],
+        "using_tracker_lines": [
+          45,
+          93,
+          151,
+          214,
+          281
+        ]
+      },
+      "cause": "Each uses a method-scoped using var trackedActivity. Catch StopWaiting and bare throw preserves action/wait error only until implicit final Dispose; timer disposal can replace it. Five distinct duplicated paths need qualification.",
+      "classification": "unverified static failure-preservation candidate; no survivor or empirical gap claim"
+    },
+    {
+      "owner": "ActiveTestHarnessExtensions.ActAsync",
+      "cause": "Observation scope and tracker use nested disposal. On action/wait primary, observation cleanup may replace it, then timer cleanup may replace either. Observation constructor is currently outside both try blocks; its setup error can also be replaced by tracker cleanup.",
+      "classification": "unverified static failure-preservation candidate"
+    },
+    {
+      "owner": "ActiveTestObservationScope",
+      "existing_semantics": "Dispose attempts send,publish,consume handles independently; exactly one cleanup rethrows same original; multiple normal failures aggregate in disposal order. Partial connection setup failure with cleanup failures intentionally aggregates startup+cleanup, protected by existing tests. Preserve this owner unchanged for narrow caller package.",
+      "risk": "Do not flatten aggregate policy or suppress required standalone cleanup to fix caller primary preservation."
+    }
+  ],
+  "minimal_product_design_recommendation": {
+    "owners": 2,
+    "Telemetry": "Protect full action+wait body. In exceptional unwind retain original body exception reference and stack and still attempt real tracker disposal. Suppress only cleanup failures while a body primary already propagates. Normal successful-body tracker disposal remains required and must propagate chosen failure. Existing guards and cancellation precheck remain outside owned resources.",
+    "Act": "Cover observation activation, action, ActionCompleted, wait and snapshot within one explicit lifetime boundary. On primary unwind still release each established observations and tracker owner independently so first cleanup throw cannot skip second. Preserve original primary exactly (including existing observation-start aggregate if one already produced). On normal completion keep existing required observation cleanup behavior and attempt tracker even when observation cleanup fails. Bind chosen policy for simultaneous normal observation+timer failures before tests/edit; no current broad acceptance claim for that unresolved combination.",
+    "non_scope": [
+      "Do not catch business action or wait as success.",
+      "Do not mute required clocks/cancellation or invent successful result.",
+      "Do not change C5 Lazy optional/required source policies or constructors again in this caller package.",
+      "No new general reflection/reset/source factory test hooks."
+    ]
+  },
+  "phase1_endpoint_native_plan": {
+    "families": [
+      {
+        "name": "publish",
+        "signature": "IPublishEndpoint / Task"
+      },
+      {
+        "name": "send",
+        "signature": "ISendEndpoint / Task"
+      },
+      {
+        "name": "request1",
+        "signature": "IRequestClient<TRequest> / Response<TResponse>"
+      },
+      {
+        "name": "request2",
+        "signature": "IRequestClient<TRequest> / Response<TResponse1,TResponse2>"
+      },
+      {
+        "name": "request3",
+        "signature": "IRequestClient<TRequest> / Response<TResponse1,TResponse2,TResponse3>"
+      }
+    ],
+    "rows_per_family": 5,
+    "planned_cases": 25,
+    "scenarios": [
+      {
+        "case": "healthy action + healthy timer cleanup",
+        "oracle": "Actual action1, strict endpoint/client reference, no endpoint method invocations; real source/root and selected provider timer; exact idle boundary minus1tick incomplete/finaltick complete; root stopped, active timers0. Request1 actualresponse Same; request2/3 selected branch Same and original task identity retained."
+      },
+      {
+        "case": "healthy action + throwing standalone timer cleanup",
+        "oracle": "Same physical action/timer/idlebounds, actual released timer before throwing selected cleanupE; assert exact cleanupE, no successful result. This rejects broad swallowing."
+      },
+      {
+        "case": "chosen action primary + healthy timer cleanup",
+        "oracle": "Actual action1 captures root then returns Task.FromException(chosenE); operation completed immediately without fakeclock advance; timer1, active0/rootstopped, exact Same actionE."
+      },
+      {
+        "case": "chosen action primary + throwing timer cleanup",
+        "oracle": "All actual action/resource checks before final Same actionE; releasing timer secondaryE must not replace actionE; chosen source/runtime assertion failure finite, not watchdog."
+      },
+      {
+        "case": "actual canceled wait + throwing timer cleanup",
+        "oracle": "Harmless action1 completed, owned linked operation CTS initiallylive, actual wait incomplete after timer armed; cancel exact ownedtoken, no fake OCE throw. Assert actual OCE exact cancellationtoken (no invented awaited exception object identity); timer secondary must not change required cancellation classification. TestContext global remains live."
+      }
+    ],
+    "predictions_only": "Each family action+hostilecleanup and cancellation+hostilecleanup expected finite original red; other3 healthy controls. Total predicted10red15healthy ONLY if original native physical fixture works; execute and classify, do not infer actual results."
+  },
+  "phase2_Act_native_plan": {
+    "minimal_planned_cases": 11,
+    "body_cases": 7,
+    "scenarios": [
+      "success+all healthy: real empty ActiveTestResult collections, actual action1, three observer attachments then all three released exactlyonce, trackedrootstopped/timeractive0, exactfakeidle boundary",
+      "actionE+all healthy: exact actionE and all resources released immediately",
+      "actionE+timersecondary: exact actionE despite actual timer release+secondary throw",
+      "actionE+observersecondary: exact actionE; all3 release attempts despite chosen handle throw; timer releases too",
+      "actionE+observersecondary+timersecondary: exact actionE and all owners released; no short-circuit cleanup",
+      "success+timersecondary: exact required timerE, no fake success",
+      "success+one observersecondary: exact required observerE; all handles and timer cleanup attempted"
+    ],
+    "setup_cases": 2,
+    "setup_plan": "Exact send connection chosenE after real consume+publish attachments, partial established connections both released; action0. With healthy timer preserve chosen setupE; with timersecondary preserve the same chosenE. Keep internal constructor aggregate behavior unchanged; if established handle also throws, the required primary is actual AggregateException with startup cause, not flattening.",
+    "wait_cancel_cases": 2,
+    "cancellation_plan": "Actual linkedtoken wait cancellation with healthy cleanup and then both observer+timersecondary; exact ownedCancellationToken and all owner cleanup required. No throwing-cancellation stand-in.",
+    "fixture": "Strict public IBaseTestHarness implementation with captured real observer registrations and three owned idempotent leases that remove actual references before selected disposal throw. Explicit TimeProvider uses existing ObservableTimeProvider real FakeTime inner/timer. No source internals/reflection/fake store/backend. Existing ObservationHarness/TrackingConnectHandle are useful API-shape references, but use real released registry/state or exact one-time connection counters rather than a mere scripted return claim. Real transport operations not required for cleanup lifetime contract.",
+    "predictions_only": "11cases: action-secondary3 + setup-with-secondary1 + cancellation-with-secondary1 expected5finite original red and6healthy; final source/runtime decides."
+  },
+  "bounded_mutation_plan": [
+    "One cause: undo exceptional tracker cleanup suppression for publish only; selected publish action-primary+timersecondary and actualwait-cancel+secondary predictedred, healthy paths must staygreen. Do not claim five overload coverage from one path; repeat targeted mutation in send/request1/request2/request3 if author edits all five independently.",
+    "One cause: undo Act exceptional observation suppression only; action-primary+observersecondary and bothsecondary cases should red; required normal observation cleanup remainshealthy.",
+    "One cause: omit tracker disposal after exceptional observation failure; finite active-timer/root/registry oracle must catch real leak before exception assertion. Never count timeout-only failure as kill.",
+    "One cause: suppress normal successful-body Dispose error; required standalone timer/observer cases should red, primary preservation cases stayhealthy.",
+    "Actual clone/fullpathset/build/native/raw/runtime graph and final unchanged fixed replay remain Root tasks; none executed here."
+  ],
+  "C5_actual_original_context": {
+    "receipt": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-original-r4/RESULT.json",
+    "sha256": "88a6afdbc9e6a19482fa1c70d4ef4c4a3bb941abf00e87107e223b63277e253a",
+    "actual_parent_cases": 7,
+    "actual_causal_red_reported": 3,
+    "actual_healthy_reported": 4,
+    "nonthrowing_source_parent_case": "ACTUAL_ORIGINAL_PASS healthy control; cannot claim it as an original counterexample or guaranteed ambient-restoration mutant kill.",
+    "qualification": "Receipt read; independent entire raw/PID/PE graph qualification belongs separate Root/telemetry review. No C5 corrected-source/fixed/mutant acceptance here."
+  },
+  "skills": {
+    "test_gap_analysis": "Read whole applicable skill + .NET analysis extension; all mutation predictions explicitly unverified because parent assigned read-only review and Root sole runtime author. No empirical survivor/score reported.",
+    "other_reused": "Previously applied Microsoft OpenTelemetry skill and test-anti-patterns guidance."
+  },
+  "scope_limits": [
+    "No current whole-suite gap claims from bounded test excerpts.",
+    "No whole P05 A+/release/coverage/provider/cloud/device acceptance.",
+    "No universal Activity.Current reentrancy restoration or hidden failed ActivitySource disposal claim.",
+    "Plan to be bound by Root CurrentOrder/research before canonical new tests or source edits."
+  ],
+  "prior_report": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-public-caller-primary-cleanup-readonly-r1.json",
+    "sha256": "cac5acce0a69a8a10c5d92bce00ad5697569c18ecf20d559354f76f066a38329",
+    "correction": "Removed illustrative hardcoded context line counts from Root-read recommendation; computed current manifest supplies exact sizes. No source/case/provenance change."
+  }
+}

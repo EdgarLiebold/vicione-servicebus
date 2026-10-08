@@ -1,0 +1,14 @@
+{
+  "kind": "ROOT_DOCUMENTATION_R28_ACCEPTANCE_R1",
+  "verdict": "ACCEPTED_EXACT_SEVEN_GUARDED_PUBLICATION",
+  "freeze_sha256": "790a91aa92d0736fed02a20c5167fc384d7e59feb2c7976d0e83fbe8a3327960",
+  "proposal_sha256": "17d4873a72b2dc8d8e82863adf4ccfbdb1db1324bf7a164302b8e1379268068a",
+  "independent_review_sha256": "3152d3b3063031c2aab946e0a0463b50948c6b5dc0c51df70e0c711d27c5cc7c",
+  "history4_byteexact": true,
+  "other11_TODO_blocks_and_preamble_byteexact": true,
+  "ordered62_obligations_preserved": true,
+  "STATE_blind_sha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+  "personal_read": "Entire small peer receipt and proposal freshly read; prior whole 162-line diff read in preceding continuation. No fresh historical body or full STATE body human-read claim.",
+  "errata": "Two prewrite pure guard attempts used an incomplete obligation regex and assumed a .testagent STATE path; no documentation mutation occurred in those attempts. Corrected exact R0 IDs and actual frozen evidence STATE path.",
+  "limits": "Local SQS bounded closure only. Clock/API/coverage/current aggregate/cloud/hardware/remote obligations remain open."
+}

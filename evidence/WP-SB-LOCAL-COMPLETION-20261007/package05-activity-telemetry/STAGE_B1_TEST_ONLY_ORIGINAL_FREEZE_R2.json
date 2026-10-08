@@ -1,0 +1,32 @@
+{
+  "kind": "P05_STAGE_B1_TEST_ONLY_ORIGINAL_FREEZE",
+  "status": "ROOT_RESEARCH_IMPLEMENTED_TESTS_BEFORE_PRODUCT_CORRECTION",
+  "source_original": {
+    "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+    "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+  },
+  "test": {
+    "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/ActivitySourceActivationIsolationTests.cs",
+    "sha256": "b6a17dfa23f716c485cc0a6a152b9037676eb623eb8b74f8a4afbccacd158832",
+    "lines": 167,
+    "root_personal_read": "Root wholeauthoredbody+2explicitbytearray successor lines, fixes targetReadOnlyMemory collection-expressioncompile2CS9174 only; no causalredcredit"
+  },
+  "requirements": {
+    "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+    "sha256": "be76207e17ad3f949d5a40c6688dfa1718d8058f471608237b47f028d0639c07",
+    "unchanged_prior_rows": 4690,
+    "new_exact_rows": [
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "Constructor_PreservesCallerAndHostMetricsWhenSourceListenerThrows",
+        "testType": "ViciOne.ServiceBus.Tests.Monitoring.ActivitySourceActivationIsolationTests",
+        "variantKey": "typed-source-construction-keeps-independent-host-metrics"
+      }
+    ]
+  },
+  "native_cases": 2,
+  "research_plan_sha256": "252431c8ea89485288b49839bd16795be1ad5577f3464bddf836456d3cab4064",
+  "accepted_stage_a_sha256": "624c3a179c34ca29939b489982646515122e67d1f7fbbfb7168644ec08081a1b",
+  "supersedes": "R1 compilefixture2CS9174 excluded; R2 uses explicit byte arrays for actualReadOnlyMemory DTO"
+}

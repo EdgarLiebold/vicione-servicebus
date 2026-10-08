@@ -1,0 +1,9 @@
+{
+  "kind": "ROOT_BOUNDED_R30_PUBLICATION_ACCEPTANCE",
+  "freeze_sha256": "cbcc856d761346f749028f8fd3cbc76cbf48c21ae9a47f1215e601d352abe989",
+  "afterpublication_peer_sha256": "935c13b7e45c5574147820cdb46dce7f10f911519060b30d5b40cf619f2366a5",
+  "root_whole_afterpublication_report_read": true,
+  "actual_seven_candidate_byteequal": true,
+  "limits": "Bounded SQS/SNS packet; other local work,globalAPI30,current coverage,cloud/hardware remain open. No new SDK/remote claim.",
+  "prior_unexecuted_freeze_attempt": "Source-only assertion used missing R0 ID regex, failed before any writes; corrected exact62 actual IDs."
+}

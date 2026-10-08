@@ -1,0 +1,18 @@
+{
+  "kind": "P05_STAGE_C1_PROCESS_METRIC_BALANCE_FIXED_FREEZE",
+  "status": "PENDING_INDEPENDENT_SOURCE_AND_FIXED_NATIVE_REVIEW",
+  "source_sha256": {
+    "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs": "a69ec12a095f6201e603e1ff5be0128ec0d4bfec4202a0f03243666b1f8c6802",
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/MessageProcessingMetricPreparationIsolationTests.cs": "b2b43d8b25fecb359c5ec5c4cb35ef28cd33fec087dfa6365240cd7f7bf4c620",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "62827310059751585f9d1034e9231b923edb19f2327bf3605450002c1673183b"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c1-fixed-owner-r1",
+  "patch_sha256": "f9d31fc87f94b465dadec8dda8a6276f17b3257f25a7963a242689afe8004c7f",
+  "root804_read_sha256": "fee48418d451623472df9b35c86f8de5ec66f8ca684cb3810268f6776cbda1c4",
+  "research_plan_sha256": "76e8e30835227572990eb0f3c1f57fba896dc76977422faf40ed14d5c75086c8",
+  "original_native_result_sha256": "cfd3077314169587fa56c325fef6f1861eeb1e8d313cb49200b81601c8c58fb6",
+  "native_cases": 8,
+  "product_owners": 1,
+  "root_product_read": "Whole433originalRoot57/fullreread+whole authoredoperation-before-counter/independentRetry/LagObserve/singleSentTimeGet delta personally consumed",
+  "limits": "Optionalretryanddeliverylagpreparationonly; no initialtimestamp/requirednotificationclock orotherownerchange."
+}

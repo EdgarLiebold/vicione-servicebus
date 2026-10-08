@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:4ef5ef35e33124b4b2ed66ddcb82ded5ac8764e269f5e31f1ae4004c89af949b",
+  "claims": [
+    {
+      "id": "claim_31fbff1faf994e06aa160a1a8b06be8a",
+      "statement": "EventHubRider owns receive endpoints, shared connection supervision and producer-provider lifecycle for its owning bus.",
+      "evidence": [
+        {
+          "resource": "repo://src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubRider.cs",
+          "version": "repo-file-v1:sha256:98da1eee183426df897a88625c33299a17469429ec510c21217357b239d005ef"
+        }
+      ]
+    },
+    {
+      "id": "claim_6b269b286433496b87223775afec223c",
+      "statement": "BatchCheckpointer uses a bounded confirmation channel and waits for confirmation before advancing a batched checkpoint.",
+      "evidence": [
+        {
+          "resource": "repo://src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/BatchCheckpointer.cs",
+          "version": "repo-file-v1:sha256:f0a40085e9b4ce10bced4f7ddb8ee99db8144a0b8e9e5d78fa724f0680a99f9b"
+        }
+      ]
+    },
+    {
+      "id": "claim_3aa77b096cf74a5b8a6a4f4e43a5dc93",
+      "statement": "SignalR backplane registration installs a bus-backed hub lifetime manager, specialized consumers and group-command request client.",
+      "evidence": [
+        {
+          "resource": "repo://src/Transports/ViciOne.ServiceBus.SignalR/SignalRBackplaneExtensions.cs",
+          "version": "repo-file-v1:sha256:84ca65a80bf3bacc97d3186385331f181be8e60a78a828f5f3040adef40c2237"
+        }
+      ]
+    },
+    {
+      "id": "claim_4a1ee665cc6e4088b195c154bf8a89f7",
+      "statement": "The SignalR lifetime manager keeps node-local connections, group/user indexes and pending invocation state.",
+      "evidence": [
+        {
+          "resource": "repo://src/Transports/ViciOne.ServiceBus.SignalR/Runtime/ServiceBusHubLifetimeManager.cs",
+          "version": "repo-file-v1:sha256:3179bec723f105baacf202c64e40da9aeba8a49955641c770a114ff3af5a2a03"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

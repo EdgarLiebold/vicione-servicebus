@@ -1,0 +1,8 @@
+{
+  "kind": "ROOT_STAGE_C7_OPERATIONAL_RUNNER_R3_ACCEPTANCE",
+  "driver_sha256": "36f039111c634d96fc7cb9c2504129b8b7698ec818fc5d2e7ee707cd7c403be3",
+  "inputs_sha256": "fb7c11713ec04bcb81a7280938c6c247aaf09dbd878e5a6651f60e743c490c3c",
+  "adversarial_review_sha256": "68dabbc23c9b3ab1e9ba5157a2b727020fc277f4e4491135a9aa3ecd6d0b5bc0",
+  "root_read": "Root authored complete R1, exact R2 transformation personally read all141, R3 authored per-child153 owning-finally delta. Source6093/prep5/freeze3/native13/sharedrestore guards personally read.",
+  "status": "BOUNDED_EXECUTION_AUTHORIZED_NO_NATIVE_MUTANT_CREDIT_YET"
+}

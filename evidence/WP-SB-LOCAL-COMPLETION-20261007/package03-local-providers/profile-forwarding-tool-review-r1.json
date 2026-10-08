@@ -1,0 +1,181 @@
+{
+  "canonicalOwners": {
+    "ViciOne.ServiceBus.Tests.RabbitMqLocalIntegration.slnx": {
+      "byteIdenticalHEAD": true,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/ViciOne.ServiceBus.Tests.RabbitMqLocalIntegration.slnx",
+      "sha256": "00f08bee1fe7a104a8d58eb7b04d96ee06400d81bbf1a78ac5817baff81a41dd"
+    },
+    "ViciOne.ServiceBus.Tests.SqlServerLocalIntegration.slnx": {
+      "byteIdenticalHEAD": true,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/ViciOne.ServiceBus.Tests.SqlServerLocalIntegration.slnx",
+      "sha256": "8ddfd357d1ddf12743aacb3ff5594ee5a7dd8d6634bb130482962cc150dab4fc"
+    },
+    "build/test-infrastructure/compose.yaml": {
+      "byteIdenticalHEAD": true,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/build/test-infrastructure/compose.yaml",
+      "sha256": "b7e3fff89ac0bb6c3cedd63d31cce72690ddb991aa631e9afd8cb5d2be645ab8"
+    },
+    "tools/ci/fixtures/broker_logs.py": {
+      "byteIdenticalHEAD": true,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/broker_logs.py",
+      "sha256": "e93b4d22d7a6218798662b465d208d22fa4f1f3ab803685ab48d9a67ab8b3ec2"
+    },
+    "tools/ci/fixtures/compose_fixture.py": {
+      "byteIdenticalHEAD": true,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/compose_fixture.py",
+      "sha256": "cc2b92ddc68377c2af3cf398c6a5ec041f858cdba42c30a886af51a413e3fe6d"
+    },
+    "tools/ci/fixtures/run_scope.py": {
+      "byteIdenticalHEAD": true,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/run_scope.py",
+      "sha256": "1ef7d3cb955828937ec1adb31fcbd4a0a6bcbbc16fbb354388b582e30005f095"
+    },
+    "tools/ci/run_broker_category.py": {
+      "byteIdenticalHEAD": true,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/run_broker_category.py",
+      "sha256": "03cdb64a2f8d3f32136d59da5f437d12b89b9b5bb362cc0e22fae489ee2d8969"
+    }
+  },
+  "externalProductTeamRole": false,
+  "findings": [],
+  "freeze": {
+    "files": {
+      "profile-owner-r1/PROFILE_FORWARDING_RESEARCH_PLAN.md": {
+        "bytes": 1741,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/profile-owner-r1/PROFILE_FORWARDING_RESEARCH_PLAN.md",
+        "sha256": "1721b5de3a062931f1070a97903d25ec78cca8a369bd18b1c6c0fb84b7b96d35"
+      },
+      "profile-owner-r1/contracts.log": {
+        "bytes": 802,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/profile-owner-r1/contracts.log",
+        "sha256": "bf8f5d231a0249cae4381abd9cc0925f9549c7b8dbff69cd068e65d699e3b1b9"
+      },
+      "profile-owner-r1/local_colima_forwarding.py": {
+        "bytes": 10845,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/profile-owner-r1/local_colima_forwarding.py",
+        "sha256": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d"
+      },
+      "profile-owner-r1/local_colima_profile_forwarding.py": {
+        "bytes": 3457,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/profile-owner-r1/local_colima_profile_forwarding.py",
+        "sha256": "6dabf694e6e22fb292a2d6dabf50d5b48f000c3fa346f2b183cbfa5ea5303399"
+      },
+      "profile-owner-r1/test_local_colima_profile_forwarding.py": {
+        "bytes": 4176,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/profile-owner-r1/test_local_colima_profile_forwarding.py",
+        "sha256": "6d09a53cd756e2dd3ebe08862f403d624c3a035c0d87d2a9a1f48ceefc13ed03"
+      }
+    },
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/PROFILE_FORWARDING_FREEZE_R1.json",
+    "sha256": "16e3d48f8e6c7fe225e9af5c56b6891bd1ececb453cb090cc2d8a2f535d9e654"
+  },
+  "kind": "INTERNAL_READ_ONLY_PROFILE_FORWARDING_TOOL_REVIEW_R1",
+  "lifetimeHelper": {
+    "exactAcceptedOwner": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d",
+    "integration": "Sibling directly invokes unchanged lifetime.execute(config, command, adoptedRoot, selectedPorts); existing six-provider main/allowlist remains unchanged. This delegates process/listener behavior rather than duplicating or widening old selected_ports.",
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/local_colima_forwarding.py",
+    "prior17ContractLogPath": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/local-forwarding-contracts-r7-corrected.log",
+    "prior17ContractLogSha256": "570fab83c264c8aa6464e6bdad22b9ee99bcb8b03ea4872864dce9066a59e159",
+    "priorReviewPath": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/forwarding-tool-review-r4.json",
+    "priorReviewSha256": "a73ab3ffd3d2eb4bad48440836a527be5d02863355310e220bd8cc390ba1fa32",
+    "sha256": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d"
+  },
+  "liveMatchesFrozen": {
+    "PROFILE_FORWARDING_RESEARCH_PLAN.md": true,
+    "local_colima_forwarding.py": true,
+    "local_colima_profile_forwarding.py": true,
+    "test_local_colima_profile_forwarding.py": true
+  },
+  "nextBoundedAction": "Root may perform separately authorized RabbitMQ and MSSQL native profile experiments with exact selected family and fresh canonical run roots, then qualify native results and complete own-resource cleanup independently.",
+  "ownershipAndIntegrationChecks": [
+    "Argparse restricts explicit selected profile to rabbitmq/mssql; command and readable SSH-config file required before adoption.",
+    "Canonical repository cwd tools/ci fixtures.run_scope adopted through token plus direct-root shape/containment/symlink checks. Bare root without proof rejects, and compose project must equal adopted root name.",
+    "RabbitMQ exact host+AMQP+management family matches BROKER_PORTS5672/15672 and BROKER_HOST_VARIABLE; MSSQL exact host+1433 family matches canonical contract.",
+    "Complete exact endpoint dict rejects additional/unselected/cloud/emulator projection; each string must equal actual child environment, host must be IPv4 loopback, ports canonical positive decimal1..65535 and distinct.",
+    "record_source_bundle writes exclusive local-colima-profile-owner.json inside adopted root before lifetime dispatch. It computes current actual wrapper and actually imported helper file hashes, preserves existing record through open(x), and labels native provider acceptance as owned by native results.",
+    "Existing local-colima-forwarding.json remains source-bound only to lifetime helper. Separate two-owner bundle does not relabel old receipt source hash as projection source or retrofit historical receipts.",
+    "Sibling writes no secret/token/environment/command dump. Source bundle records profile and file hashes only; helper records SSH config hash/status/ports. Existing canonical child inheritance carries credentials unchanged.",
+    "No docker/colima operations in sibling; no shared VM restart, mux/master attach/close/change or global setting writes. Imported helper uses private ControlMaster=no/ControlPath=none/ControlPersist=no forwards.",
+    "Exact SSH-owned IPv4 listener readiness, SSH-loss monitoring, primary-preserving return status and owned new-session group cleanup remain unchanged inside accepted helper.",
+    "Canonical runner starts exact broker/health contract, writes projection and hands environment/root/token; subprocess failure propagates primary status while canonical teardown retains infrastructure ownership.",
+    "Source validation precedes source receipt and native execute. Projection/adoption failures start no SSH or native child; source-bundle exists only after successful ownership and selected projection checks.",
+    "RabbitMQ/MSSQL runner paths reach child after declared compose readiness; ServiceBus emulator health remains before child and is not bypassed or addressed by sibling."
+  ],
+  "reviewer": "todo_reconciliation_review",
+  "rootAuthoredOwner": true,
+  "runtimeEvidence": {
+    "closedLogInspection": "lsof returned no open file handle for frozen contracts.log.",
+    "errors": 0,
+    "execution": "Reviewer verified complete source, terminal log and hashes without running contracts.",
+    "failed": 0,
+    "passed": 7,
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/profile-owner-r1/contracts.log",
+    "sha256": "bf8f5d231a0249cae4381abd9cc0925f9549c7b8dbff69cd068e65d699e3b1b9",
+    "terminal": "OK",
+    "total": 7
+  },
+  "scopeLimits": [
+    "This approval is for the frozen profile tool/test owner, not actual native provider acceptance.",
+    "Root must supply subsequent native MTP profile results and complete owned process/fixture cleanup receipts, bound to source bundle and unchanged helper receipts.",
+    "No real cloud, target-device/512MiB performance, whole-owner acceptance or product transport acceptance follows from TCP listener readiness.",
+    "The research plan statement about previous six-provider645cases/10modules was not independently re-audited in this sibling source/test review.",
+    "Reviewer changed no source, test, canonical runner, Docker/VM/global configuration or frozen evidence and started no .NET/MSBuild/Docker/SSH/provider/tests.",
+    "Arbitrary concurrent source mutation or malicious racing writers are not newly claimed as prevented by the source-bundle snapshot."
+  ],
+  "testAudit": {
+    "adjacentQualificationLimits": [
+      "Seven helper contracts do not execute canonical main, run_scope.adopt, environment handover or lifetime.execute integration; those routes are source-qualified here.",
+      "Accepted seventeen lifetime contracts exercise execute directly with real fake-listener/process cases; they are reused unchanged and were not rerun by reviewer.",
+      "No assertion here proves native RabbitMQ management/AMQP authentication, SQL query/readiness, remote SSH forwarding, broker/container removal or actual native profile result."
+    ],
+    "allMethodsAccountedFor": [
+      {
+        "method": "test_complete_selected_families_produce_their_exact_ports",
+        "oracle": "Complete RabbitMQ and MSSQL maps produce exact independent expected lists [34567,34568] and [34567]."
+      },
+      {
+        "method": "test_missing_host_or_port_prevents_execution",
+        "oracle": "Removal of each host/port member from each selected family rejects the incomplete projection."
+      },
+      {
+        "method": "test_an_unselected_or_cloud_family_is_rejected",
+        "oracle": "Extra SQL, ServiceBus emulator and cloud members reject exact RabbitMQ projection; RabbitMQ projection is rejected as MSSQL."
+      },
+      {
+        "method": "test_projected_values_must_match_the_actual_child_environment",
+        "oracle": "Changing each projected host or port in child environment rejects otherwise complete projection."
+      },
+      {
+        "method": "test_nonloopback_and_invalid_numeric_ports_are_rejected",
+        "oracle": "localhost, IPv6 and remote host rejected; zero, 65536, negative, decimal, leading-zero string, int and null ports rejected."
+      },
+      {
+        "method": "test_duplicate_endpoints_cannot_share_one_listener",
+        "oracle": "Duplicate RabbitMQ AMQP/management ports rejected."
+      },
+      {
+        "method": "test_source_bundle_binds_both_actual_owners_and_cannot_be_overwritten",
+        "oracle": "Separate source receipt must bind exact two actual source files and selected rabbitmq profile; second write raises FileExistsError and leaves original bytes unchanged."
+      }
+    ],
+    "criticalIssues": 0,
+    "highIssues": 0,
+    "lowIssues": 0,
+    "mediumIssues": 0,
+    "positiveObservations": [
+      "Clear finite expected port values and specific ValueError rejection cases.",
+      "Subtests retain family/member-specific diagnostics for incomplete maps and environment changes.",
+      "Source-bundle test compares actual source bytes and verifies exclusive-write preservation.",
+      "Temporary directory scoped to with; no leaks, sleeps, asynchronous tasks, shared mutation or swallowed exceptions.",
+      "No padding suite or duplicated lifetime contracts."
+    ],
+    "reviewedMethods": 7
+  },
+  "verdict": "PASS_BOUNDED_PROFILE_TOOL_OWNER_NO_NATIVE_PROVIDER_ACCEPTANCE",
+  "wholeSourceAndTestRead": true
+}

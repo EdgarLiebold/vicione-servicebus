@@ -1,0 +1,336 @@
+{
+  "kind": "ROOT_EXACT_TEN_EVENTHUB_TRANSFER_GATE_R1",
+  "driver_sha256": "3262013a4766bef321983dbf235c8134166ad185a0a268cb2b8954ca404753b8",
+  "input_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-completion-spi-fixed-private-preparation-r1/INPUTS.json",
+  "proposal_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-canonical-source-proposal-r1/PROPOSAL.json",
+  "post_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/restored-post/RESULT.json",
+  "fixed_six_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-completion-spi-fixed-six-native-r1/RESULT.json",
+  "final_peer": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-five-controls-and-post-native-adversarial-r1.json",
+    "sha256": "325666aec674b394a2655274ba361456c7950f5720a5768d46fe8879b458b723"
+  },
+  "bound_files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-completion-spi-fixed-private-preparation-r1/INPUTS.json",
+      "sha256": "31caf1c41eb2956b35e6d4c5ad788bc4b09836b8deb428f60eb6001ccd983291"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-canonical-source-proposal-r1/PROPOSAL.json",
+      "sha256": "d6e8f2ad6a85ebf74938a45c3726e280a937110d962227aa23869afc020336e4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/RESULT.json",
+      "sha256": "b0ad66af1d2cb28e8bf977fad2946b36d17cbf5a2f5d0549da94dc2e74cc0bb4"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/ROOT_CONTROLS_POST_QUALIFICATION_R1.json",
+      "sha256": "95363e5a0e2769100752c8d3a1d52a20abf4fb3d18af27873217ce6fee6c9ebd"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/restored-post/RESULT.json",
+      "sha256": "cc5b8d5e6ab3ac164fc77f988260621cd3fec3f16454b868545fb5963fe88bb1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-completion-spi-fixed-six-native-r1/RESULT.json",
+      "sha256": "a6bd55b61c4c40ee60a74224353c68419ae34f65a5a6e0ae374dd1fe1ec4a3a6"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-completion-spi-fixed-six-native-r1/ROOT_SIX_QUALIFICATION_R1.json",
+      "sha256": "f9352f98c008e96e27aa13b59cffeeca9f38f0a2c56076c78f56d7525c89ec7d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-original-two-native-r1/RESULT.json",
+      "sha256": "18f792caf37357e4235b6d6f23451e1b1bbfc73f6bf6eecac8a980a52c6edacb"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-unlocked-restore-r1/ROOT_LOCK_ASSET_QUALIFICATION_R1.json",
+      "sha256": "f03295a6b684b3e1eec0ae5f27ea9e52c6d1036fe722c05d65b95cb93194413a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-fixed-two-native-r1/RESULT.json",
+      "sha256": "f7d7c83cb31373e9236d2c3dab087968be371fb3c86d858b09c23a38028638ec"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-whole-local-native-r5/RESULT.json",
+      "sha256": "1f4c848b3a9f4711e1a1631c804e09657397e25556d084a8e4b3fc178a6c21ac"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-whole-completion-spi-native-r1/RESULT.json",
+      "sha256": "d74d96b80068e2517b5de9879ca0e6517dd5d88ea8f13328fc009d1d1e2050a8"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-whole-completion-spi-native-r1/ROOT_WHOLE_GREEN_QUALIFICATION_R1.json",
+      "sha256": "4c7825d0afd5dc487d6a81f816480aa1fc7ad105933479d50b54de0bcd0a7d85"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-driver-body-r1/ROOT_EXECUTION_GATE_R1.json",
+      "sha256": "a383e9fabf6cc7287d1ccbbc357d244862cd664017bb01e09e206661c45a6e9b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-clock-final-independent-retention-r1/MANIFEST.json",
+      "sha256": "064f0c17ea86d65884f8d0185533628fa153bb27a7fbfea315a8983fd5ee51df"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-eventhub-skill-pinned-r1/SKILL.md",
+      "sha256": "f9b30ce076b96ee944e8863b553d48851a6ffaf6ab0e94acff72745b41ccf686"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-eventhub-skill-pinned-r1/USAGE.json",
+      "sha256": "8d1bc72f0ade0a22d2c18e814fb3114ae371d588f7678251de94cb0d401f5bf2"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_FREEZE_R28.json",
+      "sha256": "790a91aa92d0736fed02a20c5167fc384d7e59feb2c7976d0e83fbe8a3327960"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-canonical-source-preflight-adversarial-r1.json",
+      "sha256": "d8a97be02a1676f0eb45494bc6aff827d2f5de2522bd4221f022aead7de1f0e1"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-canonical-ten-final-gate-requirements-adversarial-r1.json",
+      "sha256": "06b2191ae64d08104d7610a97c7d5c5fb5c05f432ccb4a800d9c51d55e1b33cd"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-original-two-native-adversarial-r1.json",
+      "sha256": "c1eae986280f95b11db03fe9da415cd464aaf37a51e551ba666a418d206cddc9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-generated-lock-adversarial-r1.json",
+      "sha256": "581b8139d544bf7938ed5e12c8bc34b9cba8222897100e3175d219e519f0f558"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-fixed-two-native-adversarial-r1.json",
+      "sha256": "c3b3f2f68650ac6a4b27a2e489673f4fc3cb52bef932ef6250c1d3519d7aee11"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-fixed-two-public-api-metadata-adversarial-r1.json",
+      "sha256": "263a118fe9b4b7219f42e4a28acac28abfc5533cb31f58a3627745a843c6ae1f"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-completion-spi-fixed-six-native-adversarial-r1.json",
+      "sha256": "0fb65af1321715e5ed10ca4967536bc41d13a0b35e4b11f202c724fd108ce68e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-completion-spi-fixed-six-fresh-physical-adversarial-r1.json",
+      "sha256": "f1715998ba55a5d041cade628ac8c60a39bbca21e44aaa653411607ce8b541f7"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-completion-spi-fixed-six-fresh-compiled-adversarial-r1.json",
+      "sha256": "9509643c11c1a858d35e5dad5f6442a75519c963c18b3d76b5fcc5e66d730fbb"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-whole-local-native-adversarial-r1.json",
+      "sha256": "c004d277932a7b691c53d8f89a4c0f334956df19d3ef07ecf69e35a3766760d5"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-whole-completion-spi-native-adversarial-r1.json",
+      "sha256": "f047e8bf2bd595d9b0674ae4a3974c6e046ca39123f36e215c2b9cbeddd62de8"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-five-controls-and-post-native-adversarial-r1.json",
+      "sha256": "325666aec674b394a2655274ba361456c7950f5720a5768d46fe8879b458b723"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-corrected-post-two-native-adversarial-r1.json",
+      "sha256": "5bed767a383ba0b6da17f4fdd37a41196688929771103c1e00b941033cf4b844"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-five-controls-fresh-physical-adversarial-r1.json",
+      "sha256": "e3c9fd03f12255be5c90ea5a4643a00c5eaa11a55e49806243ff99717e087738"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-five-controls-fresh-compiled-adversarial-r1.json",
+      "sha256": "1e88ebb2c15c23350eacd796453bd5178731138594e576f57fd4d24a3a36b886"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/M1-receiver-system/RESULT.json",
+      "sha256": "789883357f852976efbade57f9e9d1749a41b3dbff88cf25f210ac45a003602f"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/M1-receiver-system/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "b17521f69ce6ad45f3dbd68e385ea054523b285fabd1bd8abedc03725065480b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/M2-processor-system/RESULT.json",
+      "sha256": "f97323fb2d2b4316853e8763a2b8a602cf39f750390cac0ff0da5e7177734154"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/M2-processor-system/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "dd72fcababc29a2faf30f7058b0111e25b122e883149bdb24339f324968feee5"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/M3-partition-system/RESULT.json",
+      "sha256": "1eb9a238a8779427cf0d4cc9b015ca5fcc60c706ee97de025c3d02ceecc20ae7"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/M3-partition-system/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "958186583cba822c9172dcfa9e3b1c21f8848a333efd87d78a9d5d5814f4198c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/M4-batch-system/RESULT.json",
+      "sha256": "a278acea73df9a8a4869117e5d27e6dc92e2471e118d0e1e553210eddec1e31b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/M4-batch-system/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "4342bc1e562a99ad5ca00781c3f41664c835b027f6d3ab2ef4e6ec9059d02c2f"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/M5-batch-wrong-interval/RESULT.json",
+      "sha256": "cffb03aab4824b1b12cb3e14d6d080f076a00165cd181dba7a8c5f1937248704"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/M5-batch-wrong-interval/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "9dd4e9676642731bca553f26dc19d09c083b52e19bc7805a68a53a5390cedd06"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-canonical-transfer-driver-r2/GATE_INPUT_PREPARATION_R1.json",
+      "sha256": "7450312b29ba9964de236de2214eb5a66087658d62cee350e1ce329c391e391b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-canonical-transfer-driver-body-preflight-adversarial-r2.json",
+      "sha256": "55c918d26b834f6e661760e91282cc0a02b7b0974024a862d25a3943e5e06996"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-canonical-final-transfer-gate-adversarial-r1.json",
+      "sha256": "cf276c5b6255291f497c2b07f38f1f9402a03ce5474b193cb9a9938b64d3dc0c"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-canonical-transfer-driver-r2/driver.py",
+      "sha256": "3262013a4766bef321983dbf235c8134166ad185a0a268cb2b8954ca404753b8"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-whole-local-root-physical-qualification-r1/qualify.py",
+      "sha256": "965f365d241a07b56286446c4fecb2313f9f4a2f5227d54e36cf70b82a2dcb36"
+    }
+  ],
+  "protected_sha256": {
+    "CHANGELOG.md": "40801b4308e33bec3971489e01820031e1836aca90c0d91e0f46c27bbaa52501",
+    "TODO.md": "1fc570aaa6711d6e377c414d3811e9d2b9a1d190b6616f4881cb723fc28f4e92",
+    ".testagent/status.md": "d7aac115b52c67f289c55da03fa9ac5e5d5f390389d12210cbe83193bdec60db",
+    ".testagent/plan.md": "2cff85081bef76df2fd094568b74de3c103552be39c845b573790d4e9b6365c1",
+    ".testagent/local-completion-plan.md": "3c70f69affb3d8026afbe0a7ec4d07396155afdb237b4032c3f08a93b4437c1d",
+    "docs/quality-status.md": "63c571f514f9c764b8cf4b179d0d7dd759f93d829478406229a4975c8ab7d11a",
+    "docs/servicebus-local-completion-report.txt": "8fbba0585fb270d9063cfd5596d3b878bf00a38f937f356efcd2d8ddebd84afb",
+    "evidence/SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+    "AGENTS.md": "25f32901134fcb4df0a7e622408b58e1dc0ede946008779fe9f4386b720a9c91",
+    "../../AGENTS.md": "54a331183b55ea73ffaa59ab1a6317de6079b8f00258bd5a610920370ef3beee",
+    ".github/workflows/openwiki-update.yml": "bb97ae74933353bc8cb7293ccf61e9685819bd0a25cb3f5e281ae3aa0bcc9bdc",
+    ".openwikiignore": "daa172f2f254269ba685867e56e1c28a1604cbdb8ce801fc18c6a98c6d792d72",
+    "openwiki/.claims/architecture/conceptual-model.json": "77f3947bcbec0569751871005117c83f06bba78c98bb5fb5fbbe20e7c175a6f5",
+    "openwiki/.claims/architecture/message-lifecycle.json": "a6a4720c8d3976152d2038dcbeb3e8090f49164d03cbf2bce594592bde0d9f5f",
+    "openwiki/.claims/architecture/packages-and-ownership.json": "48fcbced2f31c40bf49e6f7d56eab1138a4211f6214b9de22bd41d83374d227b",
+    "openwiki/.claims/configuration/bus-and-host.json": "3dec2d5bb8f9ef126fb56e0f52392b9b0ea02adea23b786ebf408c6be62c31d5",
+    "openwiki/.claims/configuration/endpoints-and-topology.json": "2f4da6ba4be18d000d70dd6bdeff2b0897e3b39c319c548ed0409f22dc956149",
+    "openwiki/.claims/engineering/build-and-testing.json": "e66284467f641b9dd9f4265443fa4cee736ba26adfabe0e9a100368938ad86d8",
+    "openwiki/.claims/engineering/middleware-and-extensions.json": "aa57357a02a7de4fca28749e6f74c253be6eb724ac3322e9f6194e7cad2f9f68",
+    "openwiki/.claims/integrations/mediator-and-multibus.json": "5481bc6b4a8134e02b2b599c258d2ff7829db7d9f4550fcd4dcb1ae621067ff5",
+    "openwiki/.claims/integrations/persistence-and-message-data.json": "e68751f4d4709f5ba5b9d34f37c25101149a78dcc5cd7176b2b5bb1a69a0629a",
+    "openwiki/.claims/integrations/streaming-and-signalr.json": "1741184766ec493ba5a15131983913a123095201227154985f5e0cffc01f7367",
+    "openwiki/.claims/integrations/transports.json": "b6c1825f702a3f0bfc3a99684174165eaec921972a598de2192ff7faafb35aaa",
+    "openwiki/.claims/learn/first-application.json": "ea6a190c013636e6182c9828ad08c3e4fb800a7cb817bbc397a8e000ef81139a",
+    "openwiki/.claims/learn/messaging-model.json": "092cf41afbcdad749e3dbd65b21d2c8096c75a7d50002951ca4f09099ab30955",
+    "openwiki/.claims/messaging/concurrency-and-batching.json": "59da55238777f043bf5f8493126ca6f51021b98506419ef911fcf582a08ac9a2",
+    "openwiki/.claims/messaging/consumers-and-scopes.json": "a987f190195843e58a8e657763690c2e8458fb4eb870ebd245e97f53a74c93e4",
+    "openwiki/.claims/messaging/contracts-and-serialization.json": "c94ac0be7e6b7b8b8a7f01540d703a88223b897e5f6beddb7f037b6bc2ac5603",
+    "openwiki/.claims/messaging/request-and-response.json": "2e7f398c9aa9e005f2f485cc5ffa0be0fead4f2cfd879fcc87e1d40d257a5929",
+    "openwiki/.claims/messaging/send-and-publish.json": "c50e96bd6efee81e038c2e399374425f4cbc4fdbf690e8501b9c7818c4fa00cb",
+    "openwiki/.claims/operations/deployment-and-troubleshooting.json": "19d4103b79bee95ac969e8c6822b15e0bae1a7f519a0374e49e1bd03093a6406",
+    "openwiki/.claims/operations/message-journal.json": "9f5c250b4b7597741f633bf4e1181dd102a45175d2c4432cab50494961fc5d85",
+    "openwiki/.claims/operations/telemetry-and-health.json": "ab91da2cbc5de04a739096f33422c4b579d069870437f7436be0de7b0e547dce",
+    "openwiki/.claims/quickstart.json": "9a39520fd690c06c933eb1b82a8c0900ca19f84dde7cec8936953173d1c762eb",
+    "openwiki/.claims/reference/glossary.json": "3625c7058b9b04889f914703c8bed8f4b30ed3b104ba423899ee0c018c3fc213",
+    "openwiki/.claims/reference/implementation-gaps.json": "78826612fef91272782f50cba29c462e89500bf818d2317c7179e90a34422dc8",
+    "openwiki/.claims/reliability/delivery-and-quarantine.json": "6e8898473853dcb5be5fd3906a9d562759be442054fd8dc6336431845018ed67",
+    "openwiki/.claims/reliability/failures-and-retries.json": "3b20ed7c1a26a882bce3ae11f76c35da75b0d07d067f353d801595afad729358",
+    "openwiki/.claims/reliability/inbox-and-idempotency.json": "5ce361f0f2d0570915e0a7952c03924877a1ac37fc5319a9b5d4889e39450eec",
+    "openwiki/.claims/reliability/transactions-and-outbox.json": "33497b1bcde2ed063feba1654a0c326ba2154b3f50b715da2b4807c89d7e55d4",
+    "openwiki/.claims/workflows/courier.json": "315ce40855b9737364b50ab9501e77777a66d6ff34955539c28f5f75bb75cfa4",
+    "openwiki/.claims/workflows/futures.json": "b05acf7625dba6ed77ec313a2118c5840aa6204314ceb9422c5b1cb6e7d850f6",
+    "openwiki/.claims/workflows/jobs.json": "b33e23ea76819cf644609234504a3456c9c28e341a07499ced67695c7cf69f95",
+    "openwiki/.claims/workflows/sagas.json": "725d2b7855aaf8d71f9af268d7677445fd9770a0991b9861aaf1ea2d7ebae3ac",
+    "openwiki/.claims/workflows/scheduling.json": "f6b793a728b50b6f11796a668468112f5daff20123d96f224e574a5b8e520bd0",
+    "openwiki/.last-update.json": "fee4ac196924131ab7298ee632383ff7c07114ca43d710692d48b1066e9fab21",
+    "openwiki/.page-manifest.json": "845cb26ccb77996c9b2df78a4faa3ba977706d77fcf8fc0e0bfa15afbad346fc",
+    "openwiki/architecture/conceptual-model.md": "bbf51b95e99ddcfae7cbd05a4b2feb13821422ff71abef252b1ccdee810949b3",
+    "openwiki/architecture/index.md": "e5c30550e691ae8654917e3f3a6af3eb7fc673056a25d1f8cb54f9000d997db3",
+    "openwiki/architecture/message-lifecycle.md": "6a1d99c5644f3f60ca75b0059a6eff2b7756d233b2870a276e7032d1a9807438",
+    "openwiki/architecture/packages-and-ownership.md": "50f0b7a7c6c5bb29662b8397c49e23b5ef108e81640b3e599abf182ddd874f41",
+    "openwiki/configuration/bus-and-host.md": "a3dc57bfb62f922a6b82fab8ebb7e31d78ae8d0a666bedc813a9ec6000c119e5",
+    "openwiki/configuration/endpoints-and-topology.md": "f7450735728b0f5dfc02eeb911592588002a88f352be41e23282fc9cb3ad13bc",
+    "openwiki/configuration/index.md": "6c92b9c80d896bf54384b4e4dd87f2e444bfb145effcc52d7536c8bd68579a31",
+    "openwiki/engineering/build-and-testing.md": "ffcbe3e84fe652cbd68cc6df0d9af1f5da4cdd9c793e6ed5fd71c2270e4e617d",
+    "openwiki/engineering/index.md": "204d825c3de324d221ba70176d66c4124958334145809efd976c135c2eb092f3",
+    "openwiki/engineering/middleware-and-extensions.md": "0acde06f50cdcf92015646051b80c9471e3417bf30bd307d778244af8bb34975",
+    "openwiki/index.md": "0fc6a974302ec059304603e29ce0fd5c96f5fac604adddc7e61129c1d6b5f70b",
+    "openwiki/integrations/index.md": "831afb96908b81302c6e73238a5a299dfbe7ee141dea84718639faf7eeaa2de0",
+    "openwiki/integrations/mediator-and-multibus.md": "a4d5628f4520abceddcb754171735257c12bcb598335d0eec14135a49cea9412",
+    "openwiki/integrations/persistence-and-message-data.md": "793a110f5ae1c8cb073ace5c7d32136ddd6caeacc747d62dd8dd3bca7415323a",
+    "openwiki/integrations/streaming-and-signalr.md": "4ef5ef35e33124b4b2ed66ddcb82ded5ac8764e269f5e31f1ae4004c89af949b",
+    "openwiki/integrations/transports.md": "be59b001d21b7437ee4a043fec89680192fb8240e24e2b34d890a334a6a9addc",
+    "openwiki/learn/first-application.md": "29fe160a2b915f54b7bec48467d1ed3b7db7526fcaf357179d0d8f4aae021ff8",
+    "openwiki/learn/index.md": "89124914f9fd11aee1764729e5f2f0c32b70a1636a5dd444cfcda58834972449",
+    "openwiki/learn/messaging-model.md": "e449d47cc8b2e2697cdddcb348d410e5ed76c0891110ca9c76c19e9aedc0f548",
+    "openwiki/messaging/concurrency-and-batching.md": "887d705ebc9542195463fcc7ab6dc88f31a3a41d64682ee2b092c30149cc6e01",
+    "openwiki/messaging/consumers-and-scopes.md": "40982648dc9b5267624d8b2aaf94b983b5f9d02f5c4088b79da79addcebe16aa",
+    "openwiki/messaging/contracts-and-serialization.md": "77768d33b63ebf5d6b0f6c3cb2b516b73d2e34d46defb9b3bc53cd9382424519",
+    "openwiki/messaging/index.md": "5f01dbdae5e4745d37bbd18e33d48a6ac53bef3c52a30e8b07734ec12d683ee4",
+    "openwiki/messaging/request-and-response.md": "3c926c2407d78e1c62183c7bd043aa037ee65d95c08bb965b8ba210743f07726",
+    "openwiki/messaging/send-and-publish.md": "990ec50c30d4d2f48de395dc4e7d9dd188b74a4209394b54bebc8a24acf9017f",
+    "openwiki/operations/deployment-and-troubleshooting.md": "f962eeb583e33b8bb3bfa5000fd1334aad64fc54507f40a70ae035ac8aca1a56",
+    "openwiki/operations/index.md": "c5cebb61b5da78a62a1b770c7d9b2faadc892ed12d55500257db8021803270a4",
+    "openwiki/operations/message-journal.md": "2df4fa43c450c044cd3c6915e50542a903eaca42462eefcfea55c43994c89a3d",
+    "openwiki/operations/telemetry-and-health.md": "2e974e8f5cddd4930b8f822f1d350640d6c41d3f6a1e2017c34f4d70003c53cb",
+    "openwiki/quickstart.md": "4ff40658b896c38acbdef87d38a7fde90646c64f268524e130996864b61993bf",
+    "openwiki/reference/glossary.md": "28baedcd24588ec338e963634a8b7d916e6e0a99a3e00f686c23fb03121ad393",
+    "openwiki/reference/implementation-gaps.md": "55416ec0b4a14423dae67fe09a2ac16b3799db67cca79251320f804628c5e241",
+    "openwiki/reference/index.md": "3f7137826de77acdec893e11621049b640f7b8305d2de4a46725832820f4c34e",
+    "openwiki/reliability/delivery-and-quarantine.md": "63519e6cae0c79600592a5c769ce0a7514cb2ef8079d64a2792d1b447166b64c",
+    "openwiki/reliability/failures-and-retries.md": "6352b7a66c81adec1967d5f36d33c86860bae0d7e1550ddd0f18e50d68c39479",
+    "openwiki/reliability/inbox-and-idempotency.md": "7c784083e6d43cb204e15442c10f370b3e32ca2385bc65fb4b52727ffe70971f",
+    "openwiki/reliability/index.md": "90733833a8fb63ef018dac844735e46edacf136cc796c33291e25702312f6035",
+    "openwiki/reliability/transactions-and-outbox.md": "d1f63c2ffd377df558f8e636c332e99e26542418fb9cfc1f00594a2711a0c012",
+    "openwiki/servicebus-inconsistencies.md": "a82b015e741b07323b2dbbe7f5048813eaaada54a5f7bf6800846b8c1f96c6de",
+    "openwiki/workflows/courier.md": "cf6bf69cee00980cf209dc2bf03aa0cb9a54b0f1863b3801a315bea26a836f50",
+    "openwiki/workflows/futures.md": "a5f702ddb5403083d8287108d249dc6baf5f57c9a71e377518f7857f9f222cc7",
+    "openwiki/workflows/index.md": "f99f85a75db4c2ee4de11bf9c1dcb5c91aada9a09e0224de2029394db367a76f",
+    "openwiki/workflows/jobs.md": "0097e1231671f1fbd6e94992c5ce7916520951f1abde58a9d97a6ebd27dc1f3e",
+    "openwiki/workflows/sagas.md": "fae9fe331e98150112ee04e36a40279f05ed65805d4f140b7b65bb745e78de32",
+    "openwiki/workflows/scheduling.md": "5ef43199d2e8319c71e39dd3baf1962170fe07122a8d2af0235092378ba50773"
+  },
+  "build_anchor_sha256": {
+    "build/test-infrastructure/images.lock.json": "ae9e3a23739b2469ee89dab6c6a0ef5e8f06d0db650a95e953df99cfc904f8f7",
+    "build/test-infrastructure/new-run-credentials.sh": "e3a8fa4ab81a98641730ba9be7ce7f2ba0ff530d8d7c01cf1dc907ac8f457255",
+    "build/test-infrastructure/compose.yaml": "b7e3fff89ac0bb6c3cedd63d31cce72690ddb991aa631e9afd8cb5d2be645ab8",
+    "build/test-infrastructure/activemq/Dockerfile": "4c44e4f5ec0375a3892fea8fdffffd881d98eab699c595bea52691e9d84dd703",
+    "build/test-infrastructure/activemq/groups.properties": "bc723fa3153564758e734d0002f782c97e7ff6a91866e77e7560c04d8d96c8ba",
+    "build/test-infrastructure/activemq/activemq.xml": "920effbdcd0b3156f8cea692b71bdd2ffe6d796f31d25f601366fb0e39d8247c",
+    "build/test-infrastructure/servicebus/config.json": "2f804588a9826a7614e36505ac6873fa442566b6204428a25852e8388b417d15",
+    "build/test-infrastructure/rabbitmq/Dockerfile": "4e066af4b4d37f83ed72ec564f1c72c4252d96c0ce043d7762956fabf22e915f",
+    "build/test-infrastructure/rabbitmq/enabled_plugins": "5b9e43d4cc4e7d2b41903fccf8c78be896ac43f7ea96078e091f15cfb67341f6",
+    "build/test-infrastructure/eventhubs/config.json": "8e45b8d2d316f6cfe613f4cd6844988024707471c9231e4392acd0c311e37a53",
+    "build/test-infrastructure/haproxy/haproxy.cfg": "d03a7edb17bbded2ba124dd598d7b748f41878b40b31f2b35f0d9abbde27862f"
+  },
+  "disposition": "RELEASE_EXACT_TEN_ONLY_AFTER_INDEPENDENT_CONTROLS_POST",
+  "counts": {
+    "original_FACTS": 2,
+    "corrected_SPI_clock_slots": 6,
+    "whole_local_slots": 196,
+    "whole_display_labels": 194,
+    "variants": 5,
+    "variant_repeat_slots": 10,
+    "first_finite_RED": 5,
+    "healthy_Legacy": 5,
+    "post_PASS": 2
+  },
+  "limits": "Root sole exactly10 source copy. Source signatures/API proof boundedEventHubDLL; no currentfullcoverage/globalAPI30/cloud/HW/CI/commit/push acceptance. Config15 F/O/S; operationalbuild11 onlyO/S qualifiedowners; keybytesneverprinted. Allprotectedfilesand7docs checked outside productgraph.",
+  "source_body_peer": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-canonical-transfer-driver-body-preflight-adversarial-r2.json",
+    "sha256": "55c918d26b834f6e661760e91282cc0a02b7b0974024a862d25a3943e5e06996"
+  },
+  "exact_ten_source_peer": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-canonical-final-transfer-gate-adversarial-r1.json",
+    "sha256": "cf276c5b6255291f497c2b07f38f1f9402a03ce5474b193cb9a9938b64d3dc0c"
+  },
+  "preparation_sha256": "7450312b29ba9964de236de2214eb5a66087658d62cee350e1ce329c391e391b",
+  "provenance": "Root allactual native finite outputs and finalcontrols325666/Post5bed/sourceGatecf276 reports personallyread; freshmetadata retained peer owncredit; Root5pure11PE+all2904each and root95363 separate. ReviewR1 twoactualsource-onlyguards correctedinR2; no executedR1failure. Finaloperational gate must still receiveindependentbindingpeer and Rootseal beforeexecution."
+}

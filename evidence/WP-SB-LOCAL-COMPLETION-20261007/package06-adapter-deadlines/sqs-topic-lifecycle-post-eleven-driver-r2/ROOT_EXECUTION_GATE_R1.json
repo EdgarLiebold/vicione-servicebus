@@ -1,0 +1,47 @@
+{
+  "kind": "ROOT_SQS_POST_ELEVEN_EXECUTION_GATE_R1",
+  "driver_sha256": "84edf3940ef8e8925c7a025bb942f6c3b054f0429c8a7de4f069eff1bbee3ab3",
+  "inputs": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-fixed-private-preparation-r1/INPUTS.json",
+    "sha256": "f6eac1e54fd7160ce845015af85d2e8eb86d1e4f6e60174d2742f49a5fbc4f8d"
+  },
+  "fixed_result": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-fixed-eleven-native-r1/RESULT.json",
+    "sha256": "f110dacf1168b74e6f2a46688bdbf14516862dc840b8b5d38dbbb0ab26ebb7fc"
+  },
+  "counters_result": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-seven-counters-native-r1/RESULT.json",
+    "sha256": "de5d93f0af3ccc334e9f1c782ea5951c6b92918ce2b30fc04491071c420d8d5d"
+  },
+  "reviewed_files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-seven-counters-native-adversarial-r1.json",
+      "sha256": "b44db5308dc817fb9c447cf45df9e9ee906f3af74346dc0421f0bb8504ae7b9b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-seven-counters-fresh-physical-adversarial-r1.json",
+      "sha256": "4743ac191702188a902af8ede3f93d9e78666ad48fda247e58d2de3d7b8a3869"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-seven-counters-fresh-compiled-adversarial-r1.json",
+      "sha256": "79cc920bd92d8369e33d67c415ff22f7578eee5194456d2c29d8e6bc90889600"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-post-driver-preflight-r2.json",
+      "sha256": "4e7321ff2ac16d93f134c3aa6f3cb4d2868c24ee1a7f491c4b96291ea79d7c96"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-whole-sqs-native-adversarial-r1.json",
+      "sha256": "0bbfe0ac8446c4af98776611b619c04bd2a9903422fb0212c45627b97b9758da"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-fixed-eleven-native-adversarial-r1.json",
+      "sha256": "c184c0a081d690e601ca8713881457f64d7af18441114861429701b8ddaa897a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-seven-counters-native-r1/ROOT_QUALIFICATION_R1.json",
+      "sha256": "2d147a5aebe75eb81f0cbdc5836442822cf8d59b00710b68d58314ee77e9c040"
+    }
+  ],
+  "decision": "Root qualified allactual7+own70freshPE/14firstfinite/77bodies, boundedpeer semanticfields/ledger/seven actual diffs+aggregatefresh70PE/ALL212 proofs read; raw42 manifestrows mechanicalonly. Counter sourceholdreleased; SDK14stages/parentjoined0. Mandatoryforcedpost11 separate independentpreflightR2 accepted. No canonical apply yet."
+}

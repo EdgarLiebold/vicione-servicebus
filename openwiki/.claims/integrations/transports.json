@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:be59b001d21b7437ee4a043fec89680192fb8240e24e2b34d890a334a6a9addc",
+  "claims": [
+    {
+      "id": "claim_223a9f64a0dd43978f1bd938b030e2d2",
+      "statement": "RabbitMQ reliable dispatch validates its destination and requires persistent mandatory acknowledged publishing with an explicit acceptance proof.",
+      "evidence": [
+        {
+          "resource": "repo://src/Transports/ViciOne.ServiceBus.RabbitMq/DurableSend/RabbitMqDurableSendDispatcher.cs",
+          "version": "repo-file-v1:sha256:84dc2df06c679141685ce274482bc82b70a7d85b969b6b11381c34322984bccc"
+        },
+        {
+          "resource": "repo://src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqSendTransportContext.cs",
+          "version": "repo-file-v1:sha256:361d20a085a76bc38fa9ca850ba76b09a040fef498291890ba9edc85c95566f4"
+        }
+      ]
+    },
+    {
+      "id": "claim_3533b33d392a4abeaef695500008d227",
+      "statement": "SQS receive lock handling renews visibility, deletes on completion and changes visibility for fault redelivery.",
+      "evidence": [
+        {
+          "resource": "repo://src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsReceiveLockContext.cs",
+          "version": "repo-file-v1:sha256:330919b04a8c6692e7c3a8710a903751ef9249b6a8fb98066b560d531c9ac3c8"
+        }
+      ]
+    },
+    {
+      "id": "claim_60700854da9c44f1953753e3e517ddb3",
+      "statement": "The support matrix distinguishes ordinary messaging from durable dispatch and identifies RabbitMQ/InMemory as the supported dispatcher boundaries.",
+      "evidence": [
+        {
+          "resource": "repo://docs/provider-capabilities.json",
+          "version": "repo-file-v1:sha256:422a0241dce7f85c76e587727d2a978969f44757063d8b0bacc699299ca9b3cb"
+        }
+      ]
+    },
+    {
+      "id": "claim_7c1fb194e78d4db39dc0df332edbbc7a",
+      "statement": "SQL receive settlement and renewal are owned by the transport's delivery-lock context.",
+      "evidence": [
+        {
+          "resource": "repo://src/Transports/ViciOne.ServiceBus.SqlTransport/SqlReceiveLockContext.cs",
+          "version": "repo-file-v1:sha256:30d169e15665e8dfad5da3eff2e11dceb1552e9c8d0e82c52804d24ad9218f6d"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

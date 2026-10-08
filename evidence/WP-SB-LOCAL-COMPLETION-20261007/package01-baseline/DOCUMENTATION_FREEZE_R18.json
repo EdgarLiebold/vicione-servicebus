@@ -1,0 +1,26 @@
+{
+  "kind": "ROOT_PUBLISHED_SIX_DOCUMENTATION_FREEZE_R18",
+  "prior_freeze_sha256": "a1f5d0baa0e8008d039b6b513845aa6292775d79d6d26825b6f3dbf6d99b6131",
+  "prior_source_sha256": {
+    "CHANGELOG.md": "a03a4c23ab10ecd21e56f07a3472c2d91384bc094da615cbb8da73a41a1b6c8d",
+    "TODO.md": "acd39b04f176990bb393977c5bb6b0ad0cfbaf026511408f19b7975000b1ac57",
+    ".testagent/status.md": "814f276aa5fee75b284a4bcab4d0e158796e772448fd3fdcfc94249f3e576faf",
+    ".testagent/plan.md": "ab72ba684f94b63fed6084bcb0a4e5b4fd3fe9e95928a804a923200cf89e573b",
+    ".testagent/local-completion-plan.md": "b070491aa3f0963a8a619bc2d69909f0c3dd81781974cca2f4a81dc35d3cc5a4",
+    "docs/quality-status.md": "68e910712195fa2e05169f2fe78125dfd44bf099892fe484aa907a20bd1701c1"
+  },
+  "source_sha256": {
+    "CHANGELOG.md": "a95593e5d5528b798fbccd02dfe7ea8ba98b1907a8b59b8548f2a2ec3137146d",
+    "TODO.md": "9b7db19f97678ccf1630890aff3777c09a34392494e774c1911b061c2178bd2b",
+    ".testagent/status.md": "5868f99cfda21c635e8e92d9adb0cf8bfe3d545c017a79bf66b728558e0aab9b",
+    ".testagent/plan.md": "6d35325ff148daf752ccfcf4d9fefd8aac38941eaa1df066e127e2d2e83a8fca",
+    ".testagent/local-completion-plan.md": "ac4b5610c5616b707820797cd7a03d46af90edf1607aaac89c2663c0bfeb2f25",
+    "docs/quality-status.md": "128ed40aa1d89bcc68d755c856f6c7632f95671cdf077ef0f4d30d88aa0e1d62"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18",
+  "sqs_acceptance_sha256": "2a4af610b49a00152377d8f00decf2286142f1a80e0e7079954127b5a06cbbc5",
+  "sqs_canonical_application_sha256": "7fb3feade7a3331e6286f8c64671835455f0a661ecfbd66eedd85c3ff2e7864b",
+  "limits": "Only bounded local named SQS stage A added. Every other eleven TODO sections and 62 OBL IDs retained byte-for-byte; old audit234 and all historical sections retained. Other packages/external gates remain open.",
+  "independent_review_sha256": "b08dc9b0753072cd5b5cdd22941843a314b2387ddf0ddc541283aae94f9a2bbd",
+  "proposed_freeze_sha256": "8b2864a291f1582af5c227e578df9ab456423d7003dee15ffb372c3065ee5517"
+}

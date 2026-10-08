@@ -1,0 +1,44 @@
+{
+  "kind": "ROOT_PUBLISHED_SIX_DOCUMENTATION_FREEZE_R25",
+  "prior_freeze_sha256": "f4f1b79c35228e7d937472646106cd61ec16a3e8c6b132c0d2f5720fde5290bf",
+  "prior_source_sha256": {
+    "CHANGELOG.md": "171fdba38f9237cc108ee85c8c0be99555897b01b755ee73e2393b9237569335",
+    "TODO.md": "46c9ca999ea4811f33f1060c53809d52e8c3059b8126e84d1216e7a0166770af",
+    ".testagent/status.md": "172aaf98251bc64a70121c78a636027688fde2745f9c08fb2843723fc452683f",
+    ".testagent/plan.md": "71b26c762ae3516535be46f1ce0314e3d133472cf551ac924223b3db88b64d84",
+    ".testagent/local-completion-plan.md": "ec10125b6959751cea9fdc5202b46c2cb82a155f2215e39ac1d05710690a34c6",
+    "docs/quality-status.md": "0904bb99c7f1aa8b81abe9243ce4bb2d2e353828762c08444e2a4fa9b228eae3"
+  },
+  "source_sha256": {
+    "CHANGELOG.md": "c0069f4c35dce5e288a41e52cab153b425f5ac4119ce028e871213de008480b6",
+    "TODO.md": "8745ab60b0276ea5a53d0144adaaf3348a4ed30b2075de78adc36c8c89c075ff",
+    ".testagent/status.md": "d631f93eda9ec1ff10c85d91bb8e96fc74b8d0e08cb44b942996d94c72e00412",
+    ".testagent/plan.md": "45b921cc93cf45adef39020ef178c1ab174de77b527205698d3b027f84144079",
+    ".testagent/local-completion-plan.md": "0b45c6bdb1b5b861ce12e66e84afc2d7e7ae53da2e5c68d747a4c63387bfb6d0",
+    "docs/quality-status.md": "e629643a96b3a1f8a104c28eec081e22a8debcad99a3036c7d39194562cb0bc8"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r25",
+  "ef_acceptance_sha256": "07f77f8207fef5239043ebd46848168ae6170c3f4f6a9927189dbecee8bb069f",
+  "separate_op_report": {
+    "path": "docs/servicebus-local-completion-report.txt",
+    "prior_sha256": "bd967557bb684ee5d01b48afc2fd326e0b539e74b1e290c68134ae2a413d3cae",
+    "proposed_sha256": "71bdc3d34b6794b7e49173a2d4c5ea2b06282e14ad0f9825152406deb1ea8ed7"
+  },
+  "lossless_diff_sha256": "1329a41f7bf5dfd156131d8adaf70f7547b05579a086565c1bc603e52ea1aefa",
+  "preservation": {
+    "other11_TODO_blocks_byteexact": true,
+    "TODO_preamble_byteexact": true,
+    "ordered62_OBL_exact": true,
+    "history_suffix_sha256_including_heading": {
+      "CHANGELOG.md": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+      ".testagent/status.md": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+      ".testagent/plan.md": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+      "docs/quality-status.md": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5"
+    },
+    "frozen234_unchanged": true
+  },
+  "limits": "Exact6docs+separatePO64published afterallguards; EFboundedclosure07f77. Other11TODO/62OBL/fourhistory/frozen234 preserved. Cache4newtests sourcequalified only, allotherlocal/external work pending; no newcommit/push/globalA+.",
+  "proposed_freeze_sha256": "09855888d62831234dfaade901159ec4c654f3331a5ce94f759ae674dc378d13",
+  "independent_peer_sha256": "10b36fede08ccd1340fe72e44448fe02b55e85105af9ca8902baad1e4885a570",
+  "published_locally": true
+}

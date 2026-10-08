@@ -1,0 +1,63 @@
+{
+  "kind": "INTERNAL_READ_ONLY_TODO_RECONCILIATION_REVIEW",
+  "reviewer": "todo_reconciliation_review",
+  "utc": "2026-10-06T22:30:58.749545+00:00",
+  "root_authored_changes": true,
+  "independent_product_team_or_release_approval": false,
+  "verdict": "CHANGES_REQUIRED_FACTUAL_WORDING",
+  "freeze": {
+    "kind": "TODO_RECONCILIATION_FREEZE",
+    "baseline": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+    "file": "TODO.md",
+    "sha256": "885d8ff757548df3b40b9af1fb80c04a43ed424070eb0f5d7487a8e34ab93e97",
+    "patch_sha256": "3f48b0f0789b816695f4d68193c5519f474854b3537ec964df05d100ff17f227",
+    "closed_deferred_items": 0,
+    "runtime_acceptance": false
+  },
+  "observed_todo_sha256": "d86e206a909e13ef3ccf77a8ffac30f99b0a7f2efb4dd07f78f740be9804ab90",
+  "observed_patch_sha256": "3f48b0f0789b816695f4d68193c5519f474854b3537ec964df05d100ff17f227",
+  "freeze_hashes_match": false,
+  "patch_equals_actual_baseline_diff": false,
+  "same_deferred_headings": true,
+  "closed_deferred_items": 0,
+  "changed_sections": [
+    "## Verify startup validation across retained capabilities",
+    "## Separate cache index projection from external observation",
+    "## Continue deterministic time normalization beyond envelope materialization",
+    "## Make Activity telemetry observationally no-throw"
+  ],
+  "external_obligation_identifiers_byte_identical": true,
+  "all_other_sections_byte_identical": true,
+  "findings": [
+    {
+      "id": "TODO-R1-001",
+      "severity": "Minor",
+      "status": "CORRECTION_REQUIRED",
+      "location": "TODO.md:25",
+      "issue": "Two excluded declarations are described as two abstract models. Actual matrix excludes one abstract inheritance base and one IValidateOptions validator.",
+      "evidence": "docs/static-configuration-validation.json excludedDeclarations: InboxCleanupServiceOptions abstract base; ValidateViciOneServiceBusHostOptions validator, not options model.",
+      "required_correction": "Say including one abstract base and one validator; retain 43/41 counts and boundary counts."
+    },
+    {
+      "id": "TODO-R1-002",
+      "severity": "Info",
+      "status": "PRECISION_RECOMMENDED",
+      "location": "TODO.md:119",
+      "issue": "Their original bounded validation and mutations may imply the named historical report proves all enumerated harness and runtime families. The cited V4 report names selected runtime families and 30 mutations; later current local behaviors have separate histories.",
+      "recommended_correction": "Historical bounded runtime-time validation and mutations are retained at commit ... avoids implying complete original mutation coverage for the entire preceding list."
+    }
+  ],
+  "positive_checks": [
+    "Cache narrative matches current ResourceCache split, observer gate, full fanout catch and mutating reentry guards.",
+    "Cache ordering/failure-channel/hostile comparer/partial mutation/bounded-memory obligations remain open; no comparator rollback proof invented.",
+    "Time worklist matches body-read system-backed CTS deadlines and explicitly disclaims exhaustive closure.",
+    "Startup direct-validator versus actual host boundary is preserved; batch provider-bound guard is not promoted to startup proof.",
+    "Every deferred heading remains; external sections and obligation identifiers are unchanged.",
+    "Activity revised narrative corroborated by ActivityObservation ambient assignments, MessageActivity typed ActivitySource construction, BatchConsumer ambient restoration and StartedActivity timestamp preparation; no runtime no-throw acceptance supplied."
+  ],
+  "limitations": [
+    "Read-only source, diff and historical evidence review; no runtime process or dotnet execution.",
+    "No deferred item, whole API, A+ release, provider/cloud or hardware gate is closed.",
+    "Original historical reports were inspected with git show at exact cf2e9ebfbc193573fd376df549469a956bc7de80 and0af45942509b6391a8265cc2eb366b422714e375; they remain historical."
+  ]
+}

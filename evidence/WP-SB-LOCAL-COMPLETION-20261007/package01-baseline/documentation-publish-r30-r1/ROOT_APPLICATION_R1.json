@@ -1,0 +1,52 @@
+{
+  "kind": "ROOT_ACTUAL_SQS_R30_SEVEN_DOC_PUBLICATION_R1",
+  "gate_sha256": "e9966b115a5f52cd72a8b7ecd91d77ac0dcc8b69acd6e0aaf455b317f6b6e737",
+  "files": [
+    {
+      "path": "CHANGELOG.md",
+      "before_sha256": "bb1c8da614f6356c8df83e93df07506df0e9107ccf55656947eec472458dc835",
+      "candidate_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/CHANGELOG.md",
+      "after_sha256": "182151c1dc39e8166226194caf3b1d2de5155288313d80e76df122c9960871b0"
+    },
+    {
+      "path": ".testagent/status.md",
+      "before_sha256": "b5f85f2cb4438c11567613de24ed3b499d997608f0f9d7c46a535d48eee8f8c1",
+      "candidate_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/.testagent/status.md",
+      "after_sha256": "576321b92b25e802f9c0c1d4d2eb4d8f32c713b2486f89a61941e4ee05aa0220"
+    },
+    {
+      "path": ".testagent/plan.md",
+      "before_sha256": "5866b99cef22a0c9e9b37119b263d38b6011fa7cf75c80d2cc871a37bbee72cd",
+      "candidate_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/.testagent/plan.md",
+      "after_sha256": "3c889da63a36226cb9817c3fbbd3f936ef7695ce9725c0054ceccddbdc321907"
+    },
+    {
+      "path": "docs/quality-status.md",
+      "before_sha256": "2c6d9497162ae6d1375136d512d83659a08e7f81d440378637263ede3a1dabf7",
+      "candidate_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/docs/quality-status.md",
+      "after_sha256": "be3f4e8741e7a46a1a9574233949f5b8d1970c4afdc19ce5568616fee3646109"
+    },
+    {
+      "path": "TODO.md",
+      "before_sha256": "4de196f160f0bdcd27a2a1d8efab40d1cad304d3ff1c6aab149bf93d7aecd532",
+      "candidate_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/TODO.md",
+      "after_sha256": "df9ee1780f33f17b36d16d92e1f286ae0736f205cb8e37f2c2508101971e7c81"
+    },
+    {
+      "path": ".testagent/local-completion-plan.md",
+      "before_sha256": "e6069be4afc80990ac7f363d60112b60a7b624d48e785f01d044407615ebc82a",
+      "candidate_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/.testagent/local-completion-plan.md",
+      "after_sha256": "58fb6350f4fc36b7c19bc54379d8e493d105aafdf2b9a794cdb97b63a0919178"
+    },
+    {
+      "path": "docs/servicebus-local-completion-report.txt",
+      "before_sha256": "9293421b432e757aeb00513163894a4a9989a527e833f2d1043f273bb0c93c94",
+      "candidate_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/docs/servicebus-local-completion-report.txt",
+      "after_sha256": "9fdadc3bc267d21d1ec34ce7b7e28431a926772a313ee3a6b20847d731e0590f"
+    }
+  ],
+  "source6110_unchanged": true,
+  "protected85_build11_config15_unchanged": true,
+  "acceptance_sha256": "ac073f086883b4eeba6828d437bd9cb94bb82261a3da31b436e8b906764cabf9",
+  "limits": "Actualseven docs only; independent afterpublication history/TODO/62IDs review required. No new SDK/native/remote/global/cloudHW claim."
+}

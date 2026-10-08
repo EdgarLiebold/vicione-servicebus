@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using ViciOne.ServiceBus.Advanced;
 using ViciOne.ServiceBus.AmazonSqs.Configuration;
 using ViciOne.ServiceBus.AmazonSqs.Topology;
 using ViciOne.ServiceBus.Middleware;
@@ -22,6 +23,12 @@ public class AmazonSqsConnectionContext :
     /// <param name="connection">The AWS client connection owned by the context.</param>
     /// <param name="hostConfiguration">The Amazon SQS host and topology configuration.</param>
     /// <param name="cancellationToken">The token that signals connection-context shutdown.</param>
+    /// <remarks>
+    /// Batch timers capture this connection's TimeProvider at the first entity-resolution attempt,
+    /// after connection middleware can attach it. The captured provider belongs to the shared
+    /// resources and remains fixed across later payload or operation-scope changes. Cache expiration
+    /// continues to use the separate provider from the host's cache options.
+    /// </remarks>
     public AmazonSqsConnectionContext(IConnection connection, IAmazonSqsHostConfiguration hostConfiguration, CancellationToken cancellationToken)
         : base(cancellationToken)
     {
@@ -31,8 +38,9 @@ public class AmazonSqsConnectionContext :
         Topology = hostConfiguration.Topology;
 
         AmazonSqsClientContextCacheOptions cacheOptions = hostConfiguration.Settings.ClientContextCacheOptions;
-        _queueCache = new QueueCache(Connection.SqsClient, cacheOptions, cancellationToken);
-        _topicCache = new TopicCache(Connection.SnsClient, cacheOptions, cancellationToken);
+        var batchTimeProvider = new Lazy<TimeProvider>(() => this.GetTimeProvider(), LazyThreadSafetyMode.ExecutionAndPublication);
+        _queueCache = new QueueCache(Connection.SqsClient, cacheOptions, cancellationToken, () => batchTimeProvider.Value);
+        _topicCache = new TopicCache(Connection.SnsClient, cacheOptions, cancellationToken, () => batchTimeProvider.Value);
     }
 
     /// <summary>Gets the AWS client connection.</summary>

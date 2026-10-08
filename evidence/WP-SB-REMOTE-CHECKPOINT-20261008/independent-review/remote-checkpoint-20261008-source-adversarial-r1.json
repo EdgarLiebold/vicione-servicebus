@@ -1,0 +1,117 @@
+{
+  "kind": "READONLY_REMOTE_CHECKPOINT_ARCHIVE_SOURCE_PREFLIGHT_R1",
+  "disposition": "NO_BLOCK_PRIVATE_ROOT_ARCHIVE_AND_RESTORE_EXECUTION_ONLY",
+  "role": "Internal technical reviewer; Root alone executes archive/restore, stages and pushes. No archive script execution/import, SDK/native/provider actions or canonical edits by reviewer.",
+  "whole_sources": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-REMOTE-CHECKPOINT-20261008/prepare_archive.py",
+      "sha256": "11c2e66f22271d3b91501c393630b9c5c1233aae2cce53ce4d6f90abcd70030f",
+      "lines": 105
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-REMOTE-CHECKPOINT-20261008/restore_archive.py",
+      "sha256": "63bc39bc94b1ffbe9ec0a754d6b95397a96e55cfc2c02598bf3932cd192c5974",
+      "lines": 71
+    }
+  ],
+  "findings": [],
+  "source_checks": {
+    "capture": "Explicit N and independent-review roots, four changed/new old-state confirmations; symlinks rejected and regular files checked. Safe relative names reject absolute/traversal/empty/dot/backslash/control. SDK scratch checkouts outside retained evidence excluded.",
+    "dedupe": "SHA256+mode keys, backward hardlinks only; complete logical member rows remain. SHA256 cryptographic equality assumption explicit. Tar uid/gid neutralized.",
+    "freeze": "Each source byte hash/size/mode checked before adding and after archive assembly. Stable inputs remain mandatory. Actual successful full restoration must detect any archived-stream mismatch.",
+    "parts": "Ordered exclusive 40MiB chunks; each size/hash and whole compressed archive size/hash. 40MiB means 41943040bytes, not less than40decimalMB.",
+    "restore": "Fresh destination; verified ordered chunks; exact expected member names/no duplicates; only regular files or backward hardlinks to already verified hash/mode-compatible entries. Each member size/SHA256/mode and final complete pathset checked.",
+    "metadata": "Mode preserved; ACL/xattrs/ownership/restored timestamps are not claimed. Previous-file reuse claims byte/size only.",
+    "execution": "assert-based checks require ordinary Python without -O/PYTHONOPTIMIZE. Hash-bound trusted checkpoint manifests, not arbitrary adversarial archive input. Prospective outputs absent at review. Failed partial attempt is not accepted; no source review implies actual archive success."
+  },
+  "prior_dependency": {
+    "candidate_prior_commit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+    "manifest_sha256": "a956938156856b1ad9e8e16e033cf25d3a6d0deaf221fe00a6da901a45e04d50",
+    "inputs_sha256": "923188ff1079af7737704e2ed3a928d2e0199b4b7faaa6fa01e1ce5ac301e516",
+    "manifest_inputs_binding": true,
+    "local_parts": 3,
+    "all_part_sizes_hashes_and_combined_archive_hash_match": true,
+    "archive_sha256": "1cb6ac2ad9af96e5c2b38e5bd758a1a5eadc40791a97bdb2da34707ec1cb998a",
+    "equal_old_files": 6819,
+    "equal_old_bytes": 990837238,
+    "new_old_state_files": [
+      {
+        "path": "evidence/SERVICEBUS_API_REVIEW_AND_REPAIR/MAIN_MERGE_CONFIRMED_20261007.json",
+        "sha256": "783db6bebbecbfccdb0b817fdf89381de6f524222e19d39709f8459684d97d86",
+        "bytes": 887
+      },
+      {
+        "path": "evidence/SERVICEBUS_API_REVIEW_AND_REPAIR/REMOTE_BACKUP_RECEIPT.json",
+        "sha256": "3adc1deff888ceffd8d55c0977ab43b445b79da60264090ccdb9b2e15cf61d23",
+        "bytes": 1231
+      },
+      {
+        "path": "evidence/SERVICEBUS_API_REVIEW_AND_REPAIR/REMOTE_BACKUP_CONFIRMED_20261007.json",
+        "sha256": "62c5cac26380ba73021d0419c43cf4bea6df33dbb108c3a3a295f18d65ce018a",
+        "bytes": 1433
+      },
+      {
+        "path": "evidence/SERVICEBUS_API_REVIEW_AND_REPAIR/MAIN_MERGE_READY_20261007.json",
+        "sha256": "fc8e4663e22c1dfa4903c64bfaa03dc7e472999523303b812572d3baca4ca294",
+        "bytes": 1310
+      }
+    ],
+    "limits": "Prior archive intentionally separate. Local reference/part integrity checked; no new old-archive restore or remote fetch claimed. Actual remote prior dependency remains a follow-up."
+  },
+  "capture_scope_at_review": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007",
+      "file_count": 17707,
+      "bytes": 5383756156
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007",
+      "file_count": 1753,
+      "bytes": 75502718
+    }
+  ],
+  "claim_review": {
+    "checkpoint_changelog_block_whole_read": true,
+    "checkpoint_block_lines_including_trailing_blank": 20,
+    "checkpoint_block_sha256": "96cc7cf66e20ca60112fe71ba620bfde52b2e006809c75d7a256abacd1e202c0",
+    "CHANGELOG_sha256": "350ce26c245cbdd1e2247e3fdd5e1d041640468b2d784c4a8367d1d30f18997e",
+    "api": "e961exact one approved addition, preserves old20118lines. Previous default comparison RED/no observed outer result retained, no retrospective pipelinePASS.",
+    "runtime": "Whole actual R1/R2 receipts and R2 stdout/stderr read: first build failure; corrected Send/Publish/Request3 actualPASS then retry observation canceled. Candidate retry106..125 and retained AsyncElementList.Add223..251 read: same message ID returns before replacing retained first entry. Four later flows unreached; no8PASS claim.",
+    "checker": "Four R1 blockers retained. Current R2README read remains outdated; incomplete/unreviewed/unexecuted candidate recorded explicitly and canonical verifier untouched.",
+    "secrets": "Prior own bounded historical classification reused. Root scan attestation is separate; this report does not independently certify secret-free bytes. No external alert dismissal.",
+    "historical_scope": "No new whole human read of all historical continuation Changelog paragraphs claimed."
+  },
+  "gitignore": {
+    "whole_read": true,
+    "sha256": "23db4cd25e1ed4ee1e77025d2a5c9016033ded2c9db3e32d844a06a382613e74",
+    "exact_HEAD_delta": true,
+    "new_exclusions": [
+      "/evidence/WP-SB-LOCAL-COMPLETION-20261007/",
+      "/evidence/SERVICEBUS_API_REVIEW_AND_REPAIR/"
+    ],
+    "no_product_test_SDK_path_ignored_by_new_rules": true,
+    "later_proof": "Actual forced accepted entrypoint staging and archive retention must be independently checked."
+  },
+  "guards": {
+    "full_src_tests_tools6110_hashes_and_pathset": true,
+    "current_API_e961": true,
+    "frozen_STATE_ebbed": true
+  },
+  "gate": {
+    "private_prepare_and_full_restore_allowed": true,
+    "actual_archive_restore_accepted": false,
+    "staged_index_accepted": false,
+    "remote_push_release_from_this_preflight": false,
+    "required_next": [
+      "Actual full archive restoration and member/part/source/input bytes/modes proof.",
+      "Independent actual Git-index bytes/source diff/forced entrypoint and archive dependency audit.",
+      "Root secret-scan scope includes N, independent reviews and four new old-state confirmations before publication; redact findings.",
+      "Explicit UNRELEASED checkpoint/no globalGreen-release claims."
+    ]
+  },
+  "limits": [
+    "No SDK/test/native/product/runtime closure.",
+    "No archive execution, Git commit or push by reviewer.",
+    "No secret strings/key components/binary credential values printed."
+  ]
+}

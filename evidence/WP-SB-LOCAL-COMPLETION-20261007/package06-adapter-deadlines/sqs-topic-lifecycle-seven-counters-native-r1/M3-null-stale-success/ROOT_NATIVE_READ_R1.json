@@ -1,0 +1,15 @@
+{
+  "kind": "ROOT_ACTUAL_COUNTER_NATIVE_FIRST_FINITE_READ_R1",
+  "variant": "M3-null-stale-success",
+  "native_result_sha256": "eb2f0904ef527fc1ff2d4134b8eab58d06512abe657319c6a9085ba862c2f4b7",
+  "physical_receipt_sha256": "cd57961aea7f0664877fe3035bac15a95091e93298c9c7192f2f3470f534f9eb",
+  "actual": {
+    "total": 11,
+    "passed": 8,
+    "failed": 3,
+    "skipped": 0
+  },
+  "first_finite": "cancel-after-stale233 expectedOCEactualnull; stale103 expected2actual1; twoStale258 expectedODEactualnull. Lower234..236/104..105/259..262unreached0credit.",
+  "personally_read": "Entire actual11 native event/error blocks and complete strictbuild body; fixture487 and singlecause diff previously personally read at exacthash. raw6/CRC2 mechanically validated; healthycase exact IDs retained.",
+  "limits": "Same11cases repeated; firstfiniteonly, lowerunreachedassertions/finallyframes notadditionalcauses. No compiler/discovery/watchdogcredit, no predictioncounts or cloud/globalclosure."
+}

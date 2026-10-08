@@ -17,8 +17,8 @@ public sealed class InboxCleanupServiceTests
     private static readonly DateTimeOffset Now = new(2046, 7, 8, 9, 10, 11, TimeSpan.Zero);
 
     [Fact]
-    [RequirementCoverage("REQ-VSB-EF-INBOX-CLEANUP", "constructor-rejects-invalid-dependencies")]
-    public void Constructor_RejectsEveryMissingDependencyAndInvalidPersistenceOption()
+    [RequirementCoverage("REQ-VSB-EF-INBOX-CLEANUP", "constructor-and-start-reject-invalid-dependencies-and-options")]
+    public async Task ConstructorAndStart_RejectMissingDependenciesAndInvalidPersistenceOptionsAsync()
     {
         using ServiceProvider provider = new ServiceCollection().BuildServiceProvider();
         IOptions<InboxCleanupServiceOptions<CleanupDbContext>> options = Options.Create(CreateOptions());
@@ -37,13 +37,21 @@ public sealed class InboxCleanupServiceTests
         Assert.Throws<ArgumentNullException>(() => new InboxCleanupService<CleanupDbContext>(
             options, persistenceOptions, logger, provider, null!));
 
-        Assert.Throws<ArgumentException>(() => new InboxCleanupService<CleanupDbContext>(
+        using var nullLockService = new InboxCleanupService<CleanupDbContext>(
             options,
             Options.Create(new EntityFrameworkOutboxOptions<CleanupDbContext>()),
             logger,
             provider,
-            timeProvider));
-        Assert.Throws<ArgumentOutOfRangeException>(() => new InboxCleanupService<CleanupDbContext>(
+            timeProvider);
+        DirectStartResult nullLockStart = await StartAndJoinAsync(nullLockService);
+        ArgumentException nullLockFailure = Assert.IsType<ArgumentException>(nullLockStart.StartFailure);
+        Assert.Equal("outboxOptions", nullLockFailure.ParamName);
+        Assert.Null(nullLockStart.Execution);
+        Assert.Null(nullLockStart.StopFailure);
+        Assert.Null(nullLockStart.WorkerFailure);
+        Assert.True(nullLockStart.StartingAbsentOrTerminal);
+
+        using var undefinedIsolationService = new InboxCleanupService<CleanupDbContext>(
             options,
             Options.Create(new EntityFrameworkOutboxOptions<CleanupDbContext>
             {
@@ -52,7 +60,15 @@ public sealed class InboxCleanupServiceTests
             }),
             logger,
             provider,
-            timeProvider));
+            timeProvider);
+        DirectStartResult isolationStart = await StartAndJoinAsync(undefinedIsolationService);
+        ArgumentOutOfRangeException isolationFailure = Assert.IsType<ArgumentOutOfRangeException>(isolationStart.StartFailure);
+        Assert.Equal("outboxOptions", isolationFailure.ParamName);
+        Assert.Equal((IsolationLevel)int.MaxValue, isolationFailure.ActualValue);
+        Assert.Null(isolationStart.Execution);
+        Assert.Null(isolationStart.StopFailure);
+        Assert.Null(isolationStart.WorkerFailure);
+        Assert.True(isolationStart.StartingAbsentOrTerminal);
     }
 
     [Fact]
@@ -167,6 +183,36 @@ public sealed class InboxCleanupServiceTests
             await service.StopAsync(TestContext.Current.CancellationToken);
         }
     }
+
+    private static async Task<DirectStartResult> StartAndJoinAsync(InboxCleanupService<CleanupDbContext> service)
+    {
+        Task? starting = null, execution = null;
+        Exception? startFailure = null, stopFailure = null, workerFailure = null;
+        try
+        {
+            starting = service.StartAsync(TestContext.Current.CancellationToken);
+            await starting;
+        }
+        catch (Exception exception) { startFailure = exception; }
+        finally
+        {
+            // A changed Start guard may launch a real worker; retain and join it before any assertion.
+            execution = service.ExecuteTask;
+            using var stopBound = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            try { await service.StopAsync(stopBound.Token); }
+            catch (Exception exception) { stopFailure = exception; }
+            if (execution is not null)
+            {
+                try { await execution; }
+                catch (OperationCanceledException) when (execution.IsCanceled) { }
+                catch (Exception exception) { workerFailure = exception; }
+            }
+        }
+        return new DirectStartResult(startFailure, execution, stopFailure, workerFailure, starting is null || starting.IsCompleted);
+    }
+
+    private sealed record DirectStartResult(Exception? StartFailure, Task? Execution, Exception? StopFailure,
+        Exception? WorkerFailure, bool StartingAbsentOrTerminal);
 
     private static async Task AssertEventuallyAsync(Func<Task<bool>> condition)
     {

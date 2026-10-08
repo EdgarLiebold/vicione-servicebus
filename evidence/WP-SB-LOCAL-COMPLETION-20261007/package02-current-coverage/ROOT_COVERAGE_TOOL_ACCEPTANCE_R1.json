@@ -1,0 +1,18 @@
+{
+  "kind": "ROOT_BOUNDED_COVERAGE_BINLOG_TOOL_ACCEPTANCE",
+  "status": "ACCEPTED_TOOL_CHANGE_ONLY_NO_NATIVE_COVERAGE_RESULT",
+  "producer_changes": "Unique per-stage /bl request; reject preexisting family; collect all nonempty closed stage files; retain and revalidate original hashes before receipt",
+  "aggregate_changes": "All3stages required; exactownrun family/hash membership; reject changed/empty/symlink/borrowed/extra logs",
+  "native_python_contracts": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "exit_code": 0
+  },
+  "research_plan_sha256": "9ed04496c56af73894b9c41322ab9823b7d4b695212829a6e644c323b8faa81f",
+  "frozen_owner_sha256": "ce9469cddd6bae6e8c1feb8b2506af6643b0ae9e7a78a9e8af9a0895b709b14b",
+  "independent_review_sha256": "3d232f197500d2d62e589b2a3b46b8b3310dcee9917c3fb3482d7cfb13f0159e",
+  "source_commit_requirement": "Preserved: clean tracked HEAD and new artifacts path. No measurement from the dirty authoring tree.",
+  "actual_native_coverage": "NOT_EXECUTED",
+  "historical_receipts": "Immutable, do not promote pre-binlog receipts as current3stage evidence"
+}

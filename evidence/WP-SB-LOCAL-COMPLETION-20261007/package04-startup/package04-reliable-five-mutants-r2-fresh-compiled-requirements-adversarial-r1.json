@@ -1,0 +1,1818 @@
+{
+  "kind": "INDEPENDENT_FRESH_ALL5_RELIABLE_MUTANT_TEST_METADATA_4730METHOD_RESOURCE_REFERENCE_GRAPH_R1",
+  "rows": [
+    {
+      "variant": "M1-drop-finite-jitter-check",
+      "fresh_metadata_parse": true,
+      "TestDLL_sha256": "3cb6f4eaf502a9674cee4ac5c65d235f6cbb0f0ff76da0c7c1bff0d39d0e45fa",
+      "TestPDB_sha256": "3487bc2871aa8e4f9065469dc3bace671c424e9945925c6d7f6373804ca20956",
+      "TestDLL_byteequal_fixed13": true,
+      "resource": {
+        "name": "ViciOne.ServiceBus.Tests.Requirements.CoreRequirements.json",
+        "bytes": 1682667,
+        "sha256": "e15c10362be7938ac1453fbb86fb0c06b01d0448dc0e23ef71c43786bdb8193f",
+        "rows": 4730,
+        "METHOD_attributes": 4730,
+        "all_METHOD_resource_multiset_exact": true,
+        "old4727_order_literalprefix1681540_preserved": true
+      },
+      "selected_fact_theory_inline_metadata": [
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.TheoryAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
+          "caller_line": 908,
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 0,
+          "expectedMessage": "no persistence store",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 1,
+          "expectedMessage": "no transport dispatcher",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 2,
+          "expectedMessage": "no message-contract catalog",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 3,
+          "expectedMessage": "multiple persistence store",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 4,
+          "expectedMessage": "multiple transport dispatcher",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 5,
+          "expectedMessage": "Store limits were not configured",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 6,
+          "expectedMessage": "Delivery policy was not configured",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 7,
+          "expectedMessage": "Retention was not configured",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 8,
+          "expectedMessage": "MaximumStoredCount",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 9,
+          "expectedMessage": "Retention",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "method": "SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart",
+          "attribute": "Xunit.FactAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "caller_line": 16,
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "method": "SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart",
+          "attribute": "Xunit.FactAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "caller_line": 29,
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "method": "PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison",
+          "attribute": "Xunit.FactAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "caller_line": 42,
+          "no_named_overrides": true
+        }
+      ],
+      "new_three_METHOD_rows": [
+        {
+          "requirementId": "REQ-VSB-DURABLE-STARTUP",
+          "variantKey": "actual-host-default-reliable-nan-jitter",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "testMethod": "SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart"
+        },
+        {
+          "requirementId": "REQ-VSB-DURABLE-STARTUP",
+          "variantKey": "actual-host-typed-reliable-zero-poll",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "testMethod": "SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart"
+        },
+        {
+          "requirementId": "REQ-VSB-DURABLE-STARTUP",
+          "variantKey": "actual-host-plain-default-typed-reliable-unused-options-poison",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "testMethod": "PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison"
+        }
+      ],
+      "internal_reference_edges": [
+        {
+          "from": "ViciOne.ServiceBus.Courier",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Courier",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Initializers",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.JobService",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.JobService",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.JobService",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Mediator",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Mediator",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Sagas",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Sagas",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Mediator",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Tests.Infrastructure",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Testing",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Mediator",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.JobService",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Initializers",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Futures",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        }
+      ],
+      "internal_refs": 35,
+      "deps_all12_firstparty_exact": true,
+      "Hosting": [
+        {
+          "package": "Microsoft.Extensions.Hosting/10.0.12",
+          "contentHash_lock_assets_deps_after_sha512_prefix_nupkgmetadata_equal": true,
+          "signedrawSHA512_cachefile_equal": true,
+          "signedrawSHA512_distinct_contentHash": true,
+          "assembly_versions": [
+            "10.0.0.0"
+          ]
+        },
+        {
+          "package": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+          "contentHash_lock_assets_deps_after_sha512_prefix_nupkgmetadata_equal": true,
+          "signedrawSHA512_cachefile_equal": true,
+          "signedrawSHA512_distinct_contentHash": true,
+          "assembly_versions": [
+            "10.0.0.0"
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "M2-replace-typed-diagnostic-with-default",
+      "fresh_metadata_parse": true,
+      "TestDLL_sha256": "3cb6f4eaf502a9674cee4ac5c65d235f6cbb0f0ff76da0c7c1bff0d39d0e45fa",
+      "TestPDB_sha256": "3487bc2871aa8e4f9065469dc3bace671c424e9945925c6d7f6373804ca20956",
+      "TestDLL_byteequal_fixed13": true,
+      "resource": {
+        "name": "ViciOne.ServiceBus.Tests.Requirements.CoreRequirements.json",
+        "bytes": 1682667,
+        "sha256": "e15c10362be7938ac1453fbb86fb0c06b01d0448dc0e23ef71c43786bdb8193f",
+        "rows": 4730,
+        "METHOD_attributes": 4730,
+        "all_METHOD_resource_multiset_exact": true,
+        "old4727_order_literalprefix1681540_preserved": true
+      },
+      "selected_fact_theory_inline_metadata": [
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.TheoryAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
+          "caller_line": 908,
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 0,
+          "expectedMessage": "no persistence store",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 1,
+          "expectedMessage": "no transport dispatcher",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 2,
+          "expectedMessage": "no message-contract catalog",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 3,
+          "expectedMessage": "multiple persistence store",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 4,
+          "expectedMessage": "multiple transport dispatcher",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 5,
+          "expectedMessage": "Store limits were not configured",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 6,
+          "expectedMessage": "Delivery policy was not configured",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 7,
+          "expectedMessage": "Retention was not configured",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 8,
+          "expectedMessage": "MaximumStoredCount",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 9,
+          "expectedMessage": "Retention",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "method": "SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart",
+          "attribute": "Xunit.FactAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "caller_line": 16,
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "method": "SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart",
+          "attribute": "Xunit.FactAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "caller_line": 29,
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "method": "PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison",
+          "attribute": "Xunit.FactAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "caller_line": 42,
+          "no_named_overrides": true
+        }
+      ],
+      "new_three_METHOD_rows": [
+        {
+          "requirementId": "REQ-VSB-DURABLE-STARTUP",
+          "variantKey": "actual-host-default-reliable-nan-jitter",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "testMethod": "SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart"
+        },
+        {
+          "requirementId": "REQ-VSB-DURABLE-STARTUP",
+          "variantKey": "actual-host-typed-reliable-zero-poll",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "testMethod": "SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart"
+        },
+        {
+          "requirementId": "REQ-VSB-DURABLE-STARTUP",
+          "variantKey": "actual-host-plain-default-typed-reliable-unused-options-poison",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "testMethod": "PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison"
+        }
+      ],
+      "internal_reference_edges": [
+        {
+          "from": "ViciOne.ServiceBus.Courier",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Courier",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Initializers",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.JobService",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.JobService",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.JobService",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Mediator",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Mediator",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Sagas",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Sagas",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Mediator",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Tests.Infrastructure",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Testing",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Mediator",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.JobService",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Initializers",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Futures",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        }
+      ],
+      "internal_refs": 35,
+      "deps_all12_firstparty_exact": true,
+      "Hosting": [
+        {
+          "package": "Microsoft.Extensions.Hosting/10.0.12",
+          "contentHash_lock_assets_deps_after_sha512_prefix_nupkgmetadata_equal": true,
+          "signedrawSHA512_cachefile_equal": true,
+          "signedrawSHA512_distinct_contentHash": true,
+          "assembly_versions": [
+            "10.0.0.0"
+          ]
+        },
+        {
+          "package": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+          "contentHash_lock_assets_deps_after_sha512_prefix_nupkgmetadata_equal": true,
+          "signedrawSHA512_cachefile_equal": true,
+          "signedrawSHA512_distinct_contentHash": true,
+          "assembly_versions": [
+            "10.0.0.0"
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "M3-restore-only-eager-policy-constructor",
+      "fresh_metadata_parse": true,
+      "TestDLL_sha256": "80f9761b82f7d13ca213e1684485e7f9201c94376f5e2114c80c36f4c548dd4f",
+      "TestPDB_sha256": "9afe80efae358e5f4b0d1d7ea2c5667dd926b35b0a1959ece7b93e96de9bd4fa",
+      "TestDLL_byteequal_fixed13": false,
+      "resource": {
+        "name": "ViciOne.ServiceBus.Tests.Requirements.CoreRequirements.json",
+        "bytes": 1682667,
+        "sha256": "e15c10362be7938ac1453fbb86fb0c06b01d0448dc0e23ef71c43786bdb8193f",
+        "rows": 4730,
+        "METHOD_attributes": 4730,
+        "all_METHOD_resource_multiset_exact": true,
+        "old4727_order_literalprefix1681540_preserved": true
+      },
+      "selected_fact_theory_inline_metadata": [
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.TheoryAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
+          "caller_line": 908,
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 0,
+          "expectedMessage": "no persistence store",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 1,
+          "expectedMessage": "no transport dispatcher",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 2,
+          "expectedMessage": "no message-contract catalog",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 3,
+          "expectedMessage": "multiple persistence store",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 4,
+          "expectedMessage": "multiple transport dispatcher",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 5,
+          "expectedMessage": "Store limits were not configured",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 6,
+          "expectedMessage": "Delivery policy was not configured",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 7,
+          "expectedMessage": "Retention was not configured",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 8,
+          "expectedMessage": "MaximumStoredCount",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 9,
+          "expectedMessage": "Retention",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "method": "SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart",
+          "attribute": "Xunit.FactAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "caller_line": 16,
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "method": "SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart",
+          "attribute": "Xunit.FactAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "caller_line": 29,
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "method": "PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison",
+          "attribute": "Xunit.FactAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "caller_line": 42,
+          "no_named_overrides": true
+        }
+      ],
+      "new_three_METHOD_rows": [
+        {
+          "requirementId": "REQ-VSB-DURABLE-STARTUP",
+          "variantKey": "actual-host-default-reliable-nan-jitter",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "testMethod": "SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart"
+        },
+        {
+          "requirementId": "REQ-VSB-DURABLE-STARTUP",
+          "variantKey": "actual-host-typed-reliable-zero-poll",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "testMethod": "SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart"
+        },
+        {
+          "requirementId": "REQ-VSB-DURABLE-STARTUP",
+          "variantKey": "actual-host-plain-default-typed-reliable-unused-options-poison",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "testMethod": "PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison"
+        }
+      ],
+      "internal_reference_edges": [
+        {
+          "from": "ViciOne.ServiceBus.Courier",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Courier",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Initializers",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.JobService",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.JobService",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.JobService",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Mediator",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Mediator",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Sagas",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Sagas",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Mediator",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Tests.Infrastructure",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Testing",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Mediator",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.JobService",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Initializers",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Futures",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        }
+      ],
+      "internal_refs": 35,
+      "deps_all12_firstparty_exact": true,
+      "Hosting": [
+        {
+          "package": "Microsoft.Extensions.Hosting/10.0.12",
+          "contentHash_lock_assets_deps_after_sha512_prefix_nupkgmetadata_equal": true,
+          "signedrawSHA512_cachefile_equal": true,
+          "signedrawSHA512_distinct_contentHash": true,
+          "assembly_versions": [
+            "10.0.0.0"
+          ]
+        },
+        {
+          "package": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+          "contentHash_lock_assets_deps_after_sha512_prefix_nupkgmetadata_equal": true,
+          "signedrawSHA512_cachefile_equal": true,
+          "signedrawSHA512_distinct_contentHash": true,
+          "assembly_versions": [
+            "10.0.0.0"
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "M4-drop-runtime-policy-fallback",
+      "fresh_metadata_parse": true,
+      "TestDLL_sha256": "3cb6f4eaf502a9674cee4ac5c65d235f6cbb0f0ff76da0c7c1bff0d39d0e45fa",
+      "TestPDB_sha256": "3487bc2871aa8e4f9065469dc3bace671c424e9945925c6d7f6373804ca20956",
+      "TestDLL_byteequal_fixed13": true,
+      "resource": {
+        "name": "ViciOne.ServiceBus.Tests.Requirements.CoreRequirements.json",
+        "bytes": 1682667,
+        "sha256": "e15c10362be7938ac1453fbb86fb0c06b01d0448dc0e23ef71c43786bdb8193f",
+        "rows": 4730,
+        "METHOD_attributes": 4730,
+        "all_METHOD_resource_multiset_exact": true,
+        "old4727_order_literalprefix1681540_preserved": true
+      },
+      "selected_fact_theory_inline_metadata": [
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.TheoryAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
+          "caller_line": 908,
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 0,
+          "expectedMessage": "no persistence store",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 1,
+          "expectedMessage": "no transport dispatcher",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 2,
+          "expectedMessage": "no message-contract catalog",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 3,
+          "expectedMessage": "multiple persistence store",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 4,
+          "expectedMessage": "multiple transport dispatcher",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 5,
+          "expectedMessage": "Store limits were not configured",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 6,
+          "expectedMessage": "Delivery policy was not configured",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 7,
+          "expectedMessage": "Retention was not configured",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 8,
+          "expectedMessage": "MaximumStoredCount",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 9,
+          "expectedMessage": "Retention",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "method": "SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart",
+          "attribute": "Xunit.FactAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "caller_line": 16,
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "method": "SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart",
+          "attribute": "Xunit.FactAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "caller_line": 29,
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "method": "PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison",
+          "attribute": "Xunit.FactAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "caller_line": 42,
+          "no_named_overrides": true
+        }
+      ],
+      "new_three_METHOD_rows": [
+        {
+          "requirementId": "REQ-VSB-DURABLE-STARTUP",
+          "variantKey": "actual-host-default-reliable-nan-jitter",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "testMethod": "SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart"
+        },
+        {
+          "requirementId": "REQ-VSB-DURABLE-STARTUP",
+          "variantKey": "actual-host-typed-reliable-zero-poll",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "testMethod": "SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart"
+        },
+        {
+          "requirementId": "REQ-VSB-DURABLE-STARTUP",
+          "variantKey": "actual-host-plain-default-typed-reliable-unused-options-poison",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "testMethod": "PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison"
+        }
+      ],
+      "internal_reference_edges": [
+        {
+          "from": "ViciOne.ServiceBus.Courier",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Courier",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Initializers",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.JobService",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.JobService",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.JobService",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Mediator",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Mediator",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Sagas",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Sagas",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Mediator",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Tests.Infrastructure",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Testing",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Mediator",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.JobService",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Initializers",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Futures",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        }
+      ],
+      "internal_refs": 35,
+      "deps_all12_firstparty_exact": true,
+      "Hosting": [
+        {
+          "package": "Microsoft.Extensions.Hosting/10.0.12",
+          "contentHash_lock_assets_deps_after_sha512_prefix_nupkgmetadata_equal": true,
+          "signedrawSHA512_cachefile_equal": true,
+          "signedrawSHA512_distinct_contentHash": true,
+          "assembly_versions": [
+            "10.0.0.0"
+          ]
+        },
+        {
+          "package": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+          "contentHash_lock_assets_deps_after_sha512_prefix_nupkgmetadata_equal": true,
+          "signedrawSHA512_cachefile_equal": true,
+          "signedrawSHA512_distinct_contentHash": true,
+          "assembly_versions": [
+            "10.0.0.0"
+          ]
+        }
+      ]
+    },
+    {
+      "variant": "M5-drop-existing-options-startup-boundary",
+      "fresh_metadata_parse": true,
+      "TestDLL_sha256": "59949c8f486b7a1c976bf49d8ac24d2b005875fc9324f47f0e09c19f9789c100",
+      "TestPDB_sha256": "fff6383b987cdc8cefe040bb597d8d78e896e47a8d87ab726213e828d748184c",
+      "TestDLL_byteequal_fixed13": false,
+      "resource": {
+        "name": "ViciOne.ServiceBus.Tests.Requirements.CoreRequirements.json",
+        "bytes": 1682667,
+        "sha256": "e15c10362be7938ac1453fbb86fb0c06b01d0448dc0e23ef71c43786bdb8193f",
+        "rows": 4730,
+        "METHOD_attributes": 4730,
+        "all_METHOD_resource_multiset_exact": true,
+        "old4727_order_literalprefix1681540_preserved": true
+      },
+      "selected_fact_theory_inline_metadata": [
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.TheoryAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
+          "caller_line": 908,
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 0,
+          "expectedMessage": "no persistence store",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 1,
+          "expectedMessage": "no transport dispatcher",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 2,
+          "expectedMessage": "no message-contract catalog",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 3,
+          "expectedMessage": "multiple persistence store",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 4,
+          "expectedMessage": "multiple transport dispatcher",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 5,
+          "expectedMessage": "Store limits were not configured",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 6,
+          "expectedMessage": "Delivery policy was not configured",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 7,
+          "expectedMessage": "Retention was not configured",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 8,
+          "expectedMessage": "MaximumStoredCount",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests",
+          "method": "StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync",
+          "attribute": "Xunit.InlineDataAttribute",
+          "enum_type": "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests+InvalidComposition",
+          "enum_value": 9,
+          "expectedMessage": "Retention",
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "method": "SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart",
+          "attribute": "Xunit.FactAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "caller_line": 16,
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "method": "SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart",
+          "attribute": "Xunit.FactAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "caller_line": 29,
+          "no_named_overrides": true
+        },
+        {
+          "type": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "method": "PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison",
+          "attribute": "Xunit.FactAttribute",
+          "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-reliable-host-original/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+          "caller_line": 42,
+          "no_named_overrides": true
+        }
+      ],
+      "new_three_METHOD_rows": [
+        {
+          "requirementId": "REQ-VSB-DURABLE-STARTUP",
+          "variantKey": "actual-host-default-reliable-nan-jitter",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "testMethod": "SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart"
+        },
+        {
+          "requirementId": "REQ-VSB-DURABLE-STARTUP",
+          "variantKey": "actual-host-typed-reliable-zero-poll",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "testMethod": "SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart"
+        },
+        {
+          "requirementId": "REQ-VSB-DURABLE-STARTUP",
+          "variantKey": "actual-host-plain-default-typed-reliable-unused-options-poison",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+          "testMethod": "PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison"
+        }
+      ],
+      "internal_reference_edges": [
+        {
+          "from": "ViciOne.ServiceBus.Courier",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Courier",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Futures",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Initializers",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.JobService",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.JobService",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.JobService",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Mediator",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Mediator",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Sagas",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Sagas",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Testing",
+          "name": "ViciOne.ServiceBus.Mediator",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Tests.Infrastructure",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Testing",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Mediator",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.JobService",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Initializers",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus.Tests",
+          "name": "ViciOne.ServiceBus.Futures",
+          "version": "1.0.0.0"
+        },
+        {
+          "from": "ViciOne.ServiceBus",
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": "1.0.0.0"
+        }
+      ],
+      "internal_refs": 35,
+      "deps_all12_firstparty_exact": true,
+      "Hosting": [
+        {
+          "package": "Microsoft.Extensions.Hosting/10.0.12",
+          "contentHash_lock_assets_deps_after_sha512_prefix_nupkgmetadata_equal": true,
+          "signedrawSHA512_cachefile_equal": true,
+          "signedrawSHA512_distinct_contentHash": true,
+          "assembly_versions": [
+            "10.0.0.0"
+          ]
+        },
+        {
+          "package": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+          "contentHash_lock_assets_deps_after_sha512_prefix_nupkgmetadata_equal": true,
+          "signedrawSHA512_cachefile_equal": true,
+          "signedrawSHA512_distinct_contentHash": true,
+          "assembly_versions": [
+            "10.0.0.0"
+          ]
+        }
+      ]
+    }
+  ],
+  "fresh_all5_not_original_metadata_reuse": true,
+  "parser_source_sha256": "3f0bca13a37c7ba18c3a0c4315df0229aeb190329b92d44c2c18a7154e8352df",
+  "limits": "Pure ECMA335 table/blob/resource parse. Fresh parses even where M1/M2/M4 testbytes identical Fixed13; M3/M5 own changed image fully decoded. No .NET/native/vendor strongname validation/dependency body claims."
+}

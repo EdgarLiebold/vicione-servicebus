@@ -1,0 +1,58 @@
+{
+  "kind": "ROOT_ACCEPTED_BOUNDED_LOCAL_ASB_PREHEALTH_BOOTSTRAP_TOOL_CHAIN_R1",
+  "status": "ACCEPTED_EXACT_R2_TOOL_ONLY",
+  "independent_review_sha256": {
+    "package03-asb-bootstrap-contracts-raw-r1-adversarial-r1.json": "a68f80457016d86ab603dfe166c81aa4668d962fe95960bbc4417e2ff72ff88d",
+    "package03-asb-bootstrap-nine-counterproofs-executed-adversarial-r1.json": "d6d8a7008d81632e048bcbe7bf8341fd0a01e5e40fc9077dc45c53c33608841a",
+    "package03-asb-bootstrap-post18-and-bounded-tool-chain-adversarial-r1.json": "cd64f41e38b4678afecb241e69436e3dd323f6aad5540cc1ad886bc9180b4c46"
+  },
+  "aggregate": {
+    "staged_tool_method_slots": 45,
+    "unique_method_names": 18,
+    "initial18": {
+      "finite_red": 0,
+      "healthy": 18
+    },
+    "counter9": {
+      "finite_red": 5,
+      "healthy": 4,
+      "ERROR": 2,
+      "FAIL": 3
+    },
+    "post18": {
+      "finite_red": 0,
+      "healthy": 18
+    },
+    "total_finite_first_red": 5,
+    "total_healthy": 40,
+    "total_skipped": 0,
+    "safe_distinct_roots": 35,
+    "safe_archived_files": 249,
+    "framework_raw_streams": 10,
+    "provider_CLR_events_credited": 0
+  },
+  "qualification": [
+    "Post run exactly repeats all18 acceptedR2 methods with unchanged seven-source freeze. Its13safe roots are new, disjoint from both the initial13 and counterproof9; no reused root is counted as fresh evidence.",
+    "Full4816-byte post stderr contains18ok outcomes and10.177s OK summary, expected HTTP503/phase-interruption tracebacks and the injected log warning. These child health failures/warnings are expected tool-control scenarios, not unittest ERROR/FAIL or provider results.",
+    "Real fake-process HTTP events, health receipts, exec markers, projection/source binding, child0/29 outcomes and empty helper cleanup lists in all10forwarded post roots agree with exact tests. Two early roots record130/143; changed-dependency negative has its deliberate two-source artificial bundle.",
+    "First finite counterproof boundaries are exactly F1 variant234 ordinary OSError twice, F2run_tool218 handler/sent tuple once, F3run_tool219 extra-stop events twice. F1 known helper child29/0 receipts are independent facts; after first red no later return/group/token/receipt assertion is credited. F2 repeated signal is deliberately not sent under the wrong handler. F3 uses controlled unproven qualification after physically completed owned helper drain.",
+    "Root tool sessions79264/93957/41671 and reported joined exits are structured Root observations consistent with raw framework outcomes, never interpreted as operating-system PIDs or independent reviewer joins. Source-group/listener/callback assertions are reached in green methods; no universal OS census follows."
+  ],
+  "root_read": "Root authored R2 complete263 tool +358 tests and all three single-cause variants, executed and personally qualified original18/counter9/post18 logs and first causes. This resumed read consumes substantive final report fields;279 input hashes mechanically checked, no whole input-index prose-read claim.",
+  "limits": [
+    "Strict tool-only packet. No real Compose/Docker/SSH/cloud/.NET/provider process was executed by these fake-process contracts or reviewer. Root current isolated ASB provider experiment is separate and not inspected or accepted here.",
+    "45 repeated/staged tool slots have18unique method names;5finite counterproof failures are not product/CLR/provider mutation kills. SubTests/HTTPrequests/helper subprocesses do not create extra acceptance slots.",
+    "No universal descendant census, all-interpreter/version census, malicious same-user receipt tampering guarantee, process-group absence proof after unreached red assertions, historical SSH failure closure, current coverage/API/CI/hardware/global acceptance.",
+    "No tokens/credentials/privateconfigs read or copied. Only safe named receipt/log/request/marker whitelist files were read. No source/test/tool/governance/product edits or execution/process control by reviewer; only immutable own report written."
+  ],
+  "native_asb30": "Separate actual native run is not accepted by this tool-only receipt.",
+  "source_candidate": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-prehealth-owner-r2/local_colima_asb_bootstrap.py",
+    "sha256": "d37c2eb0c1424f088cd675e4c033d904bf82886f9d084747882bc774540a340a"
+  },
+  "tests_candidate": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-prehealth-owner-r2/test_local_colima_asb_bootstrap.py",
+    "sha256": "e535b233fb7e1b004cf8e28ae0e5fbd48ac3d0217d57acda104ff28decaea5ab"
+  },
+  "known_collector_followup": "Historical frozen broker_logs140 remains bound to tool chain; ASB-DIAG-01 redaction successor pending separate original/fixed/canonicalpost. No source freeze rewritten."
+}

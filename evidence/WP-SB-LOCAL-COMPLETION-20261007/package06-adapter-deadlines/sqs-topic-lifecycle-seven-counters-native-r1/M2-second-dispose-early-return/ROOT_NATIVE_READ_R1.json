@@ -1,0 +1,15 @@
+{
+  "kind": "ROOT_ACTUAL_COUNTER_NATIVE_FIRST_FINITE_READ_R1",
+  "variant": "M2-second-dispose-early-return",
+  "native_result_sha256": "b401639b7d1d8734b7a6cdcf317df11e2dc4d8e8892474d9a4f987ecd430235a",
+  "physical_receipt_sha256": "96389509688630096e931dd1a96d5e40d41230258d49f10ce1ecd760c7d50d23",
+  "actual": {
+    "total": 11,
+    "passed": 10,
+    "failed": 1,
+    "skipped": 0
+  },
+  "first_finite": "Concurrent first sourceAssertFalse64 on actualsecondDisposeTask completed while actualSDKheld; rawframe62 controlflow attribution only, cleanupframe72 not secondcause. Lower65..68+75..78unreached0credit.",
+  "personally_read": "Entire actual11 native event/error blocks and complete strictbuild body; fixture487 and singlecause diff previously personally read at exacthash. raw6/CRC2 mechanically validated; healthycase exact IDs retained.",
+  "limits": "Same11cases repeated; firstfiniteonly, lowerunreachedassertions/finallyframes notadditionalcauses. No compiler/discovery/watchdogcredit, no predictioncounts or cloud/globalclosure."
+}

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -15,7 +16,13 @@ class SendBatcher :
     readonly string _queueUrl;
 
     public SendBatcher(IAmazonSQS client, string queueUrl, CancellationToken cancellationToken, BatchSettings? settings = null)
-        : base(settings)
+        : this(client, queueUrl, cancellationToken, TimeProvider.System, settings)
+    {
+    }
+
+    internal SendBatcher(IAmazonSQS client, string queueUrl, CancellationToken cancellationToken, TimeProvider timeProvider,
+        BatchSettings? settings = null)
+        : base(settings, timeProvider)
     {
         _client = client;
         _queueUrl = queueUrl;

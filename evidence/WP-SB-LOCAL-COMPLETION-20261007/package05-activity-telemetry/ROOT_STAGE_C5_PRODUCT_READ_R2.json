@@ -1,0 +1,22 @@
+{
+  "kind": "ROOT_C5_COMPLETE_CURRENT_PRODUCT_READ_SUCCESSOR_R2",
+  "root_prior57_sha256": "87c47890f03ff587088d3a13d6b17fcefdc2234b9ab0bde6e420b15c39cf9e72",
+  "root_core808_sha256": "a7ef18b7dbf6d015f10a0873f4f771d1fc0568701e4c9ff8fbc49b7c5ebbbd0c",
+  "source_freeze_sha256": "7cd6b26b0bc32d858d55ba06f2db22c5d82510f24e3a1992950ac2a87fc9aa47",
+  "owners": [
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs",
+      "sha256": "05e403b9ff64a86e7828b08103837c7bd631e935890b089c63fe58eeb454abb5",
+      "content_lines": 240
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "90a781b81f734a2be9b4b3a4e4272b49afb842d46cd62bb9f05df823ec33126e",
+      "content_lines": 220
+    }
+  ],
+  "personal_read": "Root personally reread entire original two owners, then authored every fixed delta, reread entire current TrackedActivity and current TestActivityListener prefix through Dispose/output. Exact unchanged remainder reuses Root57 original wholebody reading, no reviewer transfer. Root authored entire R1\u2192R2 removal of redundant private helper and direct Lazy factory field; exact unchanged constructor/restoration/disposal/body reuses personally whole-read R1. No additional sourcebody from reviewer.",
+  "source_adversarial_sha256": "9731f07b073fb37322f6a37cae447b3b31869ab7e7b2daa01c9d4ae0475efdfe",
+  "limits": "Only current two product owners+frozen seven newtests/CoreRequirements successor. Public caller/EF remain open; no native/mutant acceptance from reading.",
+  "prior_read_sha256": "a656e0d0ce1500a0a23b1b2dcbc38012fcd96aae000430fe44f85edc48c4e611"
+}

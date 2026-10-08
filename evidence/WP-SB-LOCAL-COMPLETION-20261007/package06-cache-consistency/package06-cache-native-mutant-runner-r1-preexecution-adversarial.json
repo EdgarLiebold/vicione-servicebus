@@ -1,0 +1,39 @@
+{
+  "kind": "P06_CACHE_NATIVE_MUTATION_RUNNER_R1_READONLY_PREEXECUTION_REVIEW",
+  "status": "NO_BLOCK_BOUNDED_ROOT_RUNNER_STRUCTURAL_REVIEW__ACTUAL_NATIVE_CAUSAL_REVIEW_PENDING",
+  "findings": [],
+  "inputs": {
+    "/private/tmp/run_cache_mutants-r1.py": "3f76c7acc4adbd1622b748d871f51f8ce773754ebfa0dfc610438537beb53d72",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/mutation-driver-r1/driver.py": "3f76c7acc4adbd1622b748d871f51f8ce773754ebfa0dfc610438537beb53d72",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/mutation-driver-r1/INPUTS.json": "a0aaf4d85fa52a40cadcf496eb2976edc21ebf3679a18ea99d5bb93aa547bc5a",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/mutation-preparation-r1/PREPARED_INDEX.json": "d41d7e2f96bdaf29c915d3455de93967c12611121880e85a34854d5122430a55",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/CACHE_FIXED_SOURCE_FREEZE_R3.json": "471e5d7fdb482febf9f3119b822241e530a6b5ad906eccd00626e6b09599b7c1",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/fixed-native-r2/RESULT.json": "badab50a9696c18c5b725753a9e6aef31f442b8e3a7291fee6b9204fa955cd8e",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/whole-cache-native-r2/RESULT.json": "57b6c4ebed671384feccd15e626e2231c8af318e20ecb962be3930ec6f5d8308",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-eight-private-mutant-candidates-adversarial-r2.json": "d7b18c6390cf7cd7d2806264c2fecbaedc41abaf6a83958566a199c6cf893844"
+  },
+  "checks": {
+    "runner_full167_ast_only_sha3f76_private_archive_equal": true,
+    "Inputs_a0aa_exact": true,
+    "baseline6096_O_and13rootconfigs_exact": true,
+    "Freeze22_baseline_snapshot_exact": true,
+    "fixed30_exact_hash_all_native_named30greenIDs_and17runtimenames": true,
+    "wholeCache_reference_prepared8_candidate_review_exact": true,
+    "live_C8_current_baseline_or_exact_one_prepared_variant": true
+  },
+  "execution_model": "One existing isolated C8clone reused serially for up to eight eligible owner variants; prior unchanged locked restore retained transparently; no new restore and no eight-fresh-clone claim. Fresh write plus strict forced Rebuild each variant; native MTP30 parent IDs plus2 separately owned pending children.",
+  "ownership_review": "Each native CLI owns a new session/group and records actual PID/returncode/join. Build180/test75 deadlines TERM/group+join10 thenKILL/group+join; per-child finally drains interrupted live CLI before log closure. Outer exclusion copies closed raw with zero credit and finally restores exact owner then source/config guards. Normal parser/archive/compile/timeout errors cannot leave mutated private source as accepted baseline.",
+  "artifact_review": "Build0warn0err/nativeexit0or2/exact30IDs/summary required. Four raw and17 named runtime files plus2 actual child receipt trees and exact compiled-owner archive before next variant. RESULT remains pending finite cause/PEPDB review or SURVIVOR_NO_KILL_CREDIT. Actual child case IDs/PIDs/primary failure/nonce/runtime7 and source/deps selection still independently qualify after execution.",
+  "limits": [
+    "Rootconfigs guarded before copy and after source restoration; any final guard or outer driver join failure excludes overall successful acceptance even if a pending RESULT was already archived.",
+    "No full process-group/descendant lifetime trace or arbitrary repeated signal/SIGKILL immunity; CLI join and frozen launcher-owned child receipts are separately qualified.",
+    "Expected30 IDs/runtimeNames/reference receipts are actual fixed-native-bound; no custom assertion runner supplies product verdict.",
+    "Root alone runs SDK/native processes; reviewer parsed Python AST without executing runner and made no product/test/tool changes."
+  ],
+  "live_observation_during_report_finalization": {
+    "current_delta": [],
+    "prepared_variant": null,
+    "qualification": "Root began serial native execution after receiving the earlier verbal structural NO_BLOCK. A new live baseline equality claim is intentionally not made while a prepared variant is active. This observation is separate from historical baseline input guards and gives no native acceptance."
+  },
+  "timing_limit": "Static complete-body/AST/candidate review preceded native launch and verbal NO_BLOCK was delivered. This immutable report was finalized after Root started serial execution; it is not a new claim that C8 remained baseline during mutation execution."
+}

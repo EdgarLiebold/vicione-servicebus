@@ -1,0 +1,14 @@
+{
+  "kind": "ROOT_EXACT_REVIEWED_FIVE_SQS_FILES_CANONICAL_APPLICATION_R1",
+  "acceptance_sha256": "2a4af610b49a00152377d8f00decf2286142f1a80e0e7079954127b5a06cbbc5",
+  "source_sha256": {
+    "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973",
+    "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f",
+    "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs": "694ffbfb2fb103e081e1de064c1f4d7a875c32d971e3beb2b91ebe79e60a98d8",
+    "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a"
+  },
+  "canonical_manifest6097_exact_private_fixed": true,
+  "configuration13_unchanged": true,
+  "limits": "No current canonical rebuilt binaries claimed; accepted native binaries belong to exact source-identical private C9."
+}

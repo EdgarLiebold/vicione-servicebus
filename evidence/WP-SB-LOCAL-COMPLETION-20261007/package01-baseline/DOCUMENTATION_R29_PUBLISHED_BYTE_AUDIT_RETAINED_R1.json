@@ -1,0 +1,68 @@
+{
+  "kind": "INDEPENDENT_ACTUAL_PUBLISHED_R29_SEVEN_BYTES_AFTERCOPY_AUDIT_R1",
+  "disposition": "NO_BLOCK_ACTUAL_EXACT_SEVEN_R29_PUBLICATION_QUALIFIED",
+  "findings": [],
+  "published_freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_FREEZE_R29.json",
+    "sha256": "e2168d8139a2951c61f625862242ccb73404c312de6eb14edcb9349c9961ce04"
+  },
+  "published_seven": {
+    "CHANGELOG.md": "bb1c8da614f6356c8df83e93df07506df0e9107ccf55656947eec472458dc835",
+    "TODO.md": "4de196f160f0bdcd27a2a1d8efab40d1cad304d3ff1c6aab149bf93d7aecd532",
+    ".testagent/status.md": "b5f85f2cb4438c11567613de24ed3b499d997608f0f9d7c46a535d48eee8f8c1",
+    ".testagent/plan.md": "5866b99cef22a0c9e9b37119b263d38b6011fa7cf75c80d2cc871a37bbee72cd",
+    ".testagent/local-completion-plan.md": "e6069be4afc80990ac7f363d60112b60a7b624d48e785f01d044407615ebc82a",
+    "docs/quality-status.md": "2c6d9497162ae6d1375136d512d83659a08e7f81d440378637263ede3a1dabf7",
+    "docs/servicebus-local-completion-report.txt": "9293421b432e757aeb00513163894a4a9989a527e833f2d1043f273bb0c93c94"
+  },
+  "snapshot_all_seven_current_direct_bytes_equal": true,
+  "retained_own_publication_gate": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_R29_FINAL_PUBLICATION_GATE_RETAINED_R1.json",
+    "sha256": "049d74e74a586265fc05bbb5408e3e5e01b9ed690b21cb431e7a141d9304e3fb"
+  },
+  "preparation": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_PROPOSED_FREEZE_R29_WITH_ACCEPTANCE_R1.json",
+    "sha256": "4595fd719b1a3e9544ecf24fa22227252d273c6b98ffc90671b3c6829495e9ff"
+  },
+  "prior_R28": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_FREEZE_R28.json",
+    "sha256": "790a91aa92d0736fed02a20c5167fc384d7e59feb2c7976d0e83fbe8a3327960"
+  },
+  "actual_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/ROOT_EVENTHUB_SELECTED_CLOCK_ACCEPTANCE_R1.json",
+    "sha256": "4ae989894f447e10039797d156ac7a86ed2afd0e7d02a18f7aea1949d78fa360"
+  },
+  "actual_afterapply": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-canonical-afterapply-adversarial-r1.json",
+    "sha256": "ed73843bd507f8eff4df95a992023af7c79cdbcfc1bc15567326457ab17887d7"
+  },
+  "preservation": {
+    "other85_of_protected92_current_hashes_unchanged": true,
+    "history_four_heading_inclusive_tails_exact": {
+      "CHANGELOG.md": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+      ".testagent/status.md": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+      ".testagent/plan.md": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+      "docs/quality-status.md": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5"
+    },
+    "TODO_preamble_other11blocks_exact": true,
+    "ordered62OBL_exact": true,
+    "categories": {
+      "CLOUD": 55,
+      "PER": 6,
+      "BRK": 1
+    },
+    "localplan_table06_only_changed": true,
+    "PO_plain_German_lines91_exact": true,
+    "complete264lossless_diff_reconstructs_actual_publication": true,
+    "frozen_STATE_sha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+    "frozen234_scope": "Matched unchanged historicalaudit hash, no new234bodyrecount.",
+    "canonical_source6109_and_config15_unchanged_during_docs_publication": true,
+    "source_scope": "src/tests/tools excluding bin/obj/artifacts/__pycache__"
+  },
+  "bounded_claim_reuse": "Own finalactual049d gate already reconciles selected clock only, new2Facts/affected6/whole196slots194visiblelabels/5same2Factscontrols10repeat5firstRED5healthy/Post2full16/actual10sourcecopy. Publication bytes exact that reviewed snapshot; no new count/inference added.",
+  "read_provenance": "Own current seven rawbyte/hash comparisons, R28 snapshot preservation/delta reconstruction,85protected blindhashes, source/config/state checks. Prior own whole264diff/localplan205/PO91 and exact actualsource/native/compiled receipts reused at matched bytes only; no Root read/parse credit transfer.",
+  "release": {
+    "documentation_aftercopy_hold": "RELEASED for bounded Root docs acceptance and subsequent separately reviewed packets",
+    "limits": "No SDK/native/provider/process actions or operational imports; no reviewer docs/product writes. No new canonical-native run, commit/push/globalA+/API30/currentcoverage/cloud/HW/allproviders certification."
+  }
+}

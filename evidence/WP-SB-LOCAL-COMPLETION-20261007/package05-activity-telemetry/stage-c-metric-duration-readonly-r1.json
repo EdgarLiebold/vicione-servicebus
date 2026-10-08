@@ -1,0 +1,568 @@
+{
+  "status": "READ_ONLY_P05_C_METRIC_BALANCE_AND_SMALL_DURATION_RESEARCH__NO_IMPLEMENTATION_OR_NATIVE_QUALIFICATION__NOT_A_PLUS_CLOSURE",
+  "reviewer": "/root/continuation_adversarial",
+  "bindings": [
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs",
+      "sha256": "2422998fb8458a9f1916d759b99d523a7d13d9e1b51f9fc5d1d43108d31e5614",
+      "bytes": 19146,
+      "lines": 433,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Monitoring/MetricOperation.cs",
+      "sha256": "f813f52ec2d9db43471027d4de638b14e52762c9c36e5985d7ccb0ad7794560f",
+      "bytes": 1365,
+      "lines": 43,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsState.cs",
+      "sha256": "e46c34249bc9377e971a28e4e7375643f60d7a0987fcfd8b7206ef0ac7c0f135",
+      "bytes": 2949,
+      "lines": 68,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": false,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/HandlerMessageFilter.cs",
+      "sha256": "b322fbf344b45bdb50ad02bf45749798100dc8ad8cf486da1686682d80623248",
+      "bytes": 3135,
+      "lines": 82,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs",
+      "sha256": "4f60e9e0f8e62b031ba6453b4ab45f3bc3b388dac9f76fbf67cdae9ebe09521d",
+      "bytes": 3432,
+      "lines": 86,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/InstanceMessageFilter.cs",
+      "sha256": "8541189d535bcc65f60385602d2ab032ba56186000e03a7397105bdba35b8adf",
+      "bytes": 3536,
+      "lines": 86,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumerIngressFailure.cs",
+      "sha256": "70f6a75c0bfa33b5714faef3df94b0fd78c986b30e8512113280b4d8818799e7",
+      "bytes": 3026,
+      "lines": 97,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Context/Consumption/ConsumeContextProxy.cs",
+      "sha256": "8597758ccda665fd6def683861bfdaf5cd0716da441be9c10cdc54d27f744bc7",
+      "bytes": 6684,
+      "lines": 183,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": false,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/Logging/SagaLogContextExtensions.cs",
+      "sha256": "7bf1608e7b9f8d36dd303f6bef5d475129e8616e79e0fe1126b551d1f50769af",
+      "bytes": 2036,
+      "lines": 32,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": false,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Logging/CourierLogContextExtensions.cs",
+      "sha256": "87e01d4b7b7538ea75c1882747ea72b9ad0949d012ee09ea08e65ad3ec18fe74",
+      "bytes": 2052,
+      "lines": 32,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": false,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/OrchestratesSagaMessageFilter.cs",
+      "sha256": "d6f40348352aff215e72362b7fe0e48e74d224afe092978ca3b96362676120ce",
+      "bytes": 3034,
+      "lines": 70,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/InitiatedByOrOrchestratesSagaMessageFilter.cs",
+      "sha256": "3f9ae2a7dcca59adac060e1421c5aa47ed42422f49057f75f8ea2776a300a4d1",
+      "bytes": 3097,
+      "lines": 68,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/InitiatedBySagaMessageFilter.cs",
+      "sha256": "5df0438ebc2cf9c37b79e8588517c31cf9af31289ba8e30aef0b079f997d7635",
+      "bytes": 3032,
+      "lines": 68,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/ObservesSagaMessageFilter.cs",
+      "sha256": "7d93c97006f0fadd8e5c389c695995341a7296f1be04e241bbc814d062c920ca",
+      "bytes": 2997,
+      "lines": 70,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/StateMachineSagaMessageFilter.cs",
+      "sha256": "15b2ae4f0d170c6e7f1c94b6fad6e807e1b06dc83054f460111031e5cd6804e2",
+      "bytes": 8853,
+      "lines": 216,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/ExecuteActivityHost.cs",
+      "sha256": "31c81a902a744e42cb880897aba7a29d0ff3312467d43b15d3fc84c2996f5535",
+      "bytes": 6264,
+      "lines": 145,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/CompensateActivityHost.cs",
+      "sha256": "c8474b4bb4456ac7197826d7c93079b4c5290431de716282791ef41872309b90",
+      "bytes": 5872,
+      "lines": 140,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContextTimeProviderExtensions.cs",
+      "sha256": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206",
+      "bytes": 1893,
+      "lines": 48,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": false,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/RetryContextExtensions.cs",
+      "sha256": "6e0af3738c4c0b30e9c2b91dfd1e022f70bcaf048ca09df2dfc5cfcfbf118fe8",
+      "bytes": 1890,
+      "lines": 38,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": false,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineMetricsTests.cs",
+      "sha256": "dc517604e676bf9c9261b836f0fc92f9bb4996f732c73cc4b3c39cb288323023",
+      "bytes": 60944,
+      "lines": 1136,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": false,
+      "root_core802_unchanged_proof_match": true,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs",
+      "sha256": "41c159a7730682a1c30d57d6c7e1c81c430fba11d9a9fb70ff827df85c7fb8ee",
+      "bytes": 3621,
+      "lines": 102,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": false,
+      "root_core802_unchanged_proof_match": true,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs",
+      "sha256": "d418b48fcfab4651883083f6cef6a642c076a296fc0dd79758d046e59a17ad12",
+      "bytes": 20144,
+      "lines": 493,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": false,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": true,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/OpenTelemetryGlobalCollection.cs",
+      "sha256": "bf37ae4bc28f82905a7cbc8663b440ed2d81f6d41247418b717ff3b48ff37df6",
+      "bytes": 422,
+      "lines": 13,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": false,
+      "root_core802_unchanged_proof_match": true,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+      "sha256": "94c9fb781e42f0e164f62730684a18f2ec7df7d35cf7067171a086182dc56bed",
+      "bytes": 2062,
+      "lines": 48,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "sha256": "551075235d378635bc7a9ffc7729cc9b348cd1b7b1b53fd662bf9bd7452ccb2f",
+      "bytes": 7884,
+      "lines": 194,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "sha256": "158dceacfcfe2a05effc59b02c79efa67e6664a02fd80bad29ecb00715d96ba8",
+      "bytes": 3422,
+      "lines": 84,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "sha256": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+      "bytes": 8551,
+      "lines": 191,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": false,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "sha256": "0658c31e41c2cc96aeae7f33948a046b49189c263580df97a1fe71414594dcb9",
+      "bytes": 8208,
+      "lines": 202,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs",
+      "sha256": "152d185032cee3ade09fdb1d83af32a8d14e778b68968224fd0d5579725b6079",
+      "bytes": 10345,
+      "lines": 218,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": true,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs",
+      "sha256": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74",
+      "bytes": 2971,
+      "lines": 86,
+      "reviewer_read": "whole current owner",
+      "root_telemetry57_unchanged_proof_match": false,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": true,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderDeliveryTests.cs",
+      "sha256": "d1a2553111cf63c9d272266a5d2644e76f7060e1e8a34fc7fa7aa9a19e432029",
+      "bytes": 39632,
+      "lines": 874,
+      "reviewer_read": "focused excerpts only in this assignment; prior whole review separate",
+      "root_telemetry57_unchanged_proof_match": false,
+      "root_core802_unchanged_proof_match": true,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "f825ec82e2e3f71fd8daac77f770a875f2f5172b5d75c1e637dd9ecb635f62b7",
+      "bytes": 22994,
+      "lines": 560,
+      "reviewer_read": "focused excerpts only in this assignment; prior whole review separate",
+      "root_telemetry57_unchanged_proof_match": false,
+      "root_core802_unchanged_proof_match": false,
+      "root_shared84_unchanged_proof_match": false,
+      "root_personal_read_transfer": false
+    }
+  ],
+  "root_receipts": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_TELEMETRY57_COMPLETE_SOURCE_READ_R1.json",
+      "sha256": "87c47890f03ff587088d3a13d6b17fcefdc2234b9ab0bde6e420b15c39cf9e72"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE802_STAGE_B1_READ_CLOSURE_R2.json",
+      "sha256": "2d3018195a6b6bcef722635d7067323a0f3648f95de89063c174b162423e1bc8"
+    }
+  ],
+  "priority_C1": {
+    "owner": "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs",
+    "method": "StartProcess",
+    "exact_original_boundary": {
+      "active_increment_line": 254,
+      "unguarded_retry_getter_line": 258,
+      "unguarded_senttime_getter_line": 261,
+      "unguarded_second_senttime_and_utc_line": 263,
+      "scope_return_line": 268,
+      "outer_TryStart_catch_returns_null_lines": [
+        316,
+        333
+      ]
+    },
+    "finding": "Ordinary GetRetryAttempt payload/getter, SentTime getter, repeated SentTime.HasValue->Value change, or delivery lag GetUtcNow exception after actual ActiveOperations+1 exits through outer TryStart catch with null. No MetricOperation is returned, so caller finally cannot emit -1. Business operation does not necessarily fail, but active metric remains falsely positive and processing duration is lost.",
+    "caller_matrix": [
+      {
+        "family": "handler",
+        "entry": "TryStartHandlerMetrics",
+        "owners": [
+          "HandlerMessageFilter.cs"
+        ],
+        "identity": [
+          "handle",
+          "handler"
+        ],
+        "lifetime": "real handler/NotifyConsumed/fault operations stay required; finally instrument.Complete"
+      },
+      {
+        "family": "consumer",
+        "entry": "TryStartConsumerMetrics",
+        "owners": [
+          "ConsumerMessageFilter.cs",
+          "InstanceMessageFilter.cs"
+        ],
+        "identity": [
+          "consume",
+          "consumer"
+        ],
+        "lifetime": "real factory/instance pipe and notifications stay required; finally Complete"
+      },
+      {
+        "family": "saga",
+        "entry": "SagaLogContextExtensions",
+        "owners": [
+          "OrchestratesSagaMessageFilter.cs",
+          "InitiatedByOrOrchestratesSagaMessageFilter.cs",
+          "InitiatedBySagaMessageFilter.cs",
+          "ObservesSagaMessageFilter.cs",
+          "StateMachineSagaMessageFilter.cs"
+        ],
+        "identity": [
+          "saga/saga",
+          "saga/saga_state_machine"
+        ],
+        "lifetime": "real Consume/RaiseEvent/completion/next stay required; ordinary finally or CompleteTelemetry completes scope"
+      },
+      {
+        "family": "courier",
+        "entry": "CourierLogContextExtensions",
+        "owners": [
+          "ExecuteActivityHost.cs",
+          "CompensateActivityHost.cs"
+        ],
+        "identity": [
+          "execute/courier_execute",
+          "compensate/courier_compensate"
+        ],
+        "lifetime": "actual activity/result evaluation/notification stay required; finally Complete"
+      }
+    ],
+    "minimal_design": [
+      "Create completion MetricOperation owner before independent retry/lag preparation; Active increment and completion decrement remain separate guarded observations",
+      "Wrap whole retry preparation including GetRetryAttempt inside its own Observe, whole delivery lag preparation including one cached nullable SentTime read/GetUtcNow/conversion/Record inside a second independent Observe",
+      "Return scope despite ordinary failed retry or lag observation; no rollback that falsely claims business operation ended while it continues",
+      "Keep elapsed duration completion calculation inside its existing Observe. Original optional initial timestamp failure happens before Active increment, giving null without counter imbalance; do not enlarge this first balance package unless exact preservation contract chosen",
+      "Keep null/required argument checks and actual operation/notification/timer/storage clocks unchanged. No general catch over caller business code."
+    ],
+    "rejected_incomplete_fix": "Moving +1 after lag preparation avoids positive leak but drops otherwise healthy processing/active scopes on unrelated optional lag error. Finite tests should require retained independent scope and ProcessDuration, not merely net sum0 which an always-null metric scope trivially satisfies.",
+    "smallest_direct_native_fixture": {
+      "approach": "New separate canonical friend test owner using actual internal TryStartHandlerMetrics and MetricOperation, public LogContext.ConfigureCurrentLogContextIfNull(provider), DI AddLogging/AddMetrics, factory-scoped existing MetricObservationSession. Existing InMemoryOutboxTestContextFactory plus derived public ConsumeContextProxy<T> for controlled SentTime getter. No reflection invocation/static reset or external provider.",
+      "variants": [
+        "healthy metadata/UTC",
+        "hostile GetUtcNow only; GetTimestamp/TimestampFrequency monotonic healthy",
+        "hostile SentTime getter only; all payload/source-identity lookups and timestamp provider healthy"
+      ],
+      "time_values": "Fake monotonic start at chosen UTC; context SentTime=startUTC minus3s; GetTimestamp captures start; advance underlying FakeTimeProvider7s before Complete. GetUtcNow failure isolated to lag read, not a registered application-wide business clock.",
+      "oracles": [
+        "returned MetricOperation non-null under all3 variants",
+        "before Complete exact process ActiveOperations[+1] with exact system=in-memory,operation=handle,type=process,kind=handler boundedtags",
+        "after advancing7s and Complete twice exact ActiveOperations[+1,-1], sum0, one actual ProcessDuration7seconds and same bounded tags",
+        "healthy one actual DeliveryDuration3seconds; hostile lag prep zero actual DeliveryDuration records, no fake0 sample",
+        "GetUtcNow/SentTime chosen ordinary exception occurs in actual StartProcess preparation; no escaped observation exception; no cross-provider metrics or meter disposal by subject"
+      ],
+      "expected_original": "Two finite hostile failures (non-null scope or exact balance/duration assertion), one healthy control; outer TryStart swallowed observer cause must not be mistaken for successful closure.",
+      "precise_limit": "This direct component fixture proves metric contract only. A manually executed test delegate after TryStart would not prove real message pipeline isolation."
+    },
+    "public_handler_supplement": {
+      "route": "Actual public HandlerMessageFilter<T> invoked through IFilter<ConsumeContext<T>>. Derived ConsumeContextProxy<T> overrides generic virtual NotifyConsumedAsync<TInner>/NotifyFaultedAsync<TInner> to record actual notification arguments; inherited non-generic generic-context Notify methods route into these overrides. Existing test factory otherwise forwards actual context/members/payloads.",
+      "matrix": "Same3 diagnostic variants x actual handler success/exact chosen business exception =6 cases if desired. Real handler advances7s and increments once; next actual pipe receives context once on success and0 on business failure; notification consumed1 or faulted1 with original business exception reference; propagated outcome Null or exact same business cause; metric active/duration/lag oracles as above.",
+      "constraint": "Required filter starts/elapsed notification timestamps remain healthy. Do not give globally hostile Timestamp provider or swallow required Notify calls to manufacture green. Original metrics red alone is finding; actual business outcomes should already be healthy controls."
+    },
+    "one_single_cause_mutant_proposal": {
+      "cause": "Remove only accepted whole delivery-lag Observe wrapper, leaving scope creation, retry guard, active observations and completion untouched",
+      "before_concept": "Observe(() => { DateTimeOffset? sentTime = consumeContext.SentTime; if (sentTime.HasValue) { double deliverySeconds = Math.Max(0, (timeProvider.GetUtcNow() - AsUtc(sentTime.Value)).TotalSeconds); state.DeliveryDuration.Record(deliverySeconds, tags); } });",
+      "after_concept": "Same complete block executes directly, no Observe wrapper; no altered clock/test/requirements/metric increment or retry code",
+      "predicted": "Both hostile lag preparation variants recreate scope loss/active leak; healthy lag unaffected. Exact replacement and single changed-file proof can only bind after Root authors corrected owner, not claimed here."
+    },
+    "prior_metrics_tests": {
+      "owner": "tests/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineMetricsTests.cs",
+      "whole_read_lines": 1136,
+      "already_cover": [
+        "healthy send/receive/process exact tags and active aggregate",
+        "process actual lifetime +/-1",
+        "FakeTimeProvider processing7s",
+        "throwing MeterListener outcome isolation",
+        "application MeterFactory failure and provider ownership",
+        "retry1 across two processing attempts",
+        "first-exception/idempotent MetricOperation",
+        "outbox outcomes and public child log binding"
+      ],
+      "adjacent_missing_bounded_case": "Ordinary optional metadata/UTC preparation failure between active increment and scope return; existing tests do not select this boundary."
+    }
+  },
+  "small_meaningful_duration_candidates": [
+    {
+      "priority": "C2a",
+      "owners": [
+        "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs"
+      ],
+      "boundaries": [
+        "ctor33 GetTimestamp used only to prepare later observation",
+        "Complete45 GetElapsedTime argument evaluated after required store completion and before guarded instrumentation method"
+      ],
+      "risk": "Initial optional timestamp can prevent capability creation; after real CompleteConsumerDelivery retires intent, elapsed failure can throw instead of returning actual retired bool. Repeated completion may now return false because state was actually retired.",
+      "minimal_change": "Guard only initial diagnostic capture with nullable started token; guard all post-store diagnostic preparation. Preserve every argument/generation guard, real UTC GetUtcNow, required store operation and cancellation. Missing duration should omit duration sample; do not report invented zero. If preserving independent completion counter, typed instrumentation needs a separately bound nullable duration or separate counter method.",
+      "small_native_cases": [
+        "healthy capture and elapsed: real persisted intent retirement true then repeatfalse; duration measured exactly7s and outcome counter1 each",
+        "ordinary ctor timestamp failure: public existing driver CreateCompletion returns required capability; actual store completion still attempted with real UTC/generation/token and true result; no invented duration",
+        "healthy capture then GetTimestamp/elapsed or TimestampFrequency failure: actual retirement returns true/store snapshot0 despite failed observation",
+        "required store/UTC/cancellation failure controls propagate original required outcome and perform no fake successful retirement"
+      ],
+      "existing_route": "DurableSenderDeliveryTestDriver public CreateCompletion and factory CreateInMemoryStore; no direct hidden method invocation. Existing DurableSenderDeliveryTests ConsumerCompletion_KeepsCapacity... checks true thenfalse and actual stored0; reuse concept with new exact owner rather than changing whole493line context factory.",
+      "native_pending": true
+    },
+    {
+      "priority": "C2b",
+      "owners": [
+        "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+        "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+        "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs"
+      ],
+      "boundaries": [
+        "Delivery13 initial optional GetTimestamp before dispatch/completion construction",
+        "Telemetry24/42 elapsed preparation before guarded RecordDurableDelivery"
+      ],
+      "risk": "Clock observation can prevent actual dispatch; post-MarkDelivered elapsed error is caught as persistenceException despite actual successful retirement. RecordStatePersistenceFailure repeats same elapsed lookup, potentially replaces original persistence/cancellation error and prevents diagnostic log.",
+      "minimal_change": "Use nullable optional started capture, isolate optional elapsed preparation per observation. Keep actual persisted outcome authoritative and diagnostic state tags/log attempts independent of elapsed read; protect diagnostic prep without covering required dispatch/store/UTC/retry/quarantine work. Initial completion capture must be separately protected or ctor second timestamp still blocks dispatch.",
+      "small_native_route": "Existing Driver.DeliverDueBatchAsync with real InMemory store/lease/generation and controlled dispatcher, healthy UTC clocks. A timestamp-only hostile provider must target actual capture/elapsed positions; native case proves actual dispatch1 plus retired snapshot0 for transport acceptance, and exact same required persistence error/cancellation preserved. No hosted worker/timer/sleep is necessary.",
+      "native_pending": true
+    },
+    {
+      "priority": "EF_SEPARATE_REQUIRED_NOTIFICATION_CONTRACT",
+      "owners": [
+        "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs"
+      ],
+      "boundaries": [
+        "87 GetTimestamp before real transaction",
+        "139 and157 GetElapsedTime argument to required NotifyFaultedAsync on SaveChanges/Commit error"
+      ],
+      "risk": "Elapsed argument failure can replace real save/commit primary and prevent required fault notification; EF rollback catch then preserves the substituted error. This is not safely closed by treating whole NotifyFaultedAsync as optional.",
+      "recommendation": "Exclude from first small C1/C2 metric package. Separate local EF fixture can use actual SQLite relational transaction/no cloud and controlled SaveChanges/commit fault, but define unavailable-duration behavior explicitly and retain actual NotifyFaulted failure contract before changes. Do not invent duration0 or swallow notification/store failure. Required Received UTC timestamp remains untouched.",
+      "native_pending": true
+    }
+  ],
+  "root_author_read_actions": {
+    "reuse": "Bindings independently map exact current hash to Root57/Core802/shared84 where available. This reviewer does not transfer personal reading credit. For canonical edits Root must freeze new whole test owner and exact requirements projection against whole current Core owner receipt.",
+    "first_C1_product_owner": "Only LogContextMetricsExtensions current whole body; unchanged Root57 proof matches. MetricOperation/State/caller source and test helpers are context reads, not mutation targets.",
+    "minimal_C1_context_list": [
+      "MetricOperation.cs",
+      "LogContextMetricsState.cs",
+      "HandlerMessageFilter.cs if public handler supplemental selected",
+      "ConsumeContextProxy.cs",
+      "PipeContextTimeProviderExtensions.cs",
+      "RetryContextExtensions.cs",
+      "MessagePipelineMetricsTests.cs",
+      "MetricObservationSession.cs",
+      "InMemoryOutboxTestContextFactory.cs",
+      "OpenTelemetryGlobalCollection.cs",
+      "Core canonical project/imports/RequirementCoverage projection"
+    ],
+    "duration_next": "Only when chosen, bind extra candidate owners and current typed instrumentation authored delta if nullable duration/counter split introduced. DurableSenderDeliveryTests read only relevant excerpts here; Root current full-owner proof independently required before any changes in that existing owner."
+  },
+  "general_limits": [
+    "No product/test/tool/governance edits or .NET/provider operations by reviewer",
+    "Original/fixed/mutation/runtime PE-PDB/packages/strict-build/whole-Core native evidence not generated or qualified here",
+    "No cloud/device/release/all P05 or A+ completion claims",
+    "Required business UTC store/lease/consumer timeout/retry/inbox timestamp, timer/circuit/rate decisions, actual Fault/Notify/store and cancellation are excluded from diagnostic catches"
+  ],
+  "skills_applied": "Previously read Microsoft OpenTelemetry metric ownership/trace correlation guidance, current test-anti-patterns and .NET analysis reference; this is read-only research, not test authoring."
+}

@@ -1,0 +1,1372 @@
+{
+  "status": "NO_BLOCK_BOUNDED_P05_C6_SOURCE_TEST_NATIVE_MUTANT_POST_CLOSURE",
+  "reviewer": "/root/continuation_adversarial",
+  "scope": "Two public telemetry caller owners only, their exact two new theory test owners and exact two appended requirement purpose rows; immutable evidence aggregate, no product or native execution by reviewer.",
+  "source_freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C6_FREEZE_R1.json",
+    "sha256": "77f915ff6878f953fb940f704d843c1899485fe751991b57755f8dcc69f95896",
+    "source5": {
+      "tests/ViciOne.ServiceBus.Tests/Monitoring/PublicTelemetryCleanupIsolationTests.cs": "cd45b4f583f32312ba3eb8f58aa18eaf2b8f115fa3f4c831fbfab7405f30126c",
+      "tests/ViciOne.ServiceBus.Tests/Monitoring/ActiveTelemetryCleanupIsolationTests.cs": "4ba3b7f61891cfff983161224666d108ef776aaa4cad00675a395928affdd635",
+      "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "6e93640a343c2d9328c9d40b410a060ed2052307a6e6482ee17c3026a26e0503",
+      "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs": "5d87f3120de34a96403e05378a1d0b5f9e834aedb45cf526b4b131281f864849",
+      "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs": "8c7532245dc15130c4adf8d06e6b4434061c6a3a60a57f682621d7489e407a34"
+    },
+    "currentO_currentC3_fixed_snapshot_equal": true,
+    "canonical_src_tests_tools_paths": 6092,
+    "canonical_manifest_sha256": "756d6ba243f302dcdce201e6c8a90c0b30352f3c9bbfee70cb83674507807e69"
+  },
+  "author_read_provenance": {
+    "Root810_R2": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE810_STAGE_C6_READ_CLOSURE_R2.json",
+      "sha256": "0398e2960671b582484cca755d5467b6284ec45862053a89ac8d93734e2fdb3a"
+    },
+    "root_product_read": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C6_PRODUCT_READ_R1.json",
+      "sha256": "1840d4a3fc71fe575b5255496347f2cd6796f0916569ce3c3fb280e87f4f3c11"
+    },
+    "owner_count": 810,
+    "shared_context_count": 84,
+    "actual_current_hashes_rechecked_O_C3": true,
+    "required_read_credit": "Root own prior whole-body read plus authored whole-body/delta provenance, with corrected R2 historical context. Reviewer artifact validation never supplies author personal-read credit.",
+    "requirements_rows": 4708,
+    "native_case_expansion": {
+      "theory_methods": 2,
+      "public_cases": 25,
+      "Act_cases": 13,
+      "total": 38,
+      "new_children": 0
+    }
+  },
+  "independent_qualified_report_chain": {
+    "source": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-private-source-fix-and-canonical-test-only-adversarial-r1.json",
+      "sha256": "0454dc6c41b83ccdc617dd4029c83ba74e51eca897f536eb660ecbccaefbbc89",
+      "qualified_status": "NO_BLOCK_PRIVATE_TWO_CALLER_FIX_DRAFTS_AND_CANONICAL_TEST_ONLY_R2_PROVENANCE__NATIVE_ORIGINAL_PENDING"
+    },
+    "original": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-original-r2-native-artifact-review-r2.json",
+      "sha256": "235ca6bfeaa1a4e5093294ccde572d5a1138f4dbde6d4f3d24ddb6de87006109",
+      "qualified_status": "QUALIFIED_BOUNDED_ORIGINAL_COUNTEREXAMPLES"
+    },
+    "fixed_core": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-fixed-r1-native-artifact-review-r1.json",
+      "sha256": "822e1f6be9c08c399ff1360fc139892e02a9822d074fa17eda484a17110e7406",
+      "qualified_status": "QUALIFIED_BOUNDED_FIXED38_AND_CORE8112"
+    },
+    "M1": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-native-m1-adversarial-r1.json",
+      "sha256": "b339ce98c79ad0cf3e5b749df148e4ea615aaf61ba5e402a331f8af520ab47d5",
+      "qualified_status": "QUALIFIED_ACTUAL_COMPILED_SINGLE_CAUSE_MUTANT_NATIVE"
+    },
+    "M2r2": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-native-m2-r2-adversarial-r1.json",
+      "sha256": "5bfcde21e9385062681d6355e5a523d67a106e63415770fef033d960c00d930d",
+      "qualified_status": "QUALIFIED_ACTUAL_COMPILED_SINGLE_CAUSE_MUTANT_NATIVE"
+    },
+    "M3": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-mutant-m3-native-artifact-review-r1.json",
+      "sha256": "7bbd449576e35ce22d23380b06a50f4e6504c8d834a250b84fd7d27aab4a24c2",
+      "qualified_status": "QUALIFIED_ACTUAL_SINGLECAUSE_MUTANT"
+    },
+    "M4": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-mutant-m4-native-artifact-review-r1.json",
+      "sha256": "5a599f2f6be987b8c054f43397e9b5d4435a4a5dec8e77894656d31d54598374",
+      "qualified_status": "QUALIFIED_ACTUAL_SINGLECAUSE_MUTANT"
+    },
+    "M5r2": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-mutant-m5-r2-native-artifact-review-r2.json",
+      "sha256": "71650c6684a76b91cd2246d6f0d66a77ab6d35ba4010c64cb440a278e66290a6",
+      "qualified_status": "QUALIFIED_BOUNDED_SINGLE_CAUSE_FINITE_COUNTEREXAMPLE"
+    },
+    "M6": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-native-m6-adversarial-r2.json",
+      "sha256": "b33cce3106d0fceddcd9614d549c6d8b1c6adcd72bf264ab45b9e5d0c984a1f1",
+      "qualified_status": "QUALIFIED_ACTUAL_COMPILED_SINGLE_CAUSE_MUTANT_NATIVE"
+    },
+    "post": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-fixed-post-native-adversarial-r1.json",
+      "sha256": "4ae10d97164557178f0008dc7e3f713bf7a34599c797294b5196af8b57d94bc9",
+      "qualified_status": "QUALIFIED_UNCHANGED_FIXED_POST_NATIVE38_PASS__FINAL_AGGREGATE_PENDING_M5_REVIEW"
+    }
+  },
+  "results": [
+    {
+      "label": "original",
+      "result": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-original-r2/RESULT.json",
+      "sha256": "94097ca965871d6e32e819bf8f3863ee2255c5166263fa1afd4dcfa92ad790ac",
+      "focused": {
+        "session": 60000,
+        "joined_exit": 2,
+        "total": 38,
+        "failed": 17,
+        "passed": 21,
+        "skipped": 0
+      },
+      "all38_case_identities_match_source": true,
+      "actual_failing_ids": [
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionBothFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionTimerFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionObserverFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupAggregateAndTimerFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneBothFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: WaitCancellationBothFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupTimerFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: ActionAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: WaitCancellationAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: ActionAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: WaitCancellationAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: ActionAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: WaitCancellationAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: WaitCancellationAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: WaitCancellationAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: ActionAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: ActionAndCleanupFailure)"
+      ],
+      "raw_count": 4,
+      "binlog_count": 2,
+      "runtime_count": 17,
+      "clone": null
+    },
+    {
+      "label": "fixed",
+      "result": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-r1/RESULT.json",
+      "sha256": "26dc6e30afee65f8db6c640423b2d187a73ad4fdbcde232671d57f255b4347f0",
+      "focused": {
+        "session": 68779,
+        "joined_exit": 0,
+        "total": 38,
+        "failed": 0,
+        "passed": 38,
+        "skipped": 0
+      },
+      "all38_case_identities_match_source": true,
+      "actual_failing_ids": [],
+      "raw_count": 4,
+      "binlog_count": 2,
+      "runtime_count": 17,
+      "clone": null
+    },
+    {
+      "label": "M1",
+      "result": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m1-endpoint-cleanup-replaces-primary/RESULT.json",
+      "sha256": "b3c5725fa8e34eae42652d3c0ccaf66ff85672a4d0fd3ca08f542a18a9d623d9",
+      "focused": {
+        "total": 38,
+        "failed": 10,
+        "passed": 28,
+        "skipped": 0
+      },
+      "all38_case_identities_match_source": true,
+      "actual_failing_ids": [
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: WaitCancellationAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: WaitCancellationAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: ActionAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: ActionAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: WaitCancellationAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: WaitCancellationAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: ActionAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: WaitCancellationAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: ActionAndCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: ActionAndCleanupFailure)"
+      ],
+      "raw_count": 6,
+      "binlog_count": 3,
+      "runtime_count": 17,
+      "clone": {
+        "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c6-mutants/m1-endpoint-cleanup-replaces-primary",
+        "path_count": 6092,
+        "manifest_sha256": "2e7f0a0ca4325b7e031d4e19e7904bed6d37c494b6f898927caab38dd583246d",
+        "single_changed_owner": "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+        "owner_sha256": "38b1f3efe5ada2e7bfa709611380013fb7b6e9ce9a4477d92056f32a5fca5c26",
+        "other6091_equal_currentO": true
+      }
+    },
+    {
+      "label": "M2r2",
+      "result": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m2-endpoint-required-cleanup-muted-r2/RESULT.json",
+      "sha256": "3596cf0a617ea03528b4cabb82252650d157f0b76b9c454e86505bb55a5b125e",
+      "focused": {
+        "total": 38,
+        "failed": 5,
+        "passed": 33,
+        "skipped": 0
+      },
+      "all38_case_identities_match_source": true,
+      "actual_failing_ids": [
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: StandaloneCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: StandaloneCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: StandaloneCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: StandaloneCleanupFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: StandaloneCleanupFailure)"
+      ],
+      "raw_count": 6,
+      "binlog_count": 3,
+      "runtime_count": 17,
+      "clone": {
+        "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c6-mutants/m2-endpoint-required-cleanup-muted-r2",
+        "path_count": 6092,
+        "manifest_sha256": "c6574c9a9926d33dc111edbe14eada0c8142255631857136076b35dd5894c714",
+        "single_changed_owner": "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+        "owner_sha256": "ed543c88352a5064e433a2001b25ca0c237d7d890bddfd183c3f6b8df5331e9c",
+        "other6091_equal_currentO": true
+      }
+    },
+    {
+      "label": "M3",
+      "result": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/RESULT.json",
+      "sha256": "3e7da0b4689ad9e184cdc75ddd32f7d11dcbda2611f673eec7386517b33d99a2",
+      "focused": {
+        "total": 38,
+        "failed": 3,
+        "passed": 35,
+        "skipped": 0
+      },
+      "all38_case_identities_match_source": true,
+      "actual_failing_ids": [
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: WaitCancellationBothFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionBothFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionObserverFailure)"
+      ],
+      "raw_count": 6,
+      "binlog_count": 3,
+      "runtime_count": 17,
+      "clone": {
+        "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c6-mutants/m3-act-observation-cleanup-replaces-primary",
+        "path_count": 6092,
+        "manifest_sha256": "9819155bb620503cc325066f27e08bd64764abb9b991510d02b54b4117468178",
+        "single_changed_owner": "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+        "owner_sha256": "062d7c73593ea1e49cbaf06a6cb8a51ca6ac5a46d4e3b0d51f954fd8982cfbb6",
+        "other6091_equal_currentO": true
+      }
+    },
+    {
+      "label": "M4",
+      "result": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/RESULT.json",
+      "sha256": "4362cbbff5ddbea31faa15aa2e578e3f2f8a1a2b5511a71d7814c8845e3377c0",
+      "focused": {
+        "total": 38,
+        "failed": 5,
+        "passed": 33,
+        "skipped": 0
+      },
+      "all38_case_identities_match_source": true,
+      "actual_failing_ids": [
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionBothFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupTimerFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionTimerFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupAggregateAndTimerFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: WaitCancellationBothFailure)"
+      ],
+      "raw_count": 6,
+      "binlog_count": 3,
+      "runtime_count": 17,
+      "clone": {
+        "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c6-mutants/m4-act-timer-cleanup-replaces-primary",
+        "path_count": 6092,
+        "manifest_sha256": "a8e65bbe1095281b2421f05aadf6d56216c0c8ea05fefd216fe2018a37f3f1ac",
+        "single_changed_owner": "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+        "owner_sha256": "92d425120d21b631d4f52822ba3602a5f877a534d6a04cf8d16ac537fe8cb575",
+        "other6091_equal_currentO": true
+      }
+    },
+    {
+      "label": "M5r2",
+      "result": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m5-act-required-owner-aggregate-lost-r2/RESULT.json",
+      "sha256": "b95a3cfb7eb3073adda91ec41ef76ceae067feca9de342dd1c626ebb72de5ae0",
+      "focused": {
+        "total": 38,
+        "failed": 1,
+        "passed": 37,
+        "skipped": 0
+      },
+      "all38_case_identities_match_source": true,
+      "actual_failing_ids": [
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneBothFailure)"
+      ],
+      "raw_count": 6,
+      "binlog_count": 3,
+      "runtime_count": 17,
+      "clone": {
+        "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c6-mutants/m5-act-required-owner-aggregate-lost-r2",
+        "path_count": 6092,
+        "manifest_sha256": "6a2d5acba0f65b4491513d7acd57619aa8223c6472e29114fbf2d13c6a1c66ae",
+        "single_changed_owner": "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+        "owner_sha256": "ac3c20e9744d12164c94e5895ba204c27d422c5578b93a3b108e6d65dc32e98e",
+        "other6091_equal_currentO": true
+      }
+    },
+    {
+      "label": "M6",
+      "result": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m6-act-cleanup-order-reversed/RESULT.json",
+      "sha256": "70b8b8ac77af94381e779754ff35d96669035fbced046eb060c94cd47b7e43c4",
+      "focused": {
+        "total": 38,
+        "failed": 10,
+        "passed": 28,
+        "skipped": 0
+      },
+      "all38_case_identities_match_source": true,
+      "actual_failing_ids": [
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneTimerFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: Healthy)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionTimerFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: WaitCancellationBothFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneObserverFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneBothFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: WaitCancellation)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionBothFailure)",
+        "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionObserverFailure)"
+      ],
+      "raw_count": 6,
+      "binlog_count": 3,
+      "runtime_count": 17,
+      "clone": {
+        "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c6-mutants/m6-act-cleanup-order-reversed",
+        "path_count": 6092,
+        "manifest_sha256": "16c629976982320fc0fc9f1016aaa9e08d589633000c935201ca1d5cfa890077",
+        "single_changed_owner": "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+        "owner_sha256": "454ed4c461d6d178f4dfebf3926e834242f8b5f6b78ef5b1342cf10c6846dd00",
+        "other6091_equal_currentO": true
+      }
+    },
+    {
+      "label": "post",
+      "result": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/RESULT.json",
+      "sha256": "b1651527d5a7cd0525ccfa66599e914c456e6be8c5913d32badffe744942d564",
+      "focused": {
+        "total": 38,
+        "failed": 0,
+        "passed": 38,
+        "skipped": 0
+      },
+      "all38_case_identities_match_source": true,
+      "actual_failing_ids": [],
+      "raw_count": 2,
+      "binlog_count": 1,
+      "runtime_count": 17,
+      "clone": null
+    }
+  ],
+  "case_set_sha256_newline_sorted": "188e73299270742cfcb1bb8f64235baab711edff36622950ffcf9de6ec7090be",
+  "complete38_identity_outcome_matrix": [
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionBothFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "FAIL",
+        "M4": "FAIL",
+        "M5r2": "PASS",
+        "M6": "FAIL",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionFailure)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "FAIL",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionObserverFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "FAIL",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "FAIL",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionTimerFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "FAIL",
+        "M5r2": "PASS",
+        "M6": "FAIL",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: Healthy)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "FAIL",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupAggregateAndTimerFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "FAIL",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupFailure)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupTimerFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "FAIL",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneBothFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "FAIL",
+        "M6": "FAIL",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneObserverFailure)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "FAIL",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneTimerFailure)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "FAIL",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: WaitCancellation)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "FAIL",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: WaitCancellationBothFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "FAIL",
+        "M4": "FAIL",
+        "M5r2": "PASS",
+        "M6": "FAIL",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: ActionAndCleanupFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "FAIL",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: ActionFailure)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: Healthy)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: StandaloneCleanupFailure)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "FAIL",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: WaitCancellationAndCleanupFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "FAIL",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: ActionAndCleanupFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "FAIL",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: ActionFailure)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: Healthy)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: StandaloneCleanupFailure)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "FAIL",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: WaitCancellationAndCleanupFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "FAIL",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: ActionAndCleanupFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "FAIL",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: ActionFailure)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: Healthy)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: StandaloneCleanupFailure)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "FAIL",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: WaitCancellationAndCleanupFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "FAIL",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: ActionAndCleanupFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "FAIL",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: ActionFailure)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: Healthy)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: StandaloneCleanupFailure)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "FAIL",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: WaitCancellationAndCleanupFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "FAIL",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: ActionAndCleanupFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "FAIL",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: ActionFailure)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: Healthy)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: StandaloneCleanupFailure)",
+      "outcomes": {
+        "original": "PASS",
+        "fixed": "PASS",
+        "M1": "PASS",
+        "M2r2": "FAIL",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: WaitCancellationAndCleanupFailure)",
+      "outcomes": {
+        "original": "FAIL",
+        "fixed": "PASS",
+        "M1": "FAIL",
+        "M2r2": "PASS",
+        "M3": "PASS",
+        "M4": "PASS",
+        "M5r2": "PASS",
+        "M6": "PASS",
+        "post": "PASS"
+      }
+    }
+  ],
+  "counts": {
+    "original": {
+      "total": 38,
+      "finite_red": 17,
+      "healthy": 21
+    },
+    "fixed": {
+      "total": 38,
+      "failed": 0,
+      "passed": 38
+    },
+    "six_mutants": {
+      "total_slots": 228,
+      "finite_red_slots": 34,
+      "healthy_slots": 194,
+      "detected_independent_single_cause_experiments": 6,
+      "distinct_failing_case_ids": 27
+    },
+    "fixed_post": {
+      "total": 38,
+      "failed": 0,
+      "passed": 38
+    },
+    "selected9runs": {
+      "total_slots": 342,
+      "finite_red_slots": 51,
+      "healthy_slots": 291,
+      "distinct_case_ids": 38,
+      "skipped": 0
+    },
+    "whole_Core_separate": {
+      "total": 8112,
+      "passed": 8112,
+      "failed": 0,
+      "skipped": 0,
+      "parent_pid": 83384,
+      "session": 8839,
+      "joined_exit": 0
+    },
+    "C5_cold_children_separate": {
+      "total": 7,
+      "passed": 7,
+      "failed": 0,
+      "never_added_to_parent8112_or_C6_342": true
+    }
+  },
+  "mutant_distinct_failing_ids": [
+    "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionBothFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionObserverFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionTimerFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: Healthy)",
+    "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupAggregateAndTimerFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupTimerFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneBothFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneObserverFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneTimerFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: WaitCancellation)",
+    "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: WaitCancellationBothFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: ActionAndCleanupFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: StandaloneCleanupFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: WaitCancellationAndCleanupFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: ActionAndCleanupFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: StandaloneCleanupFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: WaitCancellationAndCleanupFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: ActionAndCleanupFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: StandaloneCleanupFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: WaitCancellationAndCleanupFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: ActionAndCleanupFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: StandaloneCleanupFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: WaitCancellationAndCleanupFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: ActionAndCleanupFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: StandaloneCleanupFailure)",
+    "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: WaitCancellationAndCleanupFailure)"
+  ],
+  "Core_result": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-core-r1/RESULT.json",
+    "sha256": "44baa8489e425078958dcbb42b799590729667db646ea73c4187b58df53d2b0c",
+    "no_build_fixed_runtime17_reused_archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-r1/runtime",
+    "fixed_initial_post_Core_runtime17_all_equal": true,
+    "qualified_by_report": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-fixed-r1-native-artifact-review-r1.json",
+      "sha256": "822e1f6be9c08c399ff1360fc139892e02a9822d074fa17eda484a17110e7406",
+      "qualified_status": "QUALIFIED_BOUNDED_FIXED38_AND_CORE8112"
+    }
+  },
+  "separate_Core_C5_children": [
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests.RequiredMonitor_StandaloneTimerCleanupFailureRemainsRequired",
+      "parent_pid": 83384,
+      "child_pid": 83396,
+      "joined_exit": 0,
+      "runtime7_before_after_archive_identical": true,
+      "artifacts": {
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "f2e732da71351860f00258fb8a6fde897abe0b37322b05c20846555e9744437a",
+        "PROCESS.json": "0123c074fa6821159163d4809064b892c36f5b47d624c29c5109e51fa25651db"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests.OptionalTimeline_ColdSourceFailureRemainsInertAcrossPublicActivations",
+      "parent_pid": 83384,
+      "child_pid": 83393,
+      "joined_exit": 0,
+      "runtime7_before_after_archive_identical": true,
+      "artifacts": {
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "12ecaaeafe5b716cac7fc4738588003bc3723e9d49dc4bc0600fa47f15a66bb8",
+        "PROCESS.json": "bdd59bed247cc9a56cb792ae9ba79783b390bc762d05aaf4d70db790f22d63c0"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests.RequiredMonitor_NonthrowingSourceObserverCannotChangeRootParent",
+      "parent_pid": 83384,
+      "child_pid": 83395,
+      "joined_exit": 0,
+      "runtime7_before_after_archive_identical": true,
+      "artifacts": {
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "2ee9eb9b33c9004c306c56494b6b169b744090d8a414707cf92d1c024e9a7861",
+        "PROCESS.json": "6edc6427aa34a9350c1561f44ea5063e8f820694320db0a851fcfbfdb2c901de"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests.OptionalTimeline_ColdHealthyPublicActivationWorksInFreshProcess",
+      "parent_pid": 83384,
+      "child_pid": 83391,
+      "joined_exit": 0,
+      "runtime7_before_after_archive_identical": true,
+      "artifacts": {
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "ec6ecfb689a42efc198d4ef3c28018ac404920b898d5a84280131dad3f9e2cb7",
+        "PROCESS.json": "812830dd980f628884a0ceeb4346e0dc3be6d6694f76f4ab9ca1464d414ddd5c"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests.RequiredMonitor_ColdSourceFailurePreservesOriginalAndCachesOneAttempt",
+      "parent_pid": 83384,
+      "child_pid": 83392,
+      "joined_exit": 0,
+      "runtime7_before_after_archive_identical": true,
+      "artifacts": {
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "cdf2851b54d545afed4971e6545e69ddd0d7bb706f87266b1207bfa1d8e63c64",
+        "PROCESS.json": "b109077f590da54d1ccf1598a0c21b342f0b08b67a9cbc2d022a02331a7c17bb"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests.RequiredMonitor_ColdHealthyPublicActionObeysExactIdleDeadline",
+      "parent_pid": 83384,
+      "child_pid": 83394,
+      "joined_exit": 0,
+      "runtime7_before_after_archive_identical": true,
+      "artifacts": {
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "97658f4c3654980550cef4dd1959922233922d1fa6cb6c625880f7d21d39e286",
+        "PROCESS.json": "739a72880b89f6d8f301b131e8477cde046fe50d29a0d23ff44fc26a45450198"
+      }
+    },
+    {
+      "case": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests.RequiredMonitor_StartFailureKeepsPrimaryWhenOwnedTimerDisposeThrows",
+      "parent_pid": 83384,
+      "child_pid": 83387,
+      "joined_exit": 0,
+      "runtime7_before_after_archive_identical": true,
+      "artifacts": {
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "7d612ff42e9a36c31c601da0a6644c1a3e7b16317e654b4e5c32e7e35de3f7b9",
+        "PROCESS.json": "2ac888b5c8549de6fdf93b575bde59795110921c08a5860de5a7e5ca434b9b5d"
+      }
+    }
+  ],
+  "artifacts": {
+    "valid_raw_files": 48,
+    "valid_binlogs": 24,
+    "actual_raw_hashes_and_gzip_integrity_rechecked": [
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-original-r2/raw/p05-c6-original-build-r1-20261007-041627--82904--3x_LjQ.binlog",
+        "sha256": "5dd47cfeb2e0aa299f7e9cf430c6cb52be8fd0da1422bde1e61c88899d4c382a",
+        "binlog_gzip_payload_sha256": "c2dd3ff2c2e89e2cdf55a6e7c730f2cf981e3f9e4358a8bbc14d02b56d960371"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-original-r2/raw/p05-c6-original-build-r1.log",
+        "sha256": "ed6717607aac512b77f644b4cbc39349b1ffd0721da1a2badc44d7993b6b2521",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-original-r2/raw/p05-c6-original-focused-r2-20261007-042037--83098--+8Y78O-dotnet-test.binlog",
+        "sha256": "9b2cc416995f036bea105e8b27ea4e82dbdd890084e1569c12595ac82d6a2eda",
+        "binlog_gzip_payload_sha256": "94c4807ab3988e70e8e40fe927ef17d91d4f01723bbfaf4b0eb9d3b8fe771473"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-original-r2/raw/p05-c6-original-focused-r2.log",
+        "sha256": "0f872b5b01e91dcf04664779fcb4f2c30ea7c666ba28fd483249789841f1e83d",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-r1/raw/p05-c6-fixed-build-r1.log",
+        "sha256": "c16b51e90cfa4ba4e44f4e8de5ae97b87ae3417de45c2243d726c06ff7f964a8",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-r1/raw/p05-c6-fixed-build-r1-20261007-042341--83207--WUoOFf.binlog",
+        "sha256": "888f179bea3d98c178071872466db992011ef85ef659d5362464d3081348eb79",
+        "binlog_gzip_payload_sha256": "18684ed6de6dfb64722d9adaa4a2c1d3f78131dde92ee0e7f3055db5d3039e82"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-r1/raw/p05-c6-fixed-focused-r1-20261007-042600--83266--VrW01J-dotnet-test.binlog",
+        "sha256": "2a5d0cf2a5cae3899b6de9a723bb86dca68545d99fc02515b683cbe1e74c7447",
+        "binlog_gzip_payload_sha256": "68f1fe7c56f835a3b6364c83b71597d89c66d9fb3a6b62d4c144460c74beda00"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-r1/raw/p05-c6-fixed-focused-r1.log",
+        "sha256": "5ece3c49257b637473b5ab33f0c7da80739075615dd7a97172f650bd91a317fa",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m1-endpoint-cleanup-replaces-primary/raw/p05-c6-m1-focused-r1-20261007-044250--83894--9uNOrZ-dotnet-test.binlog",
+        "sha256": "80dc4735296be2e460289aacc60c4914851218d275a9466f8a0e04d1e309329d",
+        "binlog_gzip_payload_sha256": "51bab6778145c4f0b840e60aa789fadf2291e5401482240bafd213c523f920bb"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m1-endpoint-cleanup-replaces-primary/raw/p05-c6-m1-restore-r1.log",
+        "sha256": "e91709162778fa632497dbce66cec11a4f66ad5fe0281d6f44c16b355fdd3638",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m1-endpoint-cleanup-replaces-primary/raw/p05-c6-m1-focused-r1.log",
+        "sha256": "082255ba765161280dc73a52eae75e37a3aa8a1c19c19ce2d8704d2c6847d299",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m1-endpoint-cleanup-replaces-primary/raw/p05-c6-m1-build-r1-20261007-044151--83863--eTH+YH.binlog",
+        "sha256": "9209d3297b40da56140e72088160f3802471b69d001de50a7ad14a2a7f93abbd",
+        "binlog_gzip_payload_sha256": "d40af398174b3837bcf062102ee934e7ed75a8658b4c615fd9f2d7fa409ee4be"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m1-endpoint-cleanup-replaces-primary/raw/p05-c6-m1-restore-r1-20261007-044145--83852--PxV3dv.binlog",
+        "sha256": "cfe6e9232ee9991e252958e03173ced3f0c99459e4d6a90e4d51883b389cfec1",
+        "binlog_gzip_payload_sha256": "b104be6f5956e118a46b89ee356fc31fbb08a0470c5674198cc52ff992ba0825"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m1-endpoint-cleanup-replaces-primary/raw/p05-c6-m1-build-r1.log",
+        "sha256": "3dd44ae9cdaeee85c9486f59bdd2954efc955fdd154f2acdb717cfe8cb1358da",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m2-endpoint-required-cleanup-muted-r2/raw/p05-c6-m2-build-r1.log",
+        "sha256": "3c5322e701d5b1b16ef182aee5d574d1826ffde1183e34189c927a457a6f55ad",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m2-endpoint-required-cleanup-muted-r2/raw/p05-c6-m2-restore-r1.log",
+        "sha256": "24abcd80f7ce98a7882001a9dfc697dbc4fc9e2d930bef9931ffeb76a880940b",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m2-endpoint-required-cleanup-muted-r2/raw/p05-c6-m2-restore-r1-20261007-044910--84323--OwF+w0.binlog",
+        "sha256": "b45b3a94f1ff079dcd25b9e0762193e0c1bf56673fbfaf93ab337a618c16a5f3",
+        "binlog_gzip_payload_sha256": "702fb8e1d2ace3f2850a07bb0ae65044a7d9d2897b364ef552272da449e42433"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m2-endpoint-required-cleanup-muted-r2/raw/p05-c6-m2-build-r1-20261007-044915--84339--9OpbhC.binlog",
+        "sha256": "f326afbaf345c9972438547cbc51cac390ee3c1032fa1d3f62c2dc982bdf2636",
+        "binlog_gzip_payload_sha256": "3fadc4849bbae84748a7c0e7051952b4edbf638f5d4f89ead8200e5ac9ffe110"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m2-endpoint-required-cleanup-muted-r2/raw/p05-c6-m2-focused-r1.log",
+        "sha256": "60cfbed0f2bea46825ed53072f8573c6adfd42c620acbbf39bf2ddfaa800f1cc",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m2-endpoint-required-cleanup-muted-r2/raw/p05-c6-m2-focused-r1-20261007-045019--84427--k5KLmM-dotnet-test.binlog",
+        "sha256": "c27cc889dd1216e10e60233ba94df2d5c6254d066de0fce7c08328f5ff5ad7db",
+        "binlog_gzip_payload_sha256": "53cb514d8b5dab0d585e4e41ea20f1f3cd7a70651be4871e98b48501697e0170"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/raw/p05-c6-m3-restore-r1.log",
+        "sha256": "d7394ac1d29c1404fba3bc15a086ef42836c95ab715a6f74f32f73e4c9025f0e",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/raw/p05-c6-m3-build-r1.log",
+        "sha256": "0170894eb0a4f9ad54c7c406592fbd54e149fa88380ab56ca0a95ff2773a24ad",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/raw/p05-c6-m3-build-r1-20261007-044445--84053--WV2K_a.binlog",
+        "sha256": "9220a15d212fde492623a8ad376a0e3f578f69f5c0f7c8aee3ac7456cf2452d1",
+        "binlog_gzip_payload_sha256": "b68a8cec2d2a1a77e1c50c75634a0634e378e15546d99d01c4b52de22c055386"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/raw/p05-c6-m3-restore-r1-20261007-044439--84034--u5SQal.binlog",
+        "sha256": "60411a972f25ee14194b3f692e19c053c79bff702626e2b9369bc2a5400f0b68",
+        "binlog_gzip_payload_sha256": "82603f20b668d0d31b981f2d3fdab980792e64cbe2b843acafbe8186d345948d"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/raw/p05-c6-m3-focused-r1-20261007-044558--84131--OiwVrL-dotnet-test.binlog",
+        "sha256": "114314614a02329e73e8fae77a32616fe9fdcdeb9600562fa8929bf9bbef2484",
+        "binlog_gzip_payload_sha256": "687cdf53f9de7dec1f4378085728d31ace4974485b720ae0f6e712de4a037b7f"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/raw/p05-c6-m3-focused-r1.log",
+        "sha256": "afa4203730575dcbf2be4a4f1067b88e82a08c2ae277319823968885c90046b2",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/raw/p05-c6-m4-restore-r1.log",
+        "sha256": "492d650b1a4e2c7957e064bbe9986dd537e46eeb0b164dc3479ace2cf77f0cdb",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/raw/p05-c6-m4-focused-r1-20261007-044642--84164--R73+2H-dotnet-test.binlog",
+        "sha256": "9c2644bc77d2bd6d979bc3a00f4be4fd26a69a45408501f3172c7b0d32c41e64",
+        "binlog_gzip_payload_sha256": "1968ced7d23674f59f3ebd0628db11143ecc42c8758572a798b660c0096cdb70"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/raw/p05-c6-m4-build-r1.log",
+        "sha256": "993705c8b34f4bf6c6828caee2638bbc7e4ceeb279f1c9103d1418a03820440c",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/raw/p05-c6-m4-build-r1-20261007-044611--84151--b5Ica7.binlog",
+        "sha256": "c5eddab5e1e73d56b66ff9a538d27adf9306af4a4d6c25256368de85ab439636",
+        "binlog_gzip_payload_sha256": "df8ff279927ea003590fabaef819ac5618e89f26c4150b544115324514b81996"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/raw/p05-c6-m4-restore-r1-20261007-044607--84136--T5cmlg.binlog",
+        "sha256": "91d77778bb86455fad15186be834405e45edcec1b5e6da7dca05648ba2a86873",
+        "binlog_gzip_payload_sha256": "be6f98e636c5ddcd361fbda48a2a7cfa009dd711ece7b199c9def84e790a03a0"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/raw/p05-c6-m4-focused-r1.log",
+        "sha256": "7fd421fc1ae1679826970ca073eea099acb4a08c64dd13c3a5962e1eb5c7b91e",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m5-act-required-owner-aggregate-lost-r2/raw/p05-c6-m5-build-r1.log",
+        "sha256": "113e0452fdfddb9e19e0b7d4f4d32508b808aea3373372a5bf918449c0349cd5",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m5-act-required-owner-aggregate-lost-r2/raw/p05-c6-m5-build-r1-20261007-045029--84446--NKXRFn.binlog",
+        "sha256": "340a3cbd33b245763860d7f6bbf01a0383e1e88b5686ceb61a2675c860f18797",
+        "binlog_gzip_payload_sha256": "3beff7bf0cf679300bf07d061ba81d0aecd78925ec9dc6bbdc1d666a7fd14c96"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m5-act-required-owner-aggregate-lost-r2/raw/p05-c6-m5-restore-r1.log",
+        "sha256": "6827c8c2b56710a311b0ba09ce7b13abd27cda9328a6a66940c9944a7bd79dbe",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m5-act-required-owner-aggregate-lost-r2/raw/p05-c6-m5-focused-r1-20261007-045101--84492--vkFtOW-dotnet-test.binlog",
+        "sha256": "d491532832b7fdaf93f18849b8f93f3ab34222e5ae439910949e2e253d397dca",
+        "binlog_gzip_payload_sha256": "7b721997924f5c502038aa91697fe1454c142758501786cc35be07a5fd59cc1d"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m5-act-required-owner-aggregate-lost-r2/raw/p05-c6-m5-focused-r1.log",
+        "sha256": "94bef22f0a69511949c50877713daaac3a01a32bc3afbfebf09194ea4a29af13",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m5-act-required-owner-aggregate-lost-r2/raw/p05-c6-m5-restore-r1-20261007-045023--84433--wjcIYC.binlog",
+        "sha256": "e01e693de878bd8bfcc62dafb6ef0f3b710ad7fa0f15b6d30a7bf4ed10eb0c78",
+        "binlog_gzip_payload_sha256": "3f2253b08595bb143a1846bfe79dfea34c00b19f57c4598be3b145c08b55fe50"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m6-act-cleanup-order-reversed/raw/p05-c6-m6-restore-r1-20261007-044647--84175--IvyArB.binlog",
+        "sha256": "e5d7496254ad6eaa881d6049a4d39fe11b28eebbfd60b5fdb70a2726a3a7146a",
+        "binlog_gzip_payload_sha256": "2b388a240733fc68106671fa2cf401494d543ea8c57ffd02a3825a18495951e9"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m6-act-cleanup-order-reversed/raw/p05-c6-m6-restore-r1.log",
+        "sha256": "d9540b5a367dd319299f3f58768deb1a4a894fbe564337c21eda55c270615cb0",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m6-act-cleanup-order-reversed/raw/p05-c6-m6-build-r1-20261007-044651--84183--goz12U.binlog",
+        "sha256": "f7bf6783eb32143a1edf618497290b38d4216ae381880b149e5acccef34fb11c",
+        "binlog_gzip_payload_sha256": "2390e845cdbae2728f9c33f3097377b39a2075fe1adadc89507782979f76325a"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m6-act-cleanup-order-reversed/raw/p05-c6-m6-focused-r1.log",
+        "sha256": "2e62ace2e31407071f1c72c955a8adf6e99d75ddac79d82530f68f47c474d182",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m6-act-cleanup-order-reversed/raw/p05-c6-m6-build-r1.log",
+        "sha256": "34f48888127038c1a7deac63f0813476e1555713a6fd6cb67825c279e3fc9b4b",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m6-act-cleanup-order-reversed/raw/p05-c6-m6-focused-r1-20261007-044717--84237--6+x__N-dotnet-test.binlog",
+        "sha256": "183fca46031bec05523626665d85a65ded10827b7f7577443344c77362eac116",
+        "binlog_gzip_payload_sha256": "21f4e5dc72c91a944462ddc8bbb338ba4b3c7d4918735ad041cb420cc8ff1a89"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/raw/p05-c6-fixed-post-r1.log",
+        "sha256": "924a2b7a5da4f4eb6a7f0242fbdb18cf11a63bf15205f967861ef8a67a676032",
+        "binlog_gzip_payload_sha256": null
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/raw/p05-c6-fixed-post-r1-20261007-045308--84625--8uOzeS-dotnet-test.binlog",
+        "sha256": "b098ed33c8293de4f1de7b69d68342b5e11a2006734f0e78417c1b59c597fe3e",
+        "binlog_gzip_payload_sha256": "eb8a7e9519a36b6863a27efa05e2eb958a30e9821ec402459660bfd92cb95bc9"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-core-r1/p05-c6-fixed-core-r1-20261007-042756--83382--1ftTj+-dotnet-test.binlog",
+        "sha256": "bbbcad5859b06552e9be9c10005ec80b520e5c755b4f01eb5faf5a5b37ec05fc",
+        "binlog_gzip_payload_sha256": "fb775ee77440d5d510d0c350e7dead9778764cbd06c9a5eed3ad5e3faa4033bb"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-core-r1/p05-c6-fixed-core-r1.log",
+        "sha256": "f53be673a1ccb78ce82f495f12e30c5d4719466d371ad1bfbe7bec2773f1751b",
+        "binlog_gzip_payload_sha256": null
+      }
+    ],
+    "archived_firstparty_runtime_per_receipt": 17,
+    "independent_runtime_qualification": "Each original, fixed, six mutant and post report binds actual12 PE/portablePDB pairs and3803 document checksums, required4708 compiled resource, actual deps/assets/project output graph. Post12/3803+35edges independently rechecked in own post report; aggregate reuses exact already-qualified immutable graphs.",
+    "binlog_limit": "Hash/gzip integrity and actual command/output/build graph are qualified; no full MSBuild binary event replay claim.",
+    "runtime_limit": "No full CLR AssemblyLoad trace or semantic disassembly claim."
+  },
+  "bounded_behavior": [
+    "Public five endpoint families preserve actual primary action/wait failures while always attempting tracker cleanup; successful bodies propagate required cleanup failure.",
+    "Act observes construction, action, waiting, and snapshot inside owned cleanup scope. Observation leases are attempted before tracker cleanup, and both owners are attempted.",
+    "Existing primary setup/action/wait failure remains primary; secondary ordinary cleanup failure is isolated. Normal successful-body cleanup failures remain required: one original error or explicit ordered nested two-owner aggregate.",
+    "Physical fixture oracles track real timer/registration resources and actual root activity; selected disposal errors occur after real resource release.",
+    "Six one-cause native experiments are detected in the exact unchanged38-case fixture, with194 named healthy experiment slots; this is bounded mutation evidence, not a universal mutation score."
+  ],
+  "finite_first_failure_limits": [
+    "M1 five action-cleanup cases Same127 bind actual chosen timer cleanup versus action primary. Five cancellation-cleanup cases stop at type130; do not credit token131/global132 or actual exception origin beyond reported type.",
+    "M2-r2 three request cases first MessageReads123 expected0 actual1; no probe125 or errorSame135 credit. Publish/Send stop at Same135 actualnull; Expected timer stack is not an Actual origin.",
+    "M3 actual3red: two action observation cases Same110 and cancellation type120; previously executed physical cleanup oracles qualify, no later cancellation token/origin credit.",
+    "M4 actual5red: selected action/setup Same boundaries or earlier aggregate/cancellation type boundaries. No reached-inner-identity credit after first failing type.",
+    "M5-r2 actual sole StandaloneBothFailure first type126: expectedAggregate/actualInvalidOperation. Physical/order/probe99-108 passed; inner127-132 and timer error identity/origin are unreached.",
+    "M6 actual two standalone cases first Empty99 retain3 real registry leases. Eight other nonsetup Act cases first outerAll100 with actual rootSame103 and innerFalse104 actualstoppedtrue3/3. No later timer/root/error/token assertion credit. Three setup controls and25 endpoint controls remain healthy.",
+    "Original17red qualifications retain actual first-failure attribution only; fixed38pass reaches full normal nested aggregation, exact cancellation token and cleanup assertions."
+  ],
+  "excluded_history": {
+    "zero_discovery": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-original-filter-attempt-excluded-r1/RESULT.json",
+      "sha256": "c73e934c8bc8dc783bf806b7df211d344cd1f315596ac584f8e7e9deec1ed75e",
+      "native_credit": 0
+    },
+    "M2r1_CS8602": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m2-endpoint-required-cleanup-muted/excluded-compiler-attempt-r1/EXCLUDED_RESULT.json",
+      "sha256": "a8f7fac7fece2b90b2f7aca42d86b7887889b32f73aa6b5a1da68a6ef12c45e4",
+      "native_credit": 0,
+      "qualification": {
+        "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-native-m2-r2-adversarial-r1.json",
+        "sha256": "5bfcde21e9385062681d6355e5a523d67a106e63415770fef033d960c00d930d",
+        "qualified_status": "QUALIFIED_ACTUAL_COMPILED_SINGLE_CAUSE_MUTANT_NATIVE"
+      }
+    },
+    "old_M5_unexecuted": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m5-act-required-owner-aggregate-lost",
+      "RESULT_absent": true,
+      "native_credit": 0
+    },
+    "old_constant_predicate_prep": "Old M2/M5 constant-false preparations and replacement-null predicate receipts remain immutable, with zero native kill credit. Final qualified native experiments use only explicit -r2 actual sources.",
+    "M5_review_R1_driver_metadata_errata": {
+      "predecessor": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-mutant-m5-r2-native-artifact-review-r1.json",
+      "predecessor_sha256": "3a2267412b835314fd8cd75fd44ba411721f98d7267cd828762ca934e46f85de",
+      "successor": {
+        "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-mutant-m5-r2-native-artifact-review-r2.json",
+        "sha256": "71650c6684a76b91cd2246d6f0d66a77ab6d35ba4010c64cb440a278e66290a6",
+        "qualified_status": "QUALIFIED_BOUNDED_SINGLE_CAUSE_FINITE_COUNTEREXAMPLE"
+      },
+      "correction": "53504 is unified exec session_id, never outer Python OS PID. Actual .NET child PIDs84433/84446/84492 remain unchanged. Likewise68676/37256 are driver session identifiers, not OS PID evidence."
+    },
+    "Root810_R1_metadata_errata": "R1 inherited C5 current metadata is retained; authoritative R2 moves it under historical_c5_only_context. Source/owner/shared hashes unchanged, two theories38C6cases/newchild0 are explicit."
+  },
+  "personal_read_statement": {
+    "source_tests": "Full original/fixed product bodies and both full new test bodies plus exact meaningful diffs were personally consumed before own static review. Root ownership provenance is separately verified, never inferred from reviewer reading.",
+    "native": "Own M1/M2-r2/M6 and post per-case identities/finite boundaries were personally consumed completely in their qualified reports. Original/fixed/M3/M4/M5 report actual finite-boundary prose is consumed with exact immutable independent report reuse. Aggregate full38-by9 outcome matrix is directly reconstructed from all actual native logs and receipts, then consumed in full below.",
+    "no_credit": "Initial oversized report dumps truncated in this continuation confer no full-file reading credit. All assurance claims rely on exact smaller complete projections plus programmatic hash/check validation and cited immutable independent qualified reports. Whole Core8112 is aggregate evidence, not personal reading of8112 individual events."
+  },
+  "findings": [],
+  "limits": [
+    "C6 is closed only within the exact two caller owners, source5freeze, current810/84 and38-case fixtures. Root alone decides package acceptance.",
+    "No broad P05 completion, current coverage/CRAP, remaining unit/provider suite, ASB/EH/SQL/EF backend, cloud, hardware, production or release readiness claim.",
+    "No new canonical changes, .NET/Docker/SSH/provider executions, remote publication or permissions by reviewer.",
+    "No general guarantee against fatal exceptions, arbitrary resource-release errors, arbitrary observer reentrancy or all possible backend concurrency."
+  ],
+  "execution": "Read-only Python/stdbyte inspections, exact immutable evidence reuse; own distinct JSON report only."
+}

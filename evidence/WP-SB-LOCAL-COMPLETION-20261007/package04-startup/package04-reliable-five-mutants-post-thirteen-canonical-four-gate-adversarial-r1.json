@@ -1,0 +1,595 @@
+{
+  "kind": "INDEPENDENT_RELIABLE_FIVE_COUNTERPROOFS_RESTORED_POST13_CANONICAL_FOUR_FILE_GATE_R1",
+  "decision": "QUALIFIED_BOUNDED_NATIVE_CHAIN_AND_EXACT_FOUR_FILE_CANONICAL_TRANSFER_GATE_NO_BLOCK",
+  "variants": [
+    {
+      "name": "M1-drop-finite-jitter-check",
+      "RESULT_sha256": "560ec223cf00b5f6ea327a91a2df45a6d84aabb73ae3ba9d07a514845f65c0f6",
+      "all13_same_unique_IDs_once": true,
+      "strict_build0_warnings0_errors_native2_joined_no_deadline": true,
+      "effective_source_manifest_exactly_one_reviewed_owner_delta": true,
+      "compiled_owner_sha256": "d628da09e1ef713f2879ed53f1dcb93cb92704b4b0785b738182bf8c89756330",
+      "events": [
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingStore, expectedMessage: \"no persistence store\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: DuplicateStore, expectedMessage: \"multiple persistence store\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingDispatcher, expectedMessage: \"no transport dispatcher\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingStoreLimits, expectedMessage: \"Store limits were not configured\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingRetention, expectedMessage: \"Retention was not configured\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingCatalog, expectedMessage: \"no message-contract catalog\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingDeliveryPolicy, expectedMessage: \"Delivery policy was not configured\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: DuplicateDispatcher, expectedMessage: \"multiple transport dispatcher\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: InvalidRetention, expectedMessage: \"Retention\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: InvalidOptions, expectedMessage: \"MaximumStoredCount\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart"
+        ],
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart"
+        ]
+      ],
+      "first_finite": {
+        "first_oracle": "Assert.IsType(value null)",
+        "native_frame": 20,
+        "first_finite_RED": 1,
+        "healthy": 12,
+        "cause": "Removing IsFinite permits NaN through selected default validation. Actual StartFailure empty and default endpoint lifecycle all1 observed; lower type/name/diagnostic/lifecycle rejection assertions unexecuted."
+      }
+    },
+    {
+      "name": "M2-replace-typed-diagnostic-with-default",
+      "RESULT_sha256": "9abe4ef01453fac187ca8a7b07f75ab66ed496533649df790ac9f8be2cf97f72",
+      "all13_same_unique_IDs_once": true,
+      "strict_build0_warnings0_errors_native2_joined_no_deadline": true,
+      "effective_source_manifest_exactly_one_reviewed_owner_delta": true,
+      "compiled_owner_sha256": "821f1d748decdc209ea0a7e8c702c0021b3ffdc8d75a278c35b3ca51d2473fcf",
+      "events": [
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingStore, expectedMessage: \"no persistence store\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: DuplicateStore, expectedMessage: \"multiple persistence store\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingDispatcher, expectedMessage: \"no transport dispatcher\")"
+        ],
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingStoreLimits, expectedMessage: \"Store limits were not configured\")"
+        ],
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingRetention, expectedMessage: \"Retention was not configured\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingCatalog, expectedMessage: \"no message-contract catalog\")"
+        ],
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingDeliveryPolicy, expectedMessage: \"Delivery policy was not configured\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: DuplicateDispatcher, expectedMessage: \"multiple transport dispatcher\")"
+        ],
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: InvalidRetention, expectedMessage: \"Retention\")"
+        ],
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: InvalidOptions, expectedMessage: \"MaximumStoredCount\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison"
+        ],
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart"
+        ]
+      ],
+      "first_finite": {
+        "first_oracle": "Assert.Equal complete typed diagnostic",
+        "native_frames": [
+          37,
+          1003
+        ],
+        "first_finite_RED": 6,
+        "healthy": 7,
+        "cause": "Wrong default bus key detected by typed Host case and five existing selected-options scenarios; default Host remains healthy. Duplicate1011 frames carry no further assertion credit."
+      }
+    },
+    {
+      "name": "M3-restore-only-eager-policy-constructor",
+      "RESULT_sha256": "6567117e3058a9d6818bf0f1dddf84edee7cc7d7044703263a54b4d5a63b4ee4",
+      "all13_same_unique_IDs_once": true,
+      "strict_build0_warnings0_errors_native2_joined_no_deadline": true,
+      "effective_source_manifest_exactly_one_reviewed_owner_delta": true,
+      "compiled_owner_sha256": "43fc1438aefa50edf6c819e673d613ff0fa3a5b979c3d1b91eb7b5d0683850b6",
+      "events": [
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingStore, expectedMessage: \"no persistence store\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: DuplicateStore, expectedMessage: \"multiple persistence store\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingDispatcher, expectedMessage: \"no transport dispatcher\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingStoreLimits, expectedMessage: \"Store limits were not configured\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingRetention, expectedMessage: \"Retention was not configured\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingCatalog, expectedMessage: \"no message-contract catalog\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingDeliveryPolicy, expectedMessage: \"Delivery policy was not configured\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: DuplicateDispatcher, expectedMessage: \"multiple transport dispatcher\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: InvalidRetention, expectedMessage: \"Retention\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: InvalidOptions, expectedMessage: \"MaximumStoredCount\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison"
+        ],
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart"
+        ],
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart"
+        ]
+      ],
+      "first_finite": {
+        "first_oracle": "Assert.Null StopFailure",
+        "native_frame": 92,
+        "first_finite_RED": 2,
+        "healthy": 11,
+        "cause": "Eager optional constructor policy resumes DI options.Value evaluation before hosted-service enumerable is assigned. Correct options type/name/single typed diagnostics and zero endpoint callbacks asserted before StopFailure; actual Reverse(null) ArgumentNullException. Later Disposal/Observer assertions93/94 unexecuted; printed empty error outputs observational only."
+      }
+    },
+    {
+      "name": "M4-drop-runtime-policy-fallback",
+      "RESULT_sha256": "c3d5c0de60ade2d320223e0bbadc6ad9967cc497830b2cffa7ecd0228b2a98a6",
+      "all13_same_unique_IDs_once": true,
+      "strict_build0_warnings0_errors_native2_joined_no_deadline": true,
+      "effective_source_manifest_exactly_one_reviewed_owner_delta": true,
+      "compiled_owner_sha256": "4ad352189049f7eea4e2a032d72f264a659d26c758340471ddec4cc0a2a6b873",
+      "events": [
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingStore, expectedMessage: \"no persistence store\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: DuplicateStore, expectedMessage: \"multiple persistence store\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingDispatcher, expectedMessage: \"no transport dispatcher\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingStoreLimits, expectedMessage: \"Store limits were not configured\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingRetention, expectedMessage: \"Retention was not configured\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingCatalog, expectedMessage: \"no message-contract catalog\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingDeliveryPolicy, expectedMessage: \"Delivery policy was not configured\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: DuplicateDispatcher, expectedMessage: \"multiple transport dispatcher\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: InvalidRetention, expectedMessage: \"Retention\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: InvalidOptions, expectedMessage: \"MaximumStoredCount\")"
+        ],
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart"
+        ]
+      ],
+      "first_finite": {
+        "first_oracle": "Assert.Null DeliveryJoinFailure",
+        "native_frame": 50,
+        "first_finite_RED": 1,
+        "healthy": 12,
+        "cause": "Actual retained worker task faults with ConfigurationException RequirePolicy187 -> EnsureCompositionResolved179 -> Execute76 and join245. Ordinary messages both consumed once observed, task terminal/faultedTrue/canceledFalse. Lower healthy assertions have zero extra credit; no watchdog or persisted-delivery claim."
+      }
+    },
+    {
+      "name": "M5-drop-existing-options-startup-boundary",
+      "RESULT_sha256": "b06bc276d4c5c1a5763973518ea2afbc1d6a5f0539a03911baf2d86280ff91fe",
+      "all13_same_unique_IDs_once": true,
+      "strict_build0_warnings0_errors_native2_joined_no_deadline": true,
+      "effective_source_manifest_exactly_one_reviewed_owner_delta": true,
+      "compiled_owner_sha256": "0d5bb16810d9d93a78187b6e5b23d8a45f4bdc2da042379de2861dd64b17b032",
+      "events": [
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingStore, expectedMessage: \"no persistence store\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: DuplicateStore, expectedMessage: \"multiple persistence store\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingDispatcher, expectedMessage: \"no transport dispatcher\")"
+        ],
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingStoreLimits, expectedMessage: \"Store limits were not configured\")"
+        ],
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingRetention, expectedMessage: \"Retention was not configured\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingCatalog, expectedMessage: \"no message-contract catalog\")"
+        ],
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: MissingDeliveryPolicy, expectedMessage: \"Delivery policy was not configured\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: DuplicateDispatcher, expectedMessage: \"multiple transport dispatcher\")"
+        ],
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: InvalidRetention, expectedMessage: \"Retention\")"
+        ],
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.DurableSend.ReliableMessagingRegistrationAndAdmissionTests.StartupValidation_RejectsEveryIncompleteOrAmbiguousCompositionAsync(invalid: InvalidOptions, expectedMessage: \"MaximumStoredCount\")"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart"
+        ],
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart"
+        ]
+      ],
+      "first_finite": {
+        "first_oracle": "Assert.ThrowsAny No exception was thrown",
+        "native_frame": 968,
+        "first_finite_RED": 5,
+        "healthy": 8,
+        "cause": "Deleting registered IStartupValidator invocation leaves five old options scenarios without exception at their asserted boundary. Five composition controls and three actualHost cases pass; test-quality control, not production defect. Duplicate1010 frame and lower phase/type/diagnostic assertions zero extra credit."
+      }
+    }
+  ],
+  "counts": {
+    "same13_repeated_slots": 65,
+    "first_finite_RED": 15,
+    "healthy": 50,
+    "product_variants": 4,
+    "test_boundary_variant": 1,
+    "new_cases_from_mutations": 0
+  },
+  "own_fresh_mutant_physical": {
+    "images": 60,
+    "PDB_documents": 19050,
+    "all_zero_missing_mismatch_ID_errors": true
+  },
+  "own_fresh_mutant_compiled": {
+    "all4730_METHOD_resource_rows_each_variant": true,
+    "internal_reference_edges_each": 35,
+    "deps12_each": true,
+    "Hosting_package10_0_12_each": true,
+    "M1_M2_M4_Testbytes_fixed13_equal_but_freshly_parsed": true,
+    "M3_M5_changed_Testimages_freshly_parsed": true
+  },
+  "post": {
+    "RESULT_sha256": "5ec645f91ba6b3552500f50a608e001e149b3b2a27c7ba5c14f57c712b6edd7b",
+    "strict_pid": 36728,
+    "native_pid": 36812,
+    "strict0_warnings0_errors_native13_uniquePASS0fail0skip_no_deadlines": true,
+    "fresh_raw6_two_closed_CRC_binlogs": [
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/reliable-generic-host-restored-post-thirteen-native-r1/strict-rebuild.stdout.log",
+        "sha256": "6ceddd8aac060cdc9df887fbfb75a1e601ad86fa4ea72b693e2368707d336f77",
+        "bytes": 2564
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/reliable-generic-host-restored-post-thirteen-native-r1/strict-rebuild.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/reliable-generic-host-restored-post-thirteen-native-r1/p04-reliable-generic-host-restored-post-strict-rebuild-r1-20261007-204005--36728--dwdGFS.binlog",
+        "sha256": "0d13c6a15f1f09c6eb5b4d9895db612199cfd45a57674cc5b8662bcc5fd882f0",
+        "bytes": 1048422,
+        "full_gzip_CRC_closed": true,
+        "decoded_bytes": 3749139
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/reliable-generic-host-restored-post-thirteen-native-r1/focused-thirteen.stdout.log",
+        "sha256": "7521441c54f75fdbe5042faaebc911f618831d119e1ac67e31ec1148d705b943",
+        "bytes": 12729
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/reliable-generic-host-restored-post-thirteen-native-r1/focused-thirteen.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/reliable-generic-host-restored-post-thirteen-native-r1/p04-reliable-generic-host-restored-post-focused-thirteen-r1-20261007-204147--36812--RDNrtm-dotnet-test.binlog",
+        "sha256": "0a25f18c4d36efd453276fb68028a32ce2cea011a654a0dfd46c9334fef3f958",
+        "bytes": 736095,
+        "full_gzip_CRC_closed": true,
+        "decoded_bytes": 3240237
+      }
+    ],
+    "historical_locked_restore": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/reliable-generic-host-original-three-native-r1/locked-restore.RESULT.json",
+      "sha256": "77b09fb6a2b1afccb8b9b912735024a4c724c4454804f9d0a7f0a46e54d217ab",
+      "executed_again": false
+    },
+    "restore_executed_again": false,
+    "runtime17": [
+      {
+        "name": "ViciOne.ServiceBus.Mediator.dll",
+        "sha256": "56a61f2d8f2009eaafbb55371e996950a328f2245596935e14258518acad9080",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.JobService.dll",
+        "sha256": "c1220fe26ae4c9134af5cc37ef02e7930de91ffb528f527d89cf9fcff5abdc15",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.Testing.dll",
+        "sha256": "675e1ce40a3dc0a39dee21be5819cf01f258968cc404760339ed04d1877e3267",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.Courier.dll",
+        "sha256": "67ef8507002faa66155d4d28617db17ab05ae2e751b854b12524010e01763b89",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.Futures.dll",
+        "sha256": "690979d4586e089dd628dd04fd1d145f108ef8a6fa5a83bcc9698ee44372a25d",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.Abstractions.dll",
+        "sha256": "e9298273a6bd1957584186db5b1c1575f2bb0260d9b5750e23df500710e26d9c",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.Initializers.dll",
+        "sha256": "08565b9876b16d09fab9d997eb97672bc0808ab89ae0e2acaa63ea85035627d5",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.Sagas.dll",
+        "sha256": "855866d3825040ad85bb43ef58ad9335eeb3ba72079b64d0da502224260e2f86",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+        "sha256": "b69e223d811c3ab676461340da7f8e4e762fdabbcd5ae708322de33f07d82edf",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.dll",
+        "sha256": "4870d095025255dbbcd48be6cf404f7d49cab419a7882be5639696f0e11e53c4",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.Tests.dll",
+        "sha256": "3cb6f4eaf502a9674cee4ac5c65d235f6cbb0f0ff76da0c7c1bff0d39d0e45fa",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+        "sha256": "2e5caee98c322c21bd180ff8fff699a39f7daf4cfcdd8a73a9a919e2a3c3146c",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.Tests.pdb",
+        "sha256": "3487bc2871aa8e4f9065469dc3bace671c424e9945925c6d7f6373804ca20956",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.Tests",
+        "sha256": "a485b3d277bb128b832f9ac839cc04ed7da029ba9aaf40f0d4001582d08c513e",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.Tests.deps.json",
+        "sha256": "ebd7e9743b85cadf35d729ceb9e51687088d9e1a60a6f25d8f8c8a09de8ed223",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.Tests.runtimeconfig.json",
+        "sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+        "directbytes_post_fixed_live_equal": true
+      },
+      {
+        "name": "ViciOne.ServiceBus.Tests.testconfig.json",
+        "sha256": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+        "directbytes_post_fixed_live_equal": true
+      }
+    ],
+    "assets12_gen39_sourceowners3_post_fixed_live_directbytes_equal": true,
+    "physical_metadata_reuse": "Own fresh Fixed13 dbf8 12PE3810 and ab13 all4730/35refs/deps reused solely because exact17 source/generated/owner bytes remain identical. No fresh post parse asserted."
+  },
+  "sourceguard": {
+    "canonical6103_private6104_full_manifests_exact": true,
+    "config14_exact_blind_keyhash_only": true,
+    "changed_paths": [
+      "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+      "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
+      "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json"
+    ],
+    "other6100_source_files_unchanged": true
+  },
+  "canonical_gate": {
+    "exact_four_paths": [
+      {
+        "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+        "canonical_before_sha256": "73be8ecd089c5574b404294ee711c4e1dc72f6b44459083a8de484055a10b13a",
+        "candidate_sha256": "5054c4236c84a80c9a7ba3c06fbeee59a2c92ae7988fa7d817c5f265826d6140"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ReliableMessagingGenericHostStartupTests.cs",
+        "canonical_before_sha256": null,
+        "candidate_sha256": "0cc7f11efd399ace2e91303f3f866a2b372e27309fe800158edf3addf03efda4"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
+        "canonical_before_sha256": "28abbdaeccc928891ad98e34c4dafe0f7cb8b2c366b4b9b7964b90a59e3ad97a",
+        "candidate_sha256": "375f7bfa7809faabd4bd1697fd6330e3800932453365312045df2ca68e1cb600"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+        "canonical_before_sha256": "a4d0f99c1d388a4ef1afea6d3bd55ea5990f13f63f354d8eaa8d7d9d69596357",
+        "candidate_sha256": "e15c10362be7938ac1453fbb86fb0c06b01d0448dc0e23ef71c43786bdb8193f"
+      }
+    ],
+    "one_product_file_two_test_source_files_one_requirement_resource": true,
+    "new_fixture343_requirements4730_bytes1682667_old4727_order_literalprefix1681540_exact": true,
+    "prospective_after_manifest_equals_qualified_private6104": true,
+    "actual_application_not_yet_claimed": true,
+    "Root_may_guardedly_transfer_only_these_four_after_this_gate": true,
+    "C17_sourcehold_released": true
+  },
+  "references": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-reliable-five-mutants-r2-fresh-physical-binding-adversarial-r1.json",
+      "sha256": "163989072d937ae2f99205862b436601335772dace9330d341de6b0377eff803"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-reliable-five-mutants-r2-fresh-compiled-requirements-adversarial-r1.json",
+      "sha256": "eb44f554908111b8abae7fb4d50643e3b16d31dac31cb5c3d7d25b2d614a19f3"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-reliable-generic-host-fixed-thirteen-physical-binding-adversarial-r1.json",
+      "sha256": "dbf8d15e8ac945a39738b483424d17139b9b977ad2042cea15ec294d04d2d75d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-reliable-generic-host-fixed-thirteen-compiled-requirements-adversarial-r1.json",
+      "sha256": "ab13f9aa02b9c80d496ec9d5ff67dc448ce06a7a0a4993591511574103401fb0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-reliable-generic-host-fixed-thirteen-and-whole-core-r2-adversarial-r1.json",
+      "sha256": "4e9fb1c0b652304a56c92399e4965efecb3aca18056b9f5c6f1094793c1e9617"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-reliable-generic-host-fixed-three-and-whole-core-r1-adversarial-r1.json",
+      "sha256": "2f005a9c321ad4d1b84b4559460decacd672809605121dafe4f9390cb0cca93d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_RELIABLE_FIVE_COUNTERPROOFS_FINITE_CAUSE_LEDGER_R1.json",
+      "sha256": "686aa5fdd63367b019dbdd85161a20a0927abb6c594e18d891a9672573cc4bc0"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/reliable-generic-host-restored-post-thirteen-native-r1/ROOT_EXACT_FIXED13_IMAGE_SOURCE_PHYSICAL_REUSE_R1.json",
+      "sha256": "ffb1d6f6f21232686c30d8ee378f36261dbd20fa84ac38061d36c020f8a83769"
+    }
+  ],
+  "own_read_provenance": "All five complete build logs and focused13 native bodies plus summaries personally read; M3 output truncation was repaired by rereading missing tail spans. All post13 focused bodies, strict stdout and empty stage stderrs personally read. All five complete single-cause owner diffs read against restored matched sources; no whole1706 existing test body or all8209 human-body credit. Full manifests/runtime/source/generated/hash comparisons and CLI/PE parses mechanical. No borrowed Root human-read credit.",
+  "historical": "OriginalR1/R2 finite cleanup failures and WholeR1 8204PASS/5 legacy-boundary RED retained; WholeR2 8209PASS existing own qualification on identical fixed bytes, not an additional whole reexecution. One legacy test-boundary finding with five reproductions, not proof of production fix regression.",
+  "limits": [
+    "No whole-mutant Core, fifteen productbugs, sixty-five new distinct cases, persisted-delivery, cloud/hardware/globalAPI/globalA+ claim.",
+    "Lower/unreached assertions and duplicate frames receive zero added counterproof/cleanup credit.",
+    "No execution/import/.NET/provider/process/source changes by reviewer; immutable reports only.",
+    "Canonical application and afterapply peer remain future Root and readonly-review actions."
+  ]
+}

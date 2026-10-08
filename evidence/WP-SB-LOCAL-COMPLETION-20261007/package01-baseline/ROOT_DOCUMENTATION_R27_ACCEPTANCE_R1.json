@@ -1,0 +1,17 @@
+{
+  "kind": "ROOT_DOCUMENTATION_R27_GUARDED_PUBLICATION_ACCEPTANCE",
+  "published_freeze_sha256": "3187570d32d1f2ce80ed772593810bdd79299e39cc4412cd8e36d1b2c76632d4",
+  "proposed_freeze_sha256": "e6350026b7899210aa01e7deb497f588a1c3b3ac2dd054049a5d4aa9d1000c86",
+  "independent_peer_sha256": "0f397c37cc8c70d4aedbed1fb64519b15805604f9cbfb196cf015a79800300bf",
+  "source_sha256": {
+    "CHANGELOG.md": "d58f8049f0eee5a6da4b497b72ef4bfb77432a52a58f635549c1a1fda7081e9c",
+    "TODO.md": "6a6478837d493096d4d574e74b527bee5078dc1eeaff33d64e24ea2898914f83",
+    ".testagent/status.md": "b9bba960687bacb17ca0a646e47756b267a73783b198b41a4113662e7a839040",
+    ".testagent/plan.md": "4773dfedbd31ac7a30042c30e70e311c1f6a633e6a0894c3e8dc6cdeb8d6b2b0",
+    ".testagent/local-completion-plan.md": "880e3e73f81e71c69efbd39fda4181e1d5296752cfb4624883bd14dde8be4208",
+    "docs/quality-status.md": "d9f1d51944f966803b9b008b3797e9aae6e8c5a034b6239f18b03ffd7d115a83",
+    "docs/servicebus-local-completion-report.txt": "71b7cd6261e85e1a138b580fcf597b7899861cd8f0dfdb8a0c7a37cbaa10dc3b"
+  },
+  "own_read": "Complete137-line exact diff and full77-line PO personally read; unchanged historical bodies byte-exact reuse, not fresh whole-body reading.",
+  "limits": "Only bounded Azure package closed; rest of authorized continuation remains active."
+}

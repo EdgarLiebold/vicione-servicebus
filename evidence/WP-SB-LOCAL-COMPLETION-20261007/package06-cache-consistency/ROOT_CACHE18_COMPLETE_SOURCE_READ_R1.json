@@ -1,0 +1,133 @@
+{
+  "kind": "ROOT_COMPLETE_CURRENT_CACHE18_SOURCE_READ_R1",
+  "product_files": [
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs",
+      "sha256": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12",
+      "lines": 32
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs",
+      "sha256": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69",
+      "lines": 32
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs",
+      "sha256": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c",
+      "lines": 13
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs",
+      "sha256": "bba8eeb8b9366996b489c820d793bb568d47c396127095a18ef45426fd2a164e",
+      "lines": 24
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs",
+      "sha256": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4",
+      "lines": 24
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs",
+      "sha256": "907772e0d3f688f3b11b0542b79d45e76f098559a0fb99e2ad1395ebdb13112d",
+      "lines": 27
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "sha256": "d6ce8980172e278b8ce7eae72fed4f6c89f74e23778a24f93e8524ab0b99c5d9",
+      "lines": 117
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+      "sha256": "54c895f4d2ccb95316a7ae3f521022cea3a25e4014d9b22fabaf75a53211625d",
+      "lines": 25
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs",
+      "sha256": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743",
+      "lines": 82
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "sha256": "a593b0fa0dc498210a20d4669ab68a743a2f13542fe9dbe53aa814ed463f6366",
+      "lines": 287
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs",
+      "sha256": "0aeb97aeae8196ed5918ccafb7401cdb2bc6f176c74f9e4b8de89833d8a3d00d",
+      "lines": 163
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs",
+      "sha256": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+      "lines": 102
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "sha256": "d33d153e2de28609ec362672c5637c97c9bfa95cc2895af236857b0181f7abd0",
+      "lines": 351
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "sha256": "98da72d0f863585936f1c9ad702bb3d27b62a7e1d606d0a21f8c8f290c56b4a2",
+      "lines": 368
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs",
+      "sha256": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7",
+      "lines": 11
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs",
+      "sha256": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76",
+      "lines": 75
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs",
+      "sha256": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4",
+      "lines": 16
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceFactory.cs",
+      "sha256": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc",
+      "lines": 13
+    }
+  ],
+  "unchanged_complete_canonical_test_reuse": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheConcurrencyTests.cs",
+      "sha256": "7087567d31ff3d8d42df1dcef4763d11f90cdfe6a97b9265ad8edc8528ed6063"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs",
+      "sha256": "fe08a94c9d3339cc2a83c85bfcc19c90e3b4f6decd3d55810d9147811062d5db"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpirationTests.cs",
+      "sha256": "8f128a449bc35bf7012638d79237393754c1e823fb33f34d68f34005996299ba"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpiredDuplicateOwnershipTests.cs",
+      "sha256": "75455c54efa1c5388e92ac8f577b73a52c330785e2d7e8dd9b933f073010c430"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheGenerationAndLockingTests.cs",
+      "sha256": "56e5e5b8ba01517ba221441930ecfdd9c50f8c6d1279c29220d626d96da63fdf"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheInitializationTests.cs",
+      "sha256": "23871810ed2cdd3bcec89ae6f336a3dc1e8433ae6fbdfe1391f69c3515627a9a"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheLifecycleTests.cs",
+      "sha256": "4c791cd63c5708a51015d250c943a9e376aa4ddc17518b87add6fafb69823866"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverAndDisposalTests.cs",
+      "sha256": "d2c10c5e7cd989c7f747c043bf8a583adec22d721de23544abcda1b6e315836e"
+    }
+  ],
+  "root808_complete_test_closure_sha256": "a7ef18b7dbf6d015f10a0873f4f771d1fc0568701e4c9ff8fbc49b7c5ebbbd0c",
+  "personal_read": "Root personally full ResourceCache.cs, Resources/Lifecycle/Observers in first2 source selections; Creation truncation recovered by separatewholeCreation read; Index/Base/Entry/Pending/Prepared/IndexSPI/Factory/Options/Mode/Statistics/Keyed full insecondbatch; truncated Observer/UsageSPI recovered separatewhole2SPIcat (C3byteequalO). These are actualsourcebody reads, not transferred agent hashes.",
+  "product_edits_or_native_credit": false,
+  "prior_research_whole_json_consumed": "All fields consumed in complementary selections; truncated last3 cachefixture inventory rows recovered separately; RootWholeReadList consumed. Cache transactiondesign successor is copied but NOT yet whole read."
+}

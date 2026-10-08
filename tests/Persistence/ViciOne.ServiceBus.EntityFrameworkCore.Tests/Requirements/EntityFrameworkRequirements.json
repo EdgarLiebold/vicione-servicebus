@@ -1415,10 +1415,10 @@
   },
   {
     "requirementId": "REQ-VSB-EF-INBOX-CLEANUP",
-    "variantKey": "constructor-rejects-invalid-dependencies",
+    "variantKey": "constructor-and-start-reject-invalid-dependencies-and-options",
     "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
     "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.InboxCleanupServiceTests",
-    "testMethod": "Constructor_RejectsEveryMissingDependencyAndInvalidPersistenceOption"
+    "testMethod": "ConstructorAndStart_RejectMissingDependenciesAndInvalidPersistenceOptionsAsync"
   },
   {
     "requirementId": "REQ-VSB-EF-INBOX-CLEANUP",
@@ -1937,5 +1937,68 @@
     "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
     "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkOutboxObserverAdmissionTests",
     "testMethod": "UseOutbox_SecondObserverAdmissionRetiresTheReturnedConsumerHandleAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EF-RECEIVE-OUTBOX",
+    "variantKey": "optional-duration-failure-preserves-real-transaction-and-store-outcome",
+    "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+    "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests",
+    "testMethod": "DiagnosticClockPreservesTransactionAndRequiredFaultNotification"
+  },
+  {
+    "requirementId": "REQ-VSB-EF-RECEIVE-OUTBOX",
+    "variantKey": "required-fault-notification-failure-still-rolls-back-and-propagates",
+    "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+    "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests",
+    "testMethod": "RequiredFaultNotificationFailureRemainsAuthoritative"
+  },
+  {
+    "requirementId": "REQ-VSB-EF-RECEIVE-OUTBOX",
+    "variantKey": "commit-fault-notification-is-awaited-before-original-failure-and-rollback",
+    "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+    "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests",
+    "testMethod": "CommitFaultNotificationIsActuallyAwaited"
+  },
+  {
+    "requirementId": "REQ-VSB-EF-RECEIVE-OUTBOX",
+    "variantKey": "required-consumption-utc-failure-remains-authoritative",
+    "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+    "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests",
+    "testMethod": "AuthoritativeUtcFailureStillRollsBack"
+  },
+  {
+    "requirementId": "REQ-VSB-EF-RECEIVE-OUTBOX",
+    "variantKey": "precanceled-delivery-retains-original-token-without-transaction",
+    "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+    "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests",
+    "testMethod": "PrecanceledDeliveryDoesNotStartTransactionOrDiagnostics"
+  },
+  {
+    "requirementId": "REQ-VSB-EF-OUTBOX-CONFIGURATION",
+    "variantKey": "actual-host-selected-null-lock-provider",
+    "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+    "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests",
+    "testMethod": "SelectedEfLockProviderNullFailsBeforeEndpointStart"
+  },
+  {
+    "requirementId": "REQ-VSB-EF-OUTBOX-CONFIGURATION",
+    "variantKey": "actual-host-selected-inbox-zero-query-delay",
+    "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+    "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests",
+    "testMethod": "SelectedInboxZeroQueryDelayFailsBeforeEndpointStart"
+  },
+  {
+    "requirementId": "REQ-VSB-EF-OUTBOX-CONFIGURATION",
+    "variantKey": "actual-host-selected-scoped-reversed-delivery-retry",
+    "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+    "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests",
+    "testMethod": "SelectedScopedDeliveryReversedRetryFailsBeforeEndpointStart"
+  },
+  {
+    "requirementId": "REQ-VSB-EF-OUTBOX-IDENTITY",
+    "variantKey": "actual-host-two-buses-sqlite-workers-unused-persistence-poison",
+    "testAssembly": "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+    "testType": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Configuration.EntityFrameworkGenericHostStartupTests",
+    "testMethod": "PlainAndTypedEfBusesDeliverAndStopWithUnusedPersistencePoison"
   }
 ]

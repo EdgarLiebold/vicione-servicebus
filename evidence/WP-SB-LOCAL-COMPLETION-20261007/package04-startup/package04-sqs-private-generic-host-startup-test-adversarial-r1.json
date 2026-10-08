@@ -1,0 +1,1016 @@
+{
+  "kind": "INTERNAL_READONLY_P04_PRIVATE_SQS_GENERIC_HOST_STARTUP_TEST_DRAFT_REVIEW_R1",
+  "utc": "2026-10-07T08:11:01.827559+00:00",
+  "status": "NO_BLOCK_FOR_PRIVATE_DRAFT_NATIVE_PREPARATION",
+  "reviewer": "todo_reconciliation_review",
+  "inputs": {
+    "prepared": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r1/PREPARED.json",
+    "prepared_sha256": "e7ff915ec5d7c2294d8d9fba9a46de7348c491f3395b5ee19b15e0871b46c477",
+    "test": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r1/AmazonSqsGenericHostStartupTests.cs",
+    "test_sha256": "8ae7bbc7107feb8a1aad5eca435e98f05da5119487f7076c0e4b47d419b3ee1e",
+    "project": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r1/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+    "project_sha256": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f",
+    "canonical_original_project": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+    "canonical_original_project_sha256": "1fa6b10f5273864ee89a9059b9eb6d7d37762a86137744a82ac364dae3241b84",
+    "Root27_9_21": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_STARTUP27_COMPLETE_SOURCE_READ_R1.json",
+    "Root27_9_21_sha256": "a382debb187a078bc547704973cd39f609c9e475c69585a5ed8ac9f4e00c180b"
+  },
+  "summary": {
+    "reviewed_test_methods": 4,
+    "theory_expanded_cases": 5,
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "blockers": 0,
+    "original_expected_red_hypotheses": 3,
+    "original_expected_healthy_hypotheses": 2,
+    "compiler_or_native_acceptance": false
+  },
+  "findings": [],
+  "test_cases": [
+    {
+      "method": "SelectedNamedInvalidOptionsFailBeforeRuntime",
+      "case": "Region",
+      "lines": "13-28",
+      "oracle": "Exact OptionsValidationException, optionsName IOrdersBus, optionsType AmazonSqsTransportOptions, required Region reason, full nested bus typename, barrier/materializations/clientFactories=0, empty cleanup failures.",
+      "original_hypothesis": "finite red: current non-generic UsingAmazonSqs attaches default options validators; named Get is unvalidated and composition reaches callback/barrier.",
+      "static_grade": "meaningful negative; no native grade"
+    },
+    {
+      "method": "SelectedNamedInvalidOptionsFailBeforeRuntime",
+      "case": "ScopeWithoutRegion",
+      "lines": "13-28",
+      "oracle": "Same exact exception/owner/0-before-materialization controls, distinct Scope requires Region reason.",
+      "original_hypothesis": "finite red for same wrong-name validator cause; explicit host callback supplies valid composition so missing-scope validation cannot be masked by absent host.",
+      "static_grade": "meaningful negative; no native grade"
+    },
+    {
+      "method": "UnusedInvalidDefaultCannotRejectCoherentNamedBus",
+      "case": "Fact",
+      "lines": "30-41",
+      "oracle": "Exact reference identity of owned barrier exception, one barrier/one ConfigureBus callback, zero SQS/SNS client-factory calls and empty cleanup failures.",
+      "original_hypothesis": "finite red: current UsingAmazonSqs validates poisoned unselected default before named composition.",
+      "static_grade": "meaningful selection isolation; no native grade"
+    },
+    {
+      "method": "SelectedInvalidDefaultStillFailsBeforeRuntime",
+      "case": "Fact",
+      "lines": "43-58",
+      "oracle": "Exact default OptionsValidationException, empty options name, correct type, Region and bus default messages, 0 barrier/materializations/clientFactories, empty cleanup failures.",
+      "original_hypothesis": "healthy baseline for existing selected-default validator.",
+      "static_grade": "meaningful required-validation control; no native grade"
+    },
+    {
+      "method": "CoherentNamedBusReachesExactlyTheSameRuntimeBoundary",
+      "case": "Fact",
+      "lines": "60-71",
+      "oracle": "Exact same owned barrier exception reference, one composition callback/one barrier entry, zero client factories, empty cleanup failures.",
+      "original_hypothesis": "healthy baseline for named coherent bus; detects unrelated construction failure before sentinel.",
+      "static_grade": "meaningful composition/boundary control; no native grade"
+    }
+  ],
+  "host_start_boundary": {
+    "actual_public_operation": "builder.Build() followed by actual Microsoft.Extensions.Hosting.IHost.StartAsync(bound.Token); no direct IStartupValidator.Validate call substitutes for host startup.",
+    "preserved": "All original IHostedService descriptors remain in order; singleton barrier inserted immediately before exactly one ServiceBusHostedService; composition validator confirmed before runtime; IStartupValidator descriptor confirmed present.",
+    "composition": "Current BusCompositionStartupValidator<TBus>.StartAsync resolves TBus and therefore executes the real bus factory/ConfigureBus. Real named IOptionsMonitor.Get(busName) receives typeof(TBus).Name; current SQS extension validates only default. Exact one callback plus sentinel identity controls require composition success before injected stop.",
+    "runtime_limit": "The owned sentinel deliberately faults before ServiceBusHostedService.StartAsync; these tests do not prove complete host startup, runtime bus startup or actual cloud/provider connectivity.",
+    "framework_primary": {
+      "path": "/Users/edgar.liebold/.nuget/packages/microsoft.extensions.hosting/10.0.12/lib/net10.0/Microsoft.Extensions.Hosting.xml",
+      "sha256": "ef15e13886f425e709f8c7a366f4656c6fa3da0c94e53923e5d50a5b7720b101",
+      "sequential_start_default_documented": true
+    }
+  },
+  "client_isolation": {
+    "public_owned_factories": "ConfigureBus supplies explicit host region and public ClientFactories delegates which increment then immediately throw. Neither uses AWS SDK fallback credentials.",
+    "source_trace": "AmazonSqsHostConfiguration.Build constructs host/endpoints; ConfigurationHostSettings.Freeze captures the custom connection lambda without invoking it. ConnectionContextFactory creates connection only upon runtime context creation. Successful same-sentinel controls and final zero counter require no custom client creation throughout start/stop/dispose.",
+    "limits": "Zero client-factory counter is a scoped native oracle after execution, not yet a runtime fact or a universal no-network proof for arbitrary framework/global changes."
+  },
+  "resource_and_error_ownership": {
+    "start": "Linked TestContext token is passed to actual Host.StartAsync, cancelled after 10s; actual Task awaited and re-awaited in finally; same primary exception observed by reference.",
+    "stop": "Actual Host.StopAsync receives independent cleanup token bounded at10s; failure captured in CleanupFailures; not passed the already cancelled caller token.",
+    "dispose": "Actual asynchronous host disposal is awaited (or synchronous IDisposable fallback called); failures captured and every case asserts CleanupFailures empty.",
+    "primary": "Cleanup stop/dispose failures do not replace stored startup failure. The cancellation call itself is not guarded against arbitrary throwing cancellation callbacks; this draft registers none and runtime start is prevented on its scoped paths.",
+    "finite_limit": "DisposeAsync has no cancellation parameter and is awaited without an independent WaitAsync timeout. Do not claim a hard cancellation deadline for disposal or arbitrary cancellation-unresponsive foreign hosted services. Direct await correctly retains ownership join."
+  },
+  "compiler_analyzer_assessment": [
+    "Public nested interface satisfies typed bus constraint; existing implicit usings/global public ServiceBus API imports are present. GenericHost alias prevents servicebus IHost ambiguity.",
+    "Assert.Single(collection, predicate) avoids the already observed xUnit2031 Where/Single anti-pattern. Explicit tokens are passed to actual StartAsync/StopAsync; cleanup cancellation is deliberately independent.",
+    "No missing await on async assertions/operations; no sleep/poll/random/environment/global mutable state used as success oracle. CancelAfter is a finite test bound, not timing success evidence.",
+    "Actual .NET strict compilation, package-lock successor restore, xUnit analyzer acceptance and GenericHost behavior remain Root native executor obligations; no compiler pass is inferred."
+  ],
+  "next_bounded_preparation": [
+    "Root should add reviewed RequirementCoverage attributes and matching immutable JSON projection rows for the four methods/five-case purposes before final frozen test package acceptance. Current199 projection has no new class rows; this private draft claims none.",
+    "Review exact lock successor from intentional Hosting reference restore before locked restore/build. Preserve all unrelated resolved dependencies and canonical source inputs.",
+    "First obtain actual original five case IDs/counts/0skip, concrete three finite negative causes and two named healthy controls; static hypotheses are not accepted defects.",
+    "After a bounded typed SQS validator repair, retain selected-default and coherent controls; a single named-validation mutant can test the cause. Broader missing/conflict/multibus composition families, selected Scope-empty predicate and full SQS suite remain outside first-five scope."
+  ],
+  "positive_observations": [
+    "Specific exception type and named options owner/reason or exact sentinel reference identify the intended failure boundary.",
+    "All original hosted services preserved and coherent configuration reaches actual composition before an owned runtime gate.",
+    "Real typed/default registration paths, healthy/unselected controls and throw-if-called public client factories avoid substituted direct validator calls.",
+    "Actual start/stop/disposal operations are awaited and cleanup errors surfaced by assertions."
+  ],
+  "canonical_preservation": {
+    "src_tests_tools_paths": 6096,
+    "actual_manifest_sha256": "01e3bc2395e8ad22b017161d10f79eafd221da45d02233746a2293cd520b3f96",
+    "prior_preflight_sha256": "ab859bc6010bc3988d223f8b05c8ffccf1264b603d229ad228e129ca592fcc32",
+    "private_test_not_canonical": true,
+    "canonical_original_project_byte_unchanged": true,
+    "product27_fixture9_context21_hashes_unchanged": true
+  },
+  "personal_read_scope": {
+    "whole_private_test_and_project_prepared": true,
+    "whole_owner_bodies": [
+      {
+        "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+        "sha256": "460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840"
+      },
+      {
+        "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/AmazonSqsRegistrationBusFactory.cs",
+        "sha256": "4565ae7bbea2c655bc529b3a1cde837de11a60965a37755099c2761d4850a8b8"
+      },
+      {
+        "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsTransportOptions.cs",
+        "sha256": "fca831dd2d3c2a48ebf183630a2181383bb8f71b8331f3392742e82a6ad431a5"
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+        "sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+        "sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+        "sha256": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b"
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+        "sha256": "8659b5f22016823aea26893f10dd0be31fc1f2efa9590f46e0acc6cb5b34972e"
+      },
+      {
+        "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs",
+        "sha256": "84e652c0237beb05aaf2d7008f49b70b886163650839c0a0ccded02676eeece2"
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+        "sha256": "458dd4d37b5c7a062c9a47f7b698ce2c8c8230fd97acc5c812e59da0f4bc9214"
+      },
+      {
+        "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/ConfigurationHostSettings.cs",
+        "sha256": "07492cdd2ebaf3061437cd250f8ec8f9b65bf58b07be00178217d11edc99a51f"
+      },
+      {
+        "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/AmazonSqsHostConfigurator.cs",
+        "sha256": "d9b0fd87d0f1178d861d285984c4335602f3767c4b1b6c9d3eae6e0186c5cda7"
+      },
+      {
+        "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/IAmazonSqsHostConfigurator.cs",
+        "sha256": "80a99e9601af89b5cccdc78f46882b8164b51ed7fbf5eefba440335f959f9772"
+      },
+      {
+        "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Connection.cs",
+        "sha256": "894ce5f4c6bf242348ba542da4c3268a2b294a80a15a1b06e10ef6d2052b65da"
+      },
+      {
+        "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/AmazonSqsHostConfiguration.cs",
+        "sha256": "360bfcbd6683270b46de5e8a4fb9f6b17d12e9979ba1a9a1cbee6625c4172c22"
+      },
+      {
+        "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextFactory.cs",
+        "sha256": "ac2e6d1a1c1a493358476f130a383c8791137aca3cc6cdda7ada1b8637e73ba0"
+      },
+      {
+        "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsHostConfigurationExtensions.cs",
+        "sha256": "0b2a4a0affa6b06938127a1daadb9db03d8c8bf7a3a268494af84b31bdefd6e4"
+      },
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsTransportOptionsStartupTests.cs",
+        "sha256": "e2a08d5a7445cfb0350bc1be384795019cb8041f7965a222b417ee9216a6e77f"
+      },
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ApiSurfaceGlobalUsings.cs",
+        "sha256": "a82aad9baede492a328420ec1941f2febe8df6c3e37ff74c95b2e3ee0cd1ac37"
+      },
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+        "sha256": "beb543a437438a862898af22a961af26408d04c97bac4d2c6efa90c70c97cc34"
+      },
+      {
+        "path": "tests/Directory.Build.props",
+        "sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8"
+      },
+      {
+        "path": "Directory.Build.props",
+        "sha256": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf"
+      },
+      {
+        "path": "Directory.Packages.props",
+        "sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e"
+      }
+    ],
+    "root_receipt57_rows": "All actual hashes checked; not a claim this reviewer personally reread all57 bodies.",
+    "requirements199": "JSON fully parsed for relevant class absence; oversized initial text output truncated, no whole textual read claim.",
+    "skills": [
+      "dotnet-test:test-anti-patterns",
+      "dotnet-test:test-analysis-extensions .NET"
+    ],
+    "no_Root_read_credit_transfer": true
+  },
+  "checks": [
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r1/PREPARED.json",
+      "pass": true,
+      "details": {
+        "actual": "e7ff915ec5d7c2294d8d9fba9a46de7348c491f3395b5ee19b15e0871b46c477"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r1/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "8ae7bbc7107feb8a1aad5eca435e98f05da5119487f7076c0e4b47d419b3ee1e"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r1/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_STARTUP27_COMPLETE_SOURCE_READ_R1.json",
+      "pass": true,
+      "details": {
+        "actual": "a382debb187a078bc547704973cd39f609c9e475c69585a5ed8ac9f4e00c180b"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "pass": true,
+      "details": {
+        "actual": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationConfigurator.cs",
+      "pass": true,
+      "details": {
+        "actual": "6f087fb1c501c7325ad43a915b07e5c864390569fc6a6d082523a89e3138e7d2"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+      "pass": true,
+      "details": {
+        "actual": "929d35ea91140e697b985c050623fb5c7446e37f87f0199c944cac38bfa7b519"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "pass": true,
+      "details": {
+        "actual": "8659b5f22016823aea26893f10dd0be31fc1f2efa9590f46e0acc6cb5b34972e"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+      "pass": true,
+      "details": {
+        "actual": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+      "pass": true,
+      "details": {
+        "actual": "458dd4d37b5c7a062c9a47f7b698ce2c8c8230fd97acc5c812e59da0f4bc9214"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/BusDepot.cs",
+      "pass": true,
+      "details": {
+        "actual": "b6bb5efbcfa677d316fe18f2dc9c2a829099cd38d9c4dda03e125eca906477b0"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Hosting/IBusDepot.cs",
+      "pass": true,
+      "details": {
+        "actual": "f10e9cea70b709c5bf671f19cc858d18847fce61496aedc68db7a03094d9f8b2"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/PayloadAdmissionOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "a9c4b474245702ae4fcc537cbf6581b1bd0e55f4b10f7d75dd4477d7c18f93c1"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Serialization/Admission/PayloadAdmissionPolicy.cs",
+      "pass": true,
+      "details": {
+        "actual": "fccb4ff5aac8ad43ea6a13a1f60ac5fafc4f5caf73e3c59ba7e7d224b8bd6496"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/MessageLimitsConfigurationExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "768c63ce53946add68e49f2616c82760641a589222363d6617872f07a06e5ee0"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsTransportOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "fca831dd2d3c2a48ebf183630a2181383bb8f71b8331f3392742e82a6ad431a5"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/AmazonSqsRegistrationBusFactory.cs",
+      "pass": true,
+      "details": {
+        "actual": "4565ae7bbea2c655bc529b3a1cde837de11a60965a37755099c2761d4850a8b8"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "84e652c0237beb05aaf2d7008f49b70b886163650839c0a0ccded02676eeece2"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqTransportOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "94fa836e5e64ab17df6eb5fe0fdc53dd1616873fd313dd935c4db2f204cfc801"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqSslOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "12451b25b41122100c997b4a7a8645175f934ac29463622db62e2effbd998778"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqRegistrationBusFactory.cs",
+      "pass": true,
+      "details": {
+        "actual": "54dfd3bb3dbebb472997d8bdf063a97acaf171ec1d6707611d9abdbe685b9c19"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusConfigurationExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "d12135b7ba9ada8671b08a00c12f5cf4c3737ad3bf0fd5fbac5376da11ccaa46"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/AzureServiceBusTransportOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "48137e32e28bf82e05fc6f134725b9039d97f879d88b3c47b979280430f2bde7"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusRegistrationBusFactory.cs",
+      "pass": true,
+      "details": {
+        "actual": "47bc98ab27570fc15126c96ac898e1be2d75c893bc14b2598f0c33ac0100d8dd"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "pass": true,
+      "details": {
+        "actual": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Batching/Runtime/BatchRuntimeSettings.cs",
+      "pass": true,
+      "details": {
+        "actual": "55f86c6399c0f9ee6f971853a7f05ef58a04f3cd714817ea64c9eef223ed0e29"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsTransportOptionsStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "e2a08d5a7445cfb0350bc1be384795019cb8041f7965a222b417ee9216a6e77f"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "967cb99eebbc593bf30429f40983d8dd0022475397535d3b8d9eef5e0075d1a1"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqRegistrationOptionsTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "49141a0da272c92e876c7f8786f2bb7b6286933d00fe88b43ca97ae2553f21e8"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusTransportOptionsStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "fe0c3b37ef5d01e9ceeb0d28e76f576a88aedd7009ef3bc3ee2ff200cc7e8f48"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ViciOneServiceBusHostOptionsValidationTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "fc07f872fbddc3287408e0c56e5243093ba941c60fcbe3675ed4419cdff21ec2"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/BusCompositionStartupValidationTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "613bfc0b93c3bed39323846ed27ede88c2d44f687271c45d18f96a05cd0d382b"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "1d2f15b80cd90109bd1b944c789761c019632d23617d9ce4e7547bc3c69c28d1"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/HostedServiceLifecycleOwnershipTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "2abeaa9d7637aabbc3b1bc8cfb57dd0f8d7060c5d1e01ccc4c9b1f02e3defba2"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs",
+      "pass": true,
+      "details": {
+        "actual": "2cbd0652ebc77f9defb1bad0fc9deb3c2a125f925e913748b53520366b99fe95"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/global.json",
+      "pass": true,
+      "details": {
+        "actual": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.props",
+      "pass": true,
+      "details": {
+        "actual": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.targets",
+      "pass": true,
+      "details": {
+        "actual": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Packages.props",
+      "pass": true,
+      "details": {
+        "actual": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/NuGet.config",
+      "pass": true,
+      "details": {
+        "actual": "3f6cda87abdfbc3e7f7a80906f21b11009ac811c70834dfdbc4840db01a9ce93"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Directory.Build.props",
+      "pass": true,
+      "details": {
+        "actual": "be8359cbeaf46760b90b3755da645aeb7b4a786af8f0fd6db9396d21f6e67911"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Directory.Build.props",
+      "pass": true,
+      "details": {
+        "actual": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/signing.props",
+      "pass": true,
+      "details": {
+        "actual": "71a2cc9a5b04a60ea4093aa41824f275ad7cf5d87f4a8866a09990450ec2e411"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/testconfig.json",
+      "pass": true,
+      "details": {
+        "actual": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/testsettings.json",
+      "pass": true,
+      "details": {
+        "actual": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "pass": true,
+      "details": {
+        "actual": "382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "pass": true,
+      "details": {
+        "actual": "fc0b486dd4aa4c78487b1e0fa9f56c546cf1c27e0499d9e1f403f26923d54fbb"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/packages.lock.json",
+      "pass": true,
+      "details": {
+        "actual": "d375ff4c06a3b00d9f80a63a8eada1a62bb720261742ad6be7cfbcffc5fdab30"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/ViciOne.ServiceBus.AmazonSqs.csproj",
+      "pass": true,
+      "details": {
+        "actual": "72bb696dcdaf49509f08d7951edb4a4ccaf76112e4bed6ced4a94b8176031e94"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "1fa6b10f5273864ee89a9059b9eb6d7d37762a86137744a82ac364dae3241b84"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "pass": true,
+      "details": {
+        "actual": "7a2f76b7d2272ee3afcd8f83c2f05dad7c45883fe814efae2c79ff76b6b51ca2"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "53ac44c04cf794e6ffc05f2b5a8ec47fb6948e1bac181b37155279b0296d3e68"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "b12b81a46e099582644c05165ee384fb394431fc36b517e2a980eceac592a6e3"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs",
+      "pass": true,
+      "details": {
+        "actual": "a8192e1d3b520714ee1a732505a26a740e06ae073a6f303972a17aefaf328206"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs",
+      "pass": true,
+      "details": {
+        "actual": "14ec1d7a56de88968a8bbbb25bb578c50fef16bfb9a4dd078780fbd6e6534c83"
+      }
+    },
+    {
+      "check": "root scope row counts27/9/21",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "1fa6b10f5273864ee89a9059b9eb6d7d37762a86137744a82ac364dae3241b84"
+      }
+    },
+    {
+      "check": "project sole additive Hosting PackageReference",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "central test-only Hosting10.0.12 already exists",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "private draft183 four methods five theory-expanded cases",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "test still private not canonical",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-fixed-source-r3-current-root812-r6-preflight-r1.json",
+      "pass": true,
+      "details": {
+        "actual": "ab859bc6010bc3988d223f8b05c8ffccf1264b603d229ad228e129ca592fcc32"
+      }
+    },
+    {
+      "check": "canonical6096 source/test/tool graph untouched from accepted preflight",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "current projection199 has no new draft rows",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "localprimary Hosting10.0.12 documents sequential startup default",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationConfigurator.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/Transports/Hosting/BusDepot.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/Transports/Hosting/IBusDepot.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/Configuration/PayloadAdmissionOptions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus.Abstractions/Serialization/Admission/PayloadAdmissionPolicy.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/Configuration/MessageLimitsConfigurationExtensions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsTransportOptions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/AmazonSqsRegistrationBusFactory.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqTransportOptions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqSslOptions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqRegistrationBusFactory.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusConfigurationExtensions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/AzureServiceBusTransportOptions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusRegistrationBusFactory.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/Batching/Runtime/BatchRuntimeSettings.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsTransportOptionsStartupTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqRegistrationOptionsTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusTransportOptionsStartupTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ViciOneServiceBusHostOptionsValidationTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/BusCompositionStartupValidationTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/HostedServiceLifecycleOwnershipTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact global.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact Directory.Build.props",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact Directory.Build.targets",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact Directory.Packages.props",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact NuGet.config",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/Directory.Build.props",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/Directory.Build.props",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact signing.props",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/testconfig.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/testsettings.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/ViciOne.ServiceBus.Tests/packages.lock.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact src/Transports/ViciOne.ServiceBus.AmazonSqs/ViciOne.ServiceBus.AmazonSqs.csproj",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "after original Root scope still exact tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r1/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "8ae7bbc7107feb8a1aad5eca435e98f05da5119487f7076c0e4b47d419b3ee1e"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r1/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r1/PREPARED.json",
+      "pass": true,
+      "details": {
+        "actual": "e7ff915ec5d7c2294d8d9fba9a46de7348c491f3395b5ee19b15e0871b46c477"
+      }
+    }
+  ],
+  "check_count": 131,
+  "limits": [
+    "Private test/project source review only; no startup/product fix, compiler, native original/fixed, SQS module whole-suite, provider or cloud acceptance.",
+    "No .NET/MSBuild/Docker/SSH/SDK process starts, installs or process control performed. No product/test/tool/doc/frozen evidence mutation. Only distinct new reviewer report written."
+  ]
+}

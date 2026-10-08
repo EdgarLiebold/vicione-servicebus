@@ -1,0 +1,252 @@
+{
+  "kind": "INTERNAL_READONLY_P04_PRIVATE_SQS_SIX_CASE_TEST_SUCCESSOR_ADVERSARIAL_R1",
+  "utc": "2026-10-07T08:42:47.580263+00:00",
+  "status": "NO_BLOCK_FOR_PRIVATE_SIX_CASE_ORIGINAL_NATIVE_PREPARATION",
+  "reviewer": "todo_reconciliation_review",
+  "findings": [],
+  "inputs": {
+    "prepared": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-six-case-test-preparation-r1/PREPARED.json",
+    "prepared_sha256": "eef814e358f60e8c45a3a93821ad5624d4849926b6f37b825d3aeca5c7449796",
+    "private194": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-six-case-test-preparation-r1/AmazonSqsGenericHostStartupTests.cs",
+    "private194_sha256": "694ffbfb2fb103e081e1de064c1f4d7a875c32d971e3beb2b91ebe79e60a98d8",
+    "prior188": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/AmazonSqsGenericHostStartupTests.cs",
+    "prior188_sha256": "074654ee59e1c22a382a702352d2a656c766f08b50f827c83dc5351c9cf698d3",
+    "qualified_original5": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-native-r1/RESULT.json",
+    "original5_sha256": "05095fc277bb3aacc832250a73a89a375599bcf6a83f92cc60426a59edd02309",
+    "original5_review": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-sqs-original5-native-artifact-adversarial-r1.json",
+    "original5_review_sha256": "4fbd2a0bc5b851dbef49ea6d517e277bae70cd77ea97466e02602e905e15a1ec",
+    "prior_requirement_review_sha256": "5162c9aac014a3ac2ca4e4d9eff6ebe45bcc7d48e728180e8ab02c8e9572daf1",
+    "unchanged_current_source": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+    "unchanged_current_source_sha256": "460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840",
+    "neighbor": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsTransportOptionsStartupTests.cs",
+    "neighbor_sha256": "e2a08d5a7445cfb0350bc1be384795019cb8041f7965a222b417ee9216a6e77f"
+  },
+  "delta": {
+    "only_changes": [
+      "Third InlineData Scope/required Scope reason",
+      "Scope setup switch adds whitespace Scope only for appended enum2",
+      "Enum appends Scope, oldRegion0/ScopeWithoutRegion1 unchanged"
+    ],
+    "normalization_restores_exact188_prior_behavior_bytes": true,
+    "methods": 4,
+    "native_expanded_planned_cases": 6,
+    "native_added_cases": 1,
+    "prior_five_unchanged_behavior": true,
+    "requirement203_four_method_pairs_unchanged": true
+  },
+  "meaningful_new_oracle": {
+    "operation": "Actual GenericHost.StartAsync through existing real typed AddViciOneServiceBus and original hosted service sequence",
+    "new_input": {
+      "case": "Scope",
+      "region": "eu-central-1",
+      "scope": " ",
+      "reason": "Scope must not be empty",
+      "static_predicate_truth": {
+        "Region": true,
+        "Scope": false,
+        "ScopeRequiresRegion": true
+      }
+    },
+    "expected_fixed": "Exact OptionsValidationException; IOrdersBus optionsName, AmazonSqsTransportOptions optionsType, Scope must not be empty failure reason and full bus typename; no composition callback/barrier/client-factory calls; no cleanup errors.",
+    "original_prediction": "Current extension registers only default options validators. Named whitespace Scope is skipped when factory applies host scope, explicit callback supplies coherent real host, so actual original should reach barrier/type failure. This is not yet native observed.",
+    "healthy_controls": "Selected invalid default and coherent named bus unchanged; poisoned unselected default is preserved; existing three original negative IDs are not replaced by the sixth case."
+  },
+  "static_predicate_independence": [
+    {
+      "case": "Region",
+      "region": " ",
+      "scope": null,
+      "reason": "Region must not be empty",
+      "static_predicate_truth": {
+        "Region": false,
+        "Scope": true,
+        "ScopeRequiresRegion": true
+      }
+    },
+    {
+      "case": "ScopeWithoutRegion",
+      "region": null,
+      "scope": "orders",
+      "reason": "Scope requires Region",
+      "static_predicate_truth": {
+        "Region": true,
+        "Scope": true,
+        "ScopeRequiresRegion": false
+      }
+    },
+    {
+      "case": "Scope",
+      "region": "eu-central-1",
+      "scope": " ",
+      "reason": "Scope must not be empty",
+      "static_predicate_truth": {
+        "Region": true,
+        "Scope": false,
+        "ScopeRequiresRegion": true
+      }
+    }
+  ],
+  "bounded_pseudo_mutation_plan": [
+    {
+      "source_predicate": "options.Region is null || !string.IsNullOrWhiteSpace(options.Region)",
+      "isolating_input": "Region=\" \", Scope=null",
+      "case": "Region",
+      "hypothetical_mutation": "Remove/mute named Region predicate only",
+      "static_prediction": "Fresh actual Host reaches barrier; exact OptionsValidationException first assertion fails. Unverified: no mutant executed."
+    },
+    {
+      "source_predicate": "options.Scope is null || !string.IsNullOrWhiteSpace(options.Scope)",
+      "isolating_input": "Region=\"eu-central-1\", Scope=\" \"",
+      "case": "Scope",
+      "hypothetical_mutation": "Remove/mute named Scope predicate only",
+      "static_prediction": "Other two predicates true, so barrier/type first assertion should fail. This covers the explicit first-five omission, but no empirical mutant survivor or kill claimed."
+    },
+    {
+      "source_predicate": "string.IsNullOrWhiteSpace(options.Scope) || !string.IsNullOrWhiteSpace(options.Region)",
+      "isolating_input": "Region=null, Scope=\"orders\"",
+      "case": "ScopeWithoutRegion",
+      "hypothetical_mutation": "Remove/mute named cross-property predicate only",
+      "static_prediction": "Other two predicates true; fresh Host reaches barrier/type first assertion fails. Unverified."
+    }
+  ],
+  "assessment": {
+    "critical": 0,
+    "high": 0,
+    "medium": 0,
+    "low": 0,
+    "blocking_findings": 0,
+    "compiler_plausibility": "One additional existing public enum InlineData, switch expression, same argument types and shared assertions. No new API/reference/compiler wiring change; actual194 strict build still required.",
+    "projection": "Passive metadata is method-level, so third Theory data needs no additional duplicate JSON row. Native executor must report all6 exact data IDs/0skip independently.",
+    "cleanup": "Shared lifecycle/callback/sentinel behavior byte unchanged after normalization, retaining R1 no-hard-disposal-timeout limit."
+  },
+  "verification_requirements": [
+    "Preserve qualified original188 five-case receipt, PE/PDB/runtime graph and review immutably.",
+    "Freeze/test194 in a fresh original graph and strict rebuild before actual original6; do not reuse original5 native/PDB credit for Scope.",
+    "Confirm actual fourth finite red at the first type assertion with barrier/composition1 and client/cleanup0/terminal True plus two unchanged healthy controls.",
+    "Then fixed6 and one-cause predicates/named/startup-selection mutants with exact first-failure evidence and final post6; static predictions here are not empirical kills."
+  ],
+  "current_preservation": {
+    "C9_test_remains_original188": true,
+    "C9_original_source460f_exact": true,
+    "canonical_test_absent": true,
+    "original5_receipt_sha256": "05095fc277bb3aacc832250a73a89a375599bcf6a83f92cc60426a59edd02309"
+  },
+  "skill_application": {
+    "test_anti_patterns": "Prior whole test review reused plus delta-specific assertions/ownership audit.",
+    "test_gap_analysis": "Static pseudo-mutation of exactly three option validators; .NET extension already read. User/Root read-only restrictions override mutation edits/native execution step. No empirical survived/killed verdict or mutation score.",
+    "code_testing_author": "Root solely authored private194; no reviewer test generation or product-role delegation."
+  },
+  "checks": [
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-six-case-test-preparation-r1/PREPARED.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-six-case-test-preparation-r1/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact scoped threechanges restore prior188 bytes",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "enum appended preserves old numeric values0/1 newScope2",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "three data rows plus three Facts=6 oneTheory/four methods unchanged",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "passive four requirement method mappings unchanged",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "compiled-original current203 method-level projection reused",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-native-r1/RESULT.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-sqs-original5-native-artifact-adversarial-r1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-sqs-private-generic-host-startup-test-requirements-r2-adversarial-r1.json",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "six private not canonical",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsTransportOptionsStartupTests.cs",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "independent single false validator input Region",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "independent single false validator input ScopeWithoutRegion",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "independent single false validator input Scope",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "newScope static isolates onlyScope predicate",
+      "pass": true,
+      "details": null
+    }
+  ],
+  "check_count": 21,
+  "limits": [
+    "Private static successor review only; no native6/compiler194/corrected-product/wholeSQS/global startup/cloud/hardware acceptance.",
+    "This closes only the planned whitespace-Scope input omission; null/empty configuration/case-insensitivity/colliding simple bus names/multiple live named buses/conflict/missing broader packages remain outside this first scope.",
+    "No .NET/MSBuild/native/Docker/SSH/process control or product/test/tool/doc/frozen edits; only distinct immutable review JSON written. No reviewer reading credit transfers to Root."
+  ]
+}

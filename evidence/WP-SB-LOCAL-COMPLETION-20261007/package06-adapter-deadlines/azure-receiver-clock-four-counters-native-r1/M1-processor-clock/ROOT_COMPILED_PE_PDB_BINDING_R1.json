@@ -1,0 +1,607 @@
+{
+  "kind": "ROOT_ACTUAL_AZURE_RECEIVER_CLOCK_TWELVE_IMMUTABLE_OWNERS_PHYSICAL_PE_PDB_SOURCE_BINDING_R1",
+  "native_sha256": "7710bc3f373ad0a10569a3120799fff87a472844024807335eea4211bdd6b8a2",
+  "actual_images": 13,
+  "actual_document_checksums": 3257,
+  "actual_runtime_files": 18,
+  "actual_assets": 13,
+  "images": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/M1-processor-clock/runtime/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "4f338bc10c54441d776388b51b7500c1fff366a0f507be9e76e2ffaff508c762",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3307733063,
+          "guid": "cc658293-8d77-4b98-b6bc-9ef781d56fa3",
+          "path": "ViciOne.ServiceBus.Abstractions.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "938265cc778d984bb6bc9ef781d56fa3470028c5",
+        "sha256": "aa8f518018f3f4c345fdd9ede1e27259c7f51a9c69ff736b69365571f1d64da6",
+        "documents": 700,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 696,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 4
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "b4265acb06771eb32df2bde5285c2b677c30d2e988642cb8da3889aad0232add",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContextTimeProviderExtensions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/M1-processor-clock/runtime/ViciOne.ServiceBus.ActiveMq.dll",
+      "sha256": "cda8752e7c482cc857c798655272441847acab390910ac5f31d6715c24aaf5ab",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2886233011,
+          "guid": "b7b71cf0-5240-4a67-b4a7-16aa67b3a4a5",
+          "path": "ViciOne.ServiceBus.ActiveMq.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "f01cb7b74052674ab4a716aa67b3a4a5b36b08ac",
+        "sha256": "5b68e20c4cab1d89bc8a0c74f9ccd6d56b8287ba16d95f008c046ef0c2bde3f4",
+        "documents": 157,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 154,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "9fcfbf1b3afbee4cb54b7d4b37df625263fbbbe27fce8544a704a20c375ba4c8",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/M1-processor-clock/runtime/ViciOne.ServiceBus.AzureServiceBus.Testing.dll",
+      "sha256": "2ab759b7ddc6fd64adcdd1d15a841ddc781ea7916aea6a080c02ad2c16457c42",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3570755636,
+          "guid": "68d1582c-a710-4e4a-a684-97cc807fca1d",
+          "path": "ViciOne.ServiceBus.AzureServiceBus.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "2c58d16810a74a4ea68497cc807fca1d3468d5d4",
+        "sha256": "413fdabc14b0c9b899bac829c12c28c4c5ef4ee4f7ab0c7ce810fb4cc14e48d9",
+        "documents": 11,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 8,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "5a6a51c7fe88a68cf54f89797337aedffabd1e85426a512cf554e8e92738bd6d",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/M1-processor-clock/runtime/ViciOne.ServiceBus.AzureServiceBus.Tests.dll",
+      "sha256": "aba3c0ce343042e398ede7886714205154bdbc75c153876d0b0941361a0489bb",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2869070450,
+          "guid": "772647e8-ee1d-40b6-8802-9328e9a2d4e3",
+          "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/artifacts/sdk/obj/ViciOne.ServiceBus.AzureServiceBus.Tests/release/ViciOne.ServiceBus.AzureServiceBus.Tests.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "e84726771deeb64088029328e9a2d4e3728a02ab",
+        "sha256": "53aa0f0a62298ee0b955e1dcef2f959e0ee764b9fc5978fe7d89aaaa4604c841",
+        "documents": 62,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 56,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 6
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "2026bb14e3f0ad5fc7397376c04d46bbeb02fd8632399fb6e1efccb8a0272f7b",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusReceiverCancellationClockTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "809bc63d0d827b39dfa8c20419f3d37b418e926290577f0363e51428874c01ff",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "809bc63d0d827b39dfa8c20419f3d37b418e926290577f0363e51428874c01ff"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/M1-processor-clock/runtime/ViciOne.ServiceBus.AzureServiceBus.dll",
+      "sha256": "c3c5579f9754323e91cc3708310ee6647261a2246d672397bde35c5e950ef010",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2416610447,
+          "guid": "de78c164-6e84-44f7-b796-304a7d872be1",
+          "path": "ViciOne.ServiceBus.AzureServiceBus.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "64c178de846ef744b796304a7d872be18f8c0a90",
+        "sha256": "fb37671720e51a83f569b06271289a34424154213b436c61a74f1ed49614334f",
+        "documents": 223,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 212,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 11
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "9c5fea0bfb431110d761357c918b08e45a99e1f4f852e24986fe4ba88276826c",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ClientContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "1e4e7219719db099ad8dbeaa715215f3e850c551cd38ea407de42623dbd8bd8b",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "1e4e7219719db099ad8dbeaa715215f3e850c551cd38ea407de42623dbd8bd8b"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageLockContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "1c0813dd97298c04712e81dbf9f8359c9823144cf7eec3943d880fca5e100a93",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "1c0813dd97298c04712e81dbf9f8359c9823144cf7eec3943d880fca5e100a93"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageSessionContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "4bf182e49632282f7908f16a777c981807e6d6e18c5271f8b57d841051f9ccd7",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "4bf182e49632282f7908f16a777c981807e6d6e18c5271f8b57d841051f9ccd7"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusReceiveContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "a02c0198567391fbc7b8ff935b65c451d42fb039d411417b7d64bce8ee154b43",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "a02c0198567391fbc7b8ff935b65c451d42fb039d411417b7d64bce8ee154b43"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusSessionMessageLockContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "912c7dd6424006d58f0e4bc81326524a91453acef677e642b32ec3dd5f303f10",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "912c7dd6424006d58f0e4bc81326524a91453acef677e642b32ec3dd5f303f10"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Receiver.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "aea0bac4f8c8ce1ae9f23fdd14efc44e4aa00a80d0328f24ef48f630f9ba1de0",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "aea0bac4f8c8ce1ae9f23fdd14efc44e4aa00a80d0328f24ef48f630f9ba1de0"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusReceiveLockContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "a259b389d481c2fb0fff73c2d8cbd53ac5f71ea15cd3e24f9394abc77c20f8ff",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "a259b389d481c2fb0fff73c2d8cbd53ac5f71ea15cd3e24f9394abc77c20f8ff"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/SessionReceiver.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "ac4ae989bdfa220388ee56e1d0c62742f64a0fe6278a828390d34b5483c4f763",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "ac4ae989bdfa220388ee56e1d0c62742f64a0fe6278a828390d34b5483c4f763"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/M1-processor-clock/runtime/ViciOne.ServiceBus.Courier.dll",
+      "sha256": "2be1acd70f7f79310505d8482423ac7bbc0eeb2f1f5ef95c932fe76c68447816",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2852291563,
+          "guid": "f6edd886-5290-429e-8965-ff8465a82a47",
+          "path": "ViciOne.ServiceBus.Courier.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "86d8edf690529e428965ff8465a82a47eb8302aa",
+        "sha256": "ad377502baf8388a8bd42aea88fde6bcc949219bc8ab0b4fe44f8cda5f256761",
+        "documents": 146,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 143,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "fbccd5002dfccda86cc044a1c9f2b128d09dd0f8265da0b7f427686cf373e746",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/M1-processor-clock/runtime/ViciOne.ServiceBus.Futures.dll",
+      "sha256": "1c92117bc4a9135f9a7012ddf952a87f450ef12233a1e6d4e52645014ab78830",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3187764720,
+          "guid": "97b2f269-bd69-4de2-9bd4-000385b9e36b",
+          "path": "ViciOne.ServiceBus.Futures.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "69f2b29769bde24d9bd4000385b9e36bf06d01be",
+        "sha256": "c81b219865d49c4335f290a654da1fcc3e1b2b2f49b39c4075e179aab9f0429e",
+        "documents": 61,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 58,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "1f352519b3d9847ef161374a5b340d29b6d929e37d80c78981b1fbc1dd823965",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/M1-processor-clock/runtime/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "52890950e02e04a186d7ab2b8f34e4a636d161ac6abc78f093c140cdeb15b24f",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3363952541,
+          "guid": "b12a54ab-61e4-435c-a3fe-ff6015378732",
+          "path": "ViciOne.ServiceBus.Mediator.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "ab542ab1e4615c43a3feff60153787329dd781c8",
+        "sha256": "82a2a297e708c85e9188ea563d17b1c66c0e048429bbe9b715a233fdc5bec615",
+        "documents": 31,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 28,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "4c15cdadf3dde5e9a3244a394460a52153fee89b86511ad6192bfbf7fc333780",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/M1-processor-clock/runtime/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "49b11df29538fb77ce736661286d509927056dc420febd246c168168e799daa3",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4118469211,
+          "guid": "a22dfb31-f2ff-4d1d-aff8-4f7d0053adef",
+          "path": "ViciOne.ServiceBus.Sagas.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "31fb2da2fff21d4daff84f7d0053adef5bda7af5",
+        "sha256": "c5b43979d800c6c1f5f6a7d33ba62f63fddd8d14cbbfbfcfa8b3336196959f52",
+        "documents": 374,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 371,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "f79a0fb3331bdab553e0a88c749bf882d6e62ac9a7a375d241bef66535ab6ce9",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/M1-processor-clock/runtime/ViciOne.ServiceBus.Testing.dll",
+      "sha256": "52af2ed7725b33d2f6e7845a463d445fdc93b3e897cae081775d741cbe3127ae",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3283211691,
+          "guid": "eeab9f0e-56fe-44b8-b66d-54833b3f7b0f",
+          "path": "ViciOne.ServiceBus.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "0e9fabeefe56b844b66d54833b3f7b0fabd5b1c3",
+        "sha256": "e50241614258700db12ff75ddf4964df968c7fc3e4a72ce5088f9e6347d8f545",
+        "documents": 104,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 101,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "9fd10c5bccf7e609ca5017224eb6d46f4622f5227455399676c8437e51a3d03e",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/M1-processor-clock/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "ef11e76d3acf30d4313ac6008494827b0a7b561acfd3afe13d1bcace008a39bf",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3389346379,
+          "guid": "4eb360a1-72fb-45f8-9f41-5f03264a057d",
+          "path": "ViciOne.ServiceBus.Tests.Infrastructure.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "a160b34efb72f8459f415f03264a057d4b5205ca",
+        "sha256": "ba9ef719d25fcb6919ba20a9e277d4b4de9441c9f2f1b1de75ed84a42a24921b",
+        "documents": 9,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 6,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "a054818e41fd598a4e3868c835e58f0f99f16fa202c25fba501643ee084fe7fb",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/M1-processor-clock/runtime/ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "sha256": "e19c8917a4773bdc52c8e8897728c35fab07e9f64f50b11758f16b6b02e2cd5c",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2932426700,
+          "guid": "fa12bf53-59ad-45a0-8be3-7bb7eb355422",
+          "path": "ViciOne.ServiceBus.Tests.InternalAccess.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "53bf12faad59a0458be37bb7eb355422cc47c9ae",
+        "sha256": "e3a09200ba45d16ee17b1f1758cc343bc7d6e88dfc4ae3205e05952641b9a4f8",
+        "documents": 38,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 35,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "ce9856249031318f893689cd678787a3a5eeda53542e364482d143ba4c3e416f",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/M1-processor-clock/runtime/ViciOne.ServiceBus.dll",
+      "sha256": "6741b7e2d22ffd0029c479e19e4c84b5528803c8ef49a7ca7704334f62ac0421",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3072910015,
+          "guid": "4a4320c1-c5a8-4ff6-854a-7b9399c68fb5",
+          "path": "ViciOne.ServiceBus.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "c120434aa8c5f64f854a7b9399c68fb5bfe228b7",
+        "sha256": "ef7871ab0cc14d7d80eab78216100dde3bed3da476f4b048118400b16cf0bf6a",
+        "documents": 1341,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 1292,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 5,
+          "EMBEDDED_SOURCE": 44
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "b020f4fefe786c5667c1c1397ce3950442d11e54e281c84d70a1f61e3ccc81be",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/ViciOne.ServiceBus/Transports/Receiving/BaseReceiveContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "0b3256e68a15d4dc9a338ba8810d9d32547484f4d7a1d0c01953466af9d40514",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "0b3256e68a15d4dc9a338ba8810d9d32547484f4d7a1d0c01953466af9d40514"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-azure-receiver-cancellation-original/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "ee1afc2cf94e4d8f4c9ef24edf7dc3ae559d68371db2f5668225e273a7392088",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "ee1afc2cf94e4d8f4c9ef24edf7dc3ae559d68371db2f5668225e273a7392088"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    }
+  ],
+  "parser_source_sha256": "1bc09397fe31d1edaa74ae0f2ddc92b3d79b81240ec2ce571064652e7217fe1f",
+  "root_driver_sha256": "f22e296e61d486506f379474a407a0748be79ac17d605d67dee2a7149cad6c6f",
+  "generated_source_sha256": "54a262f54a89e244f8e277026f912d7967772e8d70c80e83dabd7bb3e2d01749",
+  "source_owners_sha256": "2d84e7c655d985b48955b5f782a991877f055676d7ae501e7796c83476427752",
+  "limits": "Pure byte/metadata reads only. Fresh thirteen actual images and all PDB document checksums; generated source and mutant owner override are immutable. Compiled Requirements resource/method attrs and finite native causal review are separate; no source-read credit transfer, no current coverage/whole suite/globalA+ claim."
+}

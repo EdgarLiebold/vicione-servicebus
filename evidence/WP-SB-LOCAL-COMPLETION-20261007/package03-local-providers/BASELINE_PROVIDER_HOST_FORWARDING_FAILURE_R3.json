@@ -1,0 +1,33 @@
+{
+  "kind": "LOCAL_PROVIDER_HOST_FORWARDING_FAILURE",
+  "source_commit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "run_identity": "vicione-3332a1b51130",
+  "exit_code": 130,
+  "completed_native_profile": false,
+  "product_finding": false,
+  "cause": "All six probed ephemeral loopback ports refused TCP despite healthy containers. Colima host-agent logs identify SSH forwarding exit255 for each published port. Interrupted owned process group59872 with SIGINT; canonical runner teardown ran.",
+  "host_tcp_probe_ports": [
+    36276,
+    36277,
+    36279,
+    36284,
+    36285,
+    36286
+  ],
+  "cleanup_findings": [],
+  "remaining_own_containers": 0,
+  "raw_log_kept_local_only": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/local-completion/baseline/local-brokers-r2.log",
+  "raw_log_sha256": "0cf8de4b6ed645915a3c59b7e980d5cd8456400ef4fd2485611ab74e85925a8d",
+  "fixture_findings_sha256": "eb0856550d6b00d3c9a4bdb5c0b6d5582321d270313c216c67beea38d5954186",
+  "native_failures_before_interrupt": 4,
+  "native_complete_case_counts_not_available": true,
+  "follow_up": "Check a lifetime-owned local VM SSH tunnel; no shared VM restart or global settings changes.",
+  "predecessor_sha256": "7194a887ca0551c2941663a7667a6936d8de14e847772bdd171b7362f68d5d7d",
+  "native_failed_case_names": [
+    "ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.MessageData.AzureBlobMessageDataRepositoryTests.PutAsync_CommitsExpirationAndContentEncodingWithTheBlobAsync",
+    "ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.MessageData.AzureBlobMessageDataRepositoryTests.PutAndGetAsync_RoundTripExactBytesThroughAzuriteAsync(compress: True)",
+    "ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.MessageData.AzureBlobMessageDataRepositoryTests.PutAndGetAsync_RoundTripExactBytesThroughAzuriteAsync(compress: False)",
+    "ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.MessageData.AzureBlobMessageDataRepositoryTests.PutAsync_UploadsRemainingBytesAndLeavesCallerStreamOpenAsync(compress: False)"
+  ],
+  "correction": "R2 case-event count was provisional; R3 counts actual native fail events from the retained interrupted log, no completed profile verdict."
+}

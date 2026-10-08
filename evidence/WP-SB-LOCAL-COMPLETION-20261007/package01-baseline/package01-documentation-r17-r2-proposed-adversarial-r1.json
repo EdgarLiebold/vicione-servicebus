@@ -1,0 +1,161 @@
+{
+  "kind": "INTERNAL_READONLY_DOCUMENTATION_R17_R2_PREPUBLICATION_ADVERSARIAL_REVIEW_R1",
+  "status": "NO_BLOCK_EXACT_SIX_PRIVATE_DOCUMENT_DELTAS__BOUNDED_CACHE_ACCEPTANCE_ONLY",
+  "findings": [],
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/PROPOSED_DOCUMENTATION_FREEZE_R17_R2.json": "49f07514d0246a74cc434c3f21ffe8eb37787f7a603d503d170173a0a1686f6a",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_FREEZE_R16.json": "2dfe7010201b4b14f6974c0b4e3079e60ae61a33fcbae62bec7e021d4bb1a46a",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/PROPOSED_DOCUMENTATION_FREEZE_R17.json": "6a680a3025259d5c0cd48f4e7d7f279d17bf1bacff77b7fd50497af3f009b2e7",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/ROOT_CACHE_COMPARER_RETIREMENT_ACCEPTANCE_R1.json": "4f171d6aff540947873b1a093ab0f2d50fc93130428d20c4205bccf47b0b354c",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/package06-cache-post-and-bounded-aggregate-adversarial-r2.json": "e83aaa6740081148ba62bd0009b1dc9269186cae8d5a3b6f8a2e126b29652ec2",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-reconciliation-proposed-review-r16.json": "225ea104e75fe34067bfa05d8a3a081fa094038571e76e221dcd4077610b51d9",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/CHANGELOG.md": "d2722fa021b4dd136b62cc0dc104cc7ec95c9302e3a3be175785eacb3c90a018",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r17-r2/CHANGELOG.md": "a03a4c23ab10ecd21e56f07a3472c2d91384bc094da615cbb8da73a41a1b6c8d",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r16/CHANGELOG.md": "d2722fa021b4dd136b62cc0dc104cc7ec95c9302e3a3be175785eacb3c90a018",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r17/CHANGELOG.md": "a03a4c23ab10ecd21e56f07a3472c2d91384bc094da615cbb8da73a41a1b6c8d",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/TODO.md": "835a1804e7b98486d1a02a600e08fb3c382c835a74bdba69f90d9e839b7ecf46",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r17-r2/TODO.md": "acd39b04f176990bb393977c5bb6b0ad0cfbaf026511408f19b7975000b1ac57",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r16/TODO.md": "835a1804e7b98486d1a02a600e08fb3c382c835a74bdba69f90d9e839b7ecf46",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r17/TODO.md": "acd39b04f176990bb393977c5bb6b0ad0cfbaf026511408f19b7975000b1ac57",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/status.md": "fc2ff85c08bc036c43c0cfd1910e50b533752c6d6136c93d234d3b84a315efe6",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r17-r2/.testagent/status.md": "814f276aa5fee75b284a4bcab4d0e158796e772448fd3fdcfc94249f3e576faf",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r16/.testagent/status.md": "fc2ff85c08bc036c43c0cfd1910e50b533752c6d6136c93d234d3b84a315efe6",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r17/.testagent/status.md": "4d7d6ff35126213f826826f41a80146007a6e7003b3c105d3b3b97739e40c931",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/plan.md": "bca79a74ac887919e5f998260b525d14bc66165a4a8660ff4e562ab692c60a82",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r17-r2/.testagent/plan.md": "ab72ba684f94b63fed6084bcb0a4e5b4fd3fe9e95928a804a923200cf89e573b",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r16/.testagent/plan.md": "bca79a74ac887919e5f998260b525d14bc66165a4a8660ff4e562ab692c60a82",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r17/.testagent/plan.md": "96969c0f52373e342497cd2012766c2fdee6941e918f16fb9fa344908ce6bb47",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/local-completion-plan.md": "060453899bb767169776cdb584ba1a8f00d9efa51bb1f840ac05d9136448f37a",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r17-r2/.testagent/local-completion-plan.md": "b070491aa3f0963a8a619bc2d69909f0c3dd81781974cca2f4a81dc35d3cc5a4",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r16/.testagent/local-completion-plan.md": "060453899bb767169776cdb584ba1a8f00d9efa51bb1f840ac05d9136448f37a",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r17/.testagent/local-completion-plan.md": "b070491aa3f0963a8a619bc2d69909f0c3dd81781974cca2f4a81dc35d3cc5a4",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/quality-status.md": "e17516acc4d94d551a2dfcc32fdbd2e70a45b2002fd25e0649aee11ed7a539d8",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r17-r2/docs/quality-status.md": "68e910712195fa2e05169f2fe78125dfd44bf099892fe484aa907a20bd1701c1",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r16/docs/quality-status.md": "e17516acc4d94d551a2dfcc32fdbd2e70a45b2002fd25e0649aee11ed7a539d8",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r17/docs/quality-status.md": "f14670182624bdd1c984434478a095970dbecd907617d74a7ea96bcc242bc77f"
+  },
+  "checks": {
+    "proposal49f075_and_priorR16_2dfe701_exact": true,
+    "six_frozen_deltas_live_unpublished_R16_exact": true,
+    "R17R1_preserved_exact_only_build_phrase_successor": true,
+    "other11TODO_sections_byteequal_and_heading_order": true,
+    "ordered62_external_OBL_tokens_unchanged": true,
+    "historical234_ledger_and_checkpoints_unchanged": true,
+    "Root_bounded_cache_acceptance4f171_exact_postreview_e83_clean": true,
+    "actual_mutant_parent240_12red228healthy_separate_child16_3red13healthy": true,
+    "fixed30_cache142_Core8142_post30_bound_separately": true,
+    "original12red18healthy_historicalPending249_final250_honest": true,
+    "added_receipt_markdown_targets_resolve": true,
+    "open_observer_adapter_startup_coverage_benchmarks_CI_cloud_HW_preserved": true,
+    "SQS_private_preparation_zero_native_claim": true
+  },
+  "six_bindings": [
+    {
+      "path": "CHANGELOG.md",
+      "published_R16_sha256": "d2722fa021b4dd136b62cc0dc104cc7ec95c9302e3a3be175785eacb3c90a018",
+      "live_still_R16": true,
+      "proposed_sha256": "a03a4c23ab10ecd21e56f07a3472c2d91384bc094da615cbb8da73a41a1b6c8d",
+      "old_lines": 162,
+      "new_lines": 172
+    },
+    {
+      "path": "TODO.md",
+      "published_R16_sha256": "835a1804e7b98486d1a02a600e08fb3c382c835a74bdba69f90d9e839b7ecf46",
+      "live_still_R16": true,
+      "proposed_sha256": "acd39b04f176990bb393977c5bb6b0ad0cfbaf026511408f19b7975000b1ac57",
+      "old_lines": 374,
+      "new_lines": 382
+    },
+    {
+      "path": ".testagent/status.md",
+      "published_R16_sha256": "fc2ff85c08bc036c43c0cfd1910e50b533752c6d6136c93d234d3b84a315efe6",
+      "live_still_R16": true,
+      "proposed_sha256": "814f276aa5fee75b284a4bcab4d0e158796e772448fd3fdcfc94249f3e576faf",
+      "old_lines": 127,
+      "new_lines": 147
+    },
+    {
+      "path": ".testagent/plan.md",
+      "published_R16_sha256": "bca79a74ac887919e5f998260b525d14bc66165a4a8660ff4e562ab692c60a82",
+      "live_still_R16": true,
+      "proposed_sha256": "ab72ba684f94b63fed6084bcb0a4e5b4fd3fe9e95928a804a923200cf89e573b",
+      "old_lines": 152,
+      "new_lines": 172
+    },
+    {
+      "path": ".testagent/local-completion-plan.md",
+      "published_R16_sha256": "060453899bb767169776cdb584ba1a8f00d9efa51bb1f840ac05d9136448f37a",
+      "live_still_R16": true,
+      "proposed_sha256": "b070491aa3f0963a8a619bc2d69909f0c3dd81781974cca2f4a81dc35d3cc5a4",
+      "old_lines": 34,
+      "new_lines": 39
+    },
+    {
+      "path": "docs/quality-status.md",
+      "published_R16_sha256": "e17516acc4d94d551a2dfcc32fdbd2e70a45b2002fd25e0649aee11ed7a539d8",
+      "live_still_R16": true,
+      "proposed_sha256": "68e910712195fa2e05169f2fe78125dfd44bf099892fe484aa907a20bd1701c1",
+      "old_lines": 167,
+      "new_lines": 187
+    }
+  ],
+  "complete_R16_to_R17R2_diffs": {
+    "CHANGELOG.md": "--- publishedR16/CHANGELOG.md\n+++ privateR17R2/CHANGELOG.md\n@@ -120,6 +120,16 @@\n   incremental-build attempts receive no corrected-source credit. Separate source/test and native\n   reviews are accepted in the [bounded classic EF duration receipt](evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json).\n   Current coverage and broader Unit/provider/schema/CI gates remain open.\n+- Made cache index publication and retirement robust against ordinary throwing comparers and\n+  later required-clock/lookup faults. Preparation finishes before live publication, and exact\n+  owned slots unlink committed/pending entries without invoking user comparison. Failed bulk\n+  indices leave existing resources intact; late old factories cannot unlink a replacement.\n+  All 30 focused cases, 142 complete Cache cases and 8,142 Core cases pass. Eight compiled\n+  single-cause mutants expose 12 finite failures with 228 healthy controls; the unchanged\n+  final postcheck passes the same 30 cases. Separate child events and source/runtime evidence\n+  are bound in the [bounded cache repair receipt](evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/ROOT_CACHE_COMPARER_RETIREMENT_ACCEPTANCE_R1.json).\n+  Cache observer ordering/failure-channel/backpressure contracts and measured resource budgets\n+  remain separate work, alongside adapters/startup, aggregate replay, current coverage and CI.\n - Continued locally feasible work under the [local completion plan](.testagent/local-completion-plan.md).\n   Real cloud resources and target-device hardware are unavailable; GitHub workflow activation\n   remains gated by local acceptance and separate CI qualification.\n",
+    "TODO.md": "--- publishedR16/TODO.md\n+++ privateR17R2/TODO.md\n@@ -77,11 +77,19 @@\n commit `cf2e9ebfbc193573fd376df549469a956bc7de80`,\n `evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-RESOURCE-CACHE/VALIDATION.md`.\n \n-The remaining contract needs an explicit failure-channel and ordering disposition. Serialized\n-callbacks alone do not prove state-commit order. Arbitrary throwing comparers and partial index\n-mutation do not yet have a complete transactional rollback proof. Establish the bounded resource\n+Ordinary comparer/publication and retired-resource failures are now repaired through prepared\n+slots, atomic publication and callback-free exact-owner unlink. Failed bulk-index preparation,\n+colliding head/middle/tail removal, late old factories and partial expiry-clock failures have\n+bounded native proof: 30 focused / 142 Cache / 8,142 Core passing cases, eight compiled\n+one-cause mutants with 12 finite failures and 228 healthy controls, and 30 unchanged postchecks.\n+See the [bounded cache repair receipt](evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/ROOT_CACHE_COMPARER_RETIREMENT_ACCEPTANCE_R1.json).\n+\n+The remaining observer contract needs an explicit failure-channel and ordering disposition.\n+Serialized callbacks alone do not prove state-commit order. Establish the bounded resource\n contract for blocked observers and concurrent callers; do not add an unbounded single-drainer\n queue. Preserve complete observer fan-out, mutating-reentrancy rejection and index generation guards.\n+The inherited per-lookup expiry snapshot allocation still needs a local benchmark; no measured\n+heap/RSS or device-memory acceptance follows from the comparator/retirement tests.\n Acceptance requires hostile key providers, blocking/throwing/reentrant observers, concurrent\n add/remove/clear, bounded memory under backpressure, exact index consistency, and one-cause\n mutations for ordering, failure isolation and queue bounds.\n",
+    ".testagent/status.md": "--- publishedR16/.testagent/status.md\n+++ privateR17R2/.testagent/status.md\n@@ -80,14 +80,34 @@\n corrected-source credit; the accepted correction uses a forced rebuild. Whole EF display labels\n include one existing truncated-argument collision; all 432 native events are retained.\n The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json`.\n-Current coverage, full Unit/provider replay, cache/startup/adapters, CI, real cloud and hardware\n-remain open.\n+At stage-C7 acceptance, current coverage and broader Unit/provider/cache/startup/adapter/CI\n+gates remained open.\n+\n+Cache comparer/publication and retired-resource ownership repairs are accepted: all 30 focused\n+cases, 142 complete Cache cases and 8,142 Core cases pass with zero failures/skips. Eight compiled\n+single-cause mutants produce 12 finite parent failures and 228 healthy controls; their 16 separate\n+child events are three failures and 13 healthy controls, with no duplicate wrapper credit.\n+After all mutations, the unchanged corrected source passes the same 30 cases and two fresh children.\n+The accepted fixed and mutant builds are warning/error-free. Comparer preparation precedes live index publication;\n+exact slot ownership removes indices and pending state without fallible comparison. Rejected\n+factory values and resources retired before later required-clock/lookup faults are released.\n+Failed bulk-index preparation leaves existing ownership intact, colliding head/middle/tail removal\n+preserves survivors, and late old factories cannot unlink their pending replacement.\n+The original has 12 finite failures and 18 healthy controls. Its Pending249 binary is retained as\n+historical evidence; final Pending250 captures a terminal known error before the physical oracle.\n+Stranded negative-control product requests receive no join credit. Source, runtime, PE/PDB,\n+Requirements, independent adversarial reviews and unchanged postchecks are bound in\n+`evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/ROOT_CACHE_COMPARER_RETIREMENT_ACCEPTANCE_R1.json`.\n+Observer failure-channel/order/backpressure contracts, adapter deadlines, startup validation,\n+current coverage/CRAP, full Unit/provider replay, developer journeys/benchmarks and CI remain open.\n+The inherited expiry snapshot allocation remains a local-benchmark item; no heap/RSS or device\n+resource-envelope result follows from these tests.\n \n \n Process-metric balance stage C1 is accepted: eight new cases / 7,982 Core cases / two compiled\n guard mutants with six finite failures and ten healthy controls / eight unchanged green postchecks.\n \n-Current coverage, cache/startup, adapter deadlines and aggregate replay remain open.\n+Current coverage, cache observer contracts, startup, adapter deadlines and aggregate replay remain open.\n Real cloud resources and device hardware are unavailable; their evidence remains open. Native\n GitHub workflow activation remains gated by local acceptance and separate CI qualification.\n \n",
+    ".testagent/plan.md": "--- publishedR16/.testagent/plan.md\n+++ privateR17R2/.testagent/plan.md\n@@ -75,11 +75,31 @@\n corrected-source credit; the accepted correction uses a forced rebuild. Whole EF display labels\n include one existing truncated-argument collision; all 432 native events are retained.\n The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json`.\n-Current coverage, full Unit/provider replay, cache/startup/adapters, CI, real cloud and hardware\n-remain open.\n+At stage-C7 acceptance, current coverage and broader Unit/provider/cache/startup/adapter/CI\n+gates remained open.\n+\n+Cache comparer/publication and retired-resource ownership repairs are accepted: all 30 focused\n+cases, 142 complete Cache cases and 8,142 Core cases pass with zero failures/skips. Eight compiled\n+single-cause mutants produce 12 finite parent failures and 228 healthy controls; their 16 separate\n+child events are three failures and 13 healthy controls, with no duplicate wrapper credit.\n+After all mutations, the unchanged corrected source passes the same 30 cases and two fresh children.\n+The accepted fixed and mutant builds are warning/error-free. Comparer preparation precedes live index publication;\n+exact slot ownership removes indices and pending state without fallible comparison. Rejected\n+factory values and resources retired before later required-clock/lookup faults are released.\n+Failed bulk-index preparation leaves existing ownership intact, colliding head/middle/tail removal\n+preserves survivors, and late old factories cannot unlink their pending replacement.\n+The original has 12 finite failures and 18 healthy controls. Its Pending249 binary is retained as\n+historical evidence; final Pending250 captures a terminal known error before the physical oracle.\n+Stranded negative-control product requests receive no join credit. Source, runtime, PE/PDB,\n+Requirements, independent adversarial reviews and unchanged postchecks are bound in\n+`evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/ROOT_CACHE_COMPARER_RETIREMENT_ACCEPTANCE_R1.json`.\n+Observer failure-channel/order/backpressure contracts, adapter deadlines, startup validation,\n+current coverage/CRAP, full Unit/provider replay, developer journeys/benchmarks and CI remain open.\n+The inherited expiry snapshot allocation remains a local-benchmark item; no heap/RSS or device\n+resource-envelope result follows from these tests.\n \n \n-Cache consistency and remaining adapter/startup packages proceed next; current coverage and broader aggregate gates remain pending.\n+Remaining cache observer contracts and adapter/startup packages proceed next; current coverage and broader aggregate gates remain pending.\n \n ## Historical API repair execution notes\n \n",
+    ".testagent/local-completion-plan.md": "--- publishedR16/.testagent/local-completion-plan.md\n+++ privateR17R2/.testagent/local-completion-plan.md\n@@ -16,11 +16,16 @@\n | 03 | Local provider integration and historical SQL missing-delivery investigation | Native provider profiles against isolated local resources, exact message accounting and cleanup; success on retry alone does not close the historical failure | Baseline evidence accepted: 645 cases / 10 modules, RabbitMQ38 and SQLServer99; reviewed own forwarding/cleanup; historical SQL cause and post-correction replay open |\n | 04 | Startup validation inventory | All selected static invalid options fail before endpoint start; missing/conflicting/unselected and named multi-bus cases | Pending |\n | 05 | Activity telemetry isolation | Complete emission/lifetime/context inventory, hostile listeners, exact messaging outcome and schema, causal counter-mutations | Shared Activity A, typed source B1, batch handoff B2, process metrics C1, consumer completion C2, delivery clocks C3, snapshots C4, cold sources C5 and public caller cleanup C6 accepted; C6: 38 cases / 8,112 Core / 6 compiled mutations (34 finite failures, 194 healthy controls) / final38; classic EF duration C7 accepted: 13 SQLite / 432 EF / 5 compiled mutations (19 finite failures, 46 healthy controls) / final13; broader schema and aggregate closure open |\n-| 06 | Cache observer/index and deterministic time TODO reconciliation | Inspect current owners and prior accepted implementation before altering code; close only demonstrated contracts, implement genuine remaining gaps | Three Core deadlines accepted with 13 package contracts, 7,958 Core regressions and four compiled mutations; cache and adapter packages remain |\n+| 06 | Cache observer/index and deterministic time TODO reconciliation | Inspect current owners and prior accepted implementation before altering code; close only demonstrated contracts, implement genuine remaining gaps | Three Core deadlines accepted with 13 contracts / 7,958 Core / four mutants; cache comparer/retirement accepted with 30 contracts / 142 Cache / 8,142 Core / eight mutants (12 finite failures, 228 healthy controls) / unchanged final30; remaining observer and adapter contracts open |\n | 07 | Package-only developer journeys and local benchmarks | Execute supported journeys and real local infrastructure scenarios with full message counts; no target-device performance claim | Pending |\n | 08 | CI qualification | Review workflow against the accepted local commands and evidence; retain operational disable until the local acceptance prerequisite is met | Pending |\n | External | Azure/AWS/managed broker/provider contracts and S3 product decision | Real cloud/account evidence unavailable; arbitrary S3 TTL exposure requires an explicit complete product contract | Waiting for prerequisites |\n | Hardware | ARM64, 512 MiB, no swap, sustained load and recovery budgets | Requires the actual target device | Waiting for device |\n+\n+The bounded cache receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/ROOT_CACHE_COMPARER_RETIREMENT_ACCEPTANCE_R1.json`. Separate child events are never added\n+to parent counts; observer order/failure channels/backpressure and measured memory remain open.\n+Startup work next confirms selected named SQS options through the actual Generic Host before\n+any provider runtime starts; private test preparation is not compiled/native acceptance.\n \n Per code package: complete source/test-owner read \u2192 Research/Plan \u2192 causal original regression\n where applicable \u2192 minimal correction \u2192 meaningful native tests and one-cause counterproofs \u2192\n",
+    "docs/quality-status.md": "--- publishedR16/docs/quality-status.md\n+++ privateR17R2/docs/quality-status.md\n@@ -104,8 +104,28 @@\n corrected-source credit; the accepted correction uses a forced rebuild. Whole EF display labels\n include one existing truncated-argument collision; all 432 native events are retained.\n The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C7_ACCEPTANCE_R1.json`.\n-Current coverage, full Unit/provider replay, cache/startup/adapters, CI, real cloud and hardware\n-remain open.\n+At stage-C7 acceptance, current coverage and broader Unit/provider/cache/startup/adapter/CI\n+gates remained open.\n+\n+Cache comparer/publication and retired-resource ownership repairs are accepted: all 30 focused\n+cases, 142 complete Cache cases and 8,142 Core cases pass with zero failures/skips. Eight compiled\n+single-cause mutants produce 12 finite parent failures and 228 healthy controls; their 16 separate\n+child events are three failures and 13 healthy controls, with no duplicate wrapper credit.\n+After all mutations, the unchanged corrected source passes the same 30 cases and two fresh children.\n+The accepted fixed and mutant builds are warning/error-free. Comparer preparation precedes live index publication;\n+exact slot ownership removes indices and pending state without fallible comparison. Rejected\n+factory values and resources retired before later required-clock/lookup faults are released.\n+Failed bulk-index preparation leaves existing ownership intact, colliding head/middle/tail removal\n+preserves survivors, and late old factories cannot unlink their pending replacement.\n+The original has 12 finite failures and 18 healthy controls. Its Pending249 binary is retained as\n+historical evidence; final Pending250 captures a terminal known error before the physical oracle.\n+Stranded negative-control product requests receive no join credit. Source, runtime, PE/PDB,\n+Requirements, independent adversarial reviews and unchanged postchecks are bound in\n+`evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/ROOT_CACHE_COMPARER_RETIREMENT_ACCEPTANCE_R1.json`.\n+Observer failure-channel/order/backpressure contracts, adapter deadlines, startup validation,\n+current coverage/CRAP, full Unit/provider replay, developer journeys/benchmarks and CI remain open.\n+The inherited expiry snapshot allocation remains a local-benchmark item; no heap/RSS or device\n+resource-envelope result follows from these tests.\n \n \n These bounded results do not update historical\n"
+  },
+  "unchanged_other11TODO_sections_sha256": {
+    "## Verify startup validation across retained capabilities": "f413caed47f2b994ebb37f749a5f851786076b9b9cfcf752656b192f13107452",
+    "## Complete Azure Service Bus validation against the real cloud service": "0d8a955773998f64fdeabf5e3f0c659477ebe6eff1ec727f4d4177e9781aeeb2",
+    "## Continue deterministic time normalization beyond envelope materialization": "5492681adce6e3869d1e8a95ca8d9c54e930af414fde6cfbc5de5ad60f85db52",
+    "## Complete external benchmark scenarios": "ad94a2fc4505b25478cf256f0b9578be5178fde6ca89c5842c2bee6e7da5f6dd",
+    "## Make Activity telemetry observationally no-throw": "e82735949dd0d8b1f990d90b1aebdf967cc1ad037879a0d12ea69b8e9442bc5b",
+    "## Complete MessageJournal external provider validation": "7004d3dd9f288e9cdc5d9bd39fbb41cf4d9cca2470959aef0d773b2ccdf08e44",
+    "## Complete Azure Table persistence validation against the real cloud service": "cb88b3a863d609d5d52d9e306049091bd2753539c93739dc2e41a00b6c18bd5c",
+    "## Complete Entity Framework SQL Server and Azure SQL external variant validation": "514b7682cff5b750129f59f967204a995e764b1f6c365fe06689c0f6e71011e5",
+    "## AWS real-service closure": "25b7df4df7fc790caa0c9ad8ca43df69c6fb7aa4fdbd9a8a4f15cc319ca461d7",
+    "## Complete Event Hubs validation against the real cloud service": "714f6494487dc039c7e8eb79d632a694f1e03f81919f07b23c8b2a5fbbcfef1c",
+    "## Complete RabbitMQ validation against Amazon MQ": "d592562bd69b5747702059ac03a45e7cd07ab7ebda2f2fcff2db3a040f414415"
+  },
+  "ordered62OBL_sha256": "681b23e47727992c8423b4c4b55b438cbf9d2475d43896110b08f3c94390625a",
+  "acceptance_metadata_qualification": {
+    "Root_receipt_sha256": "4f171d6aff540947873b1a093ab0f2d50fc93130428d20c4205bccf47b0b354c",
+    "independent_post_aggregate_review_sha256": "e83aaa6740081148ba62bd0009b1dc9269186cae8d5a3b6f8a2e126b29652ec2",
+    "fixed": {
+      "focused": 30,
+      "wholeCache": 142,
+      "wholeCore": 8142,
+      "unchangedPost": 30,
+      "separatePostChildren": 2
+    },
+    "mutant_parents": {
+      "slots": 240,
+      "finiteRed": 12,
+      "healthy": 228
+    },
+    "separate_mutant_children": {
+      "slots": 16,
+      "finiteRed": 3,
+      "healthy": 13,
+      "wrapper_added_credit": 0,
+      "stranded_product_join_credit": 0
+    },
+    "original": {
+      "red": 12,
+      "healthy": 18,
+      "Pending249": "historical"
+    },
+    "finalPending250": "terminal source error captured before physical oracle"
+  },
+  "assessment": "All six complete changed hunks inspected against byte-bound published R16. The cache TODO replaces only stale ordinary-comparer/publication/retirement failure language, preserving observer contract work and all eleven other TODO sections. Added claims match Root bounded acceptance and independent aggregate successor. R17R2 build phrase scopes warning/error-free to accepted fixed/mutant builds, excluding preserved compiler attempts. Current publication remains pending; all six live bytes still equal published R16 at observation.",
+  "limits": [
+    "Documentation reconciliation only: no source/native/provider/SQS execution or independent requalification of entire acceptance chain in this review. Exact recorded native/PEPDB reviews reused as their own evidence.",
+    "Accepted bounded ordinary stable-key comparer/preparation/publication/exact-slot unlink/retired-list lifetime; no mutable/reentrant/fatal/OOM or universal no-throw guarantee.",
+    "No observer ordering/failure-channel/backpressure resource-envelope acceptance; heap/RSS/expiry allocation benchmark remains open. Adapter/startup/fullUnit/provider/currentcoverage/CRAP/globalCI/realcloud/hardware remain open.",
+    "Historical234 ledger/coverage/chronicle and62ordered externalOBL tokens unchanged. No global P06/P05/API/release/globalA+ closure.",
+    "Root sole author/publisher; reviewer writes only this immutable own report."
+  ]
+}

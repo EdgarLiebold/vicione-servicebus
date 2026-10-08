@@ -1,0 +1,51 @@
+{
+  "kind": "ROOT_EXACT_NINE_PRE_TRANSFER_BACKUPS_AND_ONE_NEW_ABSENT_R1",
+  "files": [
+    {
+      "relative_path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubDataReceiver.cs",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-canonical-transfer-driver-r2/before-nine/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubDataReceiver.cs",
+      "sha256": "ad9e68540c889e7f4e8b043edab9262590bf7c9f8db60ca138855e3e550ad875"
+    },
+    {
+      "relative_path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-canonical-transfer-driver-r2/before-nine/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+      "sha256": "8f75eb7f25c12d4ed7adc1e59387ed10be97100d2608044d9e43f01d2e8e5d6a"
+    },
+    {
+      "relative_path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/PartitionCheckpointData.cs",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-canonical-transfer-driver-r2/before-nine/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/PartitionCheckpointData.cs",
+      "sha256": "86a4814e69d78eb6171b8d12426f66b0f7dcf3bb21d436bb74e101625e407eba"
+    },
+    {
+      "relative_path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/BatchCheckpointer.cs",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-canonical-transfer-driver-r2/before-nine/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/BatchCheckpointer.cs",
+      "sha256": "f0a40085e9b4ce10bced4f7ddb8ee99db8144a0b8e9e5d78fa724f0680a99f9b"
+    },
+    {
+      "relative_path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/ReceiverStopLeaseRetirementTests.cs",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-canonical-transfer-driver-r2/before-nine/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/ReceiverStopLeaseRetirementTests.cs",
+      "sha256": "1c8f68ae32b977350ce7b644d07974c3bcec2e04193ca4f01740861645314f7e"
+    },
+    {
+      "relative_path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/ConsumerCompletedOwningDiagnosticsTests.cs",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-canonical-transfer-driver-r2/before-nine/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/ConsumerCompletedOwningDiagnosticsTests.cs",
+      "sha256": "f4907d8010bf9e6920f9713b2f8b259523bcd9371a521c97e2640f05b12ecbf4"
+    },
+    {
+      "relative_path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.csproj",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-canonical-transfer-driver-r2/before-nine/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.csproj",
+      "sha256": "827aab2eb3c7f3c08497c504a20f3ad17cb5ac1109df1d0497d6dd0703f12be6"
+    },
+    {
+      "relative_path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/packages.lock.json",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-canonical-transfer-driver-r2/before-nine/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/packages.lock.json",
+      "sha256": "ddca799ea3d91af9c6447df3f3e766d78be38b7586d660c7f58c45e7a30ed361"
+    },
+    {
+      "relative_path": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/EventHubLocalIntegrationRequirements.json",
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-canonical-transfer-driver-r2/before-nine/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/Requirements/EventHubLocalIntegrationRequirements.json",
+      "sha256": "5498d939af80b2e918c9d86ad051730e8d0256fd2c62ae8f90196dddfd1fe25d"
+    }
+  ],
+  "new_fixture_absent": "tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/CheckpointSelectedClockTests.cs"
+}

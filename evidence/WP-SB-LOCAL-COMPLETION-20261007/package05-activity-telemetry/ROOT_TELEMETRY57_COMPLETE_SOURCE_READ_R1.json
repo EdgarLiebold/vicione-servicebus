@@ -1,0 +1,621 @@
+{
+  "kind": "ROOT_PERSONAL_COMPLETE_TELEMETRY57_SOURCE_READ",
+  "root_personal_read_completed": true,
+  "scope": "57 complete current product/caller/contract bodies; not automatic canonical-test or additional fixture/build-owner read credit",
+  "manifest_sha256": "ebd54d65bbf052c66b8b12c8325bde51e59269d8ce64899d167170840fe0d99e",
+  "source_files": [
+    {
+      "path": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs",
+      "sha256": "152d185032cee3ade09fdb1d83af32a8d14e778b68968224fd0d5579725b6079",
+      "bytes": 10345,
+      "lines": 218
+    },
+    {
+      "path": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkTransactionalOutboxSource.cs",
+      "sha256": "67aa72ab20c2f4789975e1c77c503fd614ebce2e5a736f0771e1a4fe9dad28bd",
+      "bytes": 23888,
+      "lines": 570
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+      "sha256": "f9a346f850a05cde08ebf003fbf86758834c89ed8bfe919fa7991f619676c754",
+      "bytes": 7348,
+      "lines": 160
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusSendTransportContext.cs",
+      "sha256": "b38bafcc6bf219a745f69e70ca967a0a079bb52e41e67cccf342f6cbc2fcd55c",
+      "bytes": 13497,
+      "lines": 316
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+      "sha256": "168bc3f45a8e4f69fd89fe4749bdb5106e94a23c4a7b8ddf69e40af85a240174",
+      "bytes": 20114,
+      "lines": 468
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducerBatchSender.cs",
+      "sha256": "35a61c8a3e11a3a9f3c8d25ea9d8e8dc33ec70847e36abb2665382af5f80f36c",
+      "bytes": 10039,
+      "lines": 259
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducerSendTransportContext.cs",
+      "sha256": "e2fad19e46024568be6f1eaacf45a47a563962147020b8c855f08b6692e1092a",
+      "bytes": 9279,
+      "lines": 178
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqSendTransportContext.cs",
+      "sha256": "361d20a085a76bc38fa9ca850ba76b09a040fef498291890ba9edc85c95566f4",
+      "bytes": 20066,
+      "lines": 445
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSendTransportContext.cs",
+      "sha256": "c22e67354bb1e7cf80af519084e25c427879f218e56647ce757e5d93edc13feb",
+      "bytes": 6317,
+      "lines": 135
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/TopicSendTransportContext.cs",
+      "sha256": "3c4b06e31cc9dc56467277bcb64e0bfa7f405bc20fbea71fdb4eed622eac7e3e",
+      "bytes": 5812,
+      "lines": 123
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Util/ExceptionUtil.cs",
+      "sha256": "25c3db75271aa4d7f6e3f4d931ed3618b305426a302b9105065753e470f2a858",
+      "bytes": 3492,
+      "lines": 96
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/CompensateActivityHost.cs",
+      "sha256": "c8474b4bb4456ac7197826d7c93079b4c5290431de716282791ef41872309b90",
+      "bytes": 5872,
+      "lines": 140
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/ExecuteActivityHost.cs",
+      "sha256": "31c81a902a744e42cb880897aba7a29d0ff3312467d43b15d3fc84c2996f5535",
+      "bytes": 6264,
+      "lines": 145
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Logging/CourierActivity.cs",
+      "sha256": "ae7f2c1462036bcf9ad4942bcc2e320c76b86b156f907b0712b22197ed5abf5c",
+      "bytes": 2836,
+      "lines": 40
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/InitiatedByOrOrchestratesSagaMessageFilter.cs",
+      "sha256": "3f9ae2a7dcca59adac060e1421c5aa47ed42422f49057f75f8ea2776a300a4d1",
+      "bytes": 3097,
+      "lines": 68
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/InitiatedBySagaMessageFilter.cs",
+      "sha256": "5df0438ebc2cf9c37b79e8588517c31cf9af31289ba8e30aef0b079f997d7635",
+      "bytes": 3032,
+      "lines": 68
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/ObservesSagaMessageFilter.cs",
+      "sha256": "7d93c97006f0fadd8e5c389c695995341a7296f1be04e241bbc814d062c920ca",
+      "bytes": 2997,
+      "lines": 70
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/OrchestratesSagaMessageFilter.cs",
+      "sha256": "d6f40348352aff215e72362b7fe0e48e74d224afe092978ca3b96362676120ce",
+      "bytes": 3034,
+      "lines": 70
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/StateMachineSagaMessageFilter.cs",
+      "sha256": "15b2ae4f0d170c6e7f1c94b6fad6e807e1b06dc83054f460111031e5cd6804e2",
+      "bytes": 8853,
+      "lines": 216
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RequestStartedActivity.cs",
+      "sha256": "23303d43c763e1e15b54af66fb7fa63504977e89212685b384e62a70eedda6aa",
+      "bytes": 2722,
+      "lines": 65
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/Logging/SagaActivity.cs",
+      "sha256": "20e4beb82a2f9210600eb1da1ef1da04266bad43b567140a9f655a1a53011830",
+      "bytes": 2614,
+      "lines": 38
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/RequestEventExtensions.cs",
+      "sha256": "09b1a2199c904a4fa0aad703b7e861ecc0591114db50f533c4b21c17bd238466",
+      "bytes": 4235,
+      "lines": 83
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/DependencyInjection/Internal/ContainerTestHarness.cs",
+      "sha256": "c45b3d2faa01d87e4f4e34e40b745a3f111256ee6d2b4db0e3e935e68492bcfc",
+      "bytes": 22891,
+      "lines": 603
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/DependencyInjection/ViciOneServiceBusTestingServiceCollectionExtensions.cs",
+      "sha256": "4fcb66dd722ee22d11e9f91bcf1375f46b7321882bf8d13c54cc83815d4239a1",
+      "bytes": 15480,
+      "lines": 303
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "sha256": "8647373561a105ff543247438d3239f869009b6e2efc829f533d45bdfb235291",
+      "bytes": 17839,
+      "lines": 316
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs",
+      "sha256": "bc9bdd069b20785457700ff8cfde1ffb996f8b0f07c8522898201bbdb4e4ef7c",
+      "bytes": 6586,
+      "lines": 218
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "6bc0539808fb6237280c50550743f04d5d0fc1d6cf454e7432e5c7befa6dac1b",
+      "bytes": 6926,
+      "lines": 215
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+      "sha256": "d941d74bc5ac55af42d7c2abde5537489cd2850dcc325ecadfd7e93ff80931b9",
+      "bytes": 2155,
+      "lines": 54
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Internal/Observations/ActiveTestObservationScope.cs",
+      "sha256": "676b3732bd05212d1196a7fbd59fa6a3d8268df88d9a2e30539197e3c27a9ec3",
+      "bytes": 6061,
+      "lines": 201
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "bytes": 13959,
+      "lines": 327
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+      "sha256": "4d008ca99020815d1453376e277cc06ea57ca2db75d0a7ffb6fea279a4ab64c4",
+      "bytes": 15567,
+      "lines": 429
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Context/Consumption/BaseConsumeContext.cs",
+      "sha256": "f196ec3e96bd9bf4551f2aa15d599b5c9e1b3bcb4bc8e15c12d16e46c6d74951",
+      "bytes": 24714,
+      "lines": 420
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "bytes": 5633,
+      "lines": 183
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "bytes": 20420,
+      "lines": 392
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs",
+      "sha256": "4bcc34ae5f7127d24f423c8e7471b088a89a31ac135d2c35db9686136a69b44f",
+      "bytes": 2625,
+      "lines": 79
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs",
+      "sha256": "2422998fb8458a9f1916d759b99d523a7d13d9e1b51f9fc5d1d43108d31e5614",
+      "bytes": 19146,
+      "lines": 433
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Monitoring/MetricOperation.cs",
+      "sha256": "f813f52ec2d9db43471027d4de638b14e52762c9c36e5985d7ccb0ad7794560f",
+      "bytes": 1365,
+      "lines": 43
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "bytes": 6793,
+      "lines": 197
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "bytes": 4896,
+      "lines": 146
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerTelemetry.cs",
+      "sha256": "a436cdfb37e80f981b60f9285bfaccf47020f56058ea9511207b2e1697e82c38",
+      "bytes": 4133,
+      "lines": 117
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumerIngressFailure.cs",
+      "sha256": "70f6a75c0bfa33b5714faef3df94b0fd78c986b30e8512113280b4d8818799e7",
+      "bytes": 3026,
+      "lines": 97
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs",
+      "sha256": "4f60e9e0f8e62b031ba6453b4ab45f3bc3b388dac9f76fbf67cdae9ebe09521d",
+      "bytes": 3432,
+      "lines": 86
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/DeserializeFilter.cs",
+      "sha256": "4ef4e1185ff1f1b008ece58caf0678a0fd3f9d6b341b90e2a41ce22b1586a0f3",
+      "bytes": 3340,
+      "lines": 78
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/HandlerMessageFilter.cs",
+      "sha256": "b322fbf344b45bdb50ad02bf45749798100dc8ad8cf486da1686682d80623248",
+      "bytes": 3135,
+      "lines": 82
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/InstanceMessageFilter.cs",
+      "sha256": "8541189d535bcc65f60385602d2ab032ba56186000e03a7397105bdba35b8adf",
+      "bytes": 3536,
+      "lines": 86
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/Outbox/OutboxSendEndpoint.cs",
+      "sha256": "cbeba9bb7829fdab807e3dd0f45c5a406ddc7fbb6f12213d7fcf3dda7bec7366",
+      "bytes": 14887,
+      "lines": 303
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "sha256": "e4b191aef095e8f9480f1b6b7cfbbfb069196909628130b96a73260a593cea72",
+      "bytes": 8016,
+      "lines": 198
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/ServiceBusTelemetry.cs",
+      "sha256": "226db4576e261af6e6c8cbb7e3b54dddc317af66cb04659b1bf010549a26b2f6",
+      "bytes": 15017,
+      "lines": 194
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/SafeActivityScope.cs",
+      "sha256": "542b4841562b4445fc89ad0d06ae121633b51375d9ab241378ec0aece767b2eb",
+      "bytes": 1640,
+      "lines": 65
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "bytes": 22480,
+      "lines": 542
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendAdmission.cs",
+      "sha256": "c16c5ed64e9ae5c0a9f197b81305ee8120acd77bea809d73083845137908b373",
+      "bytes": 4490,
+      "lines": 98
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+      "sha256": "94c9fb781e42f0e164f62730684a18f2ec7df7d35cf7067171a086182dc56bed",
+      "bytes": 2062,
+      "lines": 48
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "sha256": "551075235d378635bc7a9ffc7729cc9b348cd1b7b1b53fd662bf9bd7452ccb2f",
+      "bytes": 7884,
+      "lines": 194
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "sha256": "0658c31e41c2cc96aeae7f33948a046b49189c263580df97a1fe71414594dcb9",
+      "bytes": 8208,
+      "lines": 202
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "sha256": "158dceacfcfe2a05effc59b02c79efa67e6664a02fd80bad29ecb00715d96ba8",
+      "bytes": 3422,
+      "lines": 84
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/ReceivePipeDispatcher.cs",
+      "sha256": "3411fe95f72972528c4dbe3e93b274dd485e62a2494b3d8206fe1a334db592d1",
+      "bytes": 14035,
+      "lines": 330
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Sending/SendTransport.cs",
+      "sha256": "9c3ae2d9e4976a94b3f4c4ab5ba9132d53438197568ebba8fed0f8e34c0efb19",
+      "bytes": 10332,
+      "lines": 259
+    }
+  ],
+  "packs": [
+    {
+      "ordinal": 0,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-000.txt",
+      "sha256": "15ad41003eb77b332e8e203ccd290f4340c203e29ea77c35ea476ad8036f434f",
+      "stream_start": 0,
+      "stream_end": 13991
+    },
+    {
+      "ordinal": 1,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-001.txt",
+      "sha256": "0e4129435a37d63d2c1dcadb115850312ccda920f0abc34841ceb2ab990b240d",
+      "stream_start": 13991,
+      "stream_end": 27966
+    },
+    {
+      "ordinal": 2,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-002.txt",
+      "sha256": "c373419f98a69bb3ebea610d2546e51c7220495a1c2c4c03afdc244ad5d68164",
+      "stream_start": 27966,
+      "stream_end": 41916
+    },
+    {
+      "ordinal": 3,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-003.txt",
+      "sha256": "da724ec50bc5c772fac4ff2855b557810a1bba7c2140814f082327a89770392c",
+      "stream_start": 41916,
+      "stream_end": 55883
+    },
+    {
+      "ordinal": 4,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-004.txt",
+      "sha256": "56b6f42ad871ccb5f0ce10fb3b4037b45de459356109dae16d486e4a6e5097e9",
+      "stream_start": 55883,
+      "stream_end": 69863
+    },
+    {
+      "ordinal": 5,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-005.txt",
+      "sha256": "706f3f6401000f06bbf4ac522fbaa1741e22e9dcbcfefe473c65e412e2616b2e",
+      "stream_start": 69863,
+      "stream_end": 83833
+    },
+    {
+      "ordinal": 6,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-006.txt",
+      "sha256": "7c7bc317f65ed6d767abb2ed292cc31499521b53121d27fecb1b0687571e290e",
+      "stream_start": 83833,
+      "stream_end": 97831
+    },
+    {
+      "ordinal": 7,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-007.txt",
+      "sha256": "9fc2947a8af0bd2556941b912663c7089a4ac780f676d0a7862dc6843246e264",
+      "stream_start": 97831,
+      "stream_end": 111731
+    },
+    {
+      "ordinal": 8,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-008.txt",
+      "sha256": "11d1ae18570ece032cc7cb95f9d58d8a4277ac8eaab89848dff358e5132689b9",
+      "stream_start": 111731,
+      "stream_end": 125712
+    },
+    {
+      "ordinal": 9,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-009.txt",
+      "sha256": "14f3c23613c2fe7b878a7430ca1a17c3d989af6a7654c1e0d95cc0c4f2f73fac",
+      "stream_start": 125712,
+      "stream_end": 139633
+    },
+    {
+      "ordinal": 10,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-010.txt",
+      "sha256": "7bf4c6ecc295ccc84bafb3d8331bd2bff1322bddbe1a2b41636eecbb9d398c7d",
+      "stream_start": 139633,
+      "stream_end": 153591
+    },
+    {
+      "ordinal": 11,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-011.txt",
+      "sha256": "d6a190220a78c2d16b368e4044e6587f5a7dfb56493bc4fac6a840c1066c75e2",
+      "stream_start": 153591,
+      "stream_end": 167510
+    },
+    {
+      "ordinal": 12,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-012.txt",
+      "sha256": "c5220a06701040ecb29bc4467946352e0b8998f17fbd39e6f25a61edf13a22c8",
+      "stream_start": 167510,
+      "stream_end": 181469
+    },
+    {
+      "ordinal": 13,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-013.txt",
+      "sha256": "2d1a4065e23afb4f02f268569e146e886aefde15c19b4b720c2a2cdd72c68e55",
+      "stream_start": 181469,
+      "stream_end": 195436
+    },
+    {
+      "ordinal": 14,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-014.txt",
+      "sha256": "2d4b62b92345271857d2fe5466b069288019fc4b32b972f5047dda625a17be95",
+      "stream_start": 195436,
+      "stream_end": 209394
+    },
+    {
+      "ordinal": 15,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-015.txt",
+      "sha256": "3dd459032e57b837bf6150cbbe617609cf53d0284769abb60f755bc48d19dc5b",
+      "stream_start": 209394,
+      "stream_end": 223358
+    },
+    {
+      "ordinal": 16,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-016.txt",
+      "sha256": "3866e2ec876f9c05e7832bc694fe1cfa0c6b4a212fbcc238a76a1d0dce64cdc2",
+      "stream_start": 223358,
+      "stream_end": 237346
+    },
+    {
+      "ordinal": 17,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-017.txt",
+      "sha256": "12e900add6f7fc99f0c499596d2d378743817f25f5c9e7f9a25689cc7a0a9b45",
+      "stream_start": 237346,
+      "stream_end": 251292
+    },
+    {
+      "ordinal": 18,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-018.txt",
+      "sha256": "1205995f52e224dd3fdb0af45108c0aa81c5a84f9db43de3761771f3416b8006",
+      "stream_start": 251292,
+      "stream_end": 265262
+    },
+    {
+      "ordinal": 19,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-019.txt",
+      "sha256": "6985ec6ddcf5a4bda1fe0ff8701b28d289b8f64858616901967fcc90bffcdc11",
+      "stream_start": 265262,
+      "stream_end": 279250
+    },
+    {
+      "ordinal": 20,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-020.txt",
+      "sha256": "6758efdea991bc6ba41446c7b25db59c18c49391f7043fd1a8b57ce1d9593d23",
+      "stream_start": 279250,
+      "stream_end": 293243
+    },
+    {
+      "ordinal": 21,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-021.txt",
+      "sha256": "ebebeef55e967f4ba082b5a624bf91abda89c9c48869b160fb1f8bfb1500b3cc",
+      "stream_start": 293243,
+      "stream_end": 307182
+    },
+    {
+      "ordinal": 22,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-022.txt",
+      "sha256": "cc2ec8bb7aa1bbe43420c30d5501d1a5d4fb0d02254f20b8294a75910673b2da",
+      "stream_start": 307182,
+      "stream_end": 321075
+    },
+    {
+      "ordinal": 23,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-023.txt",
+      "sha256": "4ad6ce9ce2a100d1d63ee1dd269ecc20bea3f522f0117d399338b7cb67a193a8",
+      "stream_start": 321075,
+      "stream_end": 335065
+    },
+    {
+      "ordinal": 24,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-024.txt",
+      "sha256": "09736f4c39b1e5913fed8c8a0bff91b27ff0e5819f559c412193899f2a949a19",
+      "stream_start": 335065,
+      "stream_end": 349001
+    },
+    {
+      "ordinal": 25,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-025.txt",
+      "sha256": "36acc86aefb4806ab0a9dfe5ed85a86b49e66eceeb4f5514822aceb504fcf599",
+      "stream_start": 349001,
+      "stream_end": 362967
+    },
+    {
+      "ordinal": 26,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-026.txt",
+      "sha256": "c7abf142c1236672a0f30d63554d4f4a1ff9ba051f1dccdc97a7d17b0bf03d7c",
+      "stream_start": 362967,
+      "stream_end": 376952
+    },
+    {
+      "ordinal": 27,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-027.txt",
+      "sha256": "874fb713f1bcf88e7d25822bd70fa99e4297c2939f849f6a1308d97273c514d5",
+      "stream_start": 376952,
+      "stream_end": 390811
+    },
+    {
+      "ordinal": 28,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-028.txt",
+      "sha256": "94e4ee4b9e5a6ebe67292414a9870e6c8bf5c7ca997ed0b53ba59fe79ef0db99",
+      "stream_start": 390811,
+      "stream_end": 404727
+    },
+    {
+      "ordinal": 29,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-029.txt",
+      "sha256": "d10f60c4718ab42ed23616fd3d04254a6e9d4c59f5a2a22b2863eea188463b0e",
+      "stream_start": 404727,
+      "stream_end": 418639
+    },
+    {
+      "ordinal": 30,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-030.txt",
+      "sha256": "9075fd2028f58f48836a0bdac4df436f70f5b2e048c916f94888a49e01c7f105",
+      "stream_start": 418639,
+      "stream_end": 432573
+    },
+    {
+      "ordinal": 31,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-031.txt",
+      "sha256": "9017c7f2fbee7c0716c83ccf69d515cd435a6772ba1836a723ae1f509a909692",
+      "stream_start": 432573,
+      "stream_end": 446570
+    },
+    {
+      "ordinal": 32,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-032.txt",
+      "sha256": "921a94f8f57dc4fc5553a718de2c8e04143f49fc4aaacd9df61f772c8789b90c",
+      "stream_start": 446570,
+      "stream_end": 460527
+    },
+    {
+      "ordinal": 33,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-033.txt",
+      "sha256": "6f32a0eeccf888d46b275acaf1bb5676ce9aa8163839839669e47138e4a57713",
+      "stream_start": 460527,
+      "stream_end": 474446
+    },
+    {
+      "ordinal": 34,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-034.txt",
+      "sha256": "7f5eb3b8c4cea1b3860203e16b21be822f20b47c920a0b96988d5472c0ecb6f3",
+      "stream_start": 474446,
+      "stream_end": 488378
+    },
+    {
+      "ordinal": 35,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-035.txt",
+      "sha256": "f88291ec779e124a65fb1dbfbc2c502631f96561856828cb1ce877d81efef476",
+      "stream_start": 488378,
+      "stream_end": 502373
+    },
+    {
+      "ordinal": 36,
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/PACK-036.txt",
+      "sha256": "6972ede9d29a273155d08f4da3264797d6889e0eaa6bc619e6bdf4e1aa17e3b6",
+      "stream_start": 502373,
+      "stream_end": 512603
+    }
+  ],
+  "personal_read": "Root personally consumed full untruncated ordered packs000..036. Packs000..010 survived previous continuation summary; packs011..036 consumed in current continuation. Prepared hashes alone were not read credit.",
+  "observations": [
+    "Ordinary CurrentChanged exceptions escape ambient restoration/disposal and batch handoff.",
+    "Exception-event timestamp/preparation outside isolation may replace real operation failure.",
+    "Typed ActivitySource construction can fail DI before independently owned metrics initialize.",
+    "Optional timeline static source can poison type initialization; required causal monitor must preserve original setup failure and action count zero.",
+    "Durable optional stopwatch failures must not rewrite dispatch/store results; UTC state transitions remain required.",
+    "StartProcess metric increment precedes optional delivery-clock observation and can leak active count when that observation throws; include a focused successor stage.",
+    "Notification/fault-generation tasks are business work and remain awaited/observable."
+  ]
+}

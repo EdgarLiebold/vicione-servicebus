@@ -1,0 +1,79 @@
+{
+  "kind": "ROOT_ACTUAL_FIVE_RABBIT_ONECAUSE_NATIVE_PHYSICAL_BINDING_AGGREGATE_R1",
+  "driver_whole_tool_session": 82067,
+  "driver_join_returncode": 0,
+  "canonical6098_private6099_config14_original_guard": true,
+  "variants": [
+    {
+      "name": "M1-typed-default-key",
+      "native_sha256": "ad0f5087c9f9c983ec361fea2096e490e90bd5d0560b8b69d5198b3683a39880",
+      "PE_binding_sha256": "fe75f68fd8e82d6c443cf8dd8bb2b00438b664bac9b4b9baf9ccc90a7f7fad52",
+      "images": 11,
+      "documents": 3047,
+      "focused": {
+        "total": 12,
+        "failed": 4,
+        "passed": 8,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "M2-transport-eager-validation",
+      "native_sha256": "9210603485d4c091086b0d81597f48e51732a6986829682e5a3adff65e8eabe0",
+      "PE_binding_sha256": "5d14a3a1b5c73f9daff01c876943eb6d328cf90a1f1bfeb5b2f1aa13888dcec4",
+      "images": 11,
+      "documents": 3047,
+      "focused": {
+        "total": 12,
+        "failed": 7,
+        "passed": 5,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "M3-host-predicate",
+      "native_sha256": "6fc15c4cc1d83a5b4071d7dec4544fd7b8f456e3d0d14715f3f6a1eae82f694f",
+      "PE_binding_sha256": "d61eda6df2addb64a8aa5a5d992204df79091857fd3a809d9b649c01daac24d9",
+      "images": 11,
+      "documents": 3047,
+      "focused": {
+        "total": 12,
+        "failed": 3,
+        "passed": 9,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "M4-certificate-path-predicate",
+      "native_sha256": "37131fbca4cea2fcc73cc7ba10701b251146c6cf588c701aa4767869cf53f51b",
+      "PE_binding_sha256": "d2dd937b8f3922ed977299ac5a1ca370c97822cdfbf8ac3acdd8f2f6cf60ec98",
+      "images": 11,
+      "documents": 3047,
+      "focused": {
+        "total": 12,
+        "failed": 2,
+        "passed": 10,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "M5-typed-diagnostic-name",
+      "native_sha256": "d400ec4ca0b9be96499f2600ad6a17fa6afa93a1b7262cf345f58868ea46e715",
+      "PE_binding_sha256": "1c9383706e61330b5580b7cd823f95021ee83729df2f989f29e2c56434aafb30",
+      "images": 11,
+      "documents": 3047,
+      "focused": {
+        "total": 12,
+        "failed": 3,
+        "passed": 9,
+        "skipped": 0
+      }
+    }
+  ],
+  "total_native_slots": 60,
+  "failed": 19,
+  "healthy": 41,
+  "total_PE_images": 55,
+  "total_PDB_documents": 15235,
+  "status": "FINITE_FIRST_CAUSE_REVIEW_AND_POST12_PENDING"
+}

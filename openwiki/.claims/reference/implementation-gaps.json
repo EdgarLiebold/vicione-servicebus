@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:55416ec0b4a14423dae67fe09a2ac16b3799db67cca79251320f804628c5e241",
+  "claims": [
+    {
+      "id": "claim_223d2ba1ee314640898d9bd0f2b25cd9",
+      "statement": "The reliable scheduler resolves SchedulePublishAsync through configured send routes rather than the general scheduler's publish topology.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessageScheduler.cs",
+          "version": "repo-file-v1:sha256:5516fdfa02edc84f1432e7d89e8f38c1c8b50eb11881173de60c6883047d215d"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Scheduling/MessageScheduler.cs",
+          "version": "repo-file-v1:sha256:88da3746c0f78e703908961cfb90587bb7db42e8f52a9e863a50bcf0c6fc1072"
+        }
+      ]
+    },
+    {
+      "id": "claim_23104272a7c24b4c8460f71710dece48",
+      "statement": "The reliable policy stores a required retention setting while reliable-store recurrence and shared capacity have the disconnected or narrower implementations described here.",
+      "evidence": [
+        {
+          "resource": "repo://src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ReliableMessaging/ReliableRecurringScheduleRecord.cs",
+          "version": "repo-file-v1:sha256:262a29dadc73983e8b277c11b30e9ab8618bc0d9bfe3c92bfbfb6ed3c0b59e4b"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingPolicy.cs",
+          "version": "repo-file-v1:sha256:8641f388275391cc57c72dc9fc9a49b860a3c98edde716ebc6a639a1db82c5a9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

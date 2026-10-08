@@ -1,0 +1,195 @@
+{
+  "kind": "READ_ONLY_PRIVATE_INITIAL_CACHE_COMPARER_FIXTURE_ADVERSARIAL_REVIEW_R1",
+  "status": "PRECANONICAL_PATCHES_REQUIRED_ORACLE_COMPLETENESS_AND_OWNED_TASK_JOINS__NO_NATIVE_CREDIT",
+  "utc": "2026-10-07T05:33:24.663172+00:00",
+  "reviewer": "/root/continuation_adversarial",
+  "fixture": {
+    "path": "/private/tmp/ResourceCacheComparerIsolationTests.draft.cs",
+    "sha256": "7a63cd2244c1110eee5543ae50da2c47a30ecc5da7b8a50321c870ff8bde5822",
+    "content_lines": 289,
+    "bytes": 14395,
+    "whole_body_personally_read_untruncated": true,
+    "private_only": true,
+    "theory_methods": 5,
+    "native_case_expansion_predicted": 10,
+    "canonical_application": false,
+    "native_execution_credit": 0
+  },
+  "contexts": {
+    "Root18": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/ROOT_CACHE18_COMPLETE_SOURCE_READ_R1.json",
+      "sha256": "5e59a3d4b0496fd9b3dc07476cb499aad865ad642464c8c0fdd2257382f571d8",
+      "source18_current_hashes_equal": true
+    },
+    "prior_caseplan": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-first-native-casepack-adversarial-readonly-r1.json",
+      "sha256": "c8760556713cfca3b164a1526cc6995d1fc16bc08d1d6cffe8b76b7e7d2f0c91"
+    },
+    "requirements_current_context": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "sha256": "6e93640a343c2d9328c9d40b410a060ed2052307a6e6482ee17c3026a26e0503",
+      "rows": 4708,
+      "five_existing_requirement_ids_verified": [
+        [
+          "REQ-VSB-CACHE-MULTI-INDEX",
+          "secondary-comparer-does-not-break-committed-resource-retirement"
+        ],
+        [
+          "REQ-VSB-CACHE-DIRECT-ADD",
+          "direct-admission-comparer-failure-retains-caller-ownership-and-no-index-ghost"
+        ],
+        [
+          "REQ-VSB-CACHE-INDEX-FACTORY",
+          "factory-admission-comparer-failure-releases-rejected-value-and-removes-all-index-ghosts"
+        ],
+        [
+          "REQ-VSB-CACHE-EXPIRATION",
+          "lookup-failure-after-expiration-still-releases-retired-resource"
+        ],
+        [
+          "REQ-VSB-CACHE-MULTI-INDEX",
+          "colliding-equality-preparation-failure-leaves-anchor-and-caller-ownership-intact"
+        ]
+      ],
+      "no_append_authored": true
+    },
+    "framework_reference": "Installed xunit.v3.extensibility.core XML confirms Xunit.ITestOutputHelper and single Record.ExceptionAsync(Func<Task>) contract; test build implicit usings enabled. No .NET compile performed."
+  },
+  "reviewed_case_matrix": [
+    {
+      "method": "RemoveRetiresEveryIndexAndReleasesResource",
+      "cases": 2,
+      "actual_public_route": "Cache.AddAsync while secondary comparer unarmed; primary.RemoveAsync only healthy requested index; secondary user hash first fault occurs in RemoveKey retirement. Postreads use disarmed comparer.",
+      "physical_first_assertion": "Line32 actual owned-resource DisposeCalls expected1. Original hostile source predicts0, maincount0 and stale secondary reference; before same/no-error assertion41.",
+      "healthy": "Synchronous disposable/remove/observer all complete; true result, secondary armed-throw counter0, replacement capacity1 admission, releaseexact1.",
+      "qualification": "Corrected chosen stable-handle design explicitly requires zero secondary comparer callbacks for retirement. This is stronger than disposition-neutral rollback and matches selected plan. Original/fixed cause must be native-qualified before acceptance."
+    },
+    {
+      "method": "DirectAdmissionPublishesAllIndicesTogether",
+      "cases": 2,
+      "actual_public_route": "Two empty committed and pending dictionaries: existing .NET10 FindValue empty dictionary avoids comparer hash; EnsureKeysAvailable/HasPending no hash, first CommitKey primary succeeds; second CommitKey hashes armed secondary key and throws.",
+      "physical_first_assertion": "Lines66-70 caller disposal0/maincount0/pending0/created0/public snapshot empty precede first original ghost failure Null(first)73 and later comparer Same77.",
+      "healthy": "All two index reference assertions correct; cache owns candidate after successful commit/disposes1. Snapshot identity missing, see F1.",
+      "qualification": "output at62 concatenates ACTUAL captured failure, not chosen Expected error, so original CommitKey stack can be inspected even first physical ghost assertion stops later Same. No comparer exact-count/stage ABI claim until real native trace/PDB binding."
+    },
+    {
+      "method": "FactoryAdmissionPublishesAllIndicesTogether",
+      "cases": 2,
+      "actual_public_route": "Factory ValueTask synchronous returns actual candidate once; originating primary comparer ordinary, only secondary commit fails. CompleteFaultedPending cleanup accesses healthy origin pending dictionary and completes public request; no persistent-origin deadlock in this fixture.",
+      "physical_first_assertion": "Factory calls1 line110 and rejected disposal1 line111 precede Count/Pending/CreationFaults, original ghost first Null(first)118 and comparer Same123.",
+      "healthy": "Origin pending bookkeeping and observer callback can complete synchronously, request returns exact candidate and normal disposal1. Snapshot absent/replacement release not asserted, see F1/advisory.",
+      "qualification": "Captured real error trace106 can bind second CommitKey/CompleteCreation; missing GetValues master-reference oracle must be repaired before all-index-plus-master claim."
+    },
+    {
+      "method": "LookupFailureCannotStrandAlreadyExpiredOwnership",
+      "cases": 2,
+      "actual_public_route": "Absolute9s with FakeTimeProvider and cleanup1day; advances9s+tick. Stored expired key hash remains healthy; armed key only missing, so retirement finishes then requested index lookup hash can fail. Dictionary backing buckets remain initialized after remove-last-entry on existing .NET10 route; actual trace must confirm later lookup.",
+      "physical_first_assertion": "Expired release1 line159 before comparer Same165. Original predicts release0 despite actual maincount0/Evictions1. Corrected next Add demonstrates released retiring capacity and actual final release1.",
+      "healthy": "Unarmed missing-key lookup is ordinary KeyNotFound after expiry release1. Direct replacement/miss routes have no factory pending task.",
+      "qualification": "Does not reopen withdrawn Add-expired-duplicate hypothesis; no periodic timer expiry under1day fake timer interval."
+    },
+    {
+      "method": "CollisionEqualityFailureLeavesExistingOwnershipIntact",
+      "cases": 2,
+      "actual_public_route": "Capacity2, anchor committed under constant int.MinValue hash. Armed equality fails in secondary duplicate precheck before any new candidate publication. Healthy distinct colliding key adds normally.",
+      "physical_first_assertion": "Anchor0/candidate0 disposal190-191, same anchor in both indices192-193 and exactCount/Created/Added before Same201.",
+      "healthy": "Both cases should already be healthy in current original source; hostile case is known ordinary equality-preparation rejection control, never original defect/kill credit.",
+      "qualification": "Exercises int.MinValue hashes without Math.Abs and user equality collision; misses secondary ghost and healthy master/primary candidate reference, see F1."
+    }
+  ],
+  "findings": [
+    {
+      "id": "F1_PUBLIC_MASTER_AND_ALL_INDEX_ORACLES",
+      "severity": "High",
+      "blocking_before_canonical_freeze": true,
+      "locations": [
+        "DirectAdmissionPublishesAllIndicesTogether70-86",
+        "FactoryAdmissionPublishesAllIndicesTogether110-134",
+        "CollisionEqualityFailureLeavesExistingOwnershipIntact194-206"
+      ],
+      "evidence": "K2 healthy checks public snapshot count only; K3 never calls GetValues. U1 hostile checks only primary miss, leaving a secondary-only ghost unchecked; U1 healthy checks only secondary candidate reference. These can pass an inconsistent public master/secondary state under a future one-cause bug; static candidate only, no empirically claimed survivor.",
+      "required_minimal_correction": "K2/K3 healthy: require exact candidate as Assert.Single(GetValues) and same candidate in both public indexes. Hostile: require GetValues empty and each public index result null with KeyNotFound. U1 hostile: exact anchor alone in GetValues, exact anchor through both indexes, both candidate lookups null/KeyNotFound; healthy: snapshot contains exactly anchor+candidate references, and candidate same through both indexes. Gather needed public observations before Same(actualComparerFailure) so first red remains a finite ownership/index assertion."
+    },
+    {
+      "id": "F2_ORIGINAL_TASK_OWNERSHIP_BEFORE_TIMEOUT_RESCUE",
+      "severity": "High",
+      "blocking_before_canonical_freeze": true,
+      "locations": [
+        "ReadAsync213-217",
+        "all AsTask().WaitAsync(Bound) calls",
+        "Fixture.StopAsync270-273",
+        "Fixture.DisposeAsync275-285"
+      ],
+      "evidence": "Draft only tracks stop task. WaitAsync timeout cancels wait, not real cache task; original AsTask can be lost. Disarm/Stop/terminal rescue may then occur while a real method still owns candidate/pending operation. Current synchronous happy/known hostile routes are expected finite, but future capacity/cleanup mutations can expose this. Parent explicitly plans owning task joins.",
+      "required_minimal_correction": "Record each actual AsTask before wrapping waits; retain exact completed expected-fault task/error identities and all actual read tasks. Unconditional fixture teardown must observe/join all started actual tasks with bounded independent cleanup token and always attempt cache stop. Rescue requires actual owner terminal plus no still-running tracked operation; unknown faults, canceled global test token and timeouts remain visible and receive no mutation counterexample credit. Preserve first physical assertion failure rather than allowing secondary cleanup timeout to be relabeled as native product cause."
+    },
+    {
+      "id": "F3_STRICT_XUNIT_CANCELLATION_ARGUMENTS",
+      "severity": "Warning",
+      "blocking_before_strict_execution": "Resolve before canonical strict build; actual diagnostic has not been executed.",
+      "locations": [
+        "every WaitAsync(Bound) site",
+        "public cache async no-token calls",
+        "Fixture.DisposeAsync resource loop285"
+      ],
+      "evidence": "Most async wait calls omit available CancellationToken argument; strict repository uses xUnit v3 analyzers and prior cold fixture required explicit async drain tokens. Existing accepted cache fixtures deliberately distinguish public no-token contract calls from bounded cleanup, but a comment alone does not establish analyzer success for all new calls.",
+      "required_minimal_correction": "Use TestContext.Current.CancellationToken for interruptible test waits and explicit CancellationToken.None for owned terminal cleanup/join where test cancellation must not prevent cleanup. Public no-token API exercises may remain intentional if justified; actual strict warning-as-error build decides, without blanket warning suppression. Add ordinary using System.Threading only if needed; global implicit usings already cover the types."
+    }
+  ],
+  "summary": {
+    "High": 2,
+    "Warning": 1,
+    "Critical": 0,
+    "native_cases_actual": 0,
+    "source_edits_actual": 0
+  },
+  "nonblocking_adjacent_improvements": [
+    {
+      "location": "FactoryAdmissionPublishesAllIndicesTogether137-142",
+      "note": "Keep replacement reference outside hostile branch, verify both indexes and exact GetValues reference before Stop, then replacement DisposeCalls1 after Stop. Current candidate-only disposal assertion does not prove replacement physical release."
+    },
+    {
+      "location": "DirectAdmissionPublishesAllIndicesTogether89-90 and CollisionEqualityFailureLeavesExistingOwnershipIntact208-210",
+      "note": "Rejected caller candidate remains0 after real cache Stop, which correctly establishes no cache ownership. Explicit caller Dispose1 after that check would make caller release assertion observable instead of relying solely on fixture rescue. Rescue itself is correctly excluded from product release credit."
+    },
+    {
+      "location": "DirectAdmissionPublishesAllIndicesTogether",
+      "note": "Capacity1 healthy replacement after hostile rejection would prove no hidden retiring/reservation capacity was retained. Without it, narrow claim to pending0/public absence/caller ownership rather than general slot admission cleanup."
+    },
+    {
+      "location": "Fixture267 constructor Connect",
+      "note": "No armed ordinary observer/connection failure exists in this draft; no invented fatal/OOM constructor blocker. If later constructor failure injection is added, cleanup of created cache/timer becomes part of that explicit fixture scope."
+    },
+    {
+      "location": "Comparer220-237 and mutation receipts",
+      "note": "Exact1 secondary hash throw is valid finite narrow hostile K2 source scenario; it must not become a general implementation requirement for all key lookup paths. Stable map corrected preparation can move throw earlier while preserving the same required ownership/public consistency outcome."
+    }
+  ],
+  "positive_observations": [
+    "All five theories have actual state/identity/resource assertions, healthy controls and ten explicit case expansions.",
+    "Actual public ResourceCache/index/observer/FakeTimeProvider objects; no private state reset, fake backend success, native process launch or arbitrary delay synchronizer.",
+    "Lifetime9s+tick and interval1day make explicit expiration deterministic; constant int.MinValue hash use probes normalization edge.",
+    "Actual failure ToString is emitted before first physical assertion, so native cause provenance can be reviewed without crediting unreached Same.",
+    "Fixture rescues only after actual cache task terminal and post-body physical assertions; selected rescue never counts as product cleanup.",
+    "K3 origin index comparator remains healthy, so its actual pending cleanup is distinct from future isolated K4 persistent-origin case."
+  ],
+  "predictions_not_evidence": {
+    "original_finite_candidate_red_cases": 4,
+    "original_named_healthy_controls": 6,
+    "red_scenarios": [
+      "K1 hostile release0 first32",
+      "K2 hostile primaryghost first73",
+      "K3 hostile disposedprimaryghost first118",
+      "K5 hostile expiredrelease0 first159"
+    ],
+    "U1_both_expected_current_original_healthy": true,
+    "actual_native_or_compile_claim": false
+  },
+  "excluded_scope": [
+    "K4 fresh owned process predicates/protocol not present in289line owner.",
+    "U2 invalidated old factory vs still-pending replacement not present.",
+    "No complete prepared-map utility/capacity/RAM/whole Cache or A+ acceptance from this private subset.",
+    "No actual original/fixed/mutant/native score or .NET compile claim; no coverage/provider/cloud/hardware release closure."
+  ],
+  "execution": "Read-only complete private body/source/hash/framework XML inspection; Microsoft test-anti-patterns/test-gap-analysis and .NET extension applied; own immutable JSON report only."
+}

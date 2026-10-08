@@ -1,0 +1,949 @@
+{
+  "kind": "INTERNAL_READ_ONLY_LOCAL_ASB_EMULATOR_PREHEALTH_FORWARDING_RESEARCH_R1",
+  "utc": "2026-10-07T01:57:34.446825+00:00",
+  "reviewer": "/root/todo_reconciliation_review",
+  "status": "SOURCE_DERIVED_INFRASTRUCTURE_RESEARCH_ONLY_NO_NEW_TOOL_OR_PROVIDER_ACCEPTANCE",
+  "scope": "Current ASB local profile, canonical runner/fixture/ownership/contracts, accepted isolated forwarding owners and retained local forwarding failure evidence. No Docker/SSH/.NET/process-control execution or edits; own report only.",
+  "sourceManifest": {
+    "tools/ci/run_broker_category.py": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/run_broker_category.py",
+      "sha256": "03cdb64a2f8d3f32136d59da5f437d12b89b9b5bb362cc0e22fae489ee2d8969",
+      "bytes": 22043,
+      "lines": 428,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "tools/ci/fixtures/run_scope.py": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/run_scope.py",
+      "sha256": "1ef7d3cb955828937ec1adb31fcbd4a0a6bcbbc16fbb354388b582e30005f095",
+      "bytes": 3747,
+      "lines": 92,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "tools/ci/fixtures/compose_fixture.py": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/compose_fixture.py",
+      "sha256": "cc2b92ddc68377c2af3cf398c6a5ec041f858cdba42c30a886af51a413e3fe6d",
+      "bytes": 14046,
+      "lines": 305,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "tools/ci/fixtures/broker_logs.py": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/broker_logs.py",
+      "sha256": "e93b4d22d7a6218798662b465d208d22fa4f1f3ab803685ab48d9a67ab8b3ec2",
+      "bytes": 6906,
+      "lines": 140,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "build/test-infrastructure/compose.yaml": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/build/test-infrastructure/compose.yaml",
+      "sha256": "b7e3fff89ac0bb6c3cedd63d31cce72690ddb991aa631e9afd8cb5d2be645ab8",
+      "bytes": 12080,
+      "lines": 229,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "build/test-infrastructure/servicebus/config.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/build/test-infrastructure/servicebus/config.json",
+      "sha256": "2f804588a9826a7614e36505ac6873fa442566b6204428a25852e8388b417d15",
+      "bytes": 191,
+      "lines": 14,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx",
+      "sha256": "2bff0f36fbda621f0403c63c89300d257b62d2f0441f1c096ef96e26e071d4b6",
+      "bytes": 1090,
+      "lines": 15,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    ".github/workflows/native-tests.yml": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.github/workflows/native-tests.yml",
+      "sha256": "2cd77f10f95e87fea7c5bbefcae9908adadb5dd27f7add3e289898100a10406d",
+      "bytes": 9790,
+      "lines": 219,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "tests/testsettings.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/testsettings.json",
+      "sha256": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7",
+      "bytes": 1300,
+      "lines": 57,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs",
+      "sha256": "a8192e1d3b520714ee1a732505a26a740e06ae073a6f303972a17aefaf328206",
+      "bytes": 10901,
+      "lines": 219,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs",
+      "sha256": "14ec1d7a56de88968a8bbbb25bb578c50fef16bfb9a4dd078780fbd6e6534c83",
+      "bytes": 18211,
+      "lines": 569,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/Infrastructure/AzureServiceBusLocalFixture.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/Infrastructure/AzureServiceBusLocalFixture.cs",
+      "sha256": "d4718a702af74acb37fb61081e704a6775a878cdfbb9469d1424a226ece91137",
+      "bytes": 4943,
+      "lines": 130,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/Infrastructure/AzureServiceBusEmulatorCapabilityTests.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/Infrastructure/AzureServiceBusEmulatorCapabilityTests.cs",
+      "sha256": "bc0d1eaaf539d28f9aa3009a6d9d2adecfc80333cdb0afc7438cd4f8e32e31d6",
+      "bytes": 20119,
+      "lines": 374,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.csproj": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.csproj",
+      "sha256": "e006d38ed3d8b906e35b736eab71a754007ca727580d507d69993a9f97d45495",
+      "bytes": 1651,
+      "lines": 32,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    }
+  },
+  "acceptedHelpers": {
+    "local_colima_forwarding.py": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/local_colima_forwarding.py",
+      "sha256": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d",
+      "bytes": 10845,
+      "lines": 233,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "test_local_colima_forwarding.py": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/test_local_colima_forwarding.py",
+      "sha256": "3b951d9603ce51a8910a304c801f35763b6fc6886b790b2cfa4e446493151591",
+      "bytes": 11977,
+      "lines": 240,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "local_colima_profile_forwarding.py": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/local_colima_profile_forwarding.py",
+      "sha256": "6dabf694e6e22fb292a2d6dabf50d5b48f000c3fa346f2b183cbfa5ea5303399",
+      "bytes": 3457,
+      "lines": 71,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "test_local_colima_profile_forwarding.py": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/test_local_colima_profile_forwarding.py",
+      "sha256": "6d09a53cd756e2dd3ebe08862f403d624c3a035c0d87d2a9a1f48ceefc13ed03",
+      "bytes": 4176,
+      "lines": 84,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "FORWARDING_RESEARCH_PLAN.md": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/FORWARDING_RESEARCH_PLAN.md",
+      "sha256": "86806129fe926f1962b9ee1eca4e9e8d968c9e24f7f78282d324d7b9e4fdbd8e",
+      "bytes": 1887,
+      "lines": 25,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "PROFILE_FORWARDING_RESEARCH_PLAN.md": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/PROFILE_FORWARDING_RESEARCH_PLAN.md",
+      "sha256": "1721b5de3a062931f1070a97903d25ec78cca8a369bd18b1c6c0fb84b7b96d35",
+      "bytes": 1741,
+      "lines": 23,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "ROOT_FORWARDING_TOOL_ACCEPTANCE_R1.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/ROOT_FORWARDING_TOOL_ACCEPTANCE_R1.json",
+      "sha256": "1b3f94078ace5061134f5bcaf1dfea15bc789bb77e5ec987494df313e5f81bc5",
+      "bytes": 750,
+      "lines": 16,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "ROOT_PROFILE_FORWARDING_TOOL_ACCEPTANCE_R1.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/ROOT_PROFILE_FORWARDING_TOOL_ACCEPTANCE_R1.json",
+      "sha256": "64323888a2086bc04fec35543af98c2a19ebaba18ce018c4731fcc2fa7723858",
+      "bytes": 824,
+      "lines": 16,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "PROFILE_FORWARDING_FREEZE_R1.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/PROFILE_FORWARDING_FREEZE_R1.json",
+      "sha256": "16e3d48f8e6c7fe225e9af5c56b6891bd1ececb453cb090cc2d8a2f535d9e654",
+      "bytes": 990,
+      "lines": 16,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "ROOT_BASELINE_PROVIDER_ACCEPTANCE_R1.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/ROOT_BASELINE_PROVIDER_ACCEPTANCE_R1.json",
+      "sha256": "f58f654f7f9d9a70a72efd384465c651cf47ea9f7f37d6fbdb6b8040d78415b7",
+      "bytes": 1600,
+      "lines": 33,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    }
+  },
+  "originalC2IdentityChecks": [
+    {
+      "relativePath": "tools/ci/run_broker_category.py",
+      "OByteEqualsOriginalC2": true,
+      "OByteEqualsAcceptedHEAD": true,
+      "sha256": "03cdb64a2f8d3f32136d59da5f437d12b89b9b5bb362cc0e22fae489ee2d8969"
+    },
+    {
+      "relativePath": "tools/ci/fixtures/run_scope.py",
+      "OByteEqualsOriginalC2": true,
+      "OByteEqualsAcceptedHEAD": true,
+      "sha256": "1ef7d3cb955828937ec1adb31fcbd4a0a6bcbbc16fbb354388b582e30005f095"
+    },
+    {
+      "relativePath": "tools/ci/fixtures/compose_fixture.py",
+      "OByteEqualsOriginalC2": true,
+      "OByteEqualsAcceptedHEAD": true,
+      "sha256": "cc2b92ddc68377c2af3cf398c6a5ec041f858cdba42c30a886af51a413e3fe6d"
+    },
+    {
+      "relativePath": "tools/ci/fixtures/broker_logs.py",
+      "OByteEqualsOriginalC2": true,
+      "OByteEqualsAcceptedHEAD": true,
+      "sha256": "e93b4d22d7a6218798662b465d208d22fa4f1f3ab803685ab48d9a67ab8b3ec2"
+    },
+    {
+      "relativePath": "build/test-infrastructure/compose.yaml",
+      "OByteEqualsOriginalC2": true,
+      "OByteEqualsAcceptedHEAD": true,
+      "sha256": "b7e3fff89ac0bb6c3cedd63d31cce72690ddb991aa631e9afd8cb5d2be645ab8"
+    },
+    {
+      "relativePath": "build/test-infrastructure/servicebus/config.json",
+      "OByteEqualsOriginalC2": true,
+      "OByteEqualsAcceptedHEAD": true,
+      "sha256": "2f804588a9826a7614e36505ac6873fa442566b6204428a25852e8388b417d15"
+    },
+    {
+      "relativePath": "ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx",
+      "OByteEqualsOriginalC2": true,
+      "OByteEqualsAcceptedHEAD": true,
+      "sha256": "2bff0f36fbda621f0403c63c89300d257b62d2f0441f1c096ef96e26e071d4b6"
+    }
+  ],
+  "acceptedHelperProof": {
+    "currentSHA": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d",
+    "ed76AcceptedUnmodified": true,
+    "byteEqualFrozenR4": true,
+    "accepted17ContractsReceipt": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/ROOT_FORWARDING_TOOL_ACCEPTANCE_R1.json",
+      "sha256": "1b3f94078ace5061134f5bcaf1dfea15bc789bb77e5ec987494df313e5f81bc5",
+      "bytes": 750,
+      "lines": 16,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "independentR4Review": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/forwarding-tool-review-r4.json",
+      "sha256": "a73ab3ffd3d2eb4bad48440836a527be5d02863355310e220bd8cc390ba1fa32",
+      "bytes": 9564,
+      "lines": 131,
+      "reviewerRead": "PRIOR_WHOLE_REVIEW_RETAINED; HASH_RECHECKED",
+      "RootReadingCreditTransferred": false
+    },
+    "scope": "Exact IPv4 own PID listeners, private nonmultiplexed SSH group, monitor alongside child, direct PID plus group cleanup, actual nonzero child status and interruption preservation. Prior17 process/listener contracts do not cover new ASB bootstrap or health-phase sequencing."
+  },
+  "confirmedSourceOrdering": {
+    "owner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/run_broker_category.py",
+    "execute": "compose.start -> compose.resolve_ports -> environment.update -> wait_for_servicebus_health -> endpoints.json -> subprocess.run command",
+    "preChildHealthLine": 204,
+    "healthOwner": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/compose_fixture.py",
+    "healthFunctionLine": 132,
+    "contract": "Provider-owned HTTP /health at projected management port; 2xx required within existing120second budget, each HTTP timeout2seconds; unchanged gate must remain before native execution.",
+    "reasonExistingWrapperCannotHelp": "No SSH wrapper child exists when health runs, and endpoints.json is written after health. Merely allowing ASB in selected_ports or adding servicebus profile to existing child wrapper cannot fix this sequencing.",
+    "existingExplicitLimits": "Both research plans explicitly exclude ASB pre-child gate; original17-helper six-family whitelist rejects ASB, sibling profile whitelist accepts only RabbitMQ or MSSQL."
+  },
+  "boundedInfrastructureEvidence": {
+    "retainedOriginalProjection": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/run-output/vicione-3332a1b51130/endpoints.json",
+      "sha256": "cc6a8e5173b857ec1ec6be4514b09eea7c6f8020ca79683929adb2a5b7796821",
+      "bytes": 786,
+      "lines": 18,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "retainedOriginalCleanup": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/run-output/vicione-3332a1b51130/fixture-findings.json",
+      "sha256": "eb0856550d6b00d3c9a4bdb5c0b6d5582321d270313c216c67beea38d5954186",
+      "bytes": 688,
+      "lines": 1,
+      "reviewerRead": "WHOLE",
+      "RootReadingCreditTransferred": false
+    },
+    "localLogPath": "/Users/edgar.liebold/.colima/_lima/colima/ha.stderr.log",
+    "localLogBytesAtRead": 55537664,
+    "filter": "Only exit status255 and exact dynamicports36276..36288; derived message/time/port/control-operation fields, no entire log output in report.",
+    "matchingEvents": [
+      {
+        "time": "2026-10-07T01:03:56+02:00",
+        "port": 36276,
+        "message": "failed to set up forwarding tcp port 36276 (negligible if already forwarded)",
+        "sshControlOperation": "forward",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:04:02+02:00",
+        "port": 36277,
+        "message": "failed to set up forwarding tcp port 36277 (negligible if already forwarded)",
+        "sshControlOperation": "forward",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:04:02+02:00",
+        "port": 36278,
+        "message": "failed to set up forwarding tcp port 36278 (negligible if already forwarded)",
+        "sshControlOperation": "forward",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:04:09+02:00",
+        "port": 36279,
+        "message": "failed to set up forwarding tcp port 36279 (negligible if already forwarded)",
+        "sshControlOperation": "forward",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:04:23+02:00",
+        "port": 36280,
+        "message": "failed to set up forwarding tcp port 36280 (negligible if already forwarded)",
+        "sshControlOperation": "forward",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:04:23+02:00",
+        "port": 36281,
+        "message": "failed to set up forwarding tcp port 36281 (negligible if already forwarded)",
+        "sshControlOperation": "forward",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:04:23+02:00",
+        "port": 36282,
+        "message": "failed to set up forwarding tcp port 36282 (negligible if already forwarded)",
+        "sshControlOperation": "forward",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:04:31+02:00",
+        "port": 36283,
+        "message": "failed to set up forwarding tcp port 36283 (negligible if already forwarded)",
+        "sshControlOperation": "forward",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:04:31+02:00",
+        "port": 36284,
+        "message": "failed to set up forwarding tcp port 36284 (negligible if already forwarded)",
+        "sshControlOperation": "forward",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:04:40+02:00",
+        "port": 36285,
+        "message": "failed to set up forwarding tcp port 36285 (negligible if already forwarded)",
+        "sshControlOperation": "forward",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:04:42+02:00",
+        "port": 36286,
+        "message": "failed to set up forwarding tcp port 36286 (negligible if already forwarded)",
+        "sshControlOperation": "forward",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:04:42+02:00",
+        "port": 36287,
+        "message": "failed to set up forwarding tcp port 36287 (negligible if already forwarded)",
+        "sshControlOperation": "forward",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:04:42+02:00",
+        "port": 36288,
+        "message": "failed to set up forwarding tcp port 36288 (negligible if already forwarded)",
+        "sshControlOperation": "forward",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:09:01+02:00",
+        "port": 36276,
+        "message": "failed to stop forwarding tcp port 36276",
+        "sshControlOperation": "cancel",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:09:01+02:00",
+        "port": 36286,
+        "message": "failed to stop forwarding tcp port 36286",
+        "sshControlOperation": "cancel",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:09:01+02:00",
+        "port": 36287,
+        "message": "failed to stop forwarding tcp port 36287",
+        "sshControlOperation": "cancel",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:09:01+02:00",
+        "port": 36288,
+        "message": "failed to stop forwarding tcp port 36288",
+        "sshControlOperation": "cancel",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:09:01+02:00",
+        "port": 36284,
+        "message": "failed to stop forwarding tcp port 36284",
+        "sshControlOperation": "cancel",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:09:01+02:00",
+        "port": 36283,
+        "message": "failed to stop forwarding tcp port 36283",
+        "sshControlOperation": "cancel",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:09:02+02:00",
+        "port": 36279,
+        "message": "failed to stop forwarding tcp port 36279",
+        "sshControlOperation": "cancel",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:09:03+02:00",
+        "port": 36285,
+        "message": "failed to stop forwarding tcp port 36285",
+        "sshControlOperation": "cancel",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:09:04+02:00",
+        "port": 36278,
+        "message": "failed to stop forwarding tcp port 36278",
+        "sshControlOperation": "cancel",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:09:04+02:00",
+        "port": 36277,
+        "message": "failed to stop forwarding tcp port 36277",
+        "sshControlOperation": "cancel",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:09:11+02:00",
+        "port": 36282,
+        "message": "failed to stop forwarding tcp port 36282",
+        "sshControlOperation": "cancel",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:09:11+02:00",
+        "port": 36281,
+        "message": "failed to stop forwarding tcp port 36281",
+        "sshControlOperation": "cancel",
+        "exitStatus": 255
+      },
+      {
+        "time": "2026-10-07T01:09:11+02:00",
+        "port": 36280,
+        "message": "failed to stop forwarding tcp port 36280",
+        "sshControlOperation": "cancel",
+        "exitStatus": 255
+      }
+    ],
+    "eventCounts": {
+      "forward": 13,
+      "cancel": 13
+    },
+    "limits": "13 -O forward failures and13 -O cancel failures support the prior automatic forwarding problem, while accepted private SSH helper later reached six-provider baseline645. Internal cause of shared master multiplexing failure remains unknown; working control master is not forwarding proof. No new current connectivity or ASB-native failure observed here. Foreign PostgreSQL34228/11days and shared masterPID1896 preservation are prior Root observations, not re-executed by reviewer."
+  },
+  "recommendedSmallestIsolatedPackage": {
+    "placement": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers",
+    "choice": "One new ASB-only standalone bootstrap owner with bootstrap and health-and-exec modes, plus bounded tool-contract owner/research/freeze. Keep accepted helper and canonical runner unchanged.",
+    "canonicalReuse": [
+      "run_broker_category.build_environment([servicebus]) for run credentials and LocalIntegration selection",
+      "run_scope.claim_run_root/adopt/handover for exact canonical direct-child root and token",
+      "compose_fixture.start([servicebus], env), resolve_ports(servicebus, env), same pinned Compose and dependency readiness",
+      "compose_fixture.wait_for_servicebus_health(env) unchanged inside owned phase child",
+      "run_broker_category.teardown with explicitly no outage/refusal plus existing canonical fixture-findings publication"
+    ],
+    "phases": [
+      "Validate command/config/checkout and root ownership before any Docker start; reject stale source/receipt output before touching a project. Mint fresh root or adopt only proven unused canonical root; compose identity must equal root.name.",
+      "Generate canonical credentials in memory; start only servicebus, with Compose automatically creating same-project healthy MSSQL dependency; resolve only actual ASB container5672+5300 bindings. Host must be127.0.0.1; exact three endpoint keys, two distinct valid numeric ports.",
+      "Publish secret-free complete ASB endpoints and exclusive new bootstrap/source-bundle receipt under own root. Bind actual new owner, unchanged lifetime helper and exact imported canonical source/Compose/config; do not overwrite older receipts.",
+      "Give the complete generated environment to the lifetime helper child. lifetime.execute currently uses subprocess.Popen(command) without env: a local env dictionary passed only to Compose is insufficient. Single-threaded bootstrap can use a tightly scoped process-environment handover before direct execute and restore after full retirement; alternatively a separate reviewed child-entry boundary receives explicit env. Do not change accepted helper silently.",
+      "Delegate to unchanged lifetime.execute(config, [python,newOwner,health-and-exec,--,native argv], root, exacttwoports). Its own PID lsof IPv4 listeners and SSH monitor establish private forwarding before starting phase child.",
+      "Phase child independently validates adopted root/token/project and exact endpoint equality; then invokes unchanged provider /health gate. Only after health success records health_passed and native_exec_requested and uses os.execvpe to replace itself with the requested native command in the SAME helper-owned process group. No nested canonical runner that starts/cleans Compose again.",
+      "Unchanged helper monitors private SSH through both health and native execution and retires its phase/native and SSH groups. Outer bootstrap captures own provider logs and executes canonical same-project teardown and fixture-findings regardless of startup/health/child/interruption failure."
+    ],
+    "ports": [
+      "VICIONE_SERVICEBUS_SERVICEBUS_AMQP_PORT -> Docker assigned 127.0.0.1 host binding of5672",
+      "VICIONE_SERVICEBUS_SERVICEBUS_MANAGEMENT_PORT -> Docker assigned127.0.0.1 host binding of5300"
+    ],
+    "dependency": "MSSQL is a same-compose-project dependency; its health query executes inside the container and ASB connects over SQL_SERVER=mssql. An ASB-only profile does not need host MSSQL forwarding or MSSQL endpoints in projection.",
+    "sourceReceiptPrecision": "The helper source_sha256 continues to bind helper only. Separate exclusive bootstrap source bundle binds actual new owner +helper+canonical imported sources; helper child_started means health-phase child started, not native test execution. Record health_passed/native_exec_requested separately; exact native test/build receipt owns execution and provider acceptance.",
+    "entryPointBoundary": "This is isolated local infrastructure experiment only, not canonical CI/transport API or real cloud acceptance. Avoid global monkeypatching of health, copying400-line runner, skipping health or changing compose ports/images."
+  },
+  "lifetimeAndPreservationRequirements": [
+    "Install own SIGINT/SIGTERM handling before Compose start and keep finally teardown through pre-SSH failures; helper only installs handlers inside its own execute, so outer startup is separate new lifetime boundary. Repeated termination during cleanup cannot detach own groups.",
+    "Do not replace known native nonzero exit with cleanup or terminal SSH failure. Success+SSH/cleanup failure becomes failure; interrupt130/143 retained. Health failure means no native exec, even if helper child_started=true.",
+    "Terminate only newly owned SSH/phase process groups; preserve PID+PGID absence evidence and allow descendant cleanup. No killall, shared ssh -O operations, colima stop/restart, VM/global configuration changes or daemonized forwards.",
+    "Only docker compose -p exactvalidatedrunidentity with existing pinned file; final exact compose-project filter must show0containers. MSSQL dependency is in that same project; never address unrelated PostgreSQL/shared resources.",
+    "Credentials and run-root token remain process environment/tokenfile only; endpoints/source receipts contain nonsecret host/ports/hashes/ownedIDs, not environment dumps, keys or connection strings. Do not treat source bundle existence as execution proof.",
+    "Inherited VICIONE_TESTS__ local endpoint overrides have higher normalization precedence than fixture variables. Root must bind actual native typed endpoint selection or explicitly reject conflicting ASB overrides in the isolated entry point; do not let successful health against projected ports qualify a native command aimed elsewhere."
+  ],
+  "meaningfulBoundedToolContractPlan": [
+    {
+      "id": "ASB-PREHEALTH-ORDER",
+      "oracle": "Real fake SSH-owned two listeners/HTTP endpoint and actual phase child: gate cannot proceed before exact listeners ready; health2xx followed by native marker/exit29, correct29 retained. Deliberate late-forward reversion must fail before native marker.",
+      "limit": "Controlled process/network contract, not real emulator proof."
+    },
+    {
+      "id": "ASB-HEALTH-NOT-TCP",
+      "oracle": "Reachable own TCP listener with actual unhealthy HTTP response/no2xx must not create native marker. Healthy2xx paired control execs same native marker. Test uses unchanged health function with explicit bounded budget in tool fixture only; live provider budget unchanged."
+    },
+    {
+      "id": "ASB-OWNERSHIP-PROJECTION",
+      "oracle": "Wrong token/root/project, symlink root, stale exclusive receipt, incomplete/extra/cross-family/cloud/nonloopback/mismatched/duplicate port projections reject before forbidden process or Docker stage; valid exact family accepts. Group related variants rather than many mirrored tests."
+    },
+    {
+      "id": "ASB-ENV-HANDOVER",
+      "oracle": "Actual phase child confirms selected LocalIntegration/profile and exact host/ports/ownedroot; secret marker reaches child but is absent from every receipt/log. Missing projection or higher-precedence typed conflict rejects before native exec."
+    },
+    {
+      "id": "ASB-LOSS-AND-ABORT",
+      "oracle": "Reuse existing17 helper process contracts unchanged; add only new startup SIGINT/SIGTERM and tunnel-loss-during-blocked-health integration, verifying no native marker and exact own groups retired + same-project teardown attempted."
+    },
+    {
+      "id": "ASB-OUTER-TEARDOWN",
+      "oracle": "Compose start/port projection/health/exec failure and success paired with teardown failure; all independent cleanup stages attempted, exact project preserved, known29/130 retains primary while green becomes1. An untouched foreign-resource marker proves no global teardown."
+    }
+  ],
+  "nativeOriginalInfrastructureCounterexampleRoute": {
+    "executor": "Root only, after new owner/test freeze and separate adversarial review. No process performed by this reviewer.",
+    "original": "Use unchanged original6b451 C2 canonical servicebus command mode with a finite harmless marker child. Bind Docker project/ports/container startup and exact provider health failure; marker must remain absent because no child launches before /health. Preserve failure/cleanup receipts. If automatic forwarding currently works, record healthy original control instead of inventing red.",
+    "qualification": "A host-port refusal or bounded health timeout is infrastructure evidence, not a native ServiceBus test failure or confirmed product defect. To attribute failure to forwarding rather than emulator startup, Root must separately bind actual healthy emulator/provider HTTP status reachable inside VM or via an OWNED temporary forward, without touching shared master or changing health response.",
+    "corrected": "Fresh same-original baseline project under new bootstrap: exact two own listeners established BEFORE provider2xx, phase receipt health success, then harmless marker and native command exactexit. After this actual infrastructure proof, Root can run complete unfiltered ASB local solution in the chosen clean checkout, with every actual MSBuild invocation unique closed hash-bound /bl receipt and independent native artifact review.",
+    "scope": "Existing workflow minimum25 is merely discovery floor, not exact fresh profile count. Fresh native modules/case counts/zero skip and source/build/runtime receipt determine acceptance; no46cloudobligations or whole provider aggregate closure implied.",
+    "rollback": "Optional one-cause prehealth-order reversion only in isolated test/tool snapshot; preserve original/corrected frozen source and honest failures. No real provider health skip, no source product mutant for infrastructure fault."
+  },
+  "RootWholeReadList": {
+    "mandatoryInfrastructureBeforeAuthoring": [
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/run_broker_category.py",
+        "sha256": "03cdb64a2f8d3f32136d59da5f437d12b89b9b5bb362cc0e22fae489ee2d8969",
+        "bytes": 22043,
+        "lines": 428,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/run_scope.py",
+        "sha256": "1ef7d3cb955828937ec1adb31fcbd4a0a6bcbbc16fbb354388b582e30005f095",
+        "bytes": 3747,
+        "lines": 92,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/compose_fixture.py",
+        "sha256": "cc2b92ddc68377c2af3cf398c6a5ec041f858cdba42c30a886af51a413e3fe6d",
+        "bytes": 14046,
+        "lines": 305,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/broker_logs.py",
+        "sha256": "e93b4d22d7a6218798662b465d208d22fa4f1f3ab803685ab48d9a67ab8b3ec2",
+        "bytes": 6906,
+        "lines": 140,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/build/test-infrastructure/compose.yaml",
+        "sha256": "b7e3fff89ac0bb6c3cedd63d31cce72690ddb991aa631e9afd8cb5d2be645ab8",
+        "bytes": 12080,
+        "lines": 229,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/build/test-infrastructure/servicebus/config.json",
+        "sha256": "2f804588a9826a7614e36505ac6873fa442566b6204428a25852e8388b417d15",
+        "bytes": 191,
+        "lines": 14,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/ViciOne.ServiceBus.Tests.AzureServiceBusLocalIntegration.slnx",
+        "sha256": "2bff0f36fbda621f0403c63c89300d257b62d2f0441f1c096ef96e26e071d4b6",
+        "bytes": 1090,
+        "lines": 15,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.github/workflows/native-tests.yml",
+        "sha256": "2cd77f10f95e87fea7c5bbefcae9908adadb5dd27f7add3e289898100a10406d",
+        "bytes": 9790,
+        "lines": 219,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/testsettings.json",
+        "sha256": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7",
+        "bytes": 1300,
+        "lines": 57,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs",
+        "sha256": "a8192e1d3b520714ee1a732505a26a740e06ae073a6f303972a17aefaf328206",
+        "bytes": 10901,
+        "lines": 219,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs",
+        "sha256": "14ec1d7a56de88968a8bbbb25bb578c50fef16bfb9a4dd078780fbd6e6534c83",
+        "bytes": 18211,
+        "lines": 569,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/outage_protocol.py",
+        "sha256": "f269955b6b7b5f0e2f9c3dec4d0e0fcc8123ab23513c2dbad3f12e40f7263e3b",
+        "bytes": 9205,
+        "lines": 192,
+        "reviewerRead": "NOT_WHOLE_READ_IN_THIS_TASK; ROOT_MUST_CONSUME_IF_USED",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/build/test-infrastructure/images.lock.json",
+        "sha256": "ae9e3a23739b2469ee89dab6c6a0ef5e8f06d0db650a95e953df99cfc904f8f7",
+        "bytes": 8630,
+        "lines": 93,
+        "reviewerRead": "NOT_WHOLE_READ_IN_THIS_TASK; ROOT_MUST_CONSUME_IF_USED",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.props",
+        "sha256": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf",
+        "bytes": 2886,
+        "lines": 49,
+        "reviewerRead": "NOT_WHOLE_READ_IN_THIS_TASK; ROOT_MUST_CONSUME_IF_USED",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.targets",
+        "sha256": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1",
+        "bytes": 10658,
+        "lines": 146,
+        "reviewerRead": "NOT_WHOLE_READ_IN_THIS_TASK; ROOT_MUST_CONSUME_IF_USED",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Packages.props",
+        "sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e",
+        "bytes": 5677,
+        "lines": 76,
+        "reviewerRead": "NOT_WHOLE_READ_IN_THIS_TASK; ROOT_MUST_CONSUME_IF_USED",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/global.json",
+        "sha256": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93",
+        "bytes": 63,
+        "lines": 5,
+        "reviewerRead": "NOT_WHOLE_READ_IN_THIS_TASK; ROOT_MUST_CONSUME_IF_USED",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+        "sha256": "954d1e414f5ad15239213b69d4d6e0dd7bb71fff95d8ce81616f49f991d11656",
+        "bytes": 956,
+        "lines": 24,
+        "reviewerRead": "NOT_WHOLE_READ_IN_THIS_TASK; ROOT_MUST_CONSUME_IF_USED",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/packages.lock.json",
+        "sha256": "3993753564ac55bd388733b4cc48785ffc3aefda6bc3018572485082b22010bf",
+        "bytes": 22138,
+        "lines": 523,
+        "reviewerRead": "NOT_WHOLE_READ_IN_THIS_TASK; ROOT_MUST_CONSUME_IF_USED",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/Requirements/AzureServiceBusLocalIntegrationRequirements.json",
+        "sha256": "3136b03da28b841ccb1d0630d7f7dfd1431ba7fb09767e26f4ea9d50a60c273a",
+        "bytes": 12081,
+        "lines": 32,
+        "reviewerRead": "NOT_WHOLE_READ_IN_THIS_TASK; ROOT_MUST_CONSUME_IF_USED",
+        "RootReadingCreditTransferred": false
+      }
+    ],
+    "acceptedHelperAndExistingContractsBeforeReuse": [
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/local_colima_forwarding.py",
+        "sha256": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d",
+        "bytes": 10845,
+        "lines": 233,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/test_local_colima_forwarding.py",
+        "sha256": "3b951d9603ce51a8910a304c801f35763b6fc6886b790b2cfa4e446493151591",
+        "bytes": 11977,
+        "lines": 240,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/local_colima_profile_forwarding.py",
+        "sha256": "6dabf694e6e22fb292a2d6dabf50d5b48f000c3fa346f2b183cbfa5ea5303399",
+        "bytes": 3457,
+        "lines": 71,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/test_local_colima_profile_forwarding.py",
+        "sha256": "6d09a53cd756e2dd3ebe08862f403d624c3a035c0d87d2a9a1f48ceefc13ed03",
+        "bytes": 4176,
+        "lines": 84,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/FORWARDING_RESEARCH_PLAN.md",
+        "sha256": "86806129fe926f1962b9ee1eca4e9e8d968c9e24f7f78282d324d7b9e4fdbd8e",
+        "bytes": 1887,
+        "lines": 25,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/PROFILE_FORWARDING_RESEARCH_PLAN.md",
+        "sha256": "1721b5de3a062931f1070a97903d25ec78cca8a369bd18b1c6c0fb84b7b96d35",
+        "bytes": 1741,
+        "lines": 23,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/ROOT_FORWARDING_TOOL_ACCEPTANCE_R1.json",
+        "sha256": "1b3f94078ace5061134f5bcaf1dfea15bc789bb77e5ec987494df313e5f81bc5",
+        "bytes": 750,
+        "lines": 16,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/ROOT_PROFILE_FORWARDING_TOOL_ACCEPTANCE_R1.json",
+        "sha256": "64323888a2086bc04fec35543af98c2a19ebaba18ce018c4731fcc2fa7723858",
+        "bytes": 824,
+        "lines": 16,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/PROFILE_FORWARDING_FREEZE_R1.json",
+        "sha256": "16e3d48f8e6c7fe225e9af5c56b6891bd1ececb453cb090cc2d8a2f535d9e654",
+        "bytes": 990,
+        "lines": 16,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/ROOT_BASELINE_PROVIDER_ACCEPTANCE_R1.json",
+        "sha256": "f58f654f7f9d9a70a72efd384465c651cf47ea9f7f37d6fbdb6b8040d78415b7",
+        "bytes": 1600,
+        "lines": 33,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      }
+    ],
+    "publicNativeProfileBeforeExecution": [
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/Infrastructure/AzureServiceBusLocalFixture.cs",
+        "sha256": "d4718a702af74acb37fb61081e704a6775a878cdfbb9469d1424a226ece91137",
+        "bytes": 4943,
+        "lines": 130,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/Infrastructure/AzureServiceBusEmulatorCapabilityTests.cs",
+        "sha256": "bc0d1eaaf539d28f9aa3009a6d9d2adecfc80333cdb0afc7438cd4f8e32e31d6",
+        "bytes": 20119,
+        "lines": 374,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.csproj",
+        "sha256": "e006d38ed3d8b906e35b736eab71a754007ca727580d507d69993a9f97d45495",
+        "bytes": 1651,
+        "lines": 32,
+        "reviewerRead": "WHOLE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/ApiSurfaceGlobalUsings.cs",
+        "sha256": "9d1f8fcf9f42c035f990cfb20c3f41303745e79e3fd23f1a8289609ba6ae8b60",
+        "bytes": 685,
+        "lines": 14,
+        "reviewerRead": "ROOT_WHOLE_READ_REQUIRED_BEFORE_PROFILE; ONLY_LISTED_HERE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/AssemblyInfo.cs",
+        "sha256": "0117048e0e9000839c3e3c68ca47e3b0a99bbcf651b8f9c978dbff867bcc7d91",
+        "bytes": 158,
+        "lines": 6,
+        "reviewerRead": "ROOT_WHOLE_READ_REQUIRED_BEFORE_PROFILE; ONLY_LISTED_HERE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/AzureServiceBusDeadLetterTransportTests.cs",
+        "sha256": "0711fa24cd0c1d327d26418141f11f0ed7f99e6251c93a740e4af393ef8fa853",
+        "bytes": 7363,
+        "lines": 160,
+        "reviewerRead": "ROOT_WHOLE_READ_REQUIRED_BEFORE_PROFILE; ONLY_LISTED_HERE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/AzureServiceBusFunctionReceiverTests.cs",
+        "sha256": "94a9fd06060e6a677b99784c4986f9c4ece2bea626c046b500ac6d0f65612d5b",
+        "bytes": 4425,
+        "lines": 98,
+        "reviewerRead": "ROOT_WHOLE_READ_REQUIRED_BEFORE_PROFILE; ONLY_LISTED_HERE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/AzureServiceBusMessageFlowTests.cs",
+        "sha256": "5317aa02b2d689f59f917929d5dd9a941804e1f0dd3a3537f22850a138bfe581",
+        "bytes": 16153,
+        "lines": 313,
+        "reviewerRead": "ROOT_WHOLE_READ_REQUIRED_BEFORE_PROFILE; ONLY_LISTED_HERE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/AzureServiceBusPublishTopologyTests.cs",
+        "sha256": "cfc6445391bf844ff223a02f759aa84c176770064a6179e386eb8587f27455ec",
+        "bytes": 11604,
+        "lines": 224,
+        "reviewerRead": "ROOT_WHOLE_READ_REQUIRED_BEFORE_PROFILE; ONLY_LISTED_HERE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/AzureServiceBusSessionAndSchedulingTests.cs",
+        "sha256": "d5d5a730103b49c438f83c3f25195e1797c11f6dddd44a32e439072a63d80406",
+        "bytes": 10484,
+        "lines": 200,
+        "reviewerRead": "ROOT_WHOLE_READ_REQUIRED_BEFORE_PROFILE; ONLY_LISTED_HERE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/AzureServiceBusSessionStateTests.cs",
+        "sha256": "6dc126ddd57af861f00d71fb7524e117924518e02ed535e181f446954d09e2d0",
+        "bytes": 13156,
+        "lines": 243,
+        "reviewerRead": "ROOT_WHOLE_READ_REQUIRED_BEFORE_PROFILE; ONLY_LISTED_HERE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/AzureServiceBusSubscriptionRuleTests.cs",
+        "sha256": "78315596cea2141d17dc7067c57fdcc9a285ec8f3f58b55d71e1e5c61b43521d",
+        "bytes": 13466,
+        "lines": 264,
+        "reviewerRead": "ROOT_WHOLE_READ_REQUIRED_BEFORE_PROFILE; ONLY_LISTED_HERE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/AzureServiceBusTestHarnessCleanupTests.cs",
+        "sha256": "962884e35cddd88dcf0423fcab9b42327a89552fb278831242e51b7ec98bb16c",
+        "bytes": 2223,
+        "lines": 48,
+        "reviewerRead": "ROOT_WHOLE_READ_REQUIRED_BEFORE_PROFILE; ONLY_LISTED_HERE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/AzureServiceBusTopologyLifecycleTests.cs",
+        "sha256": "b1ebb209c5be5d08724a579a022e9dd125cebe5d4f788cc53e072d35ce4e4753",
+        "bytes": 8431,
+        "lines": 151,
+        "reviewerRead": "ROOT_WHOLE_READ_REQUIRED_BEFORE_PROFILE; ONLY_LISTED_HERE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/GlobalUsings.cs",
+        "sha256": "62cc542c5b7347739f5a337f7c0cbe07b41b84ba3ed83ff55835f116d058a480",
+        "bytes": 97,
+        "lines": 2,
+        "reviewerRead": "ROOT_WHOLE_READ_REQUIRED_BEFORE_PROFILE; ONLY_LISTED_HERE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+        "sha256": "6704d5cfcd453768ea7dd0b6b6f37db26f6d811ff29b4abdc79012c550460083",
+        "bytes": 1299,
+        "lines": 28,
+        "reviewerRead": "ROOT_WHOLE_READ_REQUIRED_BEFORE_PROFILE; ONLY_LISTED_HERE",
+        "RootReadingCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests/TopologyContracts/AzureServiceBusTopologyContracts.cs",
+        "sha256": "85b6e9d2c175531ff5f4a290d7ab3e4e61bf72722a151e7b37f9d386230f5fdb",
+        "bytes": 242,
+        "lines": 8,
+        "reviewerRead": "ROOT_WHOLE_READ_REQUIRED_BEFORE_PROFILE; ONLY_LISTED_HERE",
+        "RootReadingCreditTransferred": false
+      }
+    ]
+  },
+  "notClaimed": [
+    "No ASB-native test run or accepted emulator result occurred in this research.",
+    "No .NET/Docker/SSH starts, process controls, product/tool/test writes, provider configuration changes or global VM operations. Own unique report only.",
+    "No real cloud, hardware, source defect repair or wider provider aggregate acceptance; accepted prior645/Rabbit38/SQL99 remains scoped historical baseline.",
+    "Root must personally read actual authored owner/tests/imports and native profile closure before implementation/execution; this reviewer list/read does not transfer credit."
+  ]
+}

@@ -1391,5 +1391,124 @@
     "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
     "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockCallbackOrderTests",
     "testMethod": "Faulted_RealSdkCancellationCallbackPreservesObservedWorkerOrderAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+    "variantKey": "selected-named-options-validated-by-generic-host-before-runtime",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests",
+    "testMethod": "SelectedNamedInvalidOptionsFailBeforeRuntime"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+    "variantKey": "unselected-default-options-do-not-reject-selected-named-sqs",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests",
+    "testMethod": "UnusedInvalidDefaultCannotRejectCoherentNamedBus"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+    "variantKey": "selected-default-options-remain-validated-before-runtime",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests",
+    "testMethod": "SelectedInvalidDefaultStillFailsBeforeRuntime"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+    "variantKey": "coherent-named-sqs-reaches-selected-pre-runtime-boundary",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests",
+    "testMethod": "CoherentNamedBusReachesExactlyTheSameRuntimeBoundary"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+    "variantKey": "disposed-cold-topic-rejects-publish-without-creating-batcher",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+    "testMethod": "DisposedColdTopic_RejectsPublishWithoutCreatingBatcherAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+    "variantKey": "every-topic-disposal-waits-for-admitted-provider-work",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+    "testMethod": "ConcurrentDisposals_BothWaitForAdmittedProviderWorkAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+    "variantKey": "client-reresolves-disposed-topic-before-publish-admission",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+    "testMethod": "Client_ReresolvesDisposedTopicBeforeAdmissionAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+    "variantKey": "client-reresolves-only-unadmitted-publish-after-channel-close",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+    "testMethod": "Client_ReresolvesOnlyUnadmittedEntryAfterFullChannelClosesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+    "variantKey": "client-never-replays-admitted-publish-after-provider-failure",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+    "testMethod": "Client_DoesNotReplayAdmittedProviderFailureAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+    "variantKey": "pre-canceled-client-publish-does-not-resolve-topic",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+    "testMethod": "Client_PreCanceledPublishDoesNotResolveOrCallProviderAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+    "variantKey": "cancellation-after-stale-topic-resolution-stops-relookup",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+    "testMethod": "Client_CancellationAfterStaleResolutionStopsBeforeSecondLookupAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+    "variantKey": "client-bounds-disposed-topic-reresolution-to-two-lookups",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+    "testMethod": "Client_TwoStaleTopicsStopWithoutCallingProviderAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+    "variantKey": "live-topic-preserves-publish-metadata-usage-and-provider-token",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+    "testMethod": "LiveTopic_PreservesMetadataUsageAndProviderTokenAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-BATCH-CLOCK",
+    "variantKey": "all-resource-paths-use-selected-owner-timer",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests",
+    "testMethod": "ConnectionOwnerClock_FlushesPartialBatchAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-BATCH-CLOCK",
+    "variantKey": "owner-clock-captured-before-resolution-and-kept-across-scopes",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests",
+    "testMethod": "ConnectionOwnerClock_RemainsFixedAfterPayloadAndScopeUpdatesAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-BATCH-CLOCK",
+    "variantKey": "legacy-constructors-preserve-request-local-accounting-and-drain",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests",
+    "testMethod": "LegacyConstructors_TenEntriesKeepProviderAccountingAndDrainAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-AWS-BATCH-CLOCK",
+    "variantKey": "timer-failure-closes-and-faults-all-queued-work-before-cleanup",
+    "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+    "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests",
+    "testMethod": "TimerCreationFailure_FaultsAdmittedWorkAndKeepsDisposalJoinableAsync"
   }
 ]

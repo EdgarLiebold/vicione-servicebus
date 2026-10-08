@@ -1,0 +1,116 @@
+{
+  "kind": "ROOT_BOUNDED_SQS_SNS_BATCH_CLOCK_RESEARCH_READ_R2",
+  "source": {
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Batcher.cs": {
+      "sha256": "2539ec46704400fb75596c69b1162cc620f487691bc227d0bca1aeefa5c6d9f9",
+      "lines": 220
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs": {
+      "sha256": "e2fd86c68ff15e5780d7e58c463b2a2ee88fbd6398fe47fd1667fab53705eada",
+      "lines": 73
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueInfo.cs": {
+      "sha256": "3ea57707ac22b6755e42f69b7148b761abc67249484a87a4febf9db046934a81",
+      "lines": 298
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/SendBatcher.cs": {
+      "sha256": "44fa548192a7027d6f13a8d647e7992ef0402307082ddfe7443752424af538a5",
+      "lines": 44
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/DeleteBatcher.cs": {
+      "sha256": "4f1208500ddbff5fe2a905b4fa19044e14c4c5bc5f3ee4ed963678ec320279d3",
+      "lines": 41
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/PublishBatcher.cs": {
+      "sha256": "54c3110613a8ccdfbb9843b6fc7d6b19f70a0bfb999c2f25f366add8b531d0fe",
+      "lines": 48
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueCache.cs": {
+      "sha256": "0fb5c3df9e6678967cbbfba1dc3726be460d39eda76e4f6d53ffc40a06cfc049",
+      "lines": 256
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs": {
+      "sha256": "13d304a8b161cbbce750e4ae00f9a543cec80796bb1d2ed823f7e94c31a0ae45",
+      "lines": 186
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsConnectionContext.cs": {
+      "sha256": "b1639c38ff15b71aeca975a5d9704087c8be3fd9eaabfb584f84d7e3abc3cb5b",
+      "lines": 118
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/SharedConnectionContext.cs": {
+      "sha256": "3f0f1c304085ddbf85af0564e2e9e1c925482aaf6edbeee3cc405b9ae70fcdc7",
+      "lines": 91
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContext.cs": {
+      "sha256": "f844ee8d2971b6c514026bccf55a7870359db9c687c3243fb78cc89d9f3cc3be",
+      "lines": 57
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsClientContext.cs": {
+      "sha256": "3cd1c53d27e83c627acfe8c48e05eae19eaf648b5268c6b10e5b16f8edf4d9dd",
+      "lines": 371
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ClientContextFactory.cs": {
+      "sha256": "6120307a3e55c01dbc0e3d1c504a617777a478086ba1076ed8974e068594e20b",
+      "lines": 131
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextFactory.cs": {
+      "sha256": "ac2e6d1a1c1a493358476f130a383c8791137aca3cc6cdda7ada1b8637e73ba0",
+      "lines": 93
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ClientContextBatchSettings.cs": {
+      "sha256": "19a723e45f8cfba8b915d51214a38cc38ef2b80bcbd580f4ff596f067749d43e",
+      "lines": 32
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/PublishBatchSettings.cs": {
+      "sha256": "5190de9e1b49cb2559edb31d4010e15633bc68d76f0077af4ae1f4f51e667846",
+      "lines": 32
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Middleware/ProxyPipeContext.cs": {
+      "sha256": "85171def7caf187a9f288fb5832c25329df494842db228183521db59d2ee1922",
+      "lines": 70
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Middleware/ScopePipeContext.cs": {
+      "sha256": "4432944f0e99e03e4f90806ca193c54e222723da3b33f0d438e13b0b8c83fcdd",
+      "lines": 131
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Middleware/BasePipeContext.cs": {
+      "sha256": "2303156020d82484c5e11820816eeea2ba27d0699ce51ba56a38fdf93cbfc586",
+      "lines": 150
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContextTimeProviderExtensions.cs": {
+      "sha256": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206",
+      "lines": 48
+    }
+  },
+  "whole_bodies_read": [
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Batcher.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueInfo.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/SendBatcher.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/DeleteBatcher.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/PublishBatcher.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueCache.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsConnectionContext.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/SharedConnectionContext.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContext.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsClientContext.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ClientContextFactory.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextFactory.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ClientContextBatchSettings.cs",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/PublishBatchSettings.cs",
+    "src/ViciOne.ServiceBus.Abstractions/Middleware/ProxyPipeContext.cs",
+    "src/ViciOne.ServiceBus.Abstractions/Middleware/ScopePipeContext.cs",
+    "src/ViciOne.ServiceBus.Abstractions/Middleware/BasePipeContext.cs",
+    "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContextTimeProviderExtensions.cs"
+  ],
+  "provenance": "Root personally read Batcher1..120+121..EOF, QueueInfo1..160+161..EOF, caches1..160+161..EOF, ClientContext1..190+191..EOF; remaining listed owners whole output. Globalexec10061-token combined output truncated61 tokens inside ConnectionContext; corrected whole single file863tokens. Earlier broad ConnectionContext search4883-token output truncated; narrower timer/batcher search corrected with no caller-universe claim.",
+  "observations": [
+    "One shared Batcher reads CTS process timeout87; defaults1ms; owner work/channel/executor drain independent caller cancellation.",
+    "QueueInfo owns Lazy Send/Delete; TopicInfo owns Lazy Publish, shared through connection durable/ephemeral caches. Scope-local message clocks must not change an already shared batch owner.",
+    "Caches have separate public TTL options.TimeProvider. Cache constructors run before connection filters; standard TimeProvider payload may be attached later through SharedConnectionContext Proxy forwarding, before first entity lookup.",
+    "Complete concrete cache creation sites: Queue existing+missing and Topic existing-loader+missing. Existing public constructors require System fallback and signatures unchanged.",
+    "Candidate policy under review: capture one connection-resource provider before resource resolution; hold it immutable through resource/batcher lifetime, explicitly distinct from TTL clock. Do not infer permessage batching/SDK server timing or a concurrency bug from source alone."
+  ],
+  "limits": "Research only, no finding closure, product patch, test/policy/source preflight/native credit. Next plan must decide exact provider freeze point and review full callers/wire/package compatibility before source change."
+}

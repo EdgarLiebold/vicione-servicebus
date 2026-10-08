@@ -1,0 +1,43 @@
+{
+  "kind": "ROOT_PUBLISHED_SEVEN_DOCUMENTATION_FREEZE_R27",
+  "prior_freeze_sha256": "854b698af9ccead7669e079b890948f3858a87c292980c29ab05452dcc309633",
+  "prior_source_sha256": {
+    "CHANGELOG.md": "4dabd224e52110cfc04f7eba7b08db973aac8ea5bd4ed6da10d1c31522e92956",
+    "TODO.md": "ac6ba9a8bfda7e92058fe3eced17778eace200300de3a885221932e5807eabe4",
+    ".testagent/status.md": "45c487453693e7fdc97f68269acaa3af3ac671f280e8bcc6a842fab8ccb918f6",
+    ".testagent/plan.md": "ce7db13809907a939b62f464e0ca6188cc4040e3c8209faea630bbe801c70d60",
+    ".testagent/local-completion-plan.md": "109ecc99a31b8dc8800e376ea0d628428fe1212aa2ce749d98eee98127b99ae4",
+    "docs/quality-status.md": "0ab90ba1dc4aeb0c29f19aa920af557bde84fd1a99de8fe9813c797c57a39285",
+    "docs/servicebus-local-completion-report.txt": "3ef99188653104aa225b69ce207d3fdedd2b06df52801d681881cb5c25f61da1"
+  },
+  "source_sha256": {
+    "CHANGELOG.md": "d58f8049f0eee5a6da4b497b72ef4bfb77432a52a58f635549c1a1fda7081e9c",
+    "TODO.md": "6a6478837d493096d4d574e74b527bee5078dc1eeaff33d64e24ea2898914f83",
+    ".testagent/status.md": "b9bba960687bacb17ca0a646e47756b267a73783b198b41a4113662e7a839040",
+    ".testagent/plan.md": "4773dfedbd31ac7a30042c30e70e311c1f6a633e6a0894c3e8dc6cdeb8d6b2b0",
+    ".testagent/local-completion-plan.md": "880e3e73f81e71c69efbd39fda4181e1d5296752cfb4624883bd14dde8be4208",
+    "docs/quality-status.md": "d9f1d51944f966803b9b008b3797e9aae6e8c5a034b6239f18b03ffd7d115a83",
+    "docs/servicebus-local-completion-report.txt": "71b7cd6261e85e1a138b580fcf597b7899861cd8f0dfdb8a0c7a37cbaa10dc3b"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r27",
+  "azure_acceptance_sha256": "1fbf1495929834f42290af863462d44a717e50ad2a0cbb85c535d2ecb911923b",
+  "lossless_diff_sha256": "dc6aecbfb79ef091d85e8fcfdf56aa4e97f25a7a3ccf94a32436918b63156cc0",
+  "preservation": {
+    "other11_TODO_blocks_byteexact": true,
+    "TODO_preamble_byteexact": true,
+    "ordered62_OBL_exact": true,
+    "history_suffix_sha256_including_heading": {
+      "CHANGELOG.md": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+      ".testagent/status.md": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+      ".testagent/plan.md": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+      "docs/quality-status.md": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5"
+    },
+    "only_local_package06_row_changed": true,
+    "frozen234_unchanged": true
+  },
+  "PO_lines": 77,
+  "limits": "Bounded Azure two-receiver correction only; no coverage/global A+/cloud or new remote qualification. Existing historical prose preserved.",
+  "proposed_freeze_sha256": "e6350026b7899210aa01e7deb497f588a1c3b3ac2dd054049a5d4aa9d1000c86",
+  "independent_peer_sha256": "0f397c37cc8c70d4aedbed1fb64519b15805604f9cbfb196cf015a79800300bf",
+  "published_locally": true
+}

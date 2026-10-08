@@ -14,13 +14,20 @@ public class BatchCheckpointer :
     readonly Channel<IPendingConfirmation> _channel;
     readonly Task _checkpointTask;
     readonly ReceiveSettings _settings;
+    readonly TimeProvider _timeProvider;
     readonly CancellationToken _cancellationToken;
 
     /// <summary>Starts a bounded checkpoint worker using the configured batch size, interval, and backlog limit.</summary>
     /// <param name="settings">The receive settings that control checkpoint batching.</param>
     /// <param name="cancellationToken">Stops the checkpoint worker.</param>
     public BatchCheckpointer(ReceiveSettings settings, CancellationToken cancellationToken)
+        : this(settings, cancellationToken, TimeProvider.System)
     {
+    }
+
+    internal BatchCheckpointer(ReceiveSettings settings, CancellationToken cancellationToken, TimeProvider timeProvider)
+    {
+        _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _settings = settings;
         _cancellationToken = cancellationToken;
         var channelOptions = new BoundedChannelOptions(settings.CheckpointMessageLimit)
@@ -74,7 +81,7 @@ public class BatchCheckpointer :
 
     async Task ReadBatchAsync()
     {
-        var timeoutToken = new CancellationTokenSource(_settings.CheckpointInterval);
+        var timeoutToken = new CancellationTokenSource(_settings.CheckpointInterval, _timeProvider);
         var batchToken = CancellationTokenSource.CreateLinkedTokenSource(timeoutToken.Token, _cancellationToken);
         var batch = new List<IPendingConfirmation>(_settings.CheckpointMessageCount);
 

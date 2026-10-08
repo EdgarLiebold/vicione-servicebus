@@ -1,0 +1,380 @@
+{
+  "status": "READ_ONLY_BOUNDED_C2_TWO_OWNER_DESIGN_AND_NATIVE_CASE_PLAN__NOT_AUTHORED_EXECUTED_FROZEN_OR_ACCEPTED",
+  "reviewer": "/root/continuation_adversarial",
+  "bindings": [
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+      "sha256": "94c9fb781e42f0e164f62730684a18f2ec7df7d35cf7067171a086182dc56bed",
+      "bytes": 2062,
+      "lines": 48,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": true,
+      "root804_unchanged_hash_match": false,
+      "root84_unchanged_hash_match": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "f825ec82e2e3f71fd8daac77f770a875f2f5172b5d75c1e637dd9ecb635f62b7",
+      "bytes": 22994,
+      "lines": 560,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": false,
+      "root804_unchanged_hash_match": false,
+      "root84_unchanged_hash_match": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IOutboxStore.cs",
+      "sha256": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6",
+      "bytes": 9142,
+      "lines": 155,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": false,
+      "root804_unchanged_hash_match": false,
+      "root84_unchanged_hash_match": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendConsumerCompletion.cs",
+      "sha256": "eae0d3d24b8983a6fdc5518daf4d27547fe74384fab9b12b3acdae2ecd2ef06b",
+      "bytes": 1608,
+      "lines": 26,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": false,
+      "root804_unchanged_hash_match": false,
+      "root84_unchanged_hash_match": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/DurableSend/DurableSendId.cs",
+      "sha256": "6b752fbd7adc68bcb32e1406ec5010470c1cafa0eadfd1031c0ca59408317db6",
+      "bytes": 928,
+      "lines": 25,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": false,
+      "root804_unchanged_hash_match": false,
+      "root84_unchanged_hash_match": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs",
+      "sha256": "f8b1f8ad6f7dfc1d0f5ce5cdaac48b4faf9cb5c40d476f6767008e9e9400166d",
+      "bytes": 5701,
+      "lines": 105,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": false,
+      "root804_unchanged_hash_match": false,
+      "root84_unchanged_hash_match": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDelivery.cs",
+      "sha256": "4345e43534aa1b6da7753e1723b81cae3067d6e4708edd4fb372012142365e2d",
+      "bytes": 2378,
+      "lines": 46,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": false,
+      "root804_unchanged_hash_match": false,
+      "root84_unchanged_hash_match": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendStoreSnapshot.cs",
+      "sha256": "1578782accb4f5fc0a2bcfd902ba2c1dbe762255bca61abb9ec8816fe14d4a58",
+      "bytes": 4008,
+      "lines": 72,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": false,
+      "root804_unchanged_hash_match": false,
+      "root84_unchanged_hash_match": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.cs",
+      "sha256": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc",
+      "bytes": 5517,
+      "lines": 127,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": false,
+      "root804_unchanged_hash_match": false,
+      "root84_unchanged_hash_match": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Outbox.cs",
+      "sha256": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72",
+      "bytes": 13381,
+      "lines": 320,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": false,
+      "root804_unchanged_hash_match": false,
+      "root84_unchanged_hash_match": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "sha256": "551075235d378635bc7a9ffc7729cc9b348cd1b7b1b53fd662bf9bd7452ccb2f",
+      "bytes": 7884,
+      "lines": 194,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": true,
+      "root804_unchanged_hash_match": false,
+      "root84_unchanged_hash_match": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "sha256": "158dceacfcfe2a05effc59b02c79efa67e6664a02fd80bad29ecb00715d96ba8",
+      "bytes": 3422,
+      "lines": 84,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": true,
+      "root804_unchanged_hash_match": false,
+      "root84_unchanged_hash_match": false
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs",
+      "sha256": "4ff7066cdd86cda1ea8e3890e4e6e437be99c4690192aeae750e392133ac2f96",
+      "bytes": 1102,
+      "lines": 25,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": false,
+      "root804_unchanged_hash_match": false,
+      "root84_unchanged_hash_match": true
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs",
+      "sha256": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74",
+      "bytes": 2971,
+      "lines": 86,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": false,
+      "root804_unchanged_hash_match": false,
+      "root84_unchanged_hash_match": true
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/ServiceBusInstrumentationTests.cs",
+      "sha256": "736791d5165a037b3cad460cb9bb8940b8ec35b063db82f1566022cee4260984",
+      "bytes": 24149,
+      "lines": 457,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": false,
+      "root804_unchanged_hash_match": true,
+      "root84_unchanged_hash_match": false
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs",
+      "sha256": "41c159a7730682a1c30d57d6c7e1c81c430fba11d9a9fb70ff827df85c7fb8ee",
+      "bytes": 3621,
+      "lines": 102,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": false,
+      "root804_unchanged_hash_match": true,
+      "root84_unchanged_hash_match": false
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/OpenTelemetryGlobalCollection.cs",
+      "sha256": "bf37ae4bc28f82905a7cbc8663b440ed2d81f6d41247418b717ff3b48ff37df6",
+      "bytes": 422,
+      "lines": 13,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": false,
+      "root804_unchanged_hash_match": true,
+      "root84_unchanged_hash_match": false
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/ApiSurfaceGlobalUsings.cs",
+      "sha256": "92a91807b899850c048356982d623be2d372f1cf2b903612969d07f297b7c0c6",
+      "bytes": 762,
+      "lines": 16,
+      "reviewer_whole_current_read": "Whole in this assignment or already personally whole-read unchanged exact hash in earlier C2research; no Root transfer",
+      "root57_unchanged_hash_match": false,
+      "root804_unchanged_hash_match": true,
+      "root84_unchanged_hash_match": false
+    }
+  ],
+  "exact_two_proposed_product_owners": [
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs"
+  ],
+  "scope_assessment": "Proposed nullable optional diagnostic timestamp/duration and independent counter is sound within two owners. CompleteConsumerDelivery actual UTC/id/generation/token/store/result remains required. Delivery initial timestamp and EF Notify are separate unopened scopes.",
+  "original_causes": [
+    {
+      "owner": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+      "boundary": "ctor33 GetTimestamp",
+      "effect": "A purely diagnostic initial timestamp can prevent construction before any actual completion/store call",
+      "native_original_qualifier": "Record actual constructor exception and finite Assert.Null(escaped)/capability presence boundary; storeCall0 and real fixture state retained1. Not discovery, generic type initialization, setup or compile failure."
+    },
+    {
+      "owner": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+      "boundary": "Complete45 GetElapsedTime argument after required store await",
+      "effect": "Actual retained intent may already be retired or actual fenced false known, then diagnostic elapsed prep throws rather than return authoritative bool. No counter emitted because internal telemetry method never invoked.",
+      "native_original_qualifier": "Same immutable fixture constructor succeeded and chosen second timestamp fails during actual elapsed; real store called1 with correct args/state changed as expected, finite escaped-null/retired-bool assertion fails. Do not conflate returned defaultfalse with preserved stale false without asserting no exception."
+    }
+  ],
+  "change_design": {
+    "completion": [
+      "Field becomes readonly long? initialized by one narrowly guarded optional GetTimestamp after unchanged generation/store/time/instrumentation argument validation",
+      "CompleteAsync preserves exact required expression order: actual _timeProvider.GetUtcNow is evaluated before IOutboxStore call; actual awaited task exception/cancellation propagate; optional observation occurs only after actual successful returned bool",
+      "Calculate double? elapsedSeconds=null only when captured timestamp exists, with narrow guard around actual GetElapsedTime.TotalSeconds; never retry initial capture or fabricate duration0",
+      "Call RecordDurableConsumerCompletion(retired,elapsedSeconds) whether duration is available or not; return actual bool. No catch around required UTC/store/await/cancel or entire CompleteAsync."
+    ],
+    "instrumentation": [
+      "Internal sealed ServiceBusInstrumentation<TBus> already guards host-owned metric observation; signature RecordDurableConsumerCompletion(bool,double?) affects internal source API only",
+      "Existing actual completion counter always Add1 with exact outcome retired/not-retired; Histogram.Record only for a present nullable duration, using same existing unit/name/tags",
+      "Preserve EnsureDurableMetrics/disposed/host factory/Meter ownership, schema and all other methods. Nullable absence differs from valid zero duration; no fakezero histogram or outcome suppression."
+    ],
+    "ABI": "Class is internal. Public interface IDurableSendConsumerCompletion and IOutboxStore signatures unchanged. All first-party/friend callers still require fresh compilation; do not infer private assembly compatibility from unchanged public API."
+  },
+  "exact_caller_inventory": {
+    "Completion_ctor_product": {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "line": 25,
+      "call": "new DurableSendConsumerCompletion<TBus>(id,generation,_store,_timeProvider,_instrumentation)"
+    },
+    "Completion_ctor_test_bridge": {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs",
+      "line": 60,
+      "call": "public CreateCompletion -> same internal ctor"
+    },
+    "metric_product_call": {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+      "line": 43,
+      "count": 1
+    },
+    "existing_direct_metric_schema_calls": {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/ServiceBusInstrumentationTests.cs",
+      "lines": [
+        47,
+        48
+      ],
+      "calls": [
+        "retiredtrue0.5",
+        "retiredfalse1.5"
+      ],
+      "count": 2,
+      "nullable_conversion": "Existing double arguments convert to nullable without changing healthy observations; no caller edits needed."
+    },
+    "separate_opened_neither": "Delivery13 initial timestamp remains independent known C3candidate; C2 does not close it. Telemetry other elapsed and EF required Notify clock boundaries also unchanged."
+  },
+  "fixture_routes": {
+    "recommended_real_store_decorator": {
+      "steps": [
+        "Fixture obtains inner actual InMemoryReliableStore through unchanged DurableSenderTestFactory.CreateInMemoryStore<TBus> (or direct canonical friend construction, no provider starts)",
+        "Setup calls inner actual AdmitAsync using explicit UTC, valid SerializedDurableSend/body3 and bounds, then actual ClaimDueAsync gets actual generation; successful claim validates nonempty generation and retained snapshot1/bytes3",
+        "Create strict public IOutboxStore DispatchProxy whose only allowed subject operation is CompleteConsumerDeliveryAsync; validate target id, exact capability generation (matching or intentionally stale), actual completion UTC and operation token",
+        "DispatchProxy delegates directly to inner.CompleteConsumerDeliveryAsync, no MethodInfo.Invoke wrapping; fixture uses inner.GetSnapshotAsync after subject result to assert actual state0/bytes0 when retired or1/bytes3 when stale",
+        "Subject actual public IDurableSendConsumerCompletion.CompleteAsync comes from existing public driver CreateCompletion or canonical direct internal ctor; typed instrumentation uses actual DI IMeterFactory and existing factory-scoped MetricObservationSession. Prefer direct ctor+DI for smallest graph when canonical friend route selected."
+      ],
+      "precise_semantics": "Matching generation retires actual record; distinct known stale generation must not delete retained current generation. Actual in-memory backend is process-local and does not prove restart/cloud/SQL durability or broad provider atomicity.",
+      "Root_extra_read": "If route selected, Root personally read current whole InMemoryReliableStore127+Outbox320 and factory25 plus public metadata/interfaces before authoring relevant fixture, unless independent full prior current hash-qualified Root proof exists."
+    },
+    "stateful_test_double_alternative": "A strict DispatchProxy owning dictionary/current-generation state can model authoritative true/false/cancellation for pure two-owner Completion contract efficiently. Label it stateful Store testdouble; assertions on its state do not establish real InMemoryReliableStore/backend behavior. Both routes must deny unexpected subject store operations.",
+    "DispatchProxy_shape": "Use a nonsealed accessible proxy class with accessible parameterless constructor for runtime subclassing; configure through typed proxy object. A proxy setup/TypeLoadException is invalid fixture, never a product clock finding.",
+    "original_compilation": "New fixture invokes unchanged constructor/IDurableCompletion public API. Do not call new RecordDurableConsumerCompletion(...,null) directly in original fixture: baseline double signature would compile-fail. Drive missing duration via actual subject clock faults so same test bytes compile and run original/fixed/mutants."
+  },
+  "native_case_plan": {
+    "methods": 2,
+    "proposed_cases": 9,
+    "proposed_requirement_rows": 2,
+    "not_yet_actual_requirements": "One optional-diagnostic outcome theory purpose and one required-boundary preservation theory purpose under existing observability/durable completion requirements; exact mapping must reflect actual authored methods. This is a proposal, not canonical projection append.",
+    "optional_matrix": {
+      "cases": 6,
+      "diagnostic_modes": [
+        "Healthy",
+        "InitialTimestampThrows",
+        "ElapsedTimestampThrows"
+      ],
+      "real_result_modes": [
+        "matching current generation -> retiredtrue",
+        "stale capability -> fencedfalse"
+      ],
+      "time": "Underlying Fake monotonic start0, explicit healthy UTC epoch, advance7secs after construction before Complete. InitialTimestamp mode throws on initial capture then no later optional capture attempt; ElapsedTimestamp mode captures normally but GetTimestamp after capture always throws. TimestampFrequency can stay healthy for minimal exact cause.",
+      "oracles": [
+        "No escaped constructor/Complete ordinary observation error; actual capability id intact; returned bool exactly equals actual store result",
+        "Real required store Complete called exactly1 with expected id/capability generation/completedAt epoch+7/token; actual retained state removed only for matching generation",
+        "Actual completion Counter exactly one value1 with only outcome tag retired or not-retired (Meter bus tag remains existing host schema)",
+        "Healthy exactly one duration histogram7seconds; InitialTimestamp/ElapsedTimestamp modes zero duration samples, not sample0. Independently actual counter still1 for unavailable durations",
+        "No other completion methods, storage transitions or provider calls manufactured; no reflection/private method invoke or timeout oracle"
+      ],
+      "repeat_control": "In matching generation healthy control, optional repeat of same capability must return false after true with actual store0 and second not-retired counter; specify healthy elapsed at repeat exactly7/8secs if included. Keep within declared case counts, no hidden cases added.",
+      "original_prediction": "InitialTimestamp pair finite constructor failures2; ElapsedTimestamp pair finite post-real-store observation failures2; Healthy pair green2. Exact assertion line/source/runtime becomes qualified only once actual fixture authored/executed."
+    },
+    "required_controls": {
+      "cases": 3,
+      "modes": [
+        {
+          "mode": "UTC read required exception",
+          "oracle": "Construct with healthy initial timestamp, chosen same UTC exception escapes Complete; storeCall0, state retained1, no completion counter/histogram"
+        },
+        {
+          "mode": "Store chosen required failure",
+          "oracle": "UTC healthy; subject passes exact id/generation/UTC/token to actual allowed store method; chosen same store exception escapes; state retained1 and no completion measurement; no fake retiredtrue/false result"
+        },
+        {
+          "mode": "Cancellation at required store boundary",
+          "oracle": "Actual owned token canceled, UTC remains healthy; actual store method receives same token and cancels before state transition; terminal OperationCanceledException token exactly same, no retained-state removal/metrics. If proxy captures actual OCE object or supplies a chosen faulted-task OCE, compare original object only after native runtime behavior qualifies it; minimum public cancellation contract is exact token+source boundary."
+        }
+      ],
+      "precision": "Required controls should be healthy on original/fixed/bothclock mutants because optional timestamp/elapsed are healthy and store UTC failure occurs before post-store diagnostic observation. They must not force-cancel a watchdog or throw from setup."
+    },
+    "aggregate_predictions_only": {
+      "original": {
+        "total": 9,
+        "finite_red": 4,
+        "healthy": 5,
+        "skip": 0
+      },
+      "fixed": {
+        "total": 9,
+        "healthy": 9,
+        "skip": 0
+      },
+      "mutant_ctor_guard_only": {
+        "total": 9,
+        "finite_red": 2,
+        "healthy": 7,
+        "skip": 0
+      },
+      "mutant_elapsed_guard_only": {
+        "total": 9,
+        "finite_red": 2,
+        "healthy": 7,
+        "skip": 0
+      }
+    }
+  },
+  "exact_two_cause_mutant_policy": [
+    {
+      "id": "M1",
+      "remove": "Only initial optional capture guard/helper use reverted to direct _timeProvider.GetTimestamp() assignment; nullable field/metric duration guard/post-store guard/counter unchanged",
+      "red": "InitialTimestamp matching/stale two cases, before actual store call; required controls and elapsed/healthy remaining7 green"
+    },
+    {
+      "id": "M2",
+      "remove": "Only guard around conditional post-store GetElapsedTime.TotalSeconds removed; initial capture guard/nullable absence/typed counter and histogram condition unchanged",
+      "red": "ElapsedTimestamp matching/stale two cases after real authoritative required store result; InitialTimestamp and required/healthy remaining7 green"
+    }
+  ],
+  "Root_read_context_list": {
+    "two_current_owner_binding": "Completion48 exactRoot57 reuse; typed560 original542Root57 + accepted B1 authored/current full source delta (f825...) reuse with existing independent source review, not root57-oldhash credit alone",
+    "mandatory_relevant_public_current_definitions": [
+      "IOutboxStore.cs full interface",
+      "IDurableSendConsumerCompletion.cs public contract",
+      "DurableSendId.cs",
+      "SerializedDurableSend.cs",
+      "DurableSendDelivery.cs for actual generation",
+      "DurableSendStoreSnapshot.cs",
+      "MessageContractIdentity/DurableSendStoreLimits definitions if actual Admit/Claim route used"
+    ],
+    "callers_and_fixture_context": [
+      "ReliableMessagingDeliveryService.Delivery.cs (new completion constructor, initial timestamp remains separate)",
+      "DurableSenderDeliveryTestDriver.cs public completion bridge if used",
+      "ServiceBusInstrumentationTests.cs existing full schema/ownership tests (both direct double calls)",
+      "MetricObservationSession.cs/OpenTelemetryGlobalCollection.cs/Core imports/projection",
+      "Actual InMemory127/Outbox320/factory25 only if real backend decorator chosen"
+    ],
+    "new_canonical": "Root personally read complete newly authored owner before canonical805 append; prior804 current whole owner/84context receipts can be reused only at identical current hashes. No review-agent read credit transfer."
+  },
+  "risks_and_limits": [
+    "No implementation or test/requirements edits/.NET/provider/cloud/device operation performed",
+    "No native case/artifact assurance inferred from planning or Source hashing",
+    "Narrow diagnostic catches cannot cover required UTC/store/await/cancellation or new typed parameters to avoid original compile evidence",
+    "Metrics observer callbacks can themselves throw or reenter; existing guards contain ordinary observation failure, not universal per-listener delivery/balance guarantees",
+    "DispatchProxy fake state does not qualify real-store behavior; actual process-local store does not qualify persistent durability",
+    "C3delivery initial timestamp, service outcome elapsed, optional static timeline/required monitor and EF policy remain open; no wholeP05/A+release claim"
+  ],
+  "skills": "Applied earlier Microsoft OpenTelemetry ownership/measurement absence and current test-anti-patterns/.NET reference. Read-only bounded design and case planning; no test-authoring or run-tests role.",
+  "Root_provenance": "Hash mappings to Root57/Core804/84 provided for reuse where exact current match exists. Root alone attests personal reading; reviewer merely binds own full reads and exact source context.",
+  "reviewer_write_scope": "Only own JSON under R, no product/test/tool/governance write."
+}

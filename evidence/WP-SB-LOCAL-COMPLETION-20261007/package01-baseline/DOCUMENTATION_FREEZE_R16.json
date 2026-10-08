@@ -1,0 +1,16 @@
+{
+  "kind": "ROOT_PUBLISHED_SERVICEBUS_DOCUMENTATION_FREEZE_R16",
+  "source_sha256": {
+    "CHANGELOG.md": "d2722fa021b4dd136b62cc0dc104cc7ec95c9302e3a3be175785eacb3c90a018",
+    "TODO.md": "835a1804e7b98486d1a02a600e08fb3c382c835a74bdba69f90d9e839b7ecf46",
+    ".testagent/status.md": "fc2ff85c08bc036c43c0cfd1910e50b533752c6d6136c93d234d3b84a315efe6",
+    ".testagent/plan.md": "bca79a74ac887919e5f998260b525d14bc66165a4a8660ff4e562ab692c60a82",
+    ".testagent/local-completion-plan.md": "060453899bb767169776cdb584ba1a8f00d9efa51bb1f840ac05d9136448f37a",
+    "docs/quality-status.md": "e17516acc4d94d551a2dfcc32fdbd2e70a45b2002fd25e0649aee11ed7a539d8"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r16",
+  "c7_acceptance_sha256": "b21f05f4e01a0140161265bdc784bb51c37263f74b35cdbf4d26876063401f6d",
+  "prior_freeze_sha256": "9059f9276b9023d61de4948d6567512f7b8d9ec449a11f92414c8b286ee0a2f5",
+  "independent_proposed_review_sha256": "225ea104e75fe34067bfa05d8a3a081fa094038571e76e221dcd4077610b51d9",
+  "limits": "Exact six reviewed files published. No legacy audit/coverage/TODO/external evidence closure; recorded C7 bounded local evidence only."
+}

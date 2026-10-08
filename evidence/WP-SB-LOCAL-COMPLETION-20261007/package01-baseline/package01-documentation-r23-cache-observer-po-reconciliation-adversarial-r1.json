@@ -1,0 +1,252 @@
+{
+  "kind": "INDEPENDENT_READONLY_ADVERSARIAL_DOCUMENTATION_R23_CACHE_OBSERVER_AND_PO_RECONCILIATION_R1",
+  "disposition": "NO_BLOCKER_GUARDED_PUBLICATION_READY",
+  "publication_not_performed": true,
+  "freeze": {
+    "proposed_R23_sha256": "8ae4cfedae91b662a31990522bb310586a83106cd388cf7a3985c3c36bc760f8",
+    "prior_R22_freeze_sha256": "6fc4c0a0671238bcc7913aa1f78b3a57fcd2533f9b6fe3ce017840c7f4f41f2c",
+    "canonical_six_exact_guarded_R22": true,
+    "staged_six_exact_R23": [
+      {
+        "path": "CHANGELOG.md",
+        "canonical_R22_sha256": "18f0baee1af6e1603646870aa1b2220ee5122d635fa6f1ea3194ee735bc45dc6",
+        "staged_R23_sha256": "a534c6acb054cb27a70b509f8a927ed7d825c0a021c8d67f4272819600ebbb11",
+        "lossless_diff_sha256": "5e978ce81372fa4485f6a910495a57712d98dea019862e72df6e6e9c5761f0ab",
+        "diff_bytes": 1502
+      },
+      {
+        "path": "TODO.md",
+        "canonical_R22_sha256": "d5ccf882c5738c1ed65988bf8e9678f7ba7c5b220e79ebcc99e6fb939dfd9184",
+        "staged_R23_sha256": "68da2831ab14787d7568622743394a9cd8172a4843760664b41e6455950591c8",
+        "lossless_diff_sha256": "2bd1a7ac2ee671f09943494fb84e0f329882a064323603fb24d01700d30d1341",
+        "diff_bytes": 2739
+      },
+      {
+        "path": ".testagent/status.md",
+        "canonical_R22_sha256": "d3c6934fec834db34607f40fcc4698e7c081a4d37bd3b6a72dde309d3317b1bf",
+        "staged_R23_sha256": "f4b1ae95c5ae7cedc19bae78874bedb15441dc1ce0fed43efc5d7547c330534f",
+        "lossless_diff_sha256": "60916250aac90eeddbe506c98a416c3f33bacf84831daef4750e8a291fb2d09e",
+        "diff_bytes": 1977
+      },
+      {
+        "path": ".testagent/plan.md",
+        "canonical_R22_sha256": "edc443037ec8514524f99e18bead3b711fa68217b1c17f0c8fc229c22e6054a0",
+        "staged_R23_sha256": "021565cf70a55610fe98352d9c3017e6fa0972aa4ab2f750c2ef41fa400a0156",
+        "lossless_diff_sha256": "c1e1ddaf16af24c8efb585191a588660406a07c61f0585dc707731c1153a31d8",
+        "diff_bytes": 1973
+      },
+      {
+        "path": ".testagent/local-completion-plan.md",
+        "canonical_R22_sha256": "03a653e00c0acd19ee2bebb51a55656ceebdd1c15797630f9b36405192c666bd",
+        "staged_R23_sha256": "651467cdcdb8b097cc6dfdc36ccc64b90fc14090e9d7e225945e8e674b7f1dfc",
+        "lossless_diff_sha256": "0aa2b8cc733597c677393864b7129a5331b018d38310e9ed662ccc6edf152f47",
+        "diff_bytes": 5899
+      },
+      {
+        "path": "docs/quality-status.md",
+        "canonical_R22_sha256": "59f61e4e0cb014795f6b6311f7645d566ac707b81262eab719df52e11c71ebc7",
+        "staged_R23_sha256": "e0a0141a329e6f9ecf662a7289bc258fdc947e6819384495e2380f01b85948d9",
+        "lossless_diff_sha256": "4acf5f5f1d92e70d3df4c8dc8e1f95c4f57c6248fd72ce32633b0146da38299a",
+        "diff_bytes": 1981
+      }
+    ],
+    "root_lossless_six_plus_PO_diff_sha256": "da16e3593e34f79bb8d2b995cb1a17ad61ef70b50409270dc5008557c5ca56ea",
+    "all_seven_lossless_diffs_independently_reconstructed_exact": true,
+    "own_prior_R22_peer_sha256": "1694e9f95ec800892ce4f06cba8f473c2e313d328bb850c00165c37c86232482"
+  },
+  "separate_PO_report": {
+    "path": "docs/servicebus-local-completion-report.txt",
+    "canonical_prior_sha256": "3828e3d69e2df9653b772f7b336bedbf2ed7568fb6513919b68e9b4db5124df2",
+    "staged_sha256": "8114f36a88603f30e66bcc0df829ddb04098197a6090572dddf824168b9070b4",
+    "complete_personal_read_lines": 52,
+    "lossless_diff_sha256": "c638a4cd6e9072d34822313549fa7ad4137afc2b09b3ac0636176400ccbbfaf8",
+    "exact_delta": "Adds bounded57new/59focus/8206Core199Cache/threeactualvariants/post59/exactthreefileapplication; retains current open local/external/hardware/global acceptance boundaries."
+  },
+  "cache_acceptance": {
+    "sha256": "9c164b86eeb244f7832974b14037a748f1f1ecbd04284a479efdae30d046a47f",
+    "all17_reference_files_current_hashchecked": [
+      {
+        "path": "cache-observer-failure-channel-source-candidates-r3/PREPARED.json",
+        "sha256": "c677be0fb862dc49bd9c691c639b05b00059de08e67acba12f3d8464b57a68b9"
+      },
+      {
+        "path": "cache-observer-failure-channel-native-preparation-r1/package06-cache-observer-two-row-projection-test-only-gate-adversarial-r1.json",
+        "sha256": "e217bd43f196f53c2d6a45e72ab814fb8ba253d59501b562a991c7eb0e9ef659"
+      },
+      {
+        "path": "cache-observer-failure-channel-native-preparation-r2/INPUTS.json",
+        "sha256": "70d7975a0044ef93e712292dc68d0c649e0297180dc30c08750676630bccfeec"
+      },
+      {
+        "path": "cache-observer-failure-channel-original-59-native-r2/RESULT.json",
+        "sha256": "440532083d6fa627c02bf95c78dcb5e17e0fa7ce12ca9efde5d62d11e285df0a"
+      },
+      {
+        "path": "cache-observer-failure-channel-original-59-native-r2/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+        "sha256": "071bc4eacb1ccdb0f7da3fc4567e251e6c94faec8adaa2f1a4e53cfdace8fc30"
+      },
+      {
+        "path": "cache-observer-failure-channel-original-59-native-r2/package06-cache-observer-failure-channel-original59-native-adversarial-r1.json",
+        "sha256": "d7bdfc23371f1a22ebef778b616c077dbc658006c5369894fb09b795be776aab"
+      },
+      {
+        "path": "cache-observer-failure-channel-whole-core-native-r1/RESULT.json",
+        "sha256": "df7c036ea4bef0fd0549a5d98ebaf0fa806b3e150e66bfe6d4fcecb85d5aa87c"
+      },
+      {
+        "path": "cache-observer-failure-channel-whole-core-native-r1/package06-cache-observer-failure-channel-whole-core-native-adversarial-r1.json",
+        "sha256": "d70f9fb1a10d7af8f1aafc78cfd0b7709325a6656acbdbfa17bbf572d53b35a9"
+      },
+      {
+        "path": "cache-observer-failure-channel-mutants-native-r1/ROOT_FIRST_FINITE_CAUSE_LEDGER_R2.json",
+        "sha256": "bd73d9b23ffc70aab6fb68c11b937190b6d1c3758d381ce8840dbe1808732e45"
+      },
+      {
+        "path": "cache-observer-failure-channel-mutants-native-r1/ROOT_MUTANTS_PHYSICAL_BINDING_AGGREGATE_R1.json",
+        "sha256": "e4845c368c16e579bb22db77b00fc8a463c96025c480d763d8c203299433cdc3"
+      },
+      {
+        "path": "cache-observer-failure-channel-mutants-native-r1/package06-cache-observer-failure-channel-three-mutants-native-adversarial-r1.json",
+        "sha256": "8237590f179c4a725c9cb7d18838cf6e590f11fbdc256977108717c9a3122717"
+      },
+      {
+        "path": "cache-observer-failure-channel-mutants-native-r1/package06-cache-observer-failure-channel-three-mutants-native-ledger-r2-final-adversarial-r1.json",
+        "sha256": "0f8e3bf37717d5549733ec720525738c57a986ded4f742682260cb2957994214"
+      },
+      {
+        "path": "cache-observer-failure-channel-restored-original-59-native-r1/RESULT.json",
+        "sha256": "bd58547a4dcafc8abea37dee9f0625c2074b78cbe0a0959d1f89eab3536b3825"
+      },
+      {
+        "path": "cache-observer-failure-channel-restored-original-59-native-r1/ROOT_RESTORED_ORIGINAL59_EXACT_IMAGE_BINDING_R1.json",
+        "sha256": "4eb775c98d732648086205aadba5996e6965fc6af3cb6202858af0bd942df6cd"
+      },
+      {
+        "path": "cache-observer-failure-channel-restored-original-59-native-r1/package06-cache-observer-failure-channel-restored-original59-native-final-adversarial-r1.json",
+        "sha256": "9d7ccd5ea76e903b74c12889d23fa5248116db3f08299545f73c85947ebf0ef7"
+      },
+      {
+        "path": "ROOT_CACHE_OBSERVER_FAILURE_CHANNEL_CANONICAL_THREE_FILE_APPLICATION_R1.json",
+        "sha256": "95e328def748ec2195b51b1c8180396dc71207645dfcf431fa6a075dbf09ddef"
+      },
+      {
+        "path": "package06-cache-observer-failure-channel-canonical-three-file-application-adversarial-r1.json",
+        "sha256": "86db8838110b17fb8070bcb66126ba1e531919ea04c617195859134bac67a7e7"
+      }
+    ],
+    "counts": {
+      "new_cases": 57,
+      "new_METHODrows": 2,
+      "original_focus59": {
+        "pass_count": 59,
+        "failed": 0,
+        "skipped": 0
+      },
+      "wholeCore": {
+        "pass_count": 8206,
+        "Cache": 199,
+        "failed": 0,
+        "skipped": 0
+      },
+      "actual_single_cause_variants": 3,
+      "same59_repeated_mutant_slots": 177,
+      "mutants_first_finite_RED": 117,
+      "mutants_healthy": 60,
+      "restored_focus59": {
+        "pass_count": 59,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "actual_afterapply_own_peer_sha256": "86db8838110b17fb8070bcb66126ba1e531919ea04c617195859134bac67a7e7",
+    "canonical_application_product_changes": 0,
+    "compiled_requirement_rows": 4727,
+    "compiled_resource_bytes": 1681543,
+    "all4727_METHOD_and_resource_and35refs_each_mutant_fresh_own_decode": "Original ced63 physical/a9a73 compiled; mutants afb2 physical/b145 compiled; reports hash-bound by own d7bd original/8237 mutants and 0f8e ledger R2 addendum. Fresh metadata required and independently performed because each mutant Tests.dll/PDB changes. This documentation review does not repeat parsing.",
+    "restored_runtime17_assets12_generated39_exact_original_reuse_only": true,
+    "M3_precision": "Latest Root bd73 R2 correctly preserves raw first frame105 vs source operation-completion Assert.False110 as source/control-flow/assertion-order inference only. Additional later False141 exists. No printed110, IL/PDB mapping, JIT cause, later124 violation, duplicate189 or unreached later assertion credit.",
+    "Root_read_provenance_disposition": "Accurately distinguishes personally selected owner/raw reads, literal-equality five failure-body groups and all117ID/60healthy mapping, mechanical whole8206 ledger, and independent reviewer metadata credit. No all8206humanbody or117duplicatebody read credit."
+  },
+  "read_scope": {
+    "all6_complete_lossless_diffs_and_all_new_paragraphs_personally_read": true,
+    "entire52line_PO_and_current_R23_local_plan_personally_read": true,
+    "entire_bounded_Root_acceptance_prose_counts_and_references_personally_read": true,
+    "unchanged_R22_text_reuse": "Own preceding1694 R22 read at exact current six R22 hashes; no inherited human body-read credit.",
+    "mechanical_checks": "Full-byte guards, reference hashes, lossless diff equality, TODO section/preamble, ordered OBL and historical suffix preservation. No new native or PE/PDB parse performed.",
+    "frozen234": "Fresh direct archived STATE hash and administrative scalar read, byte-identical own prior R22 STATE; no fresh234 individual finding recount."
+  },
+  "preservation": {
+    "TODO_onlychanged_section": "## Separate cache index projection from external observation",
+    "TODO_other11_fullsections_byteexact": {
+      "## Verify startup validation across retained capabilities": "8430ae6ed8a895f262d7dab7fb27d325e7b1994ac89a9b5cdb492ca93e21af6c",
+      "## Complete Azure Service Bus validation against the real cloud service": "cc5d9e8037a5130d0b6a9fd7ee45d8cf8cacaf2f5a5ca5c8097263334958112a",
+      "## Continue deterministic time normalization beyond envelope materialization": "5492681adce6e3869d1e8a95ca8d9c54e930af414fde6cfbc5de5ad60f85db52",
+      "## Complete external benchmark scenarios": "ad94a2fc4505b25478cf256f0b9578be5178fde6ca89c5842c2bee6e7da5f6dd",
+      "## Make Activity telemetry observationally no-throw": "e82735949dd0d8b1f990d90b1aebdf967cc1ad037879a0d12ea69b8e9442bc5b",
+      "## Complete MessageJournal external provider validation": "7004d3dd9f288e9cdc5d9bd39fbb41cf4d9cca2470959aef0d773b2ccdf08e44",
+      "## Complete Azure Table persistence validation against the real cloud service": "cb88b3a863d609d5d52d9e306049091bd2753539c93739dc2e41a00b6c18bd5c",
+      "## Complete Entity Framework SQL Server and Azure SQL external variant validation": "514b7682cff5b750129f59f967204a995e764b1f6c365fe06689c0f6e71011e5",
+      "## AWS real-service closure": "25b7df4df7fc790caa0c9ad8ca43df69c6fb7aa4fdbd9a8a4f15cc319ca461d7",
+      "## Complete Event Hubs validation against the real cloud service": "714f6494487dc039c7e8eb79d632a694f1e03f81919f07b23c8b2a5fbbcfef1c",
+      "## Complete RabbitMQ validation against Amazon MQ": "d592562bd69b5747702059ac03a45e7cd07ab7ebda2f2fcff2db3a040f414415"
+    },
+    "TODO_preamble_byteexact": true,
+    "ordered_OBL_raw_occurrences_exact": true,
+    "ordered_unique_OBL_count": 62,
+    "categories": {
+      "CLOUD": 55,
+      "PER": 6,
+      "BRK": 1
+    },
+    "four_historical_raw_tails_byteexact": {
+      "CHANGELOG.md": {
+        "anchor": "## Unreleased — API review completion, 6 October 2026",
+        "hash_scope": "Exact heading-inclusive raw UTF8 suffix",
+        "sha256": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+        "bytes": 2306
+      },
+      ".testagent/status.md": {
+        "anchor": "## Historical checkpoints",
+        "hash_scope": "Exact heading-inclusive raw UTF8 suffix",
+        "sha256": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+        "bytes": 6160
+      },
+      ".testagent/plan.md": {
+        "anchor": "## Historical API repair execution notes",
+        "hash_scope": "Exact heading-inclusive raw UTF8 suffix",
+        "sha256": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+        "bytes": 13058
+      },
+      "docs/quality-status.md": {
+        "anchor": "## Historical product-wide coverage and CRAP checkpoint",
+        "hash_scope": "Exact heading-inclusive raw UTF8 suffix",
+        "sha256": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5",
+        "bytes": 3174
+      }
+    },
+    "local_plan_onlychanged_table_row": "P06",
+    "frozen234_STATE_actual_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json",
+    "frozen234_STATE_bytes": 3624096,
+    "frozen234_STATE_sha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+    "frozen_accounting": {
+      "confirmed": 234,
+      "bounded_accepted": 234,
+      "pending": 0,
+      "whole_API_global_closed": false,
+      "global_A_plus_proven": false
+    },
+    "historical_suffix_scope_reconciliation_sha256": "13b0d858e3c2831efa597014a281a122b11e6615fdca29944675877d3989e83f",
+    "STATE_navigation_note": "Old workspace-top path absent; actual archived repository evidence path exists with exact prior bytes. Initial navigation uncertainty resolved, no missing-data finding."
+  },
+  "findings": [],
+  "semantic_limits": [
+    "57 new cases are included in59focus and8206Core/199Cache;177mutant slots repeat59 identities,117 first finite RED are sensitivity outcomes rather than117new product defects.",
+    "Best-effort logging wording correctly replaces an unqualified logging guarantee. Missing/disabled/throwing loggers preserve caller success/fanout without durable guaranteed diagnostics.",
+    "Complete registration-order fanout within a dispatch snapshot is bounded; no global concurrent commit order, cache snapshot, reentry, retirement capacity, backpressure, caller/waiter memory or measured performance closure.",
+    "Original product observer behavior already correct; exact three test/requirement files only, including owned existing Clear cleanup correction. No new canonicalroot native execution inferred.",
+    "Other startup/composition/currentcoverage/CRAP/allmodule/provider/API/adapter/telemetry/developerjourney/benchmark/CI/ASB negative sizes/cloud/hardware/globalA+/remotecommitpush/release gates remain explicitly open.",
+    "Frozen234 accepted audit repairs, all62 external obligations, other11TODO sections and four historical heading-inclusive tails retained.",
+    "Readonly review performed no .NET/native/provider/process/operational imports/product/test/tool/docs edits; sole write is this immutable review report."
+  ],
+  "publication_guard": "Root may publish exactly the six staged R23 hashes and separate staged PO hash only while all canonical six prior R22 and prior PO hashes match. No actual publication or afterpublication verification claimed."
+}

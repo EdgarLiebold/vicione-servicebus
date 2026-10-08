@@ -1,0 +1,611 @@
+{
+  "kind": "INTERNAL_READONLY_P06_CACHE_BOUND_FIX_POST_AND_AGGREGATE_ADVERSARIAL",
+  "status": "ACCEPTED_BOUNDED_CACHE_COMPARER_PUBLICATION_PENDING_RETIREMENT_FIX_PACKAGE",
+  "findings": [],
+  "exact_review_dependencies": {
+    "original30": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-original-r4-native-artifact-adversarial-r1.json",
+      "sha256": "6e153d02d57f667a59fa3219cf216c18d51db52fed5efc3fbb9ca59d21cb8ee1"
+    },
+    "fixed30_cache142": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-final-fixed30-wholecache142-native-adversarial-r1.json",
+      "sha256": "9d49e2662c17beed53532a295c9c8a7b7c809a5766ffb0d6de33dbef09c61b6a"
+    },
+    "M1_M4": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-mutants-m1-m4-native-adversarial-r2.json",
+      "sha256": "080e335d282494c802de7eb35175b8fd2a922ce17e291612ce261b37b8616c2f"
+    },
+    "M5_M8": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-mutants-m5-m8-native-combined-adversarial-r1.json",
+      "sha256": "245ff1eb2f93907866de3fe861e8c887c9129c48e19c415257ab17a8ca8c407e"
+    },
+    "Core8142": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-whole-core8142-native-artifact-review-r1.json",
+      "sha256": "6771e783d3803f045325e558282092f8914f50968785a47ae1efe4fbbf35af4c"
+    }
+  },
+  "post": {
+    "result_sha256": "350e80148412687de8b8069f7a35097ec0ea6e31bfea1544e28ee660f34e4ed4",
+    "strict_build": {
+      "warnings": 0,
+      "errors": 0
+    },
+    "joined_exits": {
+      "build": 0,
+      "focused": 0
+    },
+    "tool_sessions_not_OSPIDs": {
+      "forced_build": 71345,
+      "focused": 33590
+    },
+    "native30events": [
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.RemoveRetiresEveryIndexAndReleasesResource(hostile: False)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.RemoveRetiresEveryIndexAndReleasesResource(hostile: True)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LateOldFactoryCannotUnlinkPendingReplacement"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollidingResourceRemovalPreservesEveryOtherOwnedResource(position: 0)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollidingResourceRemovalPreservesEveryOtherOwnedResource(position: 2)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollidingResourceRemovalPreservesEveryOtherOwnedResource(position: 1)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get\", hostile: False)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"cleanup\", hostile: False)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get-or-add\", hostile: True)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"add\", hostile: True)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"add\", hostile: False)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"timer\", hostile: False)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get\", hostile: True)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"cleanup\", hostile: True)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get-or-add\", hostile: False)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"remove\", hostile: False)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"remove\", hostile: True)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"timer\", hostile: True)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FailedBulkIndexCannotCorruptExistingRetirement(hostile: False)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FailedBulkIndexCannotCorruptExistingRetirement(hostile: True)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LookupFailureCannotStrandAlreadyExpiredOwnership(hostile: False)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LookupFailureCannotStrandAlreadyExpiredOwnership(hostile: True)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(hostile: False)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(hostile: True)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: True)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: False)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollisionEqualityFailureLeavesExistingOwnershipIntact(hostile: False)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollisionEqualityFailureLeavesExistingOwnershipIntact(hostile: True)"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership"
+      ],
+      [
+        "erfolgreich",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership"
+      ]
+    ],
+    "two_separate_children": [
+      {
+        "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+        "parent_OSPID": 93948,
+        "child_OSPID": 93956,
+        "joined_exit": 0,
+        "waitFailure": null,
+        "runtime7_before_after_archived_equal": true,
+        "full_stdout_diff": "--- \n+++ \n@@ -1,5 +1,5 @@\n-CACHE_CASE_COMPLETED:2f1f57a84da04d4d9e98e1f235d1b00b:ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership\n-erfolgreich ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership (82ms)\n+CACHE_CASE_COMPLETED:cde3ca7285244c52bd039ab492b45075:ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership\n+erfolgreich ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership (77ms)\n   Standardausgabe\n     ACTUAL_COMPARER_ATTEMPT: candidate\n        at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.Comparer.GetHashCode(String key)\n@@ -190,4 +190,4 @@\n   fehlerhaft: 0\n   erfolgreich: 1\n   \u00fcbersprungen: 0\n-  Dauer: 2s 626ms\n+  Dauer: 2s 647ms\n",
+        "actual_product_request_slot_replacement_cache_joins": true,
+        "artifacts_sha256": {
+          "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout.log": "34656cf7f2fca4bfbe68047ba8062589b956f3775171155c0103f53ab83be633",
+          "PROCESS.json": "244a6879bc40ccd170291c2cf4c1dd90bc0700e25c3f63cfa57151733cbb2b14"
+        }
+      },
+      {
+        "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership",
+        "parent_OSPID": 93948,
+        "child_OSPID": 93962,
+        "joined_exit": 0,
+        "waitFailure": null,
+        "runtime7_before_after_archived_equal": true,
+        "full_stdout_diff": "--- \n+++ \n@@ -1,5 +1,5 @@\n-CACHE_CASE_COMPLETED:0623e662c04a44a49a00aaf5da9582f2:ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership\n-erfolgreich ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership (74ms)\n+CACHE_CASE_COMPLETED:7cb23196c7dc4e71a4c7d977fa7003b5:ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership\n+erfolgreich ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership (62ms)\n   Standardausgabe\n     STATE factoryCalls=1 factoryReturns=1 release=0 pending=0 requestTerminal=True comparerThrows=0\n     \n@@ -9,4 +9,4 @@\n   fehlerhaft: 0\n   erfolgreich: 1\n   \u00fcbersprungen: 0\n-  Dauer: 2s 498ms\n+  Dauer: 2s 356ms\n",
+        "actual_product_request_slot_replacement_cache_joins": true,
+        "artifacts_sha256": {
+          "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout.log": "61e82fa3511e2aa3b3a80a5e9255669693acd810d4e2fd35fdc5fbe10b519e8b",
+          "PROCESS.json": "db74a40cb1cbac04a7841bea8795aced44762ae3d61f8bd423d6b3632b038716"
+        }
+      }
+    ],
+    "raw4_sha256": {
+      "p06-cache-post-build-r1.log": "23285806397010ee603d3e1ea7a2c42557303523bf809ce0c06e792f9efd74d5",
+      "p06-cache-post-focused-r1-20261007-080730--93946--shxSkE-dotnet-test.binlog": "cb2b417ca3867a09c9bc8eba4498076f7a1d14782bc68d7afc32b061158b1a79",
+      "p06-cache-post-focused-r1.log": "ccf6d4a53db130075c10e252628ab59bf18932d7e0e905e5ef3c715a6b9aad3a",
+      "p06-cache-post-build-r1-20261007-080302--93718--3ZVe7W.binlog": "10656893c592ab4157496755a4d8ab39d7157e60230304631d4471bd03548eae"
+    },
+    "closed_binlogs2": [
+      {
+        "sha256": "cb2b417ca3867a09c9bc8eba4498076f7a1d14782bc68d7afc32b061158b1a79",
+        "bytes_uncompressed": 3236030,
+        "gzip_integrity": true
+      },
+      {
+        "sha256": "10656893c592ab4157496755a4d8ab39d7157e60230304631d4471bd03548eae",
+        "bytes_uncompressed": 4233308,
+        "gzip_integrity": true
+      }
+    ],
+    "runtime17_byteidentical_to_final_fixed30R2": true,
+    "PE12_PDB3806_Req4719_deps12_refs35_reuse_only_exact_all17_runtime_identity": true
+  },
+  "current_source": {
+    "freeze_sha256": "471e5d7fdb482febf9f3119b822241e530a6b5ad906eccd00626e6b09599b7c1",
+    "Root812_R6_sha256": "d1da8b8b3936d9ad8d47ba3d24cc199a520fca34660f7b73e4dbd0707422298d",
+    "Root19_R2_sha256": "1d3caebc040fc1a224a7b71a9c9046aecf106a7e115e8177666c94f83a5438bc",
+    "D2_full_source_review_sha256": "86670780355d9b2ad61da838fc3b888a882d59b4a9627d28ad9f5d8b4789ccd0",
+    "O_C_6096_baseline_and13rootconfigs_equal": true,
+    "full_manifest_sha256": "01e3bc2395e8ad22b017161d10f79eafd221da45d02233746a2293cd520b3f96",
+    "source22_snapshot_product19_Core812_shared84_hashes_exact": true,
+    "Root_author_read_credit_never_transferred": true
+  },
+  "bounded_original_fixed": {
+    "original30": {
+      "failed": 12,
+      "healthy": 18,
+      "Pending249_historical": true
+    },
+    "final_fixed30": {
+      "passed": 30,
+      "Pending250_current": true
+    },
+    "whole_cache142": {
+      "passed": 142,
+      "separate_cache_children": 2
+    },
+    "whole_Core8142": {
+      "passed": 8142,
+      "distinct_display_IDs8142": true,
+      "separate_children_cache2_cold7": true,
+      "independent_exact_review_sha256": "6771e783d3803f045325e558282092f8914f50968785a47ae1efe4fbbf35af4c"
+    },
+    "fixed_post30": {
+      "passed": 30,
+      "separate_cache_children": 2
+    }
+  },
+  "eight_mutants": [
+    {
+      "name": "m1-retirement-comparer-callback",
+      "result_sha256": "e9f9e1450e5d20b1c079609db873f6879c419875323ed0abdddf31e61f7c175b",
+      "counts": {
+        "total": 30,
+        "failed": 1,
+        "passed": 29,
+        "skipped": 0
+      },
+      "failed_case_IDs": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.RemoveRetiresEveryIndexAndReleasesResource(hostile: True)"
+      ],
+      "all30_exact_frozen_IDs": true,
+      "strict_actual_joined_stages": {
+        "build": {
+          "pid": 93309,
+          "exit": 0,
+          "deadline_exceeded": false,
+          "joined": true
+        },
+        "focused": {
+          "pid": 93348,
+          "exit": 2,
+          "deadline_exceeded": false,
+          "joined": true
+        }
+      }
+    },
+    {
+      "name": "m2-interleaved-index-publication",
+      "result_sha256": "77f34389c502cfd043244a1c54a1612cf5987f113a0015d5b1b5dfd960e8eb5a",
+      "counts": {
+        "total": 30,
+        "failed": 2,
+        "passed": 28,
+        "skipped": 0
+      },
+      "failed_case_IDs": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: True)"
+      ],
+      "all30_exact_frozen_IDs": true,
+      "strict_actual_joined_stages": {
+        "build": {
+          "pid": 93370,
+          "exit": 0,
+          "deadline_exceeded": false,
+          "joined": true
+        },
+        "focused": {
+          "pid": 93386,
+          "exit": 2,
+          "deadline_exceeded": false,
+          "joined": true
+        }
+      }
+    },
+    {
+      "name": "m3-rejected-factory-value-not-disposed",
+      "result_sha256": "7115ee436343d35efb954842e9dfd79063f3fcc39567f4d8de79b8a13c8ba617",
+      "counts": {
+        "total": 30,
+        "failed": 2,
+        "passed": 28,
+        "skipped": 0
+      },
+      "failed_case_IDs": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership"
+      ],
+      "all30_exact_frozen_IDs": true,
+      "strict_actual_joined_stages": {
+        "build": {
+          "pid": 93440,
+          "exit": 0,
+          "deadline_exceeded": false,
+          "joined": true
+        },
+        "focused": {
+          "pid": 93451,
+          "exit": 2,
+          "deadline_exceeded": false,
+          "joined": true
+        }
+      }
+    },
+    {
+      "name": "m4-pending-cleanup-comparer-callback",
+      "result_sha256": "8d7465b27465b2ec7d8dcac4a00e0871b19bb3a980fb380cbcb4010940fcc1a5",
+      "counts": {
+        "total": 30,
+        "failed": 1,
+        "passed": 29,
+        "skipped": 0
+      },
+      "failed_case_IDs": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership"
+      ],
+      "all30_exact_frozen_IDs": true,
+      "strict_actual_joined_stages": {
+        "build": {
+          "pid": 93478,
+          "exit": 0,
+          "deadline_exceeded": false,
+          "joined": true
+        },
+        "focused": {
+          "pid": 93492,
+          "exit": 2,
+          "deadline_exceeded": false,
+          "joined": true
+        }
+      }
+    },
+    {
+      "name": "m5-public-get-retirement-finally-removed",
+      "result_sha256": "e87bc3d7ff9815980b48742c5946c726b09161336ba303d0f41115090b43f051",
+      "counts": {
+        "total": 30,
+        "failed": 2,
+        "passed": 28,
+        "skipped": 0
+      },
+      "failed_case_IDs": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LookupFailureCannotStrandAlreadyExpiredOwnership(hostile: True)"
+      ],
+      "all30_exact_frozen_IDs": true,
+      "strict_actual_joined_stages": {
+        "build": {
+          "pid": 93513,
+          "exit": 0,
+          "deadline_exceeded": false,
+          "joined": true
+        },
+        "focused": {
+          "pid": 93524,
+          "exit": 2,
+          "deadline_exceeded": false,
+          "joined": true
+        }
+      }
+    },
+    {
+      "name": "m6-timed-retirement-finally-removed",
+      "result_sha256": "b073f2b91981a97584c6b78f570ba75712f28663fd0b652728d9a661d741f284",
+      "counts": {
+        "total": 30,
+        "failed": 1,
+        "passed": 29,
+        "skipped": 0
+      },
+      "failed_case_IDs": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"timer\", hostile: True)"
+      ],
+      "all30_exact_frozen_IDs": true,
+      "strict_actual_joined_stages": {
+        "build": {
+          "pid": 93543,
+          "exit": 0,
+          "deadline_exceeded": false,
+          "joined": true
+        },
+        "focused": {
+          "pid": 93569,
+          "exit": 2,
+          "deadline_exceeded": false,
+          "joined": true
+        }
+      }
+    },
+    {
+      "name": "m7-collision-successor-backlink-lost",
+      "result_sha256": "083fb2ce4d5c42a4f58ba38d5e7e1800cff1c0a1661907acf58cd5a57851fe46",
+      "counts": {
+        "total": 30,
+        "failed": 1,
+        "passed": 29,
+        "skipped": 0
+      },
+      "failed_case_IDs": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollidingResourceRemovalPreservesEveryOtherOwnedResource(position: 1)"
+      ],
+      "all30_exact_frozen_IDs": true,
+      "strict_actual_joined_stages": {
+        "build": {
+          "pid": 93584,
+          "exit": 0,
+          "deadline_exceeded": false,
+          "joined": true
+        },
+        "focused": {
+          "pid": 93597,
+          "exit": 2,
+          "deadline_exceeded": false,
+          "joined": true
+        }
+      }
+    },
+    {
+      "name": "m8-key-removal-instead-of-owned-pending-slot",
+      "result_sha256": "a56c9817765a4c7463cf621c2f444d8c4860e0f0df19cbff857cfdea443f134c",
+      "counts": {
+        "total": 30,
+        "failed": 2,
+        "passed": 28,
+        "skipped": 0
+      },
+      "failed_case_IDs": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LateOldFactoryCannotUnlinkPendingReplacement",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership"
+      ],
+      "all30_exact_frozen_IDs": true,
+      "strict_actual_joined_stages": {
+        "build": {
+          "pid": 93629,
+          "exit": 0,
+          "deadline_exceeded": false,
+          "joined": true
+        },
+        "focused": {
+          "pid": 93636,
+          "exit": 2,
+          "deadline_exceeded": false,
+          "joined": true
+        }
+      }
+    }
+  ],
+  "aggregate_mutant_slots": {
+    "parent_total": 240,
+    "distinct_failed_case_IDs": 9,
+    "separate_children_total": 16,
+    "wrapper_extra_causal_credit": 0,
+    "stranded_M4_M8_productjoins": 0,
+    "parent_failed": 12,
+    "parent_healthy": 228,
+    "separate_child_failed": 3,
+    "separate_child_healthy": 13
+  },
+  "child_slots": [
+    {
+      "mutant": "m1-retirement-comparer-callback",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+      "status": "erfolgreich",
+      "product_join_credit": true
+    },
+    {
+      "mutant": "m1-retirement-comparer-callback",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership",
+      "status": "erfolgreich",
+      "product_join_credit": true
+    },
+    {
+      "mutant": "m2-interleaved-index-publication",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+      "status": "erfolgreich",
+      "product_join_credit": true
+    },
+    {
+      "mutant": "m2-interleaved-index-publication",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership",
+      "status": "erfolgreich",
+      "product_join_credit": true
+    },
+    {
+      "mutant": "m3-rejected-factory-value-not-disposed",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+      "status": "fehlerhaft",
+      "product_join_credit": true
+    },
+    {
+      "mutant": "m3-rejected-factory-value-not-disposed",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership",
+      "status": "erfolgreich",
+      "product_join_credit": true
+    },
+    {
+      "mutant": "m4-pending-cleanup-comparer-callback",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+      "status": "fehlerhaft",
+      "product_join_credit": false
+    },
+    {
+      "mutant": "m4-pending-cleanup-comparer-callback",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership",
+      "status": "erfolgreich",
+      "product_join_credit": true
+    },
+    {
+      "mutant": "m5-public-get-retirement-finally-removed",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership",
+      "status": "erfolgreich",
+      "product_join_credit": true
+    },
+    {
+      "mutant": "m5-public-get-retirement-finally-removed",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+      "status": "erfolgreich",
+      "product_join_credit": true
+    },
+    {
+      "mutant": "m6-timed-retirement-finally-removed",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership",
+      "status": "erfolgreich",
+      "product_join_credit": true
+    },
+    {
+      "mutant": "m6-timed-retirement-finally-removed",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+      "status": "erfolgreich",
+      "product_join_credit": true
+    },
+    {
+      "mutant": "m7-collision-successor-backlink-lost",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership",
+      "status": "erfolgreich",
+      "product_join_credit": true
+    },
+    {
+      "mutant": "m7-collision-successor-backlink-lost",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+      "status": "erfolgreich",
+      "product_join_credit": true
+    },
+    {
+      "mutant": "m8-key-removal-instead-of-owned-pending-slot",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership",
+      "status": "erfolgreich",
+      "product_join_credit": true
+    },
+    {
+      "mutant": "m8-key-removal-instead-of-owned-pending-slot",
+      "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+      "status": "fehlerhaft",
+      "product_join_credit": false
+    }
+  ],
+  "acceptance_basis": "Exact pre-edit public counterexamples, full corrected source19 and integration review, meaningful bulk/collision/clock/pending ownership controls, same current native30 positive cases, wholeCache142/Core8142 regression replay, all eight separately qualified single-cause negative controls, unchanged corrected post.",
+  "metadata_failed_PE_attempt": "Correction a829\u2026 full personally read: predicate/cause unknown, earlier failed oneoff check zero qualification; subsequent idle Root checks and independent archived PE checks qualify exact current bytes.",
+  "excluded_attempts": [
+    "Original strict compiler attempts retain zero native causal credit.",
+    "OriginalPending249 intentionally retained; final250 captures terminal known error before physical oracle without changing incomplete strand signature.",
+    "No expired-duplicate hypothesis reopening; withdrawn."
+  ],
+  "limits": [
+    "This closes only the reviewed local cache comparer/publication/pending/retirement defect package, not global P06/API/release readiness.",
+    "No general callback reentrancy/mutable key/fatal allocation contract or observer policy change.",
+    "No heap/RSS/capacity resource envelope measurement, current coverage/CRAP, CI/provider/cloud/hardware acceptance.",
+    "Child events separate from parent slots. M4/M8 actual child process joins do not imply stranded product operation joins.",
+    "Qualified first actual native failure only; no later unreached assertions or expected stacks promoted to observed evidence.",
+    "Complete historical bodies reused at exact source/runtime/semantic equality; independent agent reports retained as their own evidence, no personal read transfer.",
+    "Runtime/source/PE metadata parsing is not universal CLR AssemblyLoad census or full MSBuild event replay."
+  ],
+  "metadata_correction": {
+    "predecessor_sha256": "001625be956f43dd50f87dc2da64321bc20eac53562e2141a661acbe405bc445",
+    "predecessor_preserved": true,
+    "reason": "Aggregate draft used duplicate generic failed/healthy dictionary keys for parent and child totals; child values overwrote parent labels. Successor uses explicit parent_failed12,parent_healthy228,separate_child_failed3,separate_child_healthy13. Individual run evidence and acceptance unchanged."
+  }
+}

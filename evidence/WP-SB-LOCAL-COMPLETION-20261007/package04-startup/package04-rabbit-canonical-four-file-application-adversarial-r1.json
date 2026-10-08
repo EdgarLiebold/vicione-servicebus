@@ -1,0 +1,79 @@
+{
+  "kind": "INDEPENDENT_READONLY_RABBIT_EXACT_CANONICAL_FOUR_FILE_APPLICATION_AND_BOUNDED_ACCEPTANCE_REVIEW_R1",
+  "status": "QUALIFIED_EXACT_CANONICAL_FOUR_FILES_AND_BOUNDED_ROOT_ACCEPTANCE__NO_FINDINGS",
+  "findings": [],
+  "application": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_RABBIT_CANONICAL_FOUR_FILE_APPLICATION_R1.json",
+    "sha256": "e8e5e0c70c8024ca9990fe93062f5fc1ae51df0f00b36d7a988d722e8c534692",
+    "complete_receipt_personally_read": true,
+    "exact_gate_rows_match": true,
+    "copied_files": [
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs",
+        "old_sha256": null,
+        "new_sha256": "12fb5282c4048c05d80a8faf661089a258c4ebe06bdb4e8b001667c2e2a69540"
+      },
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+        "old_sha256": "53ac44c04cf794e6ffc05f2b5a8ec47fb6948e1bac181b37155279b0296d3e68",
+        "new_sha256": "9ed3889255abbc8771522d5f8bd38ebcc774648dd98cd86ddc6e3cbb00d8b7e4"
+      },
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/packages.lock.json",
+        "old_sha256": "6700fbe21a46323f187f14cc6a263505528bd173ea56a7f1e384beeeb7c0ed87",
+        "new_sha256": "3dee0be7b986483e2473e8f3f554b44f900172636334e429290d2963148715a3"
+      },
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+        "old_sha256": "5f5ecc35a77d34a10f41324cc882f2615de84825a8500cc20df4bf33d65e1c91",
+        "new_sha256": "2ca3fc9dfc16dcbc0ba7e5ddf66c45d97675b96bc17636d55c1342518195e0b0"
+      }
+    ]
+  },
+  "acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_RABBIT_SELECTED_NAMED_HOST_ACCEPTANCE_R1.json",
+    "sha256": "e2c9de4d5f2cfecc2b15344008d6fc8cd4ca045cce180a9f3a73ab739814062d",
+    "complete_receipt_personally_read": true,
+    "all_eight_native_peer_ledger_chain_refs_exact": true,
+    "counts": {
+      "new_host_cases": 4,
+      "new_requirement_method_rows": 3,
+      "whole_module_unique": 599,
+      "countermutation_variants": 5,
+      "countermutation_repeated_slots": 60,
+      "finite_first_red": 19,
+      "healthy_controls": 41,
+      "restored_post": 12
+    },
+    "semantic_assessment": "Current original product already correct; selected named-host evidence gap filled with4 native cases/3 projection rows. Five one-cause variants yield19 reached failures/41 controls over60 repeatedslots, followed by original post12. No additive unique counts, remote or canonical native execution asserted. Scope explicitly leaves all other packages/provider/cloud/hardware/ASB invariant/globalgrade work open."
+  },
+  "guards": {
+    "canonical_source_file_count": 6099,
+    "private_source_file_count": 6099,
+    "canonical_equals_entire_actual_private_equals_frozen_private_manifest": true,
+    "exact_changes_from_original_canonical6098": [
+      "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs",
+      "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+      "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+      "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/packages.lock.json"
+    ],
+    "root_configuration_signing14_all_exact": true,
+    "rabbit_product_owner_sha256": "84e652c0237beb05aaf2d7008f49b70b886163650839c0a0ccded02676eeece2",
+    "all_original_src_paths_hashes_unchanged": true,
+    "complete_before_after_hash_dictionaries_mechanically_checked": true,
+    "personal_human_full6099_source_credit": false
+  },
+  "reuse": {
+    "own_post_mutant_gate_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-rabbit-restored-post12-and-bounded-transfer-gate-adversarial-r1.json",
+    "sha256": "663b8da63fc6457849f281e6169efe8d88e290099a8ec57e6730186ae4471c77",
+    "native_execution_repeated_by_reviewer": false,
+    "compiled_source_equal_canonical_now": true
+  },
+  "limits": [
+    "Hash-equivalent canonical application is verified now; previous native evidence was executed in private C12 and remains explicitly labeled. No new canonical native run inferred or performed.",
+    "Root personal reading statement is Root-only attestation, not a transfer of human whole-source reading to reviewer. Source/config dictionary comparisons are byte verification, not reading credit.",
+    "The original selected-negative cases pass by returning expected startup exception before runtime; actual broker connection, TLS authentication, cloud/hardware and all transport semantics remain outside scope.",
+    "Frozen repeated native4/599/12 overlap is not summed as unique;60 mutated slots repeat12 identities. No exhaustive mutation score/coverage/A+ release/globalP04 promise.",
+    "No .NET/MSBuild/import/test/Docker/SSH/provider/native/process control or product/test/tool change by reviewer. Only pure stdlib read/hash/JSON and own immutable report."
+  ]
+}

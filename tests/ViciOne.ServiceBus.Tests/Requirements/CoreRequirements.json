@@ -32633,14 +32633,13 @@
     "testType": "ViciOne.ServiceBus.Tests.Transports.JsonTransportHeaderConversionTests",
     "variantKey": "nested-attributed-reader-causes-and-raw-values-preserved"
   },
-{
-  "requirementId": "REQ-VSB-CONSUMER-REGISTRATION-DIAGNOSTICS",
-  "testAssembly": "ViciOne.ServiceBus.Tests",
-  "testMethod": "Registration_DebugFailureDoesNotPreventPublicConsumerProgressAsync",
-  "testType": "ViciOne.ServiceBus.Tests.Consumers.ConsumerRegistrationDiagnosticTests",
-  "variantKey": "public-overloads-preserve-registration-and-business-progress"
-}
-,
+  {
+    "requirementId": "REQ-VSB-CONSUMER-REGISTRATION-DIAGNOSTICS",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "Registration_DebugFailureDoesNotPreventPublicConsumerProgressAsync",
+    "testType": "ViciOne.ServiceBus.Tests.Consumers.ConsumerRegistrationDiagnosticTests",
+    "variantKey": "public-overloads-preserve-registration-and-business-progress"
+  },
   {
     "requirementId": "REQ-VSB-ENDPOINT-NAME-JOIN-SEPARATOR-NULLABILITY",
     "testAssembly": "ViciOne.ServiceBus.Tests",
@@ -32654,15 +32653,14 @@
     "testMethod": "ExplicitSeparator_PreservesActualGetterNamespaceAndPrefix",
     "testType": "ViciOne.ServiceBus.Tests.Configuration.EndpointNaming.FormatterJoinSeparatorNullabilityOriginalTests",
     "variantKey": "explicit-separator-preserves-namespace-and-prefix"
-  }
- ,
-{
-  "requirementId": "REQ-VSB-CACHE-EXPIRATION",
-  "testAssembly": "ViciOne.ServiceBus.Tests",
-  "testMethod": "AddAsync_ExpiredOwnershipIsReleasedEvenWhenTheNewKeyIsDuplicateAsync",
-  "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheExpiredDuplicateOwnershipTests",
-  "variantKey": "expired-ownership-release-before-duplicate-add-outcome"
-},
+  },
+  {
+    "requirementId": "REQ-VSB-CACHE-EXPIRATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "AddAsync_ExpiredOwnershipIsReleasedEvenWhenTheNewKeyIsDuplicateAsync",
+    "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheExpiredDuplicateOwnershipTests",
+    "variantKey": "expired-ownership-release-before-duplicate-add-outcome"
+  },
   {
     "requirementId": "REQ-VSB-COURIER-REDELIVERY",
     "testAssembly": "ViciOne.ServiceBus.Tests",
@@ -32739,8 +32737,7 @@
     "testMethod": "MultiTestConsumer_AdmissionRetiresAllAcquiredConsumersAndPreservesCausesAsync",
     "testType": "ViciOne.ServiceBus.Tests.Testing.MultiTestConsumerAdmissionCleanupTests",
     "variantKey": "failed-admission-all-acquired-retirement-and-causes"
-  }
-,
+  },
   {
     "requirementId": "REQ-VSB-SAGA-DI-STATE-MACHINE-REGISTRATION",
     "testAssembly": "ViciOne.ServiceBus.Tests",
@@ -32755,13 +32752,13 @@
     "testType": "ViciOne.ServiceBus.Tests.Testing.BusObserverDisposalFailureBoundaryTests",
     "variantKey": "observer-dispose-failure-still-retires-base-scopes"
   },
-{
-  "requirementId": "REQ-VSB-HOST-LIFECYCLE",
-  "testAssembly": "ViciOne.ServiceBus.Tests",
-  "testMethod": "Start_OptionalDiagnosticDoesNotPreventGenerationAdmissionAsync",
-  "testType": "ViciOne.ServiceBus.Tests.Transports.HostStartingDiagnosticTests",
-  "variantKey": "host-start-and-idempotent-start-optional-diagnostics"
-},
+  {
+    "requirementId": "REQ-VSB-HOST-LIFECYCLE",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "Start_OptionalDiagnosticDoesNotPreventGenerationAdmissionAsync",
+    "testType": "ViciOne.ServiceBus.Tests.Transports.HostStartingDiagnosticTests",
+    "variantKey": "host-start-and-idempotent-start-optional-diagnostics"
+  },
   {
     "requirementId": "REQ-VSB-PIPE-CONTEXT-SHUTDOWN",
     "testAssembly": "ViciOne.ServiceBus.Tests",
@@ -32796,5 +32793,348 @@
     "testAssembly": "ViciOne.ServiceBus.Tests",
     "testType": "ViciOne.ServiceBus.Tests.Transports.ConsumerDuplicateAndTypedObserverAdmissionTests",
     "testMethod": "TypedObservers_FailedAdmissionRetiresEveryActuallyReturnedRegistrationAsync"
-  }
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "TryCreate_RestoresCallerDespiteOrdinaryCurrentChangedFailure",
+    "testType": "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests",
+    "variantKey": "sampler-restore-currentchanged-isolated"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "Stop_PreservesBusinessFailureWhenStopAndRestoreObserversThrow",
+    "testType": "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests",
+    "variantKey": "stop-and-restore-cannot-replace-business-failure"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "TryStart_RetainsOriginalStartFailureWhenCleanupObserversThrow",
+    "testType": "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests",
+    "variantKey": "failed-start-retains-primary-over-cleanup-callbacks"
+  },
+  {
+    "requirementId": "REQ-VSB-ACTIVITY-OUTCOME",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "AddExceptionEvent_PreservesBusinessFailureAndStatusWhenDiagnosticClockThrows",
+    "testType": "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests",
+    "variantKey": "exception-event-clock-failure-preserves-error-status-and-cause"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "Stop_RestoresNearestLiveAncestorWhenCapturedParentStopped",
+    "testType": "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests",
+    "variantKey": "stopped-parent-restores-nearest-live-ancestor"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "Constructor_PreservesCallerAndHostMetricsWhenSourceListenerThrows",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.ActivitySourceActivationIsolationTests",
+    "variantKey": "typed-source-construction-keeps-independent-host-metrics"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "Delivery_PreservesPipelineOutcomeWhenActivityHandoffObserverThrowsAsync",
+    "testType": "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchActivityHandoffIsolationTests",
+    "variantKey": "batch-handoff-preserves-required-pipeline-outcome"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "Handler_PreservesOutcomeAndIndependentMetricsWhenDiagnosticPreparationThrowsAsync",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.MessageProcessingMetricPreparationIsolationTests",
+    "variantKey": "process-metric-balance-survives-optional-preparation"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "Completion_PreservesActualStoreResultWhenDiagnosticClockThrowsAsync",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests",
+    "variantKey": "durable-completion-optional-clock-keeps-store-result"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "Completion_PreservesRequiredClockStoreAndCancellationFailuresAsync",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests",
+    "variantKey": "durable-completion-required-failures-remain-authoritative"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests",
+    "variantKey": "durable-delivery-clock-keeps-real-outcome-and-state"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "Delivery_PreservesRequiredUtcFailuresAsync",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests",
+    "variantKey": "durable-delivery-required-utc-boundaries-stay-authoritative"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "Snapshot_PreservesCompletedBatchAsync",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests",
+    "variantKey": "durable-snapshot-optional-utc-preserves-real-batch-result"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests",
+    "variantKey": "durable-snapshot-unrepresentable-successor-is-bounded"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "OptionalTimeline_ColdHealthyPublicActivationWorksInFreshProcess",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests",
+    "variantKey": "cold-optional-timeline-healthy-public-activation"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "OptionalTimeline_ColdSourceFailureRemainsInertAcrossPublicActivations",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests",
+    "variantKey": "cold-optional-timeline-source-failure-stays-inert"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "RequiredMonitor_ColdHealthyPublicActionObeysExactIdleDeadline",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests",
+    "variantKey": "cold-required-monitor-healthy-exact-idle-deadline"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "RequiredMonitor_ColdSourceFailurePreservesOriginalAndCachesOneAttempt",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests",
+    "variantKey": "cold-required-monitor-source-primary-and-cache"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "RequiredMonitor_StartFailureKeepsPrimaryWhenOwnedTimerDisposeThrows",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests",
+    "variantKey": "required-monitor-constructor-unwind-keeps-primary"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "RequiredMonitor_StandaloneTimerCleanupFailureRemainsRequired",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests",
+    "variantKey": "required-monitor-standalone-cleanup-remains-required"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "RequiredMonitor_NonthrowingSourceObserverCannotChangeRootParent",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests",
+    "variantKey": "cold-required-monitor-nonthrowing-constructor-restores-parent"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "CallerPreservesBodyOutcomeAndReleasesActualTracker",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests",
+    "variantKey": "public-five-telemetry-callers-primary-and-required-cleanup"
+  },
+  {
+    "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome",
+    "testType": "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests",
+    "variantKey": "public-active-harness-primary-and-all-owned-cleanup"
+  },
+  {
+    "requirementId": "REQ-VSB-CACHE-MULTI-INDEX",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "RemoveRetiresEveryIndexAndReleasesResource",
+    "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+    "variantKey": "secondary-comparer-does-not-break-committed-resource-retirement"
+  },
+  {
+    "requirementId": "REQ-VSB-CACHE-DIRECT-ADD",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "DirectAdmissionPublishesAllIndicesTogether",
+    "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+    "variantKey": "direct-admission-comparer-failure-retains-caller-ownership-and-no-index-ghost"
+  },
+  {
+    "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "FactoryAdmissionPublishesAllIndicesTogether",
+    "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+    "variantKey": "factory-admission-comparer-failure-releases-rejected-value-and-removes-all-index-ghosts"
+  },
+  {
+    "requirementId": "REQ-VSB-CACHE-EXPIRATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "LookupFailureCannotStrandAlreadyExpiredOwnership",
+    "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+    "variantKey": "lookup-failure-after-expiration-still-releases-retired-resource"
+  },
+  {
+    "requirementId": "REQ-VSB-CACHE-MULTI-INDEX",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "CollisionEqualityFailureLeavesExistingOwnershipIntact",
+    "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+    "variantKey": "colliding-equality-preparation-failure-leaves-anchor-and-caller-ownership-intact"
+  },
+  {
+    "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "LateOldFactoryCannotUnlinkPendingReplacement",
+    "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+    "variantKey": "late-invalidated-factory-cleanup-cannot-remove-a-still-pending-replacement-slot"
+  },
+  {
+    "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "HealthyOriginPendingSlotReleasesOwnership",
+    "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests",
+    "variantKey": "healthy-origin-pending-slot-joins-factory-request-and-cache-in-owned-process"
+  },
+  {
+    "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "PersistentOriginComparerFailureReleasesPendingOwnership",
+    "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests",
+    "variantKey": "persistent-origin-comparer-failure-cannot-strand-pending-completion-or-capacity"
+  },
+  {
+    "requirementId": "REQ-VSB-CACHE-MULTI-INDEX",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "FailedBulkIndexCannotCorruptExistingRetirement",
+    "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+    "variantKey": "failed-bulk-index-cannot-attach-unpublished-retirement-metadata"
+  },
+  {
+    "requirementId": "REQ-VSB-CACHE-EXPIRATION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "PartialExpirationClockFailureCannotLoseRetiredOwnership",
+    "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+    "variantKey": "partial-expiration-clock-fault-releases-retired-owners-across-public-and-timed-cleanup"
+  },
+  {
+    "requirementId": "REQ-VSB-CACHE-MULTI-INDEX",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "CollidingResourceRemovalPreservesEveryOtherOwnedResource",
+    "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+    "variantKey": "colliding-head-middle-tail-retirement-preserves-survivors-and-key-reuse"
+  },
+  {
+    "requirementId": "REQ-VSB-HOST-OPTIONS-STARTUP",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "InvalidLifecyclePolicyRejectsStartupAndReleasesOwnedServices",
+    "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests",
+    "variantKey": "actual-host-invalid-policy-rejects-start-and-releases-owned-services"
+  },
+  {
+    "requirementId": "REQ-VSB-HOST-OPTIONS-STARTUP",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "CoherentPolicyStartsDeliversAndStopsWithUnusedInvalidNamedPolicy",
+    "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests",
+    "variantKey": "actual-host-coherent-policy-delivers-and-releases-owned-services"
+  },
+  {
+    "requirementId": "REQ-VSB-HOSTED-LIFECYCLE",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "CanceledStopBeforeStartupRemainsRetryable",
+    "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.CoreGenericHostStartupTests",
+    "variantKey": "canceled-unstarted-stop-allows-later-real-host-startup"
+  },
+  {
+    "requirementId": "REQ-VSB-BUS-COMPOSITION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "MissingTransportAndLimitsFailTogetherBeforeRuntime",
+    "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests",
+    "variantKey": "actual-host-missing-transport-and-limits"
+  },
+  {
+    "requirementId": "REQ-VSB-PAYLOAD-ADMISSION-DI",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "SelectedTypedPayloadLimitFailsBeforeMaterialization",
+    "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests",
+    "variantKey": "actual-host-selected-envelope-limit-not-declared"
+  },
+  {
+    "requirementId": "REQ-VSB-BUS-COMPOSITION",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "DefaultAndTypedBusesDeliverAndStopWithUnusedPayloadPoison",
+    "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests",
+    "variantKey": "actual-host-default-and-typed-runtime-with-unused-payload-poison"
+  },
+  {
+    "requirementId": "REQ-VSB-CACHE-OBSERVER",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "ObserverFailures_PreserveCommittedStateCompleteFanoutAndBestEffortDiagnosticsAsync",
+    "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheObserverFailureChannelTests",
+    "variantKey": "complete-fanout-and-best-effort-failure-channel"
+  },
+  {
+    "requirementId": "REQ-VSB-CACHE-OBSERVER",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "HealthyObservers_CompleteEachCommittedChangeWithoutFailureDiagnosticsAsync",
+    "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheObserverFailureChannelTests",
+    "variantKey": "healthy-fanout-emits-no-failure-diagnostic"
+  },
+  {
+    "requirementId": "REQ-VSB-DURABLE-STARTUP",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart",
+    "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+    "variantKey": "actual-host-default-reliable-nan-jitter"
+  },
+  {
+    "requirementId": "REQ-VSB-DURABLE-STARTUP",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart",
+    "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+    "variantKey": "actual-host-typed-reliable-zero-poll"
+  },
+  {
+    "requirementId": "REQ-VSB-DURABLE-STARTUP",
+    "testAssembly": "ViciOne.ServiceBus.Tests",
+    "testMethod": "PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison",
+    "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests",
+    "variantKey": "actual-host-plain-default-typed-reliable-unused-options-poison"
+  },
+    {
+      "requirementId": "REQ-VSB-CACHE-CAPACITY",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "Retirement_BlocksAdmissionThroughRemovedObserverAndAsyncDisposalAsync",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests",
+      "variantKey": "retirement-charged-through-observer-and-async-disposal"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-OBSERVER",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "ObserverSnapshot_IsChosenAfterDispatchAdmissionAndRetainsActiveObserversAsync",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests",
+      "variantKey": "dispatch-time-snapshot-and-active-snapshot-retention"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-OBSERVER",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "ObserverDispatch_SerializesTheEntireAwaitedBatchBeforeTheNextCommittedBatchAsync",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests",
+      "variantKey": "entire-awaited-observer-batch-is-serialized"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-OBSERVER",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "ActiveInheritedObserverScope_RejectsSameCacheMutationAndAllowsAnotherCacheAsync",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheRetirementAndDispatchTests",
+      "variantKey": "active-inherited-scope-rejects-same-cache-allows-other-cache"
+    }
 ]

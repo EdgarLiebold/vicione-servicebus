@@ -1,0 +1,8 @@
+{
+  "peer_sha256": "419664d42672c8a1ccf0ce815f066a0f8a1ef4cf4463141e0ba9c0c52bbbdc47",
+  "gate_sha256": "1bc6f4425a1ae393387badf46989db2970d01ea5e7f714cb333e8ae30a2bb7da",
+  "driver_sha256": "bf4a99fb6fe6854c1249c90c69db934f317e2b16943858c7042698bb9953f69b",
+  "inputs_sha256": "e96452cf0e272ef8411e327c7d63b62f633678903444a6bc394536173f6d5a26",
+  "sourcebody_reuse": "Root whole134 +R2delta9 read; wholeprepare50+R2metadata2 read; source/data bodyreviews exact.",
+  "action": "Execute Root-only original lockedrestore/strict/native9. No productcopy or acceptance yet."
+}

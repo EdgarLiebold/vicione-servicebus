@@ -1,0 +1,290 @@
+{
+  "kind": "INTERNAL_READONLY_ADVERSARIAL_PROPOSED_DOCUMENTATION_R21_AZURE_CORE_RECONCILIATION",
+  "status": "NO_BLOCKER_EXACT_SIX_CANDIDATES_QUALIFIED_FOR_ROOT_GUARDED_PUBLICATION",
+  "findings": [],
+  "authority": "Pure readonly text/JSON/hash review; reviewer writes only this immutable own report. No tools/driver import, code/test/docs modifications, .NET/native/provider/process operations. Publication solely Root after original canonicalR20 guard.",
+  "freeze": {
+    "proposed_sha256": "02981dbab242d8d5d51d8aac9a6d26398ac11b2ae09575142fdc63be68557b21",
+    "prior_R20_sha256": "ab6b8349daa05c77c3e098593f2b13ab5a393780c086154a3d24420e6baefd85",
+    "canonical_current_R20_exact": true,
+    "staged_exact6": [
+      {
+        "path": "CHANGELOG.md",
+        "canonical_R20_sha256": "9d2f6ebd12d4b58a0c80ee5a3d31063c25bba843e5a5e1e09ce35b0f45e22c41",
+        "staged_R21_sha256": "3c80e3a1a39c4c94a987c8489655de2fb89cc4088e5fab325af1a286530852be",
+        "whole_diff_sha256": "081c1507e6e618a741c432f28c7ffdd6146453a6ad33f1721d85ce77e94a4634",
+        "diff_bytes": 1860
+      },
+      {
+        "path": "TODO.md",
+        "canonical_R20_sha256": "a37d0ace93fa3a55a27672226141b06bb3aa58b211fc759fb7b3b77a82f7b334",
+        "staged_R21_sha256": "db3e116532a98d9909c97eb7c301f9782a3d467b01c9df7b0aa6e7dd0f4316f1",
+        "whole_diff_sha256": "eb1026d98d636274e79b4e913833690695f4980363e09cc639e8489e2cda7bcb",
+        "diff_bytes": 2616
+      },
+      {
+        "path": ".testagent/status.md",
+        "canonical_R20_sha256": "6af9cdc35cb023639506d48a7729fe28fceb37f837fa7f8544251d4239c25649",
+        "staged_R21_sha256": "8ff4918212683acf0620c5d61da0c0c536a9c73529be3ba44f221cd256b3cfb6",
+        "whole_diff_sha256": "a6c85f477f86db05ebfc24c0cd855bcc50ed21e76af5afde580ada161ea163c8",
+        "diff_bytes": 2644
+      },
+      {
+        "path": ".testagent/plan.md",
+        "canonical_R20_sha256": "50f2db1b4b1447740527d498b57ef85e3a7364012fc12c8871257c4baf4fca47",
+        "staged_R21_sha256": "990efe2601fb29f4ce6257c60cf106c03d5b08053756c0b4bae3ba0567f5a79f",
+        "whole_diff_sha256": "8b1c26a02234b51aa50567b2b3e4f9e3e3948174b9c90b5d3e7f4e1adbccd2ef",
+        "diff_bytes": 2640
+      },
+      {
+        "path": ".testagent/local-completion-plan.md",
+        "canonical_R20_sha256": "a963410119c0c13f6c20e18b12d2be4b0b75f15068020753361f71589f6805bd",
+        "staged_R21_sha256": "0bbe51516ef3094cbc3d3a2d4f227dd6bbc251a04da6c89ac6e9b110a7e50c8c",
+        "whole_diff_sha256": "abac24fa7ebdfbe24acc051f1a3e6abf8a32dc31d99bc4714233c8dbebcec4d1",
+        "diff_bytes": 6381
+      },
+      {
+        "path": "docs/quality-status.md",
+        "canonical_R20_sha256": "541c4c968da57de3b5c379965a5d3247f6d87c9d3c0fbe9e1d0d301c9ef716f8",
+        "staged_R21_sha256": "4b941290692e5ad25df0b743ea17c97bea23c556f100d0c8692643a256b83ffe",
+        "whole_diff_sha256": "ffb71a7637386184dd0abf1e97f10faa293d08832c856c5d4f07fa5eeebb2472",
+        "diff_bytes": 2648
+      }
+    ]
+  },
+  "read_scope": "All6 complete diffs and all newparagraphs personally read, plus full R21localcompletionplan. Azure/Core bounded acceptance receipt prose read; largeCoreapplication manifests and evidence lists consumed mechanically without humanwholemanifest/readcredit claim. Existing native/PE acceptance used via hash-bound peer/Root references, not converted to this reviewer freshPE/native body-read credit. RootCore800 read-provenance correction respected: not productDI/factory proof, no suchclaim in stagednewprose.",
+  "receipt_hashes": [
+    {
+      "name": "ROOT_AZURE_SELECTED_NAMED_HOST_ACCEPTANCE_R1.json",
+      "sha256": "a388694757f86c2a616e49d542ce298f87865e9a91580dd77111eff490ad46aa"
+    },
+    {
+      "name": "ROOT_AZURE_CANONICAL_FOUR_FILE_APPLICATION_R1.json",
+      "sha256": "06e8edd3ef0dab344ceb154d3abbb534acec3eaeda99f059392bee6a650fbee5"
+    },
+    {
+      "name": "ROOT_CORE_HOST_STARTUP_CLEANUP_ACCEPTANCE_R1.json",
+      "sha256": "8a7c566768f479bb3ae33c9b60ccdb071f366f8eaa36d020e3ed6271033a4830"
+    },
+    {
+      "name": "ROOT_CORE_HOST_CANONICAL_THREE_FILE_APPLICATION_R1.json",
+      "sha256": "e56bbc9e214355ec6b25b74e426f895ec2ac1e19fdb61c58712d51cd28d2d8b3"
+    }
+  ],
+  "underlying_receipt_reference_hashes": [
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-original-three-native-r2/RESULT.json",
+      "sha256": "418fbb273e29bb0671c5d95a31987a849f11e34e1c0281da337d8845c3735ed7"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-original-three-native-r2/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "a2e40c0a1614cc45da4ffd3bc0a1bc31e75812cb5add8615ca17a9a426532ccf"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-original-three-native-r2/package04-azure-original-three-native-r2-adversarial-r1.json",
+      "sha256": "8a6c37a9e2517e36deae8c17d9d8ec995f9a8a713dd1bd70dca8d73990bb69fb"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-whole-module-native-r1/ANALYZED_RESULT_R1.json",
+      "sha256": "93a9bc5e6ecf64b80d4bcad92aa5784272aaacfc32e6399458811282685a3790"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-whole-module-native-r1/package04-azure-whole-module-native-adversarial-r1.json",
+      "sha256": "d7cc7579208c7fe93ac89da1a5053871051cf51ac036c5f7996e369f5f0d353f"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-mutants-native-r1/ROOT_MUTANTS_PHYSICAL_BINDING_AGGREGATE_R1.json",
+      "sha256": "540a3d710c875fe5a237497773da4fdf69c1f873dd78fb328db4d7f4fd6fb99a"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-mutants-native-r1/ROOT_FIRST_FINITE_CAUSE_LEDGER_R1.json",
+      "sha256": "2cdd2802ce4dbf419c9769829dba88828c3373ac1516f6abd2ac97ccea88367e"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-mutants-native-r1/package04-azure-five-mutants-native-adversarial-r1.json",
+      "sha256": "0cad5335276401f97830c6086bd7bec8449fdd485a87f77c0da553a3253bdb7c"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-restored-original-native-r1/RESULT.json",
+      "sha256": "c255280912c0debe24edaa01c356f2a131e33b5090790bc52719ec7af29f55c8"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-restored-original-native-r1/ROOT_RESTORED_RUNTIME_BINDING_REUSE_R1.json",
+      "sha256": "b6716e4d900ba53dfbb10c198e2f254a86f00a8a92cd5a6ceb70ea7afeccf1ef"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/azure-restored-original-native-r1/package04-azure-restored-original-six-native-final-adversarial-r1.json",
+      "sha256": "583e3ded4c6035e7adb15c1bcdda23506da0c38a510dcb23e8fce7ef185f8d33"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_AZURE_CANONICAL_FOUR_FILE_APPLICATION_R1.json",
+      "sha256": "06e8edd3ef0dab344ceb154d3abbb534acec3eaeda99f059392bee6a650fbee5"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-original-three-native-r2/RESULT.json",
+      "sha256": "336a2db032f9d8bf9b204e8f1d162bdbceb39e7d79e5bbcbcf8c7fed60da5cfd"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-original-three-native-r2/package04-core-original-three-native-adversarial-r1.json",
+      "sha256": "77d5c88aefdab979b908f105c2dbd3f3af0d122b61b6cdfdc8a308f5b8486981"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-fixed-five-native-r1/RESULT.json",
+      "sha256": "fdc5f4711d20006c31886ef6bbc21273c821ac1136c781cfcd6aead9e6e90f2c"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-fixed-five-native-r1/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "b58b84c843f0e9dd65fdbc49915fc7b0414e0b07d5472a9393ad3b135bcb033e"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-fixed-five-native-r1/package04-core-fixed-five-native-adversarial-r1.json",
+      "sha256": "a6625e4e546da1c2114d8ee209be278e1c8db2b6a3e91572ccf05829db3cadb9"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-whole-module-native-r1/RESULT.json",
+      "sha256": "cc2751ce0ea63a2bca29d4d6306317c76811065fb3c80f40ab6f17202005660f"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-whole-module-native-r1/package04-core-whole-8146-native-adversarial-r1.json",
+      "sha256": "02bb4d156430f505c2cdfd4bbdf93f43a45102cdc08bf346a4c28453c5e7f2e3"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-mutants-native-r1/ROOT_FIRST_FINITE_CAUSE_LEDGER_R1.json",
+      "sha256": "42559319020be8c3cac2bc0876b92da839a26ec2d789f536c02291840d29e818"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-mutants-native-r1/ROOT_MUTANTS_PHYSICAL_BINDING_AGGREGATE_R1.json",
+      "sha256": "9063915beed466cca4e18a44d431bd71978c884e70d15e6e3af0f860e57b0caf"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-mutants-native-r1/package04-core-four-mutants-native-adversarial-r1.json",
+      "sha256": "ad6776bcc382dcdcb8b81a8c1fd858045f8ee3e7c02f2fea1b571548755ebbe3"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-restored-fixed-five-native-r1/RESULT.json",
+      "sha256": "61fd303ea9fdbe2dbf875d53353fe647b6c11a605c68c49819b3271705d7f95f"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-restored-fixed-five-native-r1/ROOT_RESTORED_RUNTIME_BINDING_REUSE_R1.json",
+      "sha256": "ff82eb5202aa7ccf7ffa5bd7f385243beba7ff30b7f692777e46bf0a6a9da67e"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-restored-fixed-five-native-r1/package04-core-restored-fixed-five-final-adversarial-r1.json",
+      "sha256": "d8a2349ad0a5a08346a91f4bbc304c4a2f3808f8ef98b7f58e0e7029b2b8b098"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_CORE_HOST_CANONICAL_THREE_FILE_APPLICATION_R1.json",
+      "sha256": "e56bbc9e214355ec6b25b74e426f895ec2ac1e19fdb61c58712d51cd28d2d8b3"
+    }
+  ],
+  "documented_evidence_counts": {
+    "Azure": {
+      "new3": 3,
+      "whole_native_PASS_slots": 607,
+      "distinct_shortened_displaylabels": 604,
+      "collisiongroups": 2,
+      "variants": 5,
+      "repeated_slots": 30,
+      "first_finite_red": 14,
+      "healthy": 16,
+      "postPASS": 6,
+      "limits": "Healthy case exactownedpre-runtime sentinel; no broker/client runtime/connectivity proof. Existing productregistration alreadycorrect;4test infrastructurefiles applied."
+    },
+    "Core": {
+      "original3": {
+        "red": 2,
+        "healthy": 1
+      },
+      "new_fixture_cases": 4,
+      "new_fixture_methods": 3,
+      "fixedPASS_with_neighbor": 5,
+      "wholePASS": 8146,
+      "whole_distinct_displaylabels": 8146,
+      "variants": 4,
+      "repeated_slots": 20,
+      "first_finite_red": 6,
+      "healthy": 14,
+      "restoredPASS": 5,
+      "runtime17_post_equals_fixed": true,
+      "limits": "One neverstarted cleanupfinding only; canceledcaller token/retry/actualInMemory nonce proof. Original Stop/Dispose failures are raw observations; original2 firstStopNull oracles counted once each, not lowerunreachedDispose/probe assertions. No arbitrarypartialstart/concurrentraces closure."
+    }
+  },
+  "application_scope": {
+    "Azure_four_application_sha256": "06e8edd3ef0dab344ceb154d3abbb534acec3eaeda99f059392bee6a650fbee5",
+    "Core_three_application_sha256": "e56bbc9e214355ec6b25b74e426f895ec2ac1e19fdb61c58712d51cd28d2d8b3",
+    "Core_three_files": [
+      {
+        "path": "src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+        "old_sha256": "458dd4d37b5c7a062c9a47f7b698ce2c8c8230fd97acc5c812e59da0f4bc9214",
+        "new_sha256": "fe1c535c4f61e3bfafed00960937f8e7ee4dde065662cc63fd156099ddc2af14"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/CoreGenericHostStartupTests.cs",
+        "old_sha256": null,
+        "new_sha256": "54aea94c20f35fc3cd5bd6d2702202a496331fa272cd090b4c90879b76b8d1f8"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+        "old_sha256": "b1cba734eaa3752541dd6dce522af0b35924b909930609ca17e5676425692750",
+        "new_sha256": "32b49b44106cef7b305183d0885ec53276c96f7ce16f4e522ee07c1574cd61bf"
+      }
+    ],
+    "canonical6101_allsource_names_hashes_match_acceptedCoremanifest": true,
+    "newcanonicalnativeexecution_claimed": false
+  },
+  "preservation": {
+    "TODO_other11_complete_sections_byte_exact": {
+      "## Complete Azure Service Bus validation against the real cloud service": "cc5d9e8037a5130d0b6a9fd7ee45d8cf8cacaf2f5a5ca5c8097263334958112a",
+      "## Separate cache index projection from external observation": "1e72dd4c7e4b4d1a07e04dc1edabe6239aa69a868ffc27e7dca5b95dc9cd7afe",
+      "## Continue deterministic time normalization beyond envelope materialization": "5492681adce6e3869d1e8a95ca8d9c54e930af414fde6cfbc5de5ad60f85db52",
+      "## Complete external benchmark scenarios": "ad94a2fc4505b25478cf256f0b9578be5178fde6ca89c5842c2bee6e7da5f6dd",
+      "## Make Activity telemetry observationally no-throw": "e82735949dd0d8b1f990d90b1aebdf967cc1ad037879a0d12ea69b8e9442bc5b",
+      "## Complete MessageJournal external provider validation": "7004d3dd9f288e9cdc5d9bd39fbb41cf4d9cca2470959aef0d773b2ccdf08e44",
+      "## Complete Azure Table persistence validation against the real cloud service": "cb88b3a863d609d5d52d9e306049091bd2753539c93739dc2e41a00b6c18bd5c",
+      "## Complete Entity Framework SQL Server and Azure SQL external variant validation": "514b7682cff5b750129f59f967204a995e764b1f6c365fe06689c0f6e71011e5",
+      "## AWS real-service closure": "25b7df4df7fc790caa0c9ad8ca43df69c6fb7aa4fdbd9a8a4f15cc319ca461d7",
+      "## Complete Event Hubs validation against the real cloud service": "714f6494487dc039c7e8eb79d632a694f1e03f81919f07b23c8b2a5fbbcfef1c",
+      "## Complete RabbitMQ validation against Amazon MQ": "d592562bd69b5747702059ac03a45e7cd07ab7ebda2f2fcff2db3a040f414415"
+    },
+    "TODO_onlychanged_section": "## Verify startup validation across retained capabilities",
+    "ordered_OBL_raw_occurrences_exact": true,
+    "ordered_unique_OBL_count": 62,
+    "categories": {
+      "CLOUD": 55,
+      "PER": 6,
+      "BRK": 1
+    },
+    "four_historical_suffixes_byte_exact": {
+      "CHANGELOG.md": {
+        "anchor": "## Unreleased — API review completion, 6 October 2026",
+        "sha256": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+        "bytes": 2306
+      },
+      ".testagent/status.md": {
+        "anchor": "## Historical checkpoints",
+        "sha256": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+        "bytes": 6160
+      },
+      ".testagent/plan.md": {
+        "anchor": "## Historical API repair execution notes",
+        "sha256": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+        "bytes": 13058
+      },
+      "docs/quality-status.md": {
+        "anchor": "## Historical product-wide coverage and CRAP checkpoint",
+        "sha256": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5",
+        "bytes": 3174
+      }
+    },
+    "localplan_only_changed_table_row": "P04",
+    "frozen234_audit_state_observation": {
+      "sha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+      "confirmed": 234,
+      "accepted": 234,
+      "limits": "Currentadministrative scalars/hash observed, not a recount of234finding bodies; stageddocs preserve historytails and existingfrozenboundary. STATE outside6publicationfiles."
+    },
+    "openASB_brokerInvariant": "Explicitly remains open; newfindings not rewritten as frozen234 audit repairs."
+  },
+  "semantic_limits": "New3Azure/New4Core are subsets of whole/selectedruns; post and mutation repetitions not added asdistincttests. Existing13460/23module baseline remains historical, not relabelledcurrentaggregate. Compositionnative hasnotoccurred; broaderstartup/provider/runtime/coverage/CRAP/API/adapters/observer/telemetry/CI/cloud/HW/developerjourney/benchmark/globalA+ remainopen. Sourceapproved322lineCompositionR2 draft remainsdeferred and notacceptednative.",
+  "publication_boundary": "Release only exact6stagedhashes listed after recheck original6canonicalR20hashes; publication itself notperformedbyreviewer. Root may record newpublishedfreeze; retain prior R20/earlier history unchanged."
+}

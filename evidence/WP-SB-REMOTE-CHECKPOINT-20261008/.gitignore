@@ -1,0 +1,2 @@
+# Plaintext evidence remains local; only authenticated encrypted parts are published.
+review-evidence.tar.gz.part-*

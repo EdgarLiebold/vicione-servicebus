@@ -1,0 +1,48 @@
+{
+  "kind": "ROOT_PRIVATE_SQS_ORIGINAL_INPUT_READ_R1",
+  "input_freeze_sha256": "27ac8625ee36bd0c3e4c838eadbabef7fc136c132bd5767f998cbc68a6a241ae",
+  "previous_root57_body_read_sha256": "a382debb187a078bc547704973cd39f609c9e475c69585a5ed8ac9f4e00c180b",
+  "personal_whole_read_this_turn": [
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "sha256": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973",
+      "bytes": 25099
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "sha256": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f",
+      "bytes": 1476
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+      "sha256": "074654ee59e1c22a382a702352d2a656c766f08b50f827c83dc5351c9cf698d3",
+      "bytes": 9715
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "sha256": "460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840",
+      "bytes": 3753
+    }
+  ],
+  "requirements_personal_credit": "Root-authored four-record successor with all199 orderedobjects/rawprefix retained; existing199 from prior readcontext, no new fullsourceclaim",
+  "new_lock_entries": [
+    "Microsoft.Extensions.Hosting",
+    "Microsoft.Extensions.Configuration.CommandLine",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables",
+    "Microsoft.Extensions.Logging",
+    "Microsoft.Extensions.Logging.Configuration",
+    "Microsoft.Extensions.Logging.Console",
+    "Microsoft.Extensions.Logging.Debug",
+    "Microsoft.Extensions.Logging.EventLog",
+    "Microsoft.Extensions.Logging.EventSource",
+    "System.Diagnostics.EventLog"
+  ],
+  "old_lock_entries_semantically_unchanged": true,
+  "removed_entries": [],
+  "all_added_packages_resolved": "10.0.12 matching existing central Hosting policy",
+  "actual_original_product_source_unchanged": true,
+  "restore_session": 74841,
+  "restore_exit_code": 0,
+  "native_test_credit": false,
+  "limits": "Private preparation; full SQS suite/provider/network/Hardware/cloud coverage and native proof pending. R1 archive path failure has zero native credit; partial copies preserved."
+}

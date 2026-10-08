@@ -1,0 +1,17 @@
+{
+  "kind": "ROOT_EVENTHUB_FOCUSED_R3_ASSERTION_AND_HELPER_PERSONAL_READ_R1",
+  "fixture_sha256": "e5ddb978de6828f14712e5786dc2ff9ba8cb414217ae5ab86dda08c5f884a19e",
+  "read_scope": "Entire331line actual candidate freshly re-opened in complete1..140 and141..331 ranges. Each primary/cleanup helper reviewed against previously whole-read productowner paths.",
+  "checks": [
+    "Actual fullbatch SDKdelegateentry positively precedes first finite Assert.Single timer-history33; lower configured interval/infinite assertions do not run if Single fails.",
+    "Partial phase separateCount2receiver only afterfirstfullphasepasses; actualtimercreation precedes7secFakeAdvance, SDKcheckpointentry/token exactvalue checks afterwards. False52 is only a snapshot, no general scheduler/quiescence/causal-race proof.",
+    "LegacypublicBatchconstructor exercises actualsingle fullcheckpoint and exactownedlifetimeToken, then neutralworkerdrain.",
+    "Actualinit/pending/complete tasks retained beforeboundedawait; allSDKgatesrelease beforecancelrealConfirmations/Close. RetainedClose explicitlyrejoined afterStop. Unknownerrorsaggregate withcapturedprimary.",
+    "No mocks of Batch/Partition/PL; onlySDKnetworkclient and exposedendpoint/processor SPI are substituted. Test doesnotproveReceivebodypipeline/fullcloud/nativeAPI/coverage."
+  ],
+  "limitations": [
+    "Offset field comparison repeatsfixture identity; meaningful route evidence is the actual unique ProcessEventArgs SDKdelegateentry and callcount, not a separately decoded providerpersistedoffset.",
+    "Source/analyzer confidence is not successful strictcompile or nativeproof. Constructor throws beforeOwner assignment cannot support blanketfullydisposedfixture claim.",
+    "No fresh humanwholearchive/STATE/large source map reading claimed."
+  ]
+}

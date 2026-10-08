@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:6352b7a66c81adec1967d5f36d33c86860bae0d7e1550ddd0f18e50d68c39479",
+  "claims": [
+    {
+      "id": "claim_414ca70aed9642109d81427abb3fd93f",
+      "statement": "RetryFilter awaits downstream processing and uses policy selection; terminal receive handling belongs to the configured receive pipeline.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Configuration/ReceivePipeConfiguration.cs",
+          "version": "repo-file-v1:sha256:965012b4a439f06aa9b88c8586886c03b0999b07769986ca59f64581af1a3284"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Middleware/RetryFilter.cs",
+          "version": "repo-file-v1:sha256:59bd5c3eb1013852167a96c8c4cb50a2921248994ce2e07f350f6337b8909428"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

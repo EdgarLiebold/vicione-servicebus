@@ -1,0 +1,51 @@
+{
+  "kind": "UNCHANGED_FIXED_PACKAGE_NATIVE_POST_MUTATION_CHECK",
+  "native_count": 13,
+  "passed": 13,
+  "failed": 0,
+  "skipped": 0,
+  "native_cases": [
+    "CoreDeadlines.Contracts.CoreDeadlineTests.EarlyConsumerDrain_ReleasesTheUnusedDeadlineTimerAsync",
+    "CoreDeadlines.Contracts.CoreDeadlineTests.OutboxTransportFailure_PreservesTheCauseAndDoesNotAdvanceProgressAsync",
+    "CoreDeadlines.Contracts.CoreDeadlineTests.OutboxDeadline_CapturesTheOperationClockBeforeAsynchronousLoadingAsync",
+    "CoreDeadlines.Contracts.CoreDeadlineTests.OutboxDeadline_CancelsResolutionAndSendAtTheSelectedClockBoundaryAsync(physicalSend: True)",
+    "CoreDeadlines.Contracts.CoreDeadlineTests.OutboxDeadline_CancelsResolutionAndSendAtTheSelectedClockBoundaryAsync(physicalSend: False)",
+    "CoreDeadlines.Contracts.CoreDeadlineTests.NullDeadline_DrainsWithoutInventingACancellationBudgetAsync(unexpectedExit: False)",
+    "CoreDeadlines.Contracts.CoreDeadlineTests.NullDeadline_DrainsWithoutInventingACancellationBudgetAsync(unexpectedExit: True)",
+    "CoreDeadlines.Contracts.CoreDeadlineTests.OutboxCallerCancellation_PreservesTheActualLinkedTokenAsync(physicalSend: True)",
+    "CoreDeadlines.Contracts.CoreDeadlineTests.OutboxCallerCancellation_PreservesTheActualLinkedTokenAsync(physicalSend: False)",
+    "CoreDeadlines.Contracts.CoreDeadlineTests.ConsumerGrace_CancelsEveryRetainedDeliveryAtTheClockBoundaryAndOwnsFailuresAsync(callbackThrows: True)",
+    "CoreDeadlines.Contracts.CoreDeadlineTests.ConsumerGrace_CancelsEveryRetainedDeliveryAtTheClockBoundaryAndOwnsFailuresAsync(callbackThrows: False)",
+    "CoreDeadlines.Contracts.CoreDeadlineTests.OutboxSuccessfulSend_AcknowledgesOnlyAfterTransportCompletionAsync",
+    "CoreDeadlines.Contracts.CoreDeadlineTests.UnexpectedLoopExit_UsesTheEndpointClockForItsAutomaticStopBudgetAsync"
+  ],
+  "exit_code": 0,
+  "parent_exit_observation": {
+    "tool": "exec_command then write_stdin",
+    "session_id": 91460,
+    "completed_exit_code": 0,
+    "observer": "Root personally observed returned structured tool completion, not inferred from console summary"
+  },
+  "command": [
+    "dotnet",
+    "test",
+    "--project",
+    "CoreDeadlines.Contracts.csproj",
+    "-c",
+    "Release",
+    "--no-build",
+    "--no-restore",
+    "--output",
+    "Detailed",
+    "--progress",
+    "off",
+    "/bl:artifacts/fixed-consumer-post-mutants-{}.binlog"
+  ],
+  "cwd": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed-contracts",
+  "baseline_fixture_and_modules_unchanged": true,
+  "raw_sha256": {
+    "fixed-consumer-post-mutants.log": "8a47d2c27ccbf322a8554a6271c4159b277d2cacd8d3d5d5f8b3c3fab46e9feb",
+    "fixed-consumer-post-mutants-20261006-232937--62256--+rfje2-dotnet-test.binlog": "72bc1ae446cde2bea8b3761e32c76918856c5791486c9e623eb4dc32eed6ff63"
+  },
+  "rollback_precision": "Four mutants ran in independent cloned products/private consumer caches; the corrected author/product/consumer was never mutated. This final check reruns those unchanged corrected bytes."
+}

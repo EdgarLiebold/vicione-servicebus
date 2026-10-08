@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:cf6bf69cee00980cf209dc2bf03aa0cb9a54b0f1863b3801a315bea26a836f50",
+  "claims": [
+    {
+      "id": "claim_e8c599e4c45e4ed0bb40f1689f99e6a7",
+      "statement": "Courier execution evaluates an explicit activity result and faults a missing result; compensation is hosted separately using retained logs.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Courier/Courier/CompensateActivityHost.cs",
+          "version": "repo-file-v1:sha256:c8474b4bb4456ac7197826d7c93079b4c5290431de716282791ef41872309b90"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Courier/Courier/ExecuteActivityHost.cs",
+          "version": "repo-file-v1:sha256:31c81a902a744e42cb880897aba7a29d0ff3312467d43b15d3fc84c2996f5535"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

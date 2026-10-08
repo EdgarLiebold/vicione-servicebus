@@ -1,0 +1,15 @@
+{
+  "kind": "ROOT_ACTUAL_WHOLE_AZURE613_REVIEWED_CHANGED_IMAGE_ACCEPTANCE_CANDIDATE_R1",
+  "native_sha256": "692b026a790910787ec9d54ab458affba40afdb3df035ac0754c4ef2c36c3863",
+  "actual613_pass_no_fail_skip": true,
+  "shortened_labels610": true,
+  "collision_groups": {
+    "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests.ConnectionString_RejectsIncompleteOrMixedSharedAccessCredentials(connectionString: \"Endpoint=sb://my-endpoint.servicebus.windows.net/;\"\u00b7\u00b7\u00b7)": 3,
+    "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusHostAndNameValidationTests.CustomPortSharedAccessString_RejectsMissingOrDisabledEmulatorMode(connectionString: \"Endpoint=sb://localhost:5999/;SharedAccessKeyName=\"\u00b7\u00b7\u00b7)": 2
+  },
+  "each_unchanged_clock_Fact_once": true,
+  "raw3_CRC1_rechecked": true,
+  "physical": "Byteexact18 Fixed image reuse with same13 assets/12 owners/41gen per guarded actual driver; no fresh whole physical parse.",
+  "root_body_read": "Whole6selected clock native bodies/summary/emptyerr personally read; all613events/counts and no failures/skips mechanically parsed and closed, not a claim of personally reading every other613 stdout body.",
+  "limits": "Candidate aggregate result; independent actual whole qualification required before counters. No cloud/provider/race/globalclosure."
+}

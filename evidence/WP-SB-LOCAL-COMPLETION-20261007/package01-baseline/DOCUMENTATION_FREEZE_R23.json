@@ -1,0 +1,45 @@
+{
+  "kind": "ROOT_PUBLISHED_SIX_DOCUMENTATION_FREEZE_R23",
+  "prior_freeze_sha256": "6fc4c0a0671238bcc7913aa1f78b3a57fcd2533f9b6fe3ce017840c7f4f41f2c",
+  "prior_source_sha256": {
+    "CHANGELOG.md": "18f0baee1af6e1603646870aa1b2220ee5122d635fa6f1ea3194ee735bc45dc6",
+    "TODO.md": "d5ccf882c5738c1ed65988bf8e9678f7ba7c5b220e79ebcc99e6fb939dfd9184",
+    ".testagent/status.md": "d3c6934fec834db34607f40fcc4698e7c081a4d37bd3b6a72dde309d3317b1bf",
+    ".testagent/plan.md": "edc443037ec8514524f99e18bead3b711fa68217b1c17f0c8fc229c22e6054a0",
+    ".testagent/local-completion-plan.md": "03a653e00c0acd19ee2bebb51a55656ceebdd1c15797630f9b36405192c666bd",
+    "docs/quality-status.md": "59f61e4e0cb014795f6b6311f7645d566ac707b81262eab719df52e11c71ebc7"
+  },
+  "source_sha256": {
+    "CHANGELOG.md": "a534c6acb054cb27a70b509f8a927ed7d825c0a021c8d67f4272819600ebbb11",
+    "TODO.md": "68da2831ab14787d7568622743394a9cd8172a4843760664b41e6455950591c8",
+    ".testagent/status.md": "f4b1ae95c5ae7cedc19bae78874bedb15441dc1ce0fed43efc5d7547c330534f",
+    ".testagent/plan.md": "021565cf70a55610fe98352d9c3017e6fa0972aa4ab2f750c2ef41fa400a0156",
+    ".testagent/local-completion-plan.md": "651467cdcdb8b097cc6dfdc36ccc64b90fc14090e9d7e225945e8e674b7f1dfc",
+    "docs/quality-status.md": "e0a0141a329e6f9ecf662a7289bc258fdc947e6819384495e2380f01b85948d9"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r23",
+  "cache_observer_acceptance_sha256": "9c164b86eeb244f7832974b14037a748f1f1ecbd04284a479efdae30d046a47f",
+  "cache_application_sha256": "95e328def748ec2195b51b1c8180396dc71207645dfcf431fa6a075dbf09ddef",
+  "cache_afterapply_peer_sha256": "86db8838110b17fb8070bcb66126ba1e531919ea04c617195859134bac67a7e7",
+  "separate_op_report": {
+    "path": "docs/servicebus-local-completion-report.txt",
+    "prior_sha256": "3828e3d69e2df9653b772f7b336bedbf2ed7568fb6513919b68e9b4db5124df2",
+    "proposed_sha256": "8114f36a88603f30e66bcc0df829ddb04098197a6090572dddf824168b9070b4"
+  },
+  "preservation": {
+    "other11_TODO_blocks_byteexact": true,
+    "TODO_preamble_byteexact": true,
+    "ordered62_OBL_exact": true,
+    "history_suffix_sha256_including_heading": {
+      "CHANGELOG.md": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+      ".testagent/status.md": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+      ".testagent/plan.md": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+      "docs/quality-status.md": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5"
+    },
+    "frozen234_unchanged": true
+  },
+  "limits": "Guardedpublication exactreviewed6docs+separatePO52. Other11TODO/62OBL/fourheadinginclusivehistorytails/actualfrozenSTATE234byteexact preserved. ScopeonlyacceptedCache57/59/8206/199/3mutant177repeat117firstRED60healthy/post59/exact3testfiles. Otherstartup/coverage/providers/API/adapters/schema/CI/cloud/HW/globalA+/commitpush open. Reliable3 sourcecand/driver execution separate pending, notacceptedhere.",
+  "proposed_freeze_sha256": "8ae4cfedae91b662a31990522bb310586a83106cd388cf7a3985c3c36bc760f8",
+  "independent_review_sha256": "9f186b30247de6c0a509119bec537a52e8f42d8e4b68b3bcf1adb78b823816d3",
+  "canonical_publication_completed": true
+}

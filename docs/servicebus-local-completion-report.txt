@@ -1,0 +1,99 @@
+ServiceBus: Fortschrittsbericht für den Product Owner – 8. Oktober 2026
+Die lokale Fertigstellung läuft. Gerätehardware und echte Cloud-Dienste sind noch nicht verfügbar.
+
+- Der abgeschlossene API-Auditstand mit 234 akzeptierten Korrekturen bleibt erhalten.
+  Die jetzt bearbeiteten Restaufgaben sind eine gesonderte Fortsetzung.
+- Der unveränderte Ausgangsstand ließ sich frisch bauen: 13.460 Unit-Fälle über
+  23 Module bestanden. Neuere einzelne Modulläufe ersetzen diesen Gesamtstand nicht.
+- Fehler bei Zeitsteuerung, Telemetrie, Cache-Indizes, Ressourcenfreigabe und
+  Protokollierung sind in den dokumentierten Teilpaketen behoben und nachgeprüft.
+- Neu abgeschlossen: Bei abgewiesener Startkonfiguration funktioniert das anschließende
+  Aufräumen eines noch nicht gestarteten ServiceBus jetzt korrekt. Die Konfiguration
+  wird weiterhin abgewiesen; ein abgebrochener vorzeitiger Stopp erlaubt späteren Start.
+- Dafür bestehen fünf gezielte Fälle und alle 8.146 Core-Fälle. Vier gezielt eingebaute
+  Fehlervarianten wurden erkannt; anschließend bestanden dieselben fünf Fälle erneut.
+- Die ausgewählten Startkonfigurationen für SQS, RabbitMQ und Azure Service Bus sind
+  lokal geprüft. Die positiven Transportfälle enden vor der Brokerverbindung;
+  daraus folgt keine erfolgreiche Cloud-Verbindung.
+- Die bisherige lokale Azure-Service-Bus-Emulator-Prüfung besteht mit 30 Fällen.
+  Drei negative Größenangaben in Brokerdiagnosen werden getrennt untersucht.
+  Ihre Ursache und mögliche Auswirkung sind weiterhin offen.
+- Neu abgeschlossen: drei Konfigurationsfälle und alle 8.149 Core-Fälle bestehen.
+  Zwei reale InMemory-Busse verarbeiten getrennte Nachrichten und stoppen korrekt.
+  Vier eingebaute Fehler wurden erkannt; nach Wiederherstellung bestehen die drei Fälle erneut.
+  Die unabhängige Prüfung bestätigt Quellcode, Binärdateien und Übernahme der zwei Testdateien.
+- Neu abgeschlossen: 57 Cache-Beobachterfälle prüfen Fehler in Rückrufen, vollständige
+  Weiterleitung und das Abwarten laufender Rückrufe. Fehlende oder fehlerhafte Protokollierung
+  beschädigt die Operation nicht; eine dauerhaft garantierte Fehleraufzeichnung ergibt sich daraus nicht.
+- Dafür bestehen 59 gezielte Fälle und alle 8.206 Core-Fälle, darunter 199 Cache-Fälle.
+  Drei eingebaute Fehlervarianten wurden erkannt; nach Wiederherstellung bestehen die 59 erneut.
+  Ein bestehender Test räumt jetzt auch bei einer frühen fehlgeschlagenen Prüfung korrekt auf.
+  Die Übernahme der drei Test-/Nachweisdateien ist unabhängig geprüft; Produktcode blieb unverändert.
+- Neu abgeschlossen: Ein weiterer Aufräumfehler nach ungültigem Reliable-Host-Start ist behoben.
+  Gültige reale Standard- und typisierte Busse verarbeiten ihre Nachrichten und stoppen korrekt.
+  Ein bestehender Test prüft die Optionsvalidierung jetzt ausdrücklich an der richtigen Grenze.
+- Dafür bestehen 13 gezielte Fälle und alle 8.209 Core-Fälle. Vier Produkt-Fehlervarianten und
+  eine fehlerhafte Testgrenze wurden erkannt; nach Wiederherstellung bestehen dieselben 13 erneut.
+  Die vier übernommenen Produkt-/Test-/Nachweisdateien sind unabhängig nachgeprüft.
+- Neu abgeschlossen: Auch falsche Datenbank-/Inbox-/Retry-Einstellungen verursachen beim
+  anschließenden Beenden des Hosts keinen zweiten Aufräumfehler mehr.
+  Der fehlerhafte Start wird weiterhin mit einer konkreten Meldung abgewiesen.
+- Dafür bestehen fünf gezielte Fälle, alle 436 EF-Fälle und erneut alle 8.209 Core-Fälle.
+  Drei eingebaute Fehlervarianten wurden erkannt; danach bestanden die fünf Fälle erneut.
+  Die sieben übernommenen Code-/Test-/Projektdateien sind unabhängig nachgeprüft.
+- Neu abgeschlossen: Vier Cache-Fälle prüfen das Zurückhalten neuer Ressourcen während
+  laufender Freigabe, die Auswahl und Reihenfolge von Beobachtern sowie das Abweisen
+  unerlaubter Rückrufe auf denselben Cache. Ein anderer Cache bleibt dabei nutzbar.
+- Dafür bestehen die vier gezielten Fälle und alle 8.213 Core-Fälle, darunter 203 Cache-Fälle.
+  Vier eingebaute Fehlervarianten wurden erkannt; danach bestanden die vier Fälle erneut.
+  Die zwei übernommenen Test-/Nachweisdateien sind unabhängig nachgeprüft; Produktcode
+  war hier bereits korrekt. Allgemeine Fairness und gemessene Speichergrenzen bleiben offen.
+- Neu abgeschlossen: Normale und sitzungsgebundene Azure-Empfänger verwenden beim
+  Beenden jetzt die gewählte Zeitquelle für ihre Wartefrist. Zwei nachgewiesene Zeitfehler sind behoben.
+- Dafür bestehen sechs gezielte Fälle und alle 613 Azure-Modulfälle. Vier eingebaute
+  Fehlervarianten wurden erkannt; nach Wiederherstellung bestehen dieselben sechs Fälle erneut.
+  Die sechs übernommenen Code-/Test-/Projektdateien sind unabhängig nachgeprüft.
+  Dies ist eine lokale Prüfung; allgemeine parallele Aufräumrennen sind damit nicht nachgewiesen.
+- Neu abgeschlossen: Geschlossene SQS/SNS-Topics nehmen keine neuen Nachrichten mehr an.
+  Wiederholtes Beenden wartet auf bereits laufende Arbeit; veraltete Ressourcen werden
+  höchstens einmal neu aufgelöst. Abbruch wird vor der Auflösung berücksichtigt.
+  Bereits an den Provider übergebene Nachrichten werden bei Fehlern nicht erneut gesendet.
+- Dafür bestehen elf gezielte Fälle und alle 428 SQS-Modulfälle. Sieben eingebaute
+  Fehlervarianten wurden erkannt; danach bestanden dieselben elf Fälle erneut.
+  Die vier übernommenen Code-/Test-/Nachweisdateien sind unabhängig nachgeprüft.
+- Neu abgeschlossen: Event-Hubs-Checkpoints verwenden jetzt die gewählte Zeitquelle.
+  Kleine Nachrichtenpakete werden nach der festgelegten Frist bestätigt; das lässt sich
+  mit virtueller Zeit gezielt prüfen. Die bisherigen öffentlichen Konstruktoren bleiben nutzbar.
+- Dafür bestehen zwei neue gezielte Tests, sechs betroffene Rückprüfungsfälle und alle
+  196 lokalen Event-Hubs-Modulfälle ohne übersprungene Fälle. Fünf eingebaute Fehlervarianten
+  wurden erkannt; der Kontrolltest bestand dabei jeweils weiter. Nach Wiederherstellung
+  bestehen beide neuen Tests erneut. Die zehn übernommenen Dateien sind unabhängig geprüft.
+- Neu abgeschlossen: SQS/SNS-Nachrichtenpakete verwenden jetzt die gewählte Zeitquelle.
+  Spätere Änderungen an Verbindung oder Aufruf ändern die bereits gewählte Zeitquelle nicht.
+  Scheitert die Timererzeugung im geprüften Fehlerfall, enden wartende Aufträge mit der
+  ursprünglichen Ursache; auch fehlerhafte optionale Protokollierung verhindert das Aufräumen nicht.
+- Dafür bestehen neun gezielte Fälle und alle 437 lokalen SQS-Modulfälle ohne übersprungene Fälle.
+  Sechs eingebaute Fehlervarianten wurden erkannt; der Konstruktor-Vergleichstest blieb jeweils grün.
+  Nach Wiederherstellung bestehen die neun Fälle erneut. Alle elf übernommenen Dateien und
+  ihre Binärnachweise sind unabhängig geprüft; die öffentliche SQS/SNS-API bleibt kompatibel.
+- Changelog, Plan, TODO und Qualitätsstatus sind aktualisiert und unabhängig geprüft.
+  Testwiederholungen werden nicht als zusätzliche, unterschiedliche Tests gezählt.
+- Jede Codeänderung erhält eine gesonderte adversariale Prüfung. Gezielt eingebaute
+  Fehler prüfen, ob die Tests die behauptete Schutzwirkung tatsächlich besitzen.
+- Lokal noch offen: weitere Startkonfigurationen, zusätzliche Cache-Verträge und deren
+  Ressourcenverhalten, zusätzliche Zeitsteuerungen sowie das vollständige Telemetrieschema.
+- Lokal noch offen: erneute Providerläufe am aktuellen Stand, die historische
+  SQL-Zustellungsursache, aktuelle Coverage und Risikobewertung pro Methode.
+- Lokal noch offen: Paket-/API-Kompatibilität, Entwicklerbeispiele, Benchmarks
+  und abschließende CI-Qualifikation. Die CI bleibt bis zu ihrer Qualifikation deaktiviert.
+- Extern offen: alle 62 Verpflichtungs-IDs für echte Cloud-/Providerabnahmen.
+  Lokale Emulatorergebnisse schließen diese Verpflichtungen nicht.
+- Extern offen: Betrieb und Last-/Wiederanlauftests auf ARM64 mit 512 MiB ohne Swap.
+  Dafür wird das tatsächliche Gerät benötigt.
+- Für den gesamten ServiceBus liegt deshalb noch keine abschließende A+-Freigabe vor.
+- Die Fortsetzung liegt lokal auf work/servicebus-local-completion-20261007.
+  Die neuen Änderungen wurden noch nicht als neuer Commit remote gesichert.
+
+Maßgebliche Detailnachweise: .testagent/local-completion-plan.md, TODO.md,
+docs/quality-status.md und evidence/WP-SB-LOCAL-COMPLETION-20261007/.
+Dieser Fortschrittsbericht wird während der weiteren Arbeit aktualisiert.

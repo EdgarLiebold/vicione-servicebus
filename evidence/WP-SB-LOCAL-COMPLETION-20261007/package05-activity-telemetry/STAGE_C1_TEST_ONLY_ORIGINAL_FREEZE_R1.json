@@ -1,0 +1,16 @@
+{
+  "kind": "P05_C1_TEST_ONLY_ORIGINAL_FREEZE",
+  "source_sha256": {
+    "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs": "2422998fb8458a9f1916d759b99d523a7d13d9e1b51f9fc5d1d43108d31e5614",
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/MessageProcessingMetricPreparationIsolationTests.cs": "b2b43d8b25fecb359c5ec5c4cb35ef28cd33fec087dfa6365240cd7f7bf4c620",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "62827310059751585f9d1034e9231b923edb19f2327bf3605450002c1673183b"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c1-test-only-original-owner-r1",
+  "native_cases": 8,
+  "new_requirement_rows": 1,
+  "root804_read_sha256": "fee48418d451623472df9b35c86f8de5ec66f8ca684cb3810268f6776cbda1c4",
+  "research_plan_sha256": "76e8e30835227572990eb0f3c1f57fba896dc76977422faf40ed14d5c75086c8",
+  "draft_review_sha256": "8d8cc698e086eeb020439800e4dedf53f6f421a6469ad3461c63be1980367e61",
+  "original_checkout": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed",
+  "limits": "OriginalC1metricsource with acceptedP06/A/B1/B2. NoC1native orproductfix yet."
+}

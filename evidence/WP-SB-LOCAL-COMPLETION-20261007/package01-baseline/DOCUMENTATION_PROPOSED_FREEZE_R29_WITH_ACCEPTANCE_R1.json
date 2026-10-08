@@ -1,0 +1,49 @@
+{
+  "kind": "ROOT_SEVEN_DOCUMENTATION_PROPOSAL_R29_WITH_ACTUAL_CLOCK_ACCEPTANCE_R1",
+  "prior_freeze_sha256": "790a91aa92d0736fed02a20c5167fc384d7e59feb2c7976d0e83fbe8a3327960",
+  "prior_source_sha256": {
+    "CHANGELOG.md": "40801b4308e33bec3971489e01820031e1836aca90c0d91e0f46c27bbaa52501",
+    "TODO.md": "1fc570aaa6711d6e377c414d3811e9d2b9a1d190b6616f4881cb723fc28f4e92",
+    ".testagent/status.md": "d7aac115b52c67f289c55da03fa9ac5e5d5f390389d12210cbe83193bdec60db",
+    ".testagent/plan.md": "2cff85081bef76df2fd094568b74de3c103552be39c845b573790d4e9b6365c1",
+    ".testagent/local-completion-plan.md": "3c70f69affb3d8026afbe0a7ec4d07396155afdb237b4032c3f08a93b4437c1d",
+    "docs/quality-status.md": "63c571f514f9c764b8cf4b179d0d7dd759f93d829478406229a4975c8ab7d11a",
+    "docs/servicebus-local-completion-report.txt": "8fbba0585fb270d9063cfd5596d3b878bf00a38f937f356efcd2d8ddebd84afb"
+  },
+  "source_sha256": {
+    "CHANGELOG.md": "bb1c8da614f6356c8df83e93df07506df0e9107ccf55656947eec472458dc835",
+    "TODO.md": "4de196f160f0bdcd27a2a1d8efab40d1cad304d3ff1c6aab149bf93d7aecd532",
+    ".testagent/status.md": "b5f85f2cb4438c11567613de24ed3b499d997608f0f9d7c46a535d48eee8f8c1",
+    ".testagent/plan.md": "5866b99cef22a0c9e9b37119b263d38b6011fa7cf75c80d2cc871a37bbee72cd",
+    ".testagent/local-completion-plan.md": "e6069be4afc80990ac7f363d60112b60a7b624d48e785f01d044407615ebc82a",
+    "docs/quality-status.md": "2c6d9497162ae6d1375136d512d83659a08e7f81d440378637263ede3a1dabf7",
+    "docs/servicebus-local-completion-report.txt": "9293421b432e757aeb00513163894a4a9989a527e833f2d1043f273bb0c93c94"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r29",
+  "lossless_diff_sha256": "2c0e14a3d2efe4faa7180005f47255f88f929524acae8746e829fc3266a144b8",
+  "history_suffix_sha256_including_heading": {
+    "CHANGELOG.md": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+    ".testagent/status.md": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+    ".testagent/plan.md": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+    "docs/quality-status.md": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5"
+  },
+  "other11_TODO_blocks_preamble_byteexact": true,
+  "ordered62_OBL_exact": true,
+  "local_package06_only_row_changed": true,
+  "PO_lines": 91,
+  "gate": "Actual controls/Post/afterapply boundedRootacceptance now complete. Finaldocsactualbindingpeer required before exactseven publication. Draft seven bytes unchanged from source-reviewed proposal.",
+  "limits": "Clock bounded closure only; all62 externalIDs pending; globalAPI30/coverage/aggregate/CI/remote/cloud/HW remain open.",
+  "proposal_source_sha256": "0210407a7bdfdcfecee739674e82cbd81f9b1ae0753bfdaa66d26739083e6660",
+  "eventhub_acceptance": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/ROOT_EVENTHUB_SELECTED_CLOCK_ACCEPTANCE_R1.json",
+    "sha256": "4ae989894f447e10039797d156ac7a86ed2afd0e7d02a18f7aea1949d78fa360"
+  },
+  "source_conditional_peer": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-documentation-r29-source-conditional-adversarial-r1.json",
+    "sha256": "6f526588cd0f288b1300a80f3820acf421c786b2e112669dd75eedc3afd4d518"
+  },
+  "afterapply_peer": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-canonical-afterapply-adversarial-r1.json",
+    "sha256": "ed73843bd507f8eff4df95a992023af7c79cdbcfc1bc15567326457ab17887d7"
+  }
+}

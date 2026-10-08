@@ -1,0 +1,881 @@
+{
+  "kind": "READONLY_ASB_BOOTSTRAP_ACTUAL_TOOL_CONTRACT_ARTIFACT_REVIEW_R1",
+  "verdict": "NO_BLOCK_FOR_BOUNDED_TOOL_CONTRACT_ACCEPTANCE__PROVIDER_ACCEPTANCE_NOT_GRANTED",
+  "authority": "Internal read-only adversarial artifact reviewer; Root sole author and native executor. No external Product-role claim.",
+  "created_utc": "2026-10-07T10:12:54.803820+00:00",
+  "findings": [],
+  "checks": {
+    "result_and_freeze_exact_hash": true,
+    "all_seven_frozen_source_hashes_current_equal": true,
+    "exact_eighteen_unique_source_receipt_log_method_names": true,
+    "whole_log_18_in_8_313s_OK_without_fail_error_skip_summary": true,
+    "root_reported_joined_exit_zero": true,
+    "both_complete_raw_stream_hashes": true,
+    "thirteen_unique_archives_ninety_two_whitelisted_files_hash_exact": true,
+    "twelve_full_boot_source_bundles_plus_one_intentional_changed_dependency_bundle": true,
+    "ten_real_fake_forward_phase_receipts_with_empty_cleanup_failures": true,
+    "http_200_204_success_exec_and_503_no_exec_archive_events": true,
+    "early_real_signal_130_and_143_receipts": true,
+    "critical_signal_project_drain_assertions_outside_optional_log_stop_warning_boundaries": true,
+    "closed_archive_descriptors_at_readonly_lsof_observation": true
+  },
+  "inputs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/RESULT.json",
+      "sha256": "14612ccb74469b738179070382b2b875dde3737cae86cab3917100d757bd41cb",
+      "bytes": 17715
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-prehealth-owner-r2/PREPARED.json",
+      "sha256": "9e6b0b89b5b6e0b953d56ff5ed1634ed9a3ca37234e7bb8b4c78202401decc03",
+      "bytes": 5815
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-prehealth-owner-r2/package03-asb-prehealth-owner-r2-source-tests-adversarial-r1.json",
+      "sha256": "869b56de8b1c80703f476c3bd1cf77d9392fe8b5c3da1a0a00170bbebca509b1",
+      "bytes": 13650
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-prehealth-owner-r2/local_colima_asb_bootstrap.py",
+      "sha256": "d37c2eb0c1424f088cd675e4c033d904bf82886f9d084747882bc774540a340a",
+      "bytes": 12843
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-prehealth-owner-r2/test_local_colima_asb_bootstrap.py",
+      "sha256": "e535b233fb7e1b004cf8e28ae0e5fbd48ac3d0217d57acda104ff28decaea5ab",
+      "bytes": 20670
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/local_colima_forwarding.py",
+      "sha256": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d",
+      "bytes": 10845
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/run_broker_category.py",
+      "sha256": "03cdb64a2f8d3f32136d59da5f437d12b89b9b5bb362cc0e22fae489ee2d8969",
+      "bytes": 22043
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/compose_fixture.py",
+      "sha256": "cc2b92ddc68377c2af3cf398c6a5ec041f858cdba42c30a886af51a413e3fe6d",
+      "bytes": 14046
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/run_scope.py",
+      "sha256": "1ef7d3cb955828937ec1adb31fcbd4a0a6bcbbc16fbb354388b582e30005f095",
+      "bytes": 3747
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/fixtures/broker_logs.py",
+      "sha256": "e93b4d22d7a6218798662b465d208d22fa4f1f3ab803685ab48d9a67ab8b3ec2",
+      "bytes": 6906
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/stderr.log",
+      "name": "stderr.log",
+      "sha256": "4f562b8df1784cee3595cb63bbc77287263e91fb2e8acfe1289d131e7a4b4447",
+      "bytes": 4815
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/stdout.log",
+      "name": "stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-a6d2ead9de3c/local-colima-asb-owner.json",
+      "sha256": "50e263ae253b4f08dd0a1bbf319243cb4f230d9408612096707d095cc4f9803e",
+      "bytes": 1427
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-a6d2ead9de3c/local-colima-forwarding.json",
+      "sha256": "94e72d3a314ab9eea268e5b7f4b5c21f4c0cfc4bec49d6b39e637d94b2a3bed9",
+      "bytes": 501
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-a6d2ead9de3c/local-colima-forwarding.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-a6d2ead9de3c/local-colima-asb-result.json",
+      "sha256": "bc12f31ebbec969089f82ae503212ed22046a5202a08b029f5e2ce026da27910",
+      "bytes": 216
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-a6d2ead9de3c/local-colima-asb-health.json",
+      "sha256": "fe84486de8f210b34572fe4fd6292bcd1f123ceb5e6e27bcb4f0b5489aa1b1d7",
+      "bytes": 262
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-a6d2ead9de3c/endpoints.json",
+      "sha256": "5b2fa813ae75c29c7ea784fbeb8c087a2d1367c5374241f20e161a04054ea98a",
+      "bytes": 170
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-a6d2ead9de3c/fixture-findings.json",
+      "sha256": "44f2a5c3c1b8f45fc11c0493999b34ff7169a98004409713e3ae047290889000",
+      "bytes": 261
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-a6d2ead9de3c/contract-health-requests.jsonl",
+      "sha256": "58d3b73eb5a1d43e53044004c86615f123ea4e5f99d83229d8d8b5899c6a8a72",
+      "bytes": 35
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-a6d2ead9de3c/contract-child.marker",
+      "sha256": "df230a7d25b322a897ddc423a1b2ae271ea3325f3517860fd8bcae96c327515a",
+      "bytes": 34
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-365be67d2b37/local-colima-asb-owner.json",
+      "sha256": "50e263ae253b4f08dd0a1bbf319243cb4f230d9408612096707d095cc4f9803e",
+      "bytes": 1427
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-365be67d2b37/local-colima-forwarding.json",
+      "sha256": "89bc76e6ecbca47dbe37011636af43c5ede1532cfabad7855d40b9bec433ac22",
+      "bytes": 503
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-365be67d2b37/local-colima-forwarding.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-365be67d2b37/local-colima-asb-result.json",
+      "sha256": "69e93b8511fc8cbbff0d6de1b2d7764bc21138975db15064a5df7941892d5dcc",
+      "bytes": 148
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-365be67d2b37/local-colima-asb-health.json",
+      "sha256": "fe84486de8f210b34572fe4fd6292bcd1f123ceb5e6e27bcb4f0b5489aa1b1d7",
+      "bytes": 262
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-365be67d2b37/endpoints.json",
+      "sha256": "f17b0c9ddb5024664c6bbb10e39af43f7fd33ca442cdd91d040d65e7b3c40cc4",
+      "bytes": 170
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-365be67d2b37/fixture-findings.json",
+      "sha256": "529b3606b57966ca2dd7feb8441dacf7872737a12ac20c1ad7d6784b41b407fc",
+      "bytes": 192
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-365be67d2b37/contract-health-requests.jsonl",
+      "sha256": "58d3b73eb5a1d43e53044004c86615f123ea4e5f99d83229d8d8b5899c6a8a72",
+      "bytes": 35
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-365be67d2b37/contract-child.marker",
+      "sha256": "df230a7d25b322a897ddc423a1b2ae271ea3325f3517860fd8bcae96c327515a",
+      "bytes": 34
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-dabddfd1b4f8/local-colima-asb-owner.json",
+      "sha256": "50e263ae253b4f08dd0a1bbf319243cb4f230d9408612096707d095cc4f9803e",
+      "bytes": 1427
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-dabddfd1b4f8/local-colima-forwarding.json",
+      "sha256": "bf27d0d32765a7c34c61585e5a37e6e71e5376849c114eb0aadc416602bd3566",
+      "bytes": 613
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-dabddfd1b4f8/local-colima-forwarding.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-dabddfd1b4f8/local-colima-asb-result.json",
+      "sha256": "0b0cafb5aed62bc10d246b132bc5db25384a1a633ecaf12af6ceb368b1606037",
+      "bytes": 147
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-dabddfd1b4f8/endpoints.json",
+      "sha256": "d06a2cc1d3a3f97cd466a3923e59b67275f65363a7a7d93cbb3c1708190f0970",
+      "bytes": 170
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-dabddfd1b4f8/fixture-findings.json",
+      "sha256": "529b3606b57966ca2dd7feb8441dacf7872737a12ac20c1ad7d6784b41b407fc",
+      "bytes": 192
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-dabddfd1b4f8/contract-health-requests.jsonl",
+      "sha256": "c97e36a3b7fe158609b4ce462e46484020671009a663e9b51167895edd079d20",
+      "bytes": 35
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-27584846435e/local-colima-asb-owner.json",
+      "sha256": "50e263ae253b4f08dd0a1bbf319243cb4f230d9408612096707d095cc4f9803e",
+      "bytes": 1427
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-27584846435e/local-colima-forwarding.json",
+      "sha256": "cec124c4821377661acab0e9c4e0ccdf23f73d7823359cf1d616f45d4d9c0846",
+      "bytes": 503
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-27584846435e/local-colima-forwarding.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-27584846435e/local-colima-asb-result.json",
+      "sha256": "dad13bdc00669b7c8c974e66ef7527a734bf619f12b69e8d6fa2fa2f0ec5cd21",
+      "bytes": 195
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-27584846435e/local-colima-asb-health.json",
+      "sha256": "fe84486de8f210b34572fe4fd6292bcd1f123ceb5e6e27bcb4f0b5489aa1b1d7",
+      "bytes": 262
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-27584846435e/endpoints.json",
+      "sha256": "6520e4414613b29acf47b2cddb26f0376ecf1a48409b89ae9ecc3e493f569cb9",
+      "bytes": 170
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-27584846435e/contract-health-requests.jsonl",
+      "sha256": "58d3b73eb5a1d43e53044004c86615f123ea4e5f99d83229d8d8b5899c6a8a72",
+      "bytes": 35
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-27584846435e/contract-child.marker",
+      "sha256": "df230a7d25b322a897ddc423a1b2ae271ea3325f3517860fd8bcae96c327515a",
+      "bytes": 34
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-e8e4103964b7/local-colima-asb-owner.json",
+      "sha256": "bc6aedd11d5be5ed9abe16d63db98f610b26ef505e3834275401cd9daf6651d4",
+      "bytes": 487
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-e8e4103964b7/endpoints.json",
+      "sha256": "db74d2fa8b36b033e20ef9097985d9caed09e598fab12605b0a048cc5ba2b06e",
+      "bytes": 170
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-cccf8d84036f/local-colima-asb-owner.json",
+      "sha256": "50e263ae253b4f08dd0a1bbf319243cb4f230d9408612096707d095cc4f9803e",
+      "bytes": 1427
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-cccf8d84036f/local-colima-forwarding.json",
+      "sha256": "3a93bae1a2e4024149c4bfba441462dedfa7324a6d2e75bac3cf2f24bcafd64f",
+      "bytes": 501
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-cccf8d84036f/local-colima-forwarding.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-cccf8d84036f/local-colima-asb-result.json",
+      "sha256": "503a1df5cd139402330a4814cb67abf8d9aca0ab7c3ce877e0dc61873eca0638",
+      "bytes": 194
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-cccf8d84036f/local-colima-asb-health.json",
+      "sha256": "fe84486de8f210b34572fe4fd6292bcd1f123ceb5e6e27bcb4f0b5489aa1b1d7",
+      "bytes": 262
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-cccf8d84036f/endpoints.json",
+      "sha256": "315f55d03470d11a66326aaa9dcb4e8ca40b560123ae187b3b8452858d2e5bfb",
+      "bytes": 170
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-cccf8d84036f/contract-health-requests.jsonl",
+      "sha256": "58d3b73eb5a1d43e53044004c86615f123ea4e5f99d83229d8d8b5899c6a8a72",
+      "bytes": 35
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-cccf8d84036f/contract-child.marker",
+      "sha256": "df230a7d25b322a897ddc423a1b2ae271ea3325f3517860fd8bcae96c327515a",
+      "bytes": 34
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-43a5e241acf7/local-colima-asb-owner.json",
+      "sha256": "50e263ae253b4f08dd0a1bbf319243cb4f230d9408612096707d095cc4f9803e",
+      "bytes": 1427
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-43a5e241acf7/local-colima-forwarding.json",
+      "sha256": "7b46943b8cb6452712ad066abe826a3745a47d600c057a507e83e570837b9d29",
+      "bytes": 503
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-43a5e241acf7/local-colima-forwarding.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-43a5e241acf7/local-colima-asb-result.json",
+      "sha256": "fa642d9dd9e2553504e3a3b993dcc5fb0658696d3a995b7bb3c26bc1e886191a",
+      "bytes": 217
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-43a5e241acf7/local-colima-asb-health.json",
+      "sha256": "fe84486de8f210b34572fe4fd6292bcd1f123ceb5e6e27bcb4f0b5489aa1b1d7",
+      "bytes": 262
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-43a5e241acf7/endpoints.json",
+      "sha256": "9ed2677ace54c060bf391ff2b74db44a2263e9d491b39e553c9ddad4ec7d02b1",
+      "bytes": 170
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-43a5e241acf7/fixture-findings.json",
+      "sha256": "44f2a5c3c1b8f45fc11c0493999b34ff7169a98004409713e3ae047290889000",
+      "bytes": 261
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-43a5e241acf7/contract-health-requests.jsonl",
+      "sha256": "58d3b73eb5a1d43e53044004c86615f123ea4e5f99d83229d8d8b5899c6a8a72",
+      "bytes": 35
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-43a5e241acf7/contract-child.marker",
+      "sha256": "df230a7d25b322a897ddc423a1b2ae271ea3325f3517860fd8bcae96c327515a",
+      "bytes": 34
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-14e504889746/local-colima-asb-owner.json",
+      "sha256": "50e263ae253b4f08dd0a1bbf319243cb4f230d9408612096707d095cc4f9803e",
+      "bytes": 1427
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-14e504889746/local-colima-forwarding.json",
+      "sha256": "ed727b68d41e0fc4ddd3c0db1cfeb159459864efb4aba6db6827a7610924fc39",
+      "bytes": 503
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-14e504889746/local-colima-forwarding.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-14e504889746/local-colima-asb-result.json",
+      "sha256": "ddab8eff047d698449b9692396f54d298c31a5c5020a5976854c74c9385aaee5",
+      "bytes": 284
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-14e504889746/local-colima-asb-health.json",
+      "sha256": "fe84486de8f210b34572fe4fd6292bcd1f123ceb5e6e27bcb4f0b5489aa1b1d7",
+      "bytes": 262
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-14e504889746/endpoints.json",
+      "sha256": "b8a327199ff637483668846fe9e545b01c79cbd4b36ba935b7d5f313a0aa7a06",
+      "bytes": 170
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-14e504889746/fixture-findings.json",
+      "sha256": "50aefcfd2339691186e8ae3d2902d1368bb396c03b4f6d657eadda491dbb6f06",
+      "bytes": 328
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-14e504889746/contract-health-requests.jsonl",
+      "sha256": "58d3b73eb5a1d43e53044004c86615f123ea4e5f99d83229d8d8b5899c6a8a72",
+      "bytes": 35
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-14e504889746/contract-child.marker",
+      "sha256": "df230a7d25b322a897ddc423a1b2ae271ea3325f3517860fd8bcae96c327515a",
+      "bytes": 34
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-6cc3e01df329/local-colima-asb-owner.json",
+      "sha256": "50e263ae253b4f08dd0a1bbf319243cb4f230d9408612096707d095cc4f9803e",
+      "bytes": 1427
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-6cc3e01df329/local-colima-forwarding.json",
+      "sha256": "6f9388de7ee097091b40c787f80d9c23d9f395d393ead543e31d4f03243e5b1a",
+      "bytes": 501
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-6cc3e01df329/local-colima-forwarding.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-6cc3e01df329/local-colima-asb-result.json",
+      "sha256": "687089fb7d0ef78654a12a4c597ba2fc5adb587815209e6c82d4d39d6299f9f9",
+      "bytes": 147
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-6cc3e01df329/local-colima-asb-health.json",
+      "sha256": "fe84486de8f210b34572fe4fd6292bcd1f123ceb5e6e27bcb4f0b5489aa1b1d7",
+      "bytes": 262
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-6cc3e01df329/endpoints.json",
+      "sha256": "c905a574a301accc57c6b01bb8b44f44fe4ba485e700bb6f2d29f3eda0aa0f57",
+      "bytes": 170
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-6cc3e01df329/fixture-findings.json",
+      "sha256": "529b3606b57966ca2dd7feb8441dacf7872737a12ac20c1ad7d6784b41b407fc",
+      "bytes": 192
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-6cc3e01df329/contract-health-requests.jsonl",
+      "sha256": "f9fab3a3327b61c7ed2d4f123a591036740d238ab9a67f6f5817f1b8f3a5e152",
+      "bytes": 35
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-6cc3e01df329/contract-child.marker",
+      "sha256": "df230a7d25b322a897ddc423a1b2ae271ea3325f3517860fd8bcae96c327515a",
+      "bytes": 34
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-93785dc23295/local-colima-asb-owner.json",
+      "sha256": "50e263ae253b4f08dd0a1bbf319243cb4f230d9408612096707d095cc4f9803e",
+      "bytes": 1427
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-93785dc23295/local-colima-asb-result.json",
+      "sha256": "89b215cc4f767cdc71c8550476e6b8a585a3ef64805e0e26328c1d023a513e86",
+      "bytes": 173
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-93785dc23295/fixture-findings.json",
+      "sha256": "529b3606b57966ca2dd7feb8441dacf7872737a12ac20c1ad7d6784b41b407fc",
+      "bytes": 192
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-10ba1389cc65/local-colima-asb-owner.json",
+      "sha256": "50e263ae253b4f08dd0a1bbf319243cb4f230d9408612096707d095cc4f9803e",
+      "bytes": 1427
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-10ba1389cc65/local-colima-asb-result.json",
+      "sha256": "4359da1ea2ab6b579442e723b18efd2a132d080a87d2ee7801996378195c1b72",
+      "bytes": 172
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-10ba1389cc65/fixture-findings.json",
+      "sha256": "529b3606b57966ca2dd7feb8441dacf7872737a12ac20c1ad7d6784b41b407fc",
+      "bytes": 192
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-c9aa9e7a8263/local-colima-asb-owner.json",
+      "sha256": "50e263ae253b4f08dd0a1bbf319243cb4f230d9408612096707d095cc4f9803e",
+      "bytes": 1427
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-c9aa9e7a8263/local-colima-forwarding.json",
+      "sha256": "4e3c53c0f60bfc3259dd6557c86e336a5d49c3227d6c2360c717b3b95daca3b8",
+      "bytes": 501
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-c9aa9e7a8263/local-colima-forwarding.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-c9aa9e7a8263/local-colima-asb-result.json",
+      "sha256": "d46b7db6175ca178816c62ffda2da536868430132eaabd53e154e0d0e829bb64",
+      "bytes": 283
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-c9aa9e7a8263/local-colima-asb-health.json",
+      "sha256": "fe84486de8f210b34572fe4fd6292bcd1f123ceb5e6e27bcb4f0b5489aa1b1d7",
+      "bytes": 262
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-c9aa9e7a8263/endpoints.json",
+      "sha256": "0549a344b91bcd8b02b75fdeebdb657fcd18afa7ef9c6cc6a37a6b026d229a17",
+      "bytes": 170
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-c9aa9e7a8263/fixture-findings.json",
+      "sha256": "bb953cfe6d182ff4f9d0f6ddf40c53cebc67db3899f472b7388d05496f836303",
+      "bytes": 328
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-c9aa9e7a8263/contract-health-requests.jsonl",
+      "sha256": "58d3b73eb5a1d43e53044004c86615f123ea4e5f99d83229d8d8b5899c6a8a72",
+      "bytes": 35
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-c9aa9e7a8263/contract-child.marker",
+      "sha256": "df230a7d25b322a897ddc423a1b2ae271ea3325f3517860fd8bcae96c327515a",
+      "bytes": 34
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-292309d5991f/local-colima-asb-owner.json",
+      "sha256": "50e263ae253b4f08dd0a1bbf319243cb4f230d9408612096707d095cc4f9803e",
+      "bytes": 1427
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-292309d5991f/local-colima-forwarding.json",
+      "sha256": "01178e376fb2d3a061ba0647c5412cb1c57bb5b91bacbe4b18362dd49d155974",
+      "bytes": 501
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-292309d5991f/local-colima-forwarding.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-292309d5991f/local-colima-asb-result.json",
+      "sha256": "0b0cafb5aed62bc10d246b132bc5db25384a1a633ecaf12af6ceb368b1606037",
+      "bytes": 147
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-292309d5991f/endpoints.json",
+      "sha256": "53eea29636b22386ae8b09078c3137ca3851ca9b38e1d0fdc9c5c07ecaa67126",
+      "bytes": 170
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-292309d5991f/fixture-findings.json",
+      "sha256": "529b3606b57966ca2dd7feb8441dacf7872737a12ac20c1ad7d6784b41b407fc",
+      "bytes": 192
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/asb-bootstrap-contracts-raw-r1/owned-run-raw/vicione-292309d5991f/contract-health-requests.jsonl",
+      "sha256": "cbc1c5069daa2b19d401887dc43e8757f06a8e93d5470caac912c361e8de507e",
+      "bytes": 70
+    }
+  ],
+  "actual_contracts": {
+    "methods": [
+      "test_changed_source_bundle_prevents_health_and_exec",
+      "test_cleanup_only_failure_cannot_report_success",
+      "test_digest_read_failure_keeps_known_child29_and_attempts_result_receipt",
+      "test_digest_read_failure_turns_green_child_into_failed_experiment",
+      "test_drain_receipt_cannot_prove_absence_from_a_live_or_unreadable_group",
+      "test_early_interruptions_still_teardown_and_restore_handlers",
+      "test_exact_projection_and_environment_are_required",
+      "test_handover_restores_the_complete_environment_after_interruption",
+      "test_http200_accepts_zero_child_and_complete_cleanup",
+      "test_http204_precedes_real_exec_and_nonzero_primary_survives_cleanup_failure",
+      "test_log_fault_does_not_skip_fixture_removal_or_replace_child_failure",
+      "test_original_late_forwarding_cannot_reach_child_before_health",
+      "test_root_proof_and_reserved_symlink_refuse_reuse",
+      "test_tcp_ready_but_http503_never_executes_the_child",
+      "test_tunnel_loss_during_health_joins_phase_before_fixture_teardown",
+      "test_typed_case_and_colon_aliases_are_rejected_before_compose",
+      "test_unproven_owned_drain_prevents_removal_and_retains_child29",
+      "test_unproven_owned_drain_turns_green_child_red_without_removal"
+    ],
+    "method_count": 18,
+    "failed": 0,
+    "skipped": 0,
+    "seconds": 8.313,
+    "root_tool_session": 93957,
+    "join_provenance": "Root-provided structured tool receipt joined=True/exit0, consistent with full unittest logs. Tool session is not an OS PID; reviewer did not observe or execute process join.",
+    "whitelisted_archives": [
+      {
+        "identity": "vicione-a6d2ead9de3c",
+        "file_count": 9,
+        "source_bundle_count": 6,
+        "full_six_owner_source_bundle_matches": true,
+        "primary_exit": 0,
+        "failures": [
+          "broker-teardown: OSError: injected fixture teardown failure"
+        ],
+        "child_exit": 0,
+        "ssh_exit": -15,
+        "owned_process_receipt_ids": {
+          "ssh_pid": 684,
+          "child_pid": 689
+        },
+        "health_receipt_present": true,
+        "exec_marker_present": true,
+        "actual_http_requests": [
+          {
+            "path": "/health",
+            "status": 204
+          }
+        ]
+      },
+      {
+        "identity": "vicione-365be67d2b37",
+        "file_count": 9,
+        "source_bundle_count": 6,
+        "full_six_owner_source_bundle_matches": true,
+        "primary_exit": 29,
+        "failures": [],
+        "child_exit": 29,
+        "ssh_exit": -15,
+        "owned_process_receipt_ids": {
+          "ssh_pid": 724,
+          "child_pid": 729
+        },
+        "health_receipt_present": true,
+        "exec_marker_present": true,
+        "actual_http_requests": [
+          {
+            "path": "/health",
+            "status": 204
+          }
+        ]
+      },
+      {
+        "identity": "vicione-dabddfd1b4f8",
+        "file_count": 7,
+        "source_bundle_count": 6,
+        "full_six_owner_source_bundle_matches": true,
+        "primary_exit": 1,
+        "failures": [],
+        "child_exit": null,
+        "ssh_exit": 43,
+        "owned_process_receipt_ids": {
+          "ssh_pid": 743,
+          "child_pid": 748
+        },
+        "health_receipt_present": false,
+        "exec_marker_present": false,
+        "actual_http_requests": [
+          {
+            "path": "/health",
+            "status": 503
+          }
+        ]
+      },
+      {
+        "identity": "vicione-27584846435e",
+        "file_count": 8,
+        "source_bundle_count": 6,
+        "full_six_owner_source_bundle_matches": true,
+        "primary_exit": 29,
+        "failures": [
+          "receipt:fixture-findings.json:OSError"
+        ],
+        "child_exit": 29,
+        "ssh_exit": -15,
+        "owned_process_receipt_ids": {
+          "ssh_pid": 692,
+          "child_pid": 697
+        },
+        "health_receipt_present": true,
+        "exec_marker_present": true,
+        "actual_http_requests": [
+          {
+            "path": "/health",
+            "status": 204
+          }
+        ]
+      },
+      {
+        "identity": "vicione-e8e4103964b7",
+        "file_count": 2,
+        "source_bundle_count": 2,
+        "full_six_owner_source_bundle_matches": false,
+        "primary_exit": null,
+        "failures": null,
+        "child_exit": null,
+        "ssh_exit": null,
+        "owned_process_receipt_ids": {},
+        "health_receipt_present": false,
+        "exec_marker_present": false,
+        "actual_http_requests": []
+      },
+      {
+        "identity": "vicione-cccf8d84036f",
+        "file_count": 8,
+        "source_bundle_count": 6,
+        "full_six_owner_source_bundle_matches": true,
+        "primary_exit": 0,
+        "failures": [
+          "receipt:fixture-findings.json:OSError"
+        ],
+        "child_exit": 0,
+        "ssh_exit": -15,
+        "owned_process_receipt_ids": {
+          "ssh_pid": 702,
+          "child_pid": 707
+        },
+        "health_receipt_present": true,
+        "exec_marker_present": true,
+        "actual_http_requests": [
+          {
+            "path": "/health",
+            "status": 204
+          }
+        ]
+      },
+      {
+        "identity": "vicione-43a5e241acf7",
+        "file_count": 9,
+        "source_bundle_count": 6,
+        "full_six_owner_source_bundle_matches": true,
+        "primary_exit": 29,
+        "failures": [
+          "broker-teardown: OSError: injected fixture teardown failure"
+        ],
+        "child_exit": 29,
+        "ssh_exit": -15,
+        "owned_process_receipt_ids": {
+          "ssh_pid": 717,
+          "child_pid": 722
+        },
+        "health_receipt_present": true,
+        "exec_marker_present": true,
+        "actual_http_requests": [
+          {
+            "path": "/health",
+            "status": 204
+          }
+        ]
+      },
+      {
+        "identity": "vicione-14e504889746",
+        "file_count": 9,
+        "source_bundle_count": 6,
+        "full_six_owner_source_bundle_matches": true,
+        "primary_exit": 29,
+        "failures": [
+          "owned-process-drain: injected incomplete own drain",
+          "broker-fixture: removal skipped for own project vicione-14e504889746"
+        ],
+        "child_exit": 29,
+        "ssh_exit": -15,
+        "owned_process_receipt_ids": {
+          "ssh_pid": 750,
+          "child_pid": 756
+        },
+        "health_receipt_present": true,
+        "exec_marker_present": true,
+        "actual_http_requests": [
+          {
+            "path": "/health",
+            "status": 204
+          }
+        ]
+      },
+      {
+        "identity": "vicione-6cc3e01df329",
+        "file_count": 9,
+        "source_bundle_count": 6,
+        "full_six_owner_source_bundle_matches": true,
+        "primary_exit": 0,
+        "failures": [],
+        "child_exit": 0,
+        "ssh_exit": -15,
+        "owned_process_receipt_ids": {
+          "ssh_pid": 710,
+          "child_pid": 715
+        },
+        "health_receipt_present": true,
+        "exec_marker_present": true,
+        "actual_http_requests": [
+          {
+            "path": "/health",
+            "status": 200
+          }
+        ]
+      },
+      {
+        "identity": "vicione-93785dc23295",
+        "file_count": 3,
+        "source_bundle_count": 6,
+        "full_six_owner_source_bundle_matches": true,
+        "primary_exit": 143,
+        "failures": [
+          "interrupted:15"
+        ],
+        "child_exit": null,
+        "ssh_exit": null,
+        "owned_process_receipt_ids": {},
+        "health_receipt_present": false,
+        "exec_marker_present": false,
+        "actual_http_requests": []
+      },
+      {
+        "identity": "vicione-10ba1389cc65",
+        "file_count": 3,
+        "source_bundle_count": 6,
+        "full_six_owner_source_bundle_matches": true,
+        "primary_exit": 130,
+        "failures": [
+          "interrupted:2"
+        ],
+        "child_exit": null,
+        "ssh_exit": null,
+        "owned_process_receipt_ids": {},
+        "health_receipt_present": false,
+        "exec_marker_present": false,
+        "actual_http_requests": []
+      },
+      {
+        "identity": "vicione-c9aa9e7a8263",
+        "file_count": 9,
+        "source_bundle_count": 6,
+        "full_six_owner_source_bundle_matches": true,
+        "primary_exit": 0,
+        "failures": [
+          "owned-process-drain: injected incomplete own drain",
+          "broker-fixture: removal skipped for own project vicione-c9aa9e7a8263"
+        ],
+        "child_exit": 0,
+        "ssh_exit": -15,
+        "owned_process_receipt_ids": {
+          "ssh_pid": 760,
+          "child_pid": 765
+        },
+        "health_receipt_present": true,
+        "exec_marker_present": true,
+        "actual_http_requests": [
+          {
+            "path": "/health",
+            "status": 204
+          }
+        ]
+      },
+      {
+        "identity": "vicione-292309d5991f",
+        "file_count": 7,
+        "source_bundle_count": 6,
+        "full_six_owner_source_bundle_matches": true,
+        "primary_exit": 1,
+        "failures": [],
+        "child_exit": 1,
+        "ssh_exit": -15,
+        "owned_process_receipt_ids": {
+          "ssh_pid": 733,
+          "child_pid": 740
+        },
+        "health_receipt_present": false,
+        "exec_marker_present": false,
+        "actual_http_requests": [
+          {
+            "path": "/health",
+            "status": 503
+          },
+          {
+            "path": "/health",
+            "status": 503
+          }
+        ]
+      }
+    ]
+  },
+  "personal_read": [
+    "Complete263-line bootstrap owner,358-line contract fixture,233-line unchanged forwarding helper and complete4815-byte stderr; stdout is the frozen empty stream.",
+    "Complete accepted R2 source-review qualifications; unchanged canonical runner/compose/log/root collaborators reused via exact hashes and prior source-review whole-read evidence, not a new claim of rereading every collaborator here.",
+    "Every current seven-source hash and all13 archive identities/92 whitelisted files independently checked; only explicit whitelist files read. No run-token/credentials read or copied."
+  ],
+  "causal_qualification": [
+    "Executed fake child asserts generated32-byte key by expected SHA256 digest, profile, project and all projected endpoint values before writing its marker; real health phase uses os.execvpe after canonical HTTP2xx. Marker plus health receipts distinguish actual execution from a parent-only mock. No key values are in this report.",
+    "HTTP200 and204 actual request records/health/exec marker reach child0/29; TCP-ready HTTP503 actual /health records show phase child_started but health and exec marker absent. Tunnel-loss503 receipt records fake SSH43 and phase retirement, not emulator failure.",
+    "Known child29 is returned despite teardown/log/digest/unproven-drain variants. Healthy child0 with teardown/digest/unproven-drain evidence yields experiment1 without inventing a different primary. Log-only capture failure is a canonical warning and fixture stop still occurs.",
+    "Common repeated-signal SIG_IGN observation, same-project fixture-stop observation, own group absence before stop and after execute, foreign process remaining alive, handler/env restoration and listener closure are asserted outside optional warning/cleanup exception catches. Two real early SIGINT/SIGTERM variants additionally produce130/143 and attempt logs/stop.",
+    "Unproven-drain tests deliberately inject only the qualification result after accepted helper has really retired its own groups. They prove conservative no-removal control; direct alive/PermissionError branches prove no receipt-PID signaling. They do not simulate an actual unkillable process.",
+    "One two-owner artificial changed-dependency bundle is the intentional source-validation negative; it is not expected to equal the six-owner actual execute bundle. Its frozen temporary dependency is no longer assumed current or read.",
+    "R1 three static defects were corrected before this execution. This receipt grants no execution or causal credit to R1."
+  ],
+  "limits": [
+    "18 unittest method executions, not13 independent provider runs; subTests and subprocesses have no independent native-provider credit. Archives lack explicit per-method-to-root association, so scenarios are qualified by exact method log/status, source assertions and compatible safe receipts rather than invented per-method process provenance.",
+    "No real Compose, Docker, SSH or ASB emulator/cloud operation is executed in this suite. The fake owns actual local listener/process sessions; patched Compose start/resolve/stop and log functions test coordination contracts only.",
+    "No .NET/native MTP/provider test, PE/PDB/provider assembly or cloud acceptance follows from Python tool contracts. Provider evidence must be qualified separately.",
+    "No universal process/descendant census, malicious same-user receipt mutation defense, PID-reuse proof, or arbitrary asynchronous interruption guarantee. lsof no-open-fd observation applies only to95 explicitly read archive paths at review time.",
+    "No product/test/tool/source edits or test/native/process-control execution by reviewer; only this new immutable review report is written."
+  ]
+}

@@ -684,5 +684,19 @@
   "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
   "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.ReceiverStopLeaseRetirementTests",
   "testMethod": "StopAsync_SdkStopOutcomePreservesCauseAndRetiresItsAcquiredLeaseAsync"
-}
+},
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PROCESSOR-CHECKPOINT",
+    "variantKey": "endpoint-clock-reaches-partition-batch-and-expires-partial-checkpoint",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.CheckpointSelectedClockTests",
+    "testMethod": "EndpointClock_ReachesCheckpointTimerAndExpiresPartialBatchAsync"
+  },
+  {
+    "requirementId": "REQ-VSB-EVENTHUB-PROCESSOR-CHECKPOINT",
+    "variantKey": "legacy-batch-constructor-keeps-full-batch-checkpoint-and-drain",
+    "testAssembly": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests",
+    "testType": "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubIntegration.CheckpointSelectedClockTests",
+    "testMethod": "LegacyBatchConstructor_FullBatchCheckpointsAndDrainsAsync"
+  }
 ]

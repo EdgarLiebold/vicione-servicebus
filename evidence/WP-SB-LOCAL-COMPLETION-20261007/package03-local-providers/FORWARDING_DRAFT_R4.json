@@ -1,0 +1,14 @@
+{
+  "kind": "FROZEN_LOCAL_FORWARDING_TOOL_CONTRACTS",
+  "status": "17_PASS_PENDING_INDEPENDENT_REVIEW_NO_PROVIDER_ACCEPTANCE",
+  "total": 17,
+  "passed": 17,
+  "failed": 0,
+  "exit_code": 0,
+  "files": {
+    "tool-owner-r4/contracts.log": "570fab83c264c8aa6464e6bdad22b9ee99bcb8b03ea4872864dce9066a59e159",
+    "tool-owner-r4/test_local_colima_forwarding.py": "3b951d9603ce51a8910a304c801f35763b6fc6886b790b2cfa4e446493151591",
+    "tool-owner-r4/FORWARDING_RESEARCH_PLAN.md": "86806129fe926f1962b9ee1eca4e9e8d968c9e24f7f78282d324d7b9e4fdbd8e",
+    "tool-owner-r4/local_colima_forwarding.py": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d"
+  }
+}

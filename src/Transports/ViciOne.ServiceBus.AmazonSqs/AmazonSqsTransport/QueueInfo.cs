@@ -36,7 +36,14 @@ public class QueueInfo :
     /// <param name="existing">Whether the queue existed before it was resolved.</param>
     public QueueInfo(string entityName, string url, IDictionary<string, string> attributes, IAmazonSQS client, CancellationToken cancellationToken,
         bool existing)
+        : this(entityName, url, attributes, client, cancellationToken, existing, TimeProvider.System)
     {
+    }
+
+    internal QueueInfo(string entityName, string url, IDictionary<string, string> attributes, IAmazonSQS client,
+        CancellationToken cancellationToken, bool existing, TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
         _client = client;
         Attributes = attributes;
         Existing = existing;
@@ -49,8 +56,8 @@ public class QueueInfo :
 
         _updateSemaphore = new SemaphoreSlim(1);
 
-        _batchSender = new Lazy<IBatcher<SendMessageBatchRequestEntry>>(() => new SendBatcher(client, url, cancellationToken));
-        _batchDeleter = new Lazy<IBatcher<DeleteMessageBatchRequestEntry>>(() => new DeleteBatcher(client, url, cancellationToken));
+        _batchSender = new Lazy<IBatcher<SendMessageBatchRequestEntry>>(() => new SendBatcher(client, url, cancellationToken, timeProvider));
+        _batchDeleter = new Lazy<IBatcher<DeleteMessageBatchRequestEntry>>(() => new DeleteBatcher(client, url, cancellationToken, timeProvider));
 
         SubscriptionArns = new List<string>();
     }

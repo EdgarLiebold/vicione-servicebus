@@ -1,0 +1,17 @@
+{
+  "kind": "ROOT_DOCUMENTATION_R25_GUARDED_PUBLICATION_ACCEPTANCE",
+  "published_freeze_sha256": "945bb09db53be61f16a93f2fbdfe547613c172cc12efc653b22230353cc33bf3",
+  "proposed_freeze_sha256": "09855888d62831234dfaade901159ec4c654f3331a5ce94f759ae674dc378d13",
+  "independent_peer_sha256": "10b36fede08ccd1340fe72e44448fe02b55e85105af9ca8902baad1e4885a570",
+  "own_read": "Own all7 complete lossless R24-to-R25 deltas1329 at matchedprior hashes; wholePO64 and reference EFchain ownacceptance. Unchanged priorR24 bodies reused, notfreshlegacywholebodyclaim.",
+  "source_sha256": {
+    "CHANGELOG.md": "c0069f4c35dce5e288a41e52cab153b425f5ac4119ce028e871213de008480b6",
+    "TODO.md": "8745ab60b0276ea5a53d0144adaaf3348a4ed30b2075de78adc36c8c89c075ff",
+    ".testagent/status.md": "d631f93eda9ec1ff10c85d91bb8e96fc74b8d0e08cb44b942996d94c72e00412",
+    ".testagent/plan.md": "45b921cc93cf45adef39020ef178c1ab174de77b527205698d3b027f84144079",
+    ".testagent/local-completion-plan.md": "0b45c6bdb1b5b861ce12e66e84afc2d7e7ae53da2e5c68d747a4c63387bfb6d0",
+    "docs/quality-status.md": "e629643a96b3a1f8a104c28eec081e22a8debcad99a3036c7d39194562cb0bc8"
+  },
+  "PO_sha256": "71bdc3d34b6794b7e49173a2d4c5ea2b06282e14ad0f9825152406deb1ea8ed7",
+  "limits": "Exact6docs+separatePO64published afterallguards; EFboundedclosure07f77. Other11TODO/62OBL/fourhistory/frozen234 preserved. Cache4newtests sourcequalified only, allotherlocal/external work pending; no newcommit/push/globalA+."
+}

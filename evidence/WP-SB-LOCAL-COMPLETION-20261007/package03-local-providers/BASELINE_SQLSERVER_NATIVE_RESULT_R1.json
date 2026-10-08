@@ -1,0 +1,70 @@
+{
+  "kind": "UNFILTERED_BASELINE_SQLSERVER_NATIVE_EXECUTION",
+  "status": "99_PASS_PENDING_INDEPENDENT_ARTIFACT_REVIEW",
+  "source_commit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "run_root": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/run-output/vicione-91bc584ea5c3",
+  "compose_identity": "vicione-91bc584ea5c3",
+  "native": {
+    "total": 99,
+    "passed": 99,
+    "failed": 0,
+    "skipped": 0,
+    "modules": 1,
+    "parent_exit": 0
+  },
+  "native_modules": [
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.dll"
+  ],
+  "binary_sha256": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.dll": "1328c5e1f00fb5de64596af5872b4da8531583c9168f5e944f4158f54507b7ed",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.pdb": "38f3527f06cfda2f41950a4f8e09d3a6dbf4987384c2d05588759327f273d4a1"
+  },
+  "parent_exit_observation": {
+    "tool": "exec_command then write_stdin",
+    "session_id": 29106,
+    "exit_code": 0,
+    "observer": "Root personally observed structured process completion"
+  },
+  "source_bundle": {
+    "kind": "LOCAL_PROFILE_FORWARDING_SOURCE_BUNDLE",
+    "native_provider_acceptance": "OWNED_BY_NATIVE_RESULTS_NOT_THIS_RECEIPT",
+    "profile": "mssql",
+    "source_sha256": {
+      "local_colima_forwarding.py": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d",
+      "local_colima_profile_forwarding.py": "6dabf694e6e22fb292a2d6dabf50d5b48f000c3fa346f2b183cbfa5ea5303399"
+    }
+  },
+  "actual_forwarding": {
+    "child_exit": 0,
+    "child_pid": 64384,
+    "child_started": true,
+    "cleanup_failures": [],
+    "exit_code": 0,
+    "kind": "LOCAL_COLIMA_FORWARDING_EXPERIMENT",
+    "ports": [
+      36310
+    ],
+    "provider_acceptance": "OWNED_BY_NATIVE_RESULTS_NOT_TCP_PROBE",
+    "schemaVersion": 1,
+    "source_sha256": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d",
+    "ssh_config_sha256": "e7bf007104328f823793af1cada5535c8849ed48bcaedd1831853fa8f824c01a",
+    "ssh_exit": 0,
+    "ssh_pid": 64381
+  },
+  "cleanup": {
+    "canonical_fixture_findings": [],
+    "exact_label_container_query": "0 remaining containers",
+    "Root_own_pid_pgid_observation": {
+      "64381": "PID and PGID absent",
+      "64384": "PID and PGID absent"
+    }
+  },
+  "raw_sha256": {
+    "sqlserver-tests-r1.log": "08a4fd517d6e99bea3793dbbdef351f4294db08264a87648ca8ba0be34782b4b",
+    "sqlserver-tests-r1-20261006-235315--64384--3QEjd8-dotnet-test.binlog": "642116c37e65f2fa0d22f4d8041a7b5e7630cc317c6fb8f03741254170914bd9",
+    "local-colima-profile-owner.json": "0c5f9d0a551cc9d21abb7f31d32f02b756f433868ef1fc5816af869a1d9320fe",
+    "local-colima-forwarding.json": "ff06ed88598d4839b2356fef989413fde901f0f0601779667297f6de45f8b271",
+    "fixture-findings.json": "15897b1e06baefef9249b4b6cd40425814e6d9a56d257d73ea62c8e4d7e7590e"
+  },
+  "scope": "Original baseline SQLServer local profile only; not resolution of historical 999/1000 delivery cause, post-Core-correction replay, Azure SQL/EF cloud or target-device proof."
+}

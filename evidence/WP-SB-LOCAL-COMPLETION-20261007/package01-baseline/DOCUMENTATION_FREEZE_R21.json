@@ -1,0 +1,32 @@
+{
+  "kind": "ROOT_PUBLISHED_SIX_DOCUMENTATION_FREEZE_R21",
+  "prior_freeze_sha256": "ab6b8349daa05c77c3e098593f2b13ab5a393780c086154a3d24420e6baefd85",
+  "prior_source_sha256": {
+    "CHANGELOG.md": "9d2f6ebd12d4b58a0c80ee5a3d31063c25bba843e5a5e1e09ce35b0f45e22c41",
+    "TODO.md": "a37d0ace93fa3a55a27672226141b06bb3aa58b211fc759fb7b3b77a82f7b334",
+    ".testagent/status.md": "6af9cdc35cb023639506d48a7729fe28fceb37f837fa7f8544251d4239c25649",
+    ".testagent/plan.md": "50f2db1b4b1447740527d498b57ef85e3a7364012fc12c8871257c4baf4fca47",
+    ".testagent/local-completion-plan.md": "a963410119c0c13f6c20e18b12d2be4b0b75f15068020753361f71589f6805bd",
+    "docs/quality-status.md": "541c4c968da57de3b5c379965a5d3247f6d87c9d3c0fbe9e1d0d301c9ef716f8"
+  },
+  "source_sha256": {
+    "CHANGELOG.md": "3c80e3a1a39c4c94a987c8489655de2fb89cc4088e5fab325af1a286530852be",
+    "TODO.md": "db3e116532a98d9909c97eb7c301f9782a3d467b01c9df7b0aa6e7dd0f4316f1",
+    ".testagent/status.md": "8ff4918212683acf0620c5d61da0c0c536a9c73529be3ba44f221cd256b3cfb6",
+    ".testagent/plan.md": "990efe2601fb29f4ce6257c60cf106c03d5b08053756c0b4bae3ba0567f5a79f",
+    ".testagent/local-completion-plan.md": "0bbe51516ef3094cbc3d3a2d4f227dd6bbc251a04da6c89ac6e9b110a7e50c8c",
+    "docs/quality-status.md": "4b941290692e5ad25df0b743ea17c97bea23c556f100d0c8692643a256b83ffe"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r21",
+  "receipt_sha256": {
+    "ROOT_AZURE_SELECTED_NAMED_HOST_ACCEPTANCE_R1.json": "a388694757f86c2a616e49d542ce298f87865e9a91580dd77111eff490ad46aa",
+    "ROOT_AZURE_CANONICAL_FOUR_FILE_APPLICATION_R1.json": "06e8edd3ef0dab344ceb154d3abbb534acec3eaeda99f059392bee6a650fbee5",
+    "ROOT_CORE_HOST_STARTUP_CLEANUP_ACCEPTANCE_R1.json": "8a7c566768f479bb3ae33c9b60ccdb071f366f8eaa36d020e3ed6271033a4830",
+    "ROOT_CORE_HOST_CANONICAL_THREE_FILE_APPLICATION_R1.json": "e56bbc9e214355ec6b25b74e426f895ec2ac1e19fdb61c58712d51cd28d2d8b3"
+  },
+  "preservation": "Only6 docs staged; canonical stillR20 until independent review and guarded publication. Other11TODOsections,62orderedOBL (55CLOUD6PER1BRK),4historysuffixes and frozen234audit preserved. Allnewprose scoped Azureselectedstartup/Core-never-startedcleanup only.",
+  "limits": "No new globalUnitaggregate/coverage/CRAP/allP04/compositionnative/provider/cloud/HW/A+release/remote commit-push claim.",
+  "independent_review_sha256": "9c98cbd88c00d6f4a1b3d59850c0c3550f6e388435856dc4aff41440de5af95a",
+  "proposed_freeze_sha256": "02981dbab242d8d5d51d8aac9a6d26398ac11b2ae09575142fdc63be68557b21",
+  "canonical_publication_completed": true
+}

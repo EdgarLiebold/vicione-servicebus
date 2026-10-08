@@ -1,0 +1,20 @@
+{
+  "kind": "P05_STAGE_C3_DELIVERY_CLOCK_FIXED_FREEZE",
+  "status": "PENDING_SOURCE_AND_NATIVE_REVIEW",
+  "source_sha256": {
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs": "2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc",
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs": "25d8ef5caa05e004b191561e29d557ee865c7d28b645ea853826b8b0d6101f6a",
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs": "6ca9990d84571b6bf927087a19190c5f32c77bddb70edec61728d1d19f60d3b9",
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs": "ac536dd009f59ea5cbe8898d464969da3ba3a2b2e4390fb6fa1272e2380ed11c",
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs": "8ff64032beabbffab0518f90bb7a62b12df83a5dd886e3d69ecbeab501cf58c5",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "2d1b6f28a89e52ad2ba396143ac976f61d88da8bfad931c133984dc24cad71d5"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-owner-r1",
+  "patch_sha256": "8baeb28f9d166011c9590801a63fa2ee5476b6fd59580fb7f702c0ce1bb90bdc",
+  "root806_read_sha256": "956f7ed527a243575b13c78a0dd7133ee7b451dcf6b054083d65cb6c86a7efa5",
+  "original_native_result_sha256": "3a19c961469abf7c1e0b9716f9d7cf0e217d8599cae4ea6362fb3d707603b91b",
+  "research_plan_sha256": "ee65a8e2c376aa9be2071fd91080e37675619e03415de7e01b87dbc555eb39ec",
+  "native_cases": 63,
+  "product_owners": 4,
+  "root_product_read": "Whole four originals Root57/exact accepted C2delta +whole current rereads; entire authored+personally read capture/nullable-private-signature/elapsedhelper/internal nullable delivery histogram delta. Every required UTC/store/classification/await byte remains unchanged, snapshot cadence separate."
+}

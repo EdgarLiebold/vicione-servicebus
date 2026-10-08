@@ -123,6 +123,7 @@ public sealed partial class ResourceCache<TValue> :
                 version = _indexVersion;
             }
 
+            index.ResetEntries();
             var prepared = new KeyValuePair<ResourceCacheEntry<TValue>, object>[snapshot.Length];
             var keys = new HashSet<TKey>(comparer);
             for (var i = 0; i < snapshot.Length; i++)
@@ -131,7 +132,9 @@ public sealed partial class ResourceCache<TValue> :
                 if (!keys.Add((TKey)key))
                     throw new InvalidOperationException($"Index '{name}' produced duplicate key '{key}'.");
 
-                prepared[i] = new KeyValuePair<ResourceCacheEntry<TValue>, object>(snapshot[i], key);
+                object slot = index.PrepareEntry(snapshot[i], key);
+                index.PublishEntry(slot); // This index is still private and unpublished.
+                prepared[i] = new KeyValuePair<ResourceCacheEntry<TValue>, object>(snapshot[i], slot);
             }
 
             lock (_sync)
@@ -145,11 +148,12 @@ public sealed partial class ResourceCache<TValue> :
                 if (version != _indexVersion || snapshot.Length != _entries.Count || snapshot.Any(x => !x.Active || !_entries.ContainsKey(x.Id)))
                     continue;
 
+                _indices.EnsureCapacity(_indices.Count + 1);
                 foreach (var pair in prepared)
-                {
-                    index.CommitKey(pair.Key, pair.Value);
-                    pair.Key.Keys[index] = pair.Value;
-                }
+                    pair.Key.Slots.EnsureCapacity(pair.Key.Slots.Count + 1);
+
+                foreach (var pair in prepared)
+                    pair.Key.Slots.Add(index, pair.Value);
 
                 _indices.Add(name, index);
                 _indexVersion++;
@@ -198,34 +202,39 @@ public sealed partial class ResourceCache<TValue> :
 
         while (true)
         {
-            List<ResourceCacheEntry<TValue>> removed;
+            var removed = new List<ResourceCacheEntry<TValue>>();
             Task? waitForCapacity = null;
             ResourceCacheEntry<TValue>? committed = null;
             long now = _options.TimeProvider.GetTimestamp();
 
-            lock (_sync)
+            try
             {
-                ThrowIfDisposed_NoLock();
-                removed = CollectExpired_NoLock(now);
-
-                if (prepared.IndexVersion != _indexVersion)
+                lock (_sync)
                 {
-                    committed = null;
-                }
-                else
-                {
-                    EnsureKeysAvailable_NoLock(prepared);
+                    ThrowIfDisposed_NoLock();
+                    CollectExpired_NoLock(now, removed);
 
-                    if (HasPendingKey_NoLock(prepared))
-                        waitForCapacity = WaitForCapacityChange_NoLockAsync();
-                    else if (_entries.Count + _pendingCreations.Count + _retiringEntries < _options.Capacity)
-                        committed = CommitValue_NoLock(value, prepared, now);
-                    else if (!TryEvictCapacityCandidate_NoLock(removed))
-                        waitForCapacity = WaitForCapacityChange_NoLockAsync();
+                    if (prepared.IndexVersion != _indexVersion)
+                    {
+                        committed = null;
+                    }
+                    else
+                    {
+                        EnsureKeysAvailable_NoLock(prepared);
+
+                        if (HasPendingKey_NoLock(prepared))
+                            waitForCapacity = WaitForCapacityChange_NoLockAsync();
+                        else if (_entries.Count + _pendingCreations.Count + _retiringEntries < _options.Capacity)
+                            committed = CommitValue_NoLock(value, prepared, now);
+                        else if (!TryEvictCapacityCandidate_NoLock(removed))
+                            waitForCapacity = WaitForCapacityChange_NoLockAsync();
+                    }
                 }
             }
-
-            await ReleaseEntriesAsync(removed, true, _lifetimeCancellationToken).ConfigureAwait(false);
+            finally
+            {
+                await ReleaseEntriesAsync(removed, true, _lifetimeCancellationToken).ConfigureAwait(false);
+            }
 
             if (committed is not null)
             {
@@ -285,15 +294,20 @@ public sealed partial class ResourceCache<TValue> :
     {
         cancellationToken.ThrowIfCancellationRequested();
         using var operation = EnterOperation();
-        List<ResourceCacheEntry<TValue>> removed;
+        var removed = new List<ResourceCacheEntry<TValue>>();
         long now = _options.TimeProvider.GetTimestamp();
-        lock (_sync)
+        try
         {
-            ThrowIfDisposed_NoLock();
-            removed = CollectExpired_NoLock(now);
+            lock (_sync)
+            {
+                ThrowIfDisposed_NoLock();
+                CollectExpired_NoLock(now, removed);
+            }
         }
-
-        await ReleaseEntriesAsync(removed, true, _lifetimeCancellationToken).ConfigureAwait(false);
+        finally
+        {
+            await ReleaseEntriesAsync(removed, true, _lifetimeCancellationToken).ConfigureAwait(false);
+        }
     }
 
     /// <summary>Removes committed resources and invalidates pending creations, awaiting their ownership release.</summary>
@@ -318,7 +332,7 @@ public sealed partial class ResourceCache<TValue> :
             foreach (var pending in invalidated)
             {
                 pending.Invalidated = true;
-                pending.Index.RemovePending(pending.RequestedKey, pending);
+                pending.Index.RemovePending(pending);
                 pending.Completion.TrySetException(new OperationCanceledException("The cache was cleared while the resource was being created."));
             }
 

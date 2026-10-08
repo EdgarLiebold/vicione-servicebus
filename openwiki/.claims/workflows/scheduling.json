@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:5ef43199d2e8319c71e39dd3baf1962170fe07122a8d2af0235092378ba50773",
+  "claims": [
+    {
+      "id": "claim_7d1390ab5880498da4e0f9b137e79bff",
+      "statement": "Reliable one-time scheduling stages a durable intent with DueAt and uses store cancellation dispositions; its scheduled publication resolves a send route.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessageScheduler.cs",
+          "version": "repo-file-v1:sha256:5516fdfa02edc84f1432e7d89e8f38c1c8b50eb11881173de60c6883047d215d"
+        }
+      ]
+    },
+    {
+      "id": "claim_b890f93caa624eefbb9141ed87446faa",
+      "statement": "Saga request timeout setup validates scheduler token capability before sending the request.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RequestActivityImpl.cs",
+          "version": "repo-file-v1:sha256:4dffa21d136d19159dffa0ff4f73505a94d358f97d85f375c9a0b800b8d4d6f4"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

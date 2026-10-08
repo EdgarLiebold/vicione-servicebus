@@ -1,0 +1,671 @@
+{
+  "status": "PASS_BOUNDED_UNFILTERED_ORIGINAL_SQLSERVER99_NATIVE_ARTIFACT_ACCEPTANCE",
+  "reviewer": "/root/telemetry_adversarial",
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/BASELINE_SQLSERVER_NATIVE_RESULT_R1.json": "df477429b0c8ed4bdb87e7e2cd87d320c9a8a27da22ec661bd04c477d0bd0355",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package03-baseline-local-provider-native-artifact-review-r1.json": "4c3a27804fddcd45ba87e16b3d43ff2d566780ff6fcb891a1240c85955c3e806",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package03-baseline-local-provider-native-artifact-review-r2.json": "abc474101f0a7625f3125ec580220b2ce80775854e82bdbc332dc7373da01518",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package03-baseline-rabbitmq-native-artifact-review-r2.json": "d1e463973c49b8327a9a8805c3c1674f1b42dbc27151c5d51ad5a5ebb199d3eb",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/profile-forwarding-tool-review-r1.json": "f83a5b4d9988b4e6472152883e389296ceee5759fdc0bd0bdd43fd28f4f874a9",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/forwarding-tool-review-r4.json": "a73ab3ffd3d2eb4bad48440836a527be5d02863355310e220bd8cc390ba1fa32",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/local_colima_profile_forwarding.py": "6dabf694e6e22fb292a2d6dabf50d5b48f000c3fa346f2b183cbfa5ea5303399",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/local_colima_forwarding.py": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d"
+  },
+  "checks": {
+    "all5_frozenrawhashes": true,
+    "testdll_pdb_hashes": true,
+    "exact1_native_discoveredmodule": true,
+    "exact1_native_successmodule": true,
+    "native99_0fail_0skip_summary": true,
+    "native_binlog_unique_complete_closed": true,
+    "all_firstpartydeps_canonicalbuildbytes": true,
+    "all_firstparty_pe_pdb": true,
+    "newSQLtest_product_source_checksums": true,
+    "newSQL_sourcepaths_C2_except_qualified_upstreamxunit": true,
+    "C2exactbaseline_trackedclean": true,
+    "priorC2engineering_identical_closed_complete": true,
+    "bothforwardingowners_actual_bundle_acceptedfreeze": true,
+    "complete_priorRabbit_main_source_read_still_same_bytes": true,
+    "actual3runreceipts_frozen": true,
+    "native_realchild0_ssh0_cleanupempty": true,
+    "helper_receipt_source_same_bundle": true,
+    "profile_exactMSSQL1port36310": true,
+    "canonicalfixturefindings_empty_mssql_nooutage": true,
+    "actualMSSQLbrokerloghashmatches": true,
+    "Root_parent_structured_exit0": true
+  },
+  "raw_sha256_checks": {
+    "sqlserver-tests-r1.log": true,
+    "sqlserver-tests-r1-20261006-235315--64384--3QEjd8-dotnet-test.binlog": true,
+    "local-colima-profile-owner.json": true,
+    "local-colima-forwarding.json": true,
+    "fixture-findings.json": true
+  },
+  "native_binlog": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/sqlserver-native-raw-r1/sqlserver-tests-r1-20261006-235315--64384--3QEjd8-dotnet-test.binlog",
+    "sha256": "642116c37e65f2fa0d22f4d8041a7b5e7630cc317c6fb8f03741254170914bd9",
+    "uncompressed_bytes": 7755749
+  },
+  "actual_module": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.dll",
+    "dll_sha256": "1328c5e1f00fb5de64596af5872b4da8531583c9168f5e944f4158f54507b7ed",
+    "pdb_sha256": "38f3527f06cfda2f41950a4f8e09d3a6dbf4987384c2d05588759327f273d4a1",
+    "deps_sha256": "5371230a360c01e0edfe81896a71f5b9fb9c91746848a0e7dda617d504cd1cd8",
+    "runtimeconfig_sha256": "1955401410065e135853c5621f9a43fd42685aebfab3d1732fd60488336cdca5"
+  },
+  "firstparty_dependencies": [
+    {
+      "dependency": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/1.0.0",
+      "asset": "ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.dll",
+      "output_sha256": "1328c5e1f00fb5de64596af5872b4da8531583c9168f5e944f4158f54507b7ed",
+      "canonical_build_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.dll",
+      "actual_bytes_equal_canonical": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus/1.0.0",
+      "asset": "ViciOne.ServiceBus.dll",
+      "output_sha256": "dc88ab7525b1a8ef436903aa8bec353616039587fb449e37549c6b682ad2fbe7",
+      "canonical_build_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+      "actual_bytes_equal_canonical": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Abstractions/1.0.0",
+      "asset": "ViciOne.ServiceBus.Abstractions.dll",
+      "output_sha256": "6e58c467100617f2f36b97fe474ed009831d0e413d7e85a4738090f13fd37650",
+      "canonical_build_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+      "actual_bytes_equal_canonical": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Courier/1.0.0",
+      "asset": "ViciOne.ServiceBus.Courier.dll",
+      "output_sha256": "9f4e037e4d34c98c49fc8d33d3b221cb50ef856d75c41fd597a89e47151c0572",
+      "canonical_build_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll",
+      "actual_bytes_equal_canonical": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.EntityFrameworkCore/1.0.0",
+      "asset": "ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "output_sha256": "d0ef8bfc9884d26f7a83e1d03e0a6860ee45a28821c9d4b6aaf8350139077800",
+      "canonical_build_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore/release/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "actual_bytes_equal_canonical": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas/1.0.0",
+      "asset": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+      "output_sha256": "4c22c27545d0583be7d1b0a2f196fa17f2ef752c2870f1bb60e22423960455de",
+      "canonical_build_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+      "actual_bytes_equal_canonical": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Futures/1.0.0",
+      "asset": "ViciOne.ServiceBus.Futures.dll",
+      "output_sha256": "a15be0ec5aadb36faf7ea8c3fa5a1473e000f9199107e40ae46bc038ffe92fce",
+      "canonical_build_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll",
+      "actual_bytes_equal_canonical": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.JobService/1.0.0",
+      "asset": "ViciOne.ServiceBus.JobService.dll",
+      "output_sha256": "2938e3e749b0e6af17cc84bd4aa272c9d2f28af2e622d61c60ce9d22057a33e9",
+      "canonical_build_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll",
+      "actual_bytes_equal_canonical": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Mediator/1.0.0",
+      "asset": "ViciOne.ServiceBus.Mediator.dll",
+      "output_sha256": "9676a78158513a9f3e43b281ae1987bb1c73c5a9768fade7b92f00aae33347b7",
+      "canonical_build_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll",
+      "actual_bytes_equal_canonical": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.MessagePack/1.0.0",
+      "asset": "ViciOne.ServiceBus.MessagePack.dll",
+      "output_sha256": "50b558774cabfa2bf2a9f9cd15765dc52c9d2670c715903e981be7df6d3c335a",
+      "canonical_build_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.MessagePack/release/ViciOne.ServiceBus.MessagePack.dll",
+      "actual_bytes_equal_canonical": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Sagas/1.0.0",
+      "asset": "ViciOne.ServiceBus.Sagas.dll",
+      "output_sha256": "ed882bfc12c107d34a1a6f1dcbaed7303b582ad55c31bcbe5c841bc1e24ef9ca",
+      "canonical_build_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll",
+      "actual_bytes_equal_canonical": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.SqlTransport/1.0.0",
+      "asset": "ViciOne.ServiceBus.SqlTransport.dll",
+      "output_sha256": "22fd43d90c1acb2b087c9d81f5a1f8c0682a9a5d6ab73b948b157214394f7b29",
+      "canonical_build_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport/release/ViciOne.ServiceBus.SqlTransport.dll",
+      "actual_bytes_equal_canonical": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.SqlTransport.SqlServer/1.0.0",
+      "asset": "ViciOne.ServiceBus.SqlTransport.SqlServer.dll",
+      "output_sha256": "740c2309e2f7201eec3824a1abc63b9a21d7bce96263a4c50daf34c94388c032",
+      "canonical_build_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer/release/ViciOne.ServiceBus.SqlTransport.SqlServer.dll",
+      "actual_bytes_equal_canonical": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Testing/1.0.0",
+      "asset": "ViciOne.ServiceBus.Testing.dll",
+      "output_sha256": "ad6607f34b7db13b9a9e65b15d0ef446f7c50c5f55d842da01db961f0fabc3a8",
+      "canonical_build_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Testing/release/ViciOne.ServiceBus.Testing.dll",
+      "actual_bytes_equal_canonical": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Tests.Infrastructure/1.0.0",
+      "asset": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "output_sha256": "f8e886728fc0adf594acc0b5bfcb4e2035ac6633d2589fb96973dd89f56f8591",
+      "canonical_build_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "actual_bytes_equal_canonical": true
+    }
+  ],
+  "firstparty_symbols": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "6e58c467100617f2f36b97fe474ed009831d0e413d7e85a4738090f13fd37650",
+      "qualification": "BYTE_IDENTICAL_PRIOR_FULLY_QUALIFIED_C2_BASELINE_FIRSTPARTY",
+      "prior_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.dll",
+      "prior_pdb_sha256": "746a7b9053aec9a1278e387ceb05329b1bfffd778a18d9a2f25ed97a09027f47",
+      "pdb_embedded": true,
+      "actual_portable_pdb_if_present_matches": true,
+      "source_documents": 700,
+      "pe_pdb_id_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.Courier.dll",
+      "sha256": "9f4e037e4d34c98c49fc8d33d3b221cb50ef856d75c41fd597a89e47151c0572",
+      "qualification": "BYTE_IDENTICAL_PRIOR_FULLY_QUALIFIED_C2_BASELINE_FIRSTPARTY",
+      "prior_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/release/ViciOne.ServiceBus.Courier.dll",
+      "prior_pdb_sha256": "ddad5e2fe811a7a99840bbb4179e5cf197a549547aee0f07f4f54961d6b2c450",
+      "pdb_embedded": true,
+      "actual_portable_pdb_if_present_matches": true,
+      "source_documents": 146,
+      "pe_pdb_id_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+      "sha256": "4c22c27545d0583be7d1b0a2f196fa17f2ef752c2870f1bb60e22423960455de",
+      "qualification": "BYTE_IDENTICAL_PRIOR_FULLY_QUALIFIED_C2_BASELINE_FIRSTPARTY",
+      "prior_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+      "prior_pdb_sha256": "5a8d6b1b8ffbcd678a52c051852287b668223514dcb4445174969ac0dbf8077c",
+      "pdb_embedded": true,
+      "actual_portable_pdb_if_present_matches": true,
+      "source_documents": 38,
+      "pe_pdb_id_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "sha256": "d0ef8bfc9884d26f7a83e1d03e0a6860ee45a28821c9d4b6aaf8350139077800",
+      "qualification": "BYTE_IDENTICAL_PRIOR_FULLY_QUALIFIED_C2_BASELINE_FIRSTPARTY",
+      "prior_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "prior_pdb_sha256": "29e8a58184f1fe8c2e5bbb7d70a69c2daf6cd3bad5ba36c0fea1db6971ba6899",
+      "pdb_embedded": true,
+      "actual_portable_pdb_if_present_matches": true,
+      "source_documents": 77,
+      "pe_pdb_id_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.Futures.dll",
+      "sha256": "a15be0ec5aadb36faf7ea8c3fa5a1473e000f9199107e40ae46bc038ffe92fce",
+      "qualification": "BYTE_IDENTICAL_PRIOR_FULLY_QUALIFIED_C2_BASELINE_FIRSTPARTY",
+      "prior_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/release/ViciOne.ServiceBus.Futures.dll",
+      "prior_pdb_sha256": "ee5386d0bfe8db13fe6c3756275cf79d13c3c6b209398ff9b6a0618a32d4df7a",
+      "pdb_embedded": true,
+      "actual_portable_pdb_if_present_matches": true,
+      "source_documents": 61,
+      "pe_pdb_id_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.JobService.dll",
+      "sha256": "2938e3e749b0e6af17cc84bd4aa272c9d2f28af2e622d61c60ce9d22057a33e9",
+      "qualification": "BYTE_IDENTICAL_PRIOR_FULLY_QUALIFIED_C2_BASELINE_FIRSTPARTY",
+      "prior_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/release/ViciOne.ServiceBus.JobService.dll",
+      "prior_pdb_sha256": "e853c4585e04f2727a02dc256b7feebe5b790fa7d72b547c21d3cc2663b6db2c",
+      "pdb_embedded": true,
+      "actual_portable_pdb_if_present_matches": true,
+      "source_documents": 175,
+      "pe_pdb_id_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "9676a78158513a9f3e43b281ae1987bb1c73c5a9768fade7b92f00aae33347b7",
+      "qualification": "BYTE_IDENTICAL_PRIOR_FULLY_QUALIFIED_C2_BASELINE_FIRSTPARTY",
+      "prior_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/release/ViciOne.ServiceBus.Mediator.dll",
+      "prior_pdb_sha256": "7f7b31eb3878d91ff6bad496214bc3b469983569b8ae4a12d91cf0b5345c3400",
+      "pdb_embedded": true,
+      "actual_portable_pdb_if_present_matches": true,
+      "source_documents": 31,
+      "pe_pdb_id_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.MessagePack.dll",
+      "sha256": "50b558774cabfa2bf2a9f9cd15765dc52c9d2670c715903e981be7df6d3c335a",
+      "qualification": "BYTE_IDENTICAL_PRIOR_FULLY_QUALIFIED_C2_BASELINE_FIRSTPARTY",
+      "prior_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/release/ViciOne.ServiceBus.MessagePack.dll",
+      "prior_pdb_sha256": "f822ee4ee5d1ef7b826c66f423b899bad1814126146fac1508557e28875659a7",
+      "pdb_embedded": true,
+      "actual_portable_pdb_if_present_matches": true,
+      "source_documents": 18,
+      "pe_pdb_id_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "ed882bfc12c107d34a1a6f1dcbaed7303b582ad55c31bcbe5c841bc1e24ef9ca",
+      "qualification": "BYTE_IDENTICAL_PRIOR_FULLY_QUALIFIED_C2_BASELINE_FIRSTPARTY",
+      "prior_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/release/ViciOne.ServiceBus.Sagas.dll",
+      "prior_pdb_sha256": "bbe1dc6942c8a9fb7936004743bcfd6cf4cc46663918d93f51b29636dcfa798b",
+      "pdb_embedded": true,
+      "actual_portable_pdb_if_present_matches": true,
+      "source_documents": 374,
+      "pe_pdb_id_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.dll",
+      "sha256": "1328c5e1f00fb5de64596af5872b4da8531583c9168f5e944f4158f54507b7ed",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4148321904,
+          "guid": "01b23180-e037-4eed-af8e-e9054f3e9f14",
+          "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/obj/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "8031b20137e0ed4eaf8ee9054f3e9f14705e42f7",
+        "sha256": "38f3527f06cfda2f41950a4f8e09d3a6dbf4987384c2d05588759327f273d4a1",
+        "documents": 29,
+        "embedded_missing_checked": 0,
+        "missing": [],
+        "mismatch": [],
+        "foreign_paths": [
+          "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/xunit.v3.core.mtp-v2/4.0.0/_content/DefaultRunnerReporters.cs",
+          "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/xunit.v3.core.mtp-v2/4.0.0/_content/DefaultResultWriters.cs"
+        ],
+        "document_inventory_sha256": "5e1753fe25fb0f332274ed010b0c70dc4f8778a8486770ab3aad8ad73571cfb6",
+        "documents_detail": [
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/ApiSurfaceGlobalUsings.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "2a0f7a910dbb524ffedf10048d617bf0dbecdb848fb6ce47b65573e3b0550499"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/GlobalUsings.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "62cc542c5b7347739f5a337f7c0cbe07b41b84ba3ed83ff55835f116d058a480"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Infrastructure/SqlServerTestDatabase.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "700c307af3d6cbb9c4e73ad42cc9905a8e9a7332ffc193a4a5e9d60ef858a2cd"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Infrastructure/SqlServerTransportInspection.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "a8ac076468aed1e017c46bf4bc21f310d7ce0f63e432ae750ddc37efd3533089"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "ae2508f42bb01dc07996c7f9bb55f4e87ee8cff4cdffeb5a46d6c8f80d026376"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerConcurrencyTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "e749bb8d095e3af15ffe68e451175ca3d0f91b2e9ca71638e873b79c8bc21d40"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerConfigurationAndRetryTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "663235021c57a9cf3b696d5d00b418b888c34bd64f6b0fbe9dec1f9b4ec7e42c"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerDatabaseBoundaryContractTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "a98535fa56442637d400aa693b8489de8562a171d0176f4458ea4a8fb4464925"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerDeliveryLimitTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "831cbdfe1a36633502837a62630d083d8ae24b4d85d1767f3d7e1032f27c79fa"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerJobServiceTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "1a51c4ae38bdcf5dbec0f2094b653fc6b0f5766241c41e7f0e79f6f50171c6bf"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerLockRenewalTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "23a99f50ec8b6d93fb049a7c5ac79497b28bcb2a140c98ab63811f7b961736eb"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerMaintenanceAndTopologyTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "435134f3c44bdf3fe2e9d797a23b8ab1a68d6c04cff2905cce5c51fbe96c85d2"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerMessagePackRoundTripTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "d12dfce9160ba47bc4eec0d5e1e59bdee5a6973a0448c286c105f9b3b6988587"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerProvisioningCredentialTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "dd2b39d1ecf39aad52ec051d1d9116ef07b5a11f71336bb3b84744db3666eac7"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerProvisioningTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "2d5dc00545597313987f7e0fc006da7574be2ca09d6970eafc0b7ac2d36f3ec9"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerPublishAndPurgeTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "be621685712a19aa33d3379a2199306604196e05961bc6528543d4b78e483d84"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerRedeliveryTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "72e176b456041203e1b01a4971999151623984b3ec69dc3e8904fc3ee91073dd"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerScheduleCancellationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "f87f8c4c6f1cd42debc288ee7ed20397d655b29c65f7b27ffcee59c36ad9f896"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerSchedulingTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "1062d9eae2b3d1f3c038b04d3a6b1b29234fa0ea64534718f80bc3462c0ad549"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerSendFailureClassifierTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "1a5e0b1f212ca9e35679cae67fce130c0d29dd36c815ee35b2b50a723ba6d704"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/SqlServer/SqlServerSerializationAndRequestTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "612ff509972a433e5525ca5743a9cbd69cb98f5b6effdf3aea00e865f167e35a"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/TestAssembly.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "b35fd53f304dc6542d3eb92aa73767801ba385fa495f9d3de0cfd5dc26f2b4ee"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/obj/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.GlobalUsings.g.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "8e89e93fccedb22931dd50889be488d84a527215f29f97af0e2a6f7d67bfae04"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/obj/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "f79c1ad9a9fc76110b3655f5bfb5ff4e3168e9addceff05b937c0796f0ec34eb"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/obj/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/SelfRegisteredExtensions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "7177f8b356c669032b610e5ae9cd3cf28b03bac52bdbb40ef2f07ce30109dbdb"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/xunit.v3.core.mtp-v2/4.0.0/_content/DefaultRunnerReporters.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "e110bb9fe21ca6c3120a00382c773a086d62a008a0b0d2b76d08416f27d92bf2"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/xunit.v3.core.mtp-v2/4.0.0/_content/DefaultResultWriters.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "754b9bc2c837fca63c737bad7b98d798508da60216387af1c6a5140177599dbb"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/obj/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/XunitAutoGeneratedEntryPoint.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "9c128b5821c526e8b19dd8e34ee900654dfdda723a7eed9f566871d03d3a1810"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/obj/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests.AssemblyInfo.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "5900f3fde7aed84ba6dca864e12ed15f941e9503443eb7116af5efa43369d538"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.SqlServer.dll",
+      "sha256": "740c2309e2f7201eec3824a1abc63b9a21d7bce96263a4c50daf34c94388c032",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2859408304,
+          "guid": "64bf6ced-69de-4034-b699-d28faaabd8b2",
+          "path": "ViciOne.ServiceBus.SqlTransport.SqlServer.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "ed6cbf64de693440b699d28faaabd8b2b01b6faa",
+        "sha256": "6e7b6784dd604c4b6fb626c3a7795bd4ff7ba6e72f65600a6664371b0d713d8e",
+        "documents": 18,
+        "embedded_missing_checked": 0,
+        "missing": [],
+        "mismatch": [],
+        "foreign_paths": [],
+        "document_inventory_sha256": "638e03d00b001f56b06051192b19953340d2036b0655b8c962db2a3e1632a4c1",
+        "documents_detail": [
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/ApiSurfaceGlobalUsings.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "c657ca08588c18e09c330473f8e268bf614adf889962bfe698974f581e233c53"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Configuration/SqlServerBusFactoryConfiguratorExtensions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "8d7cbc3cf58fe5aa5cb56691c923b3a59d4fd3d16acccd4d3e26902651f85270"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Configuration/SqlServerHostConfigurationExtensions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "8f25de5c338d0f8dddc5a2081db4d109512738f93d6070d836f0204c942b15e9"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Configuration/SqlServerHostConfigurator.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "1eba4e42e7e59b48116e37db98abdc3210efc357c8101adf4ce999b582256688"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Configuration/SqlServerHostSettings.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "3646c1e252cadcecee1cbb285c68419d9dedd248a6c5dced7b316b6f975f72e3"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Configuration/SqlServerTransportConfigurationExtensions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "4839c3f9dba4f0034633416074efa37f76bfafb1cdc007b9c3d97f5a9f89426b"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Database/SqlServerDatabaseMigrator.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "c5e744f203e1e629b6d15a3b322a2b9cc808062c5ff9f28772c6523cdd9624a5"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Database/SqlServerIdentifier.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "1617e94e3d7ae5a915653cfc80174870e7fb6d83b6f3ca252dce1e684f7e9e9c"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Runtime/ISqlServerTransportConnection.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "5519bd654a747c6934c85258a384cb9c74c94058aa5efdea9124e5a0ab32877e"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Runtime/SqlServerClientContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "0efd115c0bb14403172b23e391284aedf0988d7ed5cdad42c3b36554d7baf506"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Runtime/SqlServerConnectionContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "d37f0c0bf10d35ce19115d633ebc6a87703cd4a1f86d9fd57764209fcf3a88ad"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Runtime/SqlServerConnectionContextFactory.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "5af64bb594653d7f9b065872f0563406f792e8eac06082ad8624d953ed69aefb"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Runtime/SqlServerSendFailureClassifier.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "87bdc6ed8a24fa5a42f13fbef72fe32807518bd716c2215d06da8d4db9789e7b"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Runtime/SqlServerTransportConnection.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "2da2a67600a96055219bddb9ba95640c42a0a676d636df2ea5fde73ad75fcb19"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/src/Transports/ViciOne.ServiceBus.SqlTransport.SqlServer/Runtime/UriTypeHandler.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "1a08a084b9b012db500a307d54ee099ddeaf071c0430d5c71624e84a6f1308ae"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/obj/ViciOne.ServiceBus.SqlTransport.SqlServer/release/ViciOne.ServiceBus.SqlTransport.SqlServer.GlobalUsings.g.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "8f86a2cbf00ff3eee0bda2bc0eb5e1fc19c8544d5dc650c53d0132325956b592"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/obj/ViciOne.ServiceBus.SqlTransport.SqlServer/release/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "f79c1ad9a9fc76110b3655f5bfb5ff4e3168e9addceff05b937c0796f0ec34eb"
+          },
+          {
+            "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/obj/ViciOne.ServiceBus.SqlTransport.SqlServer/release/ViciOne.ServiceBus.SqlTransport.SqlServer.AssemblyInfo.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "63f56767cff0db3be1758c0d9bc376a371d271bde1871057941ef3f86c6f042e"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.dll",
+      "sha256": "22fd43d90c1acb2b087c9d81f5a1f8c0682a9a5d6ab73b948b157214394f7b29",
+      "qualification": "BYTE_IDENTICAL_PRIOR_FULLY_QUALIFIED_C2_BASELINE_FIRSTPARTY",
+      "prior_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.dll",
+      "prior_pdb_sha256": "c10b5effa2373992ebdc69fc793965edf6d2a113667e99ac96690cebffafcad9",
+      "pdb_embedded": true,
+      "actual_portable_pdb_if_present_matches": true,
+      "source_documents": 145,
+      "pe_pdb_id_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.Testing.dll",
+      "sha256": "ad6607f34b7db13b9a9e65b15d0ef446f7c50c5f55d842da01db961f0fabc3a8",
+      "qualification": "BYTE_IDENTICAL_PRIOR_FULLY_QUALIFIED_C2_BASELINE_FIRSTPARTY",
+      "prior_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/release/ViciOne.ServiceBus.Testing.dll",
+      "prior_pdb_sha256": "8796b766a8d2ffb177f48421e6af03429c4e16a07618411d1b2f5033d23781b8",
+      "pdb_embedded": true,
+      "actual_portable_pdb_if_present_matches": true,
+      "source_documents": 104,
+      "pe_pdb_id_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "f8e886728fc0adf594acc0b5bfcb4e2035ac6633d2589fb96973dd89f56f8591",
+      "qualification": "BYTE_IDENTICAL_PRIOR_FULLY_QUALIFIED_C2_BASELINE_FIRSTPARTY",
+      "prior_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "prior_pdb_sha256": "a1cb786c144c4ead228c8aa4df319a443353d51101111aa2d6f82370deb98999",
+      "pdb_embedded": true,
+      "actual_portable_pdb_if_present_matches": true,
+      "source_documents": 9,
+      "pe_pdb_id_matches": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.SqlServer.LocalIntegration.Tests/release/ViciOne.ServiceBus.dll",
+      "sha256": "dc88ab7525b1a8ef436903aa8bec353616039587fb449e37549c6b682ad2fbe7",
+      "qualification": "BYTE_IDENTICAL_PRIOR_FULLY_QUALIFIED_C2_BASELINE_FIRSTPARTY",
+      "prior_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/release/ViciOne.ServiceBus.dll",
+      "prior_pdb_sha256": "6309957c7a992d5ce86d24439cb14237accf1bfee297d0e653dd23ef40a61dd5",
+      "pdb_embedded": true,
+      "actual_portable_pdb_if_present_matches": true,
+      "source_documents": 1340,
+      "pe_pdb_id_matches": true
+    }
+  ],
+  "engineering_reused_exact": {
+    "log_sha256": "6086178e1ca571d2ad479277204af59042507f9490538b1c652856a7cdb12e42",
+    "binlogs": {
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/local-completion/baseline/engineering-build-20261006-225312--58706--OPWCtA.binlog": "f4fbc92c8711df0dff7f068018b9f750f0ad624c4d9804cfaf984fabc33a4c2d"
+    }
+  },
+  "forwarding_sourcebundle": {
+    "kind": "LOCAL_PROFILE_FORWARDING_SOURCE_BUNDLE",
+    "native_provider_acceptance": "OWNED_BY_NATIVE_RESULTS_NOT_THIS_RECEIPT",
+    "profile": "mssql",
+    "source_sha256": {
+      "local_colima_forwarding.py": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d",
+      "local_colima_profile_forwarding.py": "6dabf694e6e22fb292a2d6dabf50d5b48f000c3fa346f2b183cbfa5ea5303399"
+    }
+  },
+  "actual_forwarding": {
+    "child_exit": 0,
+    "child_pid": 64384,
+    "child_started": true,
+    "cleanup_failures": [],
+    "exit_code": 0,
+    "kind": "LOCAL_COLIMA_FORWARDING_EXPERIMENT",
+    "ports": [
+      36310
+    ],
+    "provider_acceptance": "OWNED_BY_NATIVE_RESULTS_NOT_TCP_PROBE",
+    "schemaVersion": 1,
+    "source_sha256": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d",
+    "ssh_config_sha256": "e7bf007104328f823793af1cada5535c8849ed48bcaedd1831853fa8f824c01a",
+    "ssh_exit": 0,
+    "ssh_pid": 64381
+  },
+  "lifetime_integration": "Source-identical already complete-read profile.main validates canonical adoption/runroot/composeidentity and exact selectedMSSQLhost/oneport before exclusive two-owner sourcebundle and unchanged accepted lifetime.execute. Native root records successful realchild64384 and ownedSSH64381 through36310, child0/SSH0/no cleanupfault. Seven profile contracts and17 unchanged helper lifetimecontracts reused only as hash-qualified owner evidence, no new contract execution claim.",
+  "owned_cleanup": {
+    "exactcompose": "vicione-91bc584ea5c3",
+    "Root_exactlabel_result": "0 remaining containers",
+    "Root_own_pid_pgid_absence": {
+      "64381": "PID and PGID absent",
+      "64384": "PID and PGID absent"
+    },
+    "reviewer_independent_checks": "Actual frozenforwarding receipt has emptycleanupfaults, canonicalfixturefindings empty and actualbrokerlogSHA256 matches. Docker/ps/SSH operations not repeated."
+  },
+  "findings": [],
+  "verdict": "No blocker for bounded originalclean6b451 SQLServer local99nativeaggregate acceptance. Root structuredexit0, exact native module/runtime firstparty build/PDB/source bindings, actualmain/delegated1portSSH/native lifetime and correctly scoped cleanup facts support this local baseline result.",
+  "limits": [
+    "99nativeaggregate in1exactmodule; no99individualcaseidentity claim.",
+    "15firstpartyassembly identities qualified:13byte-identical previouslyqualifiedbaseline assemblies,2newSQL-specific product/testPE/PDB/source inspections.",
+    "Default-native-host/deps/output/canonicalbuild/PE/PDB selection only, no universal AssemblyLoadtrace.",
+    "Root personally observed processcompletion0/exactlabelzero/ownPIDPGIDabsence. Reviewer does not replay Docker/OS/provider/SSH actions.",
+    "No historicalSQL999of1000 deliverycause closure or fix/retry claim; prior failures remain unchanged.",
+    "No correctedCore/post-Core replay, AzureSQL/EFcloud/realcloud/device512MiB-no-swap/all-time/providerwide acceptance."
+  ],
+  "read_only": "No.NET/MSBuild/Docker/provider/SSH/test processes or publication. No secret/run-token/SSHconfig-content files read or copied; brokerlog hash only. No product/test changes; only this own reviewJSON written."
+}

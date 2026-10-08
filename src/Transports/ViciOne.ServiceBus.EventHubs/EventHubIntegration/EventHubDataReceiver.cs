@@ -33,9 +33,10 @@ public class EventHubDataReceiver :
         : base(context)
     {
         _context = context;
+        var timeProvider = context.GetTimeProvider();
         _checkpointTokenSource = CancellationTokenSource.CreateLinkedTokenSource(Stopped);
 
-        var lockContext = new ProcessorLockContext(processorContext, receiveSettings, _checkpointTokenSource.Token);
+        var lockContext = new ProcessorLockContext(processorContext, receiveSettings, _checkpointTokenSource.Token, timeProvider);
 
         IPartitionHashGenerator hashGenerator = new Murmur3PartitionHashGenerator();
         _executorPool = new PartitionedTaskExecutor<ProcessEventArgs>(GetBytes,

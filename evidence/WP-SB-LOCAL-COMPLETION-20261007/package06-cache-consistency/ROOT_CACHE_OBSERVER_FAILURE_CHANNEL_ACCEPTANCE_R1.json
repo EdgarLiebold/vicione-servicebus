@@ -1,0 +1,87 @@
+{
+  "kind": "ROOT_CACHE_OBSERVER_FAILURE_CHANNEL_BOUNDED_ACCEPTANCE_R1",
+  "status": "ACCEPTED_SCOPED_AND_CANONICALLY_APPLIED_AFTER_INDEPENDENT_AFTERAPPLY_REVIEW",
+  "scope": "Added/Removed/Cleared selected observer failures after committed state: complete registration-order fanout within dispatch snapshot, await actual callback/public operation, caller success and exact Remove true, index/resource disposal phases, cache lifetime cancellation token, best-effort warning attempts/diagnostic errors isolated. Exactly54hostile tuples plus3healthy cases. Existing oldClear test teardown corrected to release andjoin actualdisposal/clear tasks before early assertion exit. No new product bug/fix; test evidence and teardown repaired.",
+  "evidence_sha256": {
+    "cache-observer-failure-channel-source-candidates-r3/PREPARED.json": "c677be0fb862dc49bd9c691c639b05b00059de08e67acba12f3d8464b57a68b9",
+    "cache-observer-failure-channel-native-preparation-r1/package06-cache-observer-two-row-projection-test-only-gate-adversarial-r1.json": "e217bd43f196f53c2d6a45e72ab814fb8ba253d59501b562a991c7eb0e9ef659",
+    "cache-observer-failure-channel-native-preparation-r2/INPUTS.json": "70d7975a0044ef93e712292dc68d0c649e0297180dc30c08750676630bccfeec",
+    "cache-observer-failure-channel-original-59-native-r2/RESULT.json": "440532083d6fa627c02bf95c78dcb5e17e0fa7ce12ca9efde5d62d11e285df0a",
+    "cache-observer-failure-channel-original-59-native-r2/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "071bc4eacb1ccdb0f7da3fc4567e251e6c94faec8adaa2f1a4e53cfdace8fc30",
+    "cache-observer-failure-channel-original-59-native-r2/package06-cache-observer-failure-channel-original59-native-adversarial-r1.json": "d7bdfc23371f1a22ebef778b616c077dbc658006c5369894fb09b795be776aab",
+    "cache-observer-failure-channel-whole-core-native-r1/RESULT.json": "df7c036ea4bef0fd0549a5d98ebaf0fa806b3e150e66bfe6d4fcecb85d5aa87c",
+    "cache-observer-failure-channel-whole-core-native-r1/package06-cache-observer-failure-channel-whole-core-native-adversarial-r1.json": "d70f9fb1a10d7af8f1aafc78cfd0b7709325a6656acbdbfa17bbf572d53b35a9",
+    "cache-observer-failure-channel-mutants-native-r1/ROOT_FIRST_FINITE_CAUSE_LEDGER_R2.json": "bd73d9b23ffc70aab6fb68c11b937190b6d1c3758d381ce8840dbe1808732e45",
+    "cache-observer-failure-channel-mutants-native-r1/ROOT_MUTANTS_PHYSICAL_BINDING_AGGREGATE_R1.json": "e4845c368c16e579bb22db77b00fc8a463c96025c480d763d8c203299433cdc3",
+    "cache-observer-failure-channel-mutants-native-r1/package06-cache-observer-failure-channel-three-mutants-native-adversarial-r1.json": "8237590f179c4a725c9cb7d18838cf6e590f11fbdc256977108717c9a3122717",
+    "cache-observer-failure-channel-mutants-native-r1/package06-cache-observer-failure-channel-three-mutants-native-ledger-r2-final-adversarial-r1.json": "0f8e3bf37717d5549733ec720525738c57a986ded4f742682260cb2957994214",
+    "cache-observer-failure-channel-restored-original-59-native-r1/RESULT.json": "bd58547a4dcafc8abea37dee9f0625c2074b78cbe0a0959d1f89eab3536b3825",
+    "cache-observer-failure-channel-restored-original-59-native-r1/ROOT_RESTORED_ORIGINAL59_EXACT_IMAGE_BINDING_R1.json": "4eb775c98d732648086205aadba5996e6965fc6af3cb6202858af0bd942df6cd",
+    "cache-observer-failure-channel-restored-original-59-native-r1/package06-cache-observer-failure-channel-restored-original59-native-final-adversarial-r1.json": "9d7ccd5ea76e903b74c12889d23fa5248116db3f08299545f73c85947ebf0ef7",
+    "ROOT_CACHE_OBSERVER_FAILURE_CHANNEL_CANONICAL_THREE_FILE_APPLICATION_R1.json": "95e328def748ec2195b51b1c8180396dc71207645dfcf431fa6a075dbf09ddef",
+    "package06-cache-observer-failure-channel-canonical-three-file-application-adversarial-r1.json": "86db8838110b17fb8070bcb66126ba1e531919ea04c617195859134bac67a7e7"
+  },
+  "counts": {
+    "new_cases": 57,
+    "new_METHODrows": 2,
+    "original_focus59": {
+      "pass_count": 59,
+      "failed": 0,
+      "skipped": 0
+    },
+    "wholeCore": {
+      "pass_count": 8206,
+      "Cache": 199,
+      "failed": 0,
+      "skipped": 0
+    },
+    "actual_single_cause_variants": 3,
+    "same59_repeated_mutant_slots": 177,
+    "mutants_first_finite_RED": 117,
+    "mutants_healthy": 60,
+    "restored_focus59": {
+      "pass_count": 59,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "policy_disposition": "Callback failures have best-effort LogContext.Warning diagnostics only. Missing/disabled/broken logger preserves committed state and completefanout but supplies no durable guaranteed failure channel. Observer-scope and logging context restored before cacheteardown; healthy callbacks emit no failurediagnostic.",
+  "physical": {
+    "original_fresh_root": "12PE3809/0missing-mismatch/IDs",
+    "original_independent_compiled": "all4727METHODattrs+resource1681543 bytes,35internalrefs/deps12 exact",
+    "mutants_fresh_root": "36PE11427/0errors",
+    "mutants_independent": "ALL4727METHODattrs/resource+35refs/deps freshlydecoded EACHvariant becauseTestDLL/PDB changed each. No originaltestmetadatareuse.",
+    "restored": "17runtime/12assets/39generated exactoriginal byte equality, ownRoot andpeer prior physical/compiled exactimage reuse ONLY; nofreshparse",
+    "historical_restore": "actual23714/3945 receipt reused explicitly not rerun; strict original24451/post27002 warning-error-free; R1CS8604 compilerattempt excluded0nativecredit"
+  },
+  "canonical_application": {
+    "kind": "ROOT_CACHE_FAILURE_CHANNEL_CANONICAL_THREE_TEST_FILE_APPLICATION_R1",
+    "before_source_count": 6102,
+    "after_source_count": 6103,
+    "after_manifest_equals_qualified_private6103": true,
+    "configuration14_unchanged": true,
+    "product_source_changed": 0,
+    "changed_files": [
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverAndDisposalTests.cs",
+        "before_sha256": "d2c10c5e7cd989c7f747c043bf8a583adec22d721de23544abcda1b6e315836e",
+        "after_sha256": "bbdd3f8c640ddd41cd845cb25aa45223abdc5aa957ca2c82c7c6acf2cb25617d"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverFailureChannelTests.cs",
+        "before_sha256": null,
+        "after_sha256": "9e9d6719ba1751e46f40c0dc7d9494b395ca3c941518fa683fbc588cfe3918ea"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+        "before_sha256": "9bb63defc04475044e30a7f91fefa56c7f9eb9a8960ec6f79b587da1093aa292",
+        "after_sha256": "a4d0f99c1d388a4ef1afea6d3bd55ea5990f13f63f354d8eaa8d7d9d69596357"
+      }
+    ],
+    "transfer_gate_sha256": "9d7ccd5ea76e903b74c12889d23fa5248116db3f08299545f73c85947ebf0ef7",
+    "input_sha256": "70d7975a0044ef93e712292dc68d0c649e0297180dc30c08750676630bccfeec",
+    "limits": "Exact3 independently source/native/compiled/whole/mutant/post-qualified test-only files applied. Private nativewitness qualified against byteidenticalsource, no fresh test execution in canonicalroot claimed. Actual independent afterapply peer required. Frozen234/otheruserfiles untouched; no globalcache/currentcoverage/cloud/device/A+/commit/push closure."
+  },
+  "root_read_provenance": "Listed selectedcache/product/logging owners freshlywhole read; existingfivecachefixtures own priorwholebyteexact reuse, new295whole+1NotNulldelta=R3whole296; oldClear finallydiff/ownedhelpers. All59original/post wholelogs andstrict logs personallyread; whole8206 eventmap mechanical +59selectedwholeblocks/summaries, notall8206humanrawread. Mutantall117IDs/60healthy and5complete literalidentical failurebodygroups personallyread, all177mapping mechanicallychecked; no117duplicatebody manualclaim or peer-toRoot metadata/readcredit.",
+  "limits": "Cache snapshots/concurrentcommit order/reentry/retirement capacity backpressure/caller-waiter heap/RSS budget/localbenchmark remain open; serialized callbacks do not guarantee FIFO by commit/globalcache live-value semantics. No guaranteed durable logger failure channel or hard abort/disposal bound. 177slots are only59 identities,117RED notnewdefects. M3 printedframe105/sourcecompletionFalse110 inference; additionalFalse141 exists, noprinted110/ILmapping/JIT/lateroutcome credit. No allP06/startup/providers/API/currentcoverage/CRAP/CI/cloud/device/globalA+/commit/push/release closure. Frozen234 and62external obligations unchanged; otheruserfiles notmodified by Rootcopy."
+}

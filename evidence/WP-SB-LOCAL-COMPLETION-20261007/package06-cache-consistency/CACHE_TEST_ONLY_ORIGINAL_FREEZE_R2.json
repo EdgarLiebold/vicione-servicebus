@@ -1,0 +1,32 @@
+{
+  "kind": "P06_CACHE_TEST_ONLY_ORIGINAL_FREEZE_R2",
+  "sources": {
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs": "404cdbc3326688944f871a18782b703b648d2c29ae8da98f9dfd8efab154f83d",
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs": "46a07426260b5338bb690862efcafc21f9d1c751d27afeeee67a091f70034b2f",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "8cfab7601e9be9f02ab59308a37f8e351ab800757658f9ebb0e16ef00ece6f8e",
+    "src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12",
+    "src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69",
+    "src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c",
+    "src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs": "bba8eeb8b9366996b489c820d793bb568d47c396127095a18ef45426fd2a164e",
+    "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4",
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs": "907772e0d3f688f3b11b0542b79d45e76f098559a0fb99e2ad1395ebdb13112d",
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs": "d6ce8980172e278b8ce7eae72fed4f6c89f74e23778a24f93e8524ab0b99c5d9",
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs": "54c895f4d2ccb95316a7ae3f521022cea3a25e4014d9b22fabaf75a53211625d",
+    "src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs": "a593b0fa0dc498210a20d4669ab68a743a2f13542fe9dbe53aa814ed463f6366",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs": "0aeb97aeae8196ed5918ccafb7401cdb2bc6f176c74f9e4b8de89833d8a3d00d",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs": "d33d153e2de28609ec362672c5637c97c9bfa95cc2895af236857b0181f7abd0",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.cs": "98da72d0f863585936f1c9ad702bb3d27b62a7e1d606d0a21f8c8f290c56b4a2",
+    "src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7",
+    "src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76",
+    "src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4",
+    "src/ViciOne.ServiceBus/Caching/ResourceFactory.cs": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/test-only-original-snapshot-r2",
+  "root_read_closure_sha256": "aae21c42cb93ee9f6b2cf759c7a184b3513c81d3696d750208e4740d1eac1d38",
+  "research_plan_sha256": "8329cff96e05e777376fad42fde583dd9495245d8e6214d226dd02866d2f3e89",
+  "limits": "18 product cache owners unchanged. Root812 metadata row corrected; two privately reviewed testtoken corrections applied. CompilerR1 excluded; native13Parent/2separateChild pending.",
+  "predecessor_sha256": "53cb8d5adfe309e56f381ff762140eb94e6371cfedd9de4214999222def9136b",
+  "strict_delta_review_sha256": "74a9c5547613c81dafbd768ce9429851aeb9abe667454954730985affc8723d9"
+}

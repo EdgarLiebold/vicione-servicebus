@@ -1,0 +1,18 @@
+{
+  "kind": "P05_C6_TEST_ONLY_ORIGINAL_FREEZE_READ_PROVENANCE_SUCCESSOR_R2",
+  "source_sha256": {
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/PublicTelemetryCleanupIsolationTests.cs": "cd45b4f583f32312ba3eb8f58aa18eaf2b8f115fa3f4c831fbfab7405f30126c",
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/ActiveTelemetryCleanupIsolationTests.cs": "4ba3b7f61891cfff983161224666d108ef776aaa4cad00675a395928affdd635",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "6e93640a343c2d9328c9d40b410a060ed2052307a6e6482ee17c3026a26e0503",
+    "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs": "8647373561a105ff543247438d3239f869009b6e2efc829f533d45bdfb235291",
+    "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs": "d941d74bc5ac55af42d7c2abde5537489cd2850dcc325ecadfd7e93ff80931b9"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-test-only-original-owner-r1",
+  "root_core810_sha256": "0398e2960671b582484cca755d5467b6284ec45862053a89ac8d93734e2fdb3a",
+  "research_plan_sha256": "3bfb3e6044c77090fbf2efdbad4de51308a91666f16838d04edbabb2ac06a7ed",
+  "c5_accepted_sha256": "20995730c2e3bd017045ba1a3d81c7ff08f3328a445d0ab23b58965a042b9a94",
+  "native_cases": 38,
+  "planned_whole_core_total": 8112,
+  "limits": "Original two caller owners remain byte-identical Root57. Private fix drafts not applied. Native original predicted17red21healthy unverified, no acceptance.",
+  "prior_freeze_sha256": "d5c6b4bde802aa85b4aa18f3e28e4111f7364e13a7fb9c6d4cd59381b84cc1ba"
+}

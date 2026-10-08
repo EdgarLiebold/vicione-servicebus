@@ -1,0 +1,592 @@
+{
+  "kind": "INTERNAL_READONLY_SQS_POST6_AND_BOUNDED_AGGREGATE_ADVERSARIAL_R1",
+  "status": "NO_BLOCK_BOUNDED_LOCAL_NAMED_TYPED_SQS_STARTUP_FIX_NATIVE_CHAIN__CANONICAL_FIVE_APPLICATION_STILL_PENDING",
+  "findings": [],
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/RESULT.json": "bf0131a571f79bce8cd99685b54e07b271219d05a7fe7ee2ff6a264a344556ef",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/RESULT.json": "f2261b92f30aa6fcc2e1da84c5e56b2ff5a8886e9e99360d9f04c2b597345366",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutation-driver-r1/INPUTS.json": "4abee7326ee3fda73f1214cce309b89fa4e960b0c6223271532222cc812ac12b",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-sqs-original5-native-artifact-adversarial-r1.json": "4fbd2a0bc5b851dbef49ea6d517e277bae70cd77ea97466e02602e905e15a1ec",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-sqs-original6-native-artifact-adversarial-r1.json": "b330328f6bb16748f26a93bef75c7009e4813416c972fdcd07720f6e87879f70",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-sqs-fixed6-and-scoped-api-native-adversarial-r1.json": "55e7f5534661d722b152f4e37e7b1440f5b60404237bccdc26e24b37e6d833fe",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-sqs-whole-local-module417-adversarial-r1.json": "18c5ae811b4c695408172c202547cd73cb6851c12d082c1055823e45ecbdf909",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-sqs-six-mutants-native-combined-adversarial-r1.json": "bc92066eaa40e4aed8e5ffaaf36150511468a3a7760892af7c6c86a436c1670c",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-sqs-mutation-driver-r2-adversarial-r1.json": "064fbf70a6d2b46f0439f7a5580340bda708252e190790f1f39d83ad77554bac",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "96f99f28c6cf57c218b914c3a50428944dfeb6616383be3a5dd27784e90e6310",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "d54ba994eb2dffedac78d056cafec381535ff36bc480090009c890891597dbea",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_SQS_MUTANT_FIRST_FAILURE_MATRIX_R1.json": "1b71e59d63841d2363ced4156a88b9cb6fef8d898bbe9fa1edb5649305ac1917",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/p04-sqs-post-six-focused-r1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/p04-sqs-post-six-build-r1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/p04-sqs-post-six-focused-r1-20261007-092143--98928--nqpQGc-dotnet-test.binlog": "45d9c92e46204a0de1a5d289e3449bbc243ecf7846cad988ea769c6907c15e60",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/p04-sqs-post-six-focused-r1.stdout.log": "8e48a02bf2d821c651b873f1ef6c52094e5f7e93ab96db55f4545d61b335e5e5",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/p04-sqs-post-six-build-r1.stdout.log": "bea685477ee0a7baaac03b93ba3584d8d65647a121dd99472f16c945ff47e278",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/p04-sqs-post-six-build-r1-20261007-091827--98277--9NaHlE.binlog": "14f1b463bf8a7db5cbd2409b9e055ea1dd56dcf841f4a1cd605fcec0cdd40697",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.xml": "bb4dc15bad6a4df93e36f1d2ebceebe594236f2efd33658d0fb68a3635942fb1",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.xml": "fc6a55c12f5cf2da4b72a8c45bfd411619360a944d7714a6b320e41f09572f2a",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.Futures.xml": "9e19a1ebde017b35cf0de392fe293da2bd5dac7e6e00f6bd665705c7336585ff",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.Abstractions.xml": "ad0691b5b4c76e79e2204b90bed2a6909761fb4eff86e5d16da129f1a64663aa",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.Mediator.dll": "207dda85d4522b78f142f07f107b7d4a30ba6b2a87a3de79e1fa896118645796",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests": "640bed872dc2f947c65b12e2b7b99f5910d769101c0616fa69f66afecbd10588",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.testconfig.json": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.Sagas.xml": "c35dbbd5c06e5a63538f5936c902079bde4b133336e518927dc7d9b556a6fe87",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.Testing.dll": "1b9a847081a7bf189acee9951954d213f93b294fdb4e09411f775e6420762ffa",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.Courier.dll": "b8ff979beb06da84c1d74beaef6858ccff77bd777b827daf76cec92eb6f4a089",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.Tests.Infrastructure.xml": "97a599f151cf6b7f5d2b59277b5ea58a351616053d8b042b30399008582ef89c",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.xml": "f7ff670ad1d2038739bbb05e38ea4592117cdafa709d414fdb9e4c7896ad7a87",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.runtimeconfig.json": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.Futures.dll": "ecacda698b7afa82beee23e0ac2fa783803ed92cd69a35dcfb430adbf9994e67",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.Abstractions.dll": "33e7cd73bfdf6ead7cfbcedee314fc19a5875e5ebe951e8f674c737b84232df4",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.Mediator.xml": "84f8f45c2abe285749733beb4bc82bd8693bae18a191acab9a651b01ef270fa0",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.deps.json": "38bf461e9cf3839ef3f959043381ad56025ece9519952c2085cdeccde132214f",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.Sagas.dll": "896be57d8b1fa04bdd602bb24a918c5c55cdde296207292932c8dadbd74d9e93",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.Testing.xml": "5fa24bada850262cf165da87972dffbd3aea42ea08de6d5ce7e493e4acaf07f2",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.Courier.xml": "ea159b7edf3d6ebf50ed8618f6286aaf85cea65dca5aaca0d0a4fcb419e82b66",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll": "4afcbd64f7304a9c3c090858cef47b42ba64f7a0b30fe293aa6ed6c70b11f7e9",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.dll": "f1e6828739348908ddd1c6c76003759198994d17999f33609076a8885fcb28c9",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/testsettings.json": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.dll": "811d01b8f4f6de7cbe93e89dbc2b67a7b37ba5002c2c9391f0b6dd95c5bc8f6b",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.Tests.pdb": "7a3fa5ab02dbf05002bb4b0091469ca4aea9d4ecb3a0a35cb1f627620e7fde22",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/runtime/ViciOne.ServiceBus.AmazonSqs.dll": "74b9f008c60b1ff33a303f97c39d32b617b077e1be6745de1d79762566444295",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/source/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/source/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/source/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs": "694ffbfb2fb103e081e1de064c1f4d7a875c32d971e3beb2b91ebe79e60a98d8",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/source/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/source/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-native-r1/RESULT.json": "05095fc277bb3aacc832250a73a89a375599bcf6a83f92cc60426a59edd02309",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-six-native-r1/RESULT.json": "4dae3dc4c6c0cc9ea6b0051718370bee11b7822f11c4ffdbbef628f327fd4914",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/RESULT.json": "426241207468a72d293808121794c570430997bff7c954623a9b61df8421d702",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-api-compat-native-r1/RESULT.json": "697c00c182bc8a06ae7223b04e786f909e3dd6c4ddf15c50227cfc5f3365a69c",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-native-r1/p04-sqs-original-focused-r1.stdout.log": "52d627902d8d4d17697341f58e04a1a2350a2f7549cc8e90c0c5368ae8e32e2f",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-native-r1/p04-sqs-original-build-r1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-native-r1/p04-sqs-original-build-r1-20261007-083458--95495--l3XdR4.binlog": "29319cb857d14a9835b21d7fdf26da15626e676e9816945484170538022ae597",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-native-r1/p04-sqs-original-restore-r1-20261007-082301--94798--pEhR4m.binlog": "204fb69d0842d77d488c846e85001cf064d0595600d1d1a7a3bd974442baddf5",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-native-r1/p04-sqs-original-focused-r1-20261007-083611--95545--ODnqsB-dotnet-test.binlog": "6ca9669b1cbe2e327a405c875ac532e64648e41fe284fb2fd369b094ae4242d1",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-native-r1/p04-sqs-original-build-r1.stdout.log": "e54579ba3f830b0279b442506413cddf2653b0b7951e3fe7c255023c24c87c36",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-native-r1/p04-sqs-original-restore-r1.log": "cb206aa1db9bdf073ac8cc405baed94348d60849d3b0baf4d142a205b5ed0aa5",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-native-r1/p04-sqs-original-focused-r1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-six-native-r1/p04-sqs-original-six-build-r1-20261007-084319--95863--BkyzFU.binlog": "458c812198b804df58c7a2416ec16863f6e2ee8ae72730324b80f024a40fa507",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-six-native-r1/p04-sqs-original-six-build-r1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-six-native-r1/p04-sqs-original-six-focused-r1-20261007-084511--95912--o3Sjnp-dotnet-test.binlog": "9f03fef8fb5cccad5f02f12051f3736386362806bf22943497d183533214d676",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-six-native-r1/p04-sqs-original-six-focused-r1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-six-native-r1/p04-sqs-original-six-build-r1.stdout.log": "fc62a58add565c0585d1fec5795ab28db9f332ecb8e697e54340ae48b22410ba",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-six-native-r1/p04-sqs-original-six-focused-r1.stdout.log": "6682de2d579210c813d636135e307f067781b22c224d9b824243acf446d5d7e9",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/p04-sqs-fixed-six-build-r1-20261007-084850--96066--Kb2z+X.binlog": "e5701f261cf4b44368e1e27906f3dc594a838982ad39f07d6907048bbf43553e",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/p04-sqs-fixed-six-focused-r1-20261007-085031--96161--55fHKP-dotnet-test.binlog": "953fd9b64a0978d0845d97ed145421720f47bf322aa68cb9021bee63bb6bf1a0",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/p04-sqs-fixed-six-focused-r1.stdout.log": "9b0272dede4495b37b742bd7d27190d5230b06a0e6d8461be9610214e0a710eb",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/p04-sqs-fixed-six-build-r1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/p04-sqs-fixed-six-focused-r1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/p04-sqs-fixed-six-build-r1.stdout.log": "c222d2965ff85add5a3182dcd705f211cde789f93fa6227b1dde7586bc3b2946",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/p04-sqs-whole-module-r1.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/p04-sqs-whole-module-r1-20261007-090245--96579--MYnwXS-dotnet-test.binlog": "c7148921dd41e7974e676a9891a9ba7a7b335c04944c1fc0b1b5504de47e8d73",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/p04-sqs-whole-module-r1.stdout.log": "a0f1b3d5b5194e8f48379957b45138a35367e0776ae50eb28923977579d07981",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-api-compat-native-r1/original-control.stdout.log": "51fd0f567cf92d326f75acc01b954092c90cb3ce40ac516bc363a645caabeb63",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-api-compat-native-r1/original-control.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-api-compat-native-r1/original-control-20261007-085429--96277--PdICu7.binlog": "e9268247ca0229b8ea739fef4546d0009ddeb46f4b08ad4b850663957bc8f613",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-api-compat-native-r1/forward-original-fixed.stdout.log": "a23fe795637c4834a586aba043713b39bb3b7e3e96515cb1b8d1fc2a79c5c305",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-api-compat-native-r1/forward-original-fixed.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-api-compat-native-r1/forward-original-fixed-20261007-085511--96289--iscb52.binlog": "a951c47579a0af1d8db4b3c23fa98f2f89386171c6ab755d1cd9c237dcf5e427",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-api-compat-native-r1/reverse-fixed-original.stdout.log": "0ae6baaaf5828b5a824931936e4d2d5438e9a57769dae6da95dbd5c82de42698",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-api-compat-native-r1/reverse-fixed-original.stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-api-compat-native-r1/reverse-fixed-original-20261007-085557--96324--ftCTSI.binlog": "18b46457508c944b41d1c6f40fd87a24d3e1fc1a9ce0776f3958eb056516d48d",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m1-typed-options-bound-to-default/RESULT.json": "6c8d6374b2647b53a439fd4b5fc9d3912721e13927228017abfb00623a946bab",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m1-typed-options-bound-to-default/raw/p04-sqs-m1-typed-options-bound-to-default-focused-r1-20261007-090943--96809--qvFyBg-dotnet-test.binlog": "8204d44a40a1337a0da388886cffb5264157a6e88ab534bbcc8b267b17f72440",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m1-typed-options-bound-to-default/raw/p04-sqs-m1-typed-options-bound-to-default-build-r1.log": "72d245e82917a8b2520fef38bd9e15bbe9e4ed512506b9a4f7ee8a783cdf8197",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m1-typed-options-bound-to-default/raw/p04-sqs-m1-typed-options-bound-to-default-focused-r1.log": "2e1e084afe9e99583066f2bc5af81991dd0919feb037dfb8df28afb75c1cb05a",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m1-typed-options-bound-to-default/raw/p04-sqs-m1-typed-options-bound-to-default-build-r1-20261007-090908--96757--++TcIO.binlog": "c7cad8f99b97a3683dc6172d8adaa25e32b2ebea8538064fd1176a15463ff2d4",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m2-validate-on-start-removed/RESULT.json": "e22be5dc41327d8e57cb371239ec82ea504245e5a975cc92bf3f35c10710d75a",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m2-validate-on-start-removed/raw/p04-sqs-m2-validate-on-start-removed-focused-r1.log": "b45cb832f0d7aa99b2bbdc8bce29cb9e69d50a43f729adc7d796a0af57f58c5b",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m2-validate-on-start-removed/raw/p04-sqs-m2-validate-on-start-removed-focused-r1-20261007-091039--96862--jTtjrF-dotnet-test.binlog": "e24004dbdefb986feb44cdb404542ef067a2a3b751328cc6ef803b1550692711",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m2-validate-on-start-removed/raw/p04-sqs-m2-validate-on-start-removed-build-r1-20261007-091001--96835--WcGuUb.binlog": "3b92500c341968c0f55345261d34cad4ca3a76249e7fb974de49ca92b8b3ace9",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m2-validate-on-start-removed/raw/p04-sqs-m2-validate-on-start-removed-build-r1.log": "9db78ae678abab69614056b4d00490daab21103ac921876707a55e18d0468f09",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m3-region-predicate-bypassed/RESULT.json": "f2b2fa971e2ce03d4622ab1153366e958f855e48055646fd6df17b72ada3ad5b",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m3-region-predicate-bypassed/raw/p04-sqs-m3-region-predicate-bypassed-build-r1-20261007-091100--96881--Ii7p1T.binlog": "72af376725ffb46edebc1a9a556ee1f12273a013fedea4f11832da6de5d91911",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m3-region-predicate-bypassed/raw/p04-sqs-m3-region-predicate-bypassed-build-r1.log": "9e55c7762797e07682a20359e3a54391e714427f47fa7d77281c91904013f825",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m3-region-predicate-bypassed/raw/p04-sqs-m3-region-predicate-bypassed-focused-r1.log": "1db67a51eb47da98bf609746c3bb25bd3b8e84fe7562c5515c6c178f381a8aa2",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m3-region-predicate-bypassed/raw/p04-sqs-m3-region-predicate-bypassed-focused-r1-20261007-091137--96913--ntcOQF-dotnet-test.binlog": "e47ec3f6a3c2890c5c2e7335bff70cbb69dd709c7d30af75df4c76a6c8ccb5ac",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m4-scope-predicate-bypassed/RESULT.json": "967081f6fc85f23eadbc8a9b163b8fe1fadf4fdcb636a62861871a5dcde4764b",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m4-scope-predicate-bypassed/raw/p04-sqs-m4-scope-predicate-bypassed-focused-r1-20261007-091236--96953--rr2h6V-dotnet-test.binlog": "109038a485484abd8b9ad9fa5b703cd536429b7e6cbb0882fb5801c27531a064",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m4-scope-predicate-bypassed/raw/p04-sqs-m4-scope-predicate-bypassed-build-r1.log": "dc09fdc7021710b9c4b163787f5e597a3cdde32e966d3986eacd6b0abc06e13d",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m4-scope-predicate-bypassed/raw/p04-sqs-m4-scope-predicate-bypassed-build-r1-20261007-091158--96929--9jWk3u.binlog": "077f4c2564f111495703799e6e8d83a0299e414923cf22d1d1f80dbb9b44be46",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m4-scope-predicate-bypassed/raw/p04-sqs-m4-scope-predicate-bypassed-focused-r1.log": "7f8320f6af77b1338896e66b4d44e386e52549fd5785bc25b967a838ee72ac58",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m5-scope-region-coherence-bypassed/RESULT.json": "1cd5316a4c5ca30c45b06fb40f76bbd25cd660f32c22db71f484a92530b08af0",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m5-scope-region-coherence-bypassed/raw/p04-sqs-m5-scope-region-coherence-bypassed-focused-r1.log": "99f028250aaacdceb4e95bf4c548327d0319aa6a0a6c3d0667334bdb73a12a2a",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m5-scope-region-coherence-bypassed/raw/p04-sqs-m5-scope-region-coherence-bypassed-focused-r1-20261007-091334--96998--WWwNQi-dotnet-test.binlog": "bc5aed35188011267a5139c81e4671989191519afe3dafd48b7bd183699770bd",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m5-scope-region-coherence-bypassed/raw/p04-sqs-m5-scope-region-coherence-bypassed-build-r1-20261007-091256--96976--OcmEfM.binlog": "4a95832569c0db9a1e910458c8a3d01184618e008fb240775f0546da49ca1114",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m5-scope-region-coherence-bypassed/raw/p04-sqs-m5-scope-region-coherence-bypassed-build-r1.log": "d564772237c2625c5b2775b87e4e3a8ba58cdae6563c0cbe362ef3a8c43a9874",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m6-typed-diagnostic-owner-shortened/RESULT.json": "d33ded75e10ff4e4efdf733a3ef0e9dcc0a63cc2a1949c7d50a5136cdcde3e67",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m6-typed-diagnostic-owner-shortened/raw/p04-sqs-m6-typed-diagnostic-owner-shortened-focused-r1.log": "9a2c476ec4d610b5c50c56f5d1beb2277f8b7da5b18e6e40093273b60ba8277d",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m6-typed-diagnostic-owner-shortened/raw/p04-sqs-m6-typed-diagnostic-owner-shortened-build-r1.log": "c999febd3d3f133f55a55bd70f0113ab94a39869c429497aaa1f2048d21f0b7d",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m6-typed-diagnostic-owner-shortened/raw/p04-sqs-m6-typed-diagnostic-owner-shortened-build-r1-20261007-091355--97023--NcOJyT.binlog": "4645f9f5c8a030e4ad1f843ff7aa7fec1c04898255a422860f53842e25f3ef59",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutants-native-r1/m6-typed-diagnostic-owner-shortened/raw/p04-sqs-m6-typed-diagnostic-owner-shortened-focused-r1-20261007-091434--97049--G4jxsk-dotnet-test.binlog": "d0e6f23f765988194c829589dc144e1e1c8ab5d23eabc7012d76abc87d8ad774"
+  },
+  "post": {
+    "result_sha256": "bf0131a571f79bce8cd99685b54e07b271219d05a7fe7ee2ff6a264a344556ef",
+    "actual_native6": [
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedInvalidDefaultStillFailsBeforeRuntime"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.UnusedInvalidDefaultCannotRejectCoherentNamedBus"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.CoherentNamedBusReachesExactlyTheSameRuntimeBoundary"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Region, reason: \"Region must not be empty\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Scope, reason: \"Scope must not be empty\")"
+      },
+      {
+        "status": "erfolgreich",
+        "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: ScopeWithoutRegion, reason: \"Scope requires Region\")"
+      }
+    ],
+    "all_reached_fixture_assertions_and_printed_states": [
+      {
+        "case": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedInvalidDefaultStillFailsBeforeRuntime",
+        "barrier": 0,
+        "materializations": 0,
+        "clientFactories": 0,
+        "cleanupFailures": 0,
+        "startTerminal": "True",
+        "verified_fixture_outcome": "Exact OptionsValidation type/name/type/reason/owner diagnostics before materialization/runtime; cleanup empty"
+      },
+      {
+        "case": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.UnusedInvalidDefaultCannotRejectCoherentNamedBus",
+        "barrier": 1,
+        "materializations": 1,
+        "clientFactories": 0,
+        "cleanupFailures": 0,
+        "startTerminal": "True",
+        "verified_fixture_outcome": "Same chosen barrier exception, selected composition1, no client calls, cleanup empty"
+      },
+      {
+        "case": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.CoherentNamedBusReachesExactlyTheSameRuntimeBoundary",
+        "barrier": 1,
+        "materializations": 1,
+        "clientFactories": 0,
+        "cleanupFailures": 0,
+        "startTerminal": "True",
+        "verified_fixture_outcome": "Same chosen barrier exception, selected composition1, no client calls, cleanup empty"
+      },
+      {
+        "case": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Region, reason: \"Region must not be empty\")",
+        "barrier": 0,
+        "materializations": 0,
+        "clientFactories": 0,
+        "cleanupFailures": 0,
+        "startTerminal": "True",
+        "verified_fixture_outcome": "Exact OptionsValidation type/name/type/reason/owner diagnostics before materialization/runtime; cleanup empty"
+      },
+      {
+        "case": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Scope, reason: \"Scope must not be empty\")",
+        "barrier": 0,
+        "materializations": 0,
+        "clientFactories": 0,
+        "cleanupFailures": 0,
+        "startTerminal": "True",
+        "verified_fixture_outcome": "Exact OptionsValidation type/name/type/reason/owner diagnostics before materialization/runtime; cleanup empty"
+      },
+      {
+        "case": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: ScopeWithoutRegion, reason: \"Scope requires Region\")",
+        "barrier": 0,
+        "materializations": 0,
+        "clientFactories": 0,
+        "cleanupFailures": 0,
+        "startTerminal": "True",
+        "verified_fixture_outcome": "Exact OptionsValidation type/name/type/reason/owner diagnostics before materialization/runtime; cleanup empty"
+      }
+    ],
+    "strict_build": {
+      "session_id": 2077,
+      "joined": true,
+      "exit_code": 0,
+      "warnings": 0,
+      "errors": 0,
+      "forced_rebuild": true
+    },
+    "focused": {
+      "session_id": 31862,
+      "joined": true,
+      "exit_code": 0,
+      "total": 6,
+      "failed": 0,
+      "passed": 6,
+      "skipped": 0,
+      "cases": [
+        {
+          "status": "erfolgreich",
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedInvalidDefaultStillFailsBeforeRuntime"
+        },
+        {
+          "status": "erfolgreich",
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.UnusedInvalidDefaultCannotRejectCoherentNamedBus"
+        },
+        {
+          "status": "erfolgreich",
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.CoherentNamedBusReachesExactlyTheSameRuntimeBoundary"
+        },
+        {
+          "status": "erfolgreich",
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Region, reason: \"Region must not be empty\")"
+        },
+        {
+          "status": "erfolgreich",
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Scope, reason: \"Scope must not be empty\")"
+        },
+        {
+          "status": "erfolgreich",
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: ScopeWithoutRegion, reason: \"Scope requires Region\")"
+        }
+      ]
+    },
+    "raw6_four_streams_two_closed_binlogs": [
+      {
+        "name": "p04-sqs-post-six-focused-r1.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "name": "p04-sqs-post-six-build-r1.stderr.log",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "name": "p04-sqs-post-six-focused-r1-20261007-092143--98928--nqpQGc-dotnet-test.binlog",
+        "sha256": "45d9c92e46204a0de1a5d289e3449bbc243ecf7846cad988ea769c6907c15e60",
+        "bytes": 700338
+      },
+      {
+        "name": "p04-sqs-post-six-focused-r1.stdout.log",
+        "sha256": "8e48a02bf2d821c651b873f1ef6c52094e5f7e93ab96db55f4545d61b335e5e5",
+        "bytes": 13418
+      },
+      {
+        "name": "p04-sqs-post-six-build-r1.stdout.log",
+        "sha256": "bea685477ee0a7baaac03b93ba3584d8d65647a121dd99472f16c945ff47e278",
+        "bytes": 2118
+      },
+      {
+        "name": "p04-sqs-post-six-build-r1-20261007-091827--98277--9NaHlE.binlog",
+        "sha256": "14f1b463bf8a7db5cbd2409b9e055ea1dd56dcf841f4a1cd605fcec0cdd40697",
+        "bytes": 939644
+      }
+    ],
+    "runtime26_exact_fixed_archived_and_current_bytes": {
+      "ViciOne.ServiceBus.xml": "bb4dc15bad6a4df93e36f1d2ebceebe594236f2efd33658d0fb68a3635942fb1",
+      "ViciOne.ServiceBus.AmazonSqs.xml": "fc6a55c12f5cf2da4b72a8c45bfd411619360a944d7714a6b320e41f09572f2a",
+      "ViciOne.ServiceBus.Futures.xml": "9e19a1ebde017b35cf0de392fe293da2bd5dac7e6e00f6bd665705c7336585ff",
+      "ViciOne.ServiceBus.Abstractions.xml": "ad0691b5b4c76e79e2204b90bed2a6909761fb4eff86e5d16da129f1a64663aa",
+      "ViciOne.ServiceBus.Mediator.dll": "207dda85d4522b78f142f07f107b7d4a30ba6b2a87a3de79e1fa896118645796",
+      "ViciOne.ServiceBus.AmazonSqs.Tests": "640bed872dc2f947c65b12e2b7b99f5910d769101c0616fa69f66afecbd10588",
+      "ViciOne.ServiceBus.AmazonSqs.Tests.testconfig.json": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+      "ViciOne.ServiceBus.Sagas.xml": "c35dbbd5c06e5a63538f5936c902079bde4b133336e518927dc7d9b556a6fe87",
+      "ViciOne.ServiceBus.Testing.dll": "1b9a847081a7bf189acee9951954d213f93b294fdb4e09411f775e6420762ffa",
+      "ViciOne.ServiceBus.Courier.dll": "b8ff979beb06da84c1d74beaef6858ccff77bd777b827daf76cec92eb6f4a089",
+      "ViciOne.ServiceBus.Tests.Infrastructure.xml": "97a599f151cf6b7f5d2b59277b5ea58a351616053d8b042b30399008582ef89c",
+      "ViciOne.ServiceBus.AmazonSqs.Tests.xml": "f7ff670ad1d2038739bbb05e38ea4592117cdafa709d414fdb9e4c7896ad7a87",
+      "ViciOne.ServiceBus.AmazonSqs.Tests.runtimeconfig.json": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+      "ViciOne.ServiceBus.Futures.dll": "ecacda698b7afa82beee23e0ac2fa783803ed92cd69a35dcfb430adbf9994e67",
+      "ViciOne.ServiceBus.Abstractions.dll": "33e7cd73bfdf6ead7cfbcedee314fc19a5875e5ebe951e8f674c737b84232df4",
+      "ViciOne.ServiceBus.Mediator.xml": "84f8f45c2abe285749733beb4bc82bd8693bae18a191acab9a651b01ef270fa0",
+      "ViciOne.ServiceBus.AmazonSqs.Tests.deps.json": "38bf461e9cf3839ef3f959043381ad56025ece9519952c2085cdeccde132214f",
+      "ViciOne.ServiceBus.Sagas.dll": "896be57d8b1fa04bdd602bb24a918c5c55cdde296207292932c8dadbd74d9e93",
+      "ViciOne.ServiceBus.Testing.xml": "5fa24bada850262cf165da87972dffbd3aea42ea08de6d5ce7e493e4acaf07f2",
+      "ViciOne.ServiceBus.Courier.xml": "ea159b7edf3d6ebf50ed8618f6286aaf85cea65dca5aaca0d0a4fcb419e82b66",
+      "ViciOne.ServiceBus.Tests.Infrastructure.dll": "4afcbd64f7304a9c3c090858cef47b42ba64f7a0b30fe293aa6ed6c70b11f7e9",
+      "ViciOne.ServiceBus.AmazonSqs.Tests.dll": "f1e6828739348908ddd1c6c76003759198994d17999f33609076a8885fcb28c9",
+      "testsettings.json": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7",
+      "ViciOne.ServiceBus.dll": "811d01b8f4f6de7cbe93e89dbc2b67a7b37ba5002c2c9391f0b6dd95c5bc8f6b",
+      "ViciOne.ServiceBus.AmazonSqs.Tests.pdb": "7a3fa5ab02dbf05002bb4b0091469ca4aea9d4ecb3a0a35cb1f627620e7fde22",
+      "ViciOne.ServiceBus.AmazonSqs.dll": "74b9f008c60b1ff33a303f97c39d32b617b077e1be6745de1d79762566444295"
+    },
+    "source5_frozen_current_exact": [
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+        "sha256": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973",
+        "frozen_and_current_C9_exact": true
+      },
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+        "sha256": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f",
+        "frozen_and_current_C9_exact": true
+      },
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+        "sha256": "694ffbfb2fb103e081e1de064c1f4d7a875c32d971e3beb2b91ebe79e60a98d8",
+        "frozen_and_current_C9_exact": true
+      },
+      {
+        "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+        "sha256": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa",
+        "frozen_and_current_C9_exact": true
+      },
+      {
+        "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+        "sha256": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a",
+        "frozen_and_current_C9_exact": true
+      }
+    ],
+    "PE10_PDB2997_safe_reuse": [
+      {
+        "module": "ViciOne.ServiceBus.Abstractions.dll",
+        "pe_sha256": "33e7cd73bfdf6ead7cfbcedee314fc19a5875e5ebe951e8f674c737b84232df4",
+        "pdb_id": "039e8acb99ca324cb60929b2083531eeec8c2aee",
+        "documents": 700,
+        "inventory_sha256": "06c5d1a07fd819f7b69a81b352f2669233c4d22a05e49e78b36f7ae70ff9bbc7",
+        "qualification": "Safe exact DLL/PDB-byte reuse of independently accepted fixed metadata; new Root post parser receipt agrees."
+      },
+      {
+        "module": "ViciOne.ServiceBus.AmazonSqs.Tests.dll",
+        "pe_sha256": "f1e6828739348908ddd1c6c76003759198994d17999f33609076a8885fcb28c9",
+        "pdb_id": "6144f476ec02a044b26602f44658be810dd146f8",
+        "documents": 63,
+        "inventory_sha256": "628b77a161a743320b0559b92c1aaaf6f5faddea83c5abf4ecca89419de57970",
+        "qualification": "Safe exact DLL/PDB-byte reuse of independently accepted fixed metadata; new Root post parser receipt agrees."
+      },
+      {
+        "module": "ViciOne.ServiceBus.AmazonSqs.dll",
+        "pe_sha256": "74b9f008c60b1ff33a303f97c39d32b617b077e1be6745de1d79762566444295",
+        "pdb_id": "c8d38531360ab54cb90a04f813ca90c9e5f56091",
+        "documents": 168,
+        "inventory_sha256": "873f3e500b7ff207eb6b1ae1eccf7cede1dd45cbda3c19a3dcd1870506078401",
+        "qualification": "Safe exact DLL/PDB-byte reuse of independently accepted fixed metadata; new Root post parser receipt agrees."
+      },
+      {
+        "module": "ViciOne.ServiceBus.Courier.dll",
+        "pe_sha256": "b8ff979beb06da84c1d74beaef6858ccff77bd777b827daf76cec92eb6f4a089",
+        "pdb_id": "44ac48cbb22657479680bd66ba357fd506bf30a2",
+        "documents": 146,
+        "inventory_sha256": "94c1f780735861386ab80d1e113a63c027f6e9d9d68e26b24efdc94a8402a41a",
+        "qualification": "Safe exact DLL/PDB-byte reuse of independently accepted fixed metadata; new Root post parser receipt agrees."
+      },
+      {
+        "module": "ViciOne.ServiceBus.Futures.dll",
+        "pe_sha256": "ecacda698b7afa82beee23e0ac2fa783803ed92cd69a35dcfb430adbf9994e67",
+        "pdb_id": "774d9465f4e71443b23d22bd25ae15b14d0510db",
+        "documents": 61,
+        "inventory_sha256": "f4f72b1ddb1c4e90501c13d2255085da49d2472094d27db64270ed3dcb20b0c2",
+        "qualification": "Safe exact DLL/PDB-byte reuse of independently accepted fixed metadata; new Root post parser receipt agrees."
+      },
+      {
+        "module": "ViciOne.ServiceBus.Mediator.dll",
+        "pe_sha256": "207dda85d4522b78f142f07f107b7d4a30ba6b2a87a3de79e1fa896118645796",
+        "pdb_id": "4edc5246c444104fa06be16a886cb914d0f4d4e3",
+        "documents": 31,
+        "inventory_sha256": "77592650dfbe98e3b93cc53a9ddd614331b92942858fcbcb6714ca5ab239adf0",
+        "qualification": "Safe exact DLL/PDB-byte reuse of independently accepted fixed metadata; new Root post parser receipt agrees."
+      },
+      {
+        "module": "ViciOne.ServiceBus.Sagas.dll",
+        "pe_sha256": "896be57d8b1fa04bdd602bb24a918c5c55cdde296207292932c8dadbd74d9e93",
+        "pdb_id": "5ac00071d4e3ee44818444bcc0359fabbc9cf5ea",
+        "documents": 374,
+        "inventory_sha256": "63f43e992ca78b3a2ba1b7aaa39beb3177dab91ee81bc930084c7f8db542e256",
+        "qualification": "Safe exact DLL/PDB-byte reuse of independently accepted fixed metadata; new Root post parser receipt agrees."
+      },
+      {
+        "module": "ViciOne.ServiceBus.Testing.dll",
+        "pe_sha256": "1b9a847081a7bf189acee9951954d213f93b294fdb4e09411f775e6420762ffa",
+        "pdb_id": "02cfe352146c1944bdcae21ae739169e4b83dd8c",
+        "documents": 104,
+        "inventory_sha256": "a37730f5afe24e44c6687e32a66c70d48a5ec33927d8386448ee8bb42cbfd017",
+        "qualification": "Safe exact DLL/PDB-byte reuse of independently accepted fixed metadata; new Root post parser receipt agrees."
+      },
+      {
+        "module": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+        "pe_sha256": "4afcbd64f7304a9c3c090858cef47b42ba64f7a0b30fe293aa6ed6c70b11f7e9",
+        "pdb_id": "957503090ba2534b813038fb6546f11e68cd9efc",
+        "documents": 9,
+        "inventory_sha256": "957bc7b3a5224df34f636d258ab48648827f54131967b07cb7280522aaab649b",
+        "qualification": "Safe exact DLL/PDB-byte reuse of independently accepted fixed metadata; new Root post parser receipt agrees."
+      },
+      {
+        "module": "ViciOne.ServiceBus.dll",
+        "pe_sha256": "811d01b8f4f6de7cbe93e89dbc2b67a7b37ba5002c2c9391f0b6dd95c5bc8f6b",
+        "pdb_id": "aba9e8f32c3d9840a63c9797f42cb83c16de8c9e",
+        "documents": 1341,
+        "inventory_sha256": "b10d7706014f2649eff83dd84b17d7d980bc8ad3832180f9a997e8abbf3dedd3",
+        "qualification": "Safe exact DLL/PDB-byte reuse of independently accepted fixed metadata; new Root post parser receipt agrees."
+      }
+    ],
+    "compiled_Requirements203_sha256": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa",
+    "deps10_module_default_selection_bound": true,
+    "new_Root_post_PE_sha256": "96f99f28c6cf57c218b914c3a50428944dfeb6616383be3a5dd27784e90e6310",
+    "full_post_build_and_focused_stdout_personally_read": true
+  },
+  "accepted_reuse_review_dependencies": {
+    "package04-sqs-original5-native-artifact-adversarial-r1.json": "4fbd2a0bc5b851dbef49ea6d517e277bae70cd77ea97466e02602e905e15a1ec",
+    "package04-sqs-original6-native-artifact-adversarial-r1.json": "b330328f6bb16748f26a93bef75c7009e4813416c972fdcd07720f6e87879f70",
+    "package04-sqs-fixed6-and-scoped-api-native-adversarial-r1.json": "55e7f5534661d722b152f4e37e7b1440f5b60404237bccdc26e24b37e6d833fe",
+    "package04-sqs-whole-local-module417-adversarial-r1.json": "18c5ae811b4c695408172c202547cd73cb6851c12d082c1055823e45ecbdf909",
+    "package04-sqs-six-mutants-native-combined-adversarial-r1.json": "bc92066eaa40e4aed8e5ffaaf36150511468a3a7760892af7c6c86a436c1670c",
+    "package04-sqs-mutation-driver-r2-adversarial-r1.json": "064fbf70a6d2b46f0439f7a5580340bda708252e190790f1f39d83ad77554bac"
+  },
+  "canonical_observation": {
+    "O6096_original_manifest_exact": true,
+    "C96097_fixed_manifest_exact": true,
+    "rootconfigs13_exact": true,
+    "O_SQS_owner_still_original_460f": true,
+    "C9_fixed_owner_e464": true,
+    "canonical_SQS_test_resource_project_lock_application_not_claimed": true
+  },
+  "mutants_exact_peer_reuse": [
+    {
+      "name": "m1-typed-options-bound-to-default",
+      "result_sha256": "6c8d6374b2647b53a439fd4b5fc9d3912721e13927228017abfb00623a946bab",
+      "counts": {
+        "total": 6,
+        "failed": 4,
+        "passed": 2,
+        "skipped": 0
+      },
+      "finite_failures_reused_from_exact_peer_review": 4
+    },
+    {
+      "name": "m2-validate-on-start-removed",
+      "result_sha256": "e22be5dc41327d8e57cb371239ec82ea504245e5a975cc92bf3f35c10710d75a",
+      "counts": {
+        "total": 6,
+        "failed": 4,
+        "passed": 2,
+        "skipped": 0
+      },
+      "finite_failures_reused_from_exact_peer_review": 4
+    },
+    {
+      "name": "m3-region-predicate-bypassed",
+      "result_sha256": "f2b2fa971e2ce03d4622ab1153366e958f855e48055646fd6df17b72ada3ad5b",
+      "counts": {
+        "total": 6,
+        "failed": 2,
+        "passed": 4,
+        "skipped": 0
+      },
+      "finite_failures_reused_from_exact_peer_review": 2
+    },
+    {
+      "name": "m4-scope-predicate-bypassed",
+      "result_sha256": "967081f6fc85f23eadbc8a9b163b8fe1fadf4fdcb636a62861871a5dcde4764b",
+      "counts": {
+        "total": 6,
+        "failed": 1,
+        "passed": 5,
+        "skipped": 0
+      },
+      "finite_failures_reused_from_exact_peer_review": 1
+    },
+    {
+      "name": "m5-scope-region-coherence-bypassed",
+      "result_sha256": "1cd5316a4c5ca30c45b06fb40f76bbd25cd660f32c22db71f484a92530b08af0",
+      "counts": {
+        "total": 6,
+        "failed": 1,
+        "passed": 5,
+        "skipped": 0
+      },
+      "finite_failures_reused_from_exact_peer_review": 1
+    },
+    {
+      "name": "m6-typed-diagnostic-owner-shortened",
+      "result_sha256": "d33ded75e10ff4e4efdf733a3ef0e9dcc0a63cc2a1949c7d50a5136cdcde3e67",
+      "counts": {
+        "total": 6,
+        "failed": 3,
+        "passed": 3,
+        "skipped": 0
+      },
+      "finite_failures_reused_from_exact_peer_review": 3
+    }
+  ],
+  "aggregate": {
+    "staged_focused_slots": 59,
+    "finite_red": 22,
+    "healthy": 37,
+    "skips": 0,
+    "original5": {
+      "red": 3,
+      "healthy": 2
+    },
+    "original6": {
+      "red": 4,
+      "healthy": 2
+    },
+    "fixed6": {
+      "pass": 6
+    },
+    "six_mutants": {
+      "slots": 36,
+      "red": 15,
+      "healthy": 21
+    },
+    "post6": {
+      "pass": 6
+    },
+    "whole_module_separate": 417,
+    "API_three_comparisons_separate_exit_codes": [
+      0,
+      0,
+      1
+    ],
+    "unique_closed_binlogs": 25,
+    "all_raw_streams_and_binlogs": 62
+  },
+  "native_artifact_families": [
+    {
+      "family": "sqs-original-native-r1",
+      "raw_count": 8,
+      "binlogs": 3
+    },
+    {
+      "family": "sqs-original-six-native-r1",
+      "raw_count": 6,
+      "binlogs": 2
+    },
+    {
+      "family": "sqs-fixed-six-native-r1",
+      "raw_count": 6,
+      "binlogs": 2
+    },
+    {
+      "family": "sqs-whole-module-native-r1",
+      "raw_count": 3,
+      "binlogs": 1
+    },
+    {
+      "family": "sqs-post-six-native-r1",
+      "raw_count": 6,
+      "binlogs": 2
+    },
+    {
+      "family": "scoped_api_three_comparisons",
+      "raw_count": 9,
+      "binlogs": 3
+    },
+    {
+      "family": "six_single_cause_mutants",
+      "raw_count": 24,
+      "binlogs": 12
+    }
+  ],
+  "causal_qualification_limits": [
+    "M1 invalidnamed22 type reaches sentinel; poisoneddefault39 Same receives actualOptionsValidation, fullactualrawstack reviewed. Laterassertions not credited.",
+    "M2 first52/default+22/typed ActualConfigurationException atcomposition182; no barrier reached. Namedoptionsmonitor.Get origin source/control-flow attribution from immutablecompiledcontext, not invented raw innerstack or chosen sentinel reference. ExistingCore IStartupValidator setup stillpasses.",
+    "M3 region2/M4blankScope1/M5coherence1 first type52or22 against actualsentinel; reached printedstate1/1/client0/cleanup0 is observation, laterassertions afterfirstnot credited.",
+    "M6 threeactualFullNameContains26failures; earlier type/name/reason assertions reached. Printedstate0/0 is actualoutput; laterbarrier/materialization assertions not credited."
+  ],
+  "assessment": "Postactual6 all native PASS with strict forced rebuild, byte-identical runtime26 to independently accepted fixed6 and whole417/API selection. Source5/test194/owner79/project/lock/Req203 unchanged. Frozen fixed PE/PDB/source/deps qualifications safely reused only after exact actual DLL/PDB/runtime equality and new post Root parser identity/inventory agreement. All25 named binlogs/62raw hashes rechecked, gzip nonempty and closed-at-observation. Exact original/fixed/API/whole/mutant peer reviews retain their own personal source/native-read credit; this review does not claim to personally reread all55 SQS fixture owners or all prior logs.",
+  "limits": [
+    "59 focused slots are staged repeated executions, not59 distinct case IDs or deduplicated regression identities. Original5 and6 are explicitly historical staged results with overlap; original7 total red slots and15 mutated red slots yield22/37. Whole417 and API0/0/1 are separate evidence, not additions to focused totals.",
+    "API reverse exit1 is the exact expected one generic-method CP0002 addition to original; it is not a product regression or cause-kill. Scoped original/control\u2192fixed compatibility does not close packed global public API or arbitrary overload-binding behavior.",
+    "M2 options-monitor.Get origin remains compiled-source/control-flow attribution; raw observed Composition182 ConfigurationException is the exposed exception. No absent raw inner stack or barrier identity assertion promoted. Other first finite mutant assertion boundaries and healthy controls remain exact peer-qualified.",
+    "Own CLI/process observations and archive hashes do not prove a universal CLR assembly-load or descendant-process census/full MSBuild semantic replay. PostRoot toolsession IDs2077/31862 are not OS PIDs; actual unique binlog stamps bound98277/98928 CLI outputs.",
+    "This closes only local selected named/default typed SQS startup/options validation and pre-runtime composition boundary; not all18 startup families, all55 body coverage, actual AWS client/provider/cloud runtime, Core/wholeUnit/currentcoverage/CI/hardware release acceptance.",
+    "Root sole author/native executor and canonical publisher. Reviewer made no product/test/tool/source edits or native/provider/process execution; only this own immutable report."
+  ]
+}

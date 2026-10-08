@@ -1,0 +1,12 @@
+{
+  "kind": "ROOT_COMPLETE_C6_TWO_CALLER_PRODUCT_READ",
+  "source_freeze_sha256": "77f915ff6878f953fb940f704d843c1899485fe751991b57755f8dcc69f95896",
+  "source_sha256": {
+    "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs": "5d87f3120de34a96403e05378a1d0b5f9e834aedb45cf526b4b131281f864849",
+    "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs": "8c7532245dc15130c4adf8d06e6b4434061c6a3a60a57f682621d7489e407a34"
+  },
+  "root_prior57_whole_sha256": "87c47890f03ff587088d3a13d6b17fcefdc2234b9ab0bde6e420b15c39cf9e72",
+  "root_core810_sha256": "0398e2960671b582484cca755d5467b6284ec45862053a89ac8d93734e2fdb3a",
+  "whole_personal_read": "Root reread entire original two callers316/54 and scope201, authored the entire fixed364/85 bodies in explicit toolcode, unchanged original ranges reused exactRoot57. Entire public Response340/IRequestClient28/ConnectHandle23/ActiveTestResult36/IBase45 personally read. Existing helper/test/shared84 whole reads exactHash reuse. No reviewer-read transfer.",
+  "adversarial_review_sha256": "0454dc6c41b83ccdc617dd4029c83ba74e51eca897f536eb660ecbccaefbbc89"
+}

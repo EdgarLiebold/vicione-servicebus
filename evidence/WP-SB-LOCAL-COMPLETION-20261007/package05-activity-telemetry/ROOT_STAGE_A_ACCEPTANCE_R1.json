@@ -1,0 +1,58 @@
+{
+  "kind": "ROOT_SCOPED_P05_STAGE_A_ACCEPTANCE",
+  "status": "ACCEPTED_2_ACTIVITY_OWNERS_8_CASES_CORE7966_3_COMPILED_MUTANTS_AND_POST8",
+  "scope": "ActivityObservation ambientcleanup/nearestlive ancestor; StartedActivity exception-preparation isolation; exactly2productowners/newcanonicaltest8cases/5reqrows",
+  "source_sha256": {
+    "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs": "c206f81c611584f1982f03f55b1044cae4613d3775650fa291b43a910134d625",
+    "src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs": "77d371f9f003e617a6f2fa250c3b170fa2cc9a3dd1fe98c44d6b2e8f70e40fb2",
+    "tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs": "e6a0563a8a2584d08b9bed6f0b6ef6b78f7fac2888f7344d9ec6ad562a709a13",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "d25a434309bd395ff5b34a3864ea292a9ec2eff4f63c3e30ebca0cff486638a1"
+  },
+  "freeze_sha256": "962ee505e8b8340dfa06324e984785ddabcdb28e1ca3d14c1b6e2c221c80a496",
+  "root57_read_sha256": "87c47890f03ff587088d3a13d6b17fcefdc2234b9ab0bde6e420b15c39cf9e72",
+  "root801_read_sha256": "9e1242a8e5d8e149df746afd8e24357bdcb3d0368e071568ee0abfe4acff868e",
+  "source_adversarial_sha256": "735395571cf8ce6f28378e5780226f87400442642028a81528789aae7b4fc78c",
+  "final_adversarial_sha256": "4006f4aa88f45854ba10b91e91a8a3f4cb3515069835a060271d183d7ba7383f",
+  "native_original": {
+    "focused_total": 8,
+    "failed": 5,
+    "passed": 3,
+    "skipped": 0,
+    "whole_core_total": 7966,
+    "whole_core_failed": 5
+  },
+  "native_fixed": {
+    "focused_total": 8,
+    "passed": 8,
+    "whole_core_total": 7966,
+    "whole_core_passed": 7966,
+    "failed": 0,
+    "skipped": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "compiled_mutants": {
+    "count": 3,
+    "events": 24,
+    "finite_expected_failures": 5,
+    "named_healthy_events": 19,
+    "distinct_failure_cases": 5
+  },
+  "fixed_post": {
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0
+  },
+  "excluded_drafts": [
+    "R1fixture compilation2CS0619",
+    "R2original2invalidsetupassumptions",
+    "RootreadR1line/contextmetadata corrected successor"
+  ],
+  "open": [
+    "RemainingP05sourcecreation/batch/requiredmonitor/optionalclock/metricbalance",
+    "FullcorrectedUnit/provider/packageaggregate",
+    "Currentnativecoverage",
+    "Startup/cache/adapterdeadline/journeys/benchmarks/CIqualification",
+    "Cloud/hardware"
+  ]
+}

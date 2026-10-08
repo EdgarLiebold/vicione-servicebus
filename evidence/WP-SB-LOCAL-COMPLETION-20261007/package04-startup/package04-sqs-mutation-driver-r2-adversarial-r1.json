@@ -1,0 +1,128 @@
+{
+  "kind": "INTERNAL_READONLY_SQS_MUTATION_DRIVER_R2_ADVERSARIAL_PREEXECUTION_REVIEW_R1",
+  "status": "NO_BLOCK_EXACT_FROZEN_ROOT_SERIAL_NATIVE_EXECUTION__FINITE_CAUSE_PE_PDB_ACCEPTANCE_PENDING",
+  "findings": [],
+  "inputs": {
+    "/private/tmp/run_sqs_startup_mutants-r1.py": "4efd20f7eee381b12aecca6bc814515711772152f5f149dbffccfa6115d5ebe9",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutation-driver-r1/driver-r2.py": "4efd20f7eee381b12aecca6bc814515711772152f5f149dbffccfa6115d5ebe9",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutation-driver-r1/driver.py": "b86cd309cbe17c076e70ece83449a0f7c634284a6c5a8b02418249446c1434d1",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutation-driver-r1/DRIVER_FREEZE_R2.json": "39055a2053508cf96ab049e68940fa70c25dd48e48f822be90b55e89a7228059",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutation-driver-r1/INPUTS.json": "4abee7326ee3fda73f1214cce309b89fa4e960b0c6223271532222cc812ac12b",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutation-preparation-r1/PREPARED_INDEX.json": "2ed8bcf266046aea879a7bee62c04870bc1567e6b8818de190811f9f4bf512f4",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/RESULT.json": "f2261b92f30aa6fcc2e1da84c5e56b2ff5a8886e9e99360d9f04c2b597345366",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-sqs-six-causal-mutation-candidates-adversarial-r1.json": "f0d1bd03f0b1a3645238c7d615e2fc71e10a2172a678be0bf0a769f87e6fc063",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-sqs-minimal-named-options-product-adversarial-r2.json": "8874222ff7150ae6631e9950e0900c85adff36e1a44ac1e74d6781ff6c2c6c09",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-native-mutant-runner-r1-preexecution-adversarial.json": "ecbfb13219e24927330c1874be79ff79e7f308275ae8bc75b7798b64d4c22276",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "d54ba994eb2dffedac78d056cafec381535ff36bc480090009c890891597dbea",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-api-compat-native-r1/RESULT.json": "697c00c182bc8a06ae7223b04e786f909e3dd6c4ddf15c50227cfc5f3365a69c",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-api-compat-native-r1/INPUTS.json": "6bfbbe26b4f2afe1571c83f9629ef1071cb439800aa119bf241fcc7aa0da80d3",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutation-preparation-r1/m1-typed-options-bound-to-default/mutant-owner.cs": "3b22884c45fef7fd08b1e51f8196dde2f1dc3c0ac4a863ad4972b8ccc26271bf",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutation-preparation-r1/m2-validate-on-start-removed/mutant-owner.cs": "ff5c7f778b431e6b52f400f369089861d61d55479935160884ec6a71f3e96fd1",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutation-preparation-r1/m3-region-predicate-bypassed/mutant-owner.cs": "5572ea2e75b76fc48c03f158e324b171cc7ac6e35860aea815303b57da5d39e7",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutation-preparation-r1/m4-scope-predicate-bypassed/mutant-owner.cs": "1859a394bcec360bcb99da5751272874b74ab218a56cfc0d4a371caa051b77c3",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutation-preparation-r1/m5-scope-region-coherence-bypassed/mutant-owner.cs": "9cee8ab1adca8e48d760f6cbc063bb23a3e839014182012211b5993313cff727",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-mutation-preparation-r1/m6-typed-diagnostic-owner-shortened/mutant-owner.cs": "0cd04182d0c3b2a5f358b2546c7480d6450cfc04be7ffcfc96200a3046ee6e52"
+  },
+  "checks": {
+    "full143_body_AST_only_private_arch_sha4efd_exact": true,
+    "preservedR1_b86_sole_output_census_phrase_delta": true,
+    "INPUTS4abee_index2ed8_immutable_exact": true,
+    "current_canonical6096_private6097_whole_hash_manifests": true,
+    "13_rootconfigs_bothcurrent_exact": true,
+    "exact_five_SQS_private_deltas_plus_fixed_input5": true,
+    "fixed_native6_f226_exact_names_green_zero_fail_skip": true,
+    "6_candidate_mutant_hashes_owner_distinct_and_peer_f0d1_noBlock": true,
+    "runtime26_assets10_unique_archive_and_current_matching_fixed": true,
+    "Root_PE2997_API238_context_receipts_hashbound_not_requalified_here": true,
+    "no_variant_archive_executed_at_this_observation": true
+  },
+  "private_source_delta5": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "canonical_sha256": "460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840",
+      "private_sha256": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+      "canonical_sha256": null,
+      "private_sha256": "694ffbfb2fb103e081e1de064c1f4d7a875c32d971e3beb2b91ebe79e60a98d8"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "canonical_sha256": "4cac888fdd0a09ec5b3d9077fe49f4c9fbe5b617ce9ed37f069e174f99d08c05",
+      "private_sha256": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "canonical_sha256": "1fa6b10f5273864ee89a9059b9eb6d7d37762a86137744a82ac364dae3241b84",
+      "private_sha256": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "canonical_sha256": "7a2f76b7d2272ee3afcd8f83c2f05dad7c45883fe814efae2c79ff76b6b51ca2",
+      "private_sha256": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973"
+    }
+  ],
+  "eligible_candidates": [
+    {
+      "name": "m1-typed-options-bound-to-default",
+      "owner": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "fixed_sha256": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a",
+      "mutant_sha256": "3b22884c45fef7fd08b1e51f8196dde2f1dc3c0ac4a863ad4972b8ccc26271bf",
+      "static_hypothesis_only": "Selectednamed Region/Scope/Cross bypass plus unuseddefaultreject; expected4finiteRed2healthy",
+      "native_credit": 0
+    },
+    {
+      "name": "m2-validate-on-start-removed",
+      "owner": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "fixed_sha256": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a",
+      "mutant_sha256": "ff5c7f778b431e6b52f400f369089861d61d55479935160884ec6a71f3e96fd1",
+      "static_hypothesis_only": "Validation becomes latewrappedcompositionexception for selectednamed/default; expected4Red2healthy",
+      "native_credit": 0
+    },
+    {
+      "name": "m3-region-predicate-bypassed",
+      "owner": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "fixed_sha256": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a",
+      "mutant_sha256": "5572ea2e75b76fc48c03f158e324b171cc7ac6e35860aea815303b57da5d39e7",
+      "static_hypothesis_only": "NamedRegion/defaultRegion reachbarrier; expected2Red4healthy",
+      "native_credit": 0
+    },
+    {
+      "name": "m4-scope-predicate-bypassed",
+      "owner": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "fixed_sha256": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a",
+      "mutant_sha256": "1859a394bcec360bcb99da5751272874b74ab218a56cfc0d4a371caa051b77c3",
+      "static_hypothesis_only": "NamedScope reachesbarrier; expected1Red5healthy",
+      "native_credit": 0
+    },
+    {
+      "name": "m5-scope-region-coherence-bypassed",
+      "owner": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "fixed_sha256": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a",
+      "mutant_sha256": "9cee8ab1adca8e48d760f6cbc063bb23a3e839014182012211b5993313cff727",
+      "static_hypothesis_only": "NamedScopeWithoutRegion reachesbarrier; expected1Red5healthy",
+      "native_credit": 0
+    },
+    {
+      "name": "m6-typed-diagnostic-owner-shortened",
+      "owner": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "fixed_sha256": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a",
+      "mutant_sha256": "0cd04182d0c3b2a5f358b2546c7480d6450cfc04be7ffcfc96200a3046ee6e52",
+      "static_hypothesis_only": "Three typednegative firstFullNameContains; expected3Red3healthy",
+      "native_credit": 0
+    }
+  ],
+  "R1_to_R2_complete_delta": "--- unexecutedR1\n+++ reviewedR2\n@@ -128,7 +128,7 @@\n                       raw_sha256={q.name: sha(q) for q in raw},\n                       runtime_sha256={n: sha(rt / n) for n in inputs['runtime_names']},\n                       asset_sha256={r: sha(d / r) for r in inputs['asset_paths']},\n-                      limits='ForcedRebuild and own CLI PGID deadline/join; same6 native IDs. All children drained before log close/source change. Finite first oracle/healthy controls and actualPE/PDB still require Root+independentreview. Compiler/deadline/zero-discovery/survivor0killcredit; no Cloudclient/runtime-start credit.')\n+                      limits='ForcedRebuild and own CLI PGID deadline/join; same6 native IDs. Own CLI joined before log close/source change; no universal descendant process census claim. Finite first oracle/healthy controls and actualPE/PDB still require Root+independentreview. Compiler/deadline/zero-discovery/survivor0killcredit; no Cloudclient/runtime-start credit.')\n         (d / 'RESULT.json').write_text(json.dumps(result, indent=2) + '\\n')\n         print('ARCHIVED', name, sha(d / 'RESULT.json'), failed, 6-failed, flush=True)\n     except BaseException as error:\n",
+  "guard_assessment": "Frozen canonical6096 and private6097 complete path/hash maps plus13 rootconfigs guard before first execution, before every owner write, after write with exactly reviewed effective owner hash, after actual native stages before archive and finally after restoring original private owner. Private5 fixed deltas stay explicit; mutation adds only one reviewed owner delta on that fixed basis. These are checksum inventories, not claims of personally rereading all6096 product bodies.",
+  "CLI_ownership": "One existing C9 clone reused serially for selected unique eligible names; reviewed prior locked restore reused with --no-restore, no six fresh clones/restores claim. Popen owns new session/group; build180/focus75 wait. Deadline TERM own group/join10 then KILL own group/join. Per-child finally joins interrupted live CLI before closing log context; outer finally restores original private source and rechecks all guards. Popen failure before handle acquisition is outer-excluded. No universal descendant census or arbitrary repeated-signal/SIGKILL-immunity guarantee.",
+  "compiler_native_verdict": "Every variant fresh write plus forced Rebuild --warnaserror --disable-build-servers. Strict build must exit0 and report0warnings/0errors; native MTP CLI exit0or2 with exact six unique actual IDs/summary0skip and exit2 iff native failure. No separate custom assertion runner fabricates verdicts. Compiler/deadline/parser/discovery failures excluded; surviving six-green mutant is explicitly SURVIVOR_NO_KILL_CREDIT despite driver completion.",
+  "archival_and_failure_paths": "Unique log paths require absence before launch; generated unique binlog token plus exact4 nonempty raw/two binlogs. After joins and guards, archive raw4/runtime26/assets10/compiled-owner and hash receipt before next source write. Any build/parser/copy/timeout/interruption exception preserves closed raw and stage receipts under excluded-attempt/EXCLUDED_RESULT with zero credit, then source-owning finally restores guard. Rootconfig drift at final guard excludes overall successful acceptance even if pending RESULT already written. Raw/binlog closure, decompression and archive immutability must be independently checked after execution; no full MSBuild semantic replay inferred.",
+  "reference_graph_limit": "Restored package/reference environment is reused transparently. Exact source locks/projects, current assets10/runtime26 byte equality to fixed receipt and recorded official API238 controls support preflight. Driver does not freeze external SDK/NuGet cache bytes itself; actual compiled PE/PDB/deps/assets and first native failure must still bind each mutation. Frozen RootPE/API receipts are input context, not this reviewer taking their personal native-read credit.",
+  "causal_limits": [
+    "Candidate peer f0d1 is reused only for exact prepared source hashes; hypothesis expected-red counts remain zero observed native credit here.",
+    "First finite actual case failure plus reached earlier physical/diagnostic/startup barriers and named healthy controls decide each eventual kill. No arbitrary expected stack promoted to observed origin.",
+    "This is Generic Host selected options startup/pre-runtime evidence; no actual AWS client/provider/cloud lifecycle/reliability acceptance.",
+    "No canonical SQS publication/API/globalstartup/Core/coverage/CI/device conclusion; Root remains sole source author/native executor, reviewer only reads and writes this own immutable report."
+  ]
+}

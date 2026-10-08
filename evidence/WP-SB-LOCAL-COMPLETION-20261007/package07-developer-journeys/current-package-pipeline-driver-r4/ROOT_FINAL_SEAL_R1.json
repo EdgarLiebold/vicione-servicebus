@@ -1,0 +1,13 @@
+{
+  "kind": "ROOT_R4_EXACT_PRIVATE_SDK_RELEASE_SEAL",
+  "source_preflight_unsealed_gate_sha256": "6bd8bce321bafa3402f1ff3f4b1946804e9a54780b45dbc02913412d034037a7",
+  "final_gate_sha256": "c0c0e96f3aac3c0aa5e21b7f44727c4deb25b68a6e01e548ebe8d19a785e1d45",
+  "driver_sha256": "22483099bc06a857d36a38ab17b4ec90a830da9b4e7cf48bd447559b27518512",
+  "wrapper_sha256": "187d9dc701eb8c8b4d8521344452f905a4258a87772eb7f3a8cbfdf11e920532",
+  "peer_sha256": "25383251384491722950898eaa7e170c38a6f63ba476af3e748ff15ea5316a47",
+  "stub_scope_root_receipt_sha256": "91e21bb27e79007cddf212e58b2b12009d6c8d9c572178d0e91848565cd5a1cb",
+  "retention_manifest_sha256": "11834e65c8db950b3df5c628fd1d59e9e018ebc6b444fb00d000f1871b4b44fd",
+  "root_whole_current_source_preflight_stub_addendum_count_erratum_read": true,
+  "only_gate_change": "peer_sha256 PENDING\u2192actual253832; code+input+otherbindings unchanged",
+  "limits": "Release genuine default diagnostic attempt only; no updateflags,canonicalapplication,SDK success,APIglobal or 18flows inferred."
+}

@@ -1,0 +1,131 @@
+{
+  "kind": "INTERNAL_READ_ONLY_FORWARDING_TOOL_FINAL_REVIEW_R4",
+  "reviewer": "todo_reconciliation_review",
+  "utc": "2026-10-06T23:25:52.157646+00:00",
+  "verdict": "PASS_BOUNDED_LOCAL_TOOL_EXPERIMENT",
+  "root_authored_owner": true,
+  "external_product_team_or_model_independent_assurance": false,
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/local_colima_forwarding.py": {
+      "sha256": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d",
+      "bytes": 10845
+    },
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/test_local_colima_forwarding.py": {
+      "sha256": "3b951d9603ce51a8910a304c801f35763b6fc6886b790b2cfa4e446493151591",
+      "bytes": 11977
+    },
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/FORWARDING_RESEARCH_PLAN.md": {
+      "sha256": "86806129fe926f1962b9ee1eca4e9e8d968c9e24f7f78282d324d7b9e4fdbd8e",
+      "bytes": 1887
+    },
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tools/ci/fixtures/run_scope.py": {
+      "sha256": "1ef7d3cb955828937ec1adb31fcbd4a0a6bcbbc16fbb354388b582e30005f095",
+      "bytes": 3747
+    },
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tools/ci/fixtures/compose_fixture.py": {
+      "sha256": "cc2b92ddc68377c2af3cf398c6a5ec041f858cdba42c30a886af51a413e3fe6d",
+      "bytes": 14046
+    }
+  },
+  "previous_review": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/forwarding-tool-review-r3.json",
+    "sha256": "b61add8bcec6602edee742fb4f9580f4f4643a457033041d660f98bae7046880",
+    "preserved": true
+  },
+  "runtime_evidence": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/local-forwarding-contracts-r7-corrected.log",
+    "sha256": "570fab83c264c8aa6464e6bdad22b9ee99bcb8b03ea4872864dce9066a59e159",
+    "closed_no_open_handles": true,
+    "test_names": [
+      "test_complete_projection_is_loopback_only_and_child_environment_bound",
+      "test_forwarding_command_cannot_join_or_modify_shared_control_master",
+      "test_invalid_configuration_does_not_start_any_process",
+      "test_group_permission_denial_never_proves_cleanup",
+      "test_real_owned_listener_and_successful_child_are_joined",
+      "test_child_failure_remains_the_actual_exit_code",
+      "test_known_child_failure_survives_a_concurrent_final_tunnel_exit",
+      "test_final_tunnel_loss_prevents_claiming_a_successful_child_as_acceptance",
+      "test_ssh_start_failure_prevents_child_execution",
+      "test_existing_unowned_listener_is_never_adopted_as_success",
+      "test_tunnel_loss_stops_the_held_child_and_joins_both_groups",
+      "test_sigint_preserves_interruption_and_retires_both_groups",
+      "test_sigterm_preserves_interruption_and_retires_both_groups",
+      "test_exited_child_leader_cannot_leave_a_live_group_descendant",
+      "test_cleanup_failure_cannot_replace_a_real_child_failure",
+      "test_cleanup_failure_cannot_replace_a_real_interruption",
+      "test_cleanup_failure_prevents_success_without_inventing_a_child_fault"
+    ],
+    "total": 17,
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0,
+    "meaning": "Seventeen toolcontracts including real owned process/listener cases, static argument checks and mocked negatives; not actual SSH or provider acceptance."
+  },
+  "causal_original": {
+    "result_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/mixed-terminal-counterexample-r1/RESULT.json",
+    "result_sha256": "58acceefe691af03f62f4500724e95ee03a542b2cd2b720d4d8b6278d8894fb5",
+    "bound_files": {
+      "test_local_colima_forwarding.py": "3b951d9603ce51a8910a304c801f35763b6fc6886b790b2cfa4e446493151591",
+      "local_colima_forwarding.py": "7a9dca34a26e23a04bdd1475cab5143fa120e99b81b3381ffacdd8bc2fd7377e",
+      "native-contracts.log": "72cdc087c481ae014a1e06f90ae67fc22b1ddd2e5f97ac028bf50615d588527f"
+    },
+    "total": 17,
+    "passed": 16,
+    "failed": 1,
+    "finite_oracle": "test_known_child_failure_survives_a_concurrent_final_tunnel_exit: actual child29 retained in receipt but original public1, assertion29!=1.",
+    "same_test_owner_and_oracle_as_corrected": true,
+    "only_product_correction": "Exception outcome assignment now preserves an already-observed nonzero child_exit and otherwise produces infrastructurefailure1."
+  },
+  "findings": [],
+  "prior_findings_disposition": [
+    {
+      "id": "FORWARD-R1-001",
+      "status": "CORRECTED_SOURCE_AND_BOUNDED_CONTRACT",
+      "evidence": "Wrapper SIGINT/SIGTERM handlers preserve130/143; cleanup ignores repeated termination and restores priorhandlers."
+    },
+    {
+      "id": "FORWARD-R1-002",
+      "status": "CORRECTED_SOURCE_AND_BOUNDED_CONTRACT",
+      "evidence": "Group existence is observed after leader reap; exited-leader surviving-descendant PID/PGID absence checks pass."
+    },
+    {
+      "id": "FORWARD-R1-003",
+      "status": "CORRECTED_SOURCE_AND_BOUNDED_CONTRACT",
+      "evidence": "Injected postretirement cleanupfault preserves actual29/interruption130 and turns child0 into1."
+    },
+    {
+      "id": "FORWARD-R3-001",
+      "status": "CORRECTED_CAUSAL_ORIGINAL_AND_CURRENT17_CONTRACT",
+      "evidence": "Real child terminal29 plus controlled actual finaltunnel retirement fails original finite29vs1; corrected keeps29 and records tunnelfailure. Child0+tunneltermination returns1 control remains green."
+    }
+  ],
+  "test_hook_assessment": "Popen hook always calls original_start, captures only argv-exact fake SSH/native owners, and never invents their returncodes. After actual child.poll has reaped and set returncode, final tunnel.poll hook performs actual_retire(SIGTERM). Reentrancy guard is set before retire, preventing recursive poll-triggered retirement. Helper checks both directPID absence and PGID absence before specific29/0 assertions. Hook forces terminal ordering; it does not simulate naturally concurrent remote network loss.",
+  "positive_checks": [
+    "Canonical run-root token/name/containment adoption and matching composeidentity; mainroute Source-qualified only.",
+    "Complete projected endpoint families, exact environment equality, unique valid IPv4loopback ports.",
+    "SSH command explicitly ControlMaster=no ControlPath=none ControlPersist=no; no-f/no-O, noVMrestart/globalsettings/masterchanges.",
+    "Exact liveSSH-pid lsof listener set prevents unowned-port substitution; TCP readiness is not provider acceptance.",
+    "Runtime tunnelmonitor plus own new-session processgroups cleanup; all direct PID and PGID absence assertions retained.",
+    "killpg0 PermissionError conservatively meansalive; process.poll reaps terminating leader. Persistent actualsignal denial remains visible cleanupfailure, never acceptedabsence.",
+    "Receipt omits canonical ownershiptoken and credential environment; stores endpoints/source/config hashes/status only.",
+    "Bounded six-provider experiment excludes pre-child ServiceBus health, cloud/device/product transport acceptance."
+  ],
+  "readiness_lifetime_assessment": [
+    "Exact process-owned lsof listener set and IPv4 TCP readiness prevent existingport adoption. Native child cannot be accepted merely because unrelated hostports are open.",
+    "Native dispatch follows the live ownedSSH listener boundary; subsequent SSH loss makes the run nonaccepting, drains nativegroup and tunnelgroup.",
+    "Every process started by execute uses new session. Retirement polls/reaps direct leader and waits for PGIDabsence with bounded SIGINT/TERM/KILL ladder.",
+    "Darwin killpg0 EPERM meansalive and joins/polls continue. Actual persistent signal permissionfailure remains visible failclosed cleanupfailure.",
+    "SIGINT/TERM restoration and primary-preserving finalcleanup remain exact selected source rules.",
+    "Canonical adopted root/token/project identity is Source-qualified and retains canonicalrunner fixture ownership/teardown.",
+    "No sharedVM/master/global configuration mutation appears in tool. ExistingSSHconfig is read; explicit mux options prevent attaching to sharedcontrolsocket."
+  ],
+  "limits": [
+    "Reviewer started no tests/.NET/Docker/SSH or operationalprocesses, and changed no product/tool/test files. Logclosed/hash/AST and lsof inspections only.",
+    "Acceptance covers the frozen local experiment and selected toolcontracts; real provider/native profile, actual SSH forwarding success, canonical-main execution and fixturecleanup require the subsequent root-run receipts.",
+    "Fake SSH is an actual local listener process; logPASS is not a realremote SSH authentication/routing verdict.",
+    "Main canonical ownership adoption is Source-qualified rather than exercised by execute-direct17contracts.",
+    "Deliberately escaped descendants that create other sessions, arbitrary identifierreuse churn and each ignored-signal TERM/KILL stage are not newly claimed as runtime-proven.",
+    "Cloud/device/globalA+/API/product transport acceptance remains absent; ServiceBus emulator pre-child health path remains excluded.",
+    "Originalfailed runs and R3review stay unchanged; no historical failure relabelled asPASS."
+  ]
+}

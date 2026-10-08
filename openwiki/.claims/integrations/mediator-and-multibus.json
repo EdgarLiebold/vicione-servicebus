@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:a4d5628f4520abceddcb754171735257c12bcb598335d0eec14135a49cea9412",
+  "claims": [
+    {
+      "id": "claim_aa025a7a56004686956ba0f33adcca8a",
+      "statement": "InProcessMediator owns separate primary/response dispatchers and a client factory, providing direct process-local messaging.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Mediator/Mediator/Runtime/InProcessMediator.cs",
+          "version": "repo-file-v1:sha256:7e60e97d61dceca2b937eca929ae9e3dbb5c6d7b577b0cd0f82ea3373f3f900d"
+        }
+      ]
+    },
+    {
+      "id": "claim_8ef9ea4ad1b0411e9ee930a1c8458a6c",
+      "statement": "Typed bus registration accepts an explicit stable persistence identity and registers owner-qualified scoped services.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+          "version": "repo-file-v1:sha256:80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+          "version": "repo-file-v1:sha256:d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+        }
+      ]
+    },
+    {
+      "id": "claim_c30a1d9e39f1476ab0150140533c6019",
+      "statement": "ScopedBusContextProvider chooses matching bus consume context, cross-bus context wrapper or ordinary bus context.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/DependencyInjection/ScopedBusContextProvider.cs",
+          "version": "repo-file-v1:sha256:50fa1c12117f83db49ec864ec480739f9e906c6c8316087349a49da8704fc7ba"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

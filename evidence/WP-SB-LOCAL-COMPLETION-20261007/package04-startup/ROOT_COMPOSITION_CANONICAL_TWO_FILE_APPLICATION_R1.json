@@ -1,0 +1,23 @@
+{
+  "kind": "ROOT_ACTUAL_COMPOSITION_CANONICAL_TWO_FILE_APPLICATION_R1",
+  "before_source_count": 6101,
+  "after_source_count": 6102,
+  "after_manifest_equals_qualified_private6102": true,
+  "configuration14_unchanged": true,
+  "product_source_changed": false,
+  "changed_files": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/BusCompositionGenericHostStartupTests.cs",
+      "before_sha256": null,
+      "after_sha256": "a43abd4150e7bd888a30ae5486e491080bc0477919beffc9a53999fec69d8450"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "32b49b44106cef7b305183d0885ec53276c96f7ce16f4e522ee07c1574cd61bf",
+      "after_sha256": "9bb63defc04475044e30a7f91fefa56c7f9eb9a8960ec6f79b587da1093aa292"
+    }
+  ],
+  "transfer_gate_sha256": "9b6fa12dcd57d0130482165555288e569b3bd8d4c65889dfdb086a8716c2d6d1",
+  "input_sha256": "de865a76d1d0c55a7b9fb0c2637fd05f64df86f49d17350e71fdc9bce62ff0fc",
+  "limits": "Only exact two accepted test/requirement files transferred. Fresh canonical native rerun not claimed; source equivalence to actual independently-qualified private source proven. Immutable older frozen source guards represent older before-transfer checkpoints; after-application peer pending."
+}

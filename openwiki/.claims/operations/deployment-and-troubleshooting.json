@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:f962eeb583e33b8bb3bfa5000fd1334aad64fc54507f40a70ae035ac8aca1a56",
+  "claims": [
+    {
+      "id": "claim_93ae008e40a743eaac5ef52f9f87c96c",
+      "statement": "Unified operations support inbox abandonment but return InvalidState for outgoing abandonment.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Operations/ReliableMessaging/ReliableMessagingOperations.cs",
+          "version": "repo-file-v1:sha256:d2a735ebb738fb1b6c158d92e92b37f3ca86e6b14cbbebee8e1bfbdb3c25b6a2"
+        }
+      ]
+    },
+    {
+      "id": "claim_56b4c209c63a4d179fd0ea290bec7635",
+      "statement": "Successful dispatch followed by canceled persistence can leave intent replayable after lease expiry.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+          "version": "repo-file-v1:sha256:2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc"
+        }
+      ]
+    },
+    {
+      "id": "claim_9c17a80ca7344859b687d3e925b54655",
+      "statement": "Reliable schema deployment is application-owned and precedes writers.",
+      "evidence": [
+        {
+          "resource": "repo://docs/migrations/README.md",
+          "version": "repo-file-v1:sha256:2a25ffeabe244ddcc50c582a7b37b0a55d619415af543145f6ccc54b2699d4bc"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

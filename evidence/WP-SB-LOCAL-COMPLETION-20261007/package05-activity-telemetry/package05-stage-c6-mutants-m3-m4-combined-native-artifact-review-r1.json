@@ -1,0 +1,394 @@
+{
+  "kind": "P05_C6_ACTUAL_M3_M4_COMBINED_NATIVE_ARTIFACT_REVIEW_R1",
+  "verdict": "QUALIFIED_BOUNDED_TWO_COMPILED_MUTANTS",
+  "inputs": {
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-mutant-m3-native-artifact-review-r1.json": "7bbd449576e35ce22d23380b06a50f4e6504c8d834a250b84fd7d27aab4a24c2",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-mutant-m4-native-artifact-review-r1.json": "5a599f2f6be987b8c054f43397e9b5d4435a4a5dec8e77894656d31d54598374"
+  },
+  "checks": {
+    "two_reports_exacthash_allChecks_noFindings": true,
+    "all_direct_json_inputs_hashes_rechecked": true,
+    "raw12_exact": true,
+    "six_binlogs_unique_complete_closed": true,
+    "two_actual6092_onecausePE12_PDB3803_graphs": true,
+    "76focusedEvents_8finiteRed68Healthy_sixDistinctRedIDs": true
+  },
+  "findings": [],
+  "events76": [
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupTimerFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionTimerFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupAggregateAndTimerFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneObserverFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: WaitCancellation)"
+    ],
+    [
+      "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: WaitCancellationBothFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: Healthy)"
+    ],
+    [
+      "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionBothFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionFailure)"
+    ],
+    [
+      "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionObserverFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneTimerFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneBothFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: StandaloneCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: StandaloneCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: WaitCancellationAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: StandaloneCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: WaitCancellationAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: WaitCancellationAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: WaitCancellationAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: ActionAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: StandaloneCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: WaitCancellationAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: StandaloneCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: ActionAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: ActionAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: ActionAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: ActionAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: WaitCancellationAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: ActionAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: ActionAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: ActionAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: ActionAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: StandaloneCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: StandaloneCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: WaitCancellationAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: WaitCancellationAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: StandaloneCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: WaitCancellationAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: StandaloneCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: StandaloneCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: WaitCancellationAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: ActionAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: Healthy)"
+    ],
+    [
+      "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionBothFailure)"
+    ],
+    [
+      "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupTimerFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: WaitCancellation)"
+    ],
+    [
+      "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionTimerFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneObserverFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneBothFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneTimerFailure)"
+    ],
+    [
+      "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupAggregateAndTimerFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionObserverFailure)"
+    ],
+    [
+      "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: WaitCancellationBothFailure)"
+    ]
+  ],
+  "counts": {
+    "M3": {
+      "total": 38,
+      "finite_red": 3,
+      "healthy": 35
+    },
+    "M4": {
+      "total": 38,
+      "finite_red": 5,
+      "healthy": 33
+    },
+    "combined": {
+      "total": 76,
+      "finite_red": 8,
+      "healthy": 68,
+      "distinct_red_ids": 6
+    }
+  },
+  "raw12": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/raw/p05-c6-m3-restore-r1.log": "d7394ac1d29c1404fba3bc15a086ef42836c95ab715a6f74f32f73e4c9025f0e",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/raw/p05-c6-m3-build-r1.log": "0170894eb0a4f9ad54c7c406592fbd54e149fa88380ab56ca0a95ff2773a24ad",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/raw/p05-c6-m3-build-r1-20261007-044445--84053--WV2K_a.binlog": "9220a15d212fde492623a8ad376a0e3f578f69f5c0f7c8aee3ac7456cf2452d1",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/raw/p05-c6-m3-restore-r1-20261007-044439--84034--u5SQal.binlog": "60411a972f25ee14194b3f692e19c053c79bff702626e2b9369bc2a5400f0b68",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/raw/p05-c6-m3-focused-r1-20261007-044558--84131--OiwVrL-dotnet-test.binlog": "114314614a02329e73e8fae77a32616fe9fdcdeb9600562fa8929bf9bbef2484",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/raw/p05-c6-m3-focused-r1.log": "afa4203730575dcbf2be4a4f1067b88e82a08c2ae277319823968885c90046b2",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/raw/p05-c6-m4-restore-r1.log": "492d650b1a4e2c7957e064bbe9986dd537e46eeb0b164dc3479ace2cf77f0cdb",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/raw/p05-c6-m4-focused-r1-20261007-044642--84164--R73+2H-dotnet-test.binlog": "9c2644bc77d2bd6d979bc3a00f4be4fd26a69a45408501f3172c7b0d32c41e64",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/raw/p05-c6-m4-build-r1.log": "993705c8b34f4bf6c6828caee2638bbc7e4ceeb279f1c9103d1418a03820440c",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/raw/p05-c6-m4-build-r1-20261007-044611--84151--b5Ica7.binlog": "c5eddab5e1e73d56b66ff9a538d27adf9306af4a4d6c25256368de85ab439636",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/raw/p05-c6-m4-restore-r1-20261007-044607--84136--T5cmlg.binlog": "91d77778bb86455fad15186be834405e45edcec1b5e6da7dca05648ba2a86873",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/raw/p05-c6-m4-focused-r1.log": "7fd421fc1ae1679826970ca073eea099acb4a08c64dd13c3a5962e1eb5c7b91e"
+  },
+  "unique_binlogs6": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/raw/p05-c6-m3-build-r1-20261007-044445--84053--WV2K_a.binlog",
+      "sha256": "9220a15d212fde492623a8ad376a0e3f578f69f5c0f7c8aee3ac7456cf2452d1",
+      "uncompressed_bytes": 4325533,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/raw/p05-c6-m3-focused-r1-20261007-044558--84131--OiwVrL-dotnet-test.binlog",
+      "sha256": "114314614a02329e73e8fae77a32616fe9fdcdeb9600562fa8929bf9bbef2484",
+      "uncompressed_bytes": 3254648,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m3-act-observation-cleanup-replaces-primary/raw/p05-c6-m3-restore-r1-20261007-044439--84034--u5SQal.binlog",
+      "sha256": "60411a972f25ee14194b3f692e19c053c79bff702626e2b9369bc2a5400f0b68",
+      "uncompressed_bytes": 2269297,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/raw/p05-c6-m4-build-r1-20261007-044611--84151--b5Ica7.binlog",
+      "sha256": "c5eddab5e1e73d56b66ff9a538d27adf9306af4a4d6c25256368de85ab439636",
+      "uncompressed_bytes": 4299168,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/raw/p05-c6-m4-focused-r1-20261007-044642--84164--R73+2H-dotnet-test.binlog",
+      "sha256": "9c2644bc77d2bd6d979bc3a00f4be4fd26a69a45408501f3172c7b0d32c41e64",
+      "uncompressed_bytes": 3252121,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-mutants-r1/m4-act-timer-cleanup-replaces-primary/raw/p05-c6-m4-restore-r1-20261007-044607--84136--T5cmlg.binlog",
+      "sha256": "91d77778bb86455fad15186be834405e45edcec1b5e6da7dca05648ba2a86873",
+      "uncompressed_bytes": 2247570,
+      "closed": true
+    }
+  ],
+  "limits": "Scope only actual M3/M4 isolated one-cause clones; overlapping failure IDs earn separate mutation-slot credit, not eight distinct contracts. Exact cancellation and setup-aggregate first type boundaries prove replacement type only; later token/inner identities not reached are excluded. Other four mutants/final post/Core overall acceptance pending. No child native cases in focused38, no custom assertion runner, no universal loader/cache/quiescence/provider/P05 coverage claim. Root owns native PID joins and source-read author provenance. Reviewer ran read-only Python and wrote own reports only."
+}

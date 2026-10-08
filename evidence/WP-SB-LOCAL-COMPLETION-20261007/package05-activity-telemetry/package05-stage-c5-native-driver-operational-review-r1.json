@@ -1,0 +1,40 @@
+{
+  "status": "BLOCK_RECEIPT_COUNTER_AND_CASE_BIJECTION_CLAIMS_BEFORE_DRIVER_LAUNCH",
+  "script": {
+    "path": "/private/tmp/run_c5_mutants.py",
+    "sha256": "5b83dc4d00a69efca7da268def65b51daa479047d4c2890e6457c04ac0852765",
+    "python_ast_parses": true,
+    "whole_body_personally_read": true
+  },
+  "read_only": "No driver/.NET/provider/process execution; only own report written.",
+  "sound_flow": [
+    "Exact configured mutant checkout and declared mutant owner SHA preflight",
+    "Sequential restore locked/build warnaserror/focused no-build no-restore; actual subprocess PID joined by wait",
+    "Unique existing-log refusal and unique /bl:{} per stage",
+    "Strict exit0 and actual localized zero-warning/zero-error string checks",
+    "Focused exit2 required, finite causal validation explicitly deferred",
+    "Runtime17, raw6, child PROCESS/stdout/stderr copied before next clone after successful preconditions",
+    "Source/test mutations absent from driver; environment separate owned DOTNET_CLI_HOME and telemetry optout"
+  ],
+  "blocking_receipt_findings": [
+    {
+      "id": "D1",
+      "severity": "blocking for claimed native receipt counters",
+      "cause": "total7 and skipped0 emitted without actual parent/child summary parsing. Seven normal event lines do not by themselves establish zero skipped or total7.",
+      "minimal_fix": "Parse actual parent total/failed/passed/skipped summary and each child total1/fail0or1/pass1or0/skip0, accepting actual direct fehlerhaft plus adapter fehlgeschlagen and English failed. Require unique summary fields."
+    },
+    {
+      "id": "D2",
+      "severity": "blocking for claimed exact seven-case qualification",
+      "cause": "Unique child PIDs and one parentPID does not verify seven unique declared FQNs; parent event list not joined to child cases.",
+      "minimal_fix": "Exact unchanged7 Fact FQName set, unique child full_name set equality, exact parent events FQName\u2192status map equality to child events; process command filter and sentinelcase/nonce ownership can be independently checked during final native qualification."
+    }
+  ],
+  "additional_binding_recommendation": "Each PROCESS before/after equal currently binds only testDLL to actual runtime file. Bind all seven declared runtime digests to actual checkout output/current apphost; entire firstparty PE/PDB/project graph remains separate telemetry qualification.",
+  "execution_limits": [
+    "No mutation killed/pass inferred by script prep or original/fixed controls.",
+    "Unexpected restore/build/focused exit aborts before immutable report archive; raw logs remain in clone, Root must preserve invalid attempt before rerun.",
+    "No apphost descendant process guarantee inferred merely from driver subprocess.wait; current test owns child bounded join and watchdog protocol."
+  ],
+  "requested_successor": "Preserve this exact driver review, apply minimal Root corrections, freeze/hash successor and rereview before launch."
+}

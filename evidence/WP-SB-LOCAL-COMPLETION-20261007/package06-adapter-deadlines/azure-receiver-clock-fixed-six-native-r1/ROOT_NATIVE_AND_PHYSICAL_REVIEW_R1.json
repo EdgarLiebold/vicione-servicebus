@@ -1,0 +1,56 @@
+{
+  "kind": "ROOT_ACTUAL_FIXED6_NATIVE_BODY_AND_PHYSICAL_REVIEW_R1",
+  "native_sha256": "113fb467045930d5d445c4f9c77c1dd89e9f5fe66d65496d5e0114f59e945810",
+  "physical_sha256": "baaff9aa35b99f02a7177c1f56c134461da0b01c458281fc4c3cc8c1e48e1b13",
+  "actual6": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0
+  },
+  "physical_images": 13,
+  "pdb_documents": 3257,
+  "absolute12_targets_match_immutable_owner_snapshots": true,
+  "generated41": true,
+  "raw6_CRC2": [
+    {
+      "stage": "strict-rebuild",
+      "name": "strict-rebuild.stdout.log",
+      "sha256": "2cd4b426321f5ea95b78373981265ce944782f0146769cd518f25130f3b12456",
+      "gzip_decompressed_bytes": null
+    },
+    {
+      "stage": "strict-rebuild",
+      "name": "strict-rebuild.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_decompressed_bytes": null
+    },
+    {
+      "stage": "strict-rebuild",
+      "name": "p06-azure-receiver-clock-fixed-six-strict-rebuild-r1-20261008-005636--56240--A1d8tR.binlog",
+      "sha256": "c9350cab6d0bbcfa76b4ef25768f631378d82094a311e654ee3be382bc6bab73",
+      "gzip_decompressed_bytes": 3958178
+    },
+    {
+      "stage": "focused-six",
+      "name": "focused-six.stdout.log",
+      "sha256": "af41b27761cde7e4f272f4f8fcf5186f1cda4143f4e83034856eebfdeb993aec",
+      "gzip_decompressed_bytes": null
+    },
+    {
+      "stage": "focused-six",
+      "name": "focused-six.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "gzip_decompressed_bytes": null
+    },
+    {
+      "stage": "focused-six",
+      "name": "p06-azure-receiver-clock-fixed-six-focused-six-r1-20261008-005729--56336--TMjC6O-dotnet-test.binlog",
+      "sha256": "ec1ebde9e4bf8b72042c7b404c86af6c4129b8d37bff77c161e0ccbb2485bf38",
+      "gzip_decompressed_bytes": 3036343
+    }
+  ],
+  "root_read_scope": "Personally complete strictstdout/emptyerr and all six native PASS bodies+summary/emptyerr; original whole398 fixture and whole product originals reused at matching hashes with entire reviewed two-owner delta. Own fresh pure13PE/PDB parse actual3257; this is checksum/metadata binding, not all3257 human source reads. Initial terse helper stdout cut middle targets; positive12-target projection re-read fully and exactset checked.",
+  "bounded_effect": "Both actual grace paths now pass selected fake-clock timer/due-period/exact boundary/delivery cancellation/product timer disposal and unchanged null-grace/late broker registration controls. Actual callback/dispatcher/SDKsettlement/receiver cleanup joins held operations. ProductDisposed records first disposal state, not invocation count.",
+  "limits": "Independent fresh233/13PE/native final review pending; wholeAzure, actual fourcontrols, post and canonical transfer remain. Cleanup reorder source-based defensive companion, not an observed concurrent race. No full adapter/globalA+/cloud/provider/HW closure."
+}

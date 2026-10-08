@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:0acde06f50cdcf92015646051b80c9471e3417bf30bd307d778244af8bb34975",
+  "claims": [
+    {
+      "id": "claim_747f4ddb15594e8eb587e4286ce54aa8",
+      "statement": "RetryFilter repeatedly awaits the downstream pipe according to policy and context-owned cancellation.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Middleware/RetryFilter.cs",
+          "version": "repo-file-v1:sha256:59bd5c3eb1013852167a96c8c4cb50a2921248994ce2e07f350f6337b8909428"
+        }
+      ]
+    },
+    {
+      "id": "claim_4e1fcb6f558d4859b2265de4be7b378d",
+      "statement": "Consume/send/publish transform specifications attach message transformations at the configured pipeline stage.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Configuration/TransformConfigurationExtensions.cs",
+          "version": "repo-file-v1:sha256:7701a6dd21ac17b8c3446c3e988dcae14b2b461d465db4bdff8bd2a263822e78"
+        }
+      ]
+    },
+    {
+      "id": "claim_c549cb4d74dd456bad183932b6fbed4e",
+      "statement": "The payload transport boundary rejects missing or mismatched complete admission evidence and serializer/content-type ownership.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Serialization/Admission/PayloadAdmissionTransportBoundary.cs",
+          "version": "repo-file-v1:sha256:5fec403a5b6f03cf6625df0d65904ced6321b29b69553d8be24954c9c25ff6a0"
+        }
+      ]
+    },
+    {
+      "id": "claim_74d1c5b066bc4efcbb91f6866ab3b3df",
+      "statement": "Deserialized MessageData requires consume transformation before reading the referenced value.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/MessageData/Values/DeserializedMessageData.cs",
+          "version": "repo-file-v1:sha256:e5a425ff64d54dd2022239c0fbf06646aa79034f54e657f9828d6ab3cf54e078"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

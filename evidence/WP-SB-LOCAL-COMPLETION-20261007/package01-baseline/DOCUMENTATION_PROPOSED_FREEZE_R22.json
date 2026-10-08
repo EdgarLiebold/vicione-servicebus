@@ -1,0 +1,31 @@
+{
+  "kind": "ROOT_PROPOSED_SIX_DOCUMENTATION_FREEZE_R22",
+  "prior_freeze_sha256": "ee4453dcc460b08062f9be5681f7d0d53a5b10a9d1619112f7d5a319d058e0f5",
+  "prior_source_sha256": {
+    "CHANGELOG.md": "3c80e3a1a39c4c94a987c8489655de2fb89cc4088e5fab325af1a286530852be",
+    "TODO.md": "db3e116532a98d9909c97eb7c301f9782a3d467b01c9df7b0aa6e7dd0f4316f1",
+    ".testagent/status.md": "8ff4918212683acf0620c5d61da0c0c536a9c73529be3ba44f221cd256b3cfb6",
+    ".testagent/plan.md": "990efe2601fb29f4ce6257c60cf106c03d5b08053756c0b4bae3ba0567f5a79f",
+    ".testagent/local-completion-plan.md": "0bbe51516ef3094cbc3d3a2d4f227dd6bbc251a04da6c89ac6e9b110a7e50c8c",
+    "docs/quality-status.md": "4b941290692e5ad25df0b743ea17c97bea23c556f100d0c8692643a256b83ffe"
+  },
+  "source_sha256": {
+    "CHANGELOG.md": "18f0baee1af6e1603646870aa1b2220ee5122d635fa6f1ea3194ee735bc45dc6",
+    "TODO.md": "d5ccf882c5738c1ed65988bf8e9678f7ba7c5b220e79ebcc99e6fb939dfd9184",
+    ".testagent/status.md": "d3c6934fec834db34607f40fcc4698e7c081a4d37bd3b6a72dde309d3317b1bf",
+    ".testagent/plan.md": "edc443037ec8514524f99e18bead3b711fa68217b1c17f0c8fc229c22e6054a0",
+    ".testagent/local-completion-plan.md": "03a653e00c0acd19ee2bebb51a55656ceebdd1c15797630f9b36405192c666bd",
+    "docs/quality-status.md": "59f61e4e0cb014795f6b6311f7645d566ac707b81262eab719df52e11c71ebc7"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r22",
+  "composition_acceptance_sha256": "d04bff1e45640963b8ab91730edc04ec3753587a28f1751b6d1f60f564c8878a",
+  "composition_application_sha256": "9ff233ff22b076f04e4d2d5718c1e5af9c4d7fb6e607f817802571a433d95681",
+  "composition_afterapply_peer_sha256": "abfe50ec48869f3fb36c7e893502652a943f1bd8661eb9cf02b0258496f0f8dd",
+  "separate_op_report": {
+    "path": "docs/servicebus-local-completion-report.txt",
+    "prior_sha256": "f50dc2ad4c9715e1ce0c039848afcacbd690e1a19abe66cc7e2a0b265f7eb3e0",
+    "proposed_sha256": "3828e3d69e2df9653b772f7b336bedbf2ed7568fb6513919b68e9b4db5124df2"
+  },
+  "preservation": "Other11TODO blocks,62orderedOBL(55CLOUD6PER1BRK),fourhistorytails byteexact; frozen234audit unchanged. Only boundedthree composition startup paths newly accepted.",
+  "limits": "Proposed only; canonical6docs+OP remain prior until readonlypeer and guardedpublish. No allP04/wholecurrentUnit/provider/coverage/CRAP/cloud/device/A+/release/commit/push claim."
+}

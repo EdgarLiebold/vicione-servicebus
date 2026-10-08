@@ -1,0 +1,56 @@
+{
+  "status": "PASS_B1_R3_SOURCE3_SNAPSHOT_PATCH_CURRENT_AND_ROOT802_84_CLOSURE__NO_NATIVE_ACCEPTANCE",
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_B1_FREEZE_R3.json": "9fb62ca5340c1754fc9c81b16a8bdac0b34d9954666f9b9b56b7bc22755da22b",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE802_STAGE_B1_READ_CLOSURE_R2.json": "2d3018195a6b6bcef722635d7067323a0f3648f95de89063c174b162423e1bc8",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE801_STAGE_A_READ_CLOSURE_R3.json": "9e1242a8e5d8e149df746afd8e24357bdcb3d0368e071568ee0abfe4acff868e",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_TELEMETRY57_COMPLETE_SOURCE_READ_R1.json": "87c47890f03ff587088d3a13d6b17fcefdc2234b9ab0bde6e420b15c39cf9e72",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_B1_TEST_ONLY_ORIGINAL_FREEZE_R2.json": "50dcfd365af8a5ce3c512dd7ebf6883d48e5e7e64e43693d092758c70016c7fe",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_B1_PATCH_R2.diff": "23062370a005ed5d9fe5b55b8bcb5014a326a7a68b91360f15c8e9d782ce6a90",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_B1_TYPED_SOURCE_RESEARCH_PLAN.md": "252431c8ea89485288b49839bd16795be1ad5577f3464bddf836456d3cab4064",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_A_ACCEPTANCE_R1.json": "624c3a179c34ca29939b489982646515122e67d1f7fbbfb7168644ec08081a1b"
+  },
+  "current_three": {
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs": "f825ec82e2e3f71fd8daac77f770a875f2f5172b5d75c1e637dd9ecb635f62b7",
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/ActivitySourceActivationIsolationTests.cs": "b6a17dfa23f716c485cc0a6a152b9037676eb623eb8b74f8a4afbccacd158832",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "be76207e17ad3f949d5a40c6688dfa1718d8058f471608237b47f028d0639c07"
+  },
+  "root802": {
+    "actual_git_tracked800_plus_authored_untracked2_equal": true,
+    "all802_current_hashes": true,
+    "prior801_unchanged800": true,
+    "exact_deltas": [
+      "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "tests/ViciOne.ServiceBus.Tests/Monitoring/ActivitySourceActivationIsolationTests.cs"
+    ],
+    "all84_contexts_current_and_prior_equal": true,
+    "personal_read_credit": "Root-only complete prior801+authored/read whole new167lines+one explicit new requirement row; reviewer does not substitute personal reading"
+  },
+  "requirements": {
+    "old4690_exactordered_rows_and_byteprefix_preserved": true,
+    "one_exact_new_row": [
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "Constructor_PreservesCallerAndHostMetricsWhenSourceListenerThrows",
+        "testType": "ViciOne.ServiceBus.Tests.Monitoring.ActivitySourceActivationIsolationTests",
+        "variantKey": "typed-source-construction-keeps-independent-host-metrics"
+      }
+    ],
+    "4691_unique": true
+  },
+  "source_provenance": {
+    "old_root57_source_sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+    "old542whole_root_read": true,
+    "source_delta_only_actual_single_owner_gitdiff": true,
+    "current_source_lines": 560,
+    "newcurrent_root_read_basis": "Root57 oldwhole+Rootsole-authored/consumed exact B1 delta attested in freeze source_read_basis"
+  },
+  "new_test": {
+    "lines": 167,
+    "theory_methods": 1,
+    "native_variants": 2,
+    "compile_successor_only_explicit_arrays": true,
+    "freezeR3_correct_patch_new_body": true
+  }
+}

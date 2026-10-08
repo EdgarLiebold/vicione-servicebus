@@ -1,0 +1,309 @@
+{
+  "completedAuditAuthority": {
+    "activePackage": "PACKAGE551_FINAL_ROOT_CLOSURE",
+    "currentStatePath": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json",
+    "currentStateSha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+    "currentStatus": "REPAIRS_COMPLETE_KNOWN234_BOUNDED234_PENDING0_SOURCE18600_COMPLETE_EXTERNAL_VALIDATION_PARTIAL",
+    "individualDispositionPath": "/private/tmp/vicione-servicebus-api-review-20261001/repair-research/package529-final234-placeholder44-current-scope-precision-overlay-r1/CORRECTED_CURRENT234_INDIVIDUAL_BOUNDED_DISPOSITIONS.json",
+    "matchesOriginalFinal234AuthorityHash": true,
+    "receiptByteEqualsHEAD": true,
+    "receiptPath": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE551_FINAL234_CURRENT18600_LOCAL_GATES_ROOT_ACCEPTANCE_R1.json",
+    "receiptSha256": "83f7abba93ae4cc1eaf06cb9c1c26e565454ede6701c50fc777c7e5bb908e885",
+    "scope": "Old final234 bounded authority remains exact; continuation SQL/telemetry fixes are separate engineering acceptance and do not re-label historical audit findings or claim universal release.",
+    "sha256": "171c4cc759707a20f328a7746f03bb1909359c502aac67c0240d916e472ce1ac",
+    "status": "ROOT_FINAL_ALL234_CONFIRMED_FINDINGS_BOUNDED_REPAIR_ACCEPTED_CURRENT18600_SOURCE_CONTRACTS_ACCOUNTED"
+  },
+  "externalProductTeamRole": false,
+  "findings": [],
+  "freeze": {
+    "files": {
+      ".testagent/local-completion-plan.md": {
+        "bytes": 4200,
+        "liveByteMatchesFrozen": true,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r5/.testagent/local-completion-plan.md",
+        "sha256": "e607108021050501809d2e05f191b9e9ed5cb5014216a6bea98140aaf90eb9c8"
+      },
+      ".testagent/plan.md": {
+        "bytes": 14262,
+        "liveByteMatchesFrozen": true,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r5/.testagent/plan.md",
+        "sha256": "247560ece1b03790a28c8b671e0a07a78ce63514cd26c3c3ce80e648efd9d245"
+      },
+      ".testagent/status.md": {
+        "bytes": 8095,
+        "liveByteMatchesFrozen": true,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r5/.testagent/status.md",
+        "sha256": "681e3698db1c058b5d00944edf4936fbabcc17b7773edf6d2be0b947abd19869"
+      },
+      "CHANGELOG.md": {
+        "bytes": 6815,
+        "liveByteMatchesFrozen": true,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r5/CHANGELOG.md",
+        "sha256": "9a59e80b37e62393a7eea805758a38f076eecd2185bc2dba2830a28f4d5da65e"
+      },
+      "TODO.md": {
+        "bytes": 21935,
+        "liveByteMatchesFrozen": true,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r5/TODO.md",
+        "sha256": "11ce8ac1c573fd49101bccb175ea7742c99c57cddb62b24a18cba2dca6e3b24c"
+      },
+      "docs/quality-status.md": {
+        "bytes": 5958,
+        "liveByteMatchesFrozen": true,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r5/docs/quality-status.md",
+        "sha256": "9ec09a9611cfe5ef1ccf8cacb14da0afa452679e9be50a1e6bd80ec517e4d2e7"
+      }
+    },
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/DOCUMENTATION_FREEZE_R5.json",
+    "sha256": "023a7c6d62e51a5db082a35418555dd351cad7e9e9331f47fd33d818e962eb5c"
+  },
+  "historicalPreservation": {
+    "R1BaselineErratum": "PriorR2receipt/review partially-written Engineering R1 snapshot erratum remains immutable; no successor repairs old raw evidence.",
+    "SQLCause": "Full historical quality suffix exactly unchanged incl999distinct/1000publish, one missingID/no duplicate/queue state,75/75freshretry,causeunproven,nextdeliverycountinvestigation. SQL99 receipt does not rewrite/close it.",
+    "TODO": {
+      "allOtherSectionBytesUnchanged": true,
+      "externalObligationSequenceUnchanged": true,
+      "obligationTokenCount": 62,
+      "onlyActivitySectionChanged": [
+        "## Make Activity telemetry observationally no-throw"
+      ],
+      "sameAllHeadings": true
+    },
+    "coverageCRAP": "Dated33profile30September percentages/methods/zeroCRAPabove30 remain historical in exact byte-preserved suffix; native7966 is regression count, not current coverage.",
+    "suffixes": {
+      ".testagent/plan.md": {
+        "byteEqualAcceptedR4": true,
+        "bytes": 13058,
+        "marker": "## Historical API repair execution notes",
+        "matchesHistoricalR2Hash": true,
+        "sha256": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc"
+      },
+      ".testagent/status.md": {
+        "byteEqualAcceptedR4": true,
+        "bytes": 6160,
+        "marker": "## Historical checkpoints",
+        "matchesHistoricalR2Hash": true,
+        "sha256": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a"
+      },
+      "CHANGELOG.md": {
+        "byteEqualAcceptedR4": true,
+        "bytes": 2306,
+        "marker": "## Unreleased \u2014 API review completion, 6 October 2026",
+        "matchesHistoricalR2Hash": true,
+        "sha256": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21"
+      },
+      "docs/quality-status.md": {
+        "byteEqualAcceptedR4": true,
+        "bytes": 3174,
+        "marker": "## Historical product-wide coverage and CRAP checkpoint",
+        "matchesHistoricalR2Hash": true,
+        "sha256": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5"
+      }
+    }
+  },
+  "kind": "INTERNAL_READ_ONLY_DOCUMENTATION_RECONCILIATION_FINAL_REVIEW_R5",
+  "limits": [
+    "Reviewer executed only read-only file/Git/hash/JSON/diff checks; no native/.NET/MSBuild/Docker/SSH/provider/tests/network processes or source/test/frozen-evidence edits.",
+    "Six successor docs have complete changed-body/diff review and exact preserved-body comparisons to previously whole-read acceptedR4 files. This report is documentation reconciliation, not new runtimeartifact qualification.",
+    "No Root source/test-owner author closure or external product-team/model-independent role is transferred by this review.",
+    "Live requirement file has a successor source-activation row; immutable StageA four-input snapshot hashes, current accepted helper/test bodies and bound StageA receipts are the authority for dated StageA result statements. No current authoring-tree native acceptance follows."
+  ],
+  "newSQLFacts": {
+    "Root": {
+      "native": {
+        "failed": 0,
+        "modules": 1,
+        "parent_exit": 0,
+        "passed": 99,
+        "skipped": 0,
+        "total": 99
+      },
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/ROOT_BASELINE_SQLSERVER_ACCEPTANCE_R1.json",
+      "scope": "Originalbaseline6b451 SQLServer localintegration99 only",
+      "sha256": "eec172ed233058a1ea8ebb158aa8a8b2382d6374190c2041e3feefcc2739d606",
+      "status": "ACCEPTED_UNFILTERED_SQLSERVER_BASELINE99"
+    },
+    "independentReview": {
+      "checksAllTrue": true,
+      "findings": [],
+      "matchesAcceptedHash": true,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/package03-baseline-sqlserver-native-artifact-review-r1.json",
+      "sha256": "bb0ba56e1e15c6f9e551cff6a6d95723b9613a355db8d6e880ca9ad70bfbbb98",
+      "status": "PASS_BOUNDED_UNFILTERED_ORIGINAL_SQLSERVER99_NATIVE_ARTIFACT_ACCEPTANCE"
+    },
+    "qualification": "Original6b451 complete SQLServer local native aggregate99in1module0fail0skip; passing baseline and cleanup accepted by separate artifact reader. R5 does not count SQL99 as historical999/1000 causal fix, post-Core provider replay or AzureSQL/cloudEF/hardware proof.",
+    "rawResult": {
+      "historicalPendingCandidateStatusPreserved": "99_PASS_PENDING_INDEPENDENT_ARTIFACT_REVIEW",
+      "matchesAcceptedHash": true,
+      "nativeEqualsRoot": true,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/BASELINE_SQLSERVER_NATIVE_RESULT_R1.json",
+      "sha256": "df477429b0c8ed4bdb87e7e2cd87d320c9a8a27da22ec661bd04c477d0bd0355",
+      "sourceCommit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89"
+    }
+  },
+  "newStageAFacts": {
+    "Root": {
+      "compiled_mutants": {
+        "count": 3,
+        "distinct_failure_cases": 5,
+        "events": 24,
+        "finite_expected_failures": 5,
+        "named_healthy_events": 19
+      },
+      "fixed_post": {
+        "failed": 0,
+        "passed": 8,
+        "skipped": 0
+      },
+      "native_fixed": {
+        "errors": 0,
+        "failed": 0,
+        "focused_total": 8,
+        "passed": 8,
+        "skipped": 0,
+        "warnings": 0,
+        "whole_core_passed": 7966,
+        "whole_core_total": 7966
+      },
+      "native_original": {
+        "failed": 5,
+        "focused_total": 8,
+        "passed": 3,
+        "skipped": 0,
+        "whole_core_failed": 5,
+        "whole_core_total": 7966
+      },
+      "open": [
+        "RemainingP05sourcecreation/batch/requiredmonitor/optionalclock/metricbalance",
+        "FullcorrectedUnit/provider/packageaggregate",
+        "Currentnativecoverage",
+        "Startup/cache/adapterdeadline/journeys/benchmarks/CIqualification",
+        "Cloud/hardware"
+      ],
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_A_ACCEPTANCE_R1.json",
+      "scope": "ActivityObservation ambientcleanup/nearestlive ancestor; StartedActivity exception-preparation isolation; exactly2productowners/newcanonicaltest8cases/5reqrows",
+      "sha256": "624c3a179c34ca29939b489982646515122e67d1f7fbbfb7168644ec08081a1b",
+      "status": "ACCEPTED_2_ACTIVITY_OWNERS_8_CASES_CORE7966_3_COMPILED_MUTANTS_AND_POST8"
+    },
+    "RootReadNoTransfer": "Root57/801+84 provenance is bound by separate accepted source/provenance review; this documentation report does not claim personal author read closure from hashes, compilation, team notes or native results.",
+    "allFinalReviewInputFilesHashMatch": true,
+    "currentSourceComparisonToAcceptedStageA": {
+      "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs": {
+        "matchesAcceptedSource": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+        "sha256": "c206f81c611584f1982f03f55b1044cae4613d3775650fa291b43a910134d625"
+      },
+      "src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs": {
+        "matchesAcceptedSource": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs",
+        "sha256": "77d371f9f003e617a6f2fa250c3b170fa2cc9a3dd1fe98c44d6b2e8f70e40fb2"
+      },
+      "tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs": {
+        "matchesAcceptedSource": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs",
+        "sha256": "e6a0563a8a2584d08b9bed6f0b6ef6b78f7fac2888f7344d9ec6ad562a709a13"
+      },
+      "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": {
+        "matchesAcceptedSource": false,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+        "sha256": "be76207e17ad3f949d5a40c6688dfa1718d8058f471608237b47f028d0639c07"
+      }
+    },
+    "finalReview": {
+      "checksAllTrue": true,
+      "findings": [],
+      "matchesAcceptedHash": true,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-a-final-native-artifact-review-r3.json",
+      "remainingOutsideStage": [
+        "RemainingActivitySource construction/static registration/typedDI source creation boundaries, BatchConsumer ambient assignments, required testing monitor and optionaltimeline separation, durable/EF clock/duration and other lifecycle owners remain futureP05 scope.",
+        "No completeP05, wholeUnit/provider/current-package coverage, CRAP/globalA+ release/hardware/cloud/512MiB-no-swap acceptance.",
+        "Root whole57/801+84 personal-read provenance is separately hash-qualified; this artifact does not transfer hidden reader role or claim a fresh complete body read by this reviewer."
+      ],
+      "sha256": "4006f4aa88f45854ba10b91e91a8a3f4cb3515069835a060271d183d7ba7383f",
+      "status": "PASS_BOUNDED_P05_STAGE_A_SOURCE_NATIVE_ARTIFACT_AND_THREE_COMPILED_COUNTERPROOFS_WITH_UNCHANGED_FIXED_POST_REPLAY",
+      "totals": {
+        "compiled_mutant_distinct_red_names": 5,
+        "compiled_mutant_finite_causal_red_events": 5,
+        "compiled_mutant_named_healthy_events": 19,
+        "compiled_mutant_native_events": 24,
+        "corrected_focused_individual_passes": 8,
+        "corrected_wholeCore_passed_aggregate": 7966,
+        "fixed_post_individual_passes": 8,
+        "new_requirement_projection_rows": 5,
+        "new_test_methods": 5,
+        "original_finite_causal_red": 5,
+        "original_focused_cases": 8,
+        "original_individually_named_healthy": 3,
+        "original_wholeCore_failed": 5,
+        "original_wholeCore_passed_aggregate": 7961,
+        "original_wholeCore_total": 7966
+      }
+    },
+    "freezeShaMatch": true,
+    "immutableAcceptedSourceBindings": {
+      "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs": {
+        "matchesAcceptedSource": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-a-owner-r2/src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+        "sha256": "c206f81c611584f1982f03f55b1044cae4613d3775650fa291b43a910134d625"
+      },
+      "src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs": {
+        "matchesAcceptedSource": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-a-owner-r2/src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs",
+        "sha256": "77d371f9f003e617a6f2fa250c3b170fa2cc9a3dd1fe98c44d6b2e8f70e40fb2"
+      },
+      "tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs": {
+        "matchesAcceptedSource": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-a-owner-r2/tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs",
+        "sha256": "e6a0563a8a2584d08b9bed6f0b6ef6b78f7fac2888f7344d9ec6ad562a709a13"
+      },
+      "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": {
+        "matchesAcceptedSource": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-a-owner-r2/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+        "sha256": "d25a434309bd395ff5b34a3864ea292a9ec2eff4f63c3e30ebca0cff486638a1"
+      }
+    },
+    "liveRequirementSuccessorDrift": {
+      "RootConfirmation": "Root separately confirms authorized ongoing B1 typed-source package: exact accepted4690row prefix plus one purpose row/new theory2cases. ROOT_CORE802_STAGE_B1_READ_CLOSURE_R1 and STAGE_B1_TEST_ONLY_ORIGINAL_FREEZE_R1 own that successor, original native qualification pending. Root confirmation is provenance attribution, not reviewer source reading or B1 runtime acceptance.",
+      "acceptedStageAHash": "d25a434309bd395ff5b34a3864ea292a9ec2eff4f63c3e30ebca0cff486638a1",
+      "additionalRowCount": 1,
+      "meaning": "Live authoring tree has one later ActivitySourceActivationIsolationTests requirement row beyond immutable accepted StageA requirements. This is a subsequent unaccepted scope, not a rewrite of StageA accepted snapshot/embedded runtime evidence. R5 states StageA-scoped accepted results, retains source activation open and all broader native aggregate gates pending; it supplies no latest-live-requirement-native acceptance.",
+      "newRows": [
+        {
+          "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testMethod": "Constructor_PreservesCallerAndHostMetricsWhenSourceListenerThrows",
+          "testType": "ViciOne.ServiceBus.Tests.Monitoring.ActivitySourceActivationIsolationTests",
+          "variantKey": "typed-source-construction-keeps-independent-host-metrics"
+        }
+      ],
+      "oldAcceptedRowsPreservedAsExactPrefix": true,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "sha256": "be76207e17ad3f949d5a40c6688dfa1718d8058f471608237b47f028d0639c07"
+    },
+    "sourceNarrativeCheck": "Complete current ActivityObservation and StartedActivity bodies read for doc fact checking: TrySetCurrent catches ordinary observer failures and walks stopped Parent chain; restoration/cleanup calls that helper; AddExceptionEvent guards original exception detail/timestamp preparation and independently calls TrySetStatus(Error). Exactly these shared helper paths are now accepted; typed ActivitySource construction, batch ambient paths and other owners remain distinct."
+  },
+  "priorR4Preservation": {
+    "allSnapshotFilesPreserved": true,
+    "freezeSha": "f9c7d4c86464336e6f046d94c4c59ff71d6e57b76f5627c4ef1d5894addc0d1e",
+    "matchesExpected984": true,
+    "matchesPriorReviewedFreeze": true,
+    "reviewPath": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/documentation-reconciliation-review-r4.json",
+    "reviewSha256": "9849771e718c30465c8f298fb5a23f537ee3b306a26fd82f159158205d39b601"
+  },
+  "remainingBoundaries": [
+    "TODO Activity section remains open for typed instrumentation source construction/activation; batch handoff/restoration; optional timeline and required monitor initialization/lifecycle; durable/EF optional elapsed argument preparation; StartProcess metric balance after failed optional delivery-clock read.",
+    "Eight StageA focused cases and7966Core aggregate are accepted at exact source; no completeP05, correctedUnit/provider/currentpackage aggregate, nativecurrentcoverage/CRAP or globalA+release acceptance.",
+    "ThreeCoredeadline package remains separate accepted13/7958/fourcompiledmutants/final13; adapter/broadtime/cache/startup stillopen.",
+    "All external obligation IDs and whole external TODO sections unchanged; no cloud/hardware substitute, target512MiB-noSwap proof or CI activation from local baseline.",
+    "HistoricalSQL losscause open despite acceptedSQL99; remainingseparateproviderprofiles/post-correctionaggregate replay and currentcoverage pending phrase remains qualified fromR4."
+  ],
+  "rootAuthoredChanges": true,
+  "scope": "Six exact frozen/live current documentation files, full successor diff, accepted SQL99/StageA proof bindings, preserved historical suffix/obligation bodies. No new product/runtime/nativeartifact re-audit or Root source-read transfer.",
+  "verdict": "PASS_BOUNDED_CURRENT_DOCUMENTATION_RECONCILIATION"
+}

@@ -1,0 +1,38 @@
+{
+  "kind": "COVERAGE_BINLOG_PROVENANCE_TOOL_FREEZE",
+  "status": "PENDING_SEPARATE_ADVERSARIAL_REVIEW_NO_NATIVE_COVERAGE_ACCEPTANCE",
+  "corrected_python_contracts": {
+    "total": 9,
+    "passed": 9,
+    "failed": 0,
+    "exit_code": 0
+  },
+  "original_producer_counterexamples": {
+    "test_methods": 4,
+    "healthy_methods": 1,
+    "failing_methods": 3,
+    "failure_events": 5,
+    "errors": 0,
+    "exit_code": 1
+  },
+  "first_fixture_attempt": "R1 temp alias mismatch/subtest continuation; retained logs not product defect or causal credit",
+  "synthetic_contract_binlogs": "Only Python orchestration contracts; never real MSBuild binary log claims",
+  "files": {
+    "tool-owner-r1/aggregate_coverage_receipts.py": "3249ba9322e31437a328e4a72f3e54eb97b5d469981ff44954b8e8c88b02ae6b",
+    "tool-owner-r1/coverage-corrected-contracts-r2.log": "df4062182a786d234db888438e1206166b3c77b022e734d93b04145c9a126cf7",
+    "tool-owner-r1/coverage-corrected-contracts-r1.log": "6f45b1833a8f1f1c68a9e614b6174549b2b3c5ecbc4e918a3c2b7e3afc5729bf",
+    "tool-owner-r1/test_coverage_binlog_contracts.py": "4384bbadd03a8230c16557894e95c936f62c2400f89b43ee956dbb7a046eea9f",
+    "tool-owner-r1/tool.patch": "b2416778880ea008aecfc65529b6f5377414b6bb22b0d58e3f194ddeb6cd70b2",
+    "tool-owner-r1/RESEARCH_PLAN.md": "9ed04496c56af73894b9c41322ab9823b7d4b695212829a6e644c323b8faa81f",
+    "tool-owner-r1/coverage_receipt.py": "4bd6079b51df20cf80cdfb47fca24704412080103f26af6a9a05cc5f353c3799",
+    "tool-owner-r1/coverage-original-contracts-r1.log": "31e8bb01acbf388792e7511db3ccd0717e5d3cc5aed54f1a9579738d4a819ff0",
+    "tool-owner-r1/coverage-original-contracts-r2.log": "c4c99e3a6409be9830ba88f4ee7bad0fbcaa19192e074bae024a22d9c4e78ec3",
+    "tool-owner-r1/coverage-binlog-integration-research-r1.json": "afa07863d0da74f8c44d4b45ee372cefd695248b71477d38c27c95772bb50abe"
+  },
+  "source_owner": [
+    "tools/ci/coverage_receipt.py",
+    "tools/ci/aggregate_coverage_receipts.py",
+    "tools/ci/coverage.settings.xml"
+  ],
+  "root_personal_read": "Complete two scripts/settings before tool delta; complete standalone Python test owner authored and read; no canonical .NET test edit."
+}

@@ -1,0 +1,7 @@
+{
+  "peer_sha256": "5ab16f2d72307689957145ce7aeb35429f61f73b2b673a19cd77fbb8668e3287",
+  "gate_sha256": "5dc5b73ec7e039698e0de9154624a205be971a28067153c8a9d5402eafde19c5",
+  "inputs_sha256": "a92a446e179dc62185d8761c11d0b15bf03913f885a46e72a0ef24e9b7eacb04",
+  "cwd": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+  "action": "R3fixture sourceexact/twoCT corrections, Root-only originalnative9 retrywithpermission; no productcopy/nativeacceptance yet."
+}

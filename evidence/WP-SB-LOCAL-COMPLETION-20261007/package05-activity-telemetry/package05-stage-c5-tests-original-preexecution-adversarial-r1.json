@@ -1,0 +1,229 @@
+{
+  "status": "READ_ONLY_C5_CURRENT_CANONICAL379_SIX_CASE_PREEXECUTION_REVIEW_NO_BLOCK__STRICT_NATIVE_AND_PRODUCT_CORRECTION_ACCEPTANCE_PENDING",
+  "reviewer": "/root/continuation_adversarial",
+  "current_draft": {
+    "path": "/private/tmp/ColdTelemetrySourceIsolationTests.draft.cs",
+    "sha256": "7683cb10f7d24aec2bf5fe2bd52766721cde864831712d9e617ee89e1c35d7f8",
+    "lines": 379,
+    "canonical_exact_byte_equal": true
+  },
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C5_TEST_ONLY_ORIGINAL_FREEZE_R1.json",
+    "sha256": "adf4ecbbe324d6804f6705e0c35c2706a0121060a4e30d19f45921f988b00796",
+    "four_current_original_snapshot_hashes_verified": true,
+    "source_sha256": {
+      "tests/ViciOne.ServiceBus.Tests/Monitoring/ColdTelemetrySourceIsolationTests.cs": "7683cb10f7d24aec2bf5fe2bd52766721cde864831712d9e617ee89e1c35d7f8",
+      "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "af41b6db4365be62b25e27be14285ff1f4eb30b590cb52eaab15e97f89390c21",
+      "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs": "bc9bdd069b20785457700ff8cfde1ffb996f8b0f07c8522898201bbdb4e4ef7c",
+      "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs": "6bc0539808fb6237280c50550743f04d5d0fc1d6cf454e7432e5c7befa6dac1b"
+    }
+  },
+  "research_plan": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C5_COLD_SOURCE_RESEARCH_PLAN_R2.md",
+    "sha256": "628f1e2fb73e5be746639a9265efcd349f545107859c5f5a3161a79db2053f3d",
+    "R2_before_sixth_case": "Root attests plan/order updated before authoring sixthFact; no reviewer credit substitution"
+  },
+  "prior_process_design": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-cold-telemetry-process-fixture-plan-readonly-r1.json",
+    "sha256": "d4224fd0fa564bfd0cf55ed5e131fac53afde0b76d9c2c0ae4043c2a16d0f9a5"
+  },
+  "whole_read": "Personally consumed current379 bytes in complementary full1..145 and146..379 after all protocol/6thFact corrections; earlier360 draft whole plus interim exactdelta review retained as prior analysis. No code/private/canonical modifications by reviewer.",
+  "Root808": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE808_STAGE_C5_READ_CLOSURE_R1.json",
+    "sha256": "aa4f52e49a38a62c050ab999ab2dc1abb1ca871d2f65d556fa5b74c2721f0cfb",
+    "all808_current_hashes": true,
+    "tracked800_plus_explicit8": true,
+    "prior807_806_unchanged": true,
+    "shared84same_current_prior": true,
+    "current379line_whole_new_owner_hash": true,
+    "reading": "Root authorship360whole+all complete appended/replaced protocol/sixthcase deltas soleRootattestation, prior807onlymatchinghashreuse; reviewer/source hashing is not Root personal reading."
+  },
+  "requirements": {
+    "ordered4699prefix_unchanged": true,
+    "new6exactattributes_unique4705": true,
+    "new_rows": [
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "OptionalTimeline_ColdHealthyPublicActivationWorksInFreshProcess",
+        "testType": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests",
+        "variantKey": "cold-optional-timeline-healthy-public-activation"
+      },
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "OptionalTimeline_ColdSourceFailureRemainsInertAcrossPublicActivations",
+        "testType": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests",
+        "variantKey": "cold-optional-timeline-source-failure-stays-inert"
+      },
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "RequiredMonitor_ColdHealthyPublicActionObeysExactIdleDeadline",
+        "testType": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests",
+        "variantKey": "cold-required-monitor-healthy-exact-idle-deadline"
+      },
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "RequiredMonitor_ColdSourceFailurePreservesOriginalAndCachesOneAttempt",
+        "testType": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests",
+        "variantKey": "cold-required-monitor-source-primary-and-cache"
+      },
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "RequiredMonitor_StartFailureKeepsPrimaryWhenOwnedTimerDisposeThrows",
+        "testType": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests",
+        "variantKey": "required-monitor-constructor-unwind-keeps-primary"
+      },
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "RequiredMonitor_StandaloneTimerCleanupFailureRemainsRequired",
+        "testType": "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests",
+        "variantKey": "required-monitor-standalone-cleanup-remains-required"
+      }
+    ],
+    "all_new6Facts_NoInlining_nonasync": true
+  },
+  "case_catalog": [
+    {
+      "method": "OptionalTimeline_ColdHealthyPublicActivationWorksInFreshProcess",
+      "kind": "healthy optional public DI",
+      "predicted_original": "healthy conditional on actualcold0 and DI disposal fastpath healthy controls",
+      "assertions": [
+        "two synchronous registrations while attributed NoInlining Fact remains on stack; actualconstructor1 across providers",
+        "two real harness TCS actions/result41 each, root Source/name/parent, actual independent root work row, provider disposal caller and no sampler"
+      ]
+    },
+    {
+      "method": "OptionalTimeline_ColdSourceFailureRemainsInertAcrossPublicActivations",
+      "kind": "hostile optional source ctor",
+      "predicted_original": "finite Null error from actualpublicDI activation, expected CLRTypeInitialization wrappingchosenCtorcause",
+      "first_finite_line": 161,
+      "assertions": [
+        "actualsourceconstructor1 before finiteNull, same caller after repaired activation, realTCS actions2/result41",
+        "disarmthrow recorderretained across second activation, constructorsremain1, unrelated sampler absent before/after each disposal"
+      ]
+    },
+    {
+      "method": "RequiredMonitor_ColdHealthyPublicActionObeysExactIdleDeadline",
+      "kind": "healthy required monitor",
+      "predicted_original": "healthy conditional on actualcold0/source/root/timer behavior",
+      "assertions": [
+        "actualpublicIPublishEndpoint untouchedproxy calls0/action1/root+parent/source; actualTimer1 due1min",
+        "idle1minminus1tick incomplete,lasttickjoined;active0/stoppedroot/caller/probeNone"
+      ]
+    },
+    {
+      "method": "RequiredMonitor_ColdSourceFailurePreservesOriginalAndCachesOneAttempt",
+      "kind": "hostile required source ctor",
+      "predicted_original": "finite Same chosen cause fails on CLRTypeInitialization wrapper; action0 alone notcausalproof",
+      "first_finite_line": 252,
+      "assertions": [
+        "constructor1/action0/proxy0/timers0/actualfaultedtask before exactcause assertion",
+        "secondactualpubliccall same chosenoriginal object after disarm; constructor1/cachepolicy, caller/probeNone"
+      ]
+    },
+    {
+      "method": "RequiredMonitor_StartFailureKeepsPrimaryWhenOwnedTimerDisposeThrows",
+      "kind": "required constructor primary plus secondary ownedtimer cleanup",
+      "predicted_original": "finite Same primary fails if currentlyreleasingtimer cleanup secondary replaces it",
+      "first_finite_line": 330,
+      "assertions": [
+        "actualrootstartobserver creates sameRootId child; realtracker observes it and createsTimer1 BEFOREchosenprimary",
+        "beforeCauseidentity assertions action0/proxy0/constructor1/timer1/active0/rootstopped; childseparatelydisposed/hostilecallbacksdetached/probeNone"
+      ]
+    },
+    {
+      "method": "RequiredMonitor_StandaloneTimerCleanupFailureRemainsRequired",
+      "kind": "healthy initialization with required standalone cleanup fault",
+      "predicted_original": "healthy negativecontrol; must propagate chosen requiredcleanup object",
+      "first_finite_line": 272,
+      "assertions": [
+        "same genuinecold root/action1/actualtimer/idleboundary ashealthy; releasingDispose decrementsactualactivecount thenthrowschosenE",
+        "awaitRecord captures exactcleanupFailure object, not swallowed null/rootlesssuccess; active0/rootstopped/caller/probeNone afterfault"
+      ]
+    }
+  ],
+  "counts": {
+    "canonical_facts": 6,
+    "fresh_child_cases_perfocused_parent_run": 6,
+    "expected_original_ifallhealthyfixtureprerequisitespass": {
+      "finite_red": 3,
+      "healthy": 3
+    },
+    "RootwholeCore": "Only6newparentFacts add toRootwholeCore; child6 nativeevents corroborate, never doublecount."
+  },
+  "protocol_assessment": [
+    "Parent launches exactsiblingalreadybuilt apphost viaArgumentList withoutshell/MSBuild; inheritedsentinel case/depth1/nonce/parentPID checked beforechildbranch, no recursion fallback; actualfreshchildPID differs, coldtargetcounter0 beforearming andunrelated baselineprobeNone mandatory.",
+    "Parent success requires joinedexit0, unchangedsevenfile hashes beforeafter, nonce/fullcase marker emitted onlyafterprobe asserts, exactlyone fullnamepassed event andfour mandatory1/0/1/0 localizedsummaries. Compile/discovery/zero/multiple/skip/filter/prewarmed/guard/process failures cannotcountas productkill.",
+    "Rawstdout/stderr drained concurrently toownednonce directory and PROCESS receipt withcommand/PIDs/exit/waitFailure/hashes beforesemanticparentassertions.45slinkedbound kills ownprocess tree thenjoin/drain; nativechildfailures retained. OSstart/kill/join/output/archive errors remain infrastructure failures, no universalallOScleanup guarantee.",
+    "Explicitstdout/stderr All andnoANSI avoid successfulCompletionmarker hiding in agent environment; correctedCRLF eventregexhandlesWindowslineendings; explicitNone outputdrains intentionalafterjoin, no canceledtoken truncation.",
+    "Runtime7 includesapphost/testDLL/PDB/deps/runtimeconfig + actualpublicTestingassembly +Core.dll; targetC5Source2TestingDLL now included. Sevenfileequalityis boundedfileidentity, separatePE/PDB/deps/allloadedmodule graph stillrequired.",
+    "Optionalhealthy/hostile bothpublicprovider registrations beforefirstawait keepattributedFactstack name. Independentrootwork avoidschartomission ofcapturedcallerparent. ActualTCS actions createownedharnesscancellation resources closed throughproviderDisposeAsync; no bus/providerStart, timersleeporclock synchronization.",
+    "Requiredpublicasync assertions prove actualpubliccaller/rootcleanup state, not independentexplicitrestoreinstruction: AsyncLocal executioncontext mayrestorecaller. ExistinghelperStageA andfutureselectedsource mutation tests mustbequalifiedbyactualfinitenative assertion, not assumed restoration kill."
+  ],
+  "resolved_review_corrections": [
+    {
+      "issue": "Success event regex rejectedCRLF",
+      "actual_fix": "\\)\\r?$ verified current379",
+      "status": "resolved beforecanonical"
+    },
+    {
+      "issue": "PotentialxUnit1051 omission forStreamReader cancellationoverload",
+      "actual_fix": "BothReadToEndAsync(CancellationToken.None) explicitownednoncancelabledrain verified; compile/analyzersstillneedactualstrictbuild",
+      "status": "resolved source shape beforecanonical"
+    },
+    {
+      "issue": "Originalfivefiledigest omittedtargetTesting/Coredll",
+      "actual_fix": "AddedactualTestingassemblylocation andsiblingCore.dll, sevenbeforeafter",
+      "status": "resolved boundedmodule-file scope beforecanonical"
+    },
+    {
+      "issue": "Markerhiddenonhealthychild/defaultagentstdoutFailed",
+      "actual_fix": "Roothelpconfirmed showstdout/stderrAll/noansi/parentexit; currentarguments explicit",
+      "status": "resolved beforecanonical"
+    },
+    {
+      "issue": "Generic skip1 check insufficient",
+      "actual_fix": "Allfour mandatoryexacttotal1/fail0/pass1/skip0regex plusonepassed event",
+      "status": "resolved beforecanonical"
+    },
+    {
+      "issue": "Constructorunwindisolation lackedstandalonerequiredDispose guardcontrol",
+      "actual_fix": "Sixthrealhealthyinit+fakeidle+releasingDisposechosenE case, exactobjectpropagation",
+      "status": "resolved in beforecodeboundPlanR2"
+    }
+  ],
+  "help_preflight": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/local-completion/p05-c5-apphost-help-r1.log",
+    "sha256": "fea21e2f044fcf0ec22075a5c2eeb706b1ef363e8757c12b8547a3faca7289c5",
+    "relevant_options_personally_read": true,
+    "Rootreported": "Directexistingapphosthelp only,0nativecases/0MSBuild; not evidenceC5 fixturecompiled or actualcoldcasepassed."
+  },
+  "ordinary_cleanup_limits": [
+    "Healthyoptionalprovider.DisposeAsync callerCurrent restoration currently dependsactualunstartedDI synchronousfastpath. If actualoriginalhealthycase produces stoppedrootCurrent/ambientsampler mismatch, classifyfixture/contractrefinement, notcoldsource productkill. No universalDI async-restoration assertion here.",
+    "Requiredfinally attemptsdrain byadvancingfake max andwaiting5s; cleanupRecord.Exception resultignored toretainalreadyfailedassertion. If owneddrain hits timeout/cancellation orprovesoperationstillalive, explicitlymarkcleanup qualification incomplete; parentprocess45s guard doesnotturnitinto productevidence. Healthy PASS branch has alreadyjoinedoperation/active0 assertions.",
+    "Processkill/start/archiveOS failures may prevent complete receipt afterfatalinfrastructureerror; do notcountsuchred asnativecause. Routinechildnativeassertionfailures are archivedbeforeparentasserts.",
+    "SourceCtorfailedglobalregistration returnsno publichandle; testsproveoneattempt/currentknownownedresources, no hiddenframeworkzero-global-instance claim."
+  ],
+  "adjacent_scope_limits": [
+    "R2declares methodName-null optionalpath doesnotinitialize unusedsource; sixcurrentpublicFactsall captureNonNullFactnames. Existingwarm metadata/outputtests cannotaloneprove coldmethodName-null behavior. If boundedC5acceptance explicitlyclaimsthisnewbranch, requireseparatenativecoldcontrol orleaveitsqualificationexplicitlypending.",
+    "Requiredpubliccaller actionprimary+secondaryDispose conflict remainsseparate; sixthcasechecksstandalonecleanup andfifthconstructorunwind, neither provescompletedinitialization actionprimarypreservation.",
+    "RequiredbusinessUTC/persistence/endpointoperations/cancellation remain outsideoptionalcatch scope; actualproductfixnotyetreviewed here."
+  ],
+  "findings": [],
+  "remaining": [
+    "Rootstrictoriginalsuccessfulcompile andexact6parent/6coldchild native receipts; threehealthyactualbaselineprerequisites mustpass",
+    "Classifyactualchildfinite source/wrapper/secondarycause separatelyfromparentexit assertion; freezeoriginalruntimebeforeproductsync",
+    "ReviewactualtwoProductowner fixes andcompiledonecausalmutations/healthycontrols/wholeCore/fixedreplay/PE-PDB graph beforeboundedC5acceptance"
+  ],
+  "skills_and_sources": {
+    "skills": "AppliedMicrosoftOpenTelemetryownership conventions,test-anti-patterns,focusedcode-testing-agent planning andrun-tests MTPfilter rules; readonlyrole noeditingor.NETexecution.",
+    "primary_xUnit1051": "https://xunit.net/xunit.analyzers/rules/xUnit1051",
+    "native_apphost_filter_help": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/local-completion/p05-c5-apphost-help-r1.log"
+  },
+  "execution": "Read-only source/test/design/provenance. No.NET/Docker/ProcessStart/providers/writeprivateorcanon; ownreviewerR JSON only. No release/allP05/currentcoverage/cloud/device acceptance."
+}

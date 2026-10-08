@@ -1,0 +1,3598 @@
+{
+  "kind": "P06_CACHE_ORIGINAL_R2_NATIVE_ARTIFACT_CAUSAL_ADVERSARIAL",
+  "status": "QUALIFIED_ACTUAL_ORIGINAL_13_PARENT_2_CHILD_COUNTEREXAMPLES__NO_PRODUCT_FIX_ACCEPTANCE",
+  "result": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/RESULT.json",
+    "sha256": "b1b7211f57bea30a9218d8f8877b8b05a21182847a269129957f9c5113b93891"
+  },
+  "findings": [],
+  "actual_parent_counts": {
+    "total": 13,
+    "finite_causal_red": 5,
+    "named_healthy": 8,
+    "skipped": 0
+  },
+  "actual_child_counts_separate": {
+    "total": 2,
+    "finite_red": 1,
+    "healthy": 1,
+    "skipped": 0
+  },
+  "exact_all13_case_events": [
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.RemoveRetiresEveryIndexAndReleasesResource(hostile: False)"
+    ],
+    [
+      "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.RemoveRetiresEveryIndexAndReleasesResource(hostile: True)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LateOldFactoryCannotUnlinkPendingReplacement"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LookupFailureCannotStrandAlreadyExpiredOwnership(hostile: False)"
+    ],
+    [
+      "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LookupFailureCannotStrandAlreadyExpiredOwnership(hostile: True)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(hostile: False)"
+    ],
+    [
+      "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(hostile: True)"
+    ],
+    [
+      "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: True)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: False)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollisionEqualityFailureLeavesExistingOwnershipIntact(hostile: False)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollisionEqualityFailureLeavesExistingOwnershipIntact(hostile: True)"
+    ],
+    [
+      "fehlerhaft",
+      "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership"
+    ]
+  ],
+  "individual_first_finite_boundaries": [
+    {
+      "case_id": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.RemoveRetiresEveryIndexAndReleasesResource(hostile: True)",
+      "first_line": 32,
+      "actual": "0",
+      "full_raw_failure_block": "fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.RemoveRetiresEveryIndexAndReleasesResource(hostile: True) (38ms)\n  von /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)\n  Assert.Equal() Failure: Values differ\n  Expected: 1\n  Actual:   0\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.RemoveRetiresEveryIndexAndReleasesResource(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:32\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.RemoveRetiresEveryIndexAndReleasesResource(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:49\n    --- End of stack trace from previous location ---\n  Standardausgabe\n    ACTUAL_REMOVE_FAILURE: System.InvalidOperationException: chosen stable comparer failure\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.Comparer.GetHashCode(String key) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 335\n       at System.Collections.Generic.Dictionary`2.FindValue(TKey key)\n       at System.Collections.Generic.Dictionary`2.TryGetValue(TKey key, TValue& value)\n       at ViciOne.ServiceBus.Caching.Implementation.ResourceCacheIndex`2.RemoveKey(Object key, ResourceCacheEntry`1 entry) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs:line 96\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.RemoveEntry_NoLock(ResourceCacheEntry`1 entry, Boolean eviction) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs:line 197\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.RemoveAsync[TKey](ResourceCacheIndex`2 index, TKey key, CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs:line 153\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.Fixture.RunAsync[T](Task`1 operation) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 385\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.<>c__DisplayClass3_0.<<RemoveRetiresEveryIndexAndReleasesResource>b__2>d.MoveNext() in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 26\n    --- End of stack trace from previous location ---\n       at Xunit.Record.ExceptionAsync(Func`1 testCode) in /_/src/xunit.v3.core/Record.cs:line 93\n    STATE release=0 count=0 primary= secondary=old\n    \n  Fehlerausgabe\n",
+      "credit_limit": "First physical assertion only; later Same/outcome assertions not reached. Actual logged error stack separately qualifies phase."
+    },
+    {
+      "case_id": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LookupFailureCannotStrandAlreadyExpiredOwnership(hostile: True)",
+      "first_line": 162,
+      "actual": "0",
+      "full_raw_failure_block": "fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LookupFailureCannotStrandAlreadyExpiredOwnership(hostile: True) (0ms)\n  von /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)\n  Assert.Equal() Failure: Values differ\n  Expected: 1\n  Actual:   0\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LookupFailureCannotStrandAlreadyExpiredOwnership(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:162\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LookupFailureCannotStrandAlreadyExpiredOwnership(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:175\n    --- End of stack trace from previous location ---\n  Standardausgabe\n    ACTUAL_LOOKUP_FAILURE: System.InvalidOperationException: chosen stable comparer failure\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.Comparer.GetHashCode(String key) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 335\n       at System.Collections.Generic.Dictionary`2.FindValue(TKey key)\n       at System.Collections.Generic.Dictionary`2.TryGetValue(TKey key, TValue& value)\n       at ViciOne.ServiceBus.Caching.Implementation.ResourceCacheIndex`2.TryGetEntry(TKey key, ResourceCacheEntry`1& entry) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs:line 65\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.GetAsync[TKey](ResourceCacheIndex`2 index, TKey key, CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs:line 27\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.Fixture.RunAsync[T](Task`1 operation) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 385\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.Fixture.<>c__DisplayClass18_0.<<ReadAsync>b__0>d.MoveNext() in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 399\n    --- End of stack trace from previous location ---\n       at Xunit.Record.ExceptionAsync(Func`1 testCode) in /_/src/xunit.v3.core/Record.cs:line 93\n    \n  Fehlerausgabe\n",
+      "credit_limit": "First physical assertion only; later Same/outcome assertions not reached. Actual logged error stack separately qualifies phase."
+    },
+    {
+      "case_id": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(hostile: True)",
+      "first_line": 74,
+      "actual": "Owned { DisposeCalls = 0, Id = \"candidate\" }",
+      "full_raw_failure_block": "fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(hostile: True) (5ms)\n  von /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)\n  Assert.Null() Failure: Value is not null\n  Expected: null\n  Actual:   Owned { DisposeCalls = 0, Id = \"candidate\" }\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:74\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:91\n    --- End of stack trace from previous location ---\n  Standardausgabe\n    ACTUAL_ADMISSION_FAILURE: System.InvalidOperationException: chosen stable comparer failure\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.Comparer.GetHashCode(String key) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 335\n       at System.Collections.Generic.Dictionary`2.TryInsert(TKey key, TValue value, InsertionBehavior behavior)\n       at System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)\n       at ViciOne.ServiceBus.Caching.Implementation.ResourceCacheIndex`2.CommitKey(ResourceCacheEntry`1 entry, Object key) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs:line 90\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.CommitValue_NoLock(TValue value, PreparedResourceKeys`1 prepared, Int64 timestamp) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs:line 94\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.AddAsync(TValue value, CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.cs:line 222\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.Fixture.RunAsync(Task operation) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 392\n       at Xunit.Record.ExceptionAsync(Func`1 testCode) in /_/src/xunit.v3.core/Record.cs:line 93\n    \n  Fehlerausgabe\n",
+      "credit_limit": "First physical assertion only; later Same/outcome assertions not reached. Actual logged error stack separately qualifies phase."
+    },
+    {
+      "case_id": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: True)",
+      "first_line": 121,
+      "actual": "Owned { DisposeCalls = 1, Id = \"candidate\" }",
+      "full_raw_failure_block": "fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: True) (3ms)\n  von /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)\n  Assert.Null() Failure: Value is not null\n  Expected: null\n  Actual:   Owned { DisposeCalls = 1, Id = \"candidate\" }\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:121\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:145\n    --- End of stack trace from previous location ---\n  Standardausgabe\n    ACTUAL_FACTORY_FAILURE: System.InvalidOperationException: chosen stable comparer failure\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.Comparer.GetHashCode(String key) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 335\n       at System.Collections.Generic.Dictionary`2.TryInsert(TKey key, TValue value, InsertionBehavior behavior)\n       at System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)\n       at ViciOne.ServiceBus.Caching.Implementation.ResourceCacheIndex`2.CommitKey(ResourceCacheEntry`1 entry, Object key) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs:line 90\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.CommitValue_NoLock(TValue value, PreparedResourceKeys`1 prepared, Int64 timestamp) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs:line 94\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.CompleteCreationAsync[TKey](ResourceCacheIndex`2 index, TKey requestedKey, PendingResourceCreation`1 pending, ResourceFactory`2 factory, OperationLease operation) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs:line 205\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.GetOrAddAsync[TKey](ResourceCacheIndex`2 index, TKey key, ResourceFactory`2 factory, CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs:line 123\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.Fixture.RunAsync[T](Task`1 operation) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 385\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.<>c__DisplayClass5_0.<<FactoryAdmissionPublishesAllIndicesTogether>b__2>d.MoveNext() in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 105\n    --- End of stack trace from previous location ---\n       at Xunit.Record.ExceptionAsync(Func`1 testCode) in /_/src/xunit.v3.core/Record.cs:line 93\n    \n  Fehlerausgabe\n",
+      "credit_limit": "First physical assertion only; later Same/outcome assertions not reached. Actual logged error stack separately qualifies phase."
+    },
+    {
+      "case_id": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+      "first_line": 103,
+      "parent_only_child_exit_assertion": true,
+      "full_raw_failure_block": "fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership (2s 934ms)\n  von /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)\n  The joined child failed; its actual finite cause is preserved in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/cache-pending-child-receipts/b9d1af7df968492ab60010ba7fb3ef58\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.LaunchAsync(String fullName) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:103\n    --- End of stack trace from previous location ---\n  Standardausgabe\n    Owned cache child receipt: /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/cache-pending-child-receipts/b9d1af7df968492ab60010ba7fb3ef58\n    \n  Fehlerausgabe\n",
+      "actual_child_finite_cause_required": true
+    }
+  ],
+  "children": [
+    {
+      "process": {
+        "fullName": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership",
+        "nonce": "0fad75ae821249eb84d6a5af0e25ba33",
+        "parentPid": 88174,
+        "childPid": 88178,
+        "apphost": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests",
+        "arguments": [
+          "--filter-class",
+          "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests",
+          "--filter-method",
+          "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership",
+          "--minimum-expected-tests",
+          "1",
+          "--output",
+          "Detailed",
+          "--progress",
+          "off",
+          "--no-ansi",
+          "--show-stdout",
+          "All",
+          "--show-stderr",
+          "All",
+          "--exit-on-process-exit",
+          "88174",
+          "--results-directory",
+          "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/cache-pending-child-receipts/0fad75ae821249eb84d6a5af0e25ba33/native-results"
+        ],
+        "exitCode": 0,
+        "waitFailure": null,
+        "before": {
+          "ViciOne.ServiceBus.Tests": "A485B3D277BB128B832F9AC839CC04ED7DA029BA9AAF40F0D4001582D08C513E",
+          "ViciOne.ServiceBus.Tests.dll": "BEBDFFBCF798F192DDAB732AB3D617947F189ACE64BC5749B190A1D9C08CCFC8",
+          "ViciOne.ServiceBus.Tests.pdb": "91FDEF43B7C1AF561C1621132120F9E71EAF7ED86D074833C29C5DB49C3D965D",
+          "ViciOne.ServiceBus.Tests.deps.json": "EBD7E9743B85CADF35D729CEB9E51687088D9E1A60A6F25D8F8C8A09DE8ED223",
+          "ViciOne.ServiceBus.Tests.runtimeconfig.json": "9950D4583CFC9A106857C0D5B8A75B53E8774852B57B80BC3823A74D44A4D87F",
+          "ViciOne.ServiceBus.dll": "680F771B45E093C14A1057FA73A03A72E9D97E6682DA02FB665866692F3A5FFF",
+          "ViciOne.ServiceBus.Abstractions.dll": "C3E17C72838EC5C97874EDD14E0854FA7F6846B7949C9AFBA1CE6F29A7C895AB"
+        },
+        "after": {
+          "ViciOne.ServiceBus.Tests": "A485B3D277BB128B832F9AC839CC04ED7DA029BA9AAF40F0D4001582D08C513E",
+          "ViciOne.ServiceBus.Tests.dll": "BEBDFFBCF798F192DDAB732AB3D617947F189ACE64BC5749B190A1D9C08CCFC8",
+          "ViciOne.ServiceBus.Tests.pdb": "91FDEF43B7C1AF561C1621132120F9E71EAF7ED86D074833C29C5DB49C3D965D",
+          "ViciOne.ServiceBus.Tests.deps.json": "EBD7E9743B85CADF35D729CEB9E51687088D9E1A60A6F25D8F8C8A09DE8ED223",
+          "ViciOne.ServiceBus.Tests.runtimeconfig.json": "9950D4583CFC9A106857C0D5B8A75B53E8774852B57B80BC3823A74D44A4D87F",
+          "ViciOne.ServiceBus.dll": "680F771B45E093C14A1057FA73A03A72E9D97E6682DA02FB665866692F3A5FFF",
+          "ViciOne.ServiceBus.Abstractions.dll": "C3E17C72838EC5C97874EDD14E0854FA7F6846B7949C9AFBA1CE6F29A7C895AB"
+        }
+      },
+      "artifact_sha256": {
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "80ee986a647fd340a054c51fbd35ab0e38f944a825d68085bffe79f72d3ac069",
+        "PROCESS.json": "ba0fec9994e15c2f81ad074d5a10419aae43864b1178cff5d91ebc30f212497e"
+      },
+      "native_event": [
+        [
+          "erfolgreich",
+          "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership"
+        ]
+      ],
+      "full_stdout": "CACHE_CASE_COMPLETED:0fad75ae821249eb84d6a5af0e25ba33:ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership\nerfolgreich ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership (58ms)\n  Standardausgabe\n    STATE factoryCalls=1 factoryReturns=1 release=0 pending=0 requestTerminal=True comparerThrows=0\n    \n\nTestlaufzusammenfassung: Bestanden! - /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)\n  gesamt: 1\n  fehlerhaft: 0\n  erfolgreich: 1\n  übersprungen: 0\n  Dauer: 2s 242ms\n",
+      "finite_child_pending_line": null,
+      "product_join_credit": "actual request/factory/replacement/cache joins reached",
+      "both_actual_attempt_stacks_complete_personally_read": false,
+      "watchdog_or_safety_failure": false
+    },
+    {
+      "process": {
+        "fullName": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+        "nonce": "b9d1af7df968492ab60010ba7fb3ef58",
+        "parentPid": 88174,
+        "childPid": 88177,
+        "apphost": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests",
+        "arguments": [
+          "--filter-class",
+          "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests",
+          "--filter-method",
+          "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+          "--minimum-expected-tests",
+          "1",
+          "--output",
+          "Detailed",
+          "--progress",
+          "off",
+          "--no-ansi",
+          "--show-stdout",
+          "All",
+          "--show-stderr",
+          "All",
+          "--exit-on-process-exit",
+          "88174",
+          "--results-directory",
+          "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/cache-pending-child-receipts/b9d1af7df968492ab60010ba7fb3ef58/native-results"
+        ],
+        "exitCode": 2,
+        "waitFailure": null,
+        "before": {
+          "ViciOne.ServiceBus.Tests": "A485B3D277BB128B832F9AC839CC04ED7DA029BA9AAF40F0D4001582D08C513E",
+          "ViciOne.ServiceBus.Tests.dll": "BEBDFFBCF798F192DDAB732AB3D617947F189ACE64BC5749B190A1D9C08CCFC8",
+          "ViciOne.ServiceBus.Tests.pdb": "91FDEF43B7C1AF561C1621132120F9E71EAF7ED86D074833C29C5DB49C3D965D",
+          "ViciOne.ServiceBus.Tests.deps.json": "EBD7E9743B85CADF35D729CEB9E51687088D9E1A60A6F25D8F8C8A09DE8ED223",
+          "ViciOne.ServiceBus.Tests.runtimeconfig.json": "9950D4583CFC9A106857C0D5B8A75B53E8774852B57B80BC3823A74D44A4D87F",
+          "ViciOne.ServiceBus.dll": "680F771B45E093C14A1057FA73A03A72E9D97E6682DA02FB665866692F3A5FFF",
+          "ViciOne.ServiceBus.Abstractions.dll": "C3E17C72838EC5C97874EDD14E0854FA7F6846B7949C9AFBA1CE6F29A7C895AB"
+        },
+        "after": {
+          "ViciOne.ServiceBus.Tests": "A485B3D277BB128B832F9AC839CC04ED7DA029BA9AAF40F0D4001582D08C513E",
+          "ViciOne.ServiceBus.Tests.dll": "BEBDFFBCF798F192DDAB732AB3D617947F189ACE64BC5749B190A1D9C08CCFC8",
+          "ViciOne.ServiceBus.Tests.pdb": "91FDEF43B7C1AF561C1621132120F9E71EAF7ED86D074833C29C5DB49C3D965D",
+          "ViciOne.ServiceBus.Tests.deps.json": "EBD7E9743B85CADF35D729CEB9E51687088D9E1A60A6F25D8F8C8A09DE8ED223",
+          "ViciOne.ServiceBus.Tests.runtimeconfig.json": "9950D4583CFC9A106857C0D5B8A75B53E8774852B57B80BC3823A74D44A4D87F",
+          "ViciOne.ServiceBus.dll": "680F771B45E093C14A1057FA73A03A72E9D97E6682DA02FB665866692F3A5FFF",
+          "ViciOne.ServiceBus.Abstractions.dll": "C3E17C72838EC5C97874EDD14E0854FA7F6846B7949C9AFBA1CE6F29A7C895AB"
+        }
+      },
+      "artifact_sha256": {
+        "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout.log": "c3cd7a5dae301cc92d9c9af23c2f0e57fa086343c97defc57ca5ab6215a2ce22",
+        "PROCESS.json": "a9e6744fc97156012a8ff73a7d78617f8bc23519348ddbc4d26194ee15a56471"
+      },
+      "native_event": [
+        [
+          "fehlerhaft",
+          "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership"
+        ]
+      ],
+      "full_stdout": "fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership (91ms)\n  Assert.Equal() Failure: Values differ\n  Expected: 0\n  Actual:   1\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:171\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:219\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.RunChildAsync(String name, String fullName, Func`2 action) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:45\n    --- End of stack trace from previous location ---\n  Standardausgabe\n    ACTUAL_COMPARER_ATTEMPT: candidate\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.Comparer.GetHashCode(String key)\n       at System.Collections.Generic.Dictionary`2.TryInsert(TKey key, TValue value, InsertionBehavior behavior)\n       at System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)\n       at ViciOne.ServiceBus.Caching.Implementation.ResourceCacheIndex`2.CommitKey(ResourceCacheEntry`1 entry, Object key)\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.CommitValue_NoLock(TValue value, PreparedResourceKeys`1 prepared, Int64 timestamp)\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.CompleteCreationAsync[TKey](ResourceCacheIndex`2 index, TKey requestedKey, PendingResourceCreation`1 pending, ResourceFactory`2 factory, OperationLease operation)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.CompleteCreationAsync[TKey](ResourceCacheIndex`2 index, TKey requestedKey, PendingResourceCreation`1 pending, ResourceFactory`2 factory, OperationLease operation)\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.GetOrAddAsync[TKey](ResourceCacheIndex`2 index, TKey key, ResourceFactory`2 factory, CancellationToken cancellationToken)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.GetOrAddAsync[TKey](ResourceCacheIndex`2 index, TKey key, ResourceFactory`2 factory, CancellationToken cancellationToken)\n       at ViciOne.ServiceBus.Caching.Implementation.ResourceCacheIndex`2.GetOrAddAsync(TKey key, ResourceFactory`2 factory, CancellationToken cancellationToken)\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile)\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.<PersistentOriginComparerFailureReleasesPendingOwnership>b__8_0(String _)\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.RunChildAsync(String name, String fullName, Func`2 action)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.RunChildAsync(String name, String fullName, Func`2 action)\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.RunAsync(String name, Func`2 action)\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership()\n       at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)\n       at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)\n       at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\n       at Xunit.v3.XunitTestRunnerBaseContext`1.InvokeTestMethod(Object testClassInstance)\n       at Xunit.v3.XunitTestRunnerBaseContext`1.<>c__DisplayClass18_0.<<InvokeTest>b__1>d.MoveNext()\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestRunnerBaseContext`1.<>c__DisplayClass18_0.<InvokeTest>b__1()\n       at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code)\n       at Xunit.v3.XunitTestRunnerBaseContext`1.<>c__DisplayClass18_0.<InvokeTest>b__0()\n       at Xunit.v3.ExecutionTimer.MeasureAsync(Func`1 asyncAction)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExecutionTimer.MeasureAsync(Func`1 asyncAction)\n       at Xunit.v3.XunitTestRunnerBaseContext`1.InvokeTest(Object testClassInstance)\n       at Xunit.v3.CoreTestRunner`3.InvokeTest(TContext ctxt, Object testClassInstance)\n       at Xunit.v3.XunitTestRunnerBase`2.InvokeTest(TContext ctxt, Object testClassInstance)\n       at Xunit.v3.TestRunner`2.<>c__DisplayClass15_0.<RunTest>b__6()\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at Xunit.v3.TestRunner`2.<>c__DisplayClass15_1.<<RunTest>g__runTest|0>d.MoveNext()\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestRunner`2.<>c__DisplayClass15_1.<RunTest>g__runTest|0(Object _)\n       at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)\n       at Xunit.v3.TestRunner`2.RunTest(TContext ctxt)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestRunner`2.RunTest(TContext ctxt)\n       at Xunit.v3.CoreTestRunner`3.<>n__0(TContext ctxt)\n       at Xunit.v3.CoreTestRunner`3.<>c__DisplayClass7_0.<RunTest>b__1()\n       at Xunit.v3.CoreTestRunner`3.RunTest(TContext ctxt)\n       at Xunit.v3.XunitTestRunnerBase`2.<>n__0(TContext ctxt)\n       at Xunit.v3.XunitTestRunnerBase`2.RunTest(TContext ctxt)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestRunnerBase`2.RunTest(TContext ctxt)\n       at Xunit.v3.TestRunnerBase`2.<>c__DisplayClass13_0.<Run>b__2()\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at Xunit.v3.TestRunnerBase`2.Run(TContext ctxt)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestRunnerBase`2.Run(TContext ctxt)\n       at Xunit.v3.XunitTestRunner.Run(IXunitTest test, IMessageBus messageBus, Object[] constructorArguments, ExplicitOption explicitOption, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, IReadOnlyCollection`1 beforeAfterAttributes, FixtureMappingManager caseFixtureMappings)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestRunner.Run(IXunitTest test, IMessageBus messageBus, Object[] constructorArguments, ExplicitOption explicitOption, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, IReadOnlyCollection`1 beforeAfterAttributes, FixtureMappingManager caseFixtureMappings)\n       at Xunit.v3.XunitTestCaseRunnerBaseContext`2.RunTest(TTest test)\n       at Xunit.v3.CoreTestCaseRunner`3.RunTest(TContext ctxt, TTest test)\n       at Xunit.v3.TestCaseRunner`3.RunTestCase(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestCaseRunner`3.RunTestCase(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestCaseRunner`3.<>n__0(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestCaseRunner`3.RunTestCaseInner(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.CoreTestCaseRunner`3.RunTestCaseInner(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestCaseRunnerBase`3.<>n__0(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestCaseRunnerBase`3.RunTestCaseInner(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestCaseRunnerBase`3.RunTestCaseInner(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestCaseRunner`3.RunTestCase(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.CoreTestCaseRunner`3.RunTestCase(TContext ctxt, Exception exception)\n       at Xunit.v3.TestCaseRunnerBase`2.<>c__DisplayClass5_0.<Run>b__1()\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at Xunit.v3.TestCaseRunnerBase`2.Run(TContext ctxt)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestCaseRunnerBase`2.Run(TContext ctxt)\n       at Xunit.v3.XunitTestCaseRunner.Run(IXunitTestCase testCase, IReadOnlyCollection`1 tests, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, String displayName, String skipReason, ExplicitOption explicitOption, Object[] constructorArguments, FixtureMappingManager methodFixtureMappings)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestCaseRunner.Run(IXunitTestCase testCase, IReadOnlyCollection`1 tests, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, String displayName, String skipReason, ExplicitOption explicitOption, Object[] constructorArguments, FixtureMappingManager methodFixtureMappings)\n       at Xunit.v3.XunitRunnerHelper.<>c__DisplayClass9_0.<RunXunitTestCase>b__0(IReadOnlyCollection`1 tests)\n       at Xunit.v3.XunitRunnerHelper.RunCoreTestCase[TTest](ICoreTestCase testCase, IMessageBus messageBus, ExceptionAggregator aggregator, Func`1 testFactory, Func`2 executor, CancellationTokenSource cancellationTokenSource)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitRunnerHelper.RunCoreTestCase[TTest](ICoreTestCase testCase, IMessageBus messageBus, ExceptionAggregator aggregator, Func`1 testFactory, Func`2 executor, CancellationTokenSource cancellationTokenSource)\n       at Xunit.v3.XunitRunnerHelper.RunXunitTestCase(IXunitTestCase testCase, IMessageBus messageBus, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, ExceptionAggregator aggregator, ExplicitOption explicitOption, Object[] constructorArguments, FixtureMappingManager methodFixtureMappings)\n       at Xunit.v3.XunitTestMethodRunnerBaseContext`2.RunTestCase(TTestCase testCase)\n       at Xunit.v3.CoreTestMethodRunner`3.RunTestCase(TContext ctxt, TTestCase testCase)\n       at Xunit.v3.TestMethodRunner`3.RunTestCases(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestMethodRunner`3.RunTestCases(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestMethodRunner`3.<>n__0(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestMethodRunner`3.RunTestCases(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.CoreTestMethodRunner`3.RunTestCases(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestMethodRunnerBase`3.<>n__0(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestMethodRunnerBase`3.RunTestCases(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestMethodRunnerBase`3.RunTestCases(TContext ctxt, Exception exception)\n       at Xunit.v3.TestMethodRunner`3.<>c__DisplayClass7_0.<Run>b__1()\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at Xunit.v3.TestMethodRunner`3.Run(TContext ctxt)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestMethodRunner`3.Run(TContext ctxt)\n       at Xunit.v3.XunitTestMethodRunner.Run(IXunitTestMethod testMethod, IReadOnlyCollection`1 testCases, ExplicitOption explicitOption, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, Object[] constructorArguments, FixtureMappingManager classFixtureMappings)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestMethodRunner.Run(IXunitTestMethod testMethod, IReadOnlyCollection`1 testCases, ExplicitOption explicitOption, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, Object[] constructorArguments, FixtureMappingManager classFixtureMappings)\n       at Xunit.v3.XunitTestClassRunnerBaseContext`3.RunTestMethod(TTestMethod testMethod, IReadOnlyCollection`1 testCases)\n       at Xunit.v3.CoreTestClassRunner`4.RunTestMethod(TContext ctxt, TTestMethod testMethod, IReadOnlyCollection`1 testCases)\n       at Xunit.v3.TestClassRunner`4.RunTestMethods(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestClassRunner`4.RunTestMethods(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestClassRunner`4.<>n__0(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestClassRunner`4.RunTestMethods(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.CoreTestClassRunner`4.RunTestMethods(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestClassRunnerBase`4.<>n__2(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestClassRunnerBase`4.RunTestMethods(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestClassRunnerBase`4.RunTestMethods(TContext ctxt, Exception exception)\n       at Xunit.v3.TestClassRunner`4.<>c__DisplayClass11_0.<Run>b__1()\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at Xunit.v3.TestClassRunner`4.Run(TContext ctxt)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestClassRunner`4.Run(TContext ctxt)\n       at Xunit.v3.XunitTestClassRunner.<>c__DisplayClass5_0.<Run>b__0()\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at Xunit.v3.XunitTestClassRunner.Run(IXunitTestClass testClass, IReadOnlyCollection`1 testCases, ExplicitOption explicitOption, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, FixtureMappingManager collectionFixtureMappings)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestClassRunner.Run(IXunitTestClass testClass, IReadOnlyCollection`1 testCases, ExplicitOption explicitOption, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, FixtureMappingManager collectionFixtureMappings)\n       at Xunit.v3.XunitTestCollectionRunnerContext.RunTestClass(IXunitTestClass testClass, IReadOnlyCollection`1 testCases)\n       at Xunit.v3.CoreTestCollectionRunner`4.RunTestClass(TContext ctxt, TTestClass testClass, IReadOnlyCollection`1 testCases)\n       at Xunit.v3.TestCollectionRunner`4.RunTestClasses(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestCollectionRunner`4.RunTestClasses(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestCollectionRunner`4.<>n__0(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestCollectionRunner`4.RunTestClasses(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.CoreTestCollectionRunner`4.RunTestClasses(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestCollectionRunnerBase`4.<>n__2(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestCollectionRunnerBase`4.RunTestClasses(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestCollectionRunnerBase`4.RunTestClasses(TContext ctxt, Exception exception)\n       at Xunit.v3.TestCollectionRunner`4.<>c__DisplayClass8_0.<Run>b__1()\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at Xunit.v3.TestCollectionRunner`4.Run(TContext ctxt)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestCollectionRunner`4.Run(TContext ctxt)\n       at Xunit.v3.XunitTestCollectionRunner.Run(IXunitTestCollection testCollection, IReadOnlyCollection`1 testCases, ExplicitOption explicitOption, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, FixtureMappingManager assemblyFixtureMappings)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestCollectionRunner.Run(IXunitTestCollection testCollection, IReadOnlyCollection`1 testCases, ExplicitOption explicitOption, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, FixtureMappingManager assemblyFixtureMappings)\n       at Xunit.v3.XunitTestAssemblyRunnerBaseContext`3.RunTestCollection(TTestCollection testCollection, IReadOnlyCollection`1 testCases)\n       at Xunit.v3.CoreTestAssemblyRunner`4.RunTestCollection(TContext ctxt, TTestCollection testCollection, IReadOnlyCollection`1 testCases)\n       at Xunit.v3.CoreTestAssemblyRunner`4.<>c__DisplayClass2_1.<RunTestCollections>g__taskFactory|0()\n       at Xunit.v3.ExecutionScheduler.<>c__DisplayClass12_0`1.<EnsureParallel>b__1()\n       at System.Threading.Tasks.Task`1.InnerInvoke()\n       at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)\n       at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)\n       at System.Threading.ThreadPoolWorkQueue.Dispatch()\n       at System.Threading.PortableThreadPool.WorkerThread.WorkerThreadStart()\n       at System.Threading.Thread.StartCallback()\n    \n    ACTUAL_COMPARER_ATTEMPT: candidate\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.Comparer.GetHashCode(String key)\n       at System.Collections.Generic.Dictionary`2.FindValue(TKey key)\n       at System.Collections.Generic.Dictionary`2.TryGetValue(TKey key, TValue& value)\n       at ViciOne.ServiceBus.Caching.Implementation.ResourceCacheIndex`2.RemovePending(Object key, PendingResourceCreation`1 pending)\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.CompleteFaultedPending(PendingResourceCreation`1 pending, Exception exception)\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.CompleteCreationAsync[TKey](ResourceCacheIndex`2 index, TKey requestedKey, PendingResourceCreation`1 pending, ResourceFactory`2 factory, OperationLease operation)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.CompleteCreationAsync[TKey](ResourceCacheIndex`2 index, TKey requestedKey, PendingResourceCreation`1 pending, ResourceFactory`2 factory, OperationLease operation)\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.GetOrAddAsync[TKey](ResourceCacheIndex`2 index, TKey key, ResourceFactory`2 factory, CancellationToken cancellationToken)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.GetOrAddAsync[TKey](ResourceCacheIndex`2 index, TKey key, ResourceFactory`2 factory, CancellationToken cancellationToken)\n       at ViciOne.ServiceBus.Caching.Implementation.ResourceCacheIndex`2.GetOrAddAsync(TKey key, ResourceFactory`2 factory, CancellationToken cancellationToken)\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile)\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.<PersistentOriginComparerFailureReleasesPendingOwnership>b__8_0(String _)\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.RunChildAsync(String name, String fullName, Func`2 action)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.RunChildAsync(String name, String fullName, Func`2 action)\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.RunAsync(String name, Func`2 action)\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership()\n       at System.Reflection.MethodBaseInvoker.InterpretedInvoke_Method(Object obj, IntPtr* args)\n       at System.Reflection.MethodBaseInvoker.InvokeWithNoArgs(Object obj, BindingFlags invokeAttr)\n       at System.Reflection.RuntimeMethodInfo.Invoke(Object obj, BindingFlags invokeAttr, Binder binder, Object[] parameters, CultureInfo culture)\n       at Xunit.v3.XunitTestRunnerBaseContext`1.InvokeTestMethod(Object testClassInstance)\n       at Xunit.v3.XunitTestRunnerBaseContext`1.<>c__DisplayClass18_0.<<InvokeTest>b__1>d.MoveNext()\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestRunnerBaseContext`1.<>c__DisplayClass18_0.<InvokeTest>b__1()\n       at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync(Func`1 code)\n       at Xunit.v3.XunitTestRunnerBaseContext`1.<>c__DisplayClass18_0.<InvokeTest>b__0()\n       at Xunit.v3.ExecutionTimer.MeasureAsync(Func`1 asyncAction)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExecutionTimer.MeasureAsync(Func`1 asyncAction)\n       at Xunit.v3.XunitTestRunnerBaseContext`1.InvokeTest(Object testClassInstance)\n       at Xunit.v3.CoreTestRunner`3.InvokeTest(TContext ctxt, Object testClassInstance)\n       at Xunit.v3.XunitTestRunnerBase`2.InvokeTest(TContext ctxt, Object testClassInstance)\n       at Xunit.v3.TestRunner`2.<>c__DisplayClass15_0.<RunTest>b__6()\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at Xunit.v3.TestRunner`2.<>c__DisplayClass15_1.<<RunTest>g__runTest|0>d.MoveNext()\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestRunner`2.<>c__DisplayClass15_1.<RunTest>g__runTest|0(Object _)\n       at System.Threading.ExecutionContext.RunInternal(ExecutionContext executionContext, ContextCallback callback, Object state)\n       at Xunit.v3.TestRunner`2.RunTest(TContext ctxt)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestRunner`2.RunTest(TContext ctxt)\n       at Xunit.v3.CoreTestRunner`3.<>n__0(TContext ctxt)\n       at Xunit.v3.CoreTestRunner`3.<>c__DisplayClass7_0.<RunTest>b__1()\n       at Xunit.v3.CoreTestRunner`3.RunTest(TContext ctxt)\n       at Xunit.v3.XunitTestRunnerBase`2.<>n__0(TContext ctxt)\n       at Xunit.v3.XunitTestRunnerBase`2.RunTest(TContext ctxt)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestRunnerBase`2.RunTest(TContext ctxt)\n       at Xunit.v3.TestRunnerBase`2.<>c__DisplayClass13_0.<Run>b__2()\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at Xunit.v3.TestRunnerBase`2.Run(TContext ctxt)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestRunnerBase`2.Run(TContext ctxt)\n       at Xunit.v3.XunitTestRunner.Run(IXunitTest test, IMessageBus messageBus, Object[] constructorArguments, ExplicitOption explicitOption, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, IReadOnlyCollection`1 beforeAfterAttributes, FixtureMappingManager caseFixtureMappings)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestRunner.Run(IXunitTest test, IMessageBus messageBus, Object[] constructorArguments, ExplicitOption explicitOption, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, IReadOnlyCollection`1 beforeAfterAttributes, FixtureMappingManager caseFixtureMappings)\n       at Xunit.v3.XunitTestCaseRunnerBaseContext`2.RunTest(TTest test)\n       at Xunit.v3.CoreTestCaseRunner`3.RunTest(TContext ctxt, TTest test)\n       at Xunit.v3.TestCaseRunner`3.RunTestCase(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestCaseRunner`3.RunTestCase(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestCaseRunner`3.<>n__0(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestCaseRunner`3.RunTestCaseInner(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.CoreTestCaseRunner`3.RunTestCaseInner(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestCaseRunnerBase`3.<>n__0(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestCaseRunnerBase`3.RunTestCaseInner(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestCaseRunnerBase`3.RunTestCaseInner(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestCaseRunner`3.RunTestCase(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.CoreTestCaseRunner`3.RunTestCase(TContext ctxt, Exception exception)\n       at Xunit.v3.TestCaseRunnerBase`2.<>c__DisplayClass5_0.<Run>b__1()\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at Xunit.v3.TestCaseRunnerBase`2.Run(TContext ctxt)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestCaseRunnerBase`2.Run(TContext ctxt)\n       at Xunit.v3.XunitTestCaseRunner.Run(IXunitTestCase testCase, IReadOnlyCollection`1 tests, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, String displayName, String skipReason, ExplicitOption explicitOption, Object[] constructorArguments, FixtureMappingManager methodFixtureMappings)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestCaseRunner.Run(IXunitTestCase testCase, IReadOnlyCollection`1 tests, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, String displayName, String skipReason, ExplicitOption explicitOption, Object[] constructorArguments, FixtureMappingManager methodFixtureMappings)\n       at Xunit.v3.XunitRunnerHelper.<>c__DisplayClass9_0.<RunXunitTestCase>b__0(IReadOnlyCollection`1 tests)\n       at Xunit.v3.XunitRunnerHelper.RunCoreTestCase[TTest](ICoreTestCase testCase, IMessageBus messageBus, ExceptionAggregator aggregator, Func`1 testFactory, Func`2 executor, CancellationTokenSource cancellationTokenSource)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitRunnerHelper.RunCoreTestCase[TTest](ICoreTestCase testCase, IMessageBus messageBus, ExceptionAggregator aggregator, Func`1 testFactory, Func`2 executor, CancellationTokenSource cancellationTokenSource)\n       at Xunit.v3.XunitRunnerHelper.RunXunitTestCase(IXunitTestCase testCase, IMessageBus messageBus, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, ExceptionAggregator aggregator, ExplicitOption explicitOption, Object[] constructorArguments, FixtureMappingManager methodFixtureMappings)\n       at Xunit.v3.XunitTestMethodRunnerBaseContext`2.RunTestCase(TTestCase testCase)\n       at Xunit.v3.CoreTestMethodRunner`3.RunTestCase(TContext ctxt, TTestCase testCase)\n       at Xunit.v3.TestMethodRunner`3.RunTestCases(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestMethodRunner`3.RunTestCases(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestMethodRunner`3.<>n__0(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestMethodRunner`3.RunTestCases(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.CoreTestMethodRunner`3.RunTestCases(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestMethodRunnerBase`3.<>n__0(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestMethodRunnerBase`3.RunTestCases(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestMethodRunnerBase`3.RunTestCases(TContext ctxt, Exception exception)\n       at Xunit.v3.TestMethodRunner`3.<>c__DisplayClass7_0.<Run>b__1()\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at Xunit.v3.TestMethodRunner`3.Run(TContext ctxt)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestMethodRunner`3.Run(TContext ctxt)\n       at Xunit.v3.XunitTestMethodRunner.Run(IXunitTestMethod testMethod, IReadOnlyCollection`1 testCases, ExplicitOption explicitOption, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, Object[] constructorArguments, FixtureMappingManager classFixtureMappings)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestMethodRunner.Run(IXunitTestMethod testMethod, IReadOnlyCollection`1 testCases, ExplicitOption explicitOption, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, Object[] constructorArguments, FixtureMappingManager classFixtureMappings)\n       at Xunit.v3.XunitTestClassRunnerBaseContext`3.RunTestMethod(TTestMethod testMethod, IReadOnlyCollection`1 testCases)\n       at Xunit.v3.CoreTestClassRunner`4.RunTestMethod(TContext ctxt, TTestMethod testMethod, IReadOnlyCollection`1 testCases)\n       at Xunit.v3.TestClassRunner`4.RunTestMethods(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestClassRunner`4.RunTestMethods(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestClassRunner`4.<>n__0(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestClassRunner`4.RunTestMethods(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.CoreTestClassRunner`4.RunTestMethods(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestClassRunnerBase`4.<>n__2(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestClassRunnerBase`4.RunTestMethods(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestClassRunnerBase`4.RunTestMethods(TContext ctxt, Exception exception)\n       at Xunit.v3.TestClassRunner`4.<>c__DisplayClass11_0.<Run>b__1()\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at Xunit.v3.TestClassRunner`4.Run(TContext ctxt)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestClassRunner`4.Run(TContext ctxt)\n       at Xunit.v3.XunitTestClassRunner.<>c__DisplayClass5_0.<Run>b__0()\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at Xunit.v3.XunitTestClassRunner.Run(IXunitTestClass testClass, IReadOnlyCollection`1 testCases, ExplicitOption explicitOption, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, FixtureMappingManager collectionFixtureMappings)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestClassRunner.Run(IXunitTestClass testClass, IReadOnlyCollection`1 testCases, ExplicitOption explicitOption, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, FixtureMappingManager collectionFixtureMappings)\n       at Xunit.v3.XunitTestCollectionRunnerContext.RunTestClass(IXunitTestClass testClass, IReadOnlyCollection`1 testCases)\n       at Xunit.v3.CoreTestCollectionRunner`4.RunTestClass(TContext ctxt, TTestClass testClass, IReadOnlyCollection`1 testCases)\n       at Xunit.v3.TestCollectionRunner`4.RunTestClasses(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestCollectionRunner`4.RunTestClasses(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestCollectionRunner`4.<>n__0(TContext ctxt, Exception exception)\n       at Xunit.v3.CoreTestCollectionRunner`4.RunTestClasses(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.CoreTestCollectionRunner`4.RunTestClasses(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestCollectionRunnerBase`4.<>n__2(TContext ctxt, Exception exception)\n       at Xunit.v3.XunitTestCollectionRunnerBase`4.RunTestClasses(TContext ctxt, Exception exception)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestCollectionRunnerBase`4.RunTestClasses(TContext ctxt, Exception exception)\n       at Xunit.v3.TestCollectionRunner`4.<>c__DisplayClass8_0.<Run>b__1()\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.ExceptionAggregator.RunAsync[T](Func`1 code, T defaultValue)\n       at Xunit.v3.TestCollectionRunner`4.Run(TContext ctxt)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.TestCollectionRunner`4.Run(TContext ctxt)\n       at Xunit.v3.XunitTestCollectionRunner.Run(IXunitTestCollection testCollection, IReadOnlyCollection`1 testCases, ExplicitOption explicitOption, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, FixtureMappingManager assemblyFixtureMappings)\n       at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n       at Xunit.v3.XunitTestCollectionRunner.Run(IXunitTestCollection testCollection, IReadOnlyCollection`1 testCases, ExplicitOption explicitOption, IMessageBus messageBus, ExceptionAggregator aggregator, CancellationTokenSource cancellationTokenSource, ParallelMode parallelMode, ExecutionScheduler scheduler, FixtureMappingManager assemblyFixtureMappings)\n       at Xunit.v3.XunitTestAssemblyRunnerBaseContext`3.RunTestCollection(TTestCollection testCollection, IReadOnlyCollection`1 testCases)\n       at Xunit.v3.CoreTestAssemblyRunner`4.RunTestCollection(TContext ctxt, TTestCollection testCollection, IReadOnlyCollection`1 testCases)\n       at Xunit.v3.CoreTestAssemblyRunner`4.<>c__DisplayClass2_1.<RunTestCollections>g__taskFactory|0()\n       at Xunit.v3.ExecutionScheduler.<>c__DisplayClass12_0`1.<EnsureParallel>b__1()\n       at System.Threading.Tasks.Task`1.InnerInvoke()\n       at System.Threading.ExecutionContext.RunFromThreadPoolDispatchLoop(Thread threadPoolThread, ExecutionContext executionContext, ContextCallback callback, Object state)\n       at System.Threading.Tasks.Task.ExecuteWithThreadLocal(Task& currentTaskSlot, Thread threadPoolThread)\n       at System.Threading.ThreadPoolWorkQueue.Dispatch()\n       at System.Threading.PortableThreadPool.WorkerThread.WorkerThreadStart()\n       at System.Threading.Thread.StartCallback()\n    \n    STATE factoryCalls=1 factoryReturns=1 release=1 pending=1 requestTerminal=False comparerThrows=2\n    VALIDATED_STRANDED_PENDING: finite state failure before any request await; only this original/mutant child route has no product request/slot/cache join credit.\n    \n\nTestlaufzusammenfassung: Fehler! - /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)\n  gesamt: 1\n  fehlerhaft: 1\n  erfolgreich: 0\n  übersprungen: 0\n  Dauer: 2s 291ms\n",
+      "finite_child_pending_line": 171,
+      "product_join_credit": false,
+      "both_actual_attempt_stacks_complete_personally_read": true,
+      "watchdog_or_safety_failure": false
+    }
+  ],
+  "source_binding": {
+    "canonical_O_original_C_all6095_paths_hashes_equal": true,
+    "manifest_sha256": "b8855c256e85ae343a79fba1a1bf1b6396d0a1e30477d36e971fef479e80da6c",
+    "source21_O_C_immutable_snapshot_equal": true,
+    "root812_sha256": "aae21c42cb93ee9f6b2cf759c7a184b3513c81d3696d750208e4740d1eac1d38",
+    "root812_all_current_hashes_shared84_equal": true,
+    "original_cache18_unmodified": true,
+    "root_personal_read_not_replaced_by_reviewer_or_hashes": true
+  },
+  "strict_build": {
+    "warnings": 0,
+    "errors": 0,
+    "joined_exit": 0,
+    "root_unified_tool_session_ids": {
+      "reused_locked_restore": 30748,
+      "forced_build": 90028,
+      "focused": 2125
+    },
+    "these_session_ids_are_not_OSPIDs": true,
+    "parent_OSPID": 88174,
+    "actual_child_OSPIDs": [
+      88177,
+      88178
+    ],
+    "reused_locked_restore_R1_raw_same_graph_not_new_restore": true,
+    "build_binlog_PID_filename_88059_not_tool90028": true
+  },
+  "runtime17_sha256": {
+    "ViciOne.ServiceBus.Tests.runtimeconfig.json": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+    "ViciOne.ServiceBus.Tests": "a485b3d277bb128b832f9ac839cc04ed7da029ba9aaf40f0d4001582d08c513e",
+    "ViciOne.ServiceBus.Mediator.dll": "2d031c27d99f6c66987c0a70c119c90a8aae6bc1f17be7b4c6b9f206515942d7",
+    "ViciOne.ServiceBus.JobService.dll": "2014f85bef22373ea70e6f447b542323f7b91c326e8d9eb779f6eb46bfa1d113",
+    "ViciOne.ServiceBus.Tests.testconfig.json": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+    "ViciOne.ServiceBus.Testing.dll": "0eaa54aa6aeaa45fd3de912711ace92bb70a320ffa5f9c51bd0971fb8e0bf07b",
+    "ViciOne.ServiceBus.Courier.dll": "e5392248da4875562a621f6e3ff0fcaf9d1038d4083029329011a49456b15f1c",
+    "ViciOne.ServiceBus.Futures.dll": "db3ce9d3a05a9b344fcb324af8849862d1a2460ff9dfeefb8dd471f1e98ca3d4",
+    "ViciOne.ServiceBus.Abstractions.dll": "c3e17c72838ec5c97874edd14e0854fa7f6846b7949c9afba1ce6f29a7c895ab",
+    "ViciOne.ServiceBus.Initializers.dll": "0929113f05e688ebeaabcd5192c17a531c701b86db097367908597c63739fb81",
+    "ViciOne.ServiceBus.Sagas.dll": "f59a923604c814e79e02b4a5cd970aca19d91b11caa770abac2c8b372d7873fe",
+    "ViciOne.ServiceBus.Tests.pdb": "91fdef43b7c1af561c1621132120f9e71eaf7ed86d074833c29c5db49c3d965d",
+    "ViciOne.ServiceBus.Tests.Infrastructure.dll": "c17bdd92c1599fa50e37e6cb30fc0b0583c35478bfe856fc951cb97cf8be7b80",
+    "ViciOne.ServiceBus.dll": "680f771b45e093c14a1057fa73a03a72e9d97e6682da02fb665866692f3a5fff",
+    "ViciOne.ServiceBus.Tests.dll": "bebdffbcf798f192ddab732ab3d617947f189ace64bc5749b190a1d9c08ccfc8",
+    "ViciOne.ServiceBus.Tests.InternalAccess.dll": "d0167344e00b98d1d7f935799c1a70e43e7283d8bd4104c8bc8fa9b36a63d47a",
+    "ViciOne.ServiceBus.Tests.deps.json": "ebd7e9743b85cadf35d729ceb9e51687088d9e1a60a6f25d8f8c8a09de8ed223"
+  },
+  "raw6_sha256": {
+    "p06-cache-original-restore-r1-20261007-055801--87679--evrT3l.binlog": "1b4d003bc4ea3d97e6e8720aa96e634d3cce8a3b551775943129def513754f65",
+    "p06-cache-original-restore-r1.log": "a0a6bd5e544128ebbeb9c1ce64b4d1787ef73348fd9e533d9d04637519b7a47e",
+    "p06-cache-original-build-r2.log": "6f54a5db45027eabce8a9105bab41c7762d88c1f3219bfe647b35b9f8f638c39",
+    "p06-cache-original-build-r2-20261007-061139--88059--EMUUwt.binlog": "f4d87e751af59731d988f1b9112251a8db41527d3422e267a5ed18aacd1aa582",
+    "p06-cache-original-focused-r2-20261007-061415--88171--5CAOUc-dotnet-test.binlog": "475dc552c1d2f96cb1206689fb18680245dfef24af210b0825019914c4b2b23a",
+    "p06-cache-original-focused-r2.log": "08f6cd414ce2ea649f34401427db449d02c6ba5b06fa93b661a900451e927c77"
+  },
+  "parser_sha256": "1bc09397fe31d1edaa74ae0f2ddc92b3d79b81240ec2ce571064652e7217fe1f",
+  "PE_PDB12": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/runtime/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "c3e17c72838ec5c97874edd14e0854fa7f6846b7949c9afba1ce6f29a7c895ab",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2729899863,
+          "guid": "ba8a9432-0809-44b2-bf76-ffd994522cc8",
+          "path": "ViciOne.ServiceBus.Abstractions.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "32948aba0908b244bf76ffd994522cc857f7b6a2",
+        "sha256": "1603496d63f5c7ee50acd4dc24e0e026cfc06c5058ed939fa1d4f09188f247b4",
+        "documents": 700,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 700
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "4459d2b268d1cb7a34fcdd51f07658925662288f8d2bc037fe37992d560d7fbe",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/runtime/ViciOne.ServiceBus.Courier.dll",
+      "sha256": "e5392248da4875562a621f6e3ff0fcaf9d1038d4083029329011a49456b15f1c",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4094611144,
+          "guid": "642eb84c-93f8-4ce1-9084-b202915b6f99",
+          "path": "ViciOne.ServiceBus.Courier.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "4cb82e64f893e14c9084b202915b6f99c8ce0ef4",
+        "sha256": "e14ef5335232c94871f27a07ea49105d8cedfd2997e765e2fcc6f4e47d462234",
+        "documents": 146,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 146
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "cf3f7c0a3598ac989b337f1fbf7db1495c5134ad354a9d0982762977bcb272bc",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/runtime/ViciOne.ServiceBus.Futures.dll",
+      "sha256": "db3ce9d3a05a9b344fcb324af8849862d1a2460ff9dfeefb8dd471f1e98ca3d4",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2802787691,
+          "guid": "c9a04a31-a85c-4788-a8be-71657ef4d31d",
+          "path": "ViciOne.ServiceBus.Futures.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "314aa0c95ca88847a8be71657ef4d31d6b250fa7",
+        "sha256": "ead0be3e790bb7420db500b8eb8faea741ad65f7923cf127d0686784f719f415",
+        "documents": 61,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 61
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "45753724b7b9038bae2421afd3cb1970b8c4c992dec336585fc973bb9fa6a955",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/runtime/ViciOne.ServiceBus.Initializers.dll",
+      "sha256": "0929113f05e688ebeaabcd5192c17a531c701b86db097367908597c63739fb81",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2260874943,
+          "guid": "fa6acc32-6710-4695-872f-a86175f45bc6",
+          "path": "ViciOne.ServiceBus.Initializers.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "32cc6afa10679546872fa86175f45bc6bf36c286",
+        "sha256": "21d59bdd43fc567560b51f1d01a44884ecd6fd681d9365d672fa4610e6b63041",
+        "documents": 11,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 11
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "82795e0d55947cc4215acb9a0054644683c3b7cd8f06c4890a8f99aab65af0c8",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/runtime/ViciOne.ServiceBus.JobService.dll",
+      "sha256": "2014f85bef22373ea70e6f447b542323f7b91c326e8d9eb779f6eb46bfa1d113",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2915898372,
+          "guid": "f9a00051-68cc-465e-a381-e061768a0e22",
+          "path": "ViciOne.ServiceBus.JobService.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "5100a0f9cc685e46a381e061768a0e220414cdad",
+        "sha256": "3b05d6f684bfc9cb3e16924ed105fdf516e776b649ad1ef8c311328668c7b320",
+        "documents": 175,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 175
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "a92dd7e609fc7022a281f2e706c8e8e1a091452aa01cddc59a48bb9283181e55",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/runtime/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "2d031c27d99f6c66987c0a70c119c90a8aae6bc1f17be7b4c6b9f206515942d7",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3361158776,
+          "guid": "37e9761f-6d4d-45f7-a957-b7300397b94f",
+          "path": "ViciOne.ServiceBus.Mediator.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "1f76e9374d6df745a957b7300397b94f783657c8",
+        "sha256": "519730d511e9b61d9f097eda31165ffa23ad2f97ce6a6a39ecf772a696f0f813",
+        "documents": 31,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 31
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "675a479f0659d5b5bb0a25c17ca7a010554747b8a48251a99c4ec2616d955c35",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/runtime/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "f59a923604c814e79e02b4a5cd970aca19d91b11caa770abac2c8b372d7873fe",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3315235252,
+          "guid": "d1bbaa23-8489-40fc-902f-787caed27916",
+          "path": "ViciOne.ServiceBus.Sagas.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "23aabbd18984fc40902f787caed27916b4799ac5",
+        "sha256": "bece1304dd4e12b94ae409d0313af1f984fa5a2f3430def7c84723cbf747533d",
+        "documents": 374,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 374
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "6267abd6f59411c4e869aecde16e09604abc152e7ff2674573152d0b5d9b5b64",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/runtime/ViciOne.ServiceBus.Testing.dll",
+      "sha256": "0eaa54aa6aeaa45fd3de912711ace92bb70a320ffa5f9c51bd0971fb8e0bf07b",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3320293984,
+          "guid": "4b13dbf7-dbe0-4853-a8c0-94da5d8f5648",
+          "path": "ViciOne.ServiceBus.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "f7db134be0db5348a8c094da5d8f564860aae7c5",
+        "sha256": "4dd1af62ea30aec725d1aa7f845155244199a9c18954f1a2688d91e446a89635",
+        "documents": 104,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 104
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "4cf3ec005622383b5fb6ba46afcefb5c3efe2e96d3f127e10694d491a0115e78",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "c17bdd92c1599fa50e37e6cb30fc0b0583c35478bfe856fc951cb97cf8be7b80",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3432775221,
+          "guid": "776a9beb-b0fd-422f-886f-83bf2432b388",
+          "path": "ViciOne.ServiceBus.Tests.Infrastructure.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "eb9b6a77fdb02f42886f83bf2432b38835fe9bcc",
+        "sha256": "ca0db3d677432f58b639c2d64e195102b0ede31f9a34746c26f3be51cd39b75a",
+        "documents": 9,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 9
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "33dcc6f3d152efca9de75915b78a4dc8b5039392a685ad812bfe41952f25aad8",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/runtime/ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "sha256": "d0167344e00b98d1d7f935799c1a70e43e7283d8bd4104c8bc8fa9b36a63d47a",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4138588299,
+          "guid": "a0e00cff-084d-4fd7-91c4-fa7d730f8dd0",
+          "path": "ViciOne.ServiceBus.Tests.InternalAccess.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "ff0ce0a04d08d74f91c4fa7d730f8dd08bd8adf6",
+        "sha256": "0e04573db6f63197f68584415d87efe2305ad6fc00cad04c4699bca1f571afa5",
+        "documents": 38,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 38
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "75fb9054a52367c0da886df2791d8e1b6898c4cd166a8fb9118ad13b867757b2",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/runtime/ViciOne.ServiceBus.Tests.dll",
+      "sha256": "bebdffbcf798f192ddab732ab3d617947f189ace64bc5749b190a1d9c08ccfc8",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3196529440,
+          "guid": "9de1fedc-6a66-42f2-b516-e2ae2871832e",
+          "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "dcfee19d666af242b516e2ae2871832e202b87be",
+        "sha256": "91fdef43b7c1af561c1621132120f9e71eaf7ed86d074833c29c5db49c3d965d",
+        "documents": 816,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 814,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 2
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "681ca80448f844772169c6fe92ee38eda7a4633504e925283855fc0aedfc6d30",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "404cdbc3326688944f871a18782b703b648d2c29ae8da98f9dfd8efab154f83d",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "404cdbc3326688944f871a18782b703b648d2c29ae8da98f9dfd8efab154f83d"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "46a07426260b5338bb690862efcafc21f9d1c751d27afeeee67a091f70034b2f",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "46a07426260b5338bb690862efcafc21f9d1c751d27afeeee67a091f70034b2f"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/runtime/ViciOne.ServiceBus.dll",
+      "sha256": "680f771b45e093c14a1057fa73a03a72e9d97e6682da02fb665866692f3a5fff",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2393085356,
+          "guid": "f5aae58e-502d-45e0-8281-832655f8a230",
+          "path": "ViciOne.ServiceBus.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "8ee5aaf52d50e0458281832655f8a230ac95a38e",
+        "sha256": "a22cf314a4a2e4eafecd2e28765773aee38eaccc07f16f527a812f29f043e671",
+        "documents": 1340,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 1278,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 18,
+          "EMBEDDED_SOURCE": 44
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "58489f7993fa66f8228f5be0c746f5032e527a7c10d1a0886f7d29ff8a032703",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "d6ce8980172e278b8ce7eae72fed4f6c89f74e23778a24f93e8524ab0b99c5d9",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "d6ce8980172e278b8ce7eae72fed4f6c89f74e23778a24f93e8524ab0b99c5d9"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "a593b0fa0dc498210a20d4669ab68a743a2f13542fe9dbe53aa814ed463f6366",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "a593b0fa0dc498210a20d4669ab68a743a2f13542fe9dbe53aa814ed463f6366"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "d33d153e2de28609ec362672c5637c97c9bfa95cc2895af236857b0181f7abd0",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "d33d153e2de28609ec362672c5637c97c9bfa95cc2895af236857b0181f7abd0"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    }
+  ],
+  "total_actual_PDB_documents": 3805,
+  "metadata12": [
+    {
+      "name": "ViciOne.ServiceBus.Abstractions.dll",
+      "mvid": "39c2724c-a298-4d55-a734-c7af0c0c01ea",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Immutable",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.RegularExpressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Concurrent",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Security.Cryptography",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.NetworkInformation",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Runtime.Intrinsics",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Expressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.Http",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.Mail",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Json",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.Process",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.NameResolution",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Encoding.Extensions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Courier.dll",
+      "mvid": "c500fd1b-d547-46ec-8b60-27a6445041a2",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.DiagnosticSource",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Futures.dll",
+      "mvid": "0d92e7b6-adda-44b5-8a9e-98a37efc3110",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Expressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Immutable",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Initializers.dll",
+      "mvid": "af24f018-0691-458d-bd6f-e58a7871f8d7",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.JobService.dll",
+      "mvid": "6bde84c6-2bb1-4d63-9cba-1be01a8b436f",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Expressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading.Channels",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Concurrent",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.RegularExpressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Options",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Security.Cryptography",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Mediator.dll",
+      "mvid": "31119868-72e8-4273-9484-519aa4c3a3d8",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Json",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.Mail",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Diagnostics",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Logging.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Sagas.dll",
+      "mvid": "a93350bb-893b-48f5-8249-924b5d199bed",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Expressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.DiagnosticSource",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "FastExpressionCompiler",
+          "version": [
+            5,
+            4,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Logging.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Testing.dll",
+      "mvid": "390c6fd9-17f6-48ce-a2c9-dd37e9a08fbd",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.StackTrace",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Logging.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.DiagnosticSource",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Concurrent",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Mediator",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading.Channels",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Expressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Hosting.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Options",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Console",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "mvid": "609ae9c1-63f3-4770-bff3-9b31000486fb",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Configuration.UserSecrets",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Json",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Configuration.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Security.Cryptography",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Configuration",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Configuration.FileExtensions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Configuration.Json",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Configuration.Binder",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "mvid": "5bef5b43-76dc-4853-8f8c-cf26b64c8e99",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Logging.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Concurrent",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Transactions.Local",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Reflection.DispatchProxy",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Json",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.Mail",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.DiagnosticSource",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Options",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Hosting.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Tests.dll",
+      "mvid": "26e5feca-c59c-4656-99c0-fceff8e6e259",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "xunit.v3.core",
+          "version": [
+            4,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "xunit.v3.runner.common",
+          "version": [
+            4,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Configuration.UserSecrets",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Testing.Platform",
+          "version": [
+            2,
+            3,
+            3,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Tests.Infrastructure",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Concurrent",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Logging.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Reflection.DispatchProxy",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Testing",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Diagnostics.HealthChecks",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Json",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.Mail",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Mediator",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Expressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Transactions.Local",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading.Thread",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.TimeProvider.Testing",
+          "version": [
+            10,
+            9,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Options",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.DiagnosticSource",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Hosting.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.JobService",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Google.Protobuf",
+          "version": [
+            3,
+            36,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "System.Reflection.Emit",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Data.Common",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.Process",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.RegularExpressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading.Channels",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Reflection.Primitives",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Initializers",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Futures",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Immutable",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.Http",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "xunit.v3.runner.inproc.console",
+          "version": [
+            4,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "xunit.v3.mtp-v2",
+          "version": [
+            4,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Testing.Extensions.MSBuild",
+          "version": [
+            2,
+            3,
+            3,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Testing.Extensions.Telemetry",
+          "version": [
+            2,
+            3,
+            3,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Testing.Extensions.CodeCoverage",
+          "version": [
+            18,
+            10,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "xunit.v3.assert",
+          "version": [
+            4,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Runtime.InteropServices",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Encoding.Extensions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading.Tasks.Parallel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Parallel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Security.Cryptography",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Logging",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Diagnostics",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Hosting",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.AsyncEnumerable",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading.ThreadPool",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Console",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Specialized",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.StackTrace",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "name": "ViciOne.ServiceBus.Tests.Requirements.CoreRequirements.json",
+          "implementation": 0,
+          "length": 1677497,
+          "sha256": "8cfab7601e9be9f02ab59308a37f8e351ab800757658f9ebb0e16ef00ece6f8e"
+        }
+      ]
+    },
+    {
+      "name": "ViciOne.ServiceBus.dll",
+      "mvid": "a3f9de91-afc4-4495-812c-7c1b5dc9c8f6",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Options",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Diagnostics.HealthChecks",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Concurrent",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading.Channels",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.StackTrace",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Logging.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.Mail",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Transactions.Local",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Json",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Security.Cryptography",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Data.Common",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Hosting.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.DiagnosticSource",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Immutable",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Reflection.Emit",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Reflection.Emit.ILGeneration",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Expressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.RegularExpressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Diagnostics",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Console",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Encodings.Web",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Encoding.Extensions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Reflection.Primitives",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "FastExpressionCompiler",
+          "version": [
+            5,
+            4,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "System.Runtime.InteropServices",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    }
+  ],
+  "qualified_firstparty_edges35": [
+    {
+      "from": "ViciOne.ServiceBus.Courier.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Courier.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Futures.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Futures.dll",
+      "to": "ViciOne.ServiceBus.Sagas.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Futures.dll",
+      "to": "ViciOne.ServiceBus.Courier.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Futures.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Initializers.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.JobService.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.JobService.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.JobService.dll",
+      "to": "ViciOne.ServiceBus.Sagas.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Mediator.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Mediator.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Sagas.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Sagas.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Testing.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Testing.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Testing.dll",
+      "to": "ViciOne.ServiceBus.Sagas.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Testing.dll",
+      "to": "ViciOne.ServiceBus.Courier.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Testing.dll",
+      "to": "ViciOne.ServiceBus.Mediator.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "to": "ViciOne.ServiceBus.Sagas.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "to": "ViciOne.ServiceBus.Courier.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Testing.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Mediator.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Sagas.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Courier.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.JobService.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Initializers.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Futures.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "build_outputs12": [
+    {
+      "project": "ViciOne.ServiceBus.Tests.Infrastructure",
+      "output": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "c17bdd92c1599fa50e37e6cb30fc0b0583c35478bfe856fc951cb97cf8be7b80"
+    },
+    {
+      "project": "ViciOne.ServiceBus.Abstractions",
+      "output": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "c3e17c72838ec5c97874edd14e0854fa7f6846b7949c9afba1ce6f29a7c895ab"
+    },
+    {
+      "project": "ViciOne.ServiceBus",
+      "output": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+      "sha256": "680f771b45e093c14a1057fa73a03a72e9d97e6682da02fb665866692f3a5fff"
+    },
+    {
+      "project": "ViciOne.ServiceBus.Initializers",
+      "output": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Initializers/release/ViciOne.ServiceBus.Initializers.dll",
+      "sha256": "0929113f05e688ebeaabcd5192c17a531c701b86db097367908597c63739fb81"
+    },
+    {
+      "project": "ViciOne.ServiceBus.Mediator",
+      "output": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "2d031c27d99f6c66987c0a70c119c90a8aae6bc1f17be7b4c6b9f206515942d7"
+    },
+    {
+      "project": "ViciOne.ServiceBus.Courier",
+      "output": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll",
+      "sha256": "e5392248da4875562a621f6e3ff0fcaf9d1038d4083029329011a49456b15f1c"
+    },
+    {
+      "project": "ViciOne.ServiceBus.Sagas",
+      "output": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "f59a923604c814e79e02b4a5cd970aca19d91b11caa770abac2c8b372d7873fe"
+    },
+    {
+      "project": "ViciOne.ServiceBus.Tests.InternalAccess",
+      "output": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "sha256": "d0167344e00b98d1d7f935799c1a70e43e7283d8bd4104c8bc8fa9b36a63d47a"
+    },
+    {
+      "project": "ViciOne.ServiceBus.Futures",
+      "output": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll",
+      "sha256": "db3ce9d3a05a9b344fcb324af8849862d1a2460ff9dfeefb8dd471f1e98ca3d4"
+    },
+    {
+      "project": "ViciOne.ServiceBus.JobService",
+      "output": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll",
+      "sha256": "2014f85bef22373ea70e6f447b542323f7b91c326e8d9eb779f6eb46bfa1d113"
+    },
+    {
+      "project": "ViciOne.ServiceBus.Testing",
+      "output": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Testing/release/ViciOne.ServiceBus.Testing.dll",
+      "sha256": "0eaa54aa6aeaa45fd3de912711ace92bb70a320ffa5f9c51bd0971fb8e0bf07b"
+    },
+    {
+      "project": "ViciOne.ServiceBus.Tests",
+      "output": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll",
+      "sha256": "bebdffbcf798f192ddab732ab3d617947f189ace64bc5749b190a1d9c08ccfc8"
+    }
+  ],
+  "own_project_assets12": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/obj/ViciOne.ServiceBus.Abstractions/project.assets.json",
+      "sha256": "496576b034f0d0cd4a83a22461372e73fdfd7b8de149a3676b25872102ec2c15",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "project_sha256": "fc0b486dd4aa4c78487b1e0fa9f56c546cf1c27e0499d9e1f403f26923d54fbb",
+      "project_references": []
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/obj/ViciOne.ServiceBus.Courier/project.assets.json",
+      "sha256": "0150869ff717c9ee1e28247d0b480628a4acfdc94d9d0e2da797a6ca08f071d0",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+      "project_sha256": "3f04063a3393b887bc0d1b666c73e7f4375e73860b8d6b7640960d559913adad",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/obj/ViciOne.ServiceBus.Initializers/project.assets.json",
+      "sha256": "49c8ace5980624c60f7ffb83ba99c41418b88fe13b8a9e1d61e15995a6fffd2e",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj",
+      "project_sha256": "16d4e0c3ae2688b32231a0139ef2c6a47baefe670d260703054d73d83eb1d443",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/obj/ViciOne.ServiceBus.Futures/project.assets.json",
+      "sha256": "f9d3b2c242f456fa3d9ae7d43d9fc41fa823686d1ef037b6c08f073435b2a23b",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+      "project_sha256": "8fe3e90f79ab15806ba2fd38e37e717f02a75eafa5b4c05f08b9ee63dd57ea18",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/obj/ViciOne.ServiceBus.Mediator/project.assets.json",
+      "sha256": "fedf0772b898dbfb0242988ed194fefb95c9c3a54034275d38c67157469ae628",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+      "project_sha256": "5594cd1825e0998de96fa6d78a5995ad36e949fa54cdcd75cf02de181877d023",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/obj/ViciOne.ServiceBus.JobService/project.assets.json",
+      "sha256": "e9e41d04e538834d6f5dedbbf19a121e119dc6b27928efa459337f707f0f19eb",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj",
+      "project_sha256": "8212a7535e1eb020e3b0a4f52d4e49443976acd30b7c0a5a3339d1610fb91f01",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.Infrastructure/project.assets.json",
+      "sha256": "3bc75ba25cbfb14e85f4ea24b3edce21621dcc3cf1271dadd02d0ea19ffd769c",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+      "project_sha256": "954d1e414f5ad15239213b69d4d6e0dd7bb71fff95d8ce81616f49f991d11656",
+      "project_references": []
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.Unit/project.assets.json",
+      "sha256": "ec49850e9f1aa833316c7967d31b558e91e4436d42e735e0d4c1ab81cdb41c90",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "project_sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/obj/ViciOne.ServiceBus.Testing/project.assets.json",
+      "sha256": "295f455e4260f6862d7997d1c43f2362045655e093f873e7ad2b273e3d89686a",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+      "project_sha256": "1e90e8eedf73e374ffb0a4bb145fd4d1cf4a94cdd05b65c29d440a41f8b90603",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.InternalAccess/project.assets.json",
+      "sha256": "db2b2d8d0c38c76e12cddd1c1fb1e159f6e41527c4fa6b2fed0052266baaf63b",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+      "project_sha256": "f79459b8d6dc2fd119935f425fa0284caa4592a8cb04fb79fd2e732d8db76f2d",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/obj/ViciOne.ServiceBus/project.assets.json",
+      "sha256": "c8691969152b25595a93e5a35cbcedd4ccf2af157bb2a0c383655be7c028f1b8",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "project_sha256": "382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/obj/ViciOne.ServiceBus.Sagas/project.assets.json",
+      "sha256": "5b222a61c1accebaeb5b361bdb019d73480165be652cebd9ef5d359a3b7c15c1",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+      "project_sha256": "a6d0faa1c1f4065a2a95f49d92ff643cab6de89f9b5c62bb30980b60009e7a77",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    }
+  ],
+  "deps_project12": [
+    "ViciOne.ServiceBus.Abstractions/1.0.0",
+    "ViciOne.ServiceBus.Courier/1.0.0",
+    "ViciOne.ServiceBus.Futures/1.0.0",
+    "ViciOne.ServiceBus.Initializers/1.0.0",
+    "ViciOne.ServiceBus.JobService/1.0.0",
+    "ViciOne.ServiceBus.Mediator/1.0.0",
+    "ViciOne.ServiceBus.Sagas/1.0.0",
+    "ViciOne.ServiceBus.Testing/1.0.0",
+    "ViciOne.ServiceBus.Tests.Infrastructure/1.0.0",
+    "ViciOne.ServiceBus.Tests.InternalAccess/1.0.0",
+    "ViciOne.ServiceBus.Tests/1.0.0",
+    "ViciOne.ServiceBus/1.0.0"
+  ],
+  "embedded_core_requirements4716": {
+    "name": "ViciOne.ServiceBus.Tests.Requirements.CoreRequirements.json",
+    "implementation": 0,
+    "length": 1677497,
+    "sha256": "8cfab7601e9be9f02ab59308a37f8e351ab800757658f9ebb0e16ef00ece6f8e"
+  },
+  "binlogs3": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/raw/p06-cache-original-focused-r2-20261007-061415--88171--5CAOUc-dotnet-test.binlog",
+      "sha256": "475dc552c1d2f96cb1206689fb18680245dfef24af210b0825019914c4b2b23a",
+      "gzip_integrity_valid": true,
+      "uncompressed_bytes": 3236034
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/raw/p06-cache-original-restore-r1-20261007-055801--87679--evrT3l.binlog",
+      "sha256": "1b4d003bc4ea3d97e6e8720aa96e634d3cce8a3b551775943129def513754f65",
+      "gzip_integrity_valid": true,
+      "uncompressed_bytes": 2156775
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/original-native-r2/raw/p06-cache-original-build-r2-20261007-061139--88059--EMUUwt.binlog",
+      "sha256": "f4d87e751af59731d988f1b9112251a8db41527d3422e267a5ed18aacd1aa582",
+      "gzip_integrity_valid": true,
+      "uncompressed_bytes": 4237384
+    }
+  ],
+  "personal_read": {
+    "all13_case_IDs_and_five_parent_failure_blocks": true,
+    "both_child_PROCESS_and_healthy_stdout_full": true,
+    "hostile_child_whole383_lines_two_untruncated_chunks": true,
+    "initial_truncated_bulk_output_no_read_credit": true,
+    "both_actual_comparer_stacks_commit_then_pending_rollback_distinguished": true,
+    "prior_source18_and_fixture_whole_read_exacthash_reuse": true
+  },
+  "limits": [
+    "The hostile original child cannot join stranded request/slot/cache; its joined OS process does not prove product cleanup.",
+    "First failed assertion only; no later Same/token/origin assertions receive crossed-boundary credit. Actual emitted callback stacks independently qualify phase, not expected stack substitution.",
+    "Excluded36compiler errors and metadataRoot812R1 are immutable zero-native predecessors; R2 alone qualified.",
+    "No corrected cache source, mutation detection, wholeCore, coverage/CRAP/API/P06/CI/provider/cloud/hardware/release completion.",
+    "PE/PDB structural ID/doc checksum and metadata graph checked; no CLR AssemblyLoad, managed execution, or full binary MSBuild event decode."
+  ],
+  "review_execution": "Pure Python file/byte/JSON structural reads; no .NET/Docker/SSH/provider/process control; only owned immutable report written."
+}

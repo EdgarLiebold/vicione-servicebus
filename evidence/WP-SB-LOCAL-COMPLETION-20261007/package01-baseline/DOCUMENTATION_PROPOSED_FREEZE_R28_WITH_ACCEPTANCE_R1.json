@@ -1,0 +1,37 @@
+{
+  "kind": "ROOT_SEVEN_DOCUMENTATION_PROPOSAL_R28_BOUND_TO_ACCEPTED_SQS_R1",
+  "prior_freeze_sha256": "3187570d32d1f2ce80ed772593810bdd79299e39cc4412cd8e36d1b2c76632d4",
+  "prior_source_sha256": {
+    "CHANGELOG.md": "d58f8049f0eee5a6da4b497b72ef4bfb77432a52a58f635549c1a1fda7081e9c",
+    "TODO.md": "6a6478837d493096d4d574e74b527bee5078dc1eeaff33d64e24ea2898914f83",
+    ".testagent/status.md": "b9bba960687bacb17ca0a646e47756b267a73783b198b41a4113662e7a839040",
+    ".testagent/plan.md": "4773dfedbd31ac7a30042c30e70e311c1f6a633e6a0894c3e8dc6cdeb8d6b2b0",
+    ".testagent/local-completion-plan.md": "880e3e73f81e71c69efbd39fda4181e1d5296752cfb4624883bd14dde8be4208",
+    "docs/quality-status.md": "d9f1d51944f966803b9b008b3797e9aae6e8c5a034b6239f18b03ffd7d115a83",
+    "docs/servicebus-local-completion-report.txt": "71b7cd6261e85e1a138b580fcf597b7899861cd8f0dfdb8a0c7a37cbaa10dc3b"
+  },
+  "source_sha256": {
+    "CHANGELOG.md": "40801b4308e33bec3971489e01820031e1836aca90c0d91e0f46c27bbaa52501",
+    "TODO.md": "1fc570aaa6711d6e377c414d3811e9d2b9a1d190b6616f4881cb723fc28f4e92",
+    ".testagent/status.md": "d7aac115b52c67f289c55da03fa9ac5e5d5f390389d12210cbe83193bdec60db",
+    ".testagent/plan.md": "2cff85081bef76df2fd094568b74de3c103552be39c845b573790d4e9b6365c1",
+    ".testagent/local-completion-plan.md": "3c70f69affb3d8026afbe0a7ec4d07396155afdb237b4032c3f08a93b4437c1d",
+    "docs/quality-status.md": "63c571f514f9c764b8cf4b179d0d7dd759f93d829478406229a4975c8ab7d11a",
+    "docs/servicebus-local-completion-report.txt": "8fbba0585fb270d9063cfd5596d3b878bf00a38f937f356efcd2d8ddebd84afb"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r28",
+  "lossless_diff_sha256": "17100fcfc9f1b040579d7c2d6ed4f257e14e0d424769bad1f46c2f95c533c412",
+  "history_suffix_sha256_including_heading": {
+    "CHANGELOG.md": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+    ".testagent/status.md": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+    ".testagent/plan.md": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+    "docs/quality-status.md": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5"
+  },
+  "other11_TODO_blocks_preamble_byteexact": true,
+  "ordered62_OBL_exact": true,
+  "only_local_package06_row_changed": true,
+  "PO_lines": 84,
+  "limits": "Proposal only; accepted SQS source/application referenced. Independent docsreview required beforepublication. Same428/11/77 counts; no global/cloud/HW/API/coverage/remote closure.",
+  "preparation_sha256": "56abd664adabf4e619a2a347a4d3d7c3196058cedaa0f4246be46ba8a80d84c8",
+  "sqs_acceptance_sha256": "8bd79cc01b9ab31e27665469be22d575837908a836ecc08b5fc6a92b6df60f68"
+}

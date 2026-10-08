@@ -1,0 +1,5 @@
+{
+  "kind": "ROOT_FIRST_FINITE_FRAME_ATTRIBUTION_LIMIT_CORRECTION",
+  "prior_ledger_sha256": "51b39ff09e993272dbe21f9ee766c8c08b09cfd14e25c35a29734319758f723d",
+  "correction": "Source firstFalse64/rawnativeframe62 attributed by exact source/controlflow. Prior nearestcompilerpoint phrase is unproved; no fresh IL/sequence-point mapping/JIT explanation claimed. Finally72 notextra cause. Native6RED5healthy counts unchanged."
+}

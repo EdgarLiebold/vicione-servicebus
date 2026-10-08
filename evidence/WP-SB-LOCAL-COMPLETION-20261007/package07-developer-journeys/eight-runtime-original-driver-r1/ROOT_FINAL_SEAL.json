@@ -1,0 +1,11 @@
+{
+  "kind": "ROOT_ACTUAL_EIGHT_ORIGINAL_PREFLIGHT_SEAL",
+  "gate_sha256": "6200c39b68e38e2d8ffc5df8e5c1c97ed958874b4bdc53a1a9a0158117226fdc",
+  "driver_sha256": "c166272746d0e10aa8aab41403750dfe50cb6807e489e65e72db7293c05fcdef",
+  "wrapper_sha256": "22bae5a6e5f28d8f47bf35fcf53c2a71f59401eb3ceeca6249de6f22135eb957",
+  "input_sha256": "449fd7c3fd40ecafe294098abae72f6f64ca7c3c6c7d21e7e63420f5fd326eb6",
+  "peer_sha256": "bece30c60e0a1725376521b36861e7da911ed704a476c9c005840748e5a552dd",
+  "Root_whole_source_and_report_read": true,
+  "edits_only_peer_fields": true,
+  "limits": "Operational original observation only. Produced consumer binary/deps/runtime/assets must be archived before futurebuild; ordinary RED retained, no causal/global completion inference."
+}

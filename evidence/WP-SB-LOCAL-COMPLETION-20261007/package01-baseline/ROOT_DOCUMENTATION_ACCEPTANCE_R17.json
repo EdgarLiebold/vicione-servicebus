@@ -1,0 +1,16 @@
+{
+  "kind": "ROOT_ACCEPTED_DOCUMENTATION_R17",
+  "published_freeze_sha256": "a1f5d0baa0e8008d039b6b513845aa6292775d79d6d26825b6f3dbf6d99b6131",
+  "independent_review_sha256": "6bc29abab9493464bced07efad57c71b802f063d1a25c80605dc3c6283d05395",
+  "source_sha256": {
+    "CHANGELOG.md": "a03a4c23ab10ecd21e56f07a3472c2d91384bc094da615cbb8da73a41a1b6c8d",
+    "TODO.md": "acd39b04f176990bb393977c5bb6b0ad0cfbaf026511408f19b7975000b1ac57",
+    ".testagent/status.md": "814f276aa5fee75b284a4bcab4d0e158796e772448fd3fdcfc94249f3e576faf",
+    ".testagent/plan.md": "ab72ba684f94b63fed6084bcb0a4e5b4fd3fe9e95928a804a923200cf89e573b",
+    ".testagent/local-completion-plan.md": "b070491aa3f0963a8a619bc2d69909f0c3dd81781974cca2f4a81dc35d3cc5a4",
+    "docs/quality-status.md": "68e910712195fa2e05169f2fe78125dfd44bf099892fe484aa907a20bd1701c1"
+  },
+  "cache_acceptance_sha256": "4f171d6aff540947873b1a093ab0f2d50fc93130428d20c4205bccf47b0b354c",
+  "Root_author_read": "Authored/readeverycompletedelta against frozenR16; preservedunchangedhistoricalbytes at exacthash; no agentreadtransfer.",
+  "limits": "Sixexactrevieweddocumentdeltaspublished; oldaudit234/history/other11TODOsections/62OBL/currentcoverageexternalgatespreserved. Bounded cachecomparer/retirement only; observer/adapters/startup/coverage/CI/cloud/HWopen."
+}

@@ -1,0 +1,352 @@
+{
+  "kind": "ROOT_PRIOR_WHOLE_OWNER_REUSE_GUARD_54_EXACT_3_ACCEPTED_SQS_SUCCESSORS_R1",
+  "prior_receipt_sha256": "a382debb187a078bc547704973cd39f609c9e475c69585a5ed8ac9f4e00c180b",
+  "exact_prior_whole_root_reads": [
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "prior_sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56",
+      "current_sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "prior_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef",
+      "current_sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationConfigurator.cs",
+      "prior_sha256": "6f087fb1c501c7325ad43a915b07e5c864390569fc6a6d082523a89e3138e7d2",
+      "current_sha256": "6f087fb1c501c7325ad43a915b07e5c864390569fc6a6d082523a89e3138e7d2"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+      "prior_sha256": "929d35ea91140e697b985c050623fb5c7446e37f87f0199c944cac38bfa7b519",
+      "current_sha256": "929d35ea91140e697b985c050623fb5c7446e37f87f0199c944cac38bfa7b519"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "prior_sha256": "8659b5f22016823aea26893f10dd0be31fc1f2efa9590f46e0acc6cb5b34972e",
+      "current_sha256": "8659b5f22016823aea26893f10dd0be31fc1f2efa9590f46e0acc6cb5b34972e"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+      "prior_sha256": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b",
+      "current_sha256": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+      "prior_sha256": "458dd4d37b5c7a062c9a47f7b698ce2c8c8230fd97acc5c812e59da0f4bc9214",
+      "current_sha256": "458dd4d37b5c7a062c9a47f7b698ce2c8c8230fd97acc5c812e59da0f4bc9214"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus/Transports/Hosting/BusDepot.cs",
+      "prior_sha256": "b6bb5efbcfa677d316fe18f2dc9c2a829099cd38d9c4dda03e125eca906477b0",
+      "current_sha256": "b6bb5efbcfa677d316fe18f2dc9c2a829099cd38d9c4dda03e125eca906477b0"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus/Transports/Hosting/IBusDepot.cs",
+      "prior_sha256": "f10e9cea70b709c5bf671f19cc858d18847fce61496aedc68db7a03094d9f8b2",
+      "current_sha256": "f10e9cea70b709c5bf671f19cc858d18847fce61496aedc68db7a03094d9f8b2"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/ValidateViciOneServiceBusHostOptions.cs",
+      "prior_sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e",
+      "current_sha256": "79563f3ff4252015de789d16c77283405e3448be9384b4e617d5488ef1c89b9e"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/ViciOneServiceBusHostOptions.cs",
+      "prior_sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a",
+      "current_sha256": "26aaf0a20a4183f0ab514aa55631330238dfdb35b1b5e9e3284d77f3b642f55a"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+      "prior_sha256": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08",
+      "current_sha256": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus/Configuration/PayloadAdmissionOptions.cs",
+      "prior_sha256": "a9c4b474245702ae4fcc537cbf6581b1bd0e55f4b10f7d75dd4477d7c18f93c1",
+      "current_sha256": "a9c4b474245702ae4fcc537cbf6581b1bd0e55f4b10f7d75dd4477d7c18f93c1"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus.Abstractions/Serialization/Admission/PayloadAdmissionPolicy.cs",
+      "prior_sha256": "fccb4ff5aac8ad43ea6a13a1f60ac5fafc4f5caf73e3c59ba7e7d224b8bd6496",
+      "current_sha256": "fccb4ff5aac8ad43ea6a13a1f60ac5fafc4f5caf73e3c59ba7e7d224b8bd6496"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus/Configuration/MessageLimitsConfigurationExtensions.cs",
+      "prior_sha256": "768c63ce53946add68e49f2616c82760641a589222363d6617872f07a06e5ee0",
+      "current_sha256": "768c63ce53946add68e49f2616c82760641a589222363d6617872f07a06e5ee0"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsTransportOptions.cs",
+      "prior_sha256": "fca831dd2d3c2a48ebf183630a2181383bb8f71b8331f3392742e82a6ad431a5",
+      "current_sha256": "fca831dd2d3c2a48ebf183630a2181383bb8f71b8331f3392742e82a6ad431a5"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/AmazonSqsRegistrationBusFactory.cs",
+      "prior_sha256": "4565ae7bbea2c655bc529b3a1cde837de11a60965a37755099c2761d4850a8b8",
+      "current_sha256": "4565ae7bbea2c655bc529b3a1cde837de11a60965a37755099c2761d4850a8b8"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs",
+      "prior_sha256": "84e652c0237beb05aaf2d7008f49b70b886163650839c0a0ccded02676eeece2",
+      "current_sha256": "84e652c0237beb05aaf2d7008f49b70b886163650839c0a0ccded02676eeece2"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqTransportOptions.cs",
+      "prior_sha256": "94fa836e5e64ab17df6eb5fe0fdc53dd1616873fd313dd935c4db2f204cfc801",
+      "current_sha256": "94fa836e5e64ab17df6eb5fe0fdc53dd1616873fd313dd935c4db2f204cfc801"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqSslOptions.cs",
+      "prior_sha256": "12451b25b41122100c997b4a7a8645175f934ac29463622db62e2effbd998778",
+      "current_sha256": "12451b25b41122100c997b4a7a8645175f934ac29463622db62e2effbd998778"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/Configuration/RabbitMqRegistrationBusFactory.cs",
+      "prior_sha256": "54dfd3bb3dbebb472997d8bdf063a97acaf171ec1d6707611d9abdbe685b9c19",
+      "current_sha256": "54dfd3bb3dbebb472997d8bdf063a97acaf171ec1d6707611d9abdbe685b9c19"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusConfigurationExtensions.cs",
+      "prior_sha256": "d12135b7ba9ada8671b08a00c12f5cf4c3737ad3bf0fd5fbac5376da11ccaa46",
+      "current_sha256": "d12135b7ba9ada8671b08a00c12f5cf4c3737ad3bf0fd5fbac5376da11ccaa46"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/AzureServiceBusTransportOptions.cs",
+      "prior_sha256": "48137e32e28bf82e05fc6f134725b9039d97f879d88b3c47b979280430f2bde7",
+      "current_sha256": "48137e32e28bf82e05fc6f134725b9039d97f879d88b3c47b979280430f2bde7"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusRegistrationBusFactory.cs",
+      "prior_sha256": "47bc98ab27570fc15126c96ac898e1be2d75c893bc14b2598f0c33ac0100d8dd",
+      "current_sha256": "47bc98ab27570fc15126c96ac898e1be2d75c893bc14b2598f0c33ac0100d8dd"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "prior_sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "current_sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+    },
+    {
+      "scope": "productBodies",
+      "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchRuntimeSettings.cs",
+      "prior_sha256": "55f86c6399c0f9ee6f971853a7f05ef58a04f3cd714817ea64c9eef223ed0e29",
+      "current_sha256": "55f86c6399c0f9ee6f971853a7f05ef58a04f3cd714817ea64c9eef223ed0e29"
+    },
+    {
+      "scope": "existingNamedTestAndFixtureBodies",
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsTransportOptionsStartupTests.cs",
+      "prior_sha256": "e2a08d5a7445cfb0350bc1be384795019cb8041f7965a222b417ee9216a6e77f",
+      "current_sha256": "e2a08d5a7445cfb0350bc1be384795019cb8041f7965a222b417ee9216a6e77f"
+    },
+    {
+      "scope": "existingNamedTestAndFixtureBodies",
+      "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs",
+      "prior_sha256": "967cb99eebbc593bf30429f40983d8dd0022475397535d3b8d9eef5e0075d1a1",
+      "current_sha256": "967cb99eebbc593bf30429f40983d8dd0022475397535d3b8d9eef5e0075d1a1"
+    },
+    {
+      "scope": "existingNamedTestAndFixtureBodies",
+      "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqRegistrationOptionsTests.cs",
+      "prior_sha256": "49141a0da272c92e876c7f8786f2bb7b6286933d00fe88b43ca97ae2553f21e8",
+      "current_sha256": "49141a0da272c92e876c7f8786f2bb7b6286933d00fe88b43ca97ae2553f21e8"
+    },
+    {
+      "scope": "existingNamedTestAndFixtureBodies",
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusTransportOptionsStartupTests.cs",
+      "prior_sha256": "fe0c3b37ef5d01e9ceeb0d28e76f576a88aedd7009ef3bc3ee2ff200cc7e8f48",
+      "current_sha256": "fe0c3b37ef5d01e9ceeb0d28e76f576a88aedd7009ef3bc3ee2ff200cc7e8f48"
+    },
+    {
+      "scope": "existingNamedTestAndFixtureBodies",
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ViciOneServiceBusHostOptionsValidationTests.cs",
+      "prior_sha256": "fc07f872fbddc3287408e0c56e5243093ba941c60fcbe3675ed4419cdff21ec2",
+      "current_sha256": "fc07f872fbddc3287408e0c56e5243093ba941c60fcbe3675ed4419cdff21ec2"
+    },
+    {
+      "scope": "existingNamedTestAndFixtureBodies",
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/BusCompositionStartupValidationTests.cs",
+      "prior_sha256": "613bfc0b93c3bed39323846ed27ede88c2d44f687271c45d18f96a05cd0d382b",
+      "current_sha256": "613bfc0b93c3bed39323846ed27ede88c2d44f687271c45d18f96a05cd0d382b"
+    },
+    {
+      "scope": "existingNamedTestAndFixtureBodies",
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs",
+      "prior_sha256": "1d2f15b80cd90109bd1b944c789761c019632d23617d9ce4e7547bc3c69c28d1",
+      "current_sha256": "1d2f15b80cd90109bd1b944c789761c019632d23617d9ce4e7547bc3c69c28d1"
+    },
+    {
+      "scope": "existingNamedTestAndFixtureBodies",
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/HostedServiceLifecycleOwnershipTests.cs",
+      "prior_sha256": "2abeaa9d7637aabbc3b1bc8cfb57dd0f8d7060c5d1e01ccc4c9b1f02e3defba2",
+      "current_sha256": "2abeaa9d7637aabbc3b1bc8cfb57dd0f8d7060c5d1e01ccc4c9b1f02e3defba2"
+    },
+    {
+      "scope": "existingNamedTestAndFixtureBodies",
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs",
+      "prior_sha256": "2cbd0652ebc77f9defb1bad0fc9deb3c2a125f925e913748b53520366b99fe95",
+      "current_sha256": "2cbd0652ebc77f9defb1bad0fc9deb3c2a125f925e913748b53520366b99fe95"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "global.json",
+      "prior_sha256": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93",
+      "current_sha256": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "Directory.Build.props",
+      "prior_sha256": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf",
+      "current_sha256": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "Directory.Build.targets",
+      "prior_sha256": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1",
+      "current_sha256": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "Directory.Packages.props",
+      "prior_sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e",
+      "current_sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "NuGet.config",
+      "prior_sha256": "3f6cda87abdfbc3e7f7a80906f21b11009ac811c70834dfdbc4840db01a9ce93",
+      "current_sha256": "3f6cda87abdfbc3e7f7a80906f21b11009ac811c70834dfdbc4840db01a9ce93"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "src/Directory.Build.props",
+      "prior_sha256": "be8359cbeaf46760b90b3755da645aeb7b4a786af8f0fd6db9396d21f6e67911",
+      "current_sha256": "be8359cbeaf46760b90b3755da645aeb7b4a786af8f0fd6db9396d21f6e67911"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "tests/Directory.Build.props",
+      "prior_sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8",
+      "current_sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "signing.props",
+      "prior_sha256": "71a2cc9a5b04a60ea4093aa41824f275ad7cf5d87f4a8866a09990450ec2e411",
+      "current_sha256": "71a2cc9a5b04a60ea4093aa41824f275ad7cf5d87f4a8866a09990450ec2e411"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "tests/testconfig.json",
+      "prior_sha256": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+      "current_sha256": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "tests/testsettings.json",
+      "prior_sha256": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7",
+      "current_sha256": "d23bf4c35cb18f26f9ce63a83f41a1ef22e8e43044a73ac1e996c0d2d8b49ac7"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "prior_sha256": "382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3",
+      "current_sha256": "382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "prior_sha256": "fc0b486dd4aa4c78487b1e0fa9f56c546cf1c27e0499d9e1f403f26923d54fbb",
+      "current_sha256": "fc0b486dd4aa4c78487b1e0fa9f56c546cf1c27e0499d9e1f403f26923d54fbb"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "prior_sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21",
+      "current_sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "tests/ViciOne.ServiceBus.Tests/packages.lock.json",
+      "prior_sha256": "d375ff4c06a3b00d9f80a63a8eada1a62bb720261742ad6be7cfbcffc5fdab30",
+      "current_sha256": "d375ff4c06a3b00d9f80a63a8eada1a62bb720261742ad6be7cfbcffc5fdab30"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/ViciOne.ServiceBus.AmazonSqs.csproj",
+      "prior_sha256": "72bb696dcdaf49509f08d7951edb4a4ccaf76112e4bed6ced4a94b8176031e94",
+      "current_sha256": "72bb696dcdaf49509f08d7951edb4a4ccaf76112e4bed6ced4a94b8176031e94"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+      "prior_sha256": "53ac44c04cf794e6ffc05f2b5a8ec47fb6948e1bac181b37155279b0296d3e68",
+      "current_sha256": "53ac44c04cf794e6ffc05f2b5a8ec47fb6948e1bac181b37155279b0296d3e68"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+      "prior_sha256": "b12b81a46e099582644c05165ee384fb394431fc36b517e2a980eceac592a6e3",
+      "current_sha256": "b12b81a46e099582644c05165ee384fb394431fc36b517e2a980eceac592a6e3"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs",
+      "prior_sha256": "a8192e1d3b520714ee1a732505a26a740e06ae073a6f303972a17aefaf328206",
+      "current_sha256": "a8192e1d3b520714ee1a732505a26a740e06ae073a6f303972a17aefaf328206"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs",
+      "prior_sha256": "14ec1d7a56de88968a8bbbb25bb578c50fef16bfb9a4dd078780fbd6e6534c83",
+      "current_sha256": "14ec1d7a56de88968a8bbbb25bb578c50fef16bfb9a4dd078780fbd6e6534c83"
+    }
+  ],
+  "changed_outside_Rabbit_scope": [
+    {
+      "scope": "productBodies",
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "prior_sha256": "460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840",
+      "current_sha256": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "prior_sha256": "1fa6b10f5273864ee89a9059b9eb6d7d37762a86137744a82ac364dae3241b84",
+      "current_sha256": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f"
+    },
+    {
+      "scope": "buildTestContext",
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "prior_sha256": "7a2f76b7d2272ee3afcd8f83c2f05dad7c45883fe814efae2c79ff76b6b51ca2",
+      "current_sha256": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973"
+    }
+  ],
+  "changed_owner_boundaries": "All3 changedSQS owners already Root authored/fullread and independently accepted under SQSstageA2a4af.../canonicalapplication7fb3f...; old receipts preserved, no oldhash currentequalityclaimed.",
+  "limits": "Mechanicalguard justifies own54priorwholebody reuse, not whole6098bodyaudit. NewRabbit181/projectdelta+Hostinglock/projectionnew3 remain ownfocusedread/review."
+}

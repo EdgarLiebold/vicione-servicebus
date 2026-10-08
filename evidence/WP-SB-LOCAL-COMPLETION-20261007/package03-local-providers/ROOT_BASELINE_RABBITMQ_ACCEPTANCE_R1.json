@@ -1,0 +1,21 @@
+{
+  "kind": "ROOT_BOUNDED_ORIGINAL_BASELINE_RABBITMQ_ACCEPTANCE",
+  "status": "ACCEPTED_UNFILTERED_RABBITMQ_BASELINE38",
+  "source_commit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "native": {
+    "total": 38,
+    "passed": 38,
+    "failed": 0,
+    "skipped": 0,
+    "modules": 1,
+    "parent_exit": 0
+  },
+  "independent_review_sha256": "d1e463973c49b8327a9a8805c3c1674f1b42dbc27151c5d51ad5a5ebb199d3eb",
+  "raw_receipt_sha256": "080a58aad8b3135f26c2eef44dc560a630016dc113a9b6dbdba5f370dfa7dd59",
+  "actual_main_integration": "Canonical token/root handover, selected RabbitMQ family, two-source bundle, owned real SSH2ports and native MTP child executed; unchanged lifetime helper17contracts reused",
+  "cleanup": "Root exactowncomposeidentity0containers and64205/64210PIDPGIDabsent; reviewer validates actual0exit/nocleanupfault+fixturefindings/source/binary/PDB/uniqueclosedbinlog",
+  "boundaries": [
+    "Originalbaseline beforeCoredeadlinecorrection",
+    "No AmazonMQ/cloud/hardware or all-provider acceptance"
+  ]
+}

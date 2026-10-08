@@ -1,0 +1,8 @@
+{
+  "kind": "ROOT_FINAL_FOCUSED_SIX_EXECUTION_SEAL_R1",
+  "driver_sha256": "a99a01a886713b63792ee028c715a16a6e68136450a970ef2c4a5c39a0e908a5",
+  "gate_sha256": "1f3f19bd3b392186d4fc41345058b667a1b921769f7861f74a0ae51b5eaab9bc",
+  "final_peer_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-completion-spi-fixed-six-final-binding-adversarial-r1.json",
+  "final_peer_sha256": "94635dacb81f94040c79ce35a74428eb44b51b443fb071b932f5357f2e376a96",
+  "scope": "One bounded strictRebuild+6focused only; finalpeer readwhole/actualprivateguard approved. No provider/whole/mutation/canonical execution."
+}

@@ -18,8 +18,9 @@ internal abstract class ResourceCacheIndexBase<TValue>
     public abstract object PrepareKey(TValue value);
     public abstract bool TryGetEntry(object key, [NotNullWhen(true)] out ResourceCacheEntry<TValue>? entry);
     public abstract bool TryGetPending(object key, [NotNullWhen(true)] out PendingResourceCreation<TValue>? pending);
-    public abstract void CommitKey(ResourceCacheEntry<TValue> entry, object key);
-    public abstract void RemoveKey(object key, ResourceCacheEntry<TValue> entry);
+    public abstract object PrepareEntry(ResourceCacheEntry<TValue> entry, object key);
+    public abstract void PublishEntry(object slot);
+    public abstract void RemoveEntrySlot(object slot);
     public abstract bool PreparedKeyMatches(object requestedKey, object preparedKey);
-    public abstract void RemovePending(object key, PendingResourceCreation<TValue> pending);
+    public abstract void RemovePending(PendingResourceCreation<TValue> pending);
 }

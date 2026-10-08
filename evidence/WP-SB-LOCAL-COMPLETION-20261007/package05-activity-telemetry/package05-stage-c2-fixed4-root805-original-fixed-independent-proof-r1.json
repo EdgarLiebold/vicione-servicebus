@@ -1,0 +1,181 @@
+{
+  "status": "ALL_FIXED4_SNAPSHOT_CURRENT_AND_EXACT_TWO_OWNER_PATCH_VERIFIED__ROOT805_84_AND12_CONTEXT_HASHES_VERIFIED__ORIGINAL_AND_FIXED_NATIVE_LOG_ORACLES_VERIFIED",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C2_FREEZE_R1.json",
+    "sha256": "983ead8fea14aa633138bb87bd31a34d33888aae2104c58dbe3950c7e4b42cf5"
+  },
+  "source4": {
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs": "8a01e6f31430b513cea4f35072778ae70a3927d7e71eb6837fc858d9bd2c6404",
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs": "18bcafb43ebe38b70e004864d7efd2e997426f180d29967402d4b754df808302",
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableConsumerCompletionClockIsolationTests.cs": "a14c4f103e3c40a596a04fb58bc70c81c9ba2395fc173a28405818109678e5da",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "1b1172c896c3f63f252b58507f1aea05cdb6f895e0508c7c42ca736f47e29073"
+  },
+  "line_counts": {
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs": 65,
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs": 561,
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableConsumerCompletionClockIsolationTests.cs": 209
+  },
+  "only_product_changed": [
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs"
+  ],
+  "whole_patch_verified": true,
+  "root805": {
+    "sha256": "c17b0e732d723f904ff05a9562615d15ac96e67ddd59c46f917ce2b184435d69",
+    "all805_current_hashes": true,
+    "git_tracked800_plus_explicit5": true,
+    "prior804_803_same": true,
+    "same_shared84": true,
+    "extra12_context_hashes": true,
+    "Root_personal_read_credit": "Root-only attestation and prior hash-qualified closure; independent hashing is not personal reading"
+  },
+  "requirements": {
+    "ordered4693_prefix_unchanged": true,
+    "exact_two_unique_appends": [
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "Completion_PreservesActualStoreResultWhenDiagnosticClockThrowsAsync",
+        "testType": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests",
+        "variantKey": "durable-completion-optional-clock-keeps-store-result"
+      },
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "Completion_PreservesRequiredClockStoreAndCancellationFailuresAsync",
+        "testType": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests",
+        "variantKey": "durable-completion-required-failures-remain-authoritative"
+      }
+    ],
+    "total4695": true
+  },
+  "native": [
+    {
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c2-original-r1",
+      "result_sha256": "0a635d98959e910cfb953701dbd24c9ab51d243bb096bbb96c058a53598364d7",
+      "raw_hashes_verified": 4,
+      "runtime_hashes_verified": 16,
+      "individual_events": [
+        {
+          "outcome": "erfolgreich",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesActualStoreResultWhenDiagnosticClockThrowsAsync(diagnosticFailure: None, staleGeneration: False)"
+        },
+        {
+          "outcome": "fehlerhaft",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesActualStoreResultWhenDiagnosticClockThrowsAsync(diagnosticFailure: InitialTimestamp, staleGeneration: True)"
+        },
+        {
+          "outcome": "fehlerhaft",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesActualStoreResultWhenDiagnosticClockThrowsAsync(diagnosticFailure: InitialTimestamp, staleGeneration: False)"
+        },
+        {
+          "outcome": "fehlerhaft",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesActualStoreResultWhenDiagnosticClockThrowsAsync(diagnosticFailure: ElapsedTimestamp, staleGeneration: False)"
+        },
+        {
+          "outcome": "erfolgreich",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesActualStoreResultWhenDiagnosticClockThrowsAsync(diagnosticFailure: None, staleGeneration: True)"
+        },
+        {
+          "outcome": "fehlerhaft",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesActualStoreResultWhenDiagnosticClockThrowsAsync(diagnosticFailure: ElapsedTimestamp, staleGeneration: True)"
+        },
+        {
+          "outcome": "erfolgreich",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesRequiredClockStoreAndCancellationFailuresAsync(failure: Cancellation)"
+        },
+        {
+          "outcome": "erfolgreich",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesRequiredClockStoreAndCancellationFailuresAsync(failure: Utc)"
+        },
+        {
+          "outcome": "erfolgreich",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesRequiredClockStoreAndCancellationFailuresAsync(failure: Store)"
+        }
+      ],
+      "strict_build": {
+        "parent_session": 46220,
+        "parent_exit": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      "focused": {
+        "parent_session": 33859,
+        "parent_exit": 2,
+        "total": 9,
+        "passed": 5,
+        "failed": 4,
+        "skipped": 0
+      },
+      "whole_core": null,
+      "PE_PDB_module_graph_qualification": "separate telemetry reviewer; not inferred from hash-only verification"
+    },
+    {
+      "archive": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c2-fixed-r1",
+      "result_sha256": "f44fa0f2a7cf03c0a02e054c8549fb1971d5010a6918f935476ee43cfe0d1054",
+      "raw_hashes_verified": 6,
+      "runtime_hashes_verified": 16,
+      "individual_events": [
+        {
+          "outcome": "erfolgreich",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesActualStoreResultWhenDiagnosticClockThrowsAsync(diagnosticFailure: None, staleGeneration: False)"
+        },
+        {
+          "outcome": "erfolgreich",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesActualStoreResultWhenDiagnosticClockThrowsAsync(diagnosticFailure: InitialTimestamp, staleGeneration: True)"
+        },
+        {
+          "outcome": "erfolgreich",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesActualStoreResultWhenDiagnosticClockThrowsAsync(diagnosticFailure: InitialTimestamp, staleGeneration: False)"
+        },
+        {
+          "outcome": "erfolgreich",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesActualStoreResultWhenDiagnosticClockThrowsAsync(diagnosticFailure: ElapsedTimestamp, staleGeneration: False)"
+        },
+        {
+          "outcome": "erfolgreich",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesActualStoreResultWhenDiagnosticClockThrowsAsync(diagnosticFailure: None, staleGeneration: True)"
+        },
+        {
+          "outcome": "erfolgreich",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesActualStoreResultWhenDiagnosticClockThrowsAsync(diagnosticFailure: ElapsedTimestamp, staleGeneration: True)"
+        },
+        {
+          "outcome": "erfolgreich",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesRequiredClockStoreAndCancellationFailuresAsync(failure: Cancellation)"
+        },
+        {
+          "outcome": "erfolgreich",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesRequiredClockStoreAndCancellationFailuresAsync(failure: Utc)"
+        },
+        {
+          "outcome": "erfolgreich",
+          "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests.Completion_PreservesRequiredClockStoreAndCancellationFailuresAsync(failure: Store)"
+        }
+      ],
+      "strict_build": {
+        "parent_session": 51185,
+        "parent_exit": 0,
+        "warnings": 0,
+        "errors": 0
+      },
+      "focused": {
+        "parent_session": 84306,
+        "parent_exit": 0,
+        "total": 9,
+        "passed": 9,
+        "failed": 0,
+        "skipped": 0
+      },
+      "whole_core": {
+        "parent_session": 57602,
+        "parent_exit": 0,
+        "total": 7991,
+        "passed": 7991,
+        "failed": 0,
+        "skipped": 0
+      },
+      "PE_PDB_module_graph_qualification": "separate telemetry reviewer; not inferred from hash-only verification"
+    }
+  ]
+}

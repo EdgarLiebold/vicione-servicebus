@@ -1,0 +1,71 @@
+{
+  "kind": "ROOT_BOUNDED_CORE_HOST_NEVER_STARTED_CLEANUP_ACCEPTANCE_R1",
+  "status": "ACCEPTED_ORIGINAL3_FIXED5_WHOLE8146_MUTANTS4_RESTORED5_AND_CANONICAL_THREE_FILES",
+  "finding": {
+    "id": "CORE-HOST-STARTUP-CLEANUP-01",
+    "status": "CLOSED_FOR_NEVER_STARTED_RUNTIME",
+    "scope": "One cleanup defect reproduced by two invalid startup-policy cases: Stop/Dispose re-read rejected options before any depot/start task exists. Seven added lines under the existing state lock avoid that options read. Invalid startup remains rejected. Pre-canceled unstarted Stop preserves exact caller token and remains retryable; started and completed-stop paths retain existing behavior."
+  },
+  "evidence_sha256": {
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-original-three-native-r2/RESULT.json": "336a2db032f9d8bf9b204e8f1d162bdbceb39e7d79e5bbcbcf8c7fed60da5cfd",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-original-three-native-r2/package04-core-original-three-native-adversarial-r1.json": "77d5c88aefdab979b908f105c2dbd3f3af0d122b61b6cdfdc8a308f5b8486981",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-fixed-five-native-r1/RESULT.json": "fdc5f4711d20006c31886ef6bbc21273c821ac1136c781cfcd6aead9e6e90f2c",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-fixed-five-native-r1/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "b58b84c843f0e9dd65fdbc49915fc7b0414e0b07d5472a9393ad3b135bcb033e",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-fixed-five-native-r1/package04-core-fixed-five-native-adversarial-r1.json": "a6625e4e546da1c2114d8ee209be278e1c8db2b6a3e91572ccf05829db3cadb9",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-whole-module-native-r1/RESULT.json": "cc2751ce0ea63a2bca29d4d6306317c76811065fb3c80f40ab6f17202005660f",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-whole-module-native-r1/package04-core-whole-8146-native-adversarial-r1.json": "02bb4d156430f505c2cdfd4bbdf93f43a45102cdc08bf346a4c28453c5e7f2e3",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-mutants-native-r1/ROOT_FIRST_FINITE_CAUSE_LEDGER_R1.json": "42559319020be8c3cac2bc0876b92da839a26ec2d789f536c02291840d29e818",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-mutants-native-r1/ROOT_MUTANTS_PHYSICAL_BINDING_AGGREGATE_R1.json": "9063915beed466cca4e18a44d431bd71978c884e70d15e6e3af0f860e57b0caf",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-mutants-native-r1/package04-core-four-mutants-native-adversarial-r1.json": "ad6776bcc382dcdcb8b81a8c1fd858045f8ee3e7c02f2fea1b571548755ebbe3",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-restored-fixed-five-native-r1/RESULT.json": "61fd303ea9fdbe2dbf875d53353fe647b6c11a605c68c49819b3271705d7f95f",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-restored-fixed-five-native-r1/ROOT_RESTORED_RUNTIME_BINDING_REUSE_R1.json": "ff82eb5202aa7ccf7ffa5bd7f385243beba7ff30b7f692777e46bf0a6a9da67e",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-host-restored-fixed-five-native-r1/package04-core-restored-fixed-five-final-adversarial-r1.json": "d8a2349ad0a5a08346a91f4bbc304c4a2f3808f8ef98b7f58e0e7029b2b8b098",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_CORE_HOST_CANONICAL_THREE_FILE_APPLICATION_R1.json": "e56bbc9e214355ec6b25b74e426f895ec2ac1e19fdb61c58712d51cd28d2d8b3"
+  },
+  "counts": {
+    "original_cases": 3,
+    "original_first_finite_RED": 2,
+    "original_healthy": 1,
+    "new_fixture_methods": 3,
+    "new_fixture_cases": 4,
+    "corrected_focused_including_neighbor_PASS": 5,
+    "whole_module_PASS": 8146,
+    "whole_unique_display_labels": 8146,
+    "whole_failed": 0,
+    "whole_skipped": 0,
+    "causal_variants": 4,
+    "mutant_repeated_slots": 20,
+    "mutant_first_finite_RED": 6,
+    "mutant_healthy_controls": 14,
+    "restored_focused_PASS": 5,
+    "compiled_requirement_method_rows": 4722
+  },
+  "physical_evidence": {
+    "fixed_root_fresh_PE_images": 12,
+    "fixed_root_fresh_PDB_document_checksum_occurrences": 3807,
+    "mutants_root_fresh_PE_occurrences": 48,
+    "mutants_root_fresh_PDB_checksum_occurrences": 15228,
+    "restored_all17_runtime_bytes_exact_fixed": true,
+    "restored_PE_parse": "Exact prior Root byte/source reuse only; no fresh post parse",
+    "compiled_all4722_metadata": "Independent actual fixed5 review, not Root fresh all-method decode"
+  },
+  "canonical_application": {
+    "receipt_sha256": "e56bbc9e214355ec6b25b74e426f895ec2ac1e19fdb61c58712d51cd28d2d8b3",
+    "before_files": 6100,
+    "after_files": 6101,
+    "after_equals_qualified_private": true,
+    "changed_files": [
+      "src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+      "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/CoreGenericHostStartupTests.cs",
+      "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json"
+    ]
+  },
+  "root_read_provenance": "Root own complete original/fixed owner and fixture bodies and selected neighboring lifecycle method read; all focused original/fixed/mutant/post stdout and strict summaries personally consumed untruncated. Whole8146 event ledger mechanically verified, focused startup/projection/summary spans personally read; no whole8146 source-body claim. Root fresh physical 12PE/3807 fixed and48PE/15228 mutant parse; post uses Root own exact byte/source reuse. Full6101 manifest checked mechanically, not human body read. Independent read credit is separate.",
+  "limits": [
+    "New fixture4 is included in focused5 and whole8146; mutant20 and post5 repeat existing identities and are not distinct additional tests.",
+    "M1 token-identity countercase adds lifecycle assurance, not a new separate global production finding. Later unreached assertions and duplicate source frames have zero extra kill credit.",
+    "Scope is never-started cleanup only; no arbitrary partial-start or concurrent-race closure, whole P04/global A+/coverage/CRAP/API/performance/provider/cloud/device/remote push claim.",
+    "Historical locked restore13891 reused by reference; no fresh restore claim for fixed/whole/mutant/post. Preparation/compiler/discovery/deadline failures are excluded.",
+    "Historical Core Original6099 and Azure source-chain snapshots remain immutable; canonical source-equivalent transfer does not claim a new canonical native run."
+  ]
+}

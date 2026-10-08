@@ -1,0 +1,16 @@
+{
+  "kind": "ROOT_DOCUMENTATION_ACCEPTANCE_R11",
+  "status": "ACCEPTED",
+  "freeze_sha256": "16f7835405b0ac567837dc8478e6f2bc8f8348e13a628752134aac704039e476",
+  "independent_review_sha256": "c3f4fd5600538642203dd39bf3b19b1a2161fd0449c02d34b442b11483c7f600",
+  "source_sha256": {
+    "CHANGELOG.md": "0e36599c9a5136ec1bee70936165a5dc2e7d314961abca9222c491a266a209f5",
+    "TODO.md": "476067d4a842190bbf654375483e5f861725e258e43c808e5b9772ea3079f911",
+    ".testagent/status.md": "90fd14e5393ebcc0159f448e48bcecd07c1e8c6c031d6d97696fc6bc8f6d8f7b",
+    ".testagent/plan.md": "516fd52b299bb3addb16b994e98c98661db937dc87c08ca7910a6e811c31dde9",
+    ".testagent/local-completion-plan.md": "a7b3247f2fdb93e94f9ad14c9d11418d8012e95ba2c0c383524023c2854acdb4",
+    "docs/quality-status.md": "ecc03c8191a0686e5ccebadb1e6b0693cc4c6a4a477ee281425243656255b27e"
+  },
+  "bounded_C3_acceptance_sha256": "d397e1bfd8229a149b9f66d87821ddb4c71a61ee1dc2de227fc63050b3d2e4c4",
+  "limits": "Historical audit234 unchanged; C3 only; C4 underway unaccepted, widerlocal/CI/currentcoverage/cloud/device pending"
+}

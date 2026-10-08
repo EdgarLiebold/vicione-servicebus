@@ -15,9 +15,17 @@ abstract class Batcher<TEntry> :
     readonly Channel<BatchEntry<TEntry>> _channel;
     readonly TaskExecutor _executor;
     readonly BatchSettings _settings;
+    readonly TimeProvider _timeProvider;
 
     protected Batcher(BatchSettings? settings = null)
+        : this(settings, TimeProvider.System)
     {
+    }
+
+    protected Batcher(BatchSettings? settings, TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
+        _timeProvider = timeProvider;
         _settings = settings ?? ClientContextBatchSettings.GetBatchSettings();
 
         var channelOptions = new BoundedChannelOptions(_settings.MessageLimit * 10)
@@ -73,18 +81,27 @@ abstract class Batcher<TEntry> :
             while (await _channel.Reader.WaitToReadAsync().ConfigureAwait(false))
                 await ReadBatchAsync().ConfigureAwait(false);
         }
-        catch (ChannelClosedException)
-        {
-        }
         catch (Exception exception)
         {
-            LogContext.Error?.Log(exception, "WaitForBatch Faulted");
+            // An owner failure must terminate admission and resolve every still-queued entry.
+            _channel.Writer.TryComplete(exception);
+            while (_channel.Reader.TryRead(out BatchEntry<TEntry>? entry))
+                entry.SetFaulted(exception);
+
+            try
+            {
+                LogContext.Error?.Log(exception, "WaitForBatch Faulted");
+            }
+            catch (Exception)
+            {
+                // Optional diagnostics must not prevent fault propagation or owned cleanup.
+            }
         }
     }
 
     async Task ReadBatchAsync()
     {
-        var batchToken = new CancellationTokenSource(_settings.Timeout);
+        var batchToken = new CancellationTokenSource(_settings.Timeout, _timeProvider);
         var batch = new List<BatchEntry<TEntry>>(_settings.MessageLimit);
         try
         {

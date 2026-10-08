@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:ffcbe3e84fe652cbd68cc6df0d9af1f5da4cdd9c793e6ed5fd71c2270e4e617d",
+  "claims": [
+    {
+      "id": "claim_32175bc006ac4ee18253fc7923d2f54a",
+      "statement": "The repository selects Microsoft.Testing.Platform and native xUnit v3 test projects target .NET 10.",
+      "evidence": [
+        {
+          "resource": "repo://global.json",
+          "version": "repo-file-v1:sha256:9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93"
+        },
+        {
+          "resource": "repo://tests/Directory.Build.props",
+          "version": "repo-file-v1:sha256:55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8"
+        },
+        {
+          "resource": "repo://tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+          "version": "repo-file-v1:sha256:209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21"
+        }
+      ]
+    },
+    {
+      "id": "claim_029a92c20faa41f8bb15e32edc402289",
+      "statement": "The DI test harness respects selected transport and configures InMemory defaults only when none is selected; it rejects an existing default bus registration.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Testing/DependencyInjection/ViciOneServiceBusTestingServiceCollectionExtensions.cs",
+          "version": "repo-file-v1:sha256:4fcb66dd722ee22d11e9f91bcf1375f46b7321882bf8d13c54cc83815d4239a1"
+        }
+      ]
+    },
+    {
+      "id": "claim_151b7b5f069f4bb8b451d540b22442f9",
+      "statement": "SuiteComposition exercises InMemory request and SQLite reliability/scheduling while checking loaded package closure.",
+      "evidence": [
+        {
+          "resource": "repo://samples/SuiteComposition/Program.cs",
+          "version": "repo-file-v1:sha256:75e71fec6e23b9176ed3024ceee04d276cee0847f0c39b61881ba52edd620a9d"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

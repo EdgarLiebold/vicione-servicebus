@@ -1,0 +1,68 @@
+{
+  "kind": "ROOT_FIVE_AZURE_MUTANTS_PHYSICAL_BINDING_AGGREGATE_R1",
+  "outer_native_tool_session": 92416,
+  "outer_returncode": 0,
+  "variants": [
+    {
+      "name": "M1-typed-default-key",
+      "native_sha256": "e610023d8fe68c9fc44483ccd2976f5ef3a8872c7b6e46ddf006415b026f9048",
+      "binding_sha256": "0e6d611b389d53a506f48fec3663ad5fe788fee1a1b6a62981a06d40ed8413c5",
+      "focused": {
+        "total": 6,
+        "failed": 3,
+        "passed": 3,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "M2-null-rejected",
+      "native_sha256": "b4a4b9ab5ec676a1ae803d33eaacc34cdd1ca034fd99dce34303d2c71847fddb",
+      "binding_sha256": "01306df1d6a5828ac9f08b380b4dd7237986f8660f8e233461f56eb85d56702d",
+      "focused": {
+        "total": 6,
+        "failed": 3,
+        "passed": 3,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "M3-blank-predicate-bypassed",
+      "native_sha256": "8717600157fade98d8c3081aefa675cba22a79f5f6300a089845d74fd1267ee6",
+      "binding_sha256": "50bf68414fec65a8ea5f94dc47c1d5bc522ea9728c8f5278e84117821055abf7",
+      "focused": {
+        "total": 6,
+        "failed": 3,
+        "passed": 3,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "M4-eager-validation-removed",
+      "native_sha256": "d834ffc7a5dbfb89f303056b5763dcd9ecd27d029c12a583d33a562293258964",
+      "binding_sha256": "2fe1aa6f49dd0d6a691558c5b4aa4637817d1aa3f1c31b94207a05290be0f22f",
+      "focused": {
+        "total": 6,
+        "failed": 3,
+        "passed": 3,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "M5-typed-diagnostic-name",
+      "native_sha256": "085e5d03c53fb573179c6201bbf16ff9c2435b40483753720b06f386b49906c7",
+      "binding_sha256": "97eea5fc072af68334157290ba9f3b7c151d9951e681f232443779c7b3400d9d",
+      "focused": {
+        "total": 6,
+        "failed": 2,
+        "passed": 4,
+        "skipped": 0
+      }
+    }
+  ],
+  "actual_images": 65,
+  "actual_document_checksums": 16280,
+  "total_repeated_native_slots": 30,
+  "total_first_finite_red": 14,
+  "total_healthy": 16,
+  "limits": "Repeated6 identities across5 variants, not30 distinct tests. Compiler/deadline/discovery/survivor zero kill credit. Fresh Original postRebuild6 and independent mutation review still pending."
+}

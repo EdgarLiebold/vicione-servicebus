@@ -1,0 +1,15 @@
+{
+  "kind": "ROOT_EVIDENCE_METADATA_CORRECTION_ONLY",
+  "supersedes_limits_phrase": {
+    "mutants-native-r1/m7-collision-successor-backlink-lost/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "b06ea26155c01c5d1756d56f4faa3cfcc2204ad271ac4ecdddcbcc135b2f75ff",
+    "mutants-native-r1/m3-rejected-factory-value-not-disposed/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "8d1ba2674bb3551f7117b454d3440ddb0c4b1a77ac47146324eeff19b2fb5d16",
+    "mutants-native-r1/m8-key-removal-instead-of-owned-pending-slot/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "ceba375981dc6a16db2646ac5cf23a149a8f944b7484ebb29e3bed0f97f3dc94",
+    "mutants-native-r1/m6-timed-retirement-finally-removed/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "46dcc7828a6c27bb33ee36d64fe49da355c6a8e8f987e7807e344c5daffe1118",
+    "mutants-native-r1/m4-pending-cleanup-comparer-callback/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "1e3c2171b4ee6f8e3a4ea70d7ec9d6241890cbb9c51866aad8def91fec9ddcf2",
+    "mutants-native-r1/m2-interleaved-index-publication/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "f70fab2220ff87ea695fb445a65979f2508fe330b729aa36ebba1851e692a823",
+    "mutants-native-r1/m1-retirement-comparer-callback/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "dd052eef45ac9a78dbbd63b64797118e9d0ec23236b122c00caf80d3aaae9052",
+    "mutants-native-r1/m5-public-get-retirement-finally-removed/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "12422cc9ff97e9f13a4622d5d61edb1a2d8658197f6046e48e84554c7f2f5bfc"
+  },
+  "corrected_limit": "Prior combined M2/M3 oneoff verification returned unlabelled AssertionError while serialnative was running. Exact failedpredicate was notlogged; root cause NOT established. Concurrent generatedsource writes are only a possible explanation, not proved. That failedcheck produced no receipt and confers zero qualification. Actualidle verification afterownedrunnerjoined0 independently succeeded all8*12PE/3806docs/Reqblob; those measured results unchanged.",
+  "source_test_native_delta": false
+}

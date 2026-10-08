@@ -1,0 +1,29 @@
+{
+  "kind": "LOCAL_FORWARDING_DRAFT_R1",
+  "contracts": 9,
+  "native_provider_acceptance": false,
+  "files": [
+    {
+      "path": "FORWARDING_RESEARCH_PLAN.md",
+      "sha256": "86806129fe926f1962b9ee1eca4e9e8d968c9e24f7f78282d324d7b9e4fdbd8e"
+    },
+    {
+      "path": "contracts-r1.log",
+      "sha256": "97b0e89daed33bdc975ba9b7f169f098f27fd04baeb8f09b0677f80b93e774d0"
+    },
+    {
+      "path": "local_colima_forwarding.py",
+      "sha256": "ac610718a9f861a0164477be4db409e89de9a775d33eea476c98e6f449ca93d0"
+    },
+    {
+      "path": "test_local_colima_forwarding.py",
+      "sha256": "b94319a221b6b8f908f59f36e119e3049168b42bbb24b50a7da81e3a2c726065"
+    }
+  ],
+  "review_findings": [
+    "SIGTERM bypasses cleanup",
+    "Exited leader can leave process group descendants",
+    "Cleanup failure replaces nonzero primary exit"
+  ],
+  "status": "CHANGES_REQUIRED__NOT_RUNTIME_ACCEPTED"
+}

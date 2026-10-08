@@ -1,0 +1,128 @@
+{
+  "kind": "CACHE_PRIVATE_DIRECT_R6_PENDING_R3_STRICT_DELTA_ADVERSARIAL",
+  "status": "NO_BLOCK_PRIVATE_EXACT_DELTA",
+  "direct": {
+    "old_path": "/private/tmp/ResourceCacheComparerIsolationTests.draft-r5.cs",
+    "old_sha256": "733ebbbb9647e9bca57064f410089a231e11e1ecb18f77d22eb9f3d12fccb0ae",
+    "new_path": "/private/tmp/ResourceCacheComparerIsolationTests.draft-r6.cs",
+    "new_sha256": "404cdbc3326688944f871a18782b703b648d2c29ae8da98f9dfd8efab154f83d",
+    "content_lines": 439,
+    "token_additions": 35,
+    "own_return_discards": 2,
+    "changed_lines": [
+      22,
+      26,
+      35,
+      45,
+      46,
+      61,
+      70,
+      71,
+      106,
+      117,
+      118,
+      142,
+      156,
+      167,
+      171,
+      172,
+      188,
+      190,
+      195,
+      196,
+      206,
+      212,
+      213,
+      214,
+      215,
+      216,
+      253,
+      255,
+      266,
+      268,
+      273,
+      280,
+      285,
+      312,
+      384,
+      391,
+      399
+    ],
+    "only_permitted_delta": true
+  },
+  "pending": {
+    "old_path": "/private/tmp/ResourceCachePendingComparerIsolationTests.draft-r2.cs",
+    "old_sha256": "93e9a5bff0c6e13eac03e5858f9466f041e9ad702b6ec76975e10cd204189503",
+    "new_path": "/private/tmp/ResourceCachePendingComparerIsolationTests.draft-r3.cs",
+    "new_sha256": "46a07426260b5338bb690862efcafc21f9d1c751d27afeeee67a091f70034b2f",
+    "content_lines": 249,
+    "token_additions": 6,
+    "own_return_discards": 0,
+    "changed_lines": [
+      158,
+      188,
+      189,
+      197,
+      198,
+      203
+    ],
+    "only_permitted_delta": true
+  },
+  "findings": [],
+  "preserved": {
+    "native_oracles_gates_owned_task_identity_and_cleanup_bodies": true,
+    "cleanup_CancellationToken_None": true,
+    "requirements_attributes": true,
+    "Own_explicit_discard_still_records_actual_original_task": true
+  },
+  "prior_qualified_body_reports": [
+    "package06-cache-private-direct-r5-u2-adversarial.json",
+    "package06-cache-private-pending-child-r2-adversarial.json"
+  ],
+  "excluded_compiler_attempt": {
+    "receipt": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/excluded-original-build-r1/EXCLUDED_RESULT.json",
+    "sha256": "e8ef38f92017873507868b0885e80b375db8a1e38881c61b73b06c256f875bde",
+    "raw_hashes_verified": [
+      {
+        "name": "p06-cache-original-build-r1-20261007-055927--87747--0UfLzm.binlog",
+        "sha256": "ed23a61212e788b1dfe615da005157f3725676e54abbf4138210f44403d3a88c"
+      },
+      {
+        "name": "p06-cache-original-restore-r1-20261007-055801--87679--evrT3l.binlog",
+        "sha256": "1b4d003bc4ea3d97e6e8720aa96e634d3cce8a3b551775943129def513754f65"
+      },
+      {
+        "name": "p06-cache-original-restore-r1.log",
+        "sha256": "a0a6bd5e544128ebbeb9c1ce64b4d1787ef73348fd9e533d9d04637519b7a47e"
+      },
+      {
+        "name": "p06-cache-original-build-r1.log",
+        "sha256": "01a764bc0a1568a80163a040b312701e36b09e7526fc89e8cfe5354211bb689d"
+      }
+    ],
+    "compiler_errors": {
+      "CS4014": 2,
+      "xUnit1051": 34
+    },
+    "total_errors": 36,
+    "restore_exit": 0,
+    "build_exit": 1,
+    "native_tests": 0,
+    "product_causal_credit": 0,
+    "root_tool_session_ids": [
+      30748,
+      68764
+    ],
+    "these_ids_are_not_OS_PIDs": true
+  },
+  "pending_preflight": {
+    "canonical_application_not_yet_claimed": true,
+    "Root812_R1_requirement_current_owner_row_is_stale_old_4708": true,
+    "immutable_Root812_R2_and_Freeze_R2_required_for_current_hash_closure": true
+  },
+  "limits": [
+    "Read-only private successor review; no .NET invocation or strict compilation success.",
+    "No native case success, child qualification, product fixes, or full cache completion claim.",
+    "Root personal read credit remains Root-only."
+  ]
+}

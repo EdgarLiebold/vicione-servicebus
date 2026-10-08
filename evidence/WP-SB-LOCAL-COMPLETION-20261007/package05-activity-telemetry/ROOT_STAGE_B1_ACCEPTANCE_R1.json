@@ -1,0 +1,59 @@
+{
+  "kind": "ROOT_BOUNDED_STAGE_B1_TYPED_SOURCE_ACCEPTANCE",
+  "status": "ACCEPTED",
+  "product_owners": 1,
+  "new_native_cases": 2,
+  "requirements_rows_added": 1,
+  "freeze_sha256": "9fb62ca5340c1754fc9c81b16a8bdac0b34d9954666f9b9b56b7bc22755da22b",
+  "source_sha256": {
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs": "f825ec82e2e3f71fd8daac77f770a875f2f5172b5d75c1e637dd9ecb635f62b7",
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/ActivitySourceActivationIsolationTests.cs": "b6a17dfa23f716c485cc0a6a152b9037676eb623eb8b74f8a4afbccacd158832",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "be76207e17ad3f949d5a40c6688dfa1718d8058f471608237b47f028d0639c07"
+  },
+  "root_complete_read_closure_sha256": "2d3018195a6b6bcef722635d7067323a0f3648f95de89063c174b162423e1bc8",
+  "independent_reviews_sha256": {
+    "package05-stage-b1-source-tests-adversarial-r1.json": "af8e156e958449dedfc87719eeb70ec49aefc758134ea048ddf6e7da28fd8d31",
+    "package05-stage-b1-original-native-artifact-review-r1.json": "955184b944d9029831e8880840f5e6a805490229913b8f74637f9fca4a8abae4",
+    "package05-stage-b1-fixed-native-artifact-review-r2.json": "5f3f9fdedc3ab4a568d42305cb4b74d47aee07c1ac60b5b795578141ef727ba4",
+    "package05-stage-b1-mutant-m1-native-artifact-review-r1.json": "2d6d3a6f139494796721115b9e921bcfa25fac3d0ad743e17e0eb26b4f4d3058",
+    "package05-stage-b1-mutant-m2-native-artifact-review-r1.json": "295cbdd8bea19a3900cf60d2cef67096c069d7dbd1337787318aec698e0823c7",
+    "package05-stage-b1-mutant-m3-native-artifact-review-r1.json": "780244b1f158e5a1953a7882b6d3f9e1a36e2b70ea3fe67a0d3ac513a79e4f97",
+    "package05-stage-b1-final-native-artifact-review-r2.json": "e6b0aa2b8f2a9b732986c7767f99749103291d54657a77174f8e5a8c6fcef416"
+  },
+  "native_summary": {
+    "original": {
+      "finite_failed": 1,
+      "named_healthy": 1,
+      "exit": 2
+    },
+    "fixed_focused_pass": 2,
+    "fixed_whole_core_pass": 7968,
+    "compiled_single_cause_mutants": 3,
+    "mutant_events": 6,
+    "finite_mutant_reds": 3,
+    "named_mutant_healthy": 3,
+    "distinct_hostile_theory_ids": 1,
+    "distinct_first_assertion_boundaries": 3,
+    "fixed_post_pass": 2,
+    "unique_closed_binlogs": 15
+  },
+  "root_personal_native_parent_exits": {
+    "original_build42835": 0,
+    "original_focus43946": 2,
+    "fixed_build10485": 0,
+    "fixed_focus89854": 0,
+    "fixed_core1879": 0,
+    "m1_restore4543": 0,
+    "m1_build64827": 0,
+    "m1_focus54008": 2,
+    "m2_restore64886": 0,
+    "m2_build91968": 0,
+    "m2_focus40916": 2,
+    "m3_restore27263": 0,
+    "m3_build19761": 0,
+    "m3_focus72644": 2,
+    "fixed_post13780": 0
+  },
+  "excluded_attempt": "Interrupted sandbox build12156 despite structuredexit0 after SIGTERM; R1 CS9174 original fixture compile errors excluded.",
+  "limits": "Ordinary typed ActivitySource construction failure only; independent actual host metrics and ownership preserved. No universal arbitrary reentrancy/global failed-source registry cleanup guarantee. Batch test newly authored outside archived native DLL; all remaining P05, Unit/provider/package/current coverage/CI/cloud/hardware gates open."
+}

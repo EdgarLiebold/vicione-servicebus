@@ -1,0 +1,15 @@
+{
+  "kind": "ROOT_ACTUAL_COUNTER_NATIVE_FIRST_FINITE_READ_R1",
+  "variant": "M6-third-stale-lookup",
+  "native_result_sha256": "086c8ae80d3c1a224e11ba245298d863fba5b4f67db912fad50ec49f424beb5a",
+  "physical_receipt_sha256": "da3fd6fe40694a18dd2c9805a51dcaf51ab10e88feaa956e063c0adac821ab2b",
+  "actual": {
+    "total": 11,
+    "passed": 10,
+    "failed": 1,
+    "skipped": 0
+  },
+  "first_finite": "FirstEqual261 expected2actual3 afteractualODEtype258/owner259/name260 passed. LowerEmptySDK262 unreached0credit; boundedloopcause only.",
+  "personally_read": "Entire11actualnative/error/summaryblocks plusstrictbuildbody; fixture487 and sourcecause diffs previouslypersonallywhole exacthash. raw6CRC2mechverified.",
+  "limits": "Same11case labels repeated; firstfiniteonly, lowerunreached0credit. No cloud/globalclosure."
+}

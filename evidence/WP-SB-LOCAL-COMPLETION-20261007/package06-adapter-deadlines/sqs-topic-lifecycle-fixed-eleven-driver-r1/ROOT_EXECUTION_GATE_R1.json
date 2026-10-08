@@ -1,0 +1,24 @@
+{
+  "kind": "ROOT_SQS_FIXED_ELEVEN_EXECUTION_GATE_R1",
+  "driver_sha256": "d89447c1d7ccebea07bbd5138767791a662a3d64b073f80f6ebf98c5dd1a778c",
+  "inputs": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-fixed-private-preparation-r1/INPUTS.json",
+    "sha256": "f6eac1e54fd7160ce845015af85d2e8eb86d1e4f6e60174d2742f49a5fbc4f8d"
+  },
+  "reviewed_files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-fixed-eleven-driver-r1-preflight-adversarial-r1.json",
+      "sha256": "7bfee81beaf5cb25d4dd27ef6c7ea4c5fe2d31f9b7993544ab7a6cc487887e48"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-two-owner-product-source-adversarial-r1.json",
+      "sha256": "eaa9661824f60fe3c7bdd62eb5cd657550878afeb33571dcf3fdbfea984518df"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-original-eleven-native-adversarial-r1.json",
+      "sha256": "c8af48fc32e2a8c6b76763b9b8bd0854c67fcefc3fc71871ee0b67f915a784e4"
+    }
+  ],
+  "root_qualified_source_and_driver": true,
+  "limits": "Rootwhole consumed Original/Source/FixedPreflight and132matcheddriver+exactdelta. Exact2privatecorrectedfiles only; actual locked10assets alreadyqualifiedOriginal0, preservebyteequal/noRestore. No predictedfixedpass, whole/counter/post/transfer pending; source/runtime hold persists through independentfreshphysical212/native gate."
+}

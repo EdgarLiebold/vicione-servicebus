@@ -61,6 +61,11 @@ public sealed class ConsumerCompletedOwningDiagnosticsTests
                     args![0] = settings;
                     return true;
                 }
+                if (method.Name == "TryGetPayload" && method.IsGenericMethod && method.GetGenericArguments().Single() == typeof(TimeProvider))
+                {
+                    args![0] = null;
+                    return false;
+                }
                 if (method.Name == "AddConsumeAgent")
                 {
                     IAgent actual = (IAgent)args![0]!;

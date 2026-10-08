@@ -1,0 +1,146 @@
+{
+  "kind": "ROOT_BOUNDED_EF_GENERIC_HOST_STARTUP_CLEANUP_ACCEPTANCE_R1",
+  "disposition": "ACCEPTED_ONLY_EF_HOST_STARTUP_CLEANUP_01_AND_SEVEN_REVIEWED_FILES",
+  "closed_local_finding": "EF-HOST-STARTUP-CLEANUP-01",
+  "severity": "Medium",
+  "problem": "Selected EF lock/inbox/scoped-delivery options read during hosted-service DI construction fail before Host hosted-list assignment; subsequent Stop Reverse(null) breaks cleanup.",
+  "correction": "Inbox settings resolve once on Start/Execute/directcleanup rather than constructor; Core additionalSources resolve after registeredstartupvalidation in EnsureComposition. Direct constructor dependency guards retained, directworker Start validation before worker scheduling retained, EFwithoutReliablepolicy source branch retained.",
+  "references": {
+    "original4": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-generic-host-original-four-native-r2/RESULT.json",
+      "sha256": "ec000691e0fcf3b9ecd2615e014700e63706f2a4fcb6948292bb3048aec5468d"
+    },
+    "fixed5": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-fixed-five-native-r1/RESULT.json",
+      "sha256": "9cc3d1fa3736d30241368b662eb9583697121bf525d78f05b32f7dd5244a3917"
+    },
+    "whole_ef": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-whole-ef-native-r1/RESULT.json",
+      "sha256": "2c95878cbb3eb7597eb690bc6c33bca0c16d8c36153985655d9f89a718d65281"
+    },
+    "core": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-core-regression-native-r1/RESULT.json",
+      "sha256": "f89c85f1202df319d15f6d3d23c1d37493ab17942d4e93f3e213d4e356a506e2"
+    },
+    "counters3": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/RESULT.json",
+      "sha256": "c28ebd59de63c2554e0cfef02ad00cea25491948ce6e372725e7fc8940533715"
+    },
+    "counter_latest_ledger": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/ROOT_ACTUAL_FIRST_FINITE_AND_HEALTHY_LEDGER_R3.json",
+      "sha256": "7602e594a906ce847ba7591c70f28e671bd55b8d8580ebc7206a97a920b624aa"
+    },
+    "post5": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-restored-post-five-native-r1/RESULT.json",
+      "sha256": "db2e20b4f3b9b6b7fdcf9f15e0fdfc9852c0d894e47cbee43efcef235cc02cf3"
+    },
+    "post_root_exact_reuse": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-restored-post-five-native-r1/ROOT_EXACT_RUNTIME_PHYSICAL_REUSE_R1.json",
+      "sha256": "4003fe340e12cf660bac397142b3e96072cf34c7dbc3e53d129aadd84a95f58c"
+    },
+    "canonical_application": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-canonical-seven-application-r1/RESULT.json",
+      "sha256": "752154e2e98b8cf4c6528259dd66db329add740a2a9abe66e1233b0102c1501e"
+    },
+    "independent_final_gate": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-ef-post5-final-seven-canonical-gate-adversarial-r1.json",
+      "sha256": "391752d86218da6045467647b9c57c8d3bd65be1041ce6cfdfe1150b9673af05"
+    },
+    "independent_afterapply": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-ef-canonical-seven-afterapply-adversarial-r1.json",
+      "sha256": "cfd1eb7392f71cf068d407b547541abce10900dbd2e4dacf69592e6e467e1c33"
+    }
+  },
+  "actual_counts": {
+    "original4": {
+      "finite_red": 3,
+      "healthy": 1
+    },
+    "fixed5_pass": 5,
+    "whole_ef": {
+      "passed_slots": 436,
+      "distinct_short_labels": 435,
+      "collision_groups": 1
+    },
+    "separate_affected_core_pass": 8209,
+    "counters": {
+      "variants": 3,
+      "repeated_slots": 15,
+      "distinct_cases": 5,
+      "first_finite_red": 6,
+      "healthy": 9
+    },
+    "restored_post5_pass": 5
+  },
+  "canonical_files": [
+    {
+      "canonical_relative_path": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/InboxCleanupService.cs",
+      "source_path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-generic-host-original/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/InboxCleanupService.cs",
+      "before_sha256": "073288c25cf1c2acebed89cf420cfa761b7fe432dc41c71d09ca30232fdc5651",
+      "after_sha256": "64a54765589cc9f0bb8b9cc43532b68fb792d793088d7f7e178f0599a81984c6"
+    },
+    {
+      "canonical_relative_path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "source_path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-generic-host-original/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "before_sha256": "5054c4236c84a80c9a7ba3c06fbeee59a2c92ae7988fa7d817c5f265826d6140",
+      "after_sha256": "d1998569b140196e67013e1501cef218a0519e7c89cf4b66bed729fd69420729"
+    },
+    {
+      "canonical_relative_path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/InboxCleanupServiceTests.cs",
+      "source_path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-generic-host-original/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/InboxCleanupServiceTests.cs",
+      "before_sha256": "ac9151e911cd0117cf680383fdee255cad48b74d30dd16e32191345cdbee641a",
+      "after_sha256": "5895b06692feccce3acc196c28681fa1b7513b23d0e445d3720c6a80176595b5"
+    },
+    {
+      "canonical_relative_path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Requirements/EntityFrameworkRequirements.json",
+      "source_path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-generic-host-original/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Requirements/EntityFrameworkRequirements.json",
+      "before_sha256": "deb0aec314803b9701ef9bbeff1ee2fa544d6fed9b2c71838363d964d0652e57",
+      "after_sha256": "4447697862c222119daa4464725ea8db5cfabf997cc2229ad5d91828ef76339c"
+    },
+    {
+      "canonical_relative_path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkGenericHostStartupTests.cs",
+      "source_path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-generic-host-original/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkGenericHostStartupTests.cs",
+      "before_sha256": null,
+      "after_sha256": "f70df3070ac395061977f219620a491c4679b2b5fa9751f2c58f9f8742bf9c0a"
+    },
+    {
+      "canonical_relative_path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ViciOne.ServiceBus.EntityFrameworkCore.Tests.csproj",
+      "source_path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-generic-host-original/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/ViciOne.ServiceBus.EntityFrameworkCore.Tests.csproj",
+      "before_sha256": "9bd99c90560e9786a2f4a147d052acaa1628a636c8d9c1e4f7cbec5f51d52ecc",
+      "after_sha256": "2651855295358c19a7791fe60d0eae5d4a4ea724ec523fbd188373f2cdf3f642"
+    },
+    {
+      "canonical_relative_path": "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/packages.lock.json",
+      "source_path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-generic-host-original/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/packages.lock.json",
+      "before_sha256": "f0a75551e91331583dea2d3e541366645678ac696bfe6235aa59cb8355df8aef",
+      "after_sha256": "6aae45f62b5e56b0cf6f60819309e3089205c4d31981e0f7497be0ed0596fbba"
+    }
+  ],
+  "canonical_source_files": 6105,
+  "allother6098_sources_unchanged": true,
+  "configs14_unchanged": true,
+  "post_runtime19_directbytes_fixed_archive_post_archive_live_equal": true,
+  "post_physical_reuse_not_fresh_parse": true,
+  "root_own_fresh_mutant_images": 42,
+  "root_own_fresh_mutant_document_checksums": 9465,
+  "requirements": {
+    "old": 282,
+    "current": 286,
+    "one_existing_method_variant_rename": true,
+    "other281_old_ordered_rows_exact": true,
+    "new_host_fact_rows": 4,
+    "whole_literalprefix_preserved": false
+  },
+  "frozen234_state": {
+    "sha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+    "unchanged": true
+  },
+  "root_read_provenance": "Own original/fixed/product/directtest bodies and complete lossless reviewed source deltas, whole strict and allfocused native bodies; separate Core13 bodies and wholecounts; own each3fresh14PE/3155, finiteRootledgerR3, post19exactphysicalreuse. Peerwhole final/post/afterapply reports read. Large source/config manifests and compiledresource metadata mechanical; no teammate bodyread transfer or all8209body claim.",
+  "limits": [
+    "Scoped startup/cleanup only; ordinary SQLite/InMemorymessages and actualtwo joinedworkers do not prove persisted-outboxdelivery/sustainedSQLpolls.",
+    "Settings holder keeps original mutable Inbox options reference; no deepimmutable snapshot or hotreload contract.",
+    "M3native stack46 vs exactsourceIsType47 separated; later assertions0extra; 15repeat not15newcases/sixbugs.",
+    "Compiler45025 MSB3030/cache recovery no productkillcredit; unexecuted postdriverR1glob issue corrected/reviewed before SDK.",
+    "No currentwholeUnit/providers/coverage/CRAP/telemetryschema/cache/adapters/globalpackedAPI/journeys/benchmarks/CI/cloud/HW/globalA+closure; no newcommit/push."
+  ]
+}

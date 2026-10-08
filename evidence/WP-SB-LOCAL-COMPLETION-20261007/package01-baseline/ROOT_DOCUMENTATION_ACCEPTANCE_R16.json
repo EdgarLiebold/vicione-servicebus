@@ -1,0 +1,8 @@
+{
+  "kind": "ROOT_DOCUMENTATION_ACCEPTANCE_R16",
+  "status": "ACCEPTED_AND_PUBLISHED_EXACT_SIX",
+  "freeze_sha256": "2dfe7010201b4b14f6974c0b4e3079e60ae61a33fcbae62bec7e021d4bb1a46a",
+  "review_sha256": "225ea104e75fe34067bfa05d8a3a081fa094038571e76e221dcd4077610b51d9",
+  "root_read": "Prior whole Root-authored R15 files hash checked, complete R16 delta authored and relevant heads read before generation; preserved historical suffixes/otherTODO/ordered62OBLs independently qualified.",
+  "c7_acceptance_sha256": "b21f05f4e01a0140161265bdc784bb51c37263f74b35cdbf4d26876063401f6d"
+}

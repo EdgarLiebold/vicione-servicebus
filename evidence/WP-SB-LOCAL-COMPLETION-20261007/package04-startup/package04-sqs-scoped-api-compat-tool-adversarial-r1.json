@@ -1,0 +1,219 @@
+{
+  "kind": "INTERNAL_READONLY_P04_SCOPED_API_COMPAT_TOOL_ADVERSARIAL",
+  "status": "NO_BLOCK_PRIVATE_TOOL_STRUCTURE__ACTUAL_THREE_EXECUTIONS_PENDING",
+  "findings": [],
+  "source": {
+    "project_sha256": "4dd61b9549402bb046f171160332dbed17acd40f60b552a191a71c6d1f025e16",
+    "prepared_sha256": "92988db733c9963a8875767da5a66f60049b9f0254c8b4333506346182847335",
+    "whole26lines_personally_read": true,
+    "exact_XML_task_once_unconditional_no_incremental_suppression_continueonerror": true
+  },
+  "actual_SDK_readonly_inventory": {
+    "root": "/usr/local/share/dotnet/sdk/10.0.302",
+    "task_sha256": "81b678a317b588d982e28e127c01e276b328081fc6ef7b711e3baf07bc5649c8",
+    "task_MVID": "1c212d30-2ca0-472a-b555-aac77aaf4428",
+    "local_UsingTask_targets_sha256": "2b7f80e3a32595da852e5cb14da532f7b477e643675567c477918c7ff888f0c9",
+    "Roslyn_CodeAnalysis_sha256": "1e31ee763249c122d0d9cd5f0e0ad3da96974600ac5fa633bc79b2acf308e810",
+    "Roslyn_CSharp_sha256": "0c4b0e37af1ba5be5fa0caae7125281ca9c89c7abbf23e14056e536e8f530d34",
+    "framework_reference_directory": "/usr/local/share/dotnet/packs/Microsoft.NETCore.App.Ref/10.0.10/ref/net10.0",
+    "framework_reference_count167": 167,
+    "current_C9_runtime_directory": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.Tests/release",
+    "current_C9_reference_count71": 71,
+    "combined_reference_count238": 238,
+    "candidate_task_dependencies": [
+      {
+        "assembly_name": "System.Runtime",
+        "reference_version": [
+          8,
+          0,
+          0,
+          0
+        ],
+        "candidate_paths_sha256": {},
+        "framework_runtime_dependent": true
+      },
+      {
+        "assembly_name": "Microsoft.Build.Utilities.Core",
+        "reference_version": [
+          15,
+          1,
+          0,
+          0
+        ],
+        "candidate_paths_sha256": {
+          "/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Build.Utilities.Core.dll": "8d84cf24a83afcd04792c0c9c4747f319b84e7e10f97e7ef9ecbb9510bc65c1b"
+        },
+        "framework_runtime_dependent": false
+      },
+      {
+        "assembly_name": "Microsoft.Build.Framework",
+        "reference_version": [
+          15,
+          1,
+          0,
+          0
+        ],
+        "candidate_paths_sha256": {
+          "/usr/local/share/dotnet/sdk/10.0.302/Microsoft.Build.Framework.dll": "2db389a0b92b8d5fb3ee935ee2c7b40216934b9055e7e12b160f4c51644fde39"
+        },
+        "framework_runtime_dependent": false
+      },
+      {
+        "assembly_name": "Microsoft.DotNet.ApiSymbolExtensions",
+        "reference_version": [
+          10,
+          0,
+          302,
+          0
+        ],
+        "candidate_paths_sha256": {
+          "/usr/local/share/dotnet/sdk/10.0.302/Sdks/Microsoft.NET.Sdk/tools/net10.0/Microsoft.DotNet.ApiSymbolExtensions.dll": "e7fc7552029f6235f88835b2b6a7ce6f6b56ce9fe85c682040734e2bc003d083"
+        },
+        "framework_runtime_dependent": false
+      },
+      {
+        "assembly_name": "System.Collections",
+        "reference_version": [
+          8,
+          0,
+          0,
+          0
+        ],
+        "candidate_paths_sha256": {},
+        "framework_runtime_dependent": true
+      },
+      {
+        "assembly_name": "Microsoft.DotNet.ApiCompatibility",
+        "reference_version": [
+          10,
+          0,
+          302,
+          0
+        ],
+        "candidate_paths_sha256": {
+          "/usr/local/share/dotnet/sdk/10.0.302/Sdks/Microsoft.NET.Sdk/tools/net10.0/Microsoft.DotNet.ApiCompatibility.dll": "9b8b3a7fbdc3831b29c447bd8663dfb2b2412aea6c6b08b8700413ebf1906fb2"
+        },
+        "framework_runtime_dependent": false
+      },
+      {
+        "assembly_name": "NuGet.Frameworks",
+        "reference_version": [
+          7,
+          6,
+          0,
+          0
+        ],
+        "candidate_paths_sha256": {
+          "/usr/local/share/dotnet/sdk/10.0.302/NuGet.Frameworks.dll": "95a7927cb3e090c5f11afd0f0eb6150d433150623c9607a36ff863bb31291685"
+        },
+        "framework_runtime_dependent": false
+      },
+      {
+        "assembly_name": "Microsoft.DotNet.PackageValidation",
+        "reference_version": [
+          10,
+          0,
+          302,
+          0
+        ],
+        "candidate_paths_sha256": {
+          "/usr/local/share/dotnet/sdk/10.0.302/Sdks/Microsoft.NET.Sdk/tools/net10.0/Microsoft.DotNet.PackageValidation.dll": "f2c6385eea697cc2c23fbc05c39f4f37b9142c2f96c7dd9230c3d3b01a3a5cd1"
+        },
+        "framework_runtime_dependent": false
+      },
+      {
+        "assembly_name": "System.Text.RegularExpressions",
+        "reference_version": [
+          8,
+          0,
+          0,
+          0
+        ],
+        "candidate_paths_sha256": {},
+        "framework_runtime_dependent": true
+      },
+      {
+        "assembly_name": "System.Runtime.Loader",
+        "reference_version": [
+          8,
+          0,
+          0,
+          0
+        ],
+        "candidate_paths_sha256": {},
+        "framework_runtime_dependent": true
+      },
+      {
+        "assembly_name": "Microsoft.CodeAnalysis",
+        "reference_version": [
+          4,
+          4,
+          0,
+          0
+        ],
+        "candidate_paths_sha256": {
+          "/usr/local/share/dotnet/sdk/10.0.302/Microsoft.CodeAnalysis.dll": "1e31ee763249c122d0d9cd5f0e0ad3da96974600ac5fa633bc79b2acf308e810",
+          "/usr/local/share/dotnet/sdk/10.0.302/Roslyn/bincore/Microsoft.CodeAnalysis.dll": "1e31ee763249c122d0d9cd5f0e0ad3da96974600ac5fa633bc79b2acf308e810"
+        },
+        "framework_runtime_dependent": false
+      }
+    ],
+    "current_runtime_is_mutable_not_frozen_future_execution_identity": true
+  },
+  "design_assessment": {
+    "unconditional_target": "No TargetCondition/Inputs/Outputs/semaphore/imported default skip; DefaultTargets invokes VerifyScopedApi, taskfailure naturally errors target and completion marker only follows successfultask. No SDK build/restore/Compile pipeline or generatedproduct FileWrites; no broad three-level pipeline needed forone bounded diagnostic target.",
+    "reference_mapping": "Exactlyone left/right assembly each; both taskreference arguments are one comma-delimited list of FullPath values. Official task ParseAssembliesReferences splitscomma inside each string-arrayelement indexed by assemblypair. Correct foronepair; no multiassemblytuple guarantee. Currentchosen paths contain no comma/semicolon.",
+    "SDK_loader": "Absolute taskAssemblyFile uses actualSDK10.0.302 task. Local targets expose sameUsingTask; explicit RoslynAssembliesPath correctSDKbincore. AllnonFramework dependency candidates found inSDK/taskdirs, but readonly presence/hash is not CLRtaskloader-resolution proof. MSBuildroot also has another Microsoft.CodeAnalysis candidate; actualnegative/healthyruns mustqualify loading/result.",
+    "public_compat_policy": "EnableStrictMode=false accepts compatibleadditions fromoldcontract tofixedimplementation; reverseleftfixed/rightold shouldreport missingtypedmethod. RespectInternals=false avoidsprivatehelper/newimplementationdetails while checkingexternallyaccessiblepublic/protectedsurface. Paramname/attributecomparisonenabled; nullabilityuniversality notpromised.",
+    "input_guards": "Existing left/rightpaths and nonemptyreferenceitemcount plusRoslynfileguard fail beforetaskonobviousmissinginput. Guard doesnot individuallyprove referencepackcompleteness/uniqueAssemblyIdentity/reference-resolution; nativequalification explicitlymustexcludeCP1002/unresolvedsymbols/loadererrors.",
+    "ambient_policies": "Standaloneproject importsnoSDKcommon targets/Directory.Build automatically, passesnoNoWarn/suppression/excludeattr/semaphoreparameter toTask; globalscannot silentlymap into omittedTaskparameters. Explicit taskfalse/true flagsbound. Root stillbindactualcommand/globalpropertyset/SDK/hashesbeforeafter.",
+    "right_self_reference": "RuntimeDLLlistincludes currentSQSsameassembly alongside explicit left/right. Separate rootassemblies supplied; absenceoffalseleft/rightresolution mustbe verifiedbyreverseexactCP0002negativecontrol andold\u2192oldhealthy. No claim hypotheticalsilentresolutioncannotoccur fromstaticreview."
+  },
+  "three_actual_Root_runs_required": [
+    {
+      "direction": "archived original -> same archived original",
+      "expected": "Joinedexit0 +completionmarker +actualtaskentry/referencecount + noAPIdiagnostics, no loader/referenceerror.",
+      "purpose": "SDKtaskload/references healthycontrol."
+    },
+    {
+      "direction": "archived original -> exactfixedruntimeSQS",
+      "expected": "Joinedexit0, unchangedpublic/protectedcontract withparamnames/attrs, completionmarker; left/rightactualhash beforeafter.",
+      "purpose": "Forwardcompatible addition."
+    },
+    {
+      "direction": "exactfixedruntimeSQS -> archived original",
+      "expected": "Joinednonzero causedexactoneCP0002missingpublicUsingAmazonSqs<TBus> overload, noCP1002/otherAPIerrors/no completedmarker; repeatedconsole/binlog renderings de-duplicated asone taskdiagnostic.",
+      "purpose": "Finite evidence newgenericmethod wasactuallycompared, no broadsuppression/staleassemblyfalsegreen."
+    }
+  ],
+  "per_run_binding": [
+    "Actual26lineproject/SDKTask/Roslyn/supportingSDKbinaries and complete238referencefilepathset/hashes beforeafter; fixedbuild joined BEFOREfreezing references, no livebuild racingchecks.",
+    "Actual archivedoriginalleft andcurrentcorrectedright SHA andPE/MVID/sourcebinding; exactpairedgenericoverload constraint/parameters inspected independently via compiledsurface baseline.",
+    "Rootsole executor three serial MSBuild with unique nonemptyclosed /bl rawstdout/stderr/actualjoinedPID; unifiedtoolsession numbers distinctfromOSPID.",
+    "No recompilation/restoration/newproduct mutations duringdiagnosticrun. Loader/reference/taskparameterfaults excludedzeroAPIcredit, retainrawfailure andsuccessorreview ifrepair needed."
+  ],
+  "primary_source_verification": [
+    {
+      "url": "https://raw.githubusercontent.com/dotnet/sdk/main/src/Compatibility/ApiCompat/Microsoft.DotNet.ApiCompat.Task/ValidateAssembliesTask.cs",
+      "support": "Taskparameters, requiredleft/right/Roslyn, ruleflags, referencecomma parsing, semaphore/noWarn/suppression optional. Browsedmainsource is parametercontractcontext, not exactSDKbinarybytes proof."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/dotnet/sdk/main/src/Compatibility/ApiCompat/Microsoft.DotNet.ApiCompat.Task/build/Microsoft.DotNet.ApiCompat.ValidateAssemblies.Common.targets",
+      "support": "Official frontend normally wiresconditions/semaphore/suppressions/rules; directproject intentionallydoesnot importthose skipping mechanisms."
+    }
+  ],
+  "skill": {
+    "name": "dotnet-msbuild:target-authoring",
+    "path": "/Users/edgar.liebold/.codex/plugins/cache/dotnet-agent-skills/dotnet-msbuild/0.1.0/skills/target-authoring/SKILL.md",
+    "whole_read": true,
+    "application": "Independent one-purpose diagnostic target; no overwriteofbuildchains/Outputsqueries/incrementalskip. No sourcegeneration/FileWritescleanupobligation."
+  },
+  "limits": [
+    "ReadonlyXML/SDKmetadata/referenceinventory only; no .NET/MSBuild/native/provider/process execution/codeedits.",
+    "This tool structuralNO_BLOCK alone proves no forwardcompatibility or exactadditivecompiledAPI; three actualruns pending.",
+    "Nullablecontractproof, method-bodysemantics/defaultDI/Startupvalidations remainseparate source/nativepackageevidence.",
+    "OnlyoneSQSassembly currentlocalpublic/protectedcompatibility; no wholepackedSDK/nupkg/TFM/referenceassembly/packagebaseline/P07/releasecompatibility claim.",
+    "ExistingP07packedbaseline must laterregenerate exactintendednewmethodusingacceptedformatter andseparatefullbaselinevalidation.",
+    "No mainbranchsourceidentity inference forlocalSDK10.0.302 task, no universalCLRloadcensus."
+  ]
+}

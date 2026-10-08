@@ -1,0 +1,1415 @@
+{
+  "status": "QUALIFIED_BOUNDED_P05_C4_ORIGINAL13_10FINITE_RED3HEALTHY_FIXED13PASS_CORE8067AGGREGATE_FOUR_COMPILED_ONECAUSE_MUTANTS52_9RED43HEALTHY_UNCHANGED_POST13PASS",
+  "reviewer": "/root/telemetry_adversarial",
+  "inputs": {
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-original-native-artifact-review-r1.json": "c995983932c13421c92cdea996a5856dc6ad3ef9fdd4e70cb2d2782cdb4b442d",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-fixed-native-artifact-review-r1.json": "ae9c614bce119fbce9c3e43fbe7d252ea8f7d1cfa308a940ef9f9a08f371b97b",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-mutant-m1-native-artifact-review-r1.json": "c2ae2906ce388e59051a565e80761d6447810d07b453b1fb43c89f08effccb85",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-mutant-m2-native-artifact-review-r1.json": "64a43467c627d2aa452722531a3abdacfa950a4b045e62cd5c7578785431ac9c",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-mutant-m3-native-artifact-review-r1.json": "10704ddf52bf044de88686daa3aa74ec20f56de63e73193eeaf803035426776c",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-mutant-m4-native-artifact-review-r1.json": "ddefdd8c062cdaeec42448984a88c2dfabc26c2e910738ebd25ea7a5a30152e7",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-fixed-post-r1/RESULT.json": "8febb08da157506945084bdde5016a7bea72e2a993fb32c8fdfba6e8fa5e7b60",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C4_FREEZE_R1.json": "27da98a823c3d5903e7b8ac0de8acba64cffc49f9156ce17b8ae33bc07f3ed11",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE807_STAGE_C4_READ_CLOSURE_R1.json": "6d403612f37f2f01467f5db2d75c7aeda7f56974a74c57f62a12ccf7fe3dd476",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-source2-fixed4-adversarial-r1.json": "ab20710eb9370ff34c7e1a4634e49de9b46dc65b432dc009dfed4a9c6e83fca6",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c4-actual-four-mutants-prepared-adversarial-r2.json": "a71c8a7ff5052e1239f3f798b6c76f19982df323aa10322c5fea14c8ad342f8e",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C4_SNAPSHOT_RESEARCH_PLAN_R1.md": "0d0965cc30df17bb4629f5d6451197788b069bdae58a27418f18421a8c6dc136",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-original-build-fixture-attempt-r1/RESULT.json": "49827a77f28ffbb526042013ab5ca25d5b7ba32a94e988d2f6c30bbfcd9cd32a",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C4_TEST_ONLY_ORIGINAL_FREEZE_R2.json": "1bda277fe87187178a7b45833badff8dd3e1c34d67069ef6b5fca4d3d88888ee"
+  },
+  "checks": {
+    "all6_native_predecessors_check_no_findings": true,
+    "all_predecessor_inputhashes_stillbound": true,
+    "all36raw_receipt_hashes": true,
+    "all18_binlogs_unique_closed_complete_nonempty": true,
+    "all91_focusedeventslots19finiteRed72namedHealthy": true,
+    "same_exact13_IDset_all7_stages10distinctOriginalRedIDs": true,
+    "original13_10finiteRed3healthy": true,
+    "four_compiledmutants52_9red43healthy_selected3_3_1_2_withoneoverlap": true,
+    "all6089_actualOcanonical_clone_onecause3800doc_graphs": true,
+    "all84_shared_contexts_fouractualclones": true,
+    "post_exact13_individualPASS_receipt_summary0skip": true,
+    "Root_post69207_exit0_four_mutants_complete_beforepost": true,
+    "post_source4_frozen_owner_Rootbeforeafter_exact": true,
+    "post16runtime_exactfixed_postarchive_Rootbeforeafter": true,
+    "all12_qualified_historical_build_archive_post_exact": true,
+    "post_fixed_result_bound": true,
+    "whole8067_aggregatePASS0skip_samefixedDLL": true,
+    "six_accepted_native_strict_builds0warnings0errors": true,
+    "excluded_fixture_compiler_error_no_native_causalcredit": true,
+    "fullReq4699_embedded_compiledpayload": true,
+    "currentReq_projection_semantic4699prefix_retained": true
+  },
+  "predecessor_input_hashchecks": {
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-original-native-artifact-review-r1.json": {
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-original-r2/RESULT.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C4_TEST_ONLY_ORIGINAL_FREEZE_R2.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C4_FREEZE_R1.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE807_STAGE_C4_READ_CLOSURE_R1.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE806_STAGE_C3_READ_CLOSURE_R2.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-source2-fixed4-adversarial-r1.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c3-final-native-artifact-review-r1.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C3_ACCEPTANCE_R1.json": true
+    },
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-fixed-native-artifact-review-r1.json": {
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-fixed-r1/RESULT.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C4_FREEZE_R1.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C4_TEST_ONLY_ORIGINAL_FREEZE_R2.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE807_STAGE_C4_READ_CLOSURE_R1.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE806_STAGE_C3_READ_CLOSURE_R2.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-source2-fixed4-adversarial-r1.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c3-final-native-artifact-review-r1.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C3_ACCEPTANCE_R1.json": true
+    },
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-mutant-m1-native-artifact-review-r1.json": {
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m1-optional-utc-outside-catch/RESULT.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m1-optional-utc-outside-catch/MUTATION_PREPARED.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m1-optional-utc-outside-catch/MUTATION.diff": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C4_FREEZE_R1.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE807_STAGE_C4_READ_CLOSURE_R1.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c4-actual-four-mutants-prepared-adversarial-r2.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-source2-fixed4-adversarial-r1.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-original-native-artifact-review-r1.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-fixed-native-artifact-review-r1.json": true
+    },
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-mutant-m2-native-artifact-review-r1.json": {
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m2-no-terminal-saturation/RESULT.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m2-no-terminal-saturation/MUTATION_PREPARED.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m2-no-terminal-saturation/MUTATION.diff": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C4_FREEZE_R1.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE807_STAGE_C4_READ_CLOSURE_R1.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c4-actual-four-mutants-prepared-adversarial-r2.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-source2-fixed4-adversarial-r1.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-original-native-artifact-review-r1.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-fixed-native-artifact-review-r1.json": true
+    },
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-mutant-m3-native-artifact-review-r1.json": {
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m3-no-observed-utc-promotion/RESULT.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m3-no-observed-utc-promotion/MUTATION_PREPARED.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m3-no-observed-utc-promotion/MUTATION.diff": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C4_FREEZE_R1.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE807_STAGE_C4_READ_CLOSURE_R1.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c4-actual-four-mutants-prepared-adversarial-r2.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-source2-fixed4-adversarial-r1.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-original-native-artifact-review-r1.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-fixed-native-artifact-review-r1.json": true
+    },
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-mutant-m4-native-artifact-review-r1.json": {
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m4-no-preclock-reservation/RESULT.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m4-no-preclock-reservation/MUTATION_PREPARED.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m4-no-preclock-reservation/MUTATION.diff": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C4_FREEZE_R1.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE807_STAGE_C4_READ_CLOSURE_R1.json": true,
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c4-actual-four-mutants-prepared-adversarial-r2.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-source2-fixed4-adversarial-r1.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-original-native-artifact-review-r1.json": true,
+      "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-fixed-native-artifact-review-r1.json": true
+    }
+  },
+  "all36_raw_inventory": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-original-r2/raw/p05-c4-original-build-r2.log",
+      "sha256": "08ec044c10c9afaeab8a37b9b68b43ee5da3089ca1914b0ed40abe79d44ac114",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-original-r2/raw/p05-c4-original-build-r2-20261007-024113--75910--Ou2Kl4.binlog",
+      "sha256": "955429c00b3c62595277c45049f90f77a7fa0d7dda4e2eccea6ae22334225742",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-original-r2/raw/p05-c4-original-focused-r2-20261007-024214--76074--LH6Zkl-dotnet-test.binlog",
+      "sha256": "69c0a04303fad559808955e8ab1df9692037cdf6874ada0f58c5f6bd180796a9",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-original-r2/raw/p05-c4-original-focused-r2.log",
+      "sha256": "f558885cb62f7652e4881be01ce958598e1d393e2edd15eb9959d6ba850567c8",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-fixed-r1/raw/p05-c4-fixed-build-r1-20261007-024327--76121--oGuI4x.binlog",
+      "sha256": "ffa7df792f76389bf204b0c0aed1bafe774a78d14b6bbe763ef60689b6a88dca",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-fixed-r1/raw/p05-c4-fixed-build-r1.log",
+      "sha256": "64c6573f1cd8a94aef93363a05af0e50a031ab5014971a840bae0c7808bc6297",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-fixed-r1/raw/p05-c4-fixed-focused-r1-20261007-024507--76353--HLG9tc-dotnet-test.binlog",
+      "sha256": "0134c8472af667608c1315e5b3edd9b28dbc107a062045c71890d45e253b6087",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-fixed-r1/raw/p05-c4-fixed-focused-r1.log",
+      "sha256": "4e3de2c7690ebed592e556e1dd8128005432e491910f5992f71f06ebb8650ff0",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-fixed-r1/raw/p05-c4-fixed-core-r1-20261007-024535--76408--VYGvL2-dotnet-test.binlog",
+      "sha256": "0f84dc68d4013384824ff9ad7c428292417a0db1c8a2ec2c5f1dc9c141f402ba",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-fixed-r1/raw/p05-c4-fixed-core-r1.log",
+      "sha256": "d823273604ee18e2d1e19224cb7fca7b51548f893460518aa182b7bbbc6fbf70",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m1-optional-utc-outside-catch/raw/p05-c4-m1-restore-r1.log",
+      "sha256": "d91f8ca6a8d80edabdff86ee9209739cea6a6b43fc5eaec22feec458ddcf306c",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m1-optional-utc-outside-catch/raw/p05-c4-m1-restore-r1-20261007-024709--76516--o93TFx.binlog",
+      "sha256": "734011787871b6ff45ac3129589d0222c4f730aa69bfa251f0a4b2fbae6dc084",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m1-optional-utc-outside-catch/raw/p05-c4-m1-build-r1.log",
+      "sha256": "dde7d9a7649fcdd829f1e62e1d6aa7eab74fe4b18705fdfac582eeaa497430ac",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m1-optional-utc-outside-catch/raw/p05-c4-m1-build-r1-20261007-024742--76546--XtpSLk.binlog",
+      "sha256": "495a50844bcf938521b061230945bed95b278921625adc6c411358cfa33c6b09",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m1-optional-utc-outside-catch/raw/p05-c4-m1-focused-r1-20261007-024912--76831--3106NZ-dotnet-test.binlog",
+      "sha256": "45f5a6ea612a916093240859487f301bfd43bcc53b3a2779c854c978fdac2faf",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m1-optional-utc-outside-catch/raw/p05-c4-m1-focused-r1.log",
+      "sha256": "de83c5e06c635ba99cee1027eb7f29e2c22284d2fcffc26272fe5c0c287aa191",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m2-no-terminal-saturation/raw/p05-c4-m2-restore-r1.log",
+      "sha256": "a78c26720a3f9a39e4f9e2132a55962d2b334aa3af2c0d9c846340f4fc6be567",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m2-no-terminal-saturation/raw/p05-c4-m2-restore-r1-20261007-024945--76863--6RLZOJ.binlog",
+      "sha256": "b998a5abc6d6d6597f44e54fb803ddde95e6325b59596a0f1d8baeda9616fe29",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m2-no-terminal-saturation/raw/p05-c4-m2-build-r1-20261007-025002--76878--OoLZSr.binlog",
+      "sha256": "993e831b82b07aa1e90bc1cbb0f5bfcbd6fb312771263059c98de4accac049f8",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m2-no-terminal-saturation/raw/p05-c4-m2-build-r1.log",
+      "sha256": "c199cdddc2c16591318a271c7575db7b77d7262565045c49f84ad7fa7bff11f0",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m2-no-terminal-saturation/raw/p05-c4-m2-focused-r1-20261007-025154--76983--UHw2xw-dotnet-test.binlog",
+      "sha256": "a4ef1d640f62a46fe341b3f66519e5f1e5a994da5fdd72dcc77b508179926643",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m2-no-terminal-saturation/raw/p05-c4-m2-focused-r1.log",
+      "sha256": "96b5d52f440589e7df9c0552664aa41a78f8bcd51a73087347a5f7b48940e5f8",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m3-no-observed-utc-promotion/raw/p05-c4-m3-restore-r1.log",
+      "sha256": "0d0eb545258787fe54a5858cb8f06feb53f26ed5dc4751e8acaf8fe89072e458",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m3-no-observed-utc-promotion/raw/p05-c4-m3-restore-r1-20261007-025212--77013--KwWK_K.binlog",
+      "sha256": "a948b8a9780164ea39bd136ca47a6e0dfff2a4e911e003c455778c2609909607",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m3-no-observed-utc-promotion/raw/p05-c4-m3-build-r1-20261007-025309--77083--fv9LXZ.binlog",
+      "sha256": "fa4b250c92a682a0f45968d455c68010d0bb85b2c5445ab7f6fab4fe6bafe12c",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m3-no-observed-utc-promotion/raw/p05-c4-m3-build-r1.log",
+      "sha256": "76040cc30b6f0090a8d357253812dc05fbdaafd4bf0c85ff45a55880c4f076a5",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m3-no-observed-utc-promotion/raw/p05-c4-m3-focused-r1-20261007-025423--77161--Z0LM5T-dotnet-test.binlog",
+      "sha256": "837a89a3f49187cb87f4cd3aa56a19aca79760630115b496cbf875a58d7bf4ca",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m3-no-observed-utc-promotion/raw/p05-c4-m3-focused-r1.log",
+      "sha256": "b9e82155d1437ac21ccb301bfbfaa233341907d4f88b6b8c9ad4448f5951c4aa",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m4-no-preclock-reservation/raw/p05-c4-m4-restore-r1.log",
+      "sha256": "7c776c4796d44c3e71bf136364e44f7c5b1c369fd1ac8a02fabc28a1eb7eb913",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m4-no-preclock-reservation/raw/p05-c4-m4-restore-r1-20261007-025451--77190--ksi8O4.binlog",
+      "sha256": "23804b964d13cce21e812253d90ea791f5d251c80eafdfa1eca71540ab1944b0",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m4-no-preclock-reservation/raw/p05-c4-m4-build-r1-20261007-025511--77215--rkh0Oh.binlog",
+      "sha256": "bfc8df95bc318779849d579c2b1c4aebeb10e469653afc903329eb7aaab78f37",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m4-no-preclock-reservation/raw/p05-c4-m4-build-r1.log",
+      "sha256": "6ebc7064b75a2286971dbeca74290a3a93fd6a6bfa953ad8f6135ec6537daf63",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m4-no-preclock-reservation/raw/p05-c4-m4-focused-r1-20261007-025647--77265--3E2cYA-dotnet-test.binlog",
+      "sha256": "fd6dfdc5ee734bbb427a3beb267e43c9f8df61349e89045f937712f8752b235e",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m4-no-preclock-reservation/raw/p05-c4-m4-focused-r1.log",
+      "sha256": "ee1fa61ae7999a2e3772c645908b19f4b0a1d664b920eed12dbc209df472a8fa",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-fixed-post-r1/raw/p05-c4-fixed-post-r1.log",
+      "sha256": "f2fe2d27077a230d3ddf15b6efae24dfa8b2f6a8c2775b5099c9e7a76641bb17",
+      "receipt_match": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-fixed-post-r1/raw/p05-c4-fixed-post-r1-20261007-025706--77288--5VSPSQ-dotnet-test.binlog",
+      "sha256": "d42048a037cd4689a4eef95db43d74b9010978199d8ca37c30ef4c37429b096d",
+      "receipt_match": true
+    }
+  ],
+  "all18_closed_native_binlogs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-original-r2/raw/p05-c4-original-build-r2-20261007-024113--75910--Ou2Kl4.binlog",
+      "sha256": "955429c00b3c62595277c45049f90f77a7fa0d7dda4e2eccea6ae22334225742",
+      "uncompressed_bytes": 3290596,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-original-r2/raw/p05-c4-original-focused-r2-20261007-024214--76074--LH6Zkl-dotnet-test.binlog",
+      "sha256": "69c0a04303fad559808955e8ab1df9692037cdf6874ada0f58c5f6bd180796a9",
+      "uncompressed_bytes": 3237890,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-fixed-r1/raw/p05-c4-fixed-build-r1-20261007-024327--76121--oGuI4x.binlog",
+      "sha256": "ffa7df792f76389bf204b0c0aed1bafe774a78d14b6bbe763ef60689b6a88dca",
+      "uncompressed_bytes": 4034640,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-fixed-r1/raw/p05-c4-fixed-focused-r1-20261007-024507--76353--HLG9tc-dotnet-test.binlog",
+      "sha256": "0134c8472af667608c1315e5b3edd9b28dbc107a062045c71890d45e253b6087",
+      "uncompressed_bytes": 3237887,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-fixed-r1/raw/p05-c4-fixed-core-r1-20261007-024535--76408--VYGvL2-dotnet-test.binlog",
+      "sha256": "0f84dc68d4013384824ff9ad7c428292417a0db1c8a2ec2c5f1dc9c141f402ba",
+      "uncompressed_bytes": 3237884,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m1-optional-utc-outside-catch/raw/p05-c4-m1-restore-r1-20261007-024709--76516--o93TFx.binlog",
+      "sha256": "734011787871b6ff45ac3129589d0222c4f730aa69bfa251f0a4b2fbae6dc084",
+      "uncompressed_bytes": 2233274,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m1-optional-utc-outside-catch/raw/p05-c4-m1-build-r1-20261007-024742--76546--XtpSLk.binlog",
+      "sha256": "495a50844bcf938521b061230945bed95b278921625adc6c411358cfa33c6b09",
+      "uncompressed_bytes": 4284828,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m1-optional-utc-outside-catch/raw/p05-c4-m1-focused-r1-20261007-024912--76831--3106NZ-dotnet-test.binlog",
+      "sha256": "45f5a6ea612a916093240859487f301bfd43bcc53b3a2779c854c978fdac2faf",
+      "uncompressed_bytes": 3248305,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m2-no-terminal-saturation/raw/p05-c4-m2-restore-r1-20261007-024945--76863--6RLZOJ.binlog",
+      "sha256": "b998a5abc6d6d6597f44e54fb803ddde95e6325b59596a0f1d8baeda9616fe29",
+      "uncompressed_bytes": 2222987,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m2-no-terminal-saturation/raw/p05-c4-m2-build-r1-20261007-025002--76878--OoLZSr.binlog",
+      "sha256": "993e831b82b07aa1e90bc1cbb0f5bfcbd6fb312771263059c98de4accac049f8",
+      "uncompressed_bytes": 4272221,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m2-no-terminal-saturation/raw/p05-c4-m2-focused-r1-20261007-025154--76983--UHw2xw-dotnet-test.binlog",
+      "sha256": "a4ef1d640f62a46fe341b3f66519e5f1e5a994da5fdd72dcc77b508179926643",
+      "uncompressed_bytes": 3246617,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m3-no-observed-utc-promotion/raw/p05-c4-m3-restore-r1-20261007-025212--77013--KwWK_K.binlog",
+      "sha256": "a948b8a9780164ea39bd136ca47a6e0dfff2a4e911e003c455778c2609909607",
+      "uncompressed_bytes": 2230701,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m3-no-observed-utc-promotion/raw/p05-c4-m3-build-r1-20261007-025309--77083--fv9LXZ.binlog",
+      "sha256": "fa4b250c92a682a0f45968d455c68010d0bb85b2c5445ab7f6fab4fe6bafe12c",
+      "uncompressed_bytes": 4281730,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m3-no-observed-utc-promotion/raw/p05-c4-m3-focused-r1-20261007-025423--77161--Z0LM5T-dotnet-test.binlog",
+      "sha256": "837a89a3f49187cb87f4cd3aa56a19aca79760630115b496cbf875a58d7bf4ca",
+      "uncompressed_bytes": 3247883,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m4-no-preclock-reservation/raw/p05-c4-m4-restore-r1-20261007-025451--77190--ksi8O4.binlog",
+      "sha256": "23804b964d13cce21e812253d90ea791f5d251c80eafdfa1eca71540ab1944b0",
+      "uncompressed_bytes": 2225562,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m4-no-preclock-reservation/raw/p05-c4-m4-build-r1-20261007-025511--77215--rkh0Oh.binlog",
+      "sha256": "bfc8df95bc318779849d579c2b1c4aebeb10e469653afc903329eb7aaab78f37",
+      "uncompressed_bytes": 4275415,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-mutants-r1/m4-no-preclock-reservation/raw/p05-c4-m4-focused-r1-20261007-025647--77265--3E2cYA-dotnet-test.binlog",
+      "sha256": "fd6dfdc5ee734bbb427a3beb267e43c9f8df61349e89045f937712f8752b235e",
+      "uncompressed_bytes": 3247042,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-fixed-post-r1/raw/p05-c4-fixed-post-r1-20261007-025706--77288--5VSPSQ-dotnet-test.binlog",
+      "sha256": "d42048a037cd4689a4eef95db43d74b9010978199d8ca37c30ef4c37429b096d",
+      "uncompressed_bytes": 3237884,
+      "closed": true
+    }
+  ],
+  "all91_focused_event_slots": [
+    {
+      "stage": "stage-c4-original-r2",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_SlowDeliveryPreservesMinimumObservationIntervalAsync"
+    },
+    {
+      "stage": "stage-c4-original-r2",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_RequiredClaimClockFailureRemainsAuthoritativeAsync"
+    },
+    {
+      "stage": "stage-c4-original-r2",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: True)"
+    },
+    {
+      "stage": "stage-c4-original-r2",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: False)"
+    },
+    {
+      "stage": "stage-c4-original-r2",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: False)"
+    },
+    {
+      "stage": "stage-c4-original-r2",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: True)"
+    },
+    {
+      "stage": "stage-c4-original-r2",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_BackwardsObservationDoesNotShortenReservationAsync"
+    },
+    {
+      "stage": "stage-c4-original-r2",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_ExactMaximumDeadlineIsObservedOnceAsync"
+    },
+    {
+      "stage": "stage-c4-original-r2",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: False)"
+    },
+    {
+      "stage": "stage-c4-original-r2",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: True)"
+    },
+    {
+      "stage": "stage-c4-original-r2",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Utc)"
+    },
+    {
+      "stage": "stage-c4-original-r2",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Store)"
+    },
+    {
+      "stage": "stage-c4-original-r2",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Cancellation)"
+    },
+    {
+      "stage": "stage-c4-fixed-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_SlowDeliveryPreservesMinimumObservationIntervalAsync"
+    },
+    {
+      "stage": "stage-c4-fixed-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_RequiredClaimClockFailureRemainsAuthoritativeAsync"
+    },
+    {
+      "stage": "stage-c4-fixed-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: True)"
+    },
+    {
+      "stage": "stage-c4-fixed-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: False)"
+    },
+    {
+      "stage": "stage-c4-fixed-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: False)"
+    },
+    {
+      "stage": "stage-c4-fixed-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: True)"
+    },
+    {
+      "stage": "stage-c4-fixed-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_BackwardsObservationDoesNotShortenReservationAsync"
+    },
+    {
+      "stage": "stage-c4-fixed-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_ExactMaximumDeadlineIsObservedOnceAsync"
+    },
+    {
+      "stage": "stage-c4-fixed-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: False)"
+    },
+    {
+      "stage": "stage-c4-fixed-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: True)"
+    },
+    {
+      "stage": "stage-c4-fixed-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Utc)"
+    },
+    {
+      "stage": "stage-c4-fixed-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Store)"
+    },
+    {
+      "stage": "stage-c4-fixed-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Cancellation)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m1-optional-utc-outside-catch",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_SlowDeliveryPreservesMinimumObservationIntervalAsync"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m1-optional-utc-outside-catch",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: True)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m1-optional-utc-outside-catch",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: True)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m1-optional-utc-outside-catch",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: False)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m1-optional-utc-outside-catch",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: False)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m1-optional-utc-outside-catch",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_ExactMaximumDeadlineIsObservedOnceAsync"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m1-optional-utc-outside-catch",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_RequiredClaimClockFailureRemainsAuthoritativeAsync"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m1-optional-utc-outside-catch",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_BackwardsObservationDoesNotShortenReservationAsync"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m1-optional-utc-outside-catch",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Cancellation)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m1-optional-utc-outside-catch",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Utc)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m1-optional-utc-outside-catch",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Store)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m1-optional-utc-outside-catch",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: True)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m1-optional-utc-outside-catch",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: False)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m2-no-terminal-saturation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Utc)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m2-no-terminal-saturation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Store)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m2-no-terminal-saturation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Cancellation)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m2-no-terminal-saturation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_SlowDeliveryPreservesMinimumObservationIntervalAsync"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m2-no-terminal-saturation",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_ExactMaximumDeadlineIsObservedOnceAsync"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m2-no-terminal-saturation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_RequiredClaimClockFailureRemainsAuthoritativeAsync"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m2-no-terminal-saturation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: False)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m2-no-terminal-saturation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: False)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m2-no-terminal-saturation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: True)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m2-no-terminal-saturation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: True)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m2-no-terminal-saturation",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: True)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m2-no-terminal-saturation",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: False)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m2-no-terminal-saturation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_BackwardsObservationDoesNotShortenReservationAsync"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m3-no-observed-utc-promotion",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Utc)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m3-no-observed-utc-promotion",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Cancellation)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m3-no-observed-utc-promotion",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Store)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m3-no-observed-utc-promotion",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: False)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m3-no-observed-utc-promotion",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: True)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m3-no-observed-utc-promotion",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_ExactMaximumDeadlineIsObservedOnceAsync"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m3-no-observed-utc-promotion",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: True)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m3-no-observed-utc-promotion",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: False)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m3-no-observed-utc-promotion",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: True)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m3-no-observed-utc-promotion",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: False)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m3-no-observed-utc-promotion",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_RequiredClaimClockFailureRemainsAuthoritativeAsync"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m3-no-observed-utc-promotion",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_SlowDeliveryPreservesMinimumObservationIntervalAsync"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m3-no-observed-utc-promotion",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_BackwardsObservationDoesNotShortenReservationAsync"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m4-no-preclock-reservation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_RequiredClaimClockFailureRemainsAuthoritativeAsync"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m4-no-preclock-reservation",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Utc)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m4-no-preclock-reservation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Cancellation)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m4-no-preclock-reservation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Store)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m4-no-preclock-reservation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: True)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m4-no-preclock-reservation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: False)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m4-no-preclock-reservation",
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_BackwardsObservationDoesNotShortenReservationAsync"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m4-no-preclock-reservation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_SlowDeliveryPreservesMinimumObservationIntervalAsync"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m4-no-preclock-reservation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: False)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m4-no-preclock-reservation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: False)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m4-no-preclock-reservation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: True)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m4-no-preclock-reservation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: True)"
+    },
+    {
+      "stage": "stage-c4-mutants-r1/m4-no-preclock-reservation",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_ExactMaximumDeadlineIsObservedOnceAsync"
+    },
+    {
+      "stage": "stage-c4-fixed-post-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_SlowDeliveryPreservesMinimumObservationIntervalAsync"
+    },
+    {
+      "stage": "stage-c4-fixed-post-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_RequiredClaimClockFailureRemainsAuthoritativeAsync"
+    },
+    {
+      "stage": "stage-c4-fixed-post-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: True)"
+    },
+    {
+      "stage": "stage-c4-fixed-post-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: False)"
+    },
+    {
+      "stage": "stage-c4-fixed-post-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: False)"
+    },
+    {
+      "stage": "stage-c4-fixed-post-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: True)"
+    },
+    {
+      "stage": "stage-c4-fixed-post-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_BackwardsObservationDoesNotShortenReservationAsync"
+    },
+    {
+      "stage": "stage-c4-fixed-post-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_ExactMaximumDeadlineIsObservedOnceAsync"
+    },
+    {
+      "stage": "stage-c4-fixed-post-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: False)"
+    },
+    {
+      "stage": "stage-c4-fixed-post-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: True)"
+    },
+    {
+      "stage": "stage-c4-fixed-post-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Utc)"
+    },
+    {
+      "stage": "stage-c4-fixed-post-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Store)"
+    },
+    {
+      "stage": "stage-c4-fixed-post-r1",
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Cancellation)"
+    }
+  ],
+  "10_distinct_original_red_IDs": [
+    "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_BackwardsObservationDoesNotShortenReservationAsync",
+    "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_ExactMaximumDeadlineIsObservedOnceAsync",
+    "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Cancellation)",
+    "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Store)",
+    "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Utc)",
+    "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: False)",
+    "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: True)",
+    "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: True)",
+    "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: True)",
+    "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_SlowDeliveryPreservesMinimumObservationIntervalAsync"
+  ],
+  "mutant_selected_failsets": {
+    "m1-optional-utc-outside-catch": [
+      "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Utc)",
+      "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: False, failOptionalUtc: True)",
+      "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PreservesCompletedBatchAsync(hasMessage: True, failOptionalUtc: True)"
+    ],
+    "m2-no-terminal-saturation": [
+      "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_ExactMaximumDeadlineIsObservedOnceAsync",
+      "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: False)",
+      "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync(hasMessage: True)"
+    ],
+    "m3-no-observed-utc-promotion": [
+      "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_SlowDeliveryPreservesMinimumObservationIntervalAsync"
+    ],
+    "m4-no-preclock-reservation": [
+      "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_BackwardsObservationDoesNotShortenReservationAsync",
+      "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests.Snapshot_FailedObservationReservesCadenceBeforeRetryAsync(failure: Utc)"
+    ]
+  },
+  "mutant_failure_overlap_precision": "M1 optionalUTC red3 and M4 preclockreservation red2 share the failedUTC case; four mutants yield9redslots and8distinctredIDs, not disjoint failsets.",
+  "actualclone_shared84_hashchecks": {
+    "m1-optional-utc-outside-catch": {
+      ".editorconfig": true,
+      ".gitattributes": true,
+      ".github/workflows/native-tests.yml": true,
+      "Directory.Build.props": true,
+      "Directory.Build.targets": true,
+      "Directory.Packages.props": true,
+      "NuGet.config": true,
+      "README.md": true,
+      "ViciOne.ServiceBus.Engineering.slnx": true,
+      "ViciOne.ServiceBus.Tests.Unit.slnx": true,
+      "ViciOne.ServiceBus.slnx": true,
+      "ViciOne.ServiceBus.snk": true,
+      "global.json": true,
+      "signing.props": true,
+      "src/Directory.Build.props": true,
+      "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj": true,
+      "src/ViciOne.ServiceBus.Abstractions/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj": true,
+      "src/ViciOne.ServiceBus.Courier/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj": true,
+      "src/ViciOne.ServiceBus.Futures/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj": true,
+      "src/ViciOne.ServiceBus.Initializers/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj": true,
+      "src/ViciOne.ServiceBus.JobService/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj": true,
+      "src/ViciOne.ServiceBus.Mediator/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj": true,
+      "src/ViciOne.ServiceBus.Sagas/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj": true,
+      "src/ViciOne.ServiceBus.Testing/packages.lock.json": true,
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj": true,
+      "src/ViciOne.ServiceBus/packages.lock.json": true,
+      "tests/Directory.Build.props": true,
+      "tests/Directory.Build.targets": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers/BrokerOutageControlClient.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Databases/TestDatabaseName.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ApiSurfaceGlobalUsings.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryConsumerCommitTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryInboxPipelineTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Events/HostReadyEventTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxCheckpointDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/OutboxConsumerIdentityTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Initializers/InitializerConventionRegistryTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Internals/ReflectionImplementationTestDrivers.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalEntryTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/OutboxTelemetryTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Operations/ProbeResultBuilderTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Rescue/RescueContextTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Retry/RetryFilterTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Runtime/ServiceBusRuntimeLifecycleTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/SagaStateMachine/SagaStateMachineExecutionTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/PayloadAdmissionSerializationTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Topology/GlobalTopologyTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionBusTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionNotificationTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/BufferedBusTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/UnusedBus.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/AsyncBusHandleLifecycleTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/BusDepotTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/ReceiveMessageLimitsTestContext.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/RiderCollectionTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json": true,
+      "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj": true,
+      "tests/ViciOne.ServiceBus.Tests/packages.lock.json": true,
+      "tests/testconfig.json": true,
+      "tests/testsettings.json": true
+    },
+    "m2-no-terminal-saturation": {
+      ".editorconfig": true,
+      ".gitattributes": true,
+      ".github/workflows/native-tests.yml": true,
+      "Directory.Build.props": true,
+      "Directory.Build.targets": true,
+      "Directory.Packages.props": true,
+      "NuGet.config": true,
+      "README.md": true,
+      "ViciOne.ServiceBus.Engineering.slnx": true,
+      "ViciOne.ServiceBus.Tests.Unit.slnx": true,
+      "ViciOne.ServiceBus.slnx": true,
+      "ViciOne.ServiceBus.snk": true,
+      "global.json": true,
+      "signing.props": true,
+      "src/Directory.Build.props": true,
+      "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj": true,
+      "src/ViciOne.ServiceBus.Abstractions/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj": true,
+      "src/ViciOne.ServiceBus.Courier/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj": true,
+      "src/ViciOne.ServiceBus.Futures/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj": true,
+      "src/ViciOne.ServiceBus.Initializers/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj": true,
+      "src/ViciOne.ServiceBus.JobService/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj": true,
+      "src/ViciOne.ServiceBus.Mediator/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj": true,
+      "src/ViciOne.ServiceBus.Sagas/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj": true,
+      "src/ViciOne.ServiceBus.Testing/packages.lock.json": true,
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj": true,
+      "src/ViciOne.ServiceBus/packages.lock.json": true,
+      "tests/Directory.Build.props": true,
+      "tests/Directory.Build.targets": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers/BrokerOutageControlClient.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Databases/TestDatabaseName.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ApiSurfaceGlobalUsings.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryConsumerCommitTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryInboxPipelineTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Events/HostReadyEventTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxCheckpointDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/OutboxConsumerIdentityTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Initializers/InitializerConventionRegistryTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Internals/ReflectionImplementationTestDrivers.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalEntryTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/OutboxTelemetryTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Operations/ProbeResultBuilderTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Rescue/RescueContextTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Retry/RetryFilterTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Runtime/ServiceBusRuntimeLifecycleTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/SagaStateMachine/SagaStateMachineExecutionTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/PayloadAdmissionSerializationTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Topology/GlobalTopologyTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionBusTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionNotificationTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/BufferedBusTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/UnusedBus.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/AsyncBusHandleLifecycleTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/BusDepotTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/ReceiveMessageLimitsTestContext.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/RiderCollectionTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json": true,
+      "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj": true,
+      "tests/ViciOne.ServiceBus.Tests/packages.lock.json": true,
+      "tests/testconfig.json": true,
+      "tests/testsettings.json": true
+    },
+    "m3-no-observed-utc-promotion": {
+      ".editorconfig": true,
+      ".gitattributes": true,
+      ".github/workflows/native-tests.yml": true,
+      "Directory.Build.props": true,
+      "Directory.Build.targets": true,
+      "Directory.Packages.props": true,
+      "NuGet.config": true,
+      "README.md": true,
+      "ViciOne.ServiceBus.Engineering.slnx": true,
+      "ViciOne.ServiceBus.Tests.Unit.slnx": true,
+      "ViciOne.ServiceBus.slnx": true,
+      "ViciOne.ServiceBus.snk": true,
+      "global.json": true,
+      "signing.props": true,
+      "src/Directory.Build.props": true,
+      "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj": true,
+      "src/ViciOne.ServiceBus.Abstractions/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj": true,
+      "src/ViciOne.ServiceBus.Courier/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj": true,
+      "src/ViciOne.ServiceBus.Futures/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj": true,
+      "src/ViciOne.ServiceBus.Initializers/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj": true,
+      "src/ViciOne.ServiceBus.JobService/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj": true,
+      "src/ViciOne.ServiceBus.Mediator/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj": true,
+      "src/ViciOne.ServiceBus.Sagas/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj": true,
+      "src/ViciOne.ServiceBus.Testing/packages.lock.json": true,
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj": true,
+      "src/ViciOne.ServiceBus/packages.lock.json": true,
+      "tests/Directory.Build.props": true,
+      "tests/Directory.Build.targets": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers/BrokerOutageControlClient.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Databases/TestDatabaseName.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ApiSurfaceGlobalUsings.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryConsumerCommitTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryInboxPipelineTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Events/HostReadyEventTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxCheckpointDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/OutboxConsumerIdentityTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Initializers/InitializerConventionRegistryTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Internals/ReflectionImplementationTestDrivers.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalEntryTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/OutboxTelemetryTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Operations/ProbeResultBuilderTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Rescue/RescueContextTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Retry/RetryFilterTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Runtime/ServiceBusRuntimeLifecycleTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/SagaStateMachine/SagaStateMachineExecutionTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/PayloadAdmissionSerializationTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Topology/GlobalTopologyTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionBusTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionNotificationTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/BufferedBusTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/UnusedBus.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/AsyncBusHandleLifecycleTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/BusDepotTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/ReceiveMessageLimitsTestContext.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/RiderCollectionTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json": true,
+      "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj": true,
+      "tests/ViciOne.ServiceBus.Tests/packages.lock.json": true,
+      "tests/testconfig.json": true,
+      "tests/testsettings.json": true
+    },
+    "m4-no-preclock-reservation": {
+      ".editorconfig": true,
+      ".gitattributes": true,
+      ".github/workflows/native-tests.yml": true,
+      "Directory.Build.props": true,
+      "Directory.Build.targets": true,
+      "Directory.Packages.props": true,
+      "NuGet.config": true,
+      "README.md": true,
+      "ViciOne.ServiceBus.Engineering.slnx": true,
+      "ViciOne.ServiceBus.Tests.Unit.slnx": true,
+      "ViciOne.ServiceBus.slnx": true,
+      "ViciOne.ServiceBus.snk": true,
+      "global.json": true,
+      "signing.props": true,
+      "src/Directory.Build.props": true,
+      "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj": true,
+      "src/ViciOne.ServiceBus.Abstractions/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj": true,
+      "src/ViciOne.ServiceBus.Courier/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj": true,
+      "src/ViciOne.ServiceBus.Futures/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj": true,
+      "src/ViciOne.ServiceBus.Initializers/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj": true,
+      "src/ViciOne.ServiceBus.JobService/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj": true,
+      "src/ViciOne.ServiceBus.Mediator/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj": true,
+      "src/ViciOne.ServiceBus.Sagas/packages.lock.json": true,
+      "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj": true,
+      "src/ViciOne.ServiceBus.Testing/packages.lock.json": true,
+      "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj": true,
+      "src/ViciOne.ServiceBus/packages.lock.json": true,
+      "tests/Directory.Build.props": true,
+      "tests/Directory.Build.targets": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers/BrokerOutageControlClient.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Databases/TestDatabaseName.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ApiSurfaceGlobalUsings.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryConsumerCommitTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryInboxPipelineTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Events/HostReadyEventTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxCheckpointDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/OutboxConsumerIdentityTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Initializers/InitializerConventionRegistryTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Internals/ReflectionImplementationTestDrivers.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalEntryTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/OutboxTelemetryTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Operations/ProbeResultBuilderTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Rescue/RescueContextTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Retry/RetryFilterTestFactory.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Runtime/ServiceBusRuntimeLifecycleTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/SagaStateMachine/SagaStateMachineExecutionTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/PayloadAdmissionSerializationTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Topology/GlobalTopologyTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionBusTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionNotificationTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/BufferedBusTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/UnusedBus.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/AsyncBusHandleLifecycleTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/BusDepotTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/ReceiveMessageLimitsTestContext.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/RiderCollectionTestDriver.cs": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj": true,
+      "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json": true,
+      "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj": true,
+      "tests/ViciOne.ServiceBus.Tests/packages.lock.json": true,
+      "tests/testconfig.json": true,
+      "tests/testsettings.json": true
+    }
+  },
+  "post_source4_hashchecks": {
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableSnapshotCadenceIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": true,
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs": true,
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs": true
+  },
+  "current_requirement_projection_distinction": {
+    "frozen_req4699_sha256": "8637f1a9bf688ee55f9a0fba10c723e6f7a9ebe0635f83396759d3493ee17a81",
+    "current_O_req_sha256": "8637f1a9bf688ee55f9a0fba10c723e6f7a9ebe0635f83396759d3493ee17a81",
+    "current_rows": 4699,
+    "semantic4699prefix_equal": true,
+    "successor_rows": []
+  },
+  "post_runtime16_bindings": {
+    "ViciOne.ServiceBus.Tests.runtimeconfig.json": {
+      "fixed_archive": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+      "post_archive": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+      "Root_before_after_receipt": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+      "fixed_receipt": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f"
+    },
+    "ViciOne.ServiceBus.Mediator.dll": {
+      "fixed_archive": "88ddf8fbf9f3d8ba46814c4ed1bdb32747fd5466af3d6cc1cc1e616dd24d37a3",
+      "post_archive": "88ddf8fbf9f3d8ba46814c4ed1bdb32747fd5466af3d6cc1cc1e616dd24d37a3",
+      "Root_before_after_receipt": "88ddf8fbf9f3d8ba46814c4ed1bdb32747fd5466af3d6cc1cc1e616dd24d37a3",
+      "fixed_receipt": "88ddf8fbf9f3d8ba46814c4ed1bdb32747fd5466af3d6cc1cc1e616dd24d37a3"
+    },
+    "ViciOne.ServiceBus.JobService.dll": {
+      "fixed_archive": "4d8a513cde01189e6cacb06d0045ec6309cf5faffd7fbbcc3d009da772b78cf7",
+      "post_archive": "4d8a513cde01189e6cacb06d0045ec6309cf5faffd7fbbcc3d009da772b78cf7",
+      "Root_before_after_receipt": "4d8a513cde01189e6cacb06d0045ec6309cf5faffd7fbbcc3d009da772b78cf7",
+      "fixed_receipt": "4d8a513cde01189e6cacb06d0045ec6309cf5faffd7fbbcc3d009da772b78cf7"
+    },
+    "ViciOne.ServiceBus.Tests.testconfig.json": {
+      "fixed_archive": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+      "post_archive": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+      "Root_before_after_receipt": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+      "fixed_receipt": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f"
+    },
+    "ViciOne.ServiceBus.Testing.dll": {
+      "fixed_archive": "243c0017de607f0eef37e59f594118c5514359257a50d40365301b23e89979ee",
+      "post_archive": "243c0017de607f0eef37e59f594118c5514359257a50d40365301b23e89979ee",
+      "Root_before_after_receipt": "243c0017de607f0eef37e59f594118c5514359257a50d40365301b23e89979ee",
+      "fixed_receipt": "243c0017de607f0eef37e59f594118c5514359257a50d40365301b23e89979ee"
+    },
+    "ViciOne.ServiceBus.Courier.dll": {
+      "fixed_archive": "7134e5a0d17928653adb661a775be6b17462fb17bfa03029a7425245ae1dea33",
+      "post_archive": "7134e5a0d17928653adb661a775be6b17462fb17bfa03029a7425245ae1dea33",
+      "Root_before_after_receipt": "7134e5a0d17928653adb661a775be6b17462fb17bfa03029a7425245ae1dea33",
+      "fixed_receipt": "7134e5a0d17928653adb661a775be6b17462fb17bfa03029a7425245ae1dea33"
+    },
+    "ViciOne.ServiceBus.Futures.dll": {
+      "fixed_archive": "368f597a366d61cde01fed7f42b43ea10727b4734526cb3de40f4855bdfb39cb",
+      "post_archive": "368f597a366d61cde01fed7f42b43ea10727b4734526cb3de40f4855bdfb39cb",
+      "Root_before_after_receipt": "368f597a366d61cde01fed7f42b43ea10727b4734526cb3de40f4855bdfb39cb",
+      "fixed_receipt": "368f597a366d61cde01fed7f42b43ea10727b4734526cb3de40f4855bdfb39cb"
+    },
+    "ViciOne.ServiceBus.Abstractions.dll": {
+      "fixed_archive": "a28e0008303678d3638e39626955583ca3b3cc21c8ea59041a07365f6a09d26c",
+      "post_archive": "a28e0008303678d3638e39626955583ca3b3cc21c8ea59041a07365f6a09d26c",
+      "Root_before_after_receipt": "a28e0008303678d3638e39626955583ca3b3cc21c8ea59041a07365f6a09d26c",
+      "fixed_receipt": "a28e0008303678d3638e39626955583ca3b3cc21c8ea59041a07365f6a09d26c"
+    },
+    "ViciOne.ServiceBus.Initializers.dll": {
+      "fixed_archive": "98599379e2ae5b2555e25cb95fb34dac02791b786f68a626dcd68faedf67fe30",
+      "post_archive": "98599379e2ae5b2555e25cb95fb34dac02791b786f68a626dcd68faedf67fe30",
+      "Root_before_after_receipt": "98599379e2ae5b2555e25cb95fb34dac02791b786f68a626dcd68faedf67fe30",
+      "fixed_receipt": "98599379e2ae5b2555e25cb95fb34dac02791b786f68a626dcd68faedf67fe30"
+    },
+    "ViciOne.ServiceBus.Sagas.dll": {
+      "fixed_archive": "51fbeaf2e71b22ad03e054b579bd8d8170a28992a9e82d5dd22d7cfdf4aeab68",
+      "post_archive": "51fbeaf2e71b22ad03e054b579bd8d8170a28992a9e82d5dd22d7cfdf4aeab68",
+      "Root_before_after_receipt": "51fbeaf2e71b22ad03e054b579bd8d8170a28992a9e82d5dd22d7cfdf4aeab68",
+      "fixed_receipt": "51fbeaf2e71b22ad03e054b579bd8d8170a28992a9e82d5dd22d7cfdf4aeab68"
+    },
+    "ViciOne.ServiceBus.Tests.pdb": {
+      "fixed_archive": "87ce7ae6ef8f7e2e7eafd34e2d66d31253e20d2fadba13bf73e59284d5a95ac7",
+      "post_archive": "87ce7ae6ef8f7e2e7eafd34e2d66d31253e20d2fadba13bf73e59284d5a95ac7",
+      "Root_before_after_receipt": "87ce7ae6ef8f7e2e7eafd34e2d66d31253e20d2fadba13bf73e59284d5a95ac7",
+      "fixed_receipt": "87ce7ae6ef8f7e2e7eafd34e2d66d31253e20d2fadba13bf73e59284d5a95ac7"
+    },
+    "ViciOne.ServiceBus.Tests.Infrastructure.dll": {
+      "fixed_archive": "a80ecbeadeb3f179dcbdc44b19253a46e8575aaefa0f35b586bddf0e6af77cc9",
+      "post_archive": "a80ecbeadeb3f179dcbdc44b19253a46e8575aaefa0f35b586bddf0e6af77cc9",
+      "Root_before_after_receipt": "a80ecbeadeb3f179dcbdc44b19253a46e8575aaefa0f35b586bddf0e6af77cc9",
+      "fixed_receipt": "a80ecbeadeb3f179dcbdc44b19253a46e8575aaefa0f35b586bddf0e6af77cc9"
+    },
+    "ViciOne.ServiceBus.dll": {
+      "fixed_archive": "946e8fb2d349456c9954e5dbf07474b7a7527e298b5a8c3049b763e0356f23b8",
+      "post_archive": "946e8fb2d349456c9954e5dbf07474b7a7527e298b5a8c3049b763e0356f23b8",
+      "Root_before_after_receipt": "946e8fb2d349456c9954e5dbf07474b7a7527e298b5a8c3049b763e0356f23b8",
+      "fixed_receipt": "946e8fb2d349456c9954e5dbf07474b7a7527e298b5a8c3049b763e0356f23b8"
+    },
+    "ViciOne.ServiceBus.Tests.dll": {
+      "fixed_archive": "ef132689b0f4fbfe2f05365dd5518091fabdce29c67757a0d861e248304da09d",
+      "post_archive": "ef132689b0f4fbfe2f05365dd5518091fabdce29c67757a0d861e248304da09d",
+      "Root_before_after_receipt": "ef132689b0f4fbfe2f05365dd5518091fabdce29c67757a0d861e248304da09d",
+      "fixed_receipt": "ef132689b0f4fbfe2f05365dd5518091fabdce29c67757a0d861e248304da09d"
+    },
+    "ViciOne.ServiceBus.Tests.InternalAccess.dll": {
+      "fixed_archive": "83ab90f3b61c6ab856047764bb8d8f906a44a31663e1e1f365036bf43321d862",
+      "post_archive": "83ab90f3b61c6ab856047764bb8d8f906a44a31663e1e1f365036bf43321d862",
+      "Root_before_after_receipt": "83ab90f3b61c6ab856047764bb8d8f906a44a31663e1e1f365036bf43321d862",
+      "fixed_receipt": "83ab90f3b61c6ab856047764bb8d8f906a44a31663e1e1f365036bf43321d862"
+    },
+    "ViciOne.ServiceBus.Tests.deps.json": {
+      "fixed_archive": "ebd7e9743b85cadf35d729ceb9e51687088d9e1a60a6f25d8f8c8a09de8ed223",
+      "post_archive": "ebd7e9743b85cadf35d729ceb9e51687088d9e1a60a6f25d8f8c8a09de8ed223",
+      "Root_before_after_receipt": "ebd7e9743b85cadf35d729ceb9e51687088d9e1a60a6f25d8f8c8a09de8ed223",
+      "fixed_receipt": "ebd7e9743b85cadf35d729ceb9e51687088d9e1a60a6f25d8f8c8a09de8ed223"
+    }
+  },
+  "post_firstparty12_historical_buildchecks": {
+    "ViciOne.ServiceBus.Tests.dll": true,
+    "ViciOne.ServiceBus.dll": true,
+    "ViciOne.ServiceBus.Abstractions.dll": true,
+    "ViciOne.ServiceBus.Courier.dll": true,
+    "ViciOne.ServiceBus.Futures.dll": true,
+    "ViciOne.ServiceBus.Initializers.dll": true,
+    "ViciOne.ServiceBus.JobService.dll": true,
+    "ViciOne.ServiceBus.Mediator.dll": true,
+    "ViciOne.ServiceBus.Sagas.dll": true,
+    "ViciOne.ServiceBus.Testing.dll": true,
+    "ViciOne.ServiceBus.Tests.Infrastructure.dll": true,
+    "ViciOne.ServiceBus.Tests.InternalAccess.dll": true
+  },
+  "post_parent_record": {
+    "parent_session": 69207,
+    "parent_exit": 0,
+    "total": 13,
+    "passed": 13,
+    "failed": 0,
+    "skipped": 0
+  },
+  "excluded_fixture_compiler_attempt": {
+    "receipt": {
+      "parent_session": 63735,
+      "parent_exit": 1,
+      "actual_error": "CS0103 missing test collection namespace import",
+      "warnings": 0,
+      "errors": 1,
+      "native_cases_executed": 0,
+      "product_red_credit": false,
+      "raw_sha256": {
+        "p05-c4-original-build-r1.log": "a0b0fa76bd4d00c24d942660f0d09860091d7e74d1fbea0dc86f04d71bf18e01",
+        "p05-c4-original-build-r1-20261007-024029--75791--GsXhz_.binlog": "ec6bacccefab3f8d7abf3cbe8a4898c82367c2e6aa95910ffb7905329f14c89e"
+      }
+    },
+    "raw_hashchecks": {
+      "p05-c4-original-build-r1.log": true,
+      "p05-c4-original-build-r1-20261007-024029--75791--GsXhz_.binlog": true
+    },
+    "binlog": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-original-build-fixture-attempt-r1/p05-c4-original-build-r1-20261007-024029--75791--GsXhz_.binlog",
+      "sha256": "ec6bacccefab3f8d7abf3cbe8a4898c82367c2e6aa95910ffb7905329f14c89e",
+      "uncompressed_bytes": 3250619,
+      "closed": true
+    },
+    "native_or_causal_credit": false
+  },
+  "findings": [],
+  "assessment": "Whole fixed source2 and fixture290 bind frozen4, Root807/shared84 and28 API/store/composition contexts. Original13 yields10 finite reds/3 named healthy. Guarded optionalUTC, anchor reservation before fallible observation, monotonic promotion from observedUTC and terminal representability saturation each have fresh compiled one-cause native counterproof. Every source graph matches canonicalO6089 paths except its exact selectedTelemetry delta; all12PE/PDB pairs and3800document checksums per build bind actual test/source/Req4699/deps/archive/nativeoutput/projectbuild. Fixed13 and unchanged post13 pass individually; fixed Core8067 is aggregate only. Thirty-six rawfiles/eighteen unique closed native binlogs bind91focusedslots19finiteRed72healthy. Prior compilerfixtureattempt is excluded.",
+  "causal_precision": [
+    "Original optionalUTC3 Null49/115 shows clock221\u2192Service128 after actual real storestate/args; M1 clock221\u2192Telemetry71 proves optionalUTC escape. M1 relocation also precedes anchorreservation; first failures provide no second-effect reservation claim.",
+    "Original positiveMaximum pair gives finiteNull73 with ordinary DateTimeOffset arithmetic errors; original exactMaximum second actual batch exposes finite ordinary overflow after first snapshot. M2 keeps safe arithmetic and changes terminalflag1\u21920 only: count79 expected1 actual4 and count97 expected2 actual5 prove repeated terminal observations.",
+    "Original backwards count171 expected1 actual2 establishes shortening; original slow152/store-cancellation124 red clockread counts establish extra reads only. Their original I/O cadence has no hotloop/minimum-spacing-failure credit.",
+    "M3 deletes observedUTC promotion only; slow count151 expected1 actual2 proves second observation before the required interval from successful late observation. M4 deletes preclockreservation only; failedUTC read124 expected5 actual6 shows one extra optional read, and backwards count171 expected1 actual2 shows shortened reservation.",
+    "Real physical store state/transition arguments and returnedbool checks preceding each first red receive credit; assertions after a first finite red do not. Every fixed/post namedPASS reaches complete later oracles. Required claimUTC failure retains exact chosen exception and no claim/dispatch/mark/snapshot."
+  ],
+  "scope": "Sequential delivery-batch snapshot cadence and observational snapshotUTC boundary only. Required claim/business/store UTC, cancellation, policyvalidation, accepted nullable durations/counter schema and additional-source/storeless behavior remain unchanged. Signed fixture driver invokes actual delivery service and real InMemory SPI with explicitly chosen observation errors; no hosted worker/provider integration claim.",
+  "limits": [
+    "Core8067 nativeaggregate only; no individually8067identity inventory/fullUnit/provider/restart/cloud/NuGet/coverage/CI/hardware/fullP05 claim. No original or mutant wholeCore claim.",
+    "Reservation max uses sequential read/conditional write; no concurrentserialization/atomicmax promise. Failure anchor cannot promise complete spacing from an unobserved failed clock under arbitrary clock mutation.",
+    "Injected observer OCE uses an uncanceled test token and demonstrates contained ordinary observation failure only; no true shutdown/canceledtoken proof.",
+    "Native standardhost/deps/archive/output/build/PE/PDB/source/resource selection binding; no general fullAssemblyLoadtrace.",
+    "Actual clones compare canonicalO; C3 differs only two noncompiled CIcoverage Python tools. No fullC3cloneidentity assertion.",
+    "Root owns parent exits/lifetime, beforeafter source/runtime observations and reader attestations. Reviewer independently hashes archives/source/PEPDB and consumes compact exactID/assertion tables; no transfer of whole-reading credit or universal wholeRawhumanread claim.",
+    "No .NET/MSBuild/Docker/provider/SSH/test execution or product/test/tool edits; own review files only.",
+    "Immutable C4 archives, fixed-owner snapshot and Rootpre/post observations retain historical compiledReq4699 identity if a later scope changes current source/runtime. Current live artifacts are not required as historical output identity."
+  ]
+}

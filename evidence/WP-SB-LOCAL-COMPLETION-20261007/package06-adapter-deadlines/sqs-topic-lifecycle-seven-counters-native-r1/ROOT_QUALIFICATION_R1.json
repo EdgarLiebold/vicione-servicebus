@@ -1,0 +1,108 @@
+{
+  "kind": "ROOT_ACTUAL_SEVEN_SQS_COUNTERS_OWN_PHYSICAL_FIRST_FINITE_QUALIFICATION_R1",
+  "actual_parent_sha256": "de5d93f0af3ccc334e9f1c782ea5951c6b92918ce2b30fc04491071c420d8d5d",
+  "root_exec_session": 24627,
+  "root_exec_joined_exit0": true,
+  "actual_variants": [
+    {
+      "variant": "M1-disposed-admission-guard",
+      "actual": {
+        "total": 11,
+        "passed": 8,
+        "failed": 3,
+        "skipped": 0
+      },
+      "result_sha256": "b13d5d101966c22129077539d394344136ff482f87544c8cd71c42c27ef85467",
+      "root_physical_sha256": "d413d162f5687b338f772a20c48aa4363879fee0011a4c57f0dc828af3c09396",
+      "root_native_sha256": "b19ac01e73b63840d3e75df984dd8e36d4b9b4059ae672f2fe2786749e49295c",
+      "first_finite": "first RED stale103 expected2actual1; twoStale258 andcold44 expectedODEactualnull. Lower104..105/259..262/45..48unreached0credit."
+    },
+    {
+      "variant": "M2-second-dispose-early-return",
+      "actual": {
+        "total": 11,
+        "passed": 10,
+        "failed": 1,
+        "skipped": 0
+      },
+      "result_sha256": "b401639b7d1d8734b7a6cdcf317df11e2dc4d8e8892474d9a4f987ecd430235a",
+      "root_physical_sha256": "96389509688630096e931dd1a96d5e40d41230258d49f10ce1ecd760c7d50d23",
+      "root_native_sha256": "cef944cb272ee5640ecdd2c0f4d05194cfeae3a184854428e3d39ce4651ca029",
+      "first_finite": "Concurrent first sourceAssertFalse64 on actualsecondDisposeTask completed while actualSDKheld; rawframe62 controlflow attribution only, cleanupframe72 not secondcause. Lower65..68+75..78unreached0credit."
+    },
+    {
+      "variant": "M3-null-stale-success",
+      "actual": {
+        "total": 11,
+        "passed": 8,
+        "failed": 3,
+        "skipped": 0
+      },
+      "result_sha256": "eb2f0904ef527fc1ff2d4134b8eab58d06512abe657319c6a9085ba862c2f4b7",
+      "root_physical_sha256": "cd57961aea7f0664877fe3035bac15a95091e93298c9c7192f2f3470f534f9eb",
+      "root_native_sha256": "43de595d1ba0a0bb6393a22c4ca339705a123a9a5b1e8ad630202d03d73e3d58",
+      "first_finite": "cancel-after-stale233 expectedOCEactualnull; stale103 expected2actual1; twoStale258 expectedODEactualnull. Lower234..236/104..105/259..262unreached0credit."
+    },
+    {
+      "variant": "M4-prewrite-marker-propagation",
+      "actual": {
+        "total": 11,
+        "passed": 10,
+        "failed": 1,
+        "skipped": 0
+      },
+      "result_sha256": "e58d402160a3b03538a2808f72a1ebf66ffa548bbd4e8359b42f0a8ce9ea1899",
+      "root_physical_sha256": "e066bf15882425e731cd8d366675b38e6d2f1db2a5e857f7c67075e9132e81d6",
+      "root_native_sha256": "e537cf6e51b60723d7e6b787d62bc6dfb432fa4a3edd1df8839483e6326f6308",
+      "first_finite": "Fullchannel firstNull139 actualdedicatedprewriteBatchAdmissionClosedException. Positiveactualtarget blockedwriter witness129 and10actualSDKheld stage124 precede; rawBatcher44/49/Pub229 providerfailureinnerframes notadditionalfailedassertions. Lower140..149unreached0credit."
+    },
+    {
+      "variant": "M5-admitted-fault-retry",
+      "actual": {
+        "total": 11,
+        "passed": 8,
+        "failed": 3,
+        "skipped": 0
+      },
+      "result_sha256": "be0c1d9b3830aba44aa0c1a69a3088d8d03268fe8a61c45e55700e1e53c08ddb",
+      "root_physical_sha256": "d8efc0fa0d36232b9f719bc460dfa77d811378d7aeb9b1df59b9da1413034467",
+      "root_native_sha256": "2e101855666c662e369f38758312ba0fed6897410a9854f25eb483e10e3ab70a",
+      "first_finite": "AllthreeactualfailureKind2/1/0 firstEqual182 expected1lookupactual2 afterSame181 passes andactualSDKenteredphase. LowerSingleSDKrequest183 unreached0additionalcausecredit; no3extraindependentbugs."
+    },
+    {
+      "variant": "M6-third-stale-lookup",
+      "actual": {
+        "total": 11,
+        "passed": 10,
+        "failed": 1,
+        "skipped": 0
+      },
+      "result_sha256": "086c8ae80d3c1a224e11ba245298d863fba5b4f67db912fad50ec49f424beb5a",
+      "root_physical_sha256": "da3fd6fe40694a18dd2c9805a51dcaf51ab10e88feaa956e063c0adac821ab2b",
+      "root_native_sha256": "34db108b0f636940f8f19030f2c22ea730537700bfcd495b534d4023e48d19d5",
+      "first_finite": "FirstEqual261 expected2actual3 afteractualODEtype258/owner259/name260 passed. LowerEmptySDK262 unreached0credit; boundedloopcause only."
+    },
+    {
+      "variant": "M7-caller-prelookup-boundary-omitted",
+      "actual": {
+        "total": 11,
+        "passed": 9,
+        "failed": 2,
+        "skipped": 0
+      },
+      "result_sha256": "87c9996246e3b3b58ed1b8be18923f33e35c3c653d29f65d4cd6cbfba00ee8d6",
+      "root_physical_sha256": "444ca6c41c1fb8626f3839aa23269af83cd768db8258d93c20b5d189d60c039a",
+      "root_native_sha256": "5f8be15e9e6119c74632ca07ddb66036e87b51dc6feda8cc920f7e0a39b05716",
+      "first_finite": "PreCanceledEqual208 expected0lookupactual1; cancel-after-staleIsAssignable233 expectedOCEactualObjectDisposedException. Lower209..210/234..236unreached0credit."
+    }
+  ],
+  "fresh_PE_images": 70,
+  "fresh_PDB_document_checksums": 20986,
+  "actual_repeated_slots": 77,
+  "actual_first_finite_RED": 14,
+  "actual_healthy": 63,
+  "canonical6107_private6108_config14_locked10_equal": true,
+  "corrected_sources_restored": true,
+  "independent_compiled212_graph_pending": true,
+  "limits": "70freshRootPE and20986 actualPDB checksums; same11 cases repeatedseven times77slots,14firstfailedassertions63healthy. Sourcefinallycorrected; runtime stillM7 untilmandatorypost. OwnfreshcompiledALL212 notclaimed; independent fresh requirements/graph and finalcounterrelease required before post/canonical."
+}

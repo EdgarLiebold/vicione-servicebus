@@ -1,0 +1,148 @@
+{
+  "reviewer": "Internal readonly static draft assessment; no external product role or Root personal-read transfer.",
+  "authorized_scope": "Private draft test/design review only. No canonical test, requirements, CurrentOrder, product source or native execution by reviewer.",
+  "context_owner_paths_and_hashes": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "sha256": "8647373561a105ff543247438d3239f869009b6e2efc829f533d45bdfb235291",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+      "sha256": "d941d74bc5ac55af42d7c2abde5537489cd2850dcc325ecadfd7e93ff80931b9",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Internal/Observations/ActiveTestObservationScope.cs",
+      "sha256": "676b3732bd05212d1196a7fbd59fa6a3d8268df88d9a2e30539197e3c27a9ec3",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "90a781b81f734a2be9b4b3a4e4272b49afb842d46cd62bb9f05df823ec33126e",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/IBaseTestHarness.cs",
+      "sha256": "de679bca81fc7cafe3d5fda0ee2542c300f483c57831fafb7565beb297f1dc94",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestResult.cs",
+      "sha256": "6f1268640e301f9702dce5388cb3b4ad2197158d81bfa30c5da14c307b4cdfa0",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Clients/Response.cs",
+      "sha256": "ffff2c639a268c4fc732b489445343d6888a485e6702cdf93035849a1879b468",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/ConnectHandle.cs",
+      "sha256": "c0f43d3c38e2fab39a7ef1a85b5a7f69562799e4f9980cb2c2a8898d6622f161",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/RollingTimer.cs",
+      "sha256": "58b73f24ebf7a6115065a0c8d7fbcb226ca0404b3ff70f1888f62e0c9d55acee",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Testing/ObservableTimeProvider.cs",
+      "sha256": "e3bf439b800f4f8cf7b96dc8a9a21be05d637157104efa4c72514eadb59c6f5c",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessObservationPolicyTests.cs",
+      "sha256": "4a8343b4152a0f0a5234609173fa93ba997d8f295085861abd9125e884d929fa",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    }
+  ],
+  "prior_public_caller_plan": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-public-caller-primary-cleanup-readonly-r2.json",
+    "sha256": "2e89a0b9d01a8565192721a4a1dcdff4fbbcf9174b7ecddb6ba35d5374ea58d7"
+  },
+  "public_five_family_API_check": "Publish/Send and typed Request1/Request2/Request3 explicit-provider signatures match actual TelemetryActivityExtensions. Response1 proxy implements actual Response<T>; Response2/Response3 are public structs accepting completed chosen branch plus retained pending branches, expose Is/Deconstruct/Message matching draft use. Public nonsealed DispatchProxy bases and enum InlineData are consistent with existing patterns. No concrete static API/type mismatch found; compilation/analyzers remain unexecuted.",
+  "active_API_check": "IBaseTestHarness public connector/getter proxy signatures, ConnectHandle default async disposal and public ActAsync fit current definitions. Fake timer creates real inner timer, releases it before chosen ordinary Dispose exception. Scope constructor and Dispose currently aggregate original lease errors in defined order; setup aggregate inner refs are the correct observable contract.",
+  "meaningful_existing_oracles": [
+    "Explicit 5x5 family/scenario matrix has real action root/source/parent, fake timer count1, idle-minus-one-tick vs exact-deadline, selected Task.FromException primary, real linked CTS wait cancellation and exact cancellation token.",
+    "Strict endpoint/client proxies reject all backend calls. Typed request healthy results preserve chosen response/message and original branch tasks; MessageReads only1 on healthy request path,0 on failure. Pending branch tasks are retained data, not an unjoined started background operation.",
+    "Act13 public harness cases require actual three connector attempts, exactly2 established leases on send setup failure or3 otherwise; registry object identity is removed before chosen ordinary lease exception; final registry empty and actual timer0/stopped root are asserted.",
+    "Action errors are actual task faults; cancellation is from the owned linked token while native TestContext token remains uncancelled. TimeSpan waits are finite harness watchdogs rather than product elapsed-time oracles.",
+    "Single ordinary required cleanup failure must retain original object identity. Body primary wins against all secondary owner errors. Setup AggregateException is verified by its original selected setup/cleanup inner identities, not a fabricated wrapper Same assertion."
+  ],
+  "baseline_prediction_only": {
+    "public": {
+      "cases": 25,
+      "predicted_finite_red": 10,
+      "predicted_healthy": 15
+    },
+    "active": {
+      "cases": 13,
+      "predicted_finite_red": 7,
+      "predicted_healthy": 6
+    },
+    "total_cases": 38,
+    "predicted_red": 17,
+    "predicted_healthy": 21,
+    "qualification": "Static path prediction only; first native failure/cause, compiled case identities and actual result counts may differ. No baseline native acceptance."
+  },
+  "cleanup_limits": [
+    "Existing-case physical release counts establish once-per-resource release, not exact Dispose invocation count; lease/timer implementations deliberately release before selected errors. No arbitrary throw-before-release resource implementation guarantee.",
+    "Both drafts cancel/advance/await their own operation in finally when still incomplete, and dispose owned CTS/listeners/caller/probe. A timeout/operation setup assertion is not accepted as a product causal kill without actual finite source-qualified evidence.",
+    "Assertions preceding exception-identity checks can be the first finite failure if physical state or an action/root assertion fails. Qualify actual first native cause; do not credit late unreached assertions.",
+    "Global activity listener isolation uses existing OpenTelemetryGlobalCollection. No cold static-source reset/newprocess claim; C5 handles cold behavior separately."
+  ],
+  "canonical_prerequisites": [
+    "Root must bind its final plan/CurrentOrder and complete reading to actual canonical test files plus existing owner/shared contexts before native work.",
+    "Two new canonical test files imply808->810 owner inventory. If both classes occupy one new file,809 is coherent. Actual final inventory decides the label.",
+    "Two Theory method purpose rows need exact final RequirementCoverage projection and original4706 semantic ordered prefix; theory case discovery must still show all25+13 distinct actual IDs. No predicted purpose count substitutes for compiled native identities.",
+    "Original test-only strict/native counterexamples, fixed focus/Core, one-cause mutants with controls and post replay remain Root execution and independent evidence work."
+  ],
+  "skills_used": [
+    "Previously applied dotnet-test:test-anti-patterns workflow for bounded static suite review; no test generation/writing by reviewer."
+  ],
+  "no_canonical_draft_owners_exist_at_review": {
+    "public": true,
+    "active": true
+  },
+  "no_source_or_native_acceptance": "Static private draft review only; no C6 product candidate/fix, native test pass, all P05/TODO/current coverage/provider/cloud/device acceptance.",
+  "execution": "Read-only file/hash/API/source/JSON inspection. Only distinct reviewer JSON records written.",
+  "status": "PASS_BOUNDED_STATIC_PRIVATE_DRAFT_R2_NATIVE_AND_CANONICAL_PENDING",
+  "drafts": {
+    "public_path": "/private/tmp/PublicTelemetryCleanupIsolationTests.draft.cs",
+    "public_sha256": "cd45b4f583f32312ba3eb8f58aa18eaf2b8f115fa3f4c831fbfab7405f30126c",
+    "public_lines": 216,
+    "active_path": "/private/tmp/ActiveTelemetryCleanupIsolationTests.draft.cs",
+    "active_sha256": "4ba3b7f61891cfff983161224666d108ef776aaa4cad00675a395928affdd635",
+    "active_lines": 233,
+    "design_path": "/private/tmp/c6-caller-cleanup-design-notes.txt",
+    "design_sha256": "482c5e7ea30b1dd2ef99018dbe6ff129af5cff978442ab13ab8ced3baa3182c8"
+  },
+  "prior_R1_report": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c6-private-draft-review-r1.json",
+    "sha256": "c02d5395e25e0107c01852ebbdd4e4e3760dda610738e0ab82133682c2cd69e7"
+  },
+  "blocking_findings": [],
+  "resolved_R1_findings": [
+    {
+      "id": "C6-DRAFT-R1-01",
+      "resolution": "Actual monitor root callback assigns state.Root. Every real lease captures RootAtRelease and StoppedAtRelease before registry removal/throw. Joined-operation assertions require same real root and not stopped on every physical lease release; reversing tracker teardown cannot pass that state oracle."
+    },
+    {
+      "id": "C6-DRAFT-R1-02",
+      "resolution": "Existing StandaloneBothFailure now releases and faults actual publish and consume leases. Expected outer exactly two errors: inner observation AggregateException containing selected pubE then consumeE, followed by selected timerE. Flattening the observation owner aggregate fails nested type/shape/inner identity checks."
+    }
+  ],
+  "R1_to_R2_actual_source_diff": "--- R1/ActiveTelemetryCleanupIsolationTests.draft.cs\n+++ R2/ActiveTelemetryCleanupIsolationTests.draft.cs\n@@ -39,6 +39,7 @@\n         var setupError = new InvalidOperationException(\"chosen send connection failure\");\n         var observationError = new InvalidOperationException(\"chosen releasing publish connection failure\");\n         var timerError = new InvalidOperationException(\"chosen releasing timer failure\");\n+        var consumeError = new InvalidOperationException(\"chosen releasing consume connection failure\");\n         bool actionFault = scenario is Scenario.ActionFailure or Scenario.ActionTimerFailure\n             or Scenario.ActionObserverFailure or Scenario.ActionBothFailure;\n         bool setupFault = scenario is Scenario.SetupFailure or Scenario.SetupTimerFailure or Scenario.SetupAggregateAndTimerFailure;\n@@ -50,7 +51,8 @@\n         var clock = new ObservableTimeProvider(new DateTimeOffset(2026, 10, 7, 0, 0, 0, TimeSpan.Zero), timerFault ? timerError : null);\n         using var ownedCancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);\n         CancellationToken token = ownedCancellation.Token;\n-        var state = new HarnessState(clock, token, setupFault ? setupError : null, observationFault ? observationError : null);\n+        var state = new HarnessState(clock, token, setupFault ? setupError : null, observationFault ? observationError : null,\n+            scenario == Scenario.StandaloneBothFailure ? consumeError : null);\n         IBaseTestHarness harness = DispatchProxy.Create<IBaseTestHarness, HarnessProxy>();\n         ((HarnessProxy)harness).State = state;\n         using var caller = new Activity(\"active-cleanup-caller\").Start();\n@@ -61,7 +63,7 @@\n         {\n             ShouldListenTo = s => s.Name == \"ViciOne.ServiceBus.Testing.Monitor\",\n             Sample = (ref ActivityCreationOptions<System.Diagnostics.ActivityContext> _) => ActivitySamplingResult.AllData,\n-            ActivityStarted = a => { root = a; starts++; },\n+            ActivityStarted = a => { root = a; state.Root = a; starts++; },\n         };\n         ActivitySource.AddActivityListener(rootListener);\n         using var probe = new ActivitySource(\"active-cleanup-unrelated-probe\");\n@@ -95,7 +97,12 @@\n             }\n             Exception? escaped = await Record.ExceptionAsync(() => operation.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));\n             Assert.Empty(state.Registry);\n-            Assert.All(state.Leases, lease => Assert.Equal(1, lease.ReleaseCount));\n+            Assert.All(state.Leases, lease =>\n+            {\n+                Assert.Equal(1, lease.ReleaseCount);\n+                Assert.Same(root, lease.RootAtRelease);\n+                Assert.False(lease.StoppedAtRelease);\n+            });\n             Assert.Equal(0, clock.ActiveTimerCount);\n             Assert.True(root.IsStopped);\n             Assert.Null(probe.StartActivity(\"after\"));\n@@ -117,7 +124,12 @@\n             else if (scenario == Scenario.StandaloneBothFailure)\n             {\n                 AggregateException aggregate = Assert.IsType<AggregateException>(escaped);\n-                Assert.Collection(aggregate.InnerExceptions, e => Assert.Same(observationError, e), e => Assert.Same(timerError, e));\n+                Assert.Collection(aggregate.InnerExceptions, e =>\n+                {\n+                    AggregateException ownerFailure = Assert.IsType<AggregateException>(e);\n+                    Assert.Collection(ownerFailure.InnerExceptions, item => Assert.Same(observationError, item),\n+                        item => Assert.Same(consumeError, item));\n+                }, e => Assert.Same(timerError, e));\n             }\n             else if (observationFault)\n                 Assert.Same(observationError, escaped);\n@@ -154,7 +166,7 @@\n         }\n     }\n \n-    public sealed class HarnessState(TimeProvider clock, CancellationToken token, Exception? setupFailure, Exception? observerFailure)\n+    public sealed class HarnessState(TimeProvider clock, CancellationToken token, Exception? setupFailure, Exception? observerFailure, Exception? consumeFailure)\n     {\n         public TimeSpan Timeout { get; } = TimeSpan.FromMinutes(10);\n         public TimeSpan Idle { get; } = TimeSpan.FromMinutes(1);\n@@ -163,12 +175,13 @@\n         public Dictionary<string, object> Registry { get; } = [];\n         public List<Lease> Leases { get; } = [];\n         public int ConnectionAttempts { get; private set; }\n+        public Activity? Root { get; set; }\n         public ConnectHandle Connect(string name, object observer)\n         {\n             ConnectionAttempts++;\n             if (name == \"send\" && setupFailure is not null) throw setupFailure;\n             Registry.Add(name, observer);\n-            var lease = new Lease(this, name, observer, name == \"publish\" ? observerFailure : null);\n+            var lease = new Lease(this, name, observer, name == \"publish\" ? observerFailure : name == \"consume\" ? consumeFailure : null);\n             Leases.Add(lease);\n             return lease;\n         }\n@@ -178,10 +191,14 @@\n     {\n         private int _released;\n         public int ReleaseCount { get; private set; }\n+        public Activity? RootAtRelease { get; private set; }\n+        public bool StoppedAtRelease { get; private set; }\n         public void Disconnect() => Dispose();\n         public void Dispose()\n         {\n             if (Interlocked.Exchange(ref _released, 1) != 0) return;\n+            RootAtRelease = state.Root;\n+            StoppedAtRelease = state.Root?.IsStopped ?? throw new InvalidOperationException(\"Missing actual root at lease release\");\n             Assert.Same(observer, state.Registry[name]);\n             Assert.True(state.Registry.Remove(name));\n             ReleaseCount++;\n",
+  "actual_static_checks": {
+    "public25_inline_rows": true,
+    "active13_inline_rows": true,
+    "same_two_theory_method_purpose_rows": true,
+    "no_new_scenarios_or_native_claim": true,
+    "whole_both_private_drafts_consumed": true,
+    "chosen_regular_exceptions_no_typeinitialization_fixture": true
+  },
+  "limits_of_new_order_oracle": "The recorded actual root lifetime proves observation releases occur before tracker root teardown for these selected paths. It does not constitute a general concurrent callback/timer scheduling order theorem.",
+  "assessment": "Both drafts are coherent candidates for canonical test-only original compilation and finite native qualification after Root finishes current C5 acceptance. The two meaningful new cleanup-contract gaps are fixed without expanding the38-case matrix; no concrete static API/compiler blocker is identified. Required success aggregate nesting and body-primary aggregate handling remain deliberately distinct."
+}

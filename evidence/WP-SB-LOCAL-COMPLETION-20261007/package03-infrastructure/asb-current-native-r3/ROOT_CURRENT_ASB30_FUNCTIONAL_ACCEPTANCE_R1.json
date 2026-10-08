@@ -1,0 +1,96 @@
+{
+  "kind": "ROOT_ACCEPTED_BOUNDED_CURRENT_ASB30_LOCAL_EMULATOR_FUNCTIONAL_PROFILE_R1",
+  "state": "ACCEPTED_EXACT_NATIVE30_FUNCTIONAL_CONTRACTS__BROKER_DIAGNOSTIC_INVESTIGATION_OPEN",
+  "result_sha256": "4a6d9943a5d2bc02046e26edf7310c8dbadf9de890f5db38553df557a070e25e",
+  "strict_build_sha256": "45f048fca988886d68c0ce93112a48ff36f9cc1f5f820cb6097a0034d8e4fd9b",
+  "Root_compiled_PE_PDB_sha256": "8ec21eeabaed3b33a768b95a978ad0676d54c3837db059bf56b3041234197e00",
+  "independent_native_review_sha256": "c132c074dd587f2811ca07a8555996e1629019e7d824fb22a5b465d13a752298",
+  "reviewed_tool_chain_acceptance_sha256": "59b8616112b6bedd2977b26ad03321de6d68379dd6005b54a579aa226e09e7aa",
+  "message_case_counts": {
+    "passed_unique": 30,
+    "failed": 0,
+    "skipped": 0
+  },
+  "source_boundary": "Native originalcurrent6097 +13configs+build11 exactbeforeafter; presentcanonicalsrc/tests stillbyteequal, onlyreviewedcollector+newtoolcontract make6098. Frozen originalcollector retained separately. No freshgit/wholecurrentUnit/provider/coverageclaim.",
+  "native_evidence": "Root lockedrestore+forcedstrictRebuild0warning0error+actualSDKMTP30nativePASS, ownPE12/PDB3034 binding/runtime34/archive; independentnative12PE/requirements30/framework/hash/ownresourceabsence review. Source6097 and13configs rechecked now with historicalcollectororiginalsnapshot exception; no compiledbodyreadcredit transfer.",
+  "owned_cleanup_sha256": "f566e289884d03870929e53c880bf3a38fbc9f9b4bb99b4d7527ee36c70ae65d",
+  "ASB_DIAG_01_successor_closed_sha256": "d2a42f437ac2c735f54fce9b70f4709ee70dd23874cb04c48b55252b001acb4a",
+  "broker_diagnostic_classification_sha256": "3e5db72197140da04f0f1ac5115e87fcdd317ddb942cbe5218e0447ba7794307",
+  "new_open_findings": [
+    {
+      "id": "ASB-BROKER-INVARIANT-01",
+      "severity": "Medium",
+      "state": "UNRESOLVED_DIAGNOSTIC_ANOMALY__ROOT_DISPOSITION_REQUIRED",
+      "separate_from_secret_hygiene_finding": "ASB-DIAG-01 from the native artifact review is credential-log redaction; this is a separate broker accounting invariant anomaly. The private raw log was never opened in this review.",
+      "evidence": "Exactly three Error30048 records claim negative entity sizes while all recorded active/scheduled/dead-letter counts are zero. Exact safe identities/coordinates/numeric values are in reproduction_records.",
+      "impact_limit": "Actual invariant diagnostic is established. Its server/product/SDK origin, persistence, delivery loss, quota effect and operational severity beyond this run are not established; no product defect or correctness-loss claim is invented.",
+      "native_pass_disposition": "The named message/terminal assertions passed and remain evidence of those tested contracts. They do not assert nonnegative SizeInBytes, prevent the server diagnostic or close its cause. No blanket harmless/error-free classification is defensible.",
+      "reproduction_records": [
+        {
+          "line": 53,
+          "xml_record_ordinal": 17,
+          "event_id": "30048",
+          "level": "Error",
+          "utc": "2026-10-07T10:24:45.191Z",
+          "exact_nonsecret_entity_identity": "sbemulatorns:Queue:vsb-skipped-dlq-047f2563628a48d2bb8a89a429d6602a-input",
+          "numeric_diagnostic_fields": {
+            "EntitySize": -118,
+            "Incoming size": -1314,
+            "ActiveMessageCount": 0,
+            "ScheduledMessageCount": 0,
+            "DeadLetterMessageCount": 0
+          },
+          "matched_fixture_purpose": "skipped-dlq",
+          "native_PASS_FQN": "ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.AzureServiceBusDeadLetterTransportTests.SkippedMessage_UsesNativeDeadLetterQueueWithoutCreatingSkippedQueueAsync",
+          "passed_assertion_limit": "skipped/fault: exact message/reason/fault-header or attempt identity, absence of alternate queue, helper terminal ActiveMessageCount=0/DeadLetterMessageCount=0 after Complete and Stop. Capability deadletter: exact message/body/reason/description and awaited Complete only; no runtime-count or entity-size assertion in that method."
+        },
+        {
+          "line": 82,
+          "xml_record_ordinal": 46,
+          "event_id": "30048",
+          "level": "Error",
+          "utc": "2026-10-07T10:24:52.747Z",
+          "exact_nonsecret_entity_identity": "sbemulatorns:Queue:vsb-fault-dlq-a58354587c784bd1b174e2085718631e-input",
+          "numeric_diagnostic_fields": {
+            "EntitySize": -1664,
+            "Incoming size": -2857,
+            "ActiveMessageCount": 0,
+            "ScheduledMessageCount": 0,
+            "DeadLetterMessageCount": 0
+          },
+          "matched_fixture_purpose": "fault-dlq",
+          "native_PASS_FQN": "ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.AzureServiceBusDeadLetterTransportTests.FaultedMessage_UsesNativeDeadLetterQueueWithExactFaultHeadersAsync",
+          "passed_assertion_limit": "skipped/fault: exact message/reason/fault-header or attempt identity, absence of alternate queue, helper terminal ActiveMessageCount=0/DeadLetterMessageCount=0 after Complete and Stop. Capability deadletter: exact message/body/reason/description and awaited Complete only; no runtime-count or entity-size assertion in that method."
+        },
+        {
+          "line": 707,
+          "xml_record_ordinal": 671,
+          "event_id": "30048",
+          "level": "Error",
+          "utc": "2026-10-07T10:26:00.267Z",
+          "exact_nonsecret_entity_identity": "sbemulatorns:Queue:vsb-deadletter-b79d951f32564c1f81f8d1164237282f",
+          "numeric_diagnostic_fields": {
+            "EntitySize": -175,
+            "Incoming size": -347,
+            "ActiveMessageCount": 0,
+            "ScheduledMessageCount": 0,
+            "DeadLetterMessageCount": 0
+          },
+          "matched_fixture_purpose": "deadletter",
+          "native_PASS_FQN": "ViciOne.ServiceBus.AzureServiceBus.LocalIntegration.Tests.Infrastructure.AzureServiceBusEmulatorCapabilityTests.DeadLettering_PreservesTheExactReasonAndMessageAsync",
+          "passed_assertion_limit": "skipped/fault: exact message/reason/fault-header or attempt identity, absence of alternate queue, helper terminal ActiveMessageCount=0/DeadLetterMessageCount=0 after Complete and Stop. Capability deadletter: exact message/body/reason/description and awaited Complete only; no runtime-count or entity-size assertion in that method."
+        }
+      ],
+      "small_followup": "Root can isolate/repeat the three exact native FQNs against the same pinned local image/dependency/source, preserve generated entity mapping and broker records around dead-letter transfer and Complete, and compare a non-dead-letter Complete control. Qualify any exposed provider-size measurements separately if available; no assumption that an added assertion/API is already proven. No reviewer execution or new code here."
+    }
+  ],
+  "broader_log_limits": "95Error/1108Warning/1Critical preserve; 31postdeletion sessionreceiver errors correlatedonly, unmatchedinternalmissingentity/linkclosingcausesunqualified. ServerGCdisabledperformanceconfigurationlimit; no harmless/errorfree conclusion.",
+  "root_read": "Personally executednativechain and authored frozeninputs/runtime/PEchecks; own priorcomplete native/build/logqualification retained. This resumed root read consumes fullclassification substantivefields and native substantivefields, not whole52KB packageDLL index or all16ASBtestowner humanread.",
+  "limits": [
+    "Only current canonical source in isolated workspace copy; not a fresh Git checkout/current coverage/wholeUnit/allprovider run.",
+    "Real official local emulator and SQL dependency30case acceptance only; real Azure cloud/device hardware/other profile/CI/release/API-global grade remains outside scope.",
+    "Earlier missing-build and opaqueRunnerError/native0 attempts excluded; VM path visibility is measured precondition, exact oldCompose cause unqualified. No historical13forward/cancel or multiplexing attribution.",
+    "No .NET/MSBuild/native/provider/SSH/Docker/OS process operations by reviewer; pure readonly metadata/hashes and own immutable report only.",
+    "R2tool post18 and broad P03 closure not accepted through this native report."
+  ]
+}

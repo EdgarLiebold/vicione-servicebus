@@ -13,7 +13,7 @@ internal sealed class ResourceCacheEntry<TValue>
         CreatedTimestamp = timestamp;
         LastUsedTimestamp = timestamp;
         Active = true;
-        Keys = new Dictionary<ResourceCacheIndexBase<TValue>, object>();
+        Slots = new Dictionary<ResourceCacheIndexBase<TValue>, object>();
     }
 
     public long Id { get; }
@@ -21,7 +21,7 @@ internal sealed class ResourceCacheEntry<TValue>
     public long CreatedTimestamp { get; }
     public long LastUsedTimestamp { get; set; }
     public bool Active { get; set; }
-    public Dictionary<ResourceCacheIndexBase<TValue>, object> Keys { get; }
+    public Dictionary<ResourceCacheIndexBase<TValue>, object> Slots { get; }
     public IResourceUsageSource? UsageSource { get; set; }
     public Action? UsageHandler { get; set; }
 }

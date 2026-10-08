@@ -12,17 +12,10 @@ public sealed partial class ResourceCache<TValue>
 {
     void TriggerCleanup(object? _)
     {
-        List<ResourceCacheEntry<TValue>> removed;
         TaskCompletionSource completion;
-        long now = _options.TimeProvider.GetTimestamp();
-
         lock (_sync)
         {
             if (_stopping || _disposed || _cleanupRunning)
-                return;
-
-            removed = CollectExpired_NoLock(now);
-            if (removed.Count == 0)
                 return;
 
             _cleanupRunning = true;
@@ -30,14 +23,24 @@ public sealed partial class ResourceCache<TValue>
             _cleanupTask = completion.Task;
         }
 
-        _ = CompleteTimedCleanupAsync(removed, completion);
+        _ = CompleteTimedCleanupAsync(completion);
     }
 
-    async Task CompleteTimedCleanupAsync(List<ResourceCacheEntry<TValue>> removed, TaskCompletionSource completion)
+    async Task CompleteTimedCleanupAsync(TaskCompletionSource completion)
     {
+        var removed = new List<ResourceCacheEntry<TValue>>();
         try
         {
-            await ReleaseEntriesAsync(removed, true, CancellationToken.None).ConfigureAwait(false);
+            try
+            {
+                long now = _options.TimeProvider.GetTimestamp();
+                lock (_sync)
+                    CollectExpired_NoLock(now, removed);
+            }
+            finally
+            {
+                await ReleaseEntriesAsync(removed, true, CancellationToken.None).ConfigureAwait(false);
+            }
         }
         catch (Exception exception)
         {
@@ -85,15 +88,21 @@ public sealed partial class ResourceCache<TValue>
             return _indexVersion;
     }
 
-    ResourceCacheEntry<TValue> CommitValue_NoLock(TValue value, PreparedResourceKeys<TValue> prepared, long timestamp)
+    ResourceCacheEntry<TValue>? CommitValue_NoLock(TValue value, PreparedResourceKeys<TValue> prepared,
+        long timestamp, PendingResourceCreation<TValue>? pending = null)
     {
         var entry = new ResourceCacheEntry<TValue>(++_nextEntryId, value, timestamp);
-
+        entry.Slots.EnsureCapacity(prepared.Keys.Count);
+        _entries.EnsureCapacity(_entries.Count + 1);
         foreach (var pair in prepared.Keys)
-        {
-            pair.Key.CommitKey(entry, pair.Value);
-            entry.Keys.Add(pair.Key, pair.Value);
-        }
+            entry.Slots.Add(pair.Key, pair.Key.PrepareEntry(entry, pair.Value));
+
+        // All user comparison has completed. No live index changes before this final guard.
+        if (prepared.IndexVersion != _indexVersion || _disposed || pending?.Invalidated == true)
+            return null;
+
+        foreach (var pair in entry.Slots)
+            pair.Key.PublishEntry(pair.Value);
 
         _entries.Add(entry.Id, entry);
         _totalCreated++;
@@ -121,10 +130,8 @@ public sealed partial class ResourceCache<TValue>
         return false;
     }
 
-    List<ResourceCacheEntry<TValue>> CollectExpired_NoLock(long now)
+    void CollectExpired_NoLock(long now, List<ResourceCacheEntry<TValue>> removed)
     {
-        var removed = new List<ResourceCacheEntry<TValue>>();
-
         foreach (var entry in _entries.Values.ToArray())
         {
             if (!IsExpired_NoLock(entry, now))
@@ -133,8 +140,6 @@ public sealed partial class ResourceCache<TValue>
             RemoveEntry_NoLock(entry, true);
             removed.Add(entry);
         }
-
-        return removed;
     }
 
     bool IsExpired_NoLock(ResourceCacheEntry<TValue> entry, long now)
@@ -193,8 +198,9 @@ public sealed partial class ResourceCache<TValue>
 
         entry.Active = false;
         _retiringEntries++;
-        foreach (var pair in entry.Keys)
-            pair.Key.RemoveKey(pair.Value, entry);
+        foreach (var pair in entry.Slots)
+            pair.Key.RemoveEntrySlot(pair.Value);
+        entry.Slots.Clear();
 
         if (eviction)
             _evictions++;

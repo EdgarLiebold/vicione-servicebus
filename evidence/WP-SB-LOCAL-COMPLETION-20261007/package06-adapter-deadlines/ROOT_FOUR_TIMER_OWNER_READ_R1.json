@@ -1,0 +1,32 @@
+{
+  "kind": "ROOT_SELECTED_FOUR_ADAPTER_TIMER_OWNERS_PERSONAL_WHOLE_BODY_READ_R1",
+  "rows": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Receiver.cs",
+      "sha256": "f5a3e5458b5417d27bb990a987c57d7be6dbd83671b04e250270c947a7d2f567",
+      "lines": 223,
+      "root_whole_body_personally_read_untruncated": true
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/SessionReceiver.cs",
+      "sha256": "e90a133c7585532587e6a24211fd7e042c000cef181a826e11ec98cef1373841",
+      "lines": 79,
+      "root_whole_body_personally_read_untruncated": true
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Batcher.cs",
+      "sha256": "2539ec46704400fb75596c69b1162cc620f487691bc227d0bca1aeefa5c6d9f9",
+      "lines": 220,
+      "root_whole_body_personally_read_untruncated": true
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/BatchCheckpointer.cs",
+      "sha256": "f0a40085e9b4ce10bced4f7ddb8ee99db8144a0b8e9e5d78fa724f0680a99f9b",
+      "lines": 151,
+      "root_whole_body_personally_read_untruncated": true
+    }
+  ],
+  "total_lines": 673,
+  "observations": "Azure Receiver/SessionReceiver use process CTS(ConsumerStopTimeout) inside registered broker cancellation callback despite endpoint-context TimeProvider used elsewhere; SQS sharedBatcher settings.Timeout and EventHubs BatchCheckpointer.CheckpointInterval also process CTS. Azure selected endpoint provider is actual existing candidate; SQS cache TimeProvider is expiration contract and cannot be blindly reused as batching owner. EventHubs/SQS currentconstructors lack selectedclock argument; addedoverload compileabsence is no unchanged-source native counterexample.",
+  "limits": "Only four explicit owners own whole-body read; no transitive registration/SDKcontext/dispatcher/batchingfactory/otherfixture human read or native/finding closure. Independent research attribution remains separate. Earlierresearch11Kcombinedprojectiontruncated; selectedtimer/contractplan fields require boundedreopening beforeimplementation. Rootsoleauthor/Executor; this readonlyresearch changesno canonical source/test/tool."
+}

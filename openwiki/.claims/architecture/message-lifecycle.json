@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:6a1d99c5644f3f60ca75b0059a6eff2b7756d233b2870a276e7032d1a9807438",
+  "claims": [
+    {
+      "id": "claim_e92f11c3d4a44becadc7624c76b95b02",
+      "statement": "DeserializeFilter checks envelope length and awaits consume dispatch, remaining receive stages and ConsumeCompleted.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Middleware/DeserializeFilter.cs",
+          "version": "repo-file-v1:sha256:4ef4e1185ff1f1b008ece58caf0678a0fd3f9d6b341b90e2a41ce22b1586a0f3"
+        }
+      ]
+    },
+    {
+      "id": "claim_299cd8907268435ba7e6540f80f6fdf0",
+      "statement": "ScopeConsumerFactory awaits the downstream consumer operation and releases its owned scope after the operation.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+          "version": "repo-file-v1:sha256:aedf858fa6a40d59ba1e33ccfdefac6f48dd61198684a69d0df4e8127ae9ce6d"
+        }
+      ]
+    },
+    {
+      "id": "claim_a6098705412c4efa81f1ced7b797001d",
+      "statement": "Physical payload admission validates complete admitted bytes and operation-owned metadata rather than an approximate object size.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Serialization/Admission/PayloadAdmissionTransportBoundary.cs",
+          "version": "repo-file-v1:sha256:5fec403a5b6f03cf6625df0d65904ced6321b29b69553d8be24954c9c25ff6a0"
+        }
+      ]
+    },
+    {
+      "id": "claim_da6543963fbf482f92f971b6c0ec268c",
+      "statement": "Reliable inbox endpoint configuration attaches retry observation and inbox/outbox component observers.",
+      "evidence": [
+        {
+          "resource": "repo://src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ReliableMessaging/EntityFrameworkReliableInboxEndpointConfiguration.cs",
+          "version": "repo-file-v1:sha256:f6781a2b3bd7c108aa9a35d58f9943dae63f184a40a012cd82fca7f13fd2e05a"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

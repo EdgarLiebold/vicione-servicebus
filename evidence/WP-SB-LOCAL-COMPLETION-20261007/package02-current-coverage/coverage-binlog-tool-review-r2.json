@@ -1,0 +1,202 @@
+{
+  "closedLogEvidence": {
+    "correctedR3": {
+      "errors": 0,
+      "failed": 0,
+      "lsofInspection": "No open file handles returned for the frozen corrected and counterexample logs.",
+      "passed": 10,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package02-current-coverage/tool-owner-r2/coverage-corrected-contracts-r3.log",
+      "sha256": "3c23d8f17c75b4a88a884a93656544aa78c4d37005270e5a8f48c97eb6d6f4f6",
+      "terminal": "OK",
+      "total": 10
+    },
+    "frozenR1Counterexample": {
+      "assertion": "ValueError not raised",
+      "errors": 0,
+      "executionProducerSelection": "Root supplied frozen-R1 selection; test owner supports explicit producer path; reviewer verified source/hash/finite log and did not rerun it.",
+      "failureEvents": 1,
+      "methods": 1,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package02-current-coverage/tool-owner-r2/coverage-preexisting-original-r1.log",
+      "producerSha256": "4bd6079b51df20cf80cdfb47fca24704412080103f26af6a9a05cc5f353c3799",
+      "sha256": "d184c1523e78390a0e7d37d0ff4014640f053601988a48bdd35ce86dc0a94e91",
+      "terminal": "FAILED (failures=1)"
+    },
+    "runtimeStatus": "Terminal unittest results verified from closed logs; Root supplied shell exit codes. No actual native subprocess, MSBuild binlog or coverage metric verified by these mocked orchestration contracts."
+  },
+  "deltaValidation": {
+    "R1AggregatorUnchanged": true,
+    "R1ProducerDelta": "Exactly two central prelaunch guard lines added; all other source bytes unchanged relative to frozen R1.",
+    "R1ResearchPlanUnchanged": true,
+    "onlyNewTestMethods": [
+      "test_preexisting_nonempty_stage_bytes_cannot_be_adopted_by_a_new_invocation"
+    ],
+    "priorTestMethodsAndFixturesUnchanged": true
+  },
+  "findings": [],
+  "freezeSha256": "ce9469cddd6bae6e8c1feb8b2506af6643b0ae9e7a78a9e8af9a0895b709b14b",
+  "frozenFiles": {
+    "tool-owner-r2/RESEARCH_PLAN.md": {
+      "bytes": 1967,
+      "matchesFreeze": true,
+      "sha256": "9ed04496c56af73894b9c41322ab9823b7d4b695212829a6e644c323b8faa81f"
+    },
+    "tool-owner-r2/aggregate_coverage_receipts.py": {
+      "bytes": 18016,
+      "matchesFreeze": true,
+      "sha256": "3249ba9322e31437a328e4a72f3e54eb97b5d469981ff44954b8e8c88b02ae6b"
+    },
+    "tool-owner-r2/coverage-binlog-tool-review-r1.json": {
+      "bytes": 12529,
+      "matchesFreeze": true,
+      "sha256": "04ecdf389335d3b9a8b110c14590cc2f265ac62c5d7fd5612818511fb6e00f14"
+    },
+    "tool-owner-r2/coverage-corrected-contracts-r3.log": {
+      "bytes": 1129,
+      "matchesFreeze": true,
+      "sha256": "3c23d8f17c75b4a88a884a93656544aa78c4d37005270e5a8f48c97eb6d6f4f6"
+    },
+    "tool-owner-r2/coverage-preexisting-original-r1.log": {
+      "bytes": 922,
+      "matchesFreeze": true,
+      "sha256": "d184c1523e78390a0e7d37d0ff4014640f053601988a48bdd35ce86dc0a94e91"
+    },
+    "tool-owner-r2/coverage_receipt.py": {
+      "bytes": 13694,
+      "matchesFreeze": true,
+      "sha256": "510d1ae6b7def49e2fa413b565b3de50c79a32c34b914cf4642248b78ad7519d"
+    },
+    "tool-owner-r2/test_coverage_binlog_contracts.py": {
+      "bytes": 6728,
+      "matchesFreeze": true,
+      "sha256": "354263bf6f0db4973440dfc8e665bbdf7d0e362fdb5222f5f7e19606db57dba3"
+    },
+    "tool-owner-r2/tool.patch": {
+      "bytes": 6941,
+      "matchesFreeze": true,
+      "sha256": "3f62aa691ffc867525474b024a2ea4f5c5a1343d3690bfabba292c7bc60025e9"
+    }
+  },
+  "kind": "COVERAGE_BINLOG_TOOL_ADVERSARIAL_REVIEW_R2",
+  "limits": [
+    "No actual native coverage or MSBuild format validity established by nine synthetic Python contracts.",
+    "No complete product coverage, CRAP conclusions, cloud/device/external acceptance or provider readiness established.",
+    "Nested Architecture helper MSBuild invocation logging remains outside this bounded owner delta as research plan states.",
+    "Source cleanliness guard remains unchanged; dirty authoring tree is not a qualified native coverage measurement checkout.",
+    "Nonempty completed native binlog identity still needs real future command/receipt evidence; Python files are never promoted as native logs.",
+    "Frozen tool-owner-r2 test replica adds a directory level; runtime log used the canonical package02 test owner with byte-identical frozen source. Hash snapshot is not a claim that default OWNER discovery works when running the nested replica.",
+    "Exact three requested stage families are required; multiple actual SDK log files/suffixes are allowed and bound. No blanket logging claim for arbitrary nested test-spawned MSBuild invocations."
+  ],
+  "liveEvidenceMatchesFrozen": {
+    "RESEARCH_PLAN.md": true,
+    "test_coverage_binlog_contracts.py": true
+  },
+  "liveMatchesFrozen": {
+    "aggregate_coverage_receipts.py": true,
+    "coverage_receipt.py": true
+  },
+  "preservedContracts": [
+    "Whole clean_git_state function is AST-identical to HEAD, including all tracked HEAD-diff rejection and untracked src/tests rejection.",
+    "Locked restore/fresh artifacts, build warning/error checks, MTP native test-count/report checks, unchanged binaries/source/settings/runner checks remain in main.",
+    "Aggregator project/mode completeness, exact measurement commit, portability modes, assemblies, partial handling, method risk merge and conservative branches remain unchanged.",
+    "Hash snapshots are taken after joined subprocess and text-log closure, and original snapshots are compared before receipt publication instead of replaced with newly computed hashes.",
+    "Aggregator requires exact restore/build/tests stage keys, nonempty unique lists, membership/hash agreement, expected stage names, direct own-run parent, nonempty files, no symlink substitution and exact per-family inventory."
+  ],
+  "priorEvidencePreservation": {
+    "R1FreezeSha256": "44503eda1e52336a8f6f5b24e9161684806de55a3b45b3467c5a1c0adeb2ac82",
+    "R1FrozenFilesStillMatch": true,
+    "R1ReportSha256": "04ecdf389335d3b9a8b110c14590cc2f265ac62c5d7fd5612818511fb6e00f14",
+    "errata": "First fixture attempt alias/subtest errors remain excluded as previously reviewed; original 4-method / 5-finite-assertion counterexamples and corrected nine-method R2 logs remain immutable evidence.",
+    "frozenPriorReportMatches": true,
+    "matchesPriorReviewedR1Freeze": true
+  },
+  "recommendedNextBoundedAction": "Root may prepare the separately authorized clean measurement checkout/local commit only after source overall closure. Native coverage requires actual restore/build/MTP results, valid closed native binlogs and receipts at that clean measurement commit; this review supplies no native coverage acceptance.",
+  "resolvedFindings": [
+    {
+      "boundary": "This is per-command initial family absence in an owned fresh run directory. It does not claim protection from an arbitrary hostile writer racing during execution or native binlog format validation.",
+      "causalTest": "The unchanged new method rejects arranged nonempty earlier-stage bytes and asserts subprocess.run never started; frozen R1 fails with exactly AssertionError: ValueError not raised, current full owner has ten passing methods.",
+      "id": "CB-PER-COMMAND-FRESHNESS-01",
+      "line": 54,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/coverage_receipt.py",
+      "source": "A prelaunch any(glob(stage-family)) guard rejects every existing matching entry before constructing /bl argv, opening the text log or starting subprocess.run. Existing completed-output and final hash/membership checks remain.",
+      "status": "RESOLVED_FOR_BOUNDED_OWNER"
+    }
+  ],
+  "reviewer": "internal read-only adversarial agent; no external product role",
+  "scope": {
+    "executed": "Read/hash/AST/git-show/lsof only; no tests, .NET, MSBuild, Docker, network, provider, or product mutation executed by reviewer.",
+    "freeze": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package02-current-coverage/TOOL_FREEZE_R2.json",
+    "repository": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "wholeOwnersReviewed": [
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/coverage_receipt.py",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/aggregate_coverage_receipts.py",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tools/ci/coverage.settings.xml",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package02-current-coverage/test_coverage_binlog_contracts.py",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package02-current-coverage/RESEARCH_PLAN.md"
+    ]
+  },
+  "settings": {
+    "matchesHEAD": true,
+    "sha256": "3838fc1b6b73f21d8fb447beecad11a5c91cca053bd6c31f906a6036f248464d"
+  },
+  "status": "PASS_BOUNDED_TOOL_OWNER_NO_NATIVE_COVERAGE_ACCEPTANCE",
+  "testAudit": {
+    "adjacentLimits": [
+      "Existing empty-file contract now rejects pre-existing empty files before launch; the post-return empty-output guard remains verified in source, with no separate emitted-empty runtime contract claimed.",
+      "The new test uses ValueError plus assert_not_called as a finite prestart oracle; no broad exception swallowing.",
+      "No new test suite expansion requested beyond the single corrected causal gap."
+    ],
+    "allMethodsAccountedFor": [
+      {
+        "method": "test_each_command_binds_every_closed_invocation_in_its_own_stage",
+        "oracle": "Three stage subtests assert exactly one /bl argument with {} and bind both emitted synthetic invocation files and hashes."
+      },
+      {
+        "method": "test_success_without_a_binary_log_is_rejected",
+        "oracle": "Zero subprocess status with no stage binlog must raise ValueError."
+      },
+      {
+        "method": "test_empty_binary_log_is_rejected",
+        "oracle": "Zero subprocess status with an empty stage binlog must raise ValueError; distinct boundary from absent file."
+      },
+      {
+        "method": "test_preexisting_nonempty_stage_bytes_cannot_be_adopted_by_a_new_invocation",
+        "oracle": "Nonempty matching stage file arranged before run_and_log; requires ValueError and subprocess.run.assert_not_called. Finite original-R1 failure proves rejection absent; corrected R2 passes. Calls are orchestration mocks, not real native invocation."
+      },
+      {
+        "method": "test_real_native_failure_is_preserved_without_issuing_a_receipt",
+        "oracle": "Simulated subprocess status 29 must raise ValueError containing Command exited 29; this is not an actual native subprocess or shell-exit-status-preservation test."
+      },
+      {
+        "method": "test_complete_stages_are_accepted_and_later_hash_changes_are_rejected",
+        "oracle": "Healthy complete synthetic stage map accepted by both helpers, then changed restore bytes rejected by producer and aggregator."
+      },
+      {
+        "method": "test_a_missing_stage_cannot_be_substituted_by_other_stage_files",
+        "oracle": "Missing tests stage rejected despite valid other stages."
+      },
+      {
+        "method": "test_foreign_run_bytes_are_rejected_even_when_their_hash_is_valid",
+        "oracle": "Valid-hash tests file in foreign run rejected."
+      },
+      {
+        "method": "test_unrecorded_or_empty_extra_invocations_prevent_publication",
+        "oracle": "New unrecorded empty tests-family entry rejected by final producer inventory and aggregator inventory."
+      },
+      {
+        "method": "test_symlinked_evidence_cannot_substitute_an_owned_invocation",
+        "oracle": "Same-byte symlink substitution rejected by aggregator; common fixture bytes mean valid hash does not mask missing ownership validation."
+      }
+    ],
+    "criticalAntiPatterns": 0,
+    "highFlakinessAntiPatterns": 0,
+    "lowStyleIssues": 0,
+    "mediumStyleIssues": 0,
+    "positiveObservations": [
+      "Temporary repository roots resolved before patching avoid /var versus /private/var alias artifact.",
+      "Per-test roots/patches/files cleaned in tearDown; no sleeps, unawaited async operations, swallowed failures, or order-dependent retained fixture state.",
+      "Specific ValueError contracts, positive accepted stage map before tamper, and valid-hash foreign/symlink cases provide finite rejection oracles.",
+      "Mocks are explicit orchestration fakes; synthetic bytes are clearly distinguished from native MSBuild logs."
+    ],
+    "reviewedMethods": 10
+  }
+}

@@ -1,3 +1,4 @@
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Azure.Messaging.EventHubs.Processor;
@@ -16,9 +17,15 @@ public class PartitionCheckpointData
     /// <param name="settings">The endpoint receive and checkpoint settings.</param>
     /// <param name="pending">The collection shared for tracking unconfirmed events.</param>
     public PartitionCheckpointData(ReceiveSettings settings, PendingConfirmationCollection pending)
+        : this(settings, pending, TimeProvider.System)
     {
+    }
+
+    internal PartitionCheckpointData(ReceiveSettings settings, PendingConfirmationCollection pending, TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
         _cancellationTokenSource = new CancellationTokenSource();
-        _checkpointer = new BatchCheckpointer(settings, _cancellationTokenSource.Token);
+        _checkpointer = new BatchCheckpointer(settings, _cancellationTokenSource.Token, timeProvider);
         _pending = pending;
     }
 

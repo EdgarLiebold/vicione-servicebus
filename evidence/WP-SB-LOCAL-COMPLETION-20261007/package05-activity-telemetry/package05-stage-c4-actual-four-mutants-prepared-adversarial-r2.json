@@ -1,0 +1,232 @@
+{
+  "status": "READ_ONLY_C4_FOUR_ACTUAL_MUTANT_PREPARATIONS_NO_BLOCK__EXACT_CANONICAL6089_PATHSETS_AND_ONE_CAUSE_EACH_VERIFIED__NO_NATIVE_MUTANT_CREDIT",
+  "reviewer": "/root/continuation_adversarial",
+  "canonical_reference": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+  "canonical_current6089_paths": true,
+  "fixed_freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C4_FREEZE_R1.json",
+    "sha256": "27da98a823c3d5903e7b8ac0de8acba64cffc49f9156ce17b8ae33bc07f3ed11",
+    "four_owners_snapshot_current_hashes": {
+      "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableSnapshotCadenceIsolationTests.cs": "d3cd40063b38b0f5a1e687c27463f299d531890f314c37274d08b71bd3f8c345",
+      "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "8637f1a9bf688ee55f9a0fba10c723e6f7a9ebe0635f83396759d3493ee17a81",
+      "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs": "73be8ecd089c5574b404294ee711c4e1dc72f6b44459083a8de484055a10b13a",
+      "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs": "ce07bea9f8dc3b3f0736028a45b7c84c826757e574e9167d9d6ba2f57e2c51c8"
+    }
+  },
+  "root807": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE807_STAGE_C4_READ_CLOSURE_R1.json",
+    "sha256": "6d403612f37f2f01467f5db2d75c7aeda7f56974a74c57f62a12ccf7fe3dd476",
+    "all807_current_owner_hashes": true,
+    "all84shared_same_and_clones": true,
+    "actual_fixture_lines290": true,
+    "personal_read_credit": "Root only; unchanged previous807closure reused exacthashes, no transfer from reviewer"
+  },
+  "read_scope": "Entire current corrected telemetry helper117 lines with exact guards/reservations; prior whole290canonical tests plus entirefour actualdeclared diffs/cause literals. Each actualcloneonechanged source reconstructed completely;6089allfile bytes hashing is provenance rather than humanreading claim.",
+  "prior_test_review": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-tests-original-preexecution-adversarial-r2.json",
+    "sha256": "31c3b2178ad8d2e9aea378dfdfb86e6b6f0666a93b258c8e6ddd416ef9cf07a8"
+  },
+  "mutants": [
+    {
+      "id": "m1-optional-utc-outside-catch",
+      "actual_clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c4-mutants/m1-optional-utc-outside-catch",
+      "prep_sha256": "fb76fb2d07bc6fbf08c55b4ea73eb26bd93d8f6abf16c38458d1d3f76dc7d5d4",
+      "diff_sha256": "a9f09844f20110d0d96a2e25a7730b212d2fa9f95bdc9e4ebbb2277a965eb11a",
+      "same_actual6089_pathset": true,
+      "all6088_other_paths_same": true,
+      "exact_one_changed_path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "fixed_sha256": "ce07bea9f8dc3b3f0736028a45b7c84c826757e574e9167d9d6ba2f57e2c51c8",
+      "mutant_sha256": "9902cfe895621b391b3ca4b7a884acf198e77155dd565ed0c31eef2b26cf9ed9",
+      "single_literal_replacement_and_full_diff_exact": true,
+      "other_fixed_service_owner_test_req_unchanged": true,
+      "84shared_context_current_expected_hashes_in_clone": true,
+      "root_manifest_serializer_matches": [
+        "sorted_dict"
+      ],
+      "own_complete_actual_path_hash_rows_sha256": "10f1f3d5a7701d3a408cbd3c3a745b6e29e5c894d1c3f87de5b5c38203c9ed1c",
+      "predicted_only": {
+        "same_native_cases": 13,
+        "skipped": 0,
+        "failed": 3,
+        "healthy": 10,
+        "selected_cases": [
+          {
+            "test": "Snapshot_PreservesCompletedBatchAsync",
+            "hasMessage": false,
+            "failOptionalUtc": true,
+            "first_red_line": 49
+          },
+          {
+            "test": "Snapshot_PreservesCompletedBatchAsync",
+            "hasMessage": true,
+            "failOptionalUtc": true,
+            "first_red_line": 49
+          },
+          {
+            "test": "Snapshot_FailedObservationReservesCadenceBeforeRetryAsync",
+            "failure": "Utc",
+            "first_red_line": 115
+          }
+        ],
+        "reason": "Actual postwork UTC cause escapes after gate, before optionaltry; real claim/work/storedstate precede finiteNull. Claim reservation happens after this UTC in mutant; second cadence property not credited independently when first finiteNull fails."
+      },
+      "native_execution_credit": false,
+      "canonical_and_mutant_manifest_receipts_both_exactly_match_actual_sorted_dict_hashes": true
+    },
+    {
+      "id": "m2-no-terminal-saturation",
+      "actual_clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c4-mutants/m2-no-terminal-saturation",
+      "prep_sha256": "853587648452fbdc09ab50abac4983081114e8c18a6b3b443bcacdcc7e02c011",
+      "diff_sha256": "c912073c954537af6ce6be5c68b7c6ed2f01653e01c3b9d6698a029b263860db",
+      "same_actual6089_pathset": true,
+      "all6088_other_paths_same": true,
+      "exact_one_changed_path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "fixed_sha256": "ce07bea9f8dc3b3f0736028a45b7c84c826757e574e9167d9d6ba2f57e2c51c8",
+      "mutant_sha256": "f7c3683aded3915c260110fb58c76fa33b1b00528409925d2ac850e050b930b2",
+      "single_literal_replacement_and_full_diff_exact": true,
+      "other_fixed_service_owner_test_req_unchanged": true,
+      "84shared_context_current_expected_hashes_in_clone": true,
+      "root_manifest_serializer_matches": [
+        "sorted_dict"
+      ],
+      "own_complete_actual_path_hash_rows_sha256": "e50e36fe49d633b4ca0a0eca515301177560ae599015ea68ea974afd0ef87c3c",
+      "predicted_only": {
+        "same_native_cases": 13,
+        "skipped": 0,
+        "failed": 3,
+        "healthy": 10,
+        "selected_cases": [
+          {
+            "test": "Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync",
+            "hasMessage": false,
+            "first_red_line": 79,
+            "expected": 1,
+            "actual_predicted": 4
+          },
+          {
+            "test": "Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync",
+            "hasMessage": true,
+            "first_red_line": 79,
+            "expected": 1,
+            "actual_predicted": 4
+          },
+          {
+            "test": "Snapshot_ExactMaximumDeadlineIsObservedOnceAsync",
+            "first_red_line": 97,
+            "expected": 2,
+            "actual_predicted": 5
+          }
+        ],
+        "reason": "Only terminalstate write changes1→0; overflow check still safe. Unrepresentable successor repeats three extra snapshots because gate terminalflag never sets."
+      },
+      "native_execution_credit": false,
+      "canonical_and_mutant_manifest_receipts_both_exactly_match_actual_sorted_dict_hashes": true
+    },
+    {
+      "id": "m3-no-observed-utc-promotion",
+      "actual_clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c4-mutants/m3-no-observed-utc-promotion",
+      "prep_sha256": "e98a9c3e9f6bba88282deba6dfa7fcd906b3c1d0738091e483b419103508e2b2",
+      "diff_sha256": "e40bcbfd30bdadba54670200e4e943de7162a25fa8559b21026938bd1098ebb7",
+      "same_actual6089_pathset": true,
+      "all6088_other_paths_same": true,
+      "exact_one_changed_path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "fixed_sha256": "ce07bea9f8dc3b3f0736028a45b7c84c826757e574e9167d9d6ba2f57e2c51c8",
+      "mutant_sha256": "36d536961ad404ded961da4c353bd24c93548a06fe7063f78af5a7b63198adcd",
+      "single_literal_replacement_and_full_diff_exact": true,
+      "other_fixed_service_owner_test_req_unchanged": true,
+      "84shared_context_current_expected_hashes_in_clone": true,
+      "root_manifest_serializer_matches": [
+        "sorted_dict"
+      ],
+      "own_complete_actual_path_hash_rows_sha256": "ed92d65c095e8541356327fda52450e11ef76ce22f0101bc22ecac17d341e2c3",
+      "predicted_only": {
+        "same_native_cases": 13,
+        "skipped": 0,
+        "failed": 1,
+        "healthy": 12,
+        "selected_cases": [
+          {
+            "test": "Snapshot_SlowDeliveryPreservesMinimumObservationIntervalAsync",
+            "first_red_line": 151,
+            "expected": 1,
+            "actual_predicted": 2
+          }
+        ],
+        "reason": "Claim anchor stays5s but no successfullyobservedUTC4s→9s promotion; snapshot repeated at5s after realdispatch/mark/statebefore count assertion."
+      },
+      "native_execution_credit": false,
+      "canonical_and_mutant_manifest_receipts_both_exactly_match_actual_sorted_dict_hashes": true
+    },
+    {
+      "id": "m4-no-preclock-reservation",
+      "actual_clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c4-mutants/m4-no-preclock-reservation",
+      "prep_sha256": "7cc745f77e829f33dd7e1e317e1e0f3df1c7b467b2531ae2d5df75629c403097",
+      "diff_sha256": "7a3903d28c2211dfce92639914194a108572cd8d1d1d47ee6c1fa7e4ecc53afe",
+      "same_actual6089_pathset": true,
+      "all6088_other_paths_same": true,
+      "exact_one_changed_path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "fixed_sha256": "ce07bea9f8dc3b3f0736028a45b7c84c826757e574e9167d9d6ba2f57e2c51c8",
+      "mutant_sha256": "f87cd06b676057baf412d14d88f4919094df335a80501a9a07b26c12e9d19d0d",
+      "single_literal_replacement_and_full_diff_exact": true,
+      "other_fixed_service_owner_test_req_unchanged": true,
+      "84shared_context_current_expected_hashes_in_clone": true,
+      "root_manifest_serializer_matches": [
+        "sorted_dict"
+      ],
+      "own_complete_actual_path_hash_rows_sha256": "e86342ccb1889a637bc4c8e52af77e09ccaa262fd74f8fac070bd01b3ba901fd",
+      "predicted_only": {
+        "same_native_cases": 13,
+        "skipped": 0,
+        "failed": 2,
+        "healthy": 11,
+        "selected_cases": [
+          {
+            "test": "Snapshot_FailedObservationReservesCadenceBeforeRetryAsync",
+            "failure": "Utc",
+            "first_red_line": 124,
+            "expected_reads_increment": 3,
+            "actual_predicted_increment": 4
+          },
+          {
+            "test": "Snapshot_BackwardsObservationDoesNotShortenReservationAsync",
+            "first_red_line": 171,
+            "expected": 1,
+            "actual_predicted": 2
+          }
+        ],
+        "reason": "Failed optionalUTC leaves no reservednext; firstearlyretry takes extraoptionalread (only one, since it then reserves later). BackwardssuccessfulUTC bases next2s instead of requiredanchor5s, extra snapshot at2s."
+      },
+      "native_execution_credit": false,
+      "canonical_and_mutant_manifest_receipts_both_exactly_match_actual_sorted_dict_hashes": true
+    }
+  ],
+  "case_totals_predicted_only": {
+    "runs4": true,
+    "same13_cases_each": true,
+    "total52": true,
+    "finite_red9": true,
+    "named_healthy43": true,
+    "zero_native_mutant_receipts_from_prep": true
+  },
+  "cause_quality": [
+    "M1 relocates only fresh optionalUTC evaluation outside catch after existing gate. Move necessarily also precedes requiredclaimreservation, but selected finiteNull3 prove boundaryescape; do not separately claim both causal effects from these failed first assertions. Business claimUTC remains untouched.",
+    "M2 changes terminalflag write1→0 only; saturating arithmetic and exactMax success logic otherwise retained. Three count-reds distinguish terminalrepresentation exhaustion from arithmetic/compile/fixture errors.",
+    "M3 omits only observedUTCpromotion call; claim reservation and no-shortening helper both stay intact. One slow-delivery case distinguishes requiredanchor from actualobservation elapsed spacing.",
+    "M4 omits only pre-clock claimreservation call. Successfullate observation still promotes toactualUTC; failedUTC and backwardsUTC distinguish missing known reservation. The first postfailureearlyretry alone increments an optionalread before its newreservation, so exact expectedextraRead1, not3.",
+    "All13 test cases unchanged (6 Requirement-attributed +7 supplemental) and4699 rows exact. Injected snapshot OCE demonstrates generic optional observation fault isolation; no real shutdown cancellation credit. No fake observer result/state or changed clock/assertion/timeout/runner."
+  ],
+  "findings": [],
+  "fixed_native_parent_context": "Parent reports13focused andfullCore8067PASS archived. Actualraw/runtime/module graph qualification by separate telemetry reviewer; this preparation review neither reruns nor replaces acceptance.",
+  "remaining": [
+    "Root strict actualcompiledmutants with namedexact3/3/1/2 finitefailsets and10/10/12/11 healthycontrols, no compile/discovery/setup/process/guardreds",
+    "Independent PE/PDB/source/package/projection graph review andunchangedfixed13 replay",
+    "Root boundedC4 acceptance aftercomplete receipts; no universalconcurrency/durability/allP05/hardware/cloud/release claim"
+  ],
+  "execution": "No.NET/Docker/Process/providerstarts or product/test/tool/governance writes. Own reportR only; canonicalO source graph reference explicit, no fullC3 runtimecheckout equality claim.",
+  "canonical_root_manifest_sha256": "392dcedce5d303409390eac5886ee4b82693f897f7743cdcd601fae6efc91e23",
+  "prior_report_metadata_correction": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-actual-four-mutants-prepared-adversarial-r1.json",
+    "sha256": "765bebb17ac7df8c65af13af54c6f1e99255fddcffae12e3830c2cf5b1640d2c",
+    "correction": "Computed corrected telemetry whole body117lines rather than119; remove stray prose fragment. All exact source/manifest hashes and causal predictions unaffected."
+  }
+}

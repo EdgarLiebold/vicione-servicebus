@@ -1,0 +1,88 @@
+{
+  "kind": "INDEPENDENT_READONLY_ADVERSARIAL_ACTUAL_COMPOSITION_CANONICAL_TWO_FILE_APPLICATION_R1",
+  "disposition": "QUALIFIED_ACTUAL_EXACT_TWO_FILE_APPLICATION_NO_BLOCKER",
+  "inputs": {
+    "application_receipt_sha256": "9ff233ff22b076f04e4d2d5718c1e5af9c4d7fb6e607f817802571a433d95681",
+    "dated_before_INPUTS_sha256": "de865a76d1d0c55a7b9fb0c2637fd05f64df86f49d17350e71fdc9bce62ff0fc",
+    "own_transfer_gate_sha256": "9b6fa12dcd57d0130482165555288e569b3bd8d4c65889dfdb086a8716c2d6d1",
+    "original_native_RESULT_sha256": "1c42773a2ab6928c867680cec672645b9d5691b44fb4f905432c57e6b179746e",
+    "whole_native_RESULT_sha256": "7bd2843ec16db68e91dfed48c60f7e73caccb29456b4114bf23d620a480ed4da",
+    "own_mutants_native_peer_sha256": "0f901b835ca4756db21ea4a7597c77afa48caf06eb67b18dce41a45e4e9e3ae6",
+    "restored_native_RESULT_sha256": "78b97c02dcad666da092c3b7d1305f03200b887ddcb48b6415a5915ce6e1daf4"
+  },
+  "actual_source_equivalence": {
+    "canonical_files": 6102,
+    "private_qualified_files": 6102,
+    "full_path_and_sha256_manifests_equal": true,
+    "canonical_after_equals_dated_INPUTS_private_manifest": true,
+    "canonical_before_in_dated_INPUTS_count": 6101,
+    "unchanged_common_source_files": 6100,
+    "changed_source_files": [
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/BusCompositionGenericHostStartupTests.cs",
+        "before_sha256": null,
+        "after_sha256": "a43abd4150e7bd888a30ae5486e491080bc0477919beffc9a53999fec69d8450"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+        "before_sha256": "32b49b44106cef7b305183d0885ec53276c96f7ce16f4e522ee07c1574cd61bf",
+        "after_sha256": "9bb63defc04475044e30a7f91fefa56c7f9eb9a8960ec6f79b587da1093aa292"
+      }
+    ],
+    "config_inputs14_unchanged": true,
+    "all_product_src_paths_and_hashes_unchanged": true,
+    "product_source_changes": 0,
+    "no_unexpected_new_removed_source_paths": true
+  },
+  "requirements": {
+    "old_snapshot_sha256": "32b49b44106cef7b305183d0885ec53276c96f7ce16f4e522ee07c1574cd61bf",
+    "new_canonical_sha256": "9bb63defc04475044e30a7f91fefa56c7f9eb9a8960ec6f79b587da1093aa292",
+    "old_rows": 4722,
+    "new_rows": 4725,
+    "all_old_rows_exact_in_prior_order": true,
+    "old_literal_prefix_preserved_bytes": 1679708,
+    "new_ordered_rows": [
+      {
+        "requirementId": "REQ-VSB-BUS-COMPOSITION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "MissingTransportAndLimitsFailTogetherBeforeRuntime",
+        "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests",
+        "variantKey": "actual-host-missing-transport-and-limits"
+      },
+      {
+        "requirementId": "REQ-VSB-PAYLOAD-ADMISSION-DI",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "SelectedTypedPayloadLimitFailsBeforeMaterialization",
+        "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests",
+        "variantKey": "actual-host-selected-envelope-limit-not-declared"
+      },
+      {
+        "requirementId": "REQ-VSB-BUS-COMPOSITION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "DefaultAndTypedBusesDeliverAndStopWithUnusedPayloadPoison",
+        "testType": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests",
+        "variantKey": "actual-host-default-and-typed-runtime-with-unused-payload-poison"
+      }
+    ],
+    "note": "Three new requirement rows in one resource file; whole transfer is two files."
+  },
+  "runtime_binding_at_review": {
+    "private_post_runtime17_equals_original_archive_and_post_archive": true,
+    "assets12_equal_post_archive": true,
+    "canonical_new_native_execution_claim": false,
+    "byte_and_source_equivalence_reuses_own_post9b6_and_original_b784_0786_ff46_qualification": true
+  },
+  "history_preservation": {
+    "dated_before_INPUTS_byte_hash_still_exact": true,
+    "dated_INPUTS_canonical6101_remains_before_application_snapshot": true,
+    "history_rewritten": false,
+    "note": "CurrentO6102 is correctly compared against qualifiedprivate6102; datedINPUTS canonical6101 remains unchanged rather than being misused as current guard."
+  },
+  "findings": [],
+  "scope_limits": [
+    "Actual exact source transfer and prior native evidence/source/runtime equivalence qualify. No new canonical .NET execution is claimed.",
+    "No fresh PE/PDB or compiled metadata parse in this afterapply report; previous own exact-image/whole-source byte reuse remains applicable.",
+    "No cloud/hardware/currentcoverage/globalA+/APIcensus/broaderServiceBusclosure.",
+    "Pure readonly files/hashes/JSON and own immutable report only; no product/test/docs/tool edits, .NET/native/provider/import/process control."
+  ]
+}

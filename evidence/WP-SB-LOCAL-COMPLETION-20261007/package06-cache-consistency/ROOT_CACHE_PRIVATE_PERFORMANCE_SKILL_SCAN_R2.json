@@ -1,0 +1,288 @@
+{
+  "kind": "ROOT_CACHE_PRIVATE_PERFORMANCE_SKILL_STANDARD_SCAN_R2",
+  "scope": "Exactly frozen private19.NET10 cache sources; no code edits, benchmarks, device or global performance grade.",
+  "private_freeze_sha256": "0e785265fce330cc393985a062fd289c3ee287de05562ff269c3b6ee30a89d63",
+  "recipe_execution_checklist_before_classification": [
+    {
+      "recipe": "critical_string_IndexOf_withoutComparison",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "critical_Substring",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "critical_StartsEnds_withoutComparison",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "critical_Contains_literal_withoutComparison",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "static_readonly_Dictionary",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "static_readonly_FrozenDictionary",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "per_call_List_heuristic",
+      "matching_line_count": 7,
+      "hits": [
+        {
+          "path": "ResourceCache.Creation.cs",
+          "line": 17,
+          "text": "var removed = new List<ResourceCacheEntry<TValue>>();"
+        },
+        {
+          "path": "ResourceCache.Creation.cs",
+          "line": 71,
+          "text": "var removed = new List<ResourceCacheEntry<TValue>>();"
+        },
+        {
+          "path": "ResourceCache.Creation.cs",
+          "line": 172,
+          "text": "var removed = new List<ResourceCacheEntry<TValue>>();"
+        },
+        {
+          "path": "ResourceCache.Resources.cs",
+          "line": 31,
+          "text": "var removed = new List<ResourceCacheEntry<TValue>>();"
+        },
+        {
+          "path": "ResourceCache.cs",
+          "line": 56,
+          "text": "_observers = new List<IResourceCacheObserver<TValue>>();"
+        },
+        {
+          "path": "ResourceCache.cs",
+          "line": 205,
+          "text": "var removed = new List<ResourceCacheEntry<TValue>>();"
+        },
+        {
+          "path": "ResourceCache.cs",
+          "line": 297,
+          "text": "var removed = new List<ResourceCacheEntry<TValue>>();"
+        }
+      ]
+    },
+    {
+      "recipe": "per_call_Dictionary_heuristic",
+      "matching_line_count": 4,
+      "hits": [
+        {
+          "path": "Implementation/ResourceCacheEntry.cs",
+          "line": 16,
+          "text": "Slots = new Dictionary<ResourceCacheIndexBase<TValue>, object>();"
+        },
+        {
+          "path": "ResourceCache.Resources.cs",
+          "line": 72,
+          "text": "var keys = new Dictionary<ResourceCacheIndexBase<TValue>, object>(indices.Length);"
+        },
+        {
+          "path": "ResourceCache.cs",
+          "line": 54,
+          "text": "_entries = new Dictionary<long, ResourceCacheEntry<TValue>>();"
+        },
+        {
+          "path": "ResourceCache.cs",
+          "line": 55,
+          "text": "_indices = new Dictionary<string, ResourceCacheIndexBase<TValue>>(StringComparer.Ordinal);"
+        }
+      ]
+    },
+    {
+      "recipe": "CurrentCulture_comparer",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "LINQ_Select_Where_Cast_Take_Aggregate",
+      "matching_line_count": 3,
+      "hits": [
+        {
+          "path": "ResourceCache.Lifecycle.cs",
+          "line": 52,
+          "text": "Task[] ownership = pending.Select(x => x.OwnershipReleased.Task).ToArray();"
+        },
+        {
+          "path": "ResourceCache.cs",
+          "line": 269,
+          "text": "return _entries.Values.Select(x => x.Value).ToArray();"
+        },
+        {
+          "path": "ResourceCache.cs",
+          "line": 347,
+          "text": "Task[] ownership = invalidated.Select(x => x.OwnershipReleased.Task).ToArray();"
+        }
+      ]
+    },
+    {
+      "recipe": "async_void",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "sync_wait_or_result_candidates",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "Task_Run",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "memory_ToLowerUpper",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "three_chained_Replace",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "params_signature",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "LINQ_char_All_Any",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "array_copy_ToArray",
+      "matching_line_count": 11,
+      "hits": [
+        {
+          "path": "ResourceCache.Lifecycle.cs",
+          "line": 34,
+          "text": "removed = _entries.Values.ToArray();"
+        },
+        {
+          "path": "ResourceCache.Lifecycle.cs",
+          "line": 38,
+          "text": "pending = _pendingCreations.ToArray();"
+        },
+        {
+          "path": "ResourceCache.Lifecycle.cs",
+          "line": 52,
+          "text": "Task[] ownership = pending.Select(x => x.OwnershipReleased.Task).ToArray();"
+        },
+        {
+          "path": "ResourceCache.Observers.cs",
+          "line": 63,
+          "text": "return _observers.ToArray();"
+        },
+        {
+          "path": "ResourceCache.Resources.cs",
+          "line": 68,
+          "text": "indices = _indices.Values.ToArray();"
+        },
+        {
+          "path": "ResourceCache.Resources.cs",
+          "line": 135,
+          "text": "foreach (var entry in _entries.Values.ToArray())"
+        },
+        {
+          "path": "ResourceCache.cs",
+          "line": 122,
+          "text": "snapshot = _entries.Values.ToArray();"
+        },
+        {
+          "path": "ResourceCache.cs",
+          "line": 269,
+          "text": "return _entries.Values.Select(x => x.Value).ToArray();"
+        },
+        {
+          "path": "ResourceCache.cs",
+          "line": 327,
+          "text": "removed = _entries.Values.ToArray();"
+        },
+        {
+          "path": "ResourceCache.cs",
+          "line": 331,
+          "text": "invalidated = _pendingCreations.ToArray();"
+        },
+        {
+          "path": "ResourceCache.cs",
+          "line": 347,
+          "text": "Task[] ownership = invalidated.Select(x => x.OwnershipReleased.Task).ToArray();"
+        }
+      ]
+    },
+    {
+      "recipe": "stackalloc",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "format_boxing_candidates",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "HttpClient_creation",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "Regex_creation",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "JsonSerializerOptions_creation",
+      "matching_line_count": 0,
+      "hits": []
+    },
+    {
+      "recipe": "JsonSerializer_calls",
+      "matching_line_count": 0,
+      "hits": []
+    }
+  ],
+  "structural_inverse": {
+    "class_declaration_count": 17,
+    "unique_class_names": 13,
+    "concrete_unique": 12,
+    "sealed_concrete_unique": 12,
+    "unsealed_concrete": []
+  },
+  "manual_checks": {
+    "multiple_ValueTask_awaits": "No repeated await of same ValueTask; each async value operation awaited once. DisposeTask is shared Task, not reused ValueTask.",
+    "samekey_ContainsKey_plus_indexer": "No same-key ContainsKey then indexer load; all lookups use TryGetValue; AddIndex membership tests not indexer reads.",
+    "IEnumerable_reenumeration": "No deferred input enumerated twice; entry snapshots retain resource projection lifetime boundary.",
+    "compound_string_allocations": "No Replace chain, string += loop or char.ToString transform; error interpolations are exceptional paths.",
+    "frozen_collection_applicability": "All cache dictionaries mutate; FrozenDictionary is inapplicable.",
+    "bulk_capacity": "New integer bucket/master/slot/pending structures preallocate before logical publication; no full dictionary transaction copy.",
+    "per_call_heuristic_false_positive_review": "7List hits include1observer-list constructor;4Dictionary hits include3constructors and1operation projection. Six actual operation-owned retirement List allocations preserve exception cleanup; no measured cost inferred.",
+    "lazy_lookup_r2": "Only changed map168 adds initialized-state branch and preallocated cold backing before comparer; original callback boundary retained. No extra collection copy or per-call work queue."
+  },
+  "classified_findings": [
+    {
+      "severity": "Info",
+      "id": "CACHE-PERF-SNAPSHOT",
+      "existing_boundary": "CollectExpired_NoLock snapshots live master entries per scan with ToArray, inherited original behavior; bounded by configured capacity.",
+      "disposition": "Keep current correctness/lifetime boundary for this repair. Benchmark allocation and scan cost in planned local performance package before deciding a traversal redesign. No measured regression or speedup is claimed."
+    }
+  ],
+  "summary": {
+    "Critical": 0,
+    "Moderate": 0,
+    "Info": 1
+  },
+  "limits": "Textual recipe hits are inspected candidates, not automatic findings. No fabricated 2x/10x/allocationbyte or target hardware budget claims.",
+  "predecessor_sha256": "b8044e503c6cb813f01807dc3069871768e0438ac2db4635d17a3cab75fdf955"
+}

@@ -1,0 +1,13 @@
+{
+  "kind": "ROOT_SQS_BATCH_CLOCK_CONTINUATION_SOURCE_READ_R3",
+  "new_fixture_R2_sha256": "967dea7912f48e5342265886e98dfa0d3525d9ae36233ea0edf8c47c0e9b391e",
+  "read": [
+    "OriginaldriverR1 whole134 plus exactR2 archive closure delta9 and context100..130",
+    "PreparationR1 whole50 plus exactR2 metadata SHA guard",
+    "Physicalqualifier whole33",
+    "TaskExecutor whole source1..190 and191..380 separately without truncation",
+    "FixtureR2 supporting280..470 and470..642; frozenR1 whole642 read previously, sole equivalent assertion delta195 R2 inspected"
+  ],
+  "read_correction": "Initial combined TaskExecutor/supportingfixture output6389 tokens truncated under5000. Replaced by three separate complete chunk outputs2423/1290/2677, no credit from original truncation.",
+  "limits": "Source/AST read only. No native/compiler/API/whole-module/product transfer claim. DriverR1/prepareR1 source holds retained; R2 sourcepeer gates pending."
+}

@@ -1,0 +1,16 @@
+{
+  "kind": "P05_C5_TEST_ONLY_ORIGINAL_FREEZE",
+  "source_sha256": {
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/ColdTelemetrySourceIsolationTests.cs": "a47f7a2a4981f3aebb2f35f1cf4a2451f6bd402f27be05936a358c4fd47eb1b3",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "af41b6db4365be62b25e27be14285ff1f4eb30b590cb52eaab15e97f89390c21",
+    "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs": "bc9bdd069b20785457700ff8cfde1ffb996f8b0f07c8522898201bbdb4e4ef7c",
+    "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs": "6bc0539808fb6237280c50550743f04d5d0fc1d6cf454e7432e5c7befa6dac1b"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-test-only-original-owner-r2",
+  "root808_sha256": "aaf74bd2734ecdf6576599f44ceff3b1a00c7e2ae530b4290da794e9e98a9c21",
+  "research_plan_sha256": "628f1e2fb73e5be746639a9265efcd349f545107859c5f5a3161a79db2053f3d",
+  "native_parent_facts": 6,
+  "child_native_cases": 6,
+  "apphost_help_receipt_sha256": "5591ee005ea3395ce7132e300f832117e1deb8acc6a377e8a75148a163ef6617",
+  "excluded_parent_protocol_attempt_sha256": "b5d6021a0ad251eea562534c9024a9bf4000c473d7fe89ebeddf3a877d83b9d4"
+}

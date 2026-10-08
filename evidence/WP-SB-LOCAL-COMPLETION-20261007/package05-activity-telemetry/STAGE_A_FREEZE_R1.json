@@ -1,0 +1,18 @@
+{
+  "kind": "P05_STAGE_A_PRODUCT_AND_CANONICAL_DELTA_FREEZE",
+  "status": "PENDING_NATIVE_AND_INDEPENDENT_REVIEW",
+  "owner_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-a-owner-r1",
+  "source_sha256": {
+    "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs": "c206f81c611584f1982f03f55b1044cae4613d3775650fa291b43a910134d625",
+    "src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs": "77d371f9f003e617a6f2fa250c3b170fa2cc9a3dd1fe98c44d6b2e8f70e40fb2",
+    "tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs": "21f7290640fbe910bac4c87bb3b3ee1881dcafcfaa9255acd85e1c131ed16589",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "d25a434309bd395ff5b34a3864ea292a9ec2eff4f63c3e30ebca0cff486638a1"
+  },
+  "research_plan_sha256": "0acec8d749bf307dd0f42bd05f71cb35a9e751df271d83d739ebfe40072ef4c8",
+  "root57_read_sha256": "87c47890f03ff587088d3a13d6b17fcefdc2234b9ab0bde6e420b15c39cf9e72",
+  "root801_read_sha256": "a0fcae8185d3790f4c53852403cd2ea51bc0e75cf1914579aa0c86b821a827a6",
+  "patch_sha256": "b81a3ca3937a66b26715504ddd6aa83c1b22c3cc331efe5f9f993c1d701c602e",
+  "native_cases": 8,
+  "new_requirement_rows": 5,
+  "limits": "TwoActivityproductowners only; no batch/sourcecreation/monitor/durable/generalP05 closure."
+}

@@ -1,0 +1,18 @@
+{
+  "kind": "P05_STAGE_B2_BATCH_HANDOFF_FIXED_FREEZE",
+  "status": "PENDING_INDEPENDENT_SOURCE_AND_FIXED_NATIVE_REVIEW",
+  "source_sha256": {
+    "src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs": "da6a9cb0359b3f6d401a5f8a9026565309cb8c4a1936666bae3ba726d8a61eb9",
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchActivityHandoffIsolationTests.cs": "f097715bd98b8d9fbbfd516733f8aba4a17de24f57de3ac9c73ba9db2921e213",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "cf28573d00c8b37459c630a708c8a98a20da16b2a781f26c35799dd79fb3a136"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-fixed-owner-r1",
+  "patch_sha256": "05936e866842a512e9b6dc3180813ebc3ca71dcf5e712097b456d33f9630d7e4",
+  "root803_read_sha256": "34d56c2d06ef1339159b9b4ca3a20b2dceb0d8b89d8ee63da4680382cab51bb1",
+  "research_plan_sha256": "f1cbe31a2db2c342555616458d19972c974ce6e2174c9a95971f472d9ef20566",
+  "original_native_result_sha256": "bc889c57c0d3b872ee7fc118f13701853d7c2872a4ab0134c97b880c8daa932c",
+  "native_cases": 6,
+  "product_owners": 1,
+  "root_product_read": "Whole429originalRoot57+whole authorednamespaceimport/singleassignmentdelta personally consumed; originalsnapshotboundbeforeedit",
+  "limits": "Protected explicit handoff only; no newfinally contract."
+}

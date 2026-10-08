@@ -1,0 +1,40 @@
+{
+  "kind": "ROOT_ACTUAL_FIXED_EVENTHUB_TWO_GREEN_AND_LOCKED_ASSET_GRAPH_R1",
+  "native_sha256": "f7d7c83cb31373e9236d2c3dab087968be371fb3c86d858b09c23a38028638ec",
+  "physical_sha256": "7e7c94029abbec7ad6701fa3fd2d236eeb2d94bef4cb1fc1adb2979041671c2d",
+  "focused": {
+    "total": 2,
+    "passed": 2,
+    "failed": 0,
+    "skipped": 0
+  },
+  "actual_sdk_stages": {
+    "locked-restore": {
+      "pid": 71655,
+      "joined": true,
+      "returncode": 0,
+      "deadline_exceeded": false
+    },
+    "strict-rebuild": {
+      "pid": 71675,
+      "joined": true,
+      "returncode": 0,
+      "deadline_exceeded": false
+    },
+    "focused-two": {
+      "pid": 71781,
+      "joined": true,
+      "returncode": 0,
+      "deadline_exceeded": false
+    }
+  },
+  "actual_runtime_files": 16,
+  "actual_source_owners": 13,
+  "actual_pe_images": 11,
+  "actual_pdb_document_checksums": 2904,
+  "all11_asset_JSON_direct_equal_after_declared_private_root_relocation": true,
+  "raw9_hashes_crc3_verified": true,
+  "green_scope": "SameClockFact reachesFullselectedtimer/7secDue/Infinite andseparatepartialCount2FakeAdvance->actualSDKcheckpoint1/uncanceledownedtoken. PrimarypreexpiryFalse isonlyasnapshot. LegacyfullBatchdefaultctor/exactownertoken/drain also passed.",
+  "personal_read": "Wholeactualfocused2stdout+summary read; actual strictzero fields checked. All asset/path/raw graph equality mechanical andRootfresh11/2904PEPDBparse. No freshwhole11filevendor/source humanread or semanticbinlog claim.",
+  "limits": "Boundedcorrectedprivatefocusonly. Independentfreshphysical/compiled100/APIreview, wholelocalmodule, controls/post/canonical remainsopen. No cloud/HW/currentcoverage/global A+."
+}

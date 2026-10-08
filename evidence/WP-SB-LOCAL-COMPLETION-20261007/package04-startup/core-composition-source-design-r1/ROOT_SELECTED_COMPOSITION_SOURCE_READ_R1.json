@@ -1,0 +1,124 @@
+{
+  "kind": "ROOT_COMPOSITION_SELECTED_SOURCE_AND_TEST_PERSONAL_READ_R1",
+  "actor": "/root",
+  "fresh_whole_untruncated_read": [
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+      "sha256": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b",
+      "lines": 319
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/PayloadAdmissionOptions.cs",
+      "sha256": "a9c4b474245702ae4fcc537cbf6581b1bd0e55f4b10f7d75dd4477d7c18f93c1",
+      "lines": 44
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+      "sha256": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08",
+      "lines": 89
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/MessageLimitsConfigurationExtensions.cs",
+      "sha256": "768c63ce53946add68e49f2616c82760641a589222363d6617872f07a06e5ee0",
+      "lines": 124
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationIdentity.cs",
+      "sha256": "929d35ea91140e697b985c050623fb5c7446e37f87f0199c944cac38bfa7b519",
+      "lines": 22
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/DependencyInjectionRegistrationExtensions.cs",
+      "sha256": "80590a285e90a186e494e5ac97e26f8f62f82660c055cd4f6353a90663850f56",
+      "lines": 202
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs",
+      "sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef",
+      "lines": 305
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/RegistrationConfigurator.cs",
+      "sha256": "bb3885fb29e6422b646ac87544efa635d678370c4ae501d1317392e35647ff93",
+      "lines": 216
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs",
+      "sha256": "8659b5f22016823aea26893f10dd0be31fc1f2efa9590f46e0acc6cb5b34972e",
+      "lines": 293
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Configuration/InMemoryTransport/InMemoryConfigurationExtensions.cs",
+      "sha256": "b05a7efcc92e3ce931083670a538d1a84df32e4d86d03a38113fbc062f5fc11d",
+      "lines": 131
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Hosting/BusDepot.cs",
+      "sha256": "b6bb5efbcfa677d316fe18f2dc9c2a829099cd38d9c4dda03e125eca906477b0",
+      "lines": 78
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Runtime/ServiceBusRuntime.cs",
+      "sha256": "fdb8a75d182886d32468204ea0413a430fb1f66038e8c25af8cd606515889c56",
+      "lines": 255
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Runtime/ServiceBusRuntime.Lifecycle.cs",
+      "sha256": "fda545a8e963fb69b2efca65613ae9dbc0d88420b65c7f1f5e9571290a7ec03b",
+      "lines": 259
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/InMemoryTransport/Configuration/InMemoryBusConfiguration.cs",
+      "sha256": "f434862f967b22837e2d3988dcdde507eb9ae9897938b64ae5a4a605df3b6612",
+      "lines": 56
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IBusObserver.cs",
+      "sha256": "301cd28db5882b48e64f8b338750914bca4e8215fe823676ba70e5b641533d7b",
+      "lines": 49
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Contracts/BusReady.cs",
+      "sha256": "fb55d416fa0f56fa7b8c3f90f83e0b0f8afaa64a6431d722c61f6d9613150221",
+      "lines": 11
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/ConnectHandle.cs",
+      "sha256": "c0f43d3c38e2fab39a7ef1a85b5a7f69562799e4f9980cb2c2a8898d6622f161",
+      "lines": 23
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Serialization/Admission/PayloadAdmissionPolicy.cs",
+      "sha256": "fccb4ff5aac8ad43ea6a13a1f60ac5fafc4f5caf73e3c59ba7e7d224b8bd6496",
+      "lines": 67
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Configuration/ConfigurationMessages.cs",
+      "sha256": "a065264bf22b087fcb671d1165334f4f504b97109a379bf7c02bcc6966a01f31",
+      "lines": 55
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Exceptions/ConfigurationException.cs",
+      "sha256": "5d1fa477bf8ba63554101dd3720cbecff99e5a5ea743c52bfde26f945a7042ee",
+      "lines": 60
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/BusCompositionStartupValidationTests.cs",
+      "sha256": "613bfc0b93c3bed39323846ed27ede88c2d44f687271c45d18f96a05cd0d382b",
+      "lines": 550
+    }
+  ],
+  "exact_prior_ROOT_TEST_READ_reuse": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs",
+      "sha256": "1d2f15b80cd90109bd1b944c789761c019632d23617d9ce4e7547bc3c69c28d1",
+      "prior_root_test_owner800_receipt_sha256": "5e807c7f46275c714dcb6e8c3b6f478f5f6846299510c58a2fcac60b763c6b08"
+    }
+  ],
+  "candidate_whole314_then_full_r2_delta": {
+    "fixture322_sha256": "a43abd4150e7bd888a30ae5486e491080bc0477919beffc9a53999fec69d8450",
+    "prepared_sha256": "858f41bbd3c0d1aa7ab96acdf198ffb4f5aa28fdfa8ce47378cf1559394d15fd"
+  },
+  "read_repair": "Combined supporting-body output truncated RegistrationConfigurator middle; full216 source read separately untruncated. ServiceCollection305 and TransportFactory293 bodies each wholly visible before/after middle omission. Original wholeCore800 is TEST-owner proof and supplies no product src body credit; earlier erroneous support-source reuse statement corrected, allfive1147line supporting DI/factory/InMemory bodies freshly read before any private/canonical fixtureapplication/native.",
+  "limits": "Selected source whole body reads only; no all20startupfamily/41model/allrepo complete assertion. Existing unusedRepresentative testbody priorRoottest800 exactreuse allowed; ownpeerSource reads remain separate. No source/native/canonicaltest mutation in this receipt."
+}

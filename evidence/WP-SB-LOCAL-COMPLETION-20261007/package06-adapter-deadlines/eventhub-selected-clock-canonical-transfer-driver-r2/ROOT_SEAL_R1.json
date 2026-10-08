@@ -1,0 +1,8 @@
+{
+  "kind": "ROOT_TEN_TRANSFER_SEAL_R1",
+  "gate_sha256": "38f7c69fa6d2e07bd6423ac187816908c3c589ca062a80f2fc97408df6758ef5",
+  "driver_sha256": "3262013a4766bef321983dbf235c8134166ad185a0a268cb2b8954ca404753b8",
+  "final_binding_peer_sha256": "0a843345c50dfa063ea9ac6686cd0d7a7ae5f029778729f51ae124a92ad217ad",
+  "retained_before_nine_sha256": "3687967e07f58664eecb2b2defb02ce4c317d39a2ebb406a409b29741f38ac24",
+  "scope": "Root exact10 copy only, immediateguards and independentafterapply beforeaccept/docs. Original9 durably backedup;1newfixture absent. No SDK."
+}

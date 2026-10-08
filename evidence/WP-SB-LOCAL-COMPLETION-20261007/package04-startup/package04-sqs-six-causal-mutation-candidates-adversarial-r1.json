@@ -1,0 +1,125 @@
+{
+  "kind": "INTERNAL_READONLY_P04_SIX_CAUSAL_SQS_MUTATION_CANDIDATE_ADVERSARIAL",
+  "status": "NO_BLOCK_EXACT_SIX_PREPARED_SINGLE_CAUSE_CANDIDATES__NATIVE_PENDING",
+  "findings": [],
+  "prepared_index_sha256": "2ed8bcf266046aea879a7bee62c04870bc1567e6b8818de190811f9f4bf512f4",
+  "private_fixed_owner_sha256": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a",
+  "product_review_latest_sha256": "8874222ff7150ae6631e9950e0900c85adff36e1a44ac1e74d6781ff6c2c6c09",
+  "preserved_product_review_r1_sha256": "2709a5732cc0d4e98c9946fd3390c38d475997f5b7b04d0b2aa1a719e76d394d",
+  "product_metadata_line_number_errata_R2_only": true,
+  "new_exact194_test_sha256": "694ffbfb2fb103e081e1de064c1f4d7a875c32d971e3beb2b91ebe79e60a98d8",
+  "test_delta": "--- \n+++ \n@@ -13,6 +13,7 @@\n     [Theory]\n     [InlineData(InvalidNamedOption.Region, \"Region must not be empty\")]\n     [InlineData(InvalidNamedOption.ScopeWithoutRegion, \"Scope requires Region\")]\n+    [InlineData(InvalidNamedOption.Scope, \"Scope must not be empty\")]\n     [RequirementCoverage(\"REQ-VSB-AWS-SQS-HOST-CONFIGURATION\", \"selected-named-options-validated-by-generic-host-before-runtime\")]\n     public async Task SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, string reason)\n     {\n@@ -86,7 +87,12 @@\n                 InvalidNamedOption.ScopeWithoutRegion => null,\n                 _ => \"eu-central-1\",\n             };\n-            options.Scope = selectedInvalid == InvalidNamedOption.Region ? null : \"orders\";\n+            options.Scope = selectedInvalid switch\n+            {\n+                InvalidNamedOption.Region => null,\n+                InvalidNamedOption.Scope => \" \",\n+                _ => \"orders\",\n+            };\n         });\n         if (poisonDefault)\n             services.Configure<AmazonSqsTransportOptions>(string.Empty, options => options.Region = \" \");\n@@ -183,6 +189,6 @@\n     sealed record Result(Exception? StartFailure, Exception BarrierFailure, int BarrierEntries, int Materializations,\n         int ClientFactoryCalls, IReadOnlyList<Exception> CleanupFailures);\n \n-    public enum InvalidNamedOption { Region, ScopeWithoutRegion }\n+    public enum InvalidNamedOption { Region, ScopeWithoutRegion, Scope }\n     public interface IOrdersBus : IBus { }\n }\n",
+  "test_read_provenance": "Old188 whole personally read plus complete194 successor delta and exactold assertions/current194 line map. Child startup/cleanup untouched; no wholesale weaker oracle or new provider operation. Requirements four purpose rows unchanged. This does not replace separate colleague fixture review or Root own bodyread.",
+  "candidates": [
+    {
+      "name": "m1-typed-options-bound-to-default",
+      "owner": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "mutant_sha256": "3b22884c45fef7fd08b1e51f8196dde2f1dc3c0ac4a863ad4972b8ccc26271bf",
+      "whole_fixed79_plus_complete_single_cause_diff_personally_read": true,
+      "exact_diff": "--- \n+++ \n@@ -39,7 +39,7 @@\n         Action<IBusRegistrationContext, IAmazonSqsBusFactoryConfigurator>? configure = null)\n         where TBus : class, IBus\n     {\n-        AddSharedServices(configurator.Services, typeof(TBus).Name, typeof(TBus).FullName ?? typeof(TBus).Name);\n+        AddSharedServices(configurator.Services, string.Empty, typeof(TBus).FullName ?? typeof(TBus).Name);\n         configurator.SetBusFactory(new AmazonSqsRegistrationBusFactory(configure));\n     }\n \n",
+      "predicted_native_parent_slots": {
+        "total": 6,
+        "red": 4,
+        "healthy": 2
+      },
+      "first_finite_oracle_prediction": "SelectedNamed Region/Scope/ScopeWithoutRegion firstIsType22; poisonDefaultfirstSame39. Defaultinvalid andcoherentnamed are paired healthy.",
+      "causal_qualification": "Only named options key changed; sameName factory remainsactualName and no validatorselectednamed. Poisoneddefault catches undesired crossbus ownership.",
+      "actual_native_status": "NOT_EXECUTED_NO_KILL_OR_SURVIVOR_CREDIT"
+    },
+    {
+      "name": "m2-validate-on-start-removed",
+      "owner": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "mutant_sha256": "ff5c7f778b431e6b52f400f369089861d61d55479935160884ec6a71f3e96fd1",
+      "whole_fixed79_plus_complete_single_cause_diff_personally_read": true,
+      "exact_diff": "--- \n+++ \n@@ -54,8 +54,7 @@\n                 $\"Amazon SQS transport for bus '{bus}': Scope must not be empty when specified. Set a non-empty scope or leave it unset.\")\n             .Validate(\n                 static options => string.IsNullOrWhiteSpace(options.Scope) || !string.IsNullOrWhiteSpace(options.Region),\n-                $\"Amazon SQS transport for bus '{bus}': Scope requires Region. Set Region whenever a scope is configured.\")\n-            .ValidateOnStart();\n+                $\"Amazon SQS transport for bus '{bus}': Scope requires Region. Set Region whenever a scope is configured.\");\n         services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, AmazonSqsSendFailureClassifier>());\n     }\n \n",
+      "predicted_native_parent_slots": {
+        "total": 6,
+        "red": 4,
+        "healthy": 2
+      },
+      "first_finite_oracle_prediction": "SelectedNamed3 firstIsType22 and defaultinvalidfirstIsType52: latecomposition ConfigurationException possible. Two coherent controls retain barrierSame.",
+      "causal_qualification": "Core host-options ValidateOnStart still registers IStartupValidator (DIRegistrationExtensions164); absence of transport ValidateOnStart should not fail setupdescriptorContains. Scope of actualfailure must be Options\u2192composition aggregation, not fixture missingIStartupValidator.",
+      "actual_native_status": "NOT_EXECUTED_NO_KILL_OR_SURVIVOR_CREDIT"
+    },
+    {
+      "name": "m3-region-predicate-bypassed",
+      "owner": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "mutant_sha256": "5572ea2e75b76fc48c03f158e324b171cc7ac6e35860aea815303b57da5d39e7",
+      "whole_fixed79_plus_complete_single_cause_diff_personally_read": true,
+      "exact_diff": "--- \n+++ \n@@ -47,7 +47,7 @@\n     {\n         services.AddOptions<AmazonSqsTransportOptions>(optionsName)\n             .Validate(\n-                static options => options.Region is null || !string.IsNullOrWhiteSpace(options.Region),\n+                static options => true,\n                 $\"Amazon SQS transport for bus '{bus}': Region must not be empty when specified. Set an AWS region system name or leave it unset.\")\n             .Validate(\n                 static options => options.Scope is null || !string.IsNullOrWhiteSpace(options.Scope),\n",
+      "predicted_native_parent_slots": {
+        "total": 6,
+        "red": 2,
+        "healthy": 4
+      },
+      "first_finite_oracle_prediction": "NamedRegionfirstIsType22 and defaultRegionfirstIsType52. NamedScope/coherence andtwocoherent controls remainhealthy.",
+      "causal_qualification": "Region case Scopenull keeps third predicate true, isolating Region. NamedScope validregion blankScope still secondpredicate catches. Unuseddefault not scheduled by typed registration.",
+      "actual_native_status": "NOT_EXECUTED_NO_KILL_OR_SURVIVOR_CREDIT"
+    },
+    {
+      "name": "m4-scope-predicate-bypassed",
+      "owner": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "mutant_sha256": "1859a394bcec360bcb99da5751272874b74ab218a56cfc0d4a371caa051b77c3",
+      "whole_fixed79_plus_complete_single_cause_diff_personally_read": true,
+      "exact_diff": "--- \n+++ \n@@ -50,7 +50,7 @@\n                 static options => options.Region is null || !string.IsNullOrWhiteSpace(options.Region),\n                 $\"Amazon SQS transport for bus '{bus}': Region must not be empty when specified. Set an AWS region system name or leave it unset.\")\n             .Validate(\n-                static options => options.Scope is null || !string.IsNullOrWhiteSpace(options.Scope),\n+                static options => true,\n                 $\"Amazon SQS transport for bus '{bus}': Scope must not be empty when specified. Set a non-empty scope or leave it unset.\")\n             .Validate(\n                 static options => string.IsNullOrWhiteSpace(options.Scope) || !string.IsNullOrWhiteSpace(options.Region),\n",
+      "predicted_native_parent_slots": {
+        "total": 6,
+        "red": 1,
+        "healthy": 5
+      },
+      "first_finite_oracle_prediction": "Only namedScopefirstIsType22; otherfive healthy.",
+      "causal_qualification": "New Scope has region eu-central-1 and Scope whitespace, so Region passes and coherence short-circuits true; this isolates exactly whitespaceScope predicate.",
+      "actual_native_status": "NOT_EXECUTED_NO_KILL_OR_SURVIVOR_CREDIT"
+    },
+    {
+      "name": "m5-scope-region-coherence-bypassed",
+      "owner": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "mutant_sha256": "9cee8ab1adca8e48d760f6cbc063bb23a3e839014182012211b5993313cff727",
+      "whole_fixed79_plus_complete_single_cause_diff_personally_read": true,
+      "exact_diff": "--- \n+++ \n@@ -53,7 +53,7 @@\n                 static options => options.Scope is null || !string.IsNullOrWhiteSpace(options.Scope),\n                 $\"Amazon SQS transport for bus '{bus}': Scope must not be empty when specified. Set a non-empty scope or leave it unset.\")\n             .Validate(\n-                static options => string.IsNullOrWhiteSpace(options.Scope) || !string.IsNullOrWhiteSpace(options.Region),\n+                static options => true,\n                 $\"Amazon SQS transport for bus '{bus}': Scope requires Region. Set Region whenever a scope is configured.\")\n             .ValidateOnStart();\n         services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, AmazonSqsSendFailureClassifier>());\n",
+      "predicted_native_parent_slots": {
+        "total": 6,
+        "red": 1,
+        "healthy": 5
+      },
+      "first_finite_oracle_prediction": "Only namedScopeWithoutRegionfirstIsType22; otherfive healthy.",
+      "causal_qualification": "Regionnull permitted and nonblankScope passes Scope predicate; only crossproperty predicate blocks normalstartup. Callback supplies actualregion if bypassed, preserving finite boundary.",
+      "actual_native_status": "NOT_EXECUTED_NO_KILL_OR_SURVIVOR_CREDIT"
+    },
+    {
+      "name": "m6-typed-diagnostic-owner-shortened",
+      "owner": "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "mutant_sha256": "0cd04182d0c3b2a5f358b2546c7480d6450cfc04be7ffcfc96200a3046ee6e52",
+      "whole_fixed79_plus_complete_single_cause_diff_personally_read": true,
+      "exact_diff": "--- \n+++ \n@@ -39,7 +39,7 @@\n         Action<IBusRegistrationContext, IAmazonSqsBusFactoryConfigurator>? configure = null)\n         where TBus : class, IBus\n     {\n-        AddSharedServices(configurator.Services, typeof(TBus).Name, typeof(TBus).FullName ?? typeof(TBus).Name);\n+        AddSharedServices(configurator.Services, typeof(TBus).Name, typeof(TBus).Name);\n         configurator.SetBusFactory(new AmazonSqsRegistrationBusFactory(configure));\n     }\n \n",
+      "predicted_native_parent_slots": {
+        "total": 6,
+        "red": 3,
+        "healthy": 3
+      },
+      "first_finite_oracle_prediction": "Three namednegativefirstFullNameContains26; OptionsType24/OptionsName23/reason25 should firstpass. Threeothercases healthy.",
+      "causal_qualification": "Type.Name retained as optionskey; onlybusdiagnostic shortened, no registration/factory/validation predicate alteration.",
+      "actual_native_status": "NOT_EXECUTED_NO_KILL_OR_SURVIVOR_CREDIT"
+    }
+  ],
+  "prediction_aggregate_only": {
+    "parent_slots": 36,
+    "potential_red_slots": 15,
+    "potential_healthy_slots": 21,
+    "execution_credit": 0
+  },
+  "retained_source_contracts": "Only one frozen product owner changed per candidate, all existing default/nullpolicy/helper/factory/callback/classifier bytes retained except declared onecause. No independentclone6096 global sourcegraph claim from single-owner preparation; Root must freeze actual executiongraph/source/test/project/lock/Req203.",
+  "acceptance_gates": [
+    "Exact corrected sixcase strict build and native6 first, compiled additivegeneric1method actualsurface check.",
+    "Each variant forced strictbuild and exactsame6native IDs/no skips; inspect actualfirstfailure and healthycontrols. If compiler/fixture/deadline/discovery invalid, zero nativekill.",
+    "Archive original/fixed/variant fullPEPDB/Req203/deps/projectlock/binlogs/runtime and soleowner sources before next overwrite; source overrides must immutable.",
+    "Unchanged correctedpost6 and requiredlocalunit regression replay; keep historicaloriginal5 distinct from successororiginal6."
+  ],
+  "limits": [
+    "Readonly source/research only; no .NET/native/provider/process/control/code edits.",
+    "All15predictedreds are hypotheses, no observedmutation score/survivor/kill claim.",
+    "InheritedCore IStartupValidator makes setup assertion meaningful, but actual lateexception wrapping must be observed.",
+    "Scope whitespace is the second predicate in source order; descriptor third-predicate wording denotes added third namednegative coverage, not sourcepredicate renumbering.",
+    "No same-shortname identity policy, arbitraryuntypedcast guarantee, cloud/hardware/fullSQS/globalstartup/API closure."
+  ]
+}

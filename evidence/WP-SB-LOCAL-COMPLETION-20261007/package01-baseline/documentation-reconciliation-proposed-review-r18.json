@@ -1,0 +1,1201 @@
+{
+  "kind": "INTERNAL_READONLY_PROPOSED_DOCUMENTATION_RECONCILIATION_REVIEW_R18",
+  "utc": "2026-10-07T09:46:48.441286+00:00",
+  "status": "NO_BLOCK_FOR_EXACT_SIX_DOCUMENTATION_R18_PUBLICATION",
+  "reviewer": "todo_reconciliation_review",
+  "findings": [],
+  "proposed_freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/PROPOSED_DOCUMENTATION_FREEZE_R18.json",
+    "sha256": "8b2864a291f1582af5c227e578df9ab456423d7003dee15ffb372c3065ee5517",
+    "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed"
+  },
+  "prior_published_R17": {
+    "freeze_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_FREEZE_R17.json",
+    "freeze_sha256": "a1f5d0baa0e8008d039b6b513845aa6292775d79d6d26825b6f3dbf6d99b6131",
+    "Root_acceptance_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/ROOT_DOCUMENTATION_ACCEPTANCE_R17.json",
+    "Root_acceptance_sha256": "1d8526253c8f953f80e5d34e61b5666f8b671746e700782af4c01846c015258f",
+    "actual_source_sha256": {
+      "CHANGELOG.md": "a03a4c23ab10ecd21e56f07a3472c2d91384bc094da615cbb8da73a41a1b6c8d",
+      "TODO.md": "acd39b04f176990bb393977c5bb6b0ad0cfbaf026511408f19b7975000b1ac57",
+      ".testagent/status.md": "814f276aa5fee75b284a4bcab4d0e158796e772448fd3fdcfc94249f3e576faf",
+      ".testagent/plan.md": "ab72ba684f94b63fed6084bcb0a4e5b4fd3fe9e95928a804a923200cf89e573b",
+      ".testagent/local-completion-plan.md": "b070491aa3f0963a8a619bc2d69909f0c3dd81781974cca2f4a81dc35d3cc5a4",
+      "docs/quality-status.md": "68e910712195fa2e05169f2fe78125dfd44bf099892fe484aa907a20bd1701c1"
+    },
+    "stale_summary_hashes_not_used": true
+  },
+  "exact_six_documents": {
+    "CHANGELOG.md": {
+      "proposed": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/CHANGELOG.md",
+      "proposed_sha256": "a95593e5d5528b798fbccd02dfe7ea8ba98b1907a8b59b8548f2a2ec3137146d",
+      "actual_current_R17": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/CHANGELOG.md",
+      "actual_current_R17_sha256": "a03a4c23ab10ecd21e56f07a3472c2d91384bc094da615cbb8da73a41a1b6c8d",
+      "prior_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r17/CHANGELOG.md",
+      "bytes": 16110,
+      "lines": 184
+    },
+    "TODO.md": {
+      "proposed": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/TODO.md",
+      "proposed_sha256": "9b7db19f97678ccf1630890aff3777c09a34392494e774c1911b061c2178bd2b",
+      "actual_current_R17": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/TODO.md",
+      "actual_current_R17_sha256": "acd39b04f176990bb393977c5bb6b0ad0cfbaf026511408f19b7975000b1ac57",
+      "prior_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r17/TODO.md",
+      "bytes": 29309,
+      "lines": 390
+    },
+    ".testagent/status.md": {
+      "proposed": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/.testagent/status.md",
+      "proposed_sha256": "5868f99cfda21c635e8e92d9adb0cf8bfe3d545c017a79bf66b728558e0aab9b",
+      "actual_current_R17": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/status.md",
+      "actual_current_R17_sha256": "814f276aa5fee75b284a4bcab4d0e158796e772448fd3fdcfc94249f3e576faf",
+      "prior_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r17/.testagent/status.md",
+      "bytes": 16835,
+      "lines": 162
+    },
+    ".testagent/plan.md": {
+      "proposed": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/.testagent/plan.md",
+      "proposed_sha256": "6d35325ff148daf752ccfcf4d9fefd8aac38941eaa1df066e127e2d2e83a8fca",
+      "actual_current_R17": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/plan.md",
+      "actual_current_R17_sha256": "ab72ba684f94b63fed6084bcb0a4e5b4fd3fe9e95928a804a923200cf89e573b",
+      "prior_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r17/.testagent/plan.md",
+      "bytes": 22807,
+      "lines": 187
+    },
+    ".testagent/local-completion-plan.md": {
+      "proposed": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/.testagent/local-completion-plan.md",
+      "proposed_sha256": "ac4b5610c5616b707820797cd7a03d46af90edf1607aaac89c2663c0bfeb2f25",
+      "actual_current_R17": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/local-completion-plan.md",
+      "actual_current_R17_sha256": "b070491aa3f0963a8a619bc2d69909f0c3dd81781974cca2f4a81dc35d3cc5a4",
+      "prior_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r17/.testagent/local-completion-plan.md",
+      "bytes": 5522,
+      "lines": 41
+    },
+    "docs/quality-status.md": {
+      "proposed": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/docs/quality-status.md",
+      "proposed_sha256": "128ed40aa1d89bcc68d755c856f6c7632f95671cdf077ef0f4d30d88aa0e1d62",
+      "actual_current_R17": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/quality-status.md",
+      "actual_current_R17_sha256": "68e910712195fa2e05169f2fe78125dfd44bf099892fe484aa907a20bd1701c1",
+      "prior_snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r17/docs/quality-status.md",
+      "bytes": 15013,
+      "lines": 202
+    }
+  },
+  "complete_six_diffs": {
+    "CHANGELOG.md": "--- actualpublishedR17/CHANGELOG.md\n\n+++ proposedR18/CHANGELOG.md\n\n@@ -134,6 +134,18 @@\n\n   Real cloud resources and target-device hardware are unavailable; GitHub workflow activation\n   remains gated by local acceptance and separate CI qualification.\n \n+- Corrected typed Amazon SQS startup validation to select the named bus options. Malformed\n+  Region, Scope and Scope/Region combinations fail through the actual Generic Host before the\n+  chosen pre-runtime boundary; an unused malformed default no longer blocks a coherent typed bus.\n+  All six package cases and 417 local SQS cases pass. Six compiled single-cause counter-mutations\n+  expose 15 finite first failures with 21 healthy controls; the restored correction passes all six\n+  postchecks with zero warnings/errors. The scoped SDK compatibility check retains the original\n+  public contract and identifies exactly one added generic `UsingAmazonSqs<TBus>` method.\n+  Independent source, lock, native, mutation and final reviews are accepted in the\n+  [bounded SQS startup receipt](evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_SQS_STARTUP_STAGE_A_ACCEPTANCE_R1.json).\n+  Other startup owners and the global packed API baseline remain open; these cases stop at a\n+  sentinel before actual ServiceBus/AWS runtime startup.\n+\n ## Unreleased — API review completion, 6 October 2026\n \n The source API review and repairs are complete within their recorded contract and",
+    "TODO.md": "--- actualpublishedR17/TODO.md\n\n+++ proposedR18/TODO.md\n\n@@ -28,6 +28,14 @@\n\n validator tests do not establish that a real host rejected configuration before endpoint start.\n The accepted batch timer-range guard runs at the actual context-provider boundary; it is not a\n general startup-validation proof.\n+\n+The bounded named SQS stage A now proves six actual Generic Host cases for selected Region,\n+Scope and Scope/Region validation, selected default behavior and unused malformed-default\n+isolation. All six pass, as do the 417 local SQS cases; six compiled single-cause mutations\n+produce 15 finite first failures with 21 healthy controls, followed by six unchanged green\n+postchecks. The positive cases stop at a chosen sentinel before provider runtime; full runtime\n+startup and other named/multi-bus owners remain open. Acceptance:\n+`evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_SQS_STARTUP_STAGE_A_ACCEPTANCE_R1.json`.\n \n ## Complete Azure Service Bus validation against the real cloud service\n ",
+    ".testagent/status.md": "--- actualpublishedR17/.testagent/status.md\n\n+++ proposedR18/.testagent/status.md\n\n@@ -111,6 +111,21 @@\n\n Real cloud resources and device hardware are unavailable; their evidence remains open. Native\n GitHub workflow activation remains gated by local acceptance and separate CI qualification.\n \n+Named SQS startup stage A is accepted: six actual Generic Host cases / 417 complete local\n+SQS cases / six compiled single-cause mutants with 15 finite first failures and 21 healthy\n+controls / six unchanged green postchecks. Selected typed options now validate under the bus\n+name before the chosen pre-runtime boundary; an unused malformed default cannot reject a\n+coherent typed bus. Invalid Region, Scope and Scope/Region combinations retain useful owner\n+diagnostics; selected default validation remains intact. Original six cases had four finite\n+failures and two healthy controls. All accepted fixed/mutant builds are warning/error free.\n+The scoped SDK API comparison accepts original-to-fixed compatibility; its reverse control\n+reports exactly the added generic UsingAmazonSqs<TBus> method. The global packed API baseline\n+remains open. Positive cases reach an exact sentinel before runtime, with zero client-factory\n+calls; they do not establish successful full ServiceBus or AWS runtime startup.\n+The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_SQS_STARTUP_STAGE_A_ACCEPTANCE_R1.json`.\n+Other startup owners, current coverage, full Unit/provider replay, adapter deadlines, observer\n+contracts, broader telemetry schema, CI, real cloud and device qualification remain open.\n+\n ## Historical checkpoints\n \n The following text is retained verbatim as the earlier repair chronicle. Its counts, open decisions",
+    ".testagent/plan.md": "--- actualpublishedR17/.testagent/plan.md\n\n+++ proposedR18/.testagent/plan.md\n\n@@ -101,6 +101,21 @@\n\n \n Remaining cache observer contracts and adapter/startup packages proceed next; current coverage and broader aggregate gates remain pending.\n \n+Named SQS startup stage A is accepted: six actual Generic Host cases / 417 complete local\n+SQS cases / six compiled single-cause mutants with 15 finite first failures and 21 healthy\n+controls / six unchanged green postchecks. Selected typed options now validate under the bus\n+name before the chosen pre-runtime boundary; an unused malformed default cannot reject a\n+coherent typed bus. Invalid Region, Scope and Scope/Region combinations retain useful owner\n+diagnostics; selected default validation remains intact. Original six cases had four finite\n+failures and two healthy controls. All accepted fixed/mutant builds are warning/error free.\n+The scoped SDK API comparison accepts original-to-fixed compatibility; its reverse control\n+reports exactly the added generic UsingAmazonSqs<TBus> method. The global packed API baseline\n+remains open. Positive cases reach an exact sentinel before runtime, with zero client-factory\n+calls; they do not establish successful full ServiceBus or AWS runtime startup.\n+The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_SQS_STARTUP_STAGE_A_ACCEPTANCE_R1.json`.\n+Other startup owners, current coverage, full Unit/provider replay, adapter deadlines, observer\n+contracts, broader telemetry schema, CI, real cloud and device qualification remain open.\n+\n ## Historical API repair execution notes\n \n The entries below preserve the plans as written during the repair work. Their pending/open wording",
+    ".testagent/local-completion-plan.md": "--- actualpublishedR17/.testagent/local-completion-plan.md\n\n+++ proposedR18/.testagent/local-completion-plan.md\n\n@@ -14,7 +14,7 @@\n\n | 01 | Fresh-checkout reproducibility; reconcile stale plan/status pages | Locked Engineering and Unit restores, strict Release builds, complete native Unit run, exact modules and raw evidence; independent documentation review | Accepted: fresh 13,460 Unit cases / 23 modules, strict locked builds and independent final evidence review |\n | 02 | Current coverage and method risk | Fresh source-bound coverage for current unit/local profiles and portability modes; partial if any required provider is unavailable | Binlog producer/aggregator correction accepted after 10 Python tool contracts and causal negative tests; native measurement pending |\n | 03 | Local provider integration and historical SQL missing-delivery investigation | Native provider profiles against isolated local resources, exact message accounting and cleanup; success on retry alone does not close the historical failure | Baseline evidence accepted: 645 cases / 10 modules, RabbitMQ38 and SQLServer99; reviewed own forwarding/cleanup; historical SQL cause and post-correction replay open |\n-| 04 | Startup validation inventory | All selected static invalid options fail before endpoint start; missing/conflicting/unselected and named multi-bus cases | Pending |\n+| 04 | Startup validation inventory | All selected static invalid options fail before endpoint start; missing/conflicting/unselected and named multi-bus cases | Bounded named SQS stage A accepted: six actual Generic Host cases / 417 local SQS / six mutants (15 finite first failures, 21 healthy controls) / unchanged final six; other startup owners and full runtime startup open |\n | 05 | Activity telemetry isolation | Complete emission/lifetime/context inventory, hostile listeners, exact messaging outcome and schema, causal counter-mutations | Shared Activity A, typed source B1, batch handoff B2, process metrics C1, consumer completion C2, delivery clocks C3, snapshots C4, cold sources C5 and public caller cleanup C6 accepted; C6: 38 cases / 8,112 Core / 6 compiled mutations (34 finite failures, 194 healthy controls) / final38; classic EF duration C7 accepted: 13 SQLite / 432 EF / 5 compiled mutations (19 finite failures, 46 healthy controls) / final13; broader schema and aggregate closure open |\n | 06 | Cache observer/index and deterministic time TODO reconciliation | Inspect current owners and prior accepted implementation before altering code; close only demonstrated contracts, implement genuine remaining gaps | Three Core deadlines accepted with 13 contracts / 7,958 Core / four mutants; cache comparer/retirement accepted with 30 contracts / 142 Cache / 8,142 Core / eight mutants (12 finite failures, 228 healthy controls) / unchanged final30; remaining observer and adapter contracts open |\n | 07 | Package-only developer journeys and local benchmarks | Execute supported journeys and real local infrastructure scenarios with full message counts; no target-device performance claim | Pending |\n@@ -24,8 +24,10 @@\n\n \n The bounded cache receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/ROOT_CACHE_COMPARER_RETIREMENT_ACCEPTANCE_R1.json`. Separate child events are never added\n to parent counts; observer order/failure channels/backpressure and measured memory remain open.\n-Startup work next confirms selected named SQS options through the actual Generic Host before\n-any provider runtime starts; private test preparation is not compiled/native acceptance.\n+The bounded SQS receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_SQS_STARTUP_STAGE_A_ACCEPTANCE_R1.json`.\n+Its positive cases stop at an exact pre-runtime sentinel; other startup owners, multi-bus\n+selection and actual healthy full-host startup remain next. The scoped additive generic SQS\n+API comparison is accepted; the global packed API baseline remains open.\n \n Per code package: complete source/test-owner read → Research/Plan → causal original regression\n where applicable → minimal correction → meaningful native tests and one-cause counterproofs →",
+    "docs/quality-status.md": "--- actualpublishedR17/docs/quality-status.md\n\n+++ proposedR18/docs/quality-status.md\n\n@@ -131,6 +131,21 @@\n\n These bounded results do not update historical\n coverage/CRAP values or qualify a new full Unit/provider/package replay.\n \n+Named SQS startup stage A is accepted: six actual Generic Host cases / 417 complete local\n+SQS cases / six compiled single-cause mutants with 15 finite first failures and 21 healthy\n+controls / six unchanged green postchecks. Selected typed options now validate under the bus\n+name before the chosen pre-runtime boundary; an unused malformed default cannot reject a\n+coherent typed bus. Invalid Region, Scope and Scope/Region combinations retain useful owner\n+diagnostics; selected default validation remains intact. Original six cases had four finite\n+failures and two healthy controls. All accepted fixed/mutant builds are warning/error free.\n+The scoped SDK API comparison accepts original-to-fixed compatibility; its reverse control\n+reports exactly the added generic UsingAmazonSqs<TBus> method. The global packed API baseline\n+remains open. Positive cases reach an exact sentinel before runtime, with zero client-factory\n+calls; they do not establish successful full ServiceBus or AWS runtime startup.\n+The bounded receipt is `evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_SQS_STARTUP_STAGE_A_ACCEPTANCE_R1.json`.\n+Other startup owners, current coverage, full Unit/provider replay, adapter deadlines, observer\n+contracts, broader telemetry schema, CI, real cloud and device qualification remain open.\n+\n ## Historical product-wide coverage and CRAP checkpoint\n \n The latest complete 33-profile measurement ran against commit"
+  },
+  "historical_suffixes_byte_preserved": [
+    {
+      "path": "CHANGELOG.md",
+      "anchor": "## Unreleased — API review completion, 6 October 2026",
+      "bytes": 2306,
+      "sha256": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+      "old_offset": 12767,
+      "proposed_offset": 13804,
+      "byte_exact": true
+    },
+    {
+      "path": ".testagent/status.md",
+      "anchor": "## Historical checkpoints",
+      "bytes": 6160,
+      "sha256": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+      "old_offset": 9362,
+      "proposed_offset": 10675,
+      "byte_exact": true
+    },
+    {
+      "path": ".testagent/plan.md",
+      "anchor": "## Historical API repair execution notes",
+      "bytes": 13058,
+      "sha256": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+      "old_offset": 8436,
+      "proposed_offset": 9749,
+      "byte_exact": true
+    },
+    {
+      "path": "docs/quality-status.md",
+      "anchor": "## Historical product-wide coverage and CRAP checkpoint",
+      "bytes": 3174,
+      "sha256": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5",
+      "old_offset": 10526,
+      "proposed_offset": 11839,
+      "byte_exact": true
+    }
+  ],
+  "TODO_preservation": {
+    "headings12_exact_order": [
+      "## Verify startup validation across retained capabilities",
+      "## Complete Azure Service Bus validation against the real cloud service",
+      "## Separate cache index projection from external observation",
+      "## Continue deterministic time normalization beyond envelope materialization",
+      "## Complete external benchmark scenarios",
+      "## Make Activity telemetry observationally no-throw",
+      "## Complete MessageJournal external provider validation",
+      "## Complete Azure Table persistence validation against the real cloud service",
+      "## Complete Entity Framework SQL Server and Azure SQL external variant validation",
+      "## AWS real-service closure",
+      "## Complete Event Hubs validation against the real cloud service",
+      "## Complete RabbitMQ validation against Amazon MQ"
+    ],
+    "allother11_complete_sections": [
+      {
+        "heading": "## Complete Azure Service Bus validation against the real cloud service",
+        "bytes": 2891,
+        "sha256": "0d8a955773998f64fdeabf5e3f0c659477ebe6eff1ec727f4d4177e9781aeeb2"
+      },
+      {
+        "heading": "## Separate cache index projection from external observation",
+        "bytes": 2021,
+        "sha256": "1e72dd4c7e4b4d1a07e04dc1edabe6239aa69a868ffc27e7dca5b95dc9cd7afe"
+      },
+      {
+        "heading": "## Continue deterministic time normalization beyond envelope materialization",
+        "bytes": 4010,
+        "sha256": "5492681adce6e3869d1e8a95ca8d9c54e930af414fde6cfbc5de5ad60f85db52"
+      },
+      {
+        "heading": "## Complete external benchmark scenarios",
+        "bytes": 282,
+        "sha256": "ad94a2fc4505b25478cf256f0b9578be5178fde6ca89c5842c2bee6e7da5f6dd"
+      },
+      {
+        "heading": "## Make Activity telemetry observationally no-throw",
+        "bytes": 8010,
+        "sha256": "e82735949dd0d8b1f990d90b1aebdf967cc1ad037879a0d12ea69b8e9442bc5b"
+      },
+      {
+        "heading": "## Complete MessageJournal external provider validation",
+        "bytes": 828,
+        "sha256": "7004d3dd9f288e9cdc5d9bd39fbb41cf4d9cca2470959aef0d773b2ccdf08e44"
+      },
+      {
+        "heading": "## Complete Azure Table persistence validation against the real cloud service",
+        "bytes": 2254,
+        "sha256": "cb88b3a863d609d5d52d9e306049091bd2753539c93739dc2e41a00b6c18bd5c"
+      },
+      {
+        "heading": "## Complete Entity Framework SQL Server and Azure SQL external variant validation",
+        "bytes": 1745,
+        "sha256": "514b7682cff5b750129f59f967204a995e764b1f6c365fe06689c0f6e71011e5"
+      },
+      {
+        "heading": "## AWS real-service closure",
+        "bytes": 2648,
+        "sha256": "25b7df4df7fc790caa0c9ad8ca43df69c6fb7aa4fdbd9a8a4f15cc319ca461d7"
+      },
+      {
+        "heading": "## Complete Event Hubs validation against the real cloud service",
+        "bytes": 1116,
+        "sha256": "714f6494487dc039c7e8eb79d632a694f1e03f81919f07b23c8b2a5fbbcfef1c"
+      },
+      {
+        "heading": "## Complete RabbitMQ validation against Amazon MQ",
+        "bytes": 830,
+        "sha256": "d592562bd69b5747702059ac03a45e7cd07ab7ebda2f2fcff2db3a040f414415"
+      }
+    ],
+    "ordered62_external_OBL_tokens": [
+      {
+        "token": "OBL-R0-CLOUD-0005"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0019"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0020"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0021"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0025"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0026"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0027"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0028"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0044"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0057"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0058"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0059"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0066"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0067"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0068"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0069"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0072"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0079"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0080"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0086"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0088"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0089"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0095"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0096"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0098"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0099"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0105"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0108"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0109"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0117"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0122"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0124"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0125"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0130"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0131"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0132"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0137"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0138"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0247"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0248"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0250"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0251"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0254"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0255"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0256"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0257"
+      },
+      {
+        "token": "OBL-R0-PER-0455"
+      },
+      {
+        "token": "OBL-R0-PER-0456"
+      },
+      {
+        "token": "OBL-R0-PER-0457"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0216"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0217"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0265"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0266"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0268"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0272"
+      },
+      {
+        "token": "OBL-R0-PER-0523"
+      },
+      {
+        "token": "OBL-R0-PER-0524"
+      },
+      {
+        "token": "OBL-R0-PER-0603"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0258"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0261"
+      },
+      {
+        "token": "OBL-R0-CLOUD-0262"
+      },
+      {
+        "token": "OBL-R0-BRK-0004"
+      }
+    ],
+    "acceptance_commit_removal_rule_retained": true,
+    "no_item_or_external_gate_removed": true
+  },
+  "evidence_authority": {
+    "Root_SQS_acceptance": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_SQS_STARTUP_STAGE_A_ACCEPTANCE_R1.json",
+    "sha256": "2a4af610b49a00152377d8f00decf2286142f1a80e0e7079954127b5a06cbbc5",
+    "Root_canonical_application": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_SQS_CANONICAL_APPLICATION_R1.json",
+    "canonical_application_sha256": "7fb3feade7a3331e6286f8c64671835455f0a661ecfbd66eedd85c3ff2e7864b",
+    "accepted_five_sources": {
+      "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973",
+      "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f",
+      "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs": "694ffbfb2fb103e081e1de064c1f4d7a875c32d971e3beb2b91ebe79e60a98d8",
+      "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa",
+      "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a"
+    },
+    "canonical_O_private_C9_graph6097": {
+      "count": 6097,
+      "sha256": "a1dd83fc1a55b0450e071be081ad1dc0fdf8e454b34011479dc033b3a72cb081",
+      "all_paths_hash_equal": true
+    },
+    "hashbound_supporting_records": {
+      "final_review": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-sqs-post6-and-bounded-aggregate-adversarial-r1.json",
+        "sha256": "8fddf37a4e085e177bd31aea2161c332a4d1877d691d6b6edd4c71cde8a98a63"
+      },
+      "mutants_review": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-sqs-six-mutants-native-combined-adversarial-r1.json",
+        "sha256": "bc92066eaa40e4aed8e5ffaaf36150511468a3a7760892af7c6c86a436c1670c"
+      },
+      "mutant_matrix": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_SQS_MUTANT_FIRST_FAILURE_MATRIX_R1.json",
+        "sha256": "1b71e59d63841d2363ced4156a88b9cb6fef8d898bbe9fa1edb5649305ac1917"
+      },
+      "original6": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-six-native-r1/RESULT.json",
+        "sha256": "4dae3dc4c6c0cc9ea6b0051718370bee11b7822f11c4ffdbbef628f327fd4914"
+      },
+      "fixed6": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/RESULT.json",
+        "sha256": "f2261b92f30aa6fcc2e1da84c5e56b2ff5a8886e9e99360d9f04c2b597345366"
+      },
+      "whole417": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/RESULT.json",
+        "sha256": "426241207468a72d293808121794c570430997bff7c954623a9b61df8421d702"
+      },
+      "post6": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/RESULT.json",
+        "sha256": "bf0131a571f79bce8cd99685b54e07b271219d05a7fe7ee2ff6a264a344556ef"
+      },
+      "scopedAPI": {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-api-compat-native-r1/RESULT.json",
+        "sha256": "697c00c182bc8a06ae7223b04e786f909e3dd6c4ddf15c50227cfc5f3365a69c"
+      }
+    },
+    "accepted_local_counts": {
+      "original6": {
+        "red": 4,
+        "healthy": 2
+      },
+      "fixed6": 6,
+      "whole_local_module": 417,
+      "mutant_variants": 6,
+      "mutant_slots": 36,
+      "first_finite_red": 15,
+      "healthy": 21,
+      "post6": 6,
+      "scoped_API_exit_codes": [
+        0,
+        0,
+        1
+      ]
+    },
+    "native_review_reuse": "Existing exact independent original/fixed/whole/API/mutant/final peer-qualified evidence reused by hash; this documentation review does not repeat native execution/whole55 owner review or mutate old reviews.",
+    "post_root_canonical_successor": "Final peer review was honestly dated before canonical application; Root accepted receipt plus exact application/currentsource6097 now satisfy publication condition."
+  },
+  "semantic_assessment": [
+    "All six whole proposed docs distinguish bounded named/default SQS three predicates, unused-default isolation and useful FullName diagnostic ownership from remaining startup inventory/multi-bus/full-host/provider/cloud gates.",
+    "Actual GenericHost sentinel is explicitly pre-runtime; zero client factory calls is not promoted to every SDK constructor or AWS runtime proof.",
+    "Local module417 and six package cases remain scoped functional outcomes; mutation15/21 and post6 match immutable acceptance. No overlapping original5/6 counts are summed into distinct IDs.",
+    "Scoped API0/0/1 additive UsingAmazonSqs<TBus> proof remains distinct from global packed API baseline, which stays open.",
+    "Old audit234/dated coverage/SQL999/1000 chronicle and allother11 TODO sections/ordered62 external obligations remain byte exact. No startup family/globalUnit/coverage/CI/cloud/hardware closure."
+  ],
+  "CurrentOrder": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/vicione-architecture/work/CURRENT_ORDER.yaml",
+    "whole_file_sha256": "c5ab8549737a00c2c67094ac81fbf04e14e10cc393a059620ec283d7321eda0d",
+    "bounded_unique_target_block": "  produktpaket_startup_named_sqs:\n    id: WP-SB-LOCAL-COMPLETION-20261007-P04-SQS-A\n    status: ROOT_ACCEPTED_BOUNDED_LOCAL_NAMED_SQS_STAGE_A__OTHER_STARTUP_FAMILIES_OPEN\n    authority: Existing_PO_autonomous_ServiceBus_maintenance__Root_sole_author_and_native_executor__independent_readonly_adversarial_review\n    root_source_read: repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_STARTUP27_COMPLETE_SOURCE_READ_R1.json\n    root_source_read_sha256: a382debb187a078bc547704973cd39f609c9e475c69585a5ed8ac9f4e00c180b\n    research: repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-startup-prioritized-current-research-r1.json\n    private_test_preparation: repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/PREPARED.json\n    private_test_preparation_sha256: 9cdd967d24e090bbef0c24331f20eebc99b59599e9bb35334e177dc0c8bf82b6\n    private_test_review_sha256: 5162c9aac014a3ac2ca4e4d9eff6ebe45bcc7d48e728180e8ab02c8e9572daf1\n    candidate_product_owner: repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs\n    candidate_product_owner_original_sha256: 460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840\n    pruefpfade:\n      - repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs\n      - repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj\n      - repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json\n      - repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json\n    accepted_receipt: repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_SQS_STARTUP_STAGE_A_ACCEPTANCE_R1.json\n    accepted_receipt_sha256: 2a4af610b49a00152377d8f00decf2286142f1a80e0e7079954127b5a06cbbc5\n    canonical_application_sha256: 7fb3feade7a3331e6286f8c64671835455f0a661ecfbd66eedd85c3ff2e7864b\n    grenzen: Six_actual_GenericHost_cases_before_chosen_provider_runtime_barrier__417_local_SQS_cases__six_compiled_mutants_15_first_failures_21_healthy_controls__final_six_PASS__selected_named_and_default_options_only__no_full_startup_family41_global_packed_API_cloud_hardware_A_plus_claim\n",
+    "target_block_sha256": "5e4629aeb6450d093811e3bca4eab0b5f69493100e951878ee6016af9b00a9df",
+    "old_private188_preparation_reference": "Retained original/private preparation provenance; accepted194/current79 source truth is exact Root acceptance/application. No claim that the old preparation record is current final fixture freeze."
+  },
+  "personal_read_scope": {
+    "whole_six_proposed_docs": true,
+    "full_six_diffs_against_actual_R17": true,
+    "historical_suffixes_and11sections_machine_exact": true,
+    "accepted_SQS_source5_current_graph_machine_checked": true,
+    "no_Root_personal_read_credit_transfer": true,
+    "no_new_native_or_fullmutation_reread_claim": true
+  },
+  "checks": [
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/PROPOSED_DOCUMENTATION_FREEZE_R18.json",
+      "pass": true,
+      "details": {
+        "actual": "8b2864a291f1582af5c227e578df9ab456423d7003dee15ffb372c3065ee5517",
+        "bytes": 1952
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_FREEZE_R17.json",
+      "pass": true,
+      "details": {
+        "actual": "a1f5d0baa0e8008d039b6b513845aa6292775d79d6d26825b6f3dbf6d99b6131",
+        "bytes": 1464
+      }
+    },
+    {
+      "check": "proposed prior map exact publishedR17 and RootacceptedR17",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "actualR17 status814f planab72 quality68e9 are authoritative",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact proposed6 paths same published6",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/CHANGELOG.md",
+      "pass": true,
+      "details": {
+        "actual": "a95593e5d5528b798fbccd02dfe7ea8ba98b1907a8b59b8548f2a2ec3137146d",
+        "bytes": 16110
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/CHANGELOG.md",
+      "pass": true,
+      "details": {
+        "actual": "a03a4c23ab10ecd21e56f07a3472c2d91384bc094da615cbb8da73a41a1b6c8d",
+        "bytes": 15073
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r17/CHANGELOG.md",
+      "pass": true,
+      "details": {
+        "actual": "a03a4c23ab10ecd21e56f07a3472c2d91384bc094da615cbb8da73a41a1b6c8d",
+        "bytes": 15073
+      }
+    },
+    {
+      "check": "every six delta contains boundedSQS receipt CHANGELOG.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "entire historical suffix byteexact CHANGELOG.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/TODO.md",
+      "pass": true,
+      "details": {
+        "actual": "9b7db19f97678ccf1630890aff3777c09a34392494e774c1911b061c2178bd2b",
+        "bytes": 29309
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/TODO.md",
+      "pass": true,
+      "details": {
+        "actual": "acd39b04f176990bb393977c5bb6b0ad0cfbaf026511408f19b7975000b1ac57",
+        "bytes": 28676
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r17/TODO.md",
+      "pass": true,
+      "details": {
+        "actual": "acd39b04f176990bb393977c5bb6b0ad0cfbaf026511408f19b7975000b1ac57",
+        "bytes": 28676
+      }
+    },
+    {
+      "check": "every six delta contains boundedSQS receipt TODO.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/.testagent/status.md",
+      "pass": true,
+      "details": {
+        "actual": "5868f99cfda21c635e8e92d9adb0cf8bfe3d545c017a79bf66b728558e0aab9b",
+        "bytes": 16835
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/status.md",
+      "pass": true,
+      "details": {
+        "actual": "814f276aa5fee75b284a4bcab4d0e158796e772448fd3fdcfc94249f3e576faf",
+        "bytes": 15522
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r17/.testagent/status.md",
+      "pass": true,
+      "details": {
+        "actual": "814f276aa5fee75b284a4bcab4d0e158796e772448fd3fdcfc94249f3e576faf",
+        "bytes": 15522
+      }
+    },
+    {
+      "check": "every six delta contains boundedSQS receipt .testagent/status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "entire historical suffix byteexact .testagent/status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/.testagent/plan.md",
+      "pass": true,
+      "details": {
+        "actual": "6d35325ff148daf752ccfcf4d9fefd8aac38941eaa1df066e127e2d2e83a8fca",
+        "bytes": 22807
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/plan.md",
+      "pass": true,
+      "details": {
+        "actual": "ab72ba684f94b63fed6084bcb0a4e5b4fd3fe9e95928a804a923200cf89e573b",
+        "bytes": 21494
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r17/.testagent/plan.md",
+      "pass": true,
+      "details": {
+        "actual": "ab72ba684f94b63fed6084bcb0a4e5b4fd3fe9e95928a804a923200cf89e573b",
+        "bytes": 21494
+      }
+    },
+    {
+      "check": "every six delta contains boundedSQS receipt .testagent/plan.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "entire historical suffix byteexact .testagent/plan.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/.testagent/local-completion-plan.md",
+      "pass": true,
+      "details": {
+        "actual": "ac4b5610c5616b707820797cd7a03d46af90edf1607aaac89c2663c0bfeb2f25",
+        "bytes": 5522
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/local-completion-plan.md",
+      "pass": true,
+      "details": {
+        "actual": "b070491aa3f0963a8a619bc2d69909f0c3dd81781974cca2f4a81dc35d3cc5a4",
+        "bytes": 5106
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r17/.testagent/local-completion-plan.md",
+      "pass": true,
+      "details": {
+        "actual": "b070491aa3f0963a8a619bc2d69909f0c3dd81781974cca2f4a81dc35d3cc5a4",
+        "bytes": 5106
+      }
+    },
+    {
+      "check": "every six delta contains boundedSQS receipt .testagent/local-completion-plan.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/docs/quality-status.md",
+      "pass": true,
+      "details": {
+        "actual": "128ed40aa1d89bcc68d755c856f6c7632f95671cdf077ef0f4d30d88aa0e1d62",
+        "bytes": 15013
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/quality-status.md",
+      "pass": true,
+      "details": {
+        "actual": "68e910712195fa2e05169f2fe78125dfd44bf099892fe484aa907a20bd1701c1",
+        "bytes": 13700
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r17/docs/quality-status.md",
+      "pass": true,
+      "details": {
+        "actual": "68e910712195fa2e05169f2fe78125dfd44bf099892fe484aa907a20bd1701c1",
+        "bytes": 13700
+      }
+    },
+    {
+      "check": "every six delta contains boundedSQS receipt docs/quality-status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "entire historical suffix byteexact docs/quality-status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "all12 TODO headings remain exact ordered",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "allother11 TODO complete sections byteexact ## Complete Azure Service Bus validation against the real cloud service",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "allother11 TODO complete sections byteexact ## Separate cache index projection from external observation",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "allother11 TODO complete sections byteexact ## Continue deterministic time normalization beyond envelope materialization",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "allother11 TODO complete sections byteexact ## Complete external benchmark scenarios",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "allother11 TODO complete sections byteexact ## Make Activity telemetry observationally no-throw",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "allother11 TODO complete sections byteexact ## Complete MessageJournal external provider validation",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "allother11 TODO complete sections byteexact ## Complete Azure Table persistence validation against the real cloud service",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "allother11 TODO complete sections byteexact ## Complete Entity Framework SQL Server and Azure SQL external variant validation",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "allother11 TODO complete sections byteexact ## AWS real-service closure",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "allother11 TODO complete sections byteexact ## Complete Event Hubs validation against the real cloud service",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "allother11 TODO complete sections byteexact ## Complete RabbitMQ validation against Amazon MQ",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "all62 ordered externalOBL tokens byteexact",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "TODO retains acceptance-only-aftercommit guidance",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "startupTODO unchanged old prefix plus boundednew acceptance only",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "oldAPI234 audit chronicle unchanged covered by exacthistorical bytes",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "oldSQL999/1000 cause and datedcoverage immutable in historical quality suffix",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_SQS_STARTUP_STAGE_A_ACCEPTANCE_R1.json",
+      "pass": true,
+      "details": {
+        "actual": "2a4af610b49a00152377d8f00decf2286142f1a80e0e7079954127b5a06cbbc5",
+        "bytes": 3738
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_SQS_CANONICAL_APPLICATION_R1.json",
+      "pass": true,
+      "details": {
+        "actual": "7fb3feade7a3331e6286f8c64671835455f0a661ecfbd66eedd85c3ff2e7864b",
+        "bytes": 1252
+      }
+    },
+    {
+      "check": "canonical application binds same acceptedfive source hashes",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "pass": true,
+      "details": {
+        "actual": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973",
+        "bytes": 25099
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "pass": true,
+      "details": {
+        "actual": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973",
+        "bytes": 25099
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/source/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json",
+      "pass": true,
+      "details": {
+        "actual": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973",
+        "bytes": 25099
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f",
+        "bytes": 1476
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f",
+        "bytes": 1476
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/source/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f",
+        "bytes": 1476
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "694ffbfb2fb103e081e1de064c1f4d7a875c32d971e3beb2b91ebe79e60a98d8",
+        "bytes": 9911
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "694ffbfb2fb103e081e1de064c1f4d7a875c32d971e3beb2b91ebe79e60a98d8",
+        "bytes": 9911
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/source/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "694ffbfb2fb103e081e1de064c1f4d7a875c32d971e3beb2b91ebe79e60a98d8",
+        "bytes": 9911
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "pass": true,
+      "details": {
+        "actual": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa",
+        "bytes": 72746
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "pass": true,
+      "details": {
+        "actual": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa",
+        "bytes": 72746
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/source/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "pass": true,
+      "details": {
+        "actual": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa",
+        "bytes": 72746
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a",
+        "bytes": 4750
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a",
+        "bytes": 4750
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/source/src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs",
+      "pass": true,
+      "details": {
+        "actual": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a",
+        "bytes": 4750
+      }
+    },
+    {
+      "check": "canonical/private6097 exact current code/project/tool graph",
+      "pass": true,
+      "details": {
+        "count": 6097,
+        "sha256": "a1dd83fc1a55b0450e071be081ad1dc0fdf8e454b34011479dc033b3a72cb081"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-sqs-post6-and-bounded-aggregate-adversarial-r1.json",
+      "pass": true,
+      "details": {
+        "actual": "8fddf37a4e085e177bd31aea2161c332a4d1877d691d6b6edd4c71cde8a98a63",
+        "bytes": 58862
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-sqs-six-mutants-native-combined-adversarial-r1.json",
+      "pass": true,
+      "details": {
+        "actual": "bc92066eaa40e4aed8e5ffaaf36150511468a3a7760892af7c6c86a436c1670c",
+        "bytes": 112076
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_SQS_MUTANT_FIRST_FAILURE_MATRIX_R1.json",
+      "pass": true,
+      "details": {
+        "actual": "1b71e59d63841d2363ced4156a88b9cb6fef8d898bbe9fa1edb5649305ac1917",
+        "bytes": 35254
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-original-six-native-r1/RESULT.json",
+      "pass": true,
+      "details": {
+        "actual": "4dae3dc4c6c0cc9ea6b0051718370bee11b7822f11c4ffdbbef628f327fd4914",
+        "bytes": 10844
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-fixed-six-native-r1/RESULT.json",
+      "pass": true,
+      "details": {
+        "actual": "f2261b92f30aa6fcc2e1da84c5e56b2ff5a8886e9e99360d9f04c2b597345366",
+        "bytes": 10535
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-whole-module-native-r1/RESULT.json",
+      "pass": true,
+      "details": {
+        "actual": "426241207468a72d293808121794c570430997bff7c954623a9b61df8421d702",
+        "bytes": 91119
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-post-six-native-r1/RESULT.json",
+      "pass": true,
+      "details": {
+        "actual": "bf0131a571f79bce8cd99685b54e07b271219d05a7fe7ee2ff6a264a344556ef",
+        "bytes": 8812
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-api-compat-native-r1/RESULT.json",
+      "pass": true,
+      "details": {
+        "actual": "697c00c182bc8a06ae7223b04e786f909e3dd6c4ddf15c50227cfc5f3365a69c",
+        "bytes": 2409
+      }
+    },
+    {
+      "check": "acceptedRoot original6/fixed6/module417/post6 exact counts",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "independent final/mutants no blockers",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact six mutants36slots15firstred21healthy agree Root acceptance/peer/matrix",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact unchanged final6 qualified separately from417/API/original history",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "exact scoped API serial 0/0/1 genericaddition only notglobal",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "fixed/post accepted strict build summaries0warning/error",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new three mirrored accepted blocks counters/limits .testagent/status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new three mirrored accepted blocks counters/limits .testagent/plan.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new three mirrored accepted blocks counters/limits docs/quality-status.md",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "P04table boundedaccepted otherowners/fullruntime open",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "obsolete localplan privateprepared/notnative claim replaced",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "new intended published changelog link exact acceptedRoot receipt",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "CurrentOrder exactlyone unique stageA metadata block",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "CurrentOrder acceptedscope/receipt/application refs exact",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "CurrentOrder originalcandidate460f metadata explicitly original field",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/CHANGELOG.md",
+      "pass": true,
+      "details": {
+        "actual": "a95593e5d5528b798fbccd02dfe7ea8ba98b1907a8b59b8548f2a2ec3137146d",
+        "bytes": 16110
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/CHANGELOG.md",
+      "pass": true,
+      "details": {
+        "actual": "a03a4c23ab10ecd21e56f07a3472c2d91384bc094da615cbb8da73a41a1b6c8d",
+        "bytes": 15073
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/TODO.md",
+      "pass": true,
+      "details": {
+        "actual": "9b7db19f97678ccf1630890aff3777c09a34392494e774c1911b061c2178bd2b",
+        "bytes": 29309
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/TODO.md",
+      "pass": true,
+      "details": {
+        "actual": "acd39b04f176990bb393977c5bb6b0ad0cfbaf026511408f19b7975000b1ac57",
+        "bytes": 28676
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/.testagent/status.md",
+      "pass": true,
+      "details": {
+        "actual": "5868f99cfda21c635e8e92d9adb0cf8bfe3d545c017a79bf66b728558e0aab9b",
+        "bytes": 16835
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/status.md",
+      "pass": true,
+      "details": {
+        "actual": "814f276aa5fee75b284a4bcab4d0e158796e772448fd3fdcfc94249f3e576faf",
+        "bytes": 15522
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/.testagent/plan.md",
+      "pass": true,
+      "details": {
+        "actual": "6d35325ff148daf752ccfcf4d9fefd8aac38941eaa1df066e127e2d2e83a8fca",
+        "bytes": 22807
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/plan.md",
+      "pass": true,
+      "details": {
+        "actual": "ab72ba684f94b63fed6084bcb0a4e5b4fd3fe9e95928a804a923200cf89e573b",
+        "bytes": 21494
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/.testagent/local-completion-plan.md",
+      "pass": true,
+      "details": {
+        "actual": "ac4b5610c5616b707820797cd7a03d46af90edf1607aaac89c2663c0bfeb2f25",
+        "bytes": 5522
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/local-completion-plan.md",
+      "pass": true,
+      "details": {
+        "actual": "b070491aa3f0963a8a619bc2d69909f0c3dd81781974cca2f4a81dc35d3cc5a4",
+        "bytes": 5106
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r18-proposed/docs/quality-status.md",
+      "pass": true,
+      "details": {
+        "actual": "128ed40aa1d89bcc68d755c856f6c7632f95671cdf077ef0f4d30d88aa0e1d62",
+        "bytes": 15013
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/docs/quality-status.md",
+      "pass": true,
+      "details": {
+        "actual": "68e910712195fa2e05169f2fe78125dfd44bf099892fe484aa907a20bd1701c1",
+        "bytes": 13700
+      }
+    },
+    {
+      "check": "after canonical/private current6097 graph stable",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/PROPOSED_DOCUMENTATION_FREEZE_R18.json",
+      "pass": true,
+      "details": {
+        "actual": "8b2864a291f1582af5c227e578df9ab456423d7003dee15ffb372c3065ee5517",
+        "bytes": 1952
+      }
+    }
+  ],
+  "check_count": 106,
+  "limits": [
+    "Review approves only exact proposed R18 six documentation bytes; canonical docs were still R17 at final observation. Root owns final publication/freeze/acceptance.",
+    "No product role, source/test/tool/doc edits, .NET/MSBuild/native/Docker/SSH/provider starts or process control by reviewer; only this immutable report written.",
+    "Existing accepted historical evidence and external requirements remain authoritative within their own dates/scopes. This does not re-audit whole234, whole55 source/test bodies, full startup, currentcoverage or globalAPI."
+  ]
+}

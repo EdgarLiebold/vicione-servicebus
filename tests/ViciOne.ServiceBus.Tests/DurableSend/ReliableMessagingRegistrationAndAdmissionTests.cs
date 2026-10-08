@@ -964,22 +964,51 @@ public sealed class ReliableMessagingRegistrationAndAdmissionTests
             services.AddSingleton<IDurableSendDispatcher<ITestBus>>(new NoOpDispatcher());
         await using ServiceProvider provider = services.BuildServiceProvider();
 
-        Exception failure;
-        try
+        bool optionsValidated = false;
+        Exception failure = await Assert.ThrowsAnyAsync<Exception>(async () =>
         {
+            provider.GetRequiredService<IStartupValidator>().Validate();
+            optionsValidated = true;
             IHostedService validator = provider.GetServices<IHostedService>().Single(service =>
                 service.GetType().IsGenericType
                 && service.GetType().GetGenericTypeDefinition().Name == "BusCompositionStartupValidator`1"
                 && service.GetType().GetGenericArguments()[0] == typeof(ITestBus));
-            failure = await Assert.ThrowsAnyAsync<Exception>(() =>
-                validator.StartAsync(TestContext.Current.CancellationToken));
-        }
-        catch (Exception exception)
-        {
-            failure = exception;
-        }
+            await validator.StartAsync(TestContext.Current.CancellationToken);
+        });
 
-        Assert.Contains(expectedMessage, failure.ToString(), StringComparison.OrdinalIgnoreCase);
+        bool optionsFailureExpected = invalid is InvalidComposition.MissingStoreLimits
+            or InvalidComposition.MissingDeliveryPolicy or InvalidComposition.MissingRetention
+            or InvalidComposition.InvalidOptions or InvalidComposition.InvalidRetention;
+        Assert.Equal(!optionsFailureExpected, optionsValidated);
+        string busKey = $"{typeof(ITestBus).Assembly.GetName().Name}:{typeof(ITestBus).FullName}";
+        if (optionsFailureExpected)
+        {
+            OptionsValidationException optionsFailure = Assert.IsType<OptionsValidationException>(failure);
+            Assert.Equal(typeof(ReliableMessagingOptions<ITestBus>), optionsFailure.OptionsType);
+            Assert.Equal(Options.DefaultName, optionsFailure.OptionsName);
+            string detail = invalid switch
+            {
+                InvalidComposition.MissingStoreLimits =>
+                    "Reliable messaging for bus 'unknown': Store limits were not configured. Call Store(new ReliableStoreLimits { ... }) inside UseReliableMessaging.",
+                InvalidComposition.MissingDeliveryPolicy =>
+                    "Reliable messaging for bus 'unknown': Delivery policy was not configured. Call Delivery(...) inside UseReliableMessaging.",
+                InvalidComposition.MissingRetention =>
+                    "Reliable messaging for bus 'unknown': Retention was not configured. Call Retention(...) inside UseReliableMessaging.",
+                InvalidComposition.InvalidOptions =>
+                    "Reliable messaging for bus 'unknown': MaximumStoredCount must be positive. Correct the named configuration before starting the host.",
+                InvalidComposition.InvalidRetention =>
+                    "Reliable messaging for bus 'unknown': Retention must be positive. Correct the named configuration before starting the host.",
+                _ => throw new ArgumentOutOfRangeException(nameof(invalid), invalid, null),
+            };
+            Assert.Equal($"Reliable messaging for bus '{busKey}': {detail} Correct the named value before starting the host.",
+                Assert.Single(optionsFailure.Failures));
+        }
+        else
+        {
+            ConfigurationException compositionFailure = Assert.IsType<ConfigurationException>(failure);
+            Assert.Contains($"Reliable messaging for bus '{busKey}':", compositionFailure.Message, StringComparison.Ordinal);
+        }
+        Assert.Contains(expectedMessage, failure.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     static void ConfigureReliablePolicy(IReliableMessagingConfigurator reliable)

@@ -1,0 +1,380 @@
+{
+  "kind": "P06_CACHE_PRIVATE_REQUIREMENTS4716_SUPPLEMENT_AND_PLAN_READONLY_REVIEW_R1",
+  "status": "NO_BLOCK_BOUNDED_TEST_ONLY_CANONICAL_APPLICATION_ORIGINAL_NATIVE_PENDING",
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "6e93640a343c2d9328c9d40b410a060ed2052307a6e6482ee17c3026a26e0503",
+    "/private/tmp/CoreRequirements.cache-proposed-r1.json": "8cfab7601e9be9f02ab59308a37f8e351ab800757658f9ebb0e16ef00ece6f8e",
+    "/private/tmp/ResourceCacheComparerIsolationTests.draft-r5.cs": "733ebbbb9647e9bca57064f410089a231e11e1ecb18f77d22eb9f3d12fccb0ae",
+    "/private/tmp/ResourceCachePendingComparerIsolationTests.draft-r2.cs": "93e9a5bff0c6e13eac03e5858f9466f041e9ad702b6ec76975e10cd204189503",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/CACHE_COMPARER_AND_RETIREMENT_IMPLEMENTATION_PLAN_R1.md": "8329cff96e05e777376fad42fde583dd9495245d8e6214d226dd02866d2f3e89",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/ROOT_CACHE18_COMPLETE_SOURCE_READ_R1.json": "5e59a3d4b0496fd9b3dc07476cb499aad865ad642464c8c0fdd2257382f571d8",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/vicione-architecture/work/CURRENT_ORDER.yaml": "2990c7825b832189068f57f46e90842d0a0b28786dedb30297fa74e51095e07f",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-direct-r5-u2-adversarial.json": "8093bd86ef7a5a2a7a3ac8283811772576d0a349babb16cea74e29b63109c1a3",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-pending-child-r2-adversarial.json": "36051455b2f9ecb932fefb4b3804f092b734de942a979e50c5484ce47e0c2591"
+  },
+  "checks": {
+    "canonical_original4708_exact6e936_hash": true,
+    "proposed4716_exact8cfab_hash": true,
+    "all_original4708_ordered_objects_identical": true,
+    "literal_original_record_textprefix_preserved_closing3bytes_moved": true,
+    "exact8_records_matching8_actual_private_source_attrs": true,
+    "all8_ids_existing_only_no_new_requirement_ID": true,
+    "all4716_schema5_nonemptyStrings_no_duplicate_JSONkeys": true,
+    "all4716_fullMappingIdentity_unique_new8_absent_original": true,
+    "privateDirect439_R5_pending249_R2_exact_reviewed_hashes": true,
+    "private_copies3_byteequal_frozenP06drafts": true,
+    "static13_parent11Direct2Pending_2separateChild_expansion": true,
+    "prior_source_reviews_bound_NO_BLOCK_noFindings": true,
+    "plan61_full_read_exact_sha_registeredCurrentOrder": true,
+    "RootCache18_exactproduct_original_hashes_8existingtest_reuse_current": true,
+    "canonical_new2test_files_still_absent_only_private": true,
+    "CoreTestproject_MTP_and_exact_embeddedResource_mapping": true
+  },
+  "findings": [],
+  "new8_records": [
+    {
+      "requirementId": "REQ-VSB-CACHE-MULTI-INDEX",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "RemoveRetiresEveryIndexAndReleasesResource",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "variantKey": "secondary-comparer-does-not-break-committed-resource-retirement"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-DIRECT-ADD",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "DirectAdmissionPublishesAllIndicesTogether",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "variantKey": "direct-admission-comparer-failure-retains-caller-ownership-and-no-index-ghost"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "FactoryAdmissionPublishesAllIndicesTogether",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "variantKey": "factory-admission-comparer-failure-releases-rejected-value-and-removes-all-index-ghosts"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-EXPIRATION",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "LookupFailureCannotStrandAlreadyExpiredOwnership",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "variantKey": "lookup-failure-after-expiration-still-releases-retired-resource"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-MULTI-INDEX",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "CollisionEqualityFailureLeavesExistingOwnershipIntact",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "variantKey": "colliding-equality-preparation-failure-leaves-anchor-and-caller-ownership-intact"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "LateOldFactoryCannotUnlinkPendingReplacement",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "variantKey": "late-invalidated-factory-cleanup-cannot-remove-a-still-pending-replacement-slot"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "HealthyOriginPendingSlotReleasesOwnership",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests",
+      "variantKey": "healthy-origin-pending-slot-joins-factory-request-and-cache-in-owned-process"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "PersistentOriginComparerFailureReleasesPendingOwnership",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests",
+      "variantKey": "persistent-origin-comparer-failure-cannot-strand-pending-completion-or-capacity"
+    }
+  ],
+  "actual_requirement_attribute_pairs": [
+    {
+      "requirementId": "REQ-VSB-CACHE-MULTI-INDEX",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "testMethod": "RemoveRetiresEveryIndexAndReleasesResource",
+      "variantKey": "secondary-comparer-does-not-break-committed-resource-retirement"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-DIRECT-ADD",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "testMethod": "DirectAdmissionPublishesAllIndicesTogether",
+      "variantKey": "direct-admission-comparer-failure-retains-caller-ownership-and-no-index-ghost"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "testMethod": "FactoryAdmissionPublishesAllIndicesTogether",
+      "variantKey": "factory-admission-comparer-failure-releases-rejected-value-and-removes-all-index-ghosts"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-EXPIRATION",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "testMethod": "LookupFailureCannotStrandAlreadyExpiredOwnership",
+      "variantKey": "lookup-failure-after-expiration-still-releases-retired-resource"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-MULTI-INDEX",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "testMethod": "CollisionEqualityFailureLeavesExistingOwnershipIntact",
+      "variantKey": "colliding-equality-preparation-failure-leaves-anchor-and-caller-ownership-intact"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "testMethod": "LateOldFactoryCannotUnlinkPendingReplacement",
+      "variantKey": "late-invalidated-factory-cleanup-cannot-remove-a-still-pending-replacement-slot"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests",
+      "testMethod": "HealthyOriginPendingSlotReleasesOwnership",
+      "variantKey": "healthy-origin-pending-slot-joins-factory-request-and-cache-in-owned-process"
+    },
+    {
+      "requirementId": "REQ-VSB-CACHE-INDEX-FACTORY",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests",
+      "testMethod": "PersistentOriginComparerFailureReleasesPendingOwnership",
+      "variantKey": "persistent-origin-comparer-failure-cannot-strand-pending-completion-or-capacity"
+    }
+  ],
+  "static_case_expansion": [
+    {
+      "type": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "method": "RemoveRetiresEveryIndexAndReleasesResource",
+      "requirement": "REQ-VSB-CACHE-MULTI-INDEX",
+      "purpose": "secondary-comparer-does-not-break-committed-resource-retirement",
+      "kind": "Theory",
+      "values": [
+        "false",
+        "true"
+      ],
+      "parent_count": 2,
+      "separate_child_count": 0
+    },
+    {
+      "type": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "method": "DirectAdmissionPublishesAllIndicesTogether",
+      "requirement": "REQ-VSB-CACHE-DIRECT-ADD",
+      "purpose": "direct-admission-comparer-failure-retains-caller-ownership-and-no-index-ghost",
+      "kind": "Theory",
+      "values": [
+        "false",
+        "true"
+      ],
+      "parent_count": 2,
+      "separate_child_count": 0
+    },
+    {
+      "type": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "method": "FactoryAdmissionPublishesAllIndicesTogether",
+      "requirement": "REQ-VSB-CACHE-INDEX-FACTORY",
+      "purpose": "factory-admission-comparer-failure-releases-rejected-value-and-removes-all-index-ghosts",
+      "kind": "Theory",
+      "values": [
+        "false",
+        "true"
+      ],
+      "parent_count": 2,
+      "separate_child_count": 0
+    },
+    {
+      "type": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "method": "LookupFailureCannotStrandAlreadyExpiredOwnership",
+      "requirement": "REQ-VSB-CACHE-EXPIRATION",
+      "purpose": "lookup-failure-after-expiration-still-releases-retired-resource",
+      "kind": "Theory",
+      "values": [
+        "false",
+        "true"
+      ],
+      "parent_count": 2,
+      "separate_child_count": 0
+    },
+    {
+      "type": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "method": "CollisionEqualityFailureLeavesExistingOwnershipIntact",
+      "requirement": "REQ-VSB-CACHE-MULTI-INDEX",
+      "purpose": "colliding-equality-preparation-failure-leaves-anchor-and-caller-ownership-intact",
+      "kind": "Theory",
+      "values": [
+        "false",
+        "true"
+      ],
+      "parent_count": 2,
+      "separate_child_count": 0
+    },
+    {
+      "type": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "method": "LateOldFactoryCannotUnlinkPendingReplacement",
+      "requirement": "REQ-VSB-CACHE-INDEX-FACTORY",
+      "purpose": "late-invalidated-factory-cleanup-cannot-remove-a-still-pending-replacement-slot",
+      "kind": "Fact",
+      "values": [],
+      "parent_count": 1,
+      "separate_child_count": 0
+    },
+    {
+      "type": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests",
+      "method": "HealthyOriginPendingSlotReleasesOwnership",
+      "requirement": "REQ-VSB-CACHE-INDEX-FACTORY",
+      "purpose": "healthy-origin-pending-slot-joins-factory-request-and-cache-in-owned-process",
+      "kind": "Fact",
+      "values": [],
+      "parent_count": 1,
+      "separate_child_count": 1
+    },
+    {
+      "type": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests",
+      "method": "PersistentOriginComparerFailureReleasesPendingOwnership",
+      "requirement": "REQ-VSB-CACHE-INDEX-FACTORY",
+      "purpose": "persistent-origin-comparer-failure-cannot-strand-pending-completion-or-capacity",
+      "kind": "Fact",
+      "values": [],
+      "parent_count": 1,
+      "separate_child_count": 1
+    }
+  ],
+  "prefix_binding": {
+    "old_records": 4708,
+    "new_records": 4716,
+    "preserved_literal_record_text_bytes": 1674598,
+    "old_terminal_bytes_repr": "b'\\n]\\n'",
+    "whole_original_rawJSON_is_prefix": false,
+    "ordered_semantic_record_prefix_preserved": true
+  },
+  "Root18_actual_product_hashguard": {
+    "src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs": {
+      "expected": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12",
+      "actual": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12"
+    },
+    "src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs": {
+      "expected": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69",
+      "actual": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69"
+    },
+    "src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs": {
+      "expected": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c",
+      "actual": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c"
+    },
+    "src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs": {
+      "expected": "bba8eeb8b9366996b489c820d793bb568d47c396127095a18ef45426fd2a164e",
+      "actual": "bba8eeb8b9366996b489c820d793bb568d47c396127095a18ef45426fd2a164e"
+    },
+    "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs": {
+      "expected": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4",
+      "actual": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4"
+    },
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs": {
+      "expected": "907772e0d3f688f3b11b0542b79d45e76f098559a0fb99e2ad1395ebdb13112d",
+      "actual": "907772e0d3f688f3b11b0542b79d45e76f098559a0fb99e2ad1395ebdb13112d"
+    },
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs": {
+      "expected": "d6ce8980172e278b8ce7eae72fed4f6c89f74e23778a24f93e8524ab0b99c5d9",
+      "actual": "d6ce8980172e278b8ce7eae72fed4f6c89f74e23778a24f93e8524ab0b99c5d9"
+    },
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs": {
+      "expected": "54c895f4d2ccb95316a7ae3f521022cea3a25e4014d9b22fabaf75a53211625d",
+      "actual": "54c895f4d2ccb95316a7ae3f521022cea3a25e4014d9b22fabaf75a53211625d"
+    },
+    "src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs": {
+      "expected": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743",
+      "actual": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs": {
+      "expected": "a593b0fa0dc498210a20d4669ab68a743a2f13542fe9dbe53aa814ed463f6366",
+      "actual": "a593b0fa0dc498210a20d4669ab68a743a2f13542fe9dbe53aa814ed463f6366"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs": {
+      "expected": "0aeb97aeae8196ed5918ccafb7401cdb2bc6f176c74f9e4b8de89833d8a3d00d",
+      "actual": "0aeb97aeae8196ed5918ccafb7401cdb2bc6f176c74f9e4b8de89833d8a3d00d"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs": {
+      "expected": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+      "actual": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs": {
+      "expected": "d33d153e2de28609ec362672c5637c97c9bfa95cc2895af236857b0181f7abd0",
+      "actual": "d33d153e2de28609ec362672c5637c97c9bfa95cc2895af236857b0181f7abd0"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.cs": {
+      "expected": "98da72d0f863585936f1c9ad702bb3d27b62a7e1d606d0a21f8c8f290c56b4a2",
+      "actual": "98da72d0f863585936f1c9ad702bb3d27b62a7e1d606d0a21f8c8f290c56b4a2"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs": {
+      "expected": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7",
+      "actual": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs": {
+      "expected": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76",
+      "actual": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs": {
+      "expected": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4",
+      "actual": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4"
+    },
+    "src/ViciOne.ServiceBus/Caching/ResourceFactory.cs": {
+      "expected": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc",
+      "actual": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc"
+    }
+  },
+  "8existing_cachefixture_hashreuse": {
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheConcurrencyTests.cs": {
+      "expected": "7087567d31ff3d8d42df1dcef4763d11f90cdfe6a97b9265ad8edc8528ed6063",
+      "actual": "7087567d31ff3d8d42df1dcef4763d11f90cdfe6a97b9265ad8edc8528ed6063"
+    },
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs": {
+      "expected": "fe08a94c9d3339cc2a83c85bfcc19c90e3b4f6decd3d55810d9147811062d5db",
+      "actual": "fe08a94c9d3339cc2a83c85bfcc19c90e3b4f6decd3d55810d9147811062d5db"
+    },
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpirationTests.cs": {
+      "expected": "8f128a449bc35bf7012638d79237393754c1e823fb33f34d68f34005996299ba",
+      "actual": "8f128a449bc35bf7012638d79237393754c1e823fb33f34d68f34005996299ba"
+    },
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpiredDuplicateOwnershipTests.cs": {
+      "expected": "75455c54efa1c5388e92ac8f577b73a52c330785e2d7e8dd9b933f073010c430",
+      "actual": "75455c54efa1c5388e92ac8f577b73a52c330785e2d7e8dd9b933f073010c430"
+    },
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheGenerationAndLockingTests.cs": {
+      "expected": "56e5e5b8ba01517ba221441930ecfdd9c50f8c6d1279c29220d626d96da63fdf",
+      "actual": "56e5e5b8ba01517ba221441930ecfdd9c50f8c6d1279c29220d626d96da63fdf"
+    },
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheInitializationTests.cs": {
+      "expected": "23871810ed2cdd3bcec89ae6f336a3dc1e8433ae6fbdfe1391f69c3515627a9a",
+      "actual": "23871810ed2cdd3bcec89ae6f336a3dc1e8433ae6fbdfe1391f69c3515627a9a"
+    },
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheLifecycleTests.cs": {
+      "expected": "4c791cd63c5708a51015d250c943a9e376aa4ddc17518b87add6fafb69823866",
+      "actual": "4c791cd63c5708a51015d250c943a9e376aa4ddc17518b87add6fafb69823866"
+    },
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverAndDisposalTests.cs": {
+      "expected": "d2c10c5e7cd989c7f747c043bf8a583adec22d721de23544abcda1b6e315836e",
+      "actual": "d2c10c5e7cd989c7f747c043bf8a583adec22d721de23544abcda1b6e315836e"
+    }
+  },
+  "plan_boundaries": [
+    "Root authors and executes; internal independent reviewers have no external Product-team role.",
+    "Test2/resource8 purposes are applied first with unchanged cache product sources; strict original native evidence precedes product correction.",
+    "Stable internal hashes/identity slots and prepublication allocation/preparation must preserve existing hash/equality/selectors, ownership/capacity/generation/expiration contracts. Full authored map source/build/lifetime change requires separate adversarial review and native proof.",
+    "Required clocks remain required. Already retired resources remain operation-owned for release on subsequent lookup/clock error; no new public mandatory observer-failure or global ordering policy.",
+    "Only validated finite pending-corruption child path permits process-isolation instead of impossible original cache/request join; healthy/corrected paths must join all actual ownership. Compiler/watchdog/wrapper/discovery-only failures never earn causal credit.",
+    "No dead-slot retention/full map copy per mutation, fake release rescue credit or hidden late-old-cleanup replacement unlink.",
+    "No fullAPI A+, coverage/CRAP, CI/provider/cloud/hardware/RAM/device budget acceptance inferred."
+  ],
+  "read_scope": "Complete private Direct439/Pending249 and Plan61 bodies read independently for this requirement mapping and bounded plan supplement. WholeJSON parsed with duplicate-field rejection and every prior/new ordered object/schema/identity checked. Prior source adversarial reviews and Root18 author read receipt remain separate provenance; no transferred source-body or native execution credit.",
+  "limits": [
+    "13 parent+2 child counts are static expansion only; actual finite causes/IDs/runtime and PE/PDB/compiledReq4716 qualification remain pending.",
+    "This review changes no product/test/resource/tool and runs no .NET/Docker/provider/SQLite/SSH/process-control.",
+    "No full original rawJSON byteprefix claim: exactly3 original closing bytes move after eight new records.",
+    "Whole Root810/shared84 successor proof will be independently bound when frozen; this supplement checks the unchanged Root18 and eight specific cache fixtures."
+  ]
+}

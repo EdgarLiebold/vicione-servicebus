@@ -1,0 +1,177 @@
+{
+  "status": "PASS_BOUNDED_ORIGINAL_BASELINE_LOCAL_PROVIDER_645_NATIVE_AGGREGATE_ARTIFACT_ACCEPTANCE",
+  "reviewer": "/root/telemetry_adversarial",
+  "supersedes_probe_qualifications": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package03-baseline-local-provider-native-artifact-review-r1.json",
+    "sha256": "4c3a27804fddcd45ba87e16b3d43ff2d566780ff6fcb891a1240c85955c3e806",
+    "reason": "R1 conservative path/count probes exposed expected repeated summary lines and explicit xUnit injected compile sources. R2 distinguishes those from actual product source/module mismatches; immutableR1 preserved."
+  },
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/BASELINE_LOCAL_PROVIDER_NATIVE_RESULT_R1.json": "bd7a1dcb590f505fe7e83177a59db4e44e76cf1f41bb751f6aa2a6e3ddd3ad2f",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/forwarding-tool-review-r4.json": "a73ab3ffd3d2eb4bad48440836a527be5d02863355310e220bd8cc390ba1fa32",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/local_colima_forwarding.py": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d"
+  },
+  "checks": {
+    "all4_rawhashes": true,
+    "all20dll_pdbhashes": true,
+    "exact10_discovered_modules": true,
+    "exact10_successful_modules": true,
+    "native645_0failure_0skip_summary": true,
+    "native_single_unique_complete_closed_binlog": true,
+    "current_C2_exact_baseline_trackedclean": true,
+    "all_firstparty_pe_pdb_id": true,
+    "all_firstparty_source_docs_physical_or_embedded_checksums": true,
+    "all_firstparty_deps_canonicalbuild_bytes": true,
+    "forwarding_source_accepted_R4_hash": true,
+    "forwarding_child0_ssh0_cleanupempty": true,
+    "current_run_receipts_frozen_same": true,
+    "canonical_fixturefindings_empty_samecohort": true,
+    "all6_brokerlog_hashes": true,
+    "Root_recorded_structured_exit0": true,
+    "engineering_strict_zero_warnings_errors": true,
+    "engineering_unique_complete_closed_binlog": true,
+    "all_project_product_source_paths_C2_except_qualified_xunit_sources": true,
+    "all_two_upstream_sourcefiles_match_package_bytes": true,
+    "xunit_package_bytes_equal_previously_qualified_signed_package": true,
+    "all10test_lock_xunit_version_contenthash": true,
+    "both_core_deadline_sources_are_baseline_git_bytes": true
+  },
+  "native_successful10_modules": [
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/release/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/release/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests/release/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll"
+  ],
+  "source_inventory": {
+    "assemblies": 35,
+    "source_documents": 4068
+  },
+  "upstream_compile_source_binding": {
+    "actual2paths": [
+      "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/xunit.v3.core.mtp-v2/4.0.0/_content/DefaultResultWriters.cs",
+      "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/xunit.v3.core.mtp-v2/4.0.0/_content/DefaultRunnerReporters.cs"
+    ],
+    "source_files_nupkg_member_bytes_equal": {
+      "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/xunit.v3.core.mtp-v2/4.0.0/_content/DefaultResultWriters.cs": true,
+      "/private/tmp/vicione-servicebus-api-review-20261001/runtime/repair-dotnet-home/.nuget/packages/xunit.v3.core.mtp-v2/4.0.0/_content/DefaultRunnerReporters.cs": true
+    },
+    "signed_package_sha256": "6a3f3397f6b0104e2fb55e0f8bd97d409210525eb3c73d497efd716a29dcc4b2",
+    "same_bytes_previously_qualified_p06_fixed_package": "6a3f3397f6b0104e2fb55e0f8bd97d409210525eb3c73d497efd716a29dcc4b2",
+    "all10testlocks": {
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/packages.lock.json": {
+        "sha256": "f86fdabff2a4b53ad28db14a3e7b4ebd9092cd915c8e3b76249c4e0d4a3a2dac",
+        "source_package_resolved": "4.0.0",
+        "metadata_contenthash_matches": true
+      },
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/packages.lock.json": {
+        "sha256": "07b6df9cca3f6595449fb6f2890a8573160eefceeea9def9f98b5bb74273964d",
+        "source_package_resolved": "4.0.0",
+        "metadata_contenthash_matches": true
+      },
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Persistence/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/packages.lock.json": {
+        "sha256": "46df372db0f9225e84a1a7b4e7ba7e925a61eab95824334a2cf4b8a122914a4b",
+        "source_package_resolved": "4.0.0",
+        "metadata_contenthash_matches": true
+      },
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests/packages.lock.json": {
+        "sha256": "498821ec30e66f23a50881f27506a552cc8bd4b0546370b1241f20992719635a",
+        "source_package_resolved": "4.0.0",
+        "metadata_contenthash_matches": true
+      },
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Persistence/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/packages.lock.json": {
+        "sha256": "e078295de5b87a3e624b903a18e8faf800f1ade250fd83d61554b2a3f3c57ba2",
+        "source_package_resolved": "4.0.0",
+        "metadata_contenthash_matches": true
+      },
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Persistence/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/packages.lock.json": {
+        "sha256": "ec24801a2d8574936cfecb413f920f838d777e47539e02b9be30f63aa1529bf8",
+        "source_package_resolved": "4.0.0",
+        "metadata_contenthash_matches": true
+      },
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Persistence/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/packages.lock.json": {
+        "sha256": "9be76f61b67dd6ddbab9ed26fdc08f75fbc65745b770c0fe3dcddb157abbbbc2",
+        "source_package_resolved": "4.0.0",
+        "metadata_contenthash_matches": true
+      },
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/packages.lock.json": {
+        "sha256": "d4d528c5377db5181b5bfb97c3103ddfad1b4311b5e99ebbe90e724b6e50006f",
+        "source_package_resolved": "4.0.0",
+        "metadata_contenthash_matches": true
+      },
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/packages.lock.json": {
+        "sha256": "ddca799ea3d91af9c6447df3f3e766d78be38b7586d660c7f58c45e7a30ed361",
+        "source_package_resolved": "4.0.0",
+        "metadata_contenthash_matches": true
+      },
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/tests/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/packages.lock.json": {
+        "sha256": "42c29f7585da6e609d29d7d3d93916e1b6626c837cf099f6a557471de34d1c95",
+        "source_package_resolved": "4.0.0",
+        "metadata_contenthash_matches": true
+      }
+    }
+  },
+  "core_baseline_source_pdb_git_binding": {
+    "src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs": {
+      "document_sha256": "e91101c1cf3bd5209a468542353c41a1fc87b1c40764fec4733dce84072008de",
+      "physical_source_sha256": "e91101c1cf3bd5209a468542353c41a1fc87b1c40764fec4733dce84072008de",
+      "git_baseline_sha256": "e91101c1cf3bd5209a468542353c41a1fc87b1c40764fec4733dce84072008de",
+      "all_match": true
+    },
+    "src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs": {
+      "document_sha256": "ced3f8eab359980762604d3df6fc09a69678ba48134c1e7a6e6fb0dc0a3ada8c",
+      "physical_source_sha256": "ced3f8eab359980762604d3df6fc09a69678ba48134c1e7a6e6fb0dc0a3ada8c",
+      "git_baseline_sha256": "ced3f8eab359980762604d3df6fc09a69678ba48134c1e7a6e6fb0dc0a3ada8c",
+      "all_match": true
+    }
+  },
+  "owned_lifetime": {
+    "wrapper_source_complete_read": true,
+    "accepted_tool17contracts_reused_R4": true,
+    "parent_observed_exact_compose_identity": "vicione-f54efe8eb0b4",
+    "parent_observed_exact_compose_query": "0 remaining containers",
+    "parent_observed_own_pid_pgid_absence": {
+      "62477": "PID and PGID absent",
+      "62482": "PID and PGID absent"
+    },
+    "own_ps_reread": "Sandbox denied ps Operation not permitted; no escalation/no independent repeat claim. Docker re-query prohibited by parent request and not attempted.",
+    "meaning": "Root cleanup observations are explicitly attributed; receipt cleanup_failures empty and canonical fixturefindings empty independently matched. No claim of hostile escaped-session cleanup."
+  },
+  "engineering": {
+    "log_sha256": "6086178e1ca571d2ad479277204af59042507f9490538b1c652856a7cdb12e42",
+    "binlogs": {
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/local-completion/baseline/engineering-build-20261006-225312--58706--OPWCtA.binlog": "f4fbc92c8711df0dff7f068018b9f750f0ad624c4d9804cfaf984fabc33a4c2d"
+    }
+  },
+  "native_binlog": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/baseline-forwarding-native-raw-r1/local-tests-r3-forwarding-20261006-233129--62482--0Dzysk-dotnet-test.binlog",
+    "sha256": "550b7ff871aa67f66e8fb018301e602131d1dbc99a555bdcadbff7e733a4bddb",
+    "uncompressed_bytes": 13796436
+  },
+  "raw_hashes": {
+    "local-tests-r3-forwarding.log": true,
+    "local-tests-r3-forwarding-20261006-233129--62482--0Dzysk-dotnet-test.binlog": true,
+    "local-colima-forwarding.json": true,
+    "fixture-findings.json": true
+  },
+  "findings": [],
+  "assessment": "No blocker for bounded P03 original-clean6b451 local provider aggregate645 acceptance. All10 actual native modules,20 testDLL/PDB hashes,35 firstpartyPE/PDB identities,4068 source document checksums including embedded generation, deps/output/canonical build chains and strict closed baselineEngineering/nativebinlogs are qualified. Live reviewed forwarding child0/SSH0/no cleanupfault, canonicalemptyfindings, exactcompose cleanup0 and ownedPID/PGIDabsence are correctly scoped and attributed.",
+  "limits": [
+    "Only six bound localproviders and10 executed modules. Aggregate645, no all645individualcaseidentity promise.",
+    "Standard native host/deps/module output binding; no universal runtime AssemblyLoad trace.",
+    "Root observed structured exit0 and exact compose/own PID-PGID cleanup; this artifact does not independently regenerate those external observations.",
+    "Current forwarding sourceed76a7 is hash-matched to acceptedR4tool17contracts and live wrapperreceipt; no contract rerun.",
+    "Historical SQL999of1000 rootcause remains unresolved. Passing this baseline does not relabel priorfailedruns or prove a repair.",
+    "No post-Core-correction evidence, RabbitMQ/AzureServiceBusEmulator/SqlServer/cloud/ARM64-512MiB-no-swap/all-provider/time-normalization closure.",
+    "No secret/run-token files accessed. Brokerlogs hashedonly without content review or copying."
+  ],
+  "source_count_precision": "4068 PDB document events across35 unique firstparty assembly-byte identities; repeated linked files and upstreamxUnit source events are included. This is checksum validation, no claim of a new complete source-body review.",
+  "runtime_cleanup_precision": "Current ps query was denied by sandbox. Root exactcompose query and ownPID/PGIDabsence are accepted as frozen personally observed facts, without new Docker/OS operational action.",
+  "scope": "Original6b451 baseline only; no post-Corefix acceptance. HistoricalSQL999of1000 rootcause remains open. No providerwide/cloud/hardware/timeclosure.",
+  "read_only": "No.NET/Docker/SSH/tests/publication/product writes. No credential/run-token/SSHconfig content read or copied. Only own report JSONs written."
+}

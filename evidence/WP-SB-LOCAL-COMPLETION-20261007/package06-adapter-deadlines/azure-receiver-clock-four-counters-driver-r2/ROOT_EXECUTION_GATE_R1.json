@@ -1,0 +1,41 @@
+{
+  "kind": "ROOT_ACTUAL_FIXED_AND_WHOLE_SOURCE_RUNTIME_RECHECK_COUNTER_EXECUTION_GATE_R1",
+  "references": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-fixed-private-preparation-r1/INPUTS.json",
+      "sha256": "3524d76b2b1d129626585d3e42bc4171fee0b5baafa708fc69f95f26f160a43f"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-fixed-six-native-r1/RESULT.json",
+      "sha256": "113fb467045930d5d445c4f9c77c1dd89e9f5fe66d65496d5e0114f59e945810"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-fixed-six-native-r1/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "baaff9aa35b99f02a7177c1f56c134461da0b01c458281fc4c3cc8c1e48e1b13"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-clock-fixed-six-native-adversarial-r1.json",
+      "sha256": "b120fa98a144e62b58f8a73ae70c93a6c6fd92d388f8ed564f6fb5df7c4f8439"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-whole-azure-native-r1/RESULT.json",
+      "sha256": "692b026a790910787ec9d54ab458affba40afdb3df035ac0754c4ef2c36c3863"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-clock-whole-azure-native-adversarial-r2.json",
+      "sha256": "91b19cad4cdfaeb740c4eb5403ea4c00b1c3cec5c6278201556a2b7a08af6236"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-driver-r2/driver.py",
+      "sha256": "1fa7a5abfe667eb784a95ec274e3008f693a53ae649996c3f993b4b58cda9714"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-four-counter-design-and-driver-r2-preflight-adversarial-r1.json",
+      "sha256": "42fcbd28f6dfc52868c3d278d4aee62e21514d1597c17829959ea422b940bd5d"
+    }
+  ],
+  "fullO6106_C216107_config14_assets13_live18_fixedArchive_exact": true,
+  "actualWhole613PASS_each6FactOnce": true,
+  "independentFixedAndWholeHoldReleased": true,
+  "limits": "Only Root execution gate for reviewed counters; no actual futurecounter/native/canonical/race/globalclaim."
+}

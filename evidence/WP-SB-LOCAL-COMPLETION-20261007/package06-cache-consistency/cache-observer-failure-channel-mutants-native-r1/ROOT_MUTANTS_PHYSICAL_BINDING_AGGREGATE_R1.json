@@ -1,0 +1,70 @@
+{
+  "kind": "ROOT_CACHE_OBSERVER_THREE_MUTANTS_FRESH_PHYSICAL_BINDING_AGGREGATE_R1",
+  "rows": [
+    {
+      "name": "M1-drop-observer-isolation",
+      "root_fresh_physical_sha256": "b114c19d6ad3690b1b72928d759313f4bfe06fe7ac242e8642b7f47b8872f8f1",
+      "actual_images": 12,
+      "actual_PDB_checksums": 3809,
+      "actual_changed_runtime_files": {
+        "ViciOne.ServiceBus.Courier.dll": "f24925ac2a6a74d2ccf7906e50f4553572b0b8825a2f325c042a96d45b14d531",
+        "ViciOne.ServiceBus.Futures.dll": "5dffbf46cbd06f1ce8c8c7c10b5b3b320db79f12fa8fa389e6278fb2dc58dcf2",
+        "ViciOne.ServiceBus.Initializers.dll": "274c5bc9a99588acc3a98b08f51eea265b1519cb1dffd07bf2304a6e17d8c322",
+        "ViciOne.ServiceBus.JobService.dll": "8e88da8f20a5f8d9bbadb17998e4369192ae1db0bb9ca23e949b24e5023ea0ad",
+        "ViciOne.ServiceBus.Mediator.dll": "439f3089c1a94c22fe5e6bbe1ed86ef4752fd602c951801f063adc7c9fa00c84",
+        "ViciOne.ServiceBus.Sagas.dll": "8a099a4383b3f82429c1cc478e803b6b6d007e5fb8cd90ad02837c181349930a",
+        "ViciOne.ServiceBus.Testing.dll": "bcbd144ca0aacad423b5c724c777bb4369ad0010b4a456d94a60d9560b6b8c3c",
+        "ViciOne.ServiceBus.Tests.InternalAccess.dll": "3e00f22406a5c5d13aa31a9c3e3d1c2e1c6723577b7142c35e5dd219f843b0b8",
+        "ViciOne.ServiceBus.Tests.dll": "2caebf2efda6799b4cb86f17af667f1fd1f4e5ce998166dff728539d84a7410d",
+        "ViciOne.ServiceBus.Tests.pdb": "d62b587765badfe3b2535d6f5a43ed3481827e454887147b6c00f0af78f54a34",
+        "ViciOne.ServiceBus.dll": "8fa6738b3b061f901d34f7550a485658bb7dbb6c74d2cdc852d6c1457744c3d3"
+      },
+      "compiled_metadata_policy": "AllthreeTestDLL/PDBchanged: freshindependentall4727METHODattrs/resource and35refs required, noOriginal59testmetadata reuse."
+    },
+    {
+      "name": "M2-drop-best-effort-warning",
+      "root_fresh_physical_sha256": "8b5f5e87938b037d8260aeb0130a9455dad5b5f131e589c3de8170d50bda7e89",
+      "actual_images": 12,
+      "actual_PDB_checksums": 3809,
+      "actual_changed_runtime_files": {
+        "ViciOne.ServiceBus.Courier.dll": "f24925ac2a6a74d2ccf7906e50f4553572b0b8825a2f325c042a96d45b14d531",
+        "ViciOne.ServiceBus.Futures.dll": "5dffbf46cbd06f1ce8c8c7c10b5b3b320db79f12fa8fa389e6278fb2dc58dcf2",
+        "ViciOne.ServiceBus.Initializers.dll": "274c5bc9a99588acc3a98b08f51eea265b1519cb1dffd07bf2304a6e17d8c322",
+        "ViciOne.ServiceBus.JobService.dll": "8e88da8f20a5f8d9bbadb17998e4369192ae1db0bb9ca23e949b24e5023ea0ad",
+        "ViciOne.ServiceBus.Mediator.dll": "439f3089c1a94c22fe5e6bbe1ed86ef4752fd602c951801f063adc7c9fa00c84",
+        "ViciOne.ServiceBus.Sagas.dll": "8a099a4383b3f82429c1cc478e803b6b6d007e5fb8cd90ad02837c181349930a",
+        "ViciOne.ServiceBus.Testing.dll": "bcbd144ca0aacad423b5c724c777bb4369ad0010b4a456d94a60d9560b6b8c3c",
+        "ViciOne.ServiceBus.Tests.InternalAccess.dll": "3e00f22406a5c5d13aa31a9c3e3d1c2e1c6723577b7142c35e5dd219f843b0b8",
+        "ViciOne.ServiceBus.Tests.dll": "2caebf2efda6799b4cb86f17af667f1fd1f4e5ce998166dff728539d84a7410d",
+        "ViciOne.ServiceBus.Tests.pdb": "d62b587765badfe3b2535d6f5a43ed3481827e454887147b6c00f0af78f54a34",
+        "ViciOne.ServiceBus.dll": "ac97c490dba589cb10791dfa2a3f8bf975f7448832bce564fd873a009a3ec195"
+      },
+      "compiled_metadata_policy": "AllthreeTestDLL/PDBchanged: freshindependentall4727METHODattrs/resource and35refs required, noOriginal59testmetadata reuse."
+    },
+    {
+      "name": "M3-drop-callback-await",
+      "root_fresh_physical_sha256": "df6ecb5168747a2304a9e4251acffd2d39ac4e4f995b7759b0014a7e8477082d",
+      "actual_images": 12,
+      "actual_PDB_checksums": 3809,
+      "actual_changed_runtime_files": {
+        "ViciOne.ServiceBus.Courier.dll": "93cbc47ad9b636636a37c044cc2189dafdc04e16430ac5ede73cfe09e87a688b",
+        "ViciOne.ServiceBus.Futures.dll": "04068bd63b9679d4cbd828503fd3e85e23cd7be43f259ea8d5ee7036a31752a4",
+        "ViciOne.ServiceBus.Initializers.dll": "760773c9a08f87c9644a37ff54d88834fd26b7690b18193943a7cd56b8c6b4b9",
+        "ViciOne.ServiceBus.JobService.dll": "61340e17837cb644ff6f5d4efacae06565cd6d7657ce244cd5f8f189a564ee07",
+        "ViciOne.ServiceBus.Mediator.dll": "7c9ec98a042603aa8e12134d0854a37e6a56bb15ebad575b8ebec51c609e5c25",
+        "ViciOne.ServiceBus.Sagas.dll": "a3d946c4036f5dc3003eccc677c1175b1c04b11a77fd22110c3e51419bbb8cbf",
+        "ViciOne.ServiceBus.Testing.dll": "56514eb3e55284f069f2048b9656e9327fbfd1b2c980e692bccf8581df5faf7c",
+        "ViciOne.ServiceBus.Tests.InternalAccess.dll": "91003b2705a5ba8fdbf418456a37040e048cd4782e28b15cf45053d3a9499777",
+        "ViciOne.ServiceBus.Tests.dll": "06fdd68f5fe23b336b46f411609ecd49b537b175be8eeb2dbf6455c8b5365c12",
+        "ViciOne.ServiceBus.Tests.pdb": "b96aff07743ff4849f88e06e47ecdd0c854180b50bfded43cd7726503d7a2369",
+        "ViciOne.ServiceBus.dll": "fce523405d2017977ea25b6de00756aa7e11883ae0bf737c03e6929c7feacaad"
+      },
+      "compiled_metadata_policy": "AllthreeTestDLL/PDBchanged: freshindependentall4727METHODattrs/resource and35refs required, noOriginal59testmetadata reuse."
+    }
+  ],
+  "fresh_PE_occurrences": 36,
+  "fresh_PDB_document_checksum_occurrences": 11427,
+  "missing_or_mismatch": 0,
+  "first_finite_ledger_sha256": "3b994fbd558cf0e8a46b22bf41851564517d465628f1b24adca955cc833d3fa4",
+  "limits": "Source finallybaseline6103restored; runtime lastM3elevenfilesdifferent. RootfreshPE/PDB all36/11427; independent4727freshmetadata andnewpost pending."
+}

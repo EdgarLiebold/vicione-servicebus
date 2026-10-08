@@ -1,0 +1,24 @@
+{
+  "kind": "ROOT_RESTORED_ORIGINAL_SIX_ACTUAL_NATIVE_AND_EXACT_PRIOR_OWN_PHYSICAL_PROOF_REUSE_R1",
+  "native_sha256": "c255280912c0debe24edaa01c356f2a131e33b5090790bc52719ec7af29f55c8",
+  "root_tool_session": 99847,
+  "outer_returncode": 0,
+  "native_pids": {
+    "locked-restore": 9856,
+    "strict-rebuild": 13216,
+    "focused-six": 13290
+  },
+  "original_native_sha256": "418fbb273e29bb0671c5d95a31987a849f11e34e1c0281da337d8845c3735ed7",
+  "prior_root_own_PE_PDB_sha256": "a2e40c0a1614cc45da4ffd3bc0a1bc31e75812cb5add8615ca17a9a426532ccf",
+  "same_all18_runtime_archive_live_bytes": true,
+  "same13_assets_archive_live": true,
+  "same_canonical6099_private6100_configs14": true,
+  "source_input_sha256": "d471facc5aac4a8eac8eac072ed971e83e381c231b67319c5f93db681be95063",
+  "physical_reuse": {
+    "images": 13,
+    "document_checksums": 3256,
+    "kind": "EXACT_BYTE_AND_SOURCE_IDENTITY_REUSE_OF_ROOT_OWN_PROOF_NOT_FRESH_REPARSE"
+  },
+  "full_focused6_and_strict_build_logs_personally_read_untruncated": true,
+  "limits": "Actual strictRebuild0warnings0errors and6uniqueNativePASS0skip, full restoredruntime18 equalsoriginalR2. Prior Rootown13PE3256PDB binding reused by exactbyte+source equality. Independentpostreview andmutationfinitequalification stillpending; noProductpatch/coverage/cloud/hardware/globalA+ closure."
+}

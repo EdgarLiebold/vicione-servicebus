@@ -1,0 +1,32 @@
+{
+  "kind": "ROOT_RABBIT_CANONICAL_EXACT_FOUR_REVIEWED_TEST_INFRASTRUCTURE_FILE_APPLICATION_R1",
+  "independent_transfer_gate_sha256": "663b8da63fc6457849f281e6169efe8d88e290099a8ec57e6730186ae4471c77",
+  "copied_files": [
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs",
+      "old_sha256": null,
+      "new_sha256": "12fb5282c4048c05d80a8faf661089a258c4ebe06bdb4e8b001667c2e2a69540"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/ViciOne.ServiceBus.RabbitMq.Tests.csproj",
+      "old_sha256": "53ac44c04cf794e6ffc05f2b5a8ec47fb6948e1bac181b37155279b0296d3e68",
+      "new_sha256": "9ed3889255abbc8771522d5f8bd38ebcc774648dd98cd86ddc6e3cbb00d8b7e4"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/packages.lock.json",
+      "old_sha256": "6700fbe21a46323f187f14cc6a263505528bd173ea56a7f1e384beeeb7c0ed87",
+      "new_sha256": "3dee0be7b986483e2473e8f3f554b44f900172636334e429290d2963148715a3"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RabbitMqAddressRequirements.json",
+      "old_sha256": "5f5ecc35a77d34a10f41324cc882f2615de84825a8500cc20df4bf33d65e1c91",
+      "new_sha256": "2ca3fc9dfc16dcbc0ba7e5ddf66c45d97675b96bc17636d55c1342518195e0b0"
+    }
+  ],
+  "canonical_before_count": 6098,
+  "canonical_after_count": 6099,
+  "canonical_after_exact_compiled_private6099": true,
+  "root_configuration_signing14_equal": true,
+  "product_registration_owner_unchanged_sha256": "84e652c0237beb05aaf2d7008f49b70b886163650839c0a0ccded02676eeece2",
+  "limits": "Only4 reviewed test/project/generatedlock/Req files copied. No productfix inferred and no new execution in canonical worktree. Native original4/599/5mutants/post12 exact source/binary qualification reused. GlobalP04/cloud/hardware/coverage/remote/release remain open."
+}

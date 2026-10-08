@@ -1,0 +1,8 @@
+{
+  "status": "ACCEPTED_DOCUMENTATION_C6_BOUNDED_CHECKPOINT",
+  "freeze_sha256": "9059f9276b9023d61de4948d6567512f7b8d9ec449a11f92414c8b286ee0a2f5",
+  "review_sha256": "7f1f8c7daf6b5a6d693bcba6761e98d8089be6a52108f0300f977ef7900d560f",
+  "c6_acceptance_sha256": "10b95e5b13bb7fc5dcc9f24e2686e68f73e8f259675fe71d19ea8ff007d1310b",
+  "all_canonical6_equal_reviewed_and_frozen": true,
+  "limits": "Only new bounded C6 checkpoint and currentC7active wording; historical234/11otherTODOsections/62OBLtokens retained; no new broader acceptance."
+}

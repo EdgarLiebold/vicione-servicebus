@@ -1,0 +1,17 @@
+{
+  "kind": "ROOT_GUARDED_SIX_DOCUMENTATION_PUBLICATION_ACCEPTANCE_R20",
+  "prior_published_freeze_sha256": "febd96b5a763973309c9de598210a58aea80faf41b1a4574ab50515dacdd6162",
+  "proposed_freeze_sha256": "c568acf3ff4b2672b56275b69562a264395bc16b3626e85a1940f735b4caca2c",
+  "independent_review_sha256": "699e578fe33ce43c58b1c55b87d3ab54088daaf7fe919639a4cf5c69f46f06b2",
+  "published_freeze_sha256": "ab6b8349daa05c77c3e098593f2b13ab5a393780c086154a3d24420e6baefd85",
+  "canonical_actual_sha256": {
+    "CHANGELOG.md": "9d2f6ebd12d4b58a0c80ee5a3d31063c25bba843e5a5e1e09ce35b0f45e22c41",
+    "TODO.md": "a37d0ace93fa3a55a27672226141b06bb3aa58b211fc759fb7b3b77a82f7b334",
+    ".testagent/status.md": "6af9cdc35cb023639506d48a7729fe28fceb37f837fa7f8544251d4239c25649",
+    ".testagent/plan.md": "50f2db1b4b1447740527d498b57ef85e3a7364012fc12c8871257c4baf4fca47",
+    ".testagent/local-completion-plan.md": "a963410119c0c13f6c20e18b12d2be4b0b75f15068020753361f71589f6805bd",
+    "docs/quality-status.md": "541c4c968da57de3b5c379965a5d3247f6d87c9d3c0fbe9e1d0d301c9ef716f8"
+  },
+  "all_six_canonical_exact_reviewed_snapshot": true,
+  "limits": "OnlyboundedRabbitstartupdocumentationnew;futureAzure3notacceptedhere/noallP04orcoverageUnitaggregationcloudhardwareglobalA+ grade. Sources/tests unaffected bydocpublication, no native rerun required forproseonly. All62externalOBL/other11TODO/history4 preserved."
+}

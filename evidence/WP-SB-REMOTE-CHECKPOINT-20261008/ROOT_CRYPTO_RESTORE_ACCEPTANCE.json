@@ -1,0 +1,16 @@
+{
+  "kind": "ROOT_ACTUAL_ENCRYPTED_ARCHIVE_QUALIFICATION",
+  "encryption_session": 66844,
+  "encryption_observed_exit": 0,
+  "full_restore_session": 32205,
+  "full_restore_observed_exit": 0,
+  "encryption_manifest_sha256": "7462ecd3e34abbc5e9ec0911295a3c22fa8dbae11ec7e213c26b117001b2bae8",
+  "full_restore_receipt_sha256": "000ea4c4e2f3fda106ed759070c0221d96d0beaa8e6dbc368d553f196571c398",
+  "member_count": 19465,
+  "cipher_parts": 35,
+  "all_plaintext_bytes_sizes_modes_verified": true,
+  "ciphertext_tamper_and_wrong_AAD_rejected_before_output": true,
+  "key_in_repository": false,
+  "owner_offsite_key_backup": "Not performed or claimed; owner must separately secure the locally supplied key. Code/test/changelog recovery fromGit requires noarchivekey.",
+  "limits": "Backup operational verification only; no currentaggregateSuite/profile/coverage/CI/cloud/hardware closure."
+}

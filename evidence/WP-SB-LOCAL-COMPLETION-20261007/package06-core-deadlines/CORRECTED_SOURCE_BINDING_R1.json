@@ -1,0 +1,22 @@
+{
+  "kind": "CORRECTED_CORE_DEADLINE_SOURCE_BINDING",
+  "baseline": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "whole_owner_receipt": "ROOT_CORE_OWNER_COMPLETE_READ_R1.json",
+  "whole_owner_receipt_sha256": "5e807c7f46275c714dcb6e8c3b6f478f5f6846299510c58a2fcac60b763c6b08",
+  "files": [
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "sha256": "e4b191aef095e8f9480f1b6b7cfbbfb069196909628130b96a73260a593cea72"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+      "sha256": "ee1afc2cf94e4d8f4c9ef24edf7dc3ae559d68371db2f5668225e273a7392088"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Transports/ConsumerAgentTests.cs",
+      "sha256": "160ccfa858b1cdd4524bf9b352b9dd6042994bdaa450994617dae7716c217dfd"
+    }
+  ],
+  "plan_sha256": "40b9f4017980adea7c4bd7c4408ca39520a6ebcd38395e8ef5b4ebf4e4cc8378",
+  "native_corrected_status": "NOT_EXECUTED"
+}

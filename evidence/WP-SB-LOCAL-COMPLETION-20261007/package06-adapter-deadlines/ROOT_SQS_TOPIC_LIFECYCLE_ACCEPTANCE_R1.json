@@ -1,0 +1,137 @@
+{
+  "kind": "ROOT_BOUNDED_SQS_TOPIC_LIFECYCLE_REPAIR_ACCEPTANCE_R1",
+  "status": "ACCEPTED_LOCAL_BOUNDED_THREE_FINDINGS",
+  "findings": [
+    {
+      "id": "SQS-TOPIC-LIFECYCLE-01",
+      "severity": "Medium",
+      "status": "CLOSED_BOUNDED",
+      "cause": "Disposed topic could initialize fresh unowned batcher and accept new work.",
+      "repair": "Guard/admission under lifecycle monitor; disposed cold publish rejectswithoutlazy/provider creation."
+    },
+    {
+      "id": "SQS-TOPIC-DISPOSE-JOIN-01",
+      "severity": "Medium",
+      "status": "CLOSED_BOUNDED",
+      "cause": "Repeated disposal reportedcompletion beforefirstadmittedproviderdrain.",
+      "repair": "CacheactualdisposeTask; everycallerjoins sameowneddrain."
+    },
+    {
+      "id": "SQS-CLIENT-TOPIC-RESOLUTION-01",
+      "severity": "Medium",
+      "status": "CLOSED_BOUNDED",
+      "cause": "Missingprelookupcallerboundary andboundedrelookup fordisposed/provenunadmittedtopic.",
+      "repair": "Cancellation beforeeachlookup; max2admissions; retryonlystale-null orfirstdedicatedprewriteMarker. ActualadmittedSDKerrorsretainidentity/noreplay."
+    }
+  ],
+  "native": {
+    "original": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-original-eleven-native-r2/RESULT.json",
+      "sha256": "c20eafa4413eb60589d3484d5750e3b76ac6830cf763f474dff62410a01f80dc"
+    },
+    "fixed": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-fixed-eleven-native-r1/RESULT.json",
+      "sha256": "f110dacf1168b74e6f2a46688bdbf14516862dc840b8b5d38dbbb0ab26ebb7fc"
+    },
+    "whole": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-whole-sqs-native-r1/RESULT.json",
+      "sha256": "e6b350971c1964afee847cdf977f65c567d4d2a5ce377def1def2e317c44c56f"
+    },
+    "controls": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-seven-counters-native-r1/RESULT.json",
+      "sha256": "de5d93f0af3ccc334e9f1c782ea5951c6b92918ce2b30fc04491071c420d8d5d"
+    },
+    "post": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-post-eleven-native-r1/RESULT.json",
+      "sha256": "8146ca543acb55cda3b3a334f0bbd20307b6190f3ad1f4632b23d40b9b079c2b"
+    },
+    "application": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-canonical-four-application-r1/RESULT.json",
+      "sha256": "624936c69abba50ece9c9a0e332cf05826f3d0fc11b40f36f9bc8f3c8a8d8a3c"
+    },
+    "root_original_physical": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-original-eleven-native-r2/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "f04d86e9e9ac7bbb0891679a4de760b4600b3637c4cc317835649a8d7249273d"
+    },
+    "root_fixed_physical": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-fixed-eleven-native-r1/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "89f671fa69f4f70ee928298ec66f945f7b2fc96c55edafd73f5896c568192f1a"
+    },
+    "root_controls": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-seven-counters-native-r1/ROOT_QUALIFICATION_R1.json",
+      "sha256": "2d147a5aebe75eb81f0cbdc5836442822cf8d59b00710b68d58314ee77e9c040"
+    },
+    "root_post": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-post-eleven-native-r1/ROOT_QUALIFICATION_R1.json",
+      "sha256": "4dc28cbe5295295239d71815b6be8047582bf419a99e51e184a839766943627b"
+    }
+  },
+  "actual_counts": {
+    "original11": {
+      "first_finite_RED": 6,
+      "healthy": 5
+    },
+    "fixed11_PASS": 11,
+    "whole_SQS_PASS_slots": 428,
+    "whole_distinct_shortened_labels": 428,
+    "focused11_and_projection_overlap_whole": true,
+    "seven_counters": {
+      "same11_labels_repeated_slots": 77,
+      "first_finite_RED": 14,
+      "healthy": 63,
+      "own_fresh_PE_parse_slots": 70,
+      "actual_PDB_doc_checksums": 20986,
+      "fresh212_each": true
+    },
+    "restored_post11_PASS": 11,
+    "complete_runtime15_Fixed_Post_live_direct_byte_equal": true,
+    "lockedassets10_owner13_gen32_exact_post_proof": true
+  },
+  "canonical_files": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+      "old_sha256": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+      "new_sha256": "e2fd86c68ff15e5780d7e58c463b2a2ee88fbd6398fe47fd1667fab53705eada",
+      "canonical_private_candidate_direct_bytes_equal": true,
+      "absent_in_historical_before_manifest": false,
+      "original_native_owner_snapshot_old_hash_verified": true
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsClientContext.cs",
+      "old_sha256": "7bf23a6d364d8c33714f52d60a32b8f15f5b947e7444a5326b5efc4652e7aa19",
+      "new_sha256": "3cd1c53d27e83c627acfe8c48e05eae19eaf648b5268c6b10e5b16f8edf4d9dd",
+      "canonical_private_candidate_direct_bytes_equal": true,
+      "absent_in_historical_before_manifest": false,
+      "original_native_owner_snapshot_old_hash_verified": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsTopicLifecycleTests.cs",
+      "old_sha256": null,
+      "new_sha256": "53a98a7f667482ddca495caba137f203717d9abb3d527fc05d06f0683539aace",
+      "canonical_private_candidate_direct_bytes_equal": true,
+      "absent_in_historical_before_manifest": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "old_sha256": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa",
+      "new_sha256": "d9c16e5dc15c40ead163dc6b172343b73e92e068aadc18de78235e01454bd209",
+      "canonical_private_candidate_direct_bytes_equal": true,
+      "absent_in_historical_before_manifest": false
+    }
+  ],
+  "canonical_source_count": 6108,
+  "unchanged_other_existing6104": true,
+  "rootconfigs14_unchanged": true,
+  "frozen234_STATE_sha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+  "independent_afterapply_sha256": "7b7836bad8d161d493a7380bb0c696cbb73bceb583bd7252188e5719efb998e5",
+  "retained_independent_reports": 45,
+  "retention_manifest_sha256": "485e227d05e2729efd43bd065029b174961315a97aea0c6a5b9546f19d5c9e8f",
+  "root_personal_read": "Completeoriginal11/fixed11/post11 actualnative and strict bodies, all77 counterbody/strictoutputs, original/refinedfixedowner/test/diffs atpinnedhashes. Fresh ownOriginal10+Fixed10+counter70 PE/PDB. Whole428selected11/projection/summary personallyread, full428event ledger mechanicallyparsed. Independentfreshcompiled212 proofs reused after Rootboundedfields/new9/attrs/causalledger review; no ownfreshALL212 orhumanALL428/212 body claim.",
+  "excluded_history": "R1/R2 source/driver proposals unexecuted; firstactual R3 fixture strictfailed6analyzers andgavezero nativecredit, recoveryR4 originalactualretained. PostdriverR1 earlyacceptancearchivalfinding fixedR2 beforeexecution. No compiler/watchdog/discovery/survivor productcounterexamplecredit.",
+  "limits": [
+    "All11 focused recurwithin428 andpost;77controlslotsrepeat11identities and14 firstfiniteassertions are not14newbugs. 70parse slots are not70distinctassemblies. Lowerunreachedasserts/finallyframes0additionalcauses; source64/raw62 attributioncontrolflowonly.",
+    "Onlytwo productowners+newfixture+203\u2192212requirementappend transferred. Existingpublicsignatures/project/locks unchanged. No newcanonicalSDK run, currentglobalAPI/coverage/aggregate/provider/cloud/HW/release/remotecommitclaim.",
+    "Real SNS/SQS, cacheevictionintegration, generalpublish-disposal linearization/races andSQS/EH batching clocks remainopen. No global A+ verdict."
+  ],
+  "next": "Publish independentlyreviewedR28 docs, thencontinueall feasiblelocaltasks autonomously; EventHubselectedclock testpreparation next. Hardware/cloud unavailable."
+}

@@ -1,0 +1,884 @@
+{
+  "kind": "ROOT_ACTUAL_LOCKED_CACHE_RECOVERY_BYTE_INTEGRITY_QUALIFICATION_R1",
+  "recovery_result_sha256": "d5a5f798cdef6820a2cbed28e5dbb6153f072da521c998d0255a482852639e7a",
+  "packages": [
+    {
+      "package": "FastExpressionCompiler/5.4.1",
+      "metadata_sha256": "89609a28ace060a42c674e535935e0e992f4d3a25b22d3c7f136d0df8a410d78",
+      "archive_sha256": "1076ef1b02332739d97669a7edfd4e89fae58a9e117e9700d4aff19d34a29795",
+      "declared_files": 20,
+      "extracted_archive_equal": 18,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "MessagePack/3.1.8",
+      "metadata_sha256": "a5373936705b7fe63faac818b77ad4c0a25d1d25f85bde4dc13f3b21ce43c4aa",
+      "archive_sha256": "483d08700e3dbb0a4a042576a8325cb96961fdbd0e28891e4555e09c4c2157b8",
+      "declared_files": 14,
+      "extracted_archive_equal": 12,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "MessagePack.Annotations/3.1.8",
+      "metadata_sha256": "4d6a05eb56764645f9e22738c9732d138d27afe3f300d9b506fc0c4ff309b08b",
+      "archive_sha256": "67675b37450d898ae8270be9753d42ec7a8c8956c578c918913685eead7eb333",
+      "declared_files": 6,
+      "extracted_archive_equal": 4,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "MessagePackAnalyzer/3.1.8",
+      "metadata_sha256": "e0ff193410f95856724a21aac8be9e43bd875662ba6a7d8435a829a6c77babf8",
+      "archive_sha256": "88a508c47681cdea5f5602f6e39df140dc72308a01c6f217bba46168a88ee568",
+      "declared_files": 7,
+      "extracted_archive_equal": 5,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.ApplicationInsights/2.23.0",
+      "metadata_sha256": "4b7767f29c9832f0921fb3c10507d0f1b2f82cfe1e75cab7dfb6e2e1058c2de2",
+      "archive_sha256": "e6c7f76e0ec26598c7b1e2be1777e839c84486655e8a878fc4c655bd2e918dbd",
+      "declared_files": 14,
+      "extracted_archive_equal": 12,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Bcl.AsyncInterfaces/6.0.0",
+      "metadata_sha256": "6fee8339a813a87fb4c7ed57298b6f2361fda91a46c8aefc0e681cf8b5ef390f",
+      "archive_sha256": "e3df87fe2170a7e01f0880af59caa8f6eb380b3c40a4f282dfb43912aaf0f895",
+      "declared_files": 14,
+      "extracted_archive_equal": 12,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Bcl.Cryptography/9.0.13",
+      "metadata_sha256": "64f86d24818d4f8084a56c2a501ffb5491cee4fe867e28c4abdea2e624ed174d",
+      "archive_sha256": "855f7d3db91d1b438dbfa6af044760b0eaed4878595b6bf91106ef914e2a20ad",
+      "declared_files": 21,
+      "extracted_archive_equal": 19,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Data.SqlClient/7.0.3",
+      "metadata_sha256": "25221059a3d92f2cbc6bdcdf8890a75123cf299237300c50ce3b7f1d2ac9289c",
+      "archive_sha256": "db1a1bbb0db89041e34b766b6cb5e13af52a2eb8f2e3f5e95252feb8f6715cc6",
+      "declared_files": 66,
+      "extracted_archive_equal": 64,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Data.SqlClient.Extensions.Abstractions/7.0.3",
+      "metadata_sha256": "1719ebfaa2b70d21f3536ef139dae282b07a0b50e39eacdc8e4b88ee470125a7",
+      "archive_sha256": "203d776e341daa7f8d7e3bce1527ea07128717123e3d4bc2f48bd13c88b14d66",
+      "declared_files": 8,
+      "extracted_archive_equal": 6,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Data.SqlClient.Internal.Logging/7.0.3",
+      "metadata_sha256": "c774ca0fc9da6f21a3941001af39c775110cd76fd9955ecfabbbed78c4b8b0de",
+      "archive_sha256": "94369a600b5a86d805c07577eef89f31e1dcedbd5970cd7ff6893d5aeb04805e",
+      "declared_files": 8,
+      "extracted_archive_equal": 6,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Data.SqlClient.SNI.runtime/6.0.3",
+      "metadata_sha256": "a0b1657f20e8d2b7192b16f7ab5f03865c2d98477c995b51df9706c769450ae6",
+      "archive_sha256": "b9df07c20101398f77cf16b209afefafcc7190d6ac0b6e244e81a2fed4c96f5f",
+      "declared_files": 9,
+      "extracted_archive_equal": 7,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Data.Sqlite.Core/10.0.12",
+      "metadata_sha256": "2c99bdd661ddcff3a037d33887e1e4d803f681f76076e205bbda57c23dc128d6",
+      "archive_sha256": "5e8ed353006dadf55d5c7f56d237321c20bb10c786262e6b25526756e1036332",
+      "declared_files": 10,
+      "extracted_archive_equal": 8,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.DiaSymReader/2.2.10",
+      "metadata_sha256": "de01cd82df59f1878fed88fdf7985e815690203d08d53649f212745229080db4",
+      "archive_sha256": "75d3245bbb06e45a445120db870d51f9de123dbe8fe5422c2288b9b5d3f36cfe",
+      "declared_files": 11,
+      "extracted_archive_equal": 9,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.EntityFrameworkCore/10.0.12",
+      "metadata_sha256": "32d3fcd76a179ddfc7d5c1e0e6e9a8f149911aa92183091891d92e694dba9dea",
+      "archive_sha256": "7e9f98370ce04178d704d1bc6a3b86bda1c254230f1e487e4fa666f2cb8323f5",
+      "declared_files": 9,
+      "extracted_archive_equal": 7,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.EntityFrameworkCore.Abstractions/10.0.12",
+      "metadata_sha256": "2f78c18a471ad993a20b60f1729729da9639d2e8e1271031f99ef636030373b7",
+      "archive_sha256": "6b5d47aec9ac71ff5cf4248210cbaa810bd4031bf8fabc68d5440a8aad3a67d1",
+      "declared_files": 8,
+      "extracted_archive_equal": 6,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.EntityFrameworkCore.Analyzers/10.0.12",
+      "metadata_sha256": "adb7f786a07c1594af14eba2d76ccdcbc228d821dd4138566e94ab2c463fc6e0",
+      "archive_sha256": "cf3991f30bc2fc2bfc08c372987fa5eec4dfd9906eb1871233c4172f829b2714",
+      "declared_files": 7,
+      "extracted_archive_equal": 5,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.EntityFrameworkCore.Relational/10.0.12",
+      "metadata_sha256": "b5da277417165396d5040e870ee3cfbb88f65c7bd6440990f074231320b7792b",
+      "archive_sha256": "993a89827edc7a0d36d3861e7e965af4f345717f02154841fc3f34ee087c5792",
+      "declared_files": 8,
+      "extracted_archive_equal": 6,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.EntityFrameworkCore.Sqlite/10.0.12",
+      "metadata_sha256": "41dd784e46a98f44ed2f378f44ef98833399a55ecfdcf54b40ccafeac91f8368",
+      "archive_sha256": "914345c27b9294e45314670ac1ff3510d71123c894e6df3a910b0313d3b9aa07",
+      "declared_files": 7,
+      "extracted_archive_equal": 5,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.EntityFrameworkCore.Sqlite.Core/10.0.12",
+      "metadata_sha256": "e580022427e2c2f6f0d9d291c0d26936e80d469db816fbf990f1356498d82c86",
+      "archive_sha256": "bc684b844caec77c45fe6435654b4ea91d6d665a55f9abf8f331710461d2bf31",
+      "declared_files": 8,
+      "extracted_archive_equal": 6,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.EntityFrameworkCore.SqlServer/10.0.12",
+      "metadata_sha256": "17bbb958b806a8b8dfdeb8663f605e10f70b022e280c3a81e124730387589846",
+      "archive_sha256": "cd7c8bb1dbd15eea88a909625d0ad66e2def9dc073cc257438ff924312e0bfc0",
+      "declared_files": 8,
+      "extracted_archive_equal": 6,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Caching.Abstractions/10.0.12",
+      "metadata_sha256": "12ba17258e62a8e140817491c86d9573fe402f212574f84e06779b2fed9e83d8",
+      "archive_sha256": "ee944e3c5912ffc6193624aab6e75d28a449f1d4617cbc92860db2c058c616bc",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Caching.Memory/10.0.12",
+      "metadata_sha256": "5d6cd0bfb3dbdde784e99d8191a23f5078173bc32ab713835bcc8cb55909c0bb",
+      "archive_sha256": "79eb1513cf083ed4bfa773621c59203a8225c750378095d71165d6823012d8ca",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Configuration/10.0.12",
+      "metadata_sha256": "6a8eb8d2912a041d0b84483ac86017300a354687795aed1bfa6752106da1cac6",
+      "archive_sha256": "d06de9d376ee3d28b0fec645b396993a3eb7b04fbc1ef7091654a08d9e1e72cb",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Configuration.Abstractions/10.0.12",
+      "metadata_sha256": "1319a9405b8d95a61cac95d8354dfc21e46248abd089c25b1a3a0038f99b8dee",
+      "archive_sha256": "f7397df285cb2a34c88a6929710c0b8ed84913382e2ae708f734060bc091ce51",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Configuration.Binder/10.0.12",
+      "metadata_sha256": "f13950d3f06f744dab6b04ebb987c1ad89ee713145686df08877bb03429695ef",
+      "archive_sha256": "fe267b1321b7e183183ed3042071bcaf5e3ad244a83e1d27fb055071367eba48",
+      "declared_files": 33,
+      "extracted_archive_equal": 31,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Configuration.CommandLine/10.0.12",
+      "metadata_sha256": "14aee9744d797486c16deede508fdb10837080a1c3d4d8f54eb0ba2e7ee9d326",
+      "archive_sha256": "638a357b5c95fc75665de36641fdb6d5be81352d1205b50fb8307c23a7ed09aa",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Configuration.EnvironmentVariables/10.0.12",
+      "metadata_sha256": "f17f78569b781e35fe4e641eb9f1fd17a543e7f20c0a4810475f493f505ec061",
+      "archive_sha256": "b789356d63f3d533430487b310222bf5eb89869c28e7a7bba1c9edaaf1209d66",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Configuration.FileExtensions/10.0.12",
+      "metadata_sha256": "c7b2eea16a93e0bd0c4cadf91fc96e77c1e6205b8af25d98e274b8e2d579c960",
+      "archive_sha256": "010898cf57299c9e3b1950db0ca798b553bb753273c846d008d3e0c9f25f3f12",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Configuration.Json/10.0.12",
+      "metadata_sha256": "2a3937b3fd37ddcc5c5c123b8291590021f436d323b1dfd4ac28f08dda260263",
+      "archive_sha256": "4516d4c2cb973baf931e0414bf9d87497d4775bd950eafbd50b730a3c1233f9f",
+      "declared_files": 24,
+      "extracted_archive_equal": 22,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Configuration.UserSecrets/10.0.12",
+      "metadata_sha256": "cbcaae4cb4153e5a3e8343430d274746f74a03bf401d8f32a47e605b04dd73ad",
+      "archive_sha256": "f190687edaab77cca7d82fd08655862ddb8cb0bb17a946066f31eeac03b39ff8",
+      "declared_files": 26,
+      "extracted_archive_equal": 24,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.DependencyInjection/10.0.12",
+      "metadata_sha256": "4803ba1e4c0af2d8c91fd8ba7e19fe9725de0cfffa8d26b7115d43de80ef2b07",
+      "archive_sha256": "b979c630191f6c48b548cad866d8224a0ed0e6e7be0aba87f454b57597b63779",
+      "declared_files": 24,
+      "extracted_archive_equal": 22,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.DependencyInjection.Abstractions/10.0.12",
+      "metadata_sha256": "b12e1e728913a60e837e057fc48bddc9c683e8016b10a6cf6d99a03cc47ccb32",
+      "archive_sha256": "4664fab0ac4b56b8935333f59ee9e7801c8ab96de7c57cb3b6eb8192a5a61c55",
+      "declared_files": 24,
+      "extracted_archive_equal": 22,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.DependencyModel/10.0.12",
+      "metadata_sha256": "ea008a63a5431aec9e5c6f700442151a7d304ab9577c0cb9644ef7f04480eca0",
+      "archive_sha256": "b47be2500b09c9f1b8bc7b193eaaa7a515e8218b0dfb5a43b03f45b2ceb317ff",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Diagnostics/10.0.12",
+      "metadata_sha256": "233b10e3b528de91eb2a474030fc1211210b24a90146a68545dedbed764b936c",
+      "archive_sha256": "6edb9246a77906a0bb91bb63175c4f70cdf7b49328d3ceaae6e6c4c7bacf89ea",
+      "declared_files": 21,
+      "extracted_archive_equal": 19,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Diagnostics.Abstractions/10.0.12",
+      "metadata_sha256": "05a09eab5c514b909e76c94727536f8b2580055995a361c65518546bc11c4987",
+      "archive_sha256": "5ece1e660e3f707cb2d8bda190329406434b5faab45d5ee6ea8e51c93c744ec0",
+      "declared_files": 21,
+      "extracted_archive_equal": 19,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Diagnostics.HealthChecks/10.0.12",
+      "metadata_sha256": "ca3b0e3982d3a4b2ff9ed1c4fc85b60828b7e78973f14691be0a0371626f0c12",
+      "archive_sha256": "8aa7164a9800fbc1bff7ef624093780a2a588d93bd066cd590b32ab08f4bb49c",
+      "declared_files": 12,
+      "extracted_archive_equal": 10,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions/10.0.12",
+      "metadata_sha256": "667069f9fd1d50630374e4a96bb4b7e5f31d8eac3c516a462619f74913c59304",
+      "archive_sha256": "9f2f201db6ccc5cb6c2c2f724301652f8c59be4a12a900a9a20adf850e806771",
+      "declared_files": 12,
+      "extracted_archive_equal": 10,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.FileProviders.Abstractions/10.0.12",
+      "metadata_sha256": "99441cb22c84b7481d63aee55e5338030d613f4dde6bbbd5b26104044802e388",
+      "archive_sha256": "49dad2381a98e644f68b711106f06c01db62c7fc3b4b1e79799ba770d0d4d9e7",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.FileProviders.Physical/10.0.12",
+      "metadata_sha256": "02f93374a366a5c6f70657b7a240c78e9e11f028c1b2a2cb32b1ff0dd3969659",
+      "archive_sha256": "4a6ffdf4541f6ff2612fb4f8eb201bf795b47336cc9df488ed8cf3499e4e4694",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.FileSystemGlobbing/10.0.12",
+      "metadata_sha256": "9c77b8cde45b138001462fac9078eab35247b674160a98bbfaab0ccef4a8e880",
+      "archive_sha256": "8630d8878798bea4530828dafa3a4ec868b528004c95eaf37102b2ab95956d4a",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Hosting/10.0.12",
+      "metadata_sha256": "c1dd5da405e57f2685b124d32384103f5a880e0184cfde1a96fea6392f8450e2",
+      "archive_sha256": "c840afe710ae4a56ed19bf2e47dcca8c24b96e434c8b63442dd3e772cb564767",
+      "declared_files": 24,
+      "extracted_archive_equal": 22,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Hosting.Abstractions/10.0.12",
+      "metadata_sha256": "d51215cb247351c28d596e0b98adf10f68d821be89d9898c08570160fbb96d62",
+      "archive_sha256": "535354f24c323122edbbc3a090f7c00e201effb88ab10db043e537a2023da70f",
+      "declared_files": 24,
+      "extracted_archive_equal": 22,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Logging/10.0.12",
+      "metadata_sha256": "00efb008413ca19e9fb8da034dbafd42f06b18c7231099e09949e8ab5be78658",
+      "archive_sha256": "539919dc90956d273ac67d24e99ae7d92a893848b6efd368c1d0e61e5bc955a9",
+      "declared_files": 24,
+      "extracted_archive_equal": 22,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Logging.Abstractions/10.0.12",
+      "metadata_sha256": "89a0bb0e5822e61bbf67234a40eebb822b0a93388a9dfcd657612af7c592cf76",
+      "archive_sha256": "34eaaa60afb61ed3d86e2e2669eae0c690d0e237e8a7066ba5bdb45a386709e7",
+      "declared_files": 65,
+      "extracted_archive_equal": 63,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Logging.Configuration/10.0.12",
+      "metadata_sha256": "3c7301bd98eba3a910bb6d5e51bb069edbc37c493b355f6937b39f5907ab3bc5",
+      "archive_sha256": "41b895b70fa521fe2d3d8c356943f2d2432594dc5b78dee1601ce79ac40b9bb7",
+      "declared_files": 21,
+      "extracted_archive_equal": 19,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Logging.Console/10.0.12",
+      "metadata_sha256": "adbfb0b6c7eb395d226b394dd6765dae29ccd8e57262acce2300b6d45a0e70ab",
+      "archive_sha256": "231e6ad666ce745e0ed4aff26143675461bcfd6722bf3c5bca2457b7e1acba83",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Logging.Debug/10.0.12",
+      "metadata_sha256": "da85dc3277d63e8edee043e29c47a86135e3a233f3cc16af12540507a515a67a",
+      "archive_sha256": "19fbbfe99586502a5d05043b3a7c6b6e7b6bcccd94788c721dc5769e50411354",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Logging.EventLog/10.0.12",
+      "metadata_sha256": "6e956ef5f536b1d35d37f61ef5124b711a4e7572365e167fae86ab2fe6a1e359",
+      "archive_sha256": "856713368f01def91709dbee019eb0634852a5bbd6457198d960653f54875bb1",
+      "declared_files": 21,
+      "extracted_archive_equal": 19,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Logging.EventSource/10.0.12",
+      "metadata_sha256": "d0db390e5e5d0df306dd963b84206c3dff4196a7292f285440db00dbc022e94f",
+      "archive_sha256": "ee969e14349f4d09b06839b3b0e709fea38e88186609c29303c3344a3ebd60e4",
+      "declared_files": 21,
+      "extracted_archive_equal": 19,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Options/10.0.12",
+      "metadata_sha256": "964168755ab1f152b59d6fbc67b6863fa21da7726a9fa05155d155d061da3e40",
+      "archive_sha256": "eec90916f11d84ea41e942b59cbf82f1e32726d87e99be7ee2b2424e31570ff7",
+      "declared_files": 39,
+      "extracted_archive_equal": 37,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Options.ConfigurationExtensions/10.0.12",
+      "metadata_sha256": "069d0516be64d96e9a05ccb4f502d4481f85c0a427549ec2edd08cd28e8be73a",
+      "archive_sha256": "71cbb9b3b179ee51d5416b3b8602d7109bdfc61ae741c0c3903fe4959e2ed7e1",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.Primitives/10.0.12",
+      "metadata_sha256": "c66f623e9d1dae95f1f7d74988513ce1f56b93b3445210271b3388e702b5f28c",
+      "archive_sha256": "97ee742afe0cb0634558262f925cc112b5882d09db8d169575e559031da63922",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Extensions.TimeProvider.Testing/10.9.0",
+      "metadata_sha256": "e84f964e36f5dbb47a372f7afb3f0c20fed86461b005a310b89e23e9024f59ef",
+      "archive_sha256": "459d9007395900435d33c5a7e4d950450f217afb47729b1f460d81cee12cea4a",
+      "declared_files": 16,
+      "extracted_archive_equal": 14,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.IdentityModel.Abstractions/8.16.0",
+      "metadata_sha256": "72066a29b848bc18133448eddc47a7860f962e534c4f096f3e76d0764b97647d",
+      "archive_sha256": "3a94c54294ed83503c2356c120eaaffe7f69c185d3ab3308f192d72d90ed8b9c",
+      "declared_files": 19,
+      "extracted_archive_equal": 17,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.IdentityModel.JsonWebTokens/8.16.0",
+      "metadata_sha256": "192d1465b06afdd5cb220ab2fb41e62d91a2745b5681dfc12e5827af21aa2ce4",
+      "archive_sha256": "09cb5fda2b885cb324953b82bf35afef6d6fda61ecd07101038ec1a802a1a7d2",
+      "declared_files": 19,
+      "extracted_archive_equal": 17,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.IdentityModel.Logging/8.16.0",
+      "metadata_sha256": "3875df37463608afb562c7253247606525ad79b56b7b6af7df3013098bcf1a6d",
+      "archive_sha256": "df9e6efb72c89ff41f8821c53170fede2a5d4539db5cb0103730b8b161056a94",
+      "declared_files": 19,
+      "extracted_archive_equal": 17,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.IdentityModel.Protocols/8.16.0",
+      "metadata_sha256": "0bc881e04b27bf465d64e38726706b6d5e3a46bc4c63a4c16cd392e3fdca7007",
+      "archive_sha256": "d5aad600e442a38a20cd8a611a491d6a62e29e5d93f44ba1bb804075ff79f9db",
+      "declared_files": 19,
+      "extracted_archive_equal": 17,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.IdentityModel.Protocols.OpenIdConnect/8.16.0",
+      "metadata_sha256": "351f38bc2d706bc236cde140811f23aeb1b0fc0ca206734c223db389a1e101d5",
+      "archive_sha256": "4a093037eb801d0466d552a825dadb88c5c135af789d6acbd8fbf4055261faa6",
+      "declared_files": 19,
+      "extracted_archive_equal": 17,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.IdentityModel.Tokens/8.16.0",
+      "metadata_sha256": "6862317c37f70cb42e7f69b72ef95d50f7eb14464ac8143b75fa492a3ad34984",
+      "archive_sha256": "eacf192e72b0df65baf8a6e76a10957b5bfd633a687a69e91cd43755b1525783",
+      "declared_files": 19,
+      "extracted_archive_equal": 17,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.NET.StringTools/17.11.4",
+      "metadata_sha256": "2c98a0e8b37cb0519f6f7bc6cc05f7bcba61f2e89dd00fed135159e963b37b6a",
+      "archive_sha256": "9567f3637e5643e88a4bd4e9bb3b434e58e017d088391845845126d29d5d5411",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.SqlServer.Server/1.0.0",
+      "metadata_sha256": "09ef4233f27c4bfaab5cbd4a683ad2a9daa2a4bd443ce025a506a3489277c127",
+      "archive_sha256": "9b1fe2a8798133003c525a2dd27e9815520ab14d53c7bab84ebbbb3128db1204",
+      "declared_files": 11,
+      "extracted_archive_equal": 9,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Testing.Extensions.CodeCoverage/18.10.0",
+      "metadata_sha256": "be48cfffa814cd3248b26886f4dbc99ad1dc303235b11f02d674b7f8a8637565",
+      "archive_sha256": "c9cbd48ad1a3de99efc17661ee2ced211ebe68f522cab4f4167702fdda57f9c2",
+      "declared_files": 116,
+      "extracted_archive_equal": 114,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Testing.Extensions.Telemetry/2.3.3",
+      "metadata_sha256": "00a0e42d8d003b7619410871cafb0b8c09f7327c161780f623e1f8bb28eab16a",
+      "archive_sha256": "0e8a35200c270e56eaca0d90ea9f3646e618010ed59099d8e0f9fd30366a08eb",
+      "declared_files": 61,
+      "extracted_archive_equal": 59,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Testing.Extensions.TrxReport.Abstractions/2.3.3",
+      "metadata_sha256": "465fd17741313e75504bf6194e215c578a2e63d320732855cc98316f3fc7a281",
+      "archive_sha256": "6008074b70742f046f2077abdbce50b92ad808ee45712a405daccbe693470786",
+      "declared_files": 15,
+      "extracted_archive_equal": 13,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Testing.Platform/2.3.3",
+      "metadata_sha256": "f62139b1bce7e62cda48fa497a408e534dd5ee22c06a0f95ee6999b6fbba9547",
+      "archive_sha256": "b07d00cab5f49f2d0981592044baef3d720a079e6941601c7790044584b3174a",
+      "declared_files": 68,
+      "extracted_archive_equal": 66,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Testing.Platform.MSBuild/2.3.3",
+      "metadata_sha256": "98e44cdc2a3dc50d9b4375028433dfb8e3a164e3d36eb66e27a2c4fbce662c40",
+      "archive_sha256": "25e537fbc39e6ce0c0da4e8a4a8ae6d8fee98ae41945d4b586124a03075f4890",
+      "declared_files": 97,
+      "extracted_archive_equal": 95,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Microsoft.Win32.Registry/5.0.0",
+      "metadata_sha256": "dc31f4ac10b764a6411f5615758c75c114a55215cfbd5547630bde3c02663d1f",
+      "archive_sha256": "f64ca53c67ca65ce7cc85a8d29aefbb2da2672836731e1115e8cd62730dc5080",
+      "declared_files": 37,
+      "extracted_archive_equal": 35,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Npgsql/10.0.3",
+      "metadata_sha256": "785543b0e39950fb4d6e2fc8b8ee202194f2c037818e79af634b3fb27f1c894b",
+      "archive_sha256": "75d0970923a8c9fcbbd37e4ebe72fee0b10362a1e36723e86777df1b6728316d",
+      "declared_files": 12,
+      "extracted_archive_equal": 10,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "Npgsql.EntityFrameworkCore.PostgreSQL/10.0.3",
+      "metadata_sha256": "9c2ff4116df0f5ed8ea72a6423681fef03919dfd758c11c74686930ddfb20ab2",
+      "archive_sha256": "d889af8847c9db50e4ee98cb2511429dd8b97ea0cb3a5e20926b46c47dcee3c4",
+      "declared_files": 8,
+      "extracted_archive_equal": 6,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "SQLitePCLRaw.bundle_e_sqlite3/2.1.12",
+      "metadata_sha256": "9c15574a1bd92804918d889759490101bddb713a1c29c7dfae0bf89c44ad101d",
+      "archive_sha256": "a9a06e6b5a313f6ef3675f91997d012adeffe8aa9e1ffd69ed46a4e685b054e1",
+      "declared_files": 11,
+      "extracted_archive_equal": 9,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "SQLitePCLRaw.core/2.1.12",
+      "metadata_sha256": "1bde3bddb62b0881dd6c38a924ac0adb247726a663309e6a7760be5326d3c103",
+      "archive_sha256": "af06904138ffa6dc95a599133d64d254716d6facc7543a6b3b910793dae9dca5",
+      "declared_files": 5,
+      "extracted_archive_equal": 3,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "SQLitePCLRaw.lib.e_sqlite3/2.1.12",
+      "metadata_sha256": "337dc6612c3e5b7a9bc6c4c9d511e65b4d9328f391d7972b0b8015ac47d0b5f9",
+      "archive_sha256": "4a22c02ffcf489792903cf263def9fce27739716883f965f0b5eeff1637430ac",
+      "declared_files": 36,
+      "extracted_archive_equal": 34,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "SQLitePCLRaw.provider.e_sqlite3/2.1.12",
+      "metadata_sha256": "e910f36c5ec7066ccd9d526bc484e5bbcef5a67c8470b1a79e1c2e49ff4c14f1",
+      "archive_sha256": "df2b3271992e5d719186c4671e3cf4f8658097c154cbcd41494ab594c5997595",
+      "declared_files": 7,
+      "extracted_archive_equal": 5,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "System.Configuration.ConfigurationManager/9.0.13",
+      "metadata_sha256": "6ff13982b8955c2bf2acb5b5eb047c10ba66b16de5f19d04aba22a1ca8cef000",
+      "archive_sha256": "96a85694d5d66c33d23e826b93f1485d9dcd71971a2f481c018838135d7ff71d",
+      "declared_files": 21,
+      "extracted_archive_equal": 19,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "System.Diagnostics.EventLog/10.0.12",
+      "metadata_sha256": "9111b0684b526beb30d53f2f5e38f01d049d96585eed62e139ace338f8df82fc",
+      "archive_sha256": "da77128a9f15980d115128c98a1b08b3fea67e3f2e54387e4029e0e57e3023c5",
+      "declared_files": 31,
+      "extracted_archive_equal": 29,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "System.IdentityModel.Tokens.Jwt/8.16.0",
+      "metadata_sha256": "ed8f15366054891cd7ad2b001fca14b910b6eea7d37771742fe18536143f0227",
+      "archive_sha256": "c0212450f9ca0e33bb2a97ebd6fa6be4872f93af6014780459c48b6c5b43ea98",
+      "declared_files": 19,
+      "extracted_archive_equal": 17,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "System.Security.AccessControl/6.0.1",
+      "metadata_sha256": "ad5f7b31761c058b749f3a61542164f7d19417fec327d3be5155e467239a4568",
+      "archive_sha256": "462e26f796417e8a4350655a85bbd4233b94cbd0f7150c1c5e9acfd88e885141",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "System.Security.Cryptography.Pkcs/9.0.13",
+      "metadata_sha256": "f529ce6855b2b54a39bdbb94617596d339f5451a6bc38e400311768f98e68c53",
+      "archive_sha256": "cb8f84f73fcd1687e30d4f5679739dbe522f8183ec671bc1a5d9d4b7f73c98c4",
+      "declared_files": 26,
+      "extracted_archive_equal": 24,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "System.Security.Cryptography.ProtectedData/9.0.13",
+      "metadata_sha256": "4496a19c4ed3007780bfc23cb96fb33c71aaea600117a81db00b878c52d6fbbd",
+      "archive_sha256": "1d220a909755480edc8838c78f98dcafc0b23096a755d8b16630e68c6058b14b",
+      "declared_files": 27,
+      "extracted_archive_equal": 25,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "xunit.analyzers/2.0.0",
+      "metadata_sha256": "c7294f2c07a895c50ea4b1a761b3d56c4557744ad791416732f3d45c6f7006a2",
+      "archive_sha256": "9d040d284a972ac50dc6b149cbd7f76933f30b03e9214903b1dcd7d117b308af",
+      "declared_files": 10,
+      "extracted_archive_equal": 8,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "xunit.v3.assert/4.0.0",
+      "metadata_sha256": "349d4db00f413116025b61196f9a8babcf7284df412e835982b83f308a22bf03",
+      "archive_sha256": "58e041a132ba8092aa78779616fe953ae2e5ec9102e2b480bf6776a9297d51d1",
+      "declared_files": 10,
+      "extracted_archive_equal": 8,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "xunit.v3.common/4.0.0",
+      "metadata_sha256": "6e485dbdcb20454974cf89172ba05c5da99661ad60b7d51a3c3ead03b394ae78",
+      "archive_sha256": "165a769dce914cf894744c76c641d84ec12687d366a2823bf11021d4c471f25b",
+      "declared_files": 8,
+      "extracted_archive_equal": 6,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "xunit.v3.core.mtp-v2/4.0.0",
+      "metadata_sha256": "a5713e4a0fe719c719b50f7225cf4487eb9c614c52185341ba3e5f7f0264dfdf",
+      "archive_sha256": "6a3f3397f6b0104e2fb55e0f8bd97d409210525eb3c73d497efd716a29dcc4b2",
+      "declared_files": 22,
+      "extracted_archive_equal": 20,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "xunit.v3.extensibility.core/4.0.0",
+      "metadata_sha256": "d7f4a145dc798093b7a134ca6fe4a93c6f647a88b2f35a9d7b0b3bb0425e29a4",
+      "archive_sha256": "6e489a237720169f91ba59b0d801495a28cdc956399995afa69f7aaea0992c11",
+      "declared_files": 8,
+      "extracted_archive_equal": 6,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "xunit.v3.mtp-v2/4.0.0",
+      "metadata_sha256": "5c7786f03521860b9d2ffe654edabaf9dd662c89a214436cb582bc75b1ca88d9",
+      "archive_sha256": "b131a89b59141ce5dd1ad89a736e0e2e959a44d5951d596e548d0c7a31825507",
+      "declared_files": 8,
+      "extracted_archive_equal": 6,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "xunit.v3.runner.common/4.0.0",
+      "metadata_sha256": "f85afe8951aec19dc9a1ba5e0e880888785a7d4fe626d36f937672565d40b850",
+      "archive_sha256": "328c2a49436464bf54c40d5e544922f72252b9bc8dbcd322dfead5e52420bb94",
+      "declared_files": 8,
+      "extracted_archive_equal": 6,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    },
+    {
+      "package": "xunit.v3.runner.inproc.console/4.0.0",
+      "metadata_sha256": "80ebd5dcbe4fa8b995c7952c3e9c8a6cac1ebcda2f2a26fe706f39bf77bad49d",
+      "archive_sha256": "1446b39b1c6f43662993d71a53d51597b6ff5849f4f9369e42a0f5808f7189a5",
+      "declared_files": 10,
+      "extracted_archive_equal": 8,
+      "archive_crc_closed": true,
+      "contentHash_matches_frozen_assets": true,
+      "metadata_exact_historical": true
+    }
+  ],
+  "packages87": true,
+  "checked_archive_extracted_files": 1721,
+  "all_frozen_metadata_sha256_exact": true,
+  "all_declared_files_present": true,
+  "source6104_private6105_config14_assets14_exact": true,
+  "EventLog_two_preexisting_DLLs_byteexact": true,
+  "Messages_DLL_sha256": "8f3def30d41d85e2bd87b2d2e7542d49d625f0b4d96a6dc9b03e0f49bd59b8ef",
+  "limits": "Actual cache repair only. Full rawrestore/emptyerr personallyread;87package metadata/archives/extractedbyte comparison mechanical. ZIPpath comparison normalizes double separator (MessagePackAnalyzer CodeFixes) and case only; no bytes changed. Signedraw SHA512 differs from NuGet normalizedcontentHash; no cryptographicsignaturechain proof. No native/mutation credit and no attribution of missingfiles cause."
+}

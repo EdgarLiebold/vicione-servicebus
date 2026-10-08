@@ -1,0 +1,168 @@
+{
+  "status": "READ_ONLY_C4_R2_FIXTURE_TEST_ORACLES_AND_ROOT807_PROVENANCE_NO_BLOCK__NO_NATIVE_OR_FIXED_PRODUCT_ACCEPTANCE_FROM_THIS_REVIEW",
+  "reviewer": "/root/continuation_adversarial",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C4_TEST_ONLY_ORIGINAL_FREEZE_R2.json",
+    "sha256": "1bda277fe87187178a7b45833badff8dd3e1c34d67069ef6b5fca4d3d88888ee",
+    "all_four_immutable_original_snapshot_hashes_match": true,
+    "source_sha256": {
+      "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableSnapshotCadenceIsolationTests.cs": "d3cd40063b38b0f5a1e687c27463f299d531890f314c37274d08b71bd3f8c345",
+      "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "8637f1a9bf688ee55f9a0fba10c723e6f7a9ebe0635f83396759d3493ee17a81",
+      "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+      "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs": "25d8ef5caa05e004b191561e29d557ee865c7d28b645ea853826b8b0d6101f6a"
+    },
+    "current_O_test_and_requirements_unchanged": true,
+    "product_reference": "Original immutable R2 snapshot. Root authored corrected current productpair after this reviewer read originals; fixed source review assigned separately."
+  },
+  "research": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C4_SNAPSHOT_RESEARCH_PLAN_R1.md",
+    "sha256": "0d0965cc30df17bb4629f5d6451197788b069bdae58a27418f18421a8c6dc136"
+  },
+  "read_scope": "Whole original fixture289 +exact sole using import successor => whole current290; whole original service191/telemetry100 body and public delivery-source/composition. Only unchanged exact canonical test/requirements/currentCore hashes reused.",
+  "root807": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE807_STAGE_C4_READ_CLOSURE_R1.json",
+    "sha256": "6d403612f37f2f01467f5db2d75c7aeda7f56974a74c57f62a12ccf7fe3dd476",
+    "all807_current_test_owner_hashes": true,
+    "800tracked_plus7_explicit_new": true,
+    "prior806_805_same": true,
+    "84same_shared_current_prior": true,
+    "whole_current_test290_hash": true,
+    "linecount_convention": {
+      "splitlines": 290,
+      "newline_count": 290,
+      "split_newline_including_terminal_empty": 291,
+      "receipt_stated290_correct": true
+    },
+    "reviewer_previous_mistake": "Reviewer initially echoed291 from earlier parent message and incorrectly suggested290→291metadata correction. Independent splitlines count and Root clarification corrected that inference; no receipt errata or finding.",
+    "credit": "Root authored/read priorwhole289 andsoleimport successor; no reviewer reading transfers to Root."
+  },
+  "requirements": {
+    "ordered4697_prefix_same": true,
+    "two_exact_appends": [
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "Snapshot_PreservesCompletedBatchAsync",
+        "testType": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests",
+        "variantKey": "durable-snapshot-optional-utc-preserves-real-batch-result"
+      },
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync",
+        "testType": "ViciOne.ServiceBus.Tests.Monitoring.DurableSnapshotCadenceIsolationTests",
+        "variantKey": "durable-snapshot-unrepresentable-successor-is-bounded"
+      }
+    ],
+    "total4699_unique": true,
+    "mapping_precision": "2 attributed theory methods cover6 native cases. Remaining5methods expand7 supplemental controls with no RequirementCoverage attribute. Current verifier intentionally scans attributed methods; projection internally exact, no all13 requirement mapping claim."
+  },
+  "case_inventory": [
+    {
+      "method": "Snapshot_PreservesCompletedBatchAsync",
+      "cases": 4,
+      "original_predicted_red": 2,
+      "original_healthy": 2,
+      "finite_oracle": "Real claim/dispatch/mark result/id/lease/time/token and actual storedcount/bytes0 BEFORE finite Null; preserves actual true/false batchresult and exactsnapshot/failurecounts."
+    },
+    {
+      "method": "Snapshot_PositiveMaximumIntervalDoesNotEscapeOrRepeatAsync",
+      "cases": 2,
+      "original_predicted_red": 2,
+      "original_healthy": 0,
+      "finite_oracle": "TimeSpan.MaxValue accepted positive; real physical record removal and mark/dispatch counts BEFORE finite Null; one snapshot then only requiredclaim UTC acrossthree immediate batches."
+    },
+    {
+      "method": "Snapshot_ExactMaximumDeadlineIsObservedOnceAsync",
+      "cases": 1,
+      "original_predicted_red": 1,
+      "original_healthy": 0,
+      "finite_oracle": "Empty realstore starts MaxValue-Interval snapshot1 then exactMax snapshot2; no representable successor must suppress repeated snapshot and optional UTC while preserving requiredclaims."
+    },
+    {
+      "method": "Snapshot_FailedObservationReservesCadenceBeforeRetryAsync",
+      "cases": 3,
+      "original_predicted_red": 3,
+      "original_healthy": 0,
+      "finite_oracle": "Postclaim actual one-shot optionalUTC fault or explicitsnapshotTask fault;3 interval-minus1tick retries onlyrequiredUTC, exactticknextattempt. OCEinject carries normally noncancelled testtoken; no shutdowncredit."
+    },
+    {
+      "method": "Snapshot_SlowDeliveryPreservesMinimumObservationIntervalAsync",
+      "cases": 1,
+      "original_predicted_red": 1,
+      "original_healthy": 0,
+      "finite_oracle": "Actualdispatch advancesUTC4s/realmark4s/removal; observedreservation9s wins over anchor5s, nooptionalread at5 or9minus1tick."
+    },
+    {
+      "method": "Snapshot_BackwardsObservationDoesNotShortenReservationAsync",
+      "cases": 1,
+      "original_predicted_red": 1,
+      "original_healthy": 0,
+      "finite_oracle": "ClaimanchorEpoch beforepostclaimbackwardsUTC-3; reservationmustremain5s, notshortened2s. Snapshot1/readgate at2 before actual5s snapshot2."
+    },
+    {
+      "method": "Snapshot_RequiredClaimClockFailureRemainsAuthoritativeAsync",
+      "cases": 1,
+      "original_predicted_red": 0,
+      "original_healthy": 1,
+      "finite_oracle": "Actual requiredpreclaimUTC selectedsameexception object;zero claim/snapshot/mark/dispatch; notoptional success."
+    }
+  ],
+  "all_method_and_case_count": {
+    "methods": 7,
+    "theorycases": 9,
+    "facts": 4,
+    "total13": true,
+    "original_prediction10_red3_healthy": true
+  },
+  "assessment": [
+    "Real in-memory backend owns admit/claim/mark physical state, wrapper delegates actual storage; independent verification calls inner snapshot directly so optionalcounter does not inflate. Claim validates controlledUTC/batch16/lease2min/token, dispatcher validates actualcontext/id/completion/attempt/token.",
+    "Optional fault flags set AFTER requiredmark for one message or AFTERclaim for emptybatch, isolating postworkUTC from requiredstoreUTC. Physical storedcount0/bytes0 and exact requiredargs/results precede first finite error. No hidden fakebackend or injected final state.",
+    "MaxValue test empty realstore avoids arbitrary required lease overflow; positive TimeSpan.MaxValue tests genuine optionaldeadline arithmetic after realwork. Exacttick/readcount cadence assertions catch snapshot suppression as well as unnecessary optionalreads.",
+    "Slowdelivery and backwardsclock cases independently constrain observedUTC promotion and no-shortening claimreservation. Sequential directdriver cadence only; no universal concurrentdriver serialization or arbitraryfailedclockspacing claim.",
+    "Store and Cancellation snapshots deliberately return Task.FromException. InjectedOCE does not cancelglobal TestContext token, so only generic optional observation exception isolation is demonstrated; realshutdown cancellation branch remains outside13cases.",
+    "Simple controllable UTCprovider inherits systemmonotonic measurement but no elapsedvalue asserted and noBackgroundService loop/timers started. No real sleep/polling/wallclock result assertion; driver/ownedresources close normally.",
+    "RequiredclaimUTC actualexceptionidentity andzero downstreamcalls keeprequiredbehavior authoritative; source2businessclaim/store/additionalsourceawait/token behavior is reviewed by assigned fixedsource reviewer separately."
+  ],
+  "findings": [],
+  "optional_nonblocking_strengthening": [
+    "Optionally assert exact TestContext cancellationtoken inside snapshot spy to expose future optionalIOtoken mutation; unchanged current source passes token and business requiredclaim/dispatch/mark already exact.",
+    "If reporting requirementcoverage across all13 later, explicitly label supplemental7 or add separate purposeattributes/rows in a separately frozen successor; current2rows onlyassert6mappedcases.",
+    "For future businessboundarymutation coverage, repeat full capturedmark ID/lease/token oracle in Maxinterval/slow tests; currentactualinnerphysicalremoval andexistingfirst4exactargs are meaningful for thisoptionaldeadline scope."
+  ],
+  "excluded_compile_attempt": {
+    "namespace_import_only_successor": true,
+    "R1_CS0103_fixture_error": "zero native/product counterexample credit",
+    "result_sha256": "49827a77f28ffbb526042013ab5ca25d5b7ba32a94e988d2f6c30bbfcd9cd32a"
+  },
+  "parent_native_original_context": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-original-r2/RESULT.json",
+    "sha256": "d3f6376fabbd5fe42ae124a09dd903a0478b3016421895338a38ea9a0a57ee1f",
+    "strict_build": {
+      "parent_session": 71429,
+      "parent_exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "parent_session": 42771,
+      "parent_exit": 2,
+      "total": 13,
+      "failed": 10,
+      "passed": 3,
+      "skipped": 0
+    },
+    "qualification": "Parent structured native result context only. This fixture review does not qualify whole raw native logs/PE-PDB/project graph; separate reviewer does."
+  },
+  "remaining": [
+    "Actualoriginal13 namedcase raw/runtime/source graph qualification by assigned independent reviewer",
+    "Corrected two-sourceowner adversarial review, fixed13/fullCore, onecausecompiledmutations andunchangedreplay",
+    "RootboundedC4acceptance only aftercomplete receipts; no allP05/A+/release/cloud/hardware proof"
+  ],
+  "execution": "Read-only, no.NET/Docker/Process/providerstarts; no product/test/tool/governance modification. OwnR reviewer JSON only.",
+  "prior_report_metadata_correction": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c4-tests-original-preexecution-adversarial-r1.json",
+    "sha256": "866389f20fc65c0af106b74dd2a46e6a55b3c656e3124bbf19e5cf3ab56b1eb2",
+    "correction": "Original service whole body has191lines, not188; exact frozen sourcehash and full bodyread unaffected."
+  }
+}

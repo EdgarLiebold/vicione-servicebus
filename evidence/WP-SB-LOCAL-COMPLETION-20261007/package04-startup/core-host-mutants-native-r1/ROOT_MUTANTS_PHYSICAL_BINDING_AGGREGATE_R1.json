@@ -1,0 +1,67 @@
+{
+  "kind": "ROOT_CORE_FOUR_MUTANTS_ACTUAL_FRESH_PHYSICAL_BINDING_AGGREGATE_R1",
+  "variants": [
+    {
+      "name": "M1-original-options-read",
+      "result_sha256": "9ac71dc679bc10886b69ce24092b0203d9bb274341d0ca38ce5c70509f3343d2",
+      "binding_sha256": "14d934686ee97da870856f56ef7fcb490d080807eec153ee4008c135dc7f9421",
+      "images": 12,
+      "document_checksums": 3807,
+      "runtime17": true,
+      "assets12": true,
+      "test_dll_pdb_byteexact_fixed5": true,
+      "changed_runtime_files": [
+        "ViciOne.ServiceBus.dll"
+      ]
+    },
+    {
+      "name": "M2-canceled-stop-publishes-stopped",
+      "result_sha256": "a147f80cac0f46efb5580b8fb9930385bfddf320cf7314b6d9320e924294b22d",
+      "binding_sha256": "00edcfd2be0c294cdbcfd88bb09375f4212fa15611985e2a0638a85afef6e2f4",
+      "images": 12,
+      "document_checksums": 3807,
+      "runtime17": true,
+      "assets12": true,
+      "test_dll_pdb_byteexact_fixed5": true,
+      "changed_runtime_files": [
+        "ViciOne.ServiceBus.dll"
+      ]
+    },
+    {
+      "name": "M3-ignore-unstarted-stop-cancellation",
+      "result_sha256": "533cb559525a73b0bc572a5b27a41d4ac345538b268e2c6a5e4a09f014e5a9a1",
+      "binding_sha256": "2bcf25366ab100de920229c6d704dbbd3075ff8910551ddfc70d926c73f589cb",
+      "images": 12,
+      "document_checksums": 3807,
+      "runtime17": true,
+      "assets12": true,
+      "test_dll_pdb_byteexact_fixed5": true,
+      "changed_runtime_files": [
+        "ViciOne.ServiceBus.dll"
+      ]
+    },
+    {
+      "name": "M4-fast-path-for-started-runtime",
+      "result_sha256": "71f61ab20d3ce2e7a3621f6d72e43ca1f2503f4fa7b3223c77f813b0dfb43308",
+      "binding_sha256": "322bd87a5e7f2e66a1874bc8d20baa8b43cf6aef9eb12e268f04bbaba06653d4",
+      "images": 12,
+      "document_checksums": 3807,
+      "runtime17": true,
+      "assets12": true,
+      "test_dll_pdb_byteexact_fixed5": true,
+      "changed_runtime_files": [
+        "ViciOne.ServiceBus.dll"
+      ]
+    }
+  ],
+  "actual_images": 48,
+  "actual_document_checksums": 15228,
+  "all_missing_mismatch_zero_and_PE_PDB_ids_true": true,
+  "compiled4722_metadata_reuse": {
+    "fixed_native_sha256": "fdc5f4711d20006c31886ef6bbc21273c821ac1136c781cfcd6aead9e6e90f2c",
+    "independent_fixed5_peer_sha256": "a6625e4e546da1c2114d8ee209be278e1c8db2b6a3e91572ccf05829db3cadb9",
+    "method": "All four testDLL and PDB bytes exactly fixed5; independent all4722resource/methodattrs and new3methods are reused only at exact equal bytes. Root freshphysical48/15228 separate; Root makes no own freshcompiled4722parse claim."
+  },
+  "root_first_finite_ledger_sha256": "42559319020be8c3cac2bc0876b92da839a26ec2d789f536c02291840d29e818",
+  "limits": "Root own fresh actual48PE/15228 PDB document checksums. Immutable owner/generated snapshots override each variant; alltest sources/requirementdata unchanged. Source195 restored butruntime stillM4 untilnewfixedpost. Independentphysical/finite qualification pending; no watchdog/compiler/discovery/survivor kills, no universal source read/globalA+/coverage/Cloud/HW."
+}

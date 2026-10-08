@@ -1,0 +1,22 @@
+{
+  "kind": "ROOT_ACTUAL_CORRECTED_SQS_POST11_EXACT15_IMAGE_REUSE_QUALIFICATION_R1",
+  "native_result_sha256": "8146ca543acb55cda3b3a334f0bbd20307b6190f3ad1f4632b23d40b9b079c2b",
+  "root_exec_session": 78123,
+  "root_exec_joined_exit0": true,
+  "strict_native_os_pids": [
+    65627,
+    65722
+  ],
+  "actual_focused": {
+    "total": 11,
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0
+  },
+  "full11_labels_equal_Fixed": true,
+  "raw6_CRC2_verified": true,
+  "exact15_Fixed_Post_live_direct_bytes": true,
+  "owners13_generated32_assets10_current_and_archived_equal": true,
+  "personally_read": "All11 actual native/summary blocks and fullstrictstdout/emptyerrs. Fixed physical/compiled metadata reuse at exact15 only; no freshPostPEparse claimed.",
+  "limits": "Post restored after7countervariants; canonical4 transfer and peer actualPost qualification pending. Localmodule428 remains qualified at exactimageequality, no cloud/HW/globalclosure."
+}

@@ -1,0 +1,60 @@
+{
+  "kind": "ROOT_ORIGINAL_BROKER_LOG_REDACTION_FIRST_CAUSE_QUALIFICATION_R1",
+  "test_source_sha256": "b2484937dc1d0bda49b9713cb70fed126adb767a602b5661dc3c4e108a0cc0d3",
+  "original_subject_sha256": "e93b4d22d7a6218798662b465d208d22fa4f1f3ab803685ab48d9a67ab8b3ec2",
+  "fixed_subject_sha256": "74912fa88d0f1c9929cb2f802a21ee0ffda13e478aa30be4dc1f8ae08af9691f",
+  "result_sha256": {
+    "original9": "5c7024a8535e56fa1a36ecc05a856196268c0a87850b1432dc99ecedc73e9bd9",
+    "fixed9": "d36ff75ea6dc5e4668a84dcf5107771a77c11408920cff452feeae0d4899440d",
+    "original9-r2": "01daba5acd76f73669d9b01a02a1e8506da32a4affea2170f1c770644285cf20",
+    "fixed9-r2": "9b79b085d5331f0b7cb8579190f319b88eaf020d783e6b886f0f23ffd2cf1867"
+  },
+  "root_own_read": "Complete original stderr348lines all27 AssertionError blocks and complete fixed stderr independently personally read this resumed turn, plus complete focused source160/test132; no later assertions credited on first failed assertion.",
+  "original": {
+    "method_count": 9,
+    "affected_method_count": 6,
+    "healthy_methods": [
+      "test_empty_and_unrelated_environment_values_preserve_log_bytes",
+      "test_refusal_evidence_still_accepts_one_and_rejects_duplicate_refusals",
+      "test_success_output_retains_the_actual_persisted_line_count_and_no_credential"
+    ],
+    "first_boundaries": {
+      "test_all_known_fixture_secret_variables_and_case_aliases_are_masked": {
+        "line": 60,
+        "subtest_assertion_failures": 22,
+        "cause": "actual persisted output retains selected explicit credential instead of exact REDACTED expected text;11 independent explicit keys upper/loweraliases"
+      },
+      "test_duplicate_secret_values_are_removed_at_every_occurrence": {
+        "line": 128,
+        "cause": "exact persisted Equal retains duplicate literal value"
+      },
+      "test_every_selected_broker_uses_the_complete_shared_secret_scope": {
+        "line": 100,
+        "cause": "first rabbitmq persisted Equal retainsSQL/SAS; second broker assertion unreached in original"
+      },
+      "test_failed_collection_masks_console_credentials_and_does_not_write_a_log": {
+        "line": 69,
+        "cause": "AssertIn REDACTED absent in actual consolewarning; later credentialabsence/nofile uncredited original"
+      },
+      "test_overlapping_values_and_regex_characters_are_literal_and_complete": {
+        "line": 83,
+        "cause": "exact persisted Equal retains original unmasked prefix/metacharactervalues"
+      },
+      "test_redaction_precedes_console_whitespace_trimming": {
+        "line": 76,
+        "cause": "AssertIn ([REDACTED]) absent; console has trimmed plaintext. Later NotIn unreached"
+      }
+    },
+    "raw_failure_events": 27,
+    "errors": 0,
+    "timeouts": 0,
+    "discovery_failures": 0
+  },
+  "fixed": {
+    "methods": 9,
+    "PASS": 9,
+    "skipped": 0
+  },
+  "repeat_R2": "Same9methods each unchanged original/fixed rerun provide child-module path/hash/PID attestation before unittest.main. R1 subject binding was Parent env/hash only. Do not count repeated redsubtests as extra unique causes.",
+  "limits": "Only collector tool mocked compose results; no cloud/hardware/CLR/provider product kill/whole secrets guarantee."
+}

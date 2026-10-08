@@ -1,0 +1,486 @@
+{
+  "kind": "ROOT_FIVE_RABBIT_STARTUP_MUTANTS_FINITE_FIRST_CAUSE_LEDGER_R1",
+  "whole_focused_raw_bodies_personally_consumed": "All5 entire focused logs printed separately with sufficient output budget; no truncation; build summary and actual counts independently mechanically checked.",
+  "variants": [
+    {
+      "name": "M1-typed-default-key",
+      "single_source_delta": {
+        "before": "        AddSharedServices(configurator.Services, typeof(TBus).Name, typeof(TBus).FullName ?? typeof(TBus).Name);",
+        "after": "        AddSharedServices(configurator.Services, string.Empty, typeof(TBus).FullName ?? typeof(TBus).Name);"
+      },
+      "native_result_sha256": "ad0f5087c9f9c983ec361fea2096e490e90bd5d0560b8b69d5198b3683a39880",
+      "PE_binding_sha256": "fe75f68fd8e82d6c443cf8dd8bb2b00438b664bac9b4b9baf9ccc90a7f7fad52",
+      "finite_first_red_oracles": [
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.InvalidSecondSelectedBusFailsBeforeEitherRuntime",
+          "first_assertion": "Assert.IsType() Failure: Value is not the exact type",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.InvalidSecondSelectedBusFailsBeforeEitherRuntime() in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs:53",
+          "line": 53,
+          "observed_startup_failure": [
+            "ACTUAL_STARTUP_FAILURE: ViciOne.ServiceBus.ConfigurationException: Bus composition for bus 'ViciOne.ServiceBus.RabbitMq.Tests:ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests+IBillingBus': The RabbitMQ host must not be null, empty, or whitespace. (Parameter 'host'). Correct the named configuration before starting the host."
+          ],
+          "observed_state": [
+            "STATE barrier=0 orders=1 billing=1 cleanupFailures=0 startTerminal=True"
+          ],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.UnusedInvalidDefaultAndOtherNameCannotRejectSelectedBus",
+          "first_assertion": "Assert.Same() Failure: Values are not the same instance",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.UnusedInvalidDefaultAndOtherNameCannotRejectSelectedBus() in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs:39",
+          "line": 39,
+          "observed_startup_failure": [
+            "ACTUAL_STARTUP_FAILURE: System.AggregateException: One or more errors occurred. (RabbitMQ transport for bus 'ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests+IOrdersBus': Host must not be empty. Set a resolvable broker host name.) (RabbitMQ TLS for bus 'ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests+IOrdersBus': CertPassphrase is set without CertPath. Set the certificate path or remove the passphrase.)"
+          ],
+          "observed_state": [
+            "STATE barrier=0 orders=0 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: CertificatePassphrase, reason: \"CertPassphrase is set without CertPath\")",
+          "first_assertion": "Assert.IsType() Failure: Value is not the exact type",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs:21",
+          "line": 21,
+          "observed_startup_failure": [
+            "ACTUAL_STARTUP_FAILURE: System.InvalidOperationException: chosen local RabbitMQ pre-runtime startup barrier"
+          ],
+          "observed_state": [
+            "STATE barrier=1 orders=1 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Host, reason: \"Host must not be empty\")",
+          "first_assertion": "Assert.IsType() Failure: Value is not the exact type",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs:21",
+          "line": 21,
+          "observed_startup_failure": [
+            "ACTUAL_STARTUP_FAILURE: ViciOne.ServiceBus.ConfigurationException: Bus composition for bus 'ViciOne.ServiceBus.RabbitMq.Tests:ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests+IOrdersBus': The RabbitMQ host must not be null, empty, or whitespace. (Parameter 'host'). Correct the named configuration before starting the host."
+          ],
+          "observed_state": [
+            "STATE barrier=0 orders=1 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        }
+      ],
+      "healthy_case_ids": [
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.CoherentDefaults_PassTheSameStartupBoundary",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: VirtualHost, property: \"VHost\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: TlsProtocol, property: \"Protocol\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: Credentials, property: \"User and Pass\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: CertificatePassphrase, property: \"CertPassphrase\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: Port, property: \"Port\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: ManagementPort, property: \"ManagementPort\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: Host, property: \"Host\")"
+      ],
+      "four_actual_host_observed_states": [
+        [
+          "0",
+          "1",
+          "1",
+          "0",
+          "True"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "True"
+        ],
+        [
+          "1",
+          "1",
+          "0",
+          "0",
+          "True"
+        ],
+        [
+          "0",
+          "1",
+          "0",
+          "0",
+          "True"
+        ]
+      ]
+    },
+    {
+      "name": "M2-transport-eager-validation",
+      "single_source_delta": {
+        "before": ".ValidateOnStart();",
+        "after": ";"
+      },
+      "native_result_sha256": "9210603485d4c091086b0d81597f48e51732a6986829682e5a3adff65e8eabe0",
+      "PE_binding_sha256": "5d14a3a1b5c73f9daff01c876943eb6d328cf90a1f1bfeb5b2f1aa13888dcec4",
+      "finite_first_red_oracles": [
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: VirtualHost, property: \"VHost\")",
+          "first_assertion": "Assert.Throws() Failure: No exception was thrown",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(InvalidOption invalid, String property) in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs:22",
+          "line": 22,
+          "observed_startup_failure": [],
+          "observed_state": [],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: Credentials, property: \"User and Pass\")",
+          "first_assertion": "Assert.Throws() Failure: No exception was thrown",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(InvalidOption invalid, String property) in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs:22",
+          "line": 22,
+          "observed_startup_failure": [],
+          "observed_state": [],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: Port, property: \"Port\")",
+          "first_assertion": "Assert.Throws() Failure: No exception was thrown",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(InvalidOption invalid, String property) in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs:22",
+          "line": 22,
+          "observed_startup_failure": [],
+          "observed_state": [],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: ManagementPort, property: \"ManagementPort\")",
+          "first_assertion": "Assert.Throws() Failure: No exception was thrown",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(InvalidOption invalid, String property) in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs:22",
+          "line": 22,
+          "observed_startup_failure": [],
+          "observed_state": [],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: Host, property: \"Host\")",
+          "first_assertion": "Assert.Throws() Failure: No exception was thrown",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(InvalidOption invalid, String property) in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs:22",
+          "line": 22,
+          "observed_startup_failure": [],
+          "observed_state": [],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.InvalidSecondSelectedBusFailsBeforeEitherRuntime",
+          "first_assertion": "Assert.IsType() Failure: Value is not the exact type",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.InvalidSecondSelectedBusFailsBeforeEitherRuntime() in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs:53",
+          "line": 53,
+          "observed_startup_failure": [
+            "ACTUAL_STARTUP_FAILURE: ViciOne.ServiceBus.ConfigurationException: Bus composition for bus 'ViciOne.ServiceBus.RabbitMq.Tests:ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests+IBillingBus': RabbitMQ transport for bus 'ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests+IBillingBus': Host must not be empty. Set a resolvable broker host name. Correct the named configuration before starting the host."
+          ],
+          "observed_state": [
+            "STATE barrier=0 orders=1 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Host, reason: \"Host must not be empty\")",
+          "first_assertion": "Assert.IsType() Failure: Value is not the exact type",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs:21",
+          "line": 21,
+          "observed_startup_failure": [
+            "ACTUAL_STARTUP_FAILURE: ViciOne.ServiceBus.ConfigurationException: Bus composition for bus 'ViciOne.ServiceBus.RabbitMq.Tests:ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests+IOrdersBus': RabbitMQ transport for bus 'ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests+IOrdersBus': Host must not be empty. Set a resolvable broker host name. Correct the named configuration before starting the host."
+          ],
+          "observed_state": [
+            "STATE barrier=0 orders=0 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        }
+      ],
+      "healthy_case_ids": [
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.CoherentDefaults_PassTheSameStartupBoundary",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: TlsProtocol, property: \"Protocol\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: CertificatePassphrase, property: \"CertPassphrase\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.UnusedInvalidDefaultAndOtherNameCannotRejectSelectedBus",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: CertificatePassphrase, reason: \"CertPassphrase is set without CertPath\")"
+      ],
+      "four_actual_host_observed_states": [
+        [
+          "0",
+          "1",
+          "0",
+          "0",
+          "True"
+        ],
+        [
+          "1",
+          "1",
+          "0",
+          "0",
+          "True"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "True"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "True"
+        ]
+      ]
+    },
+    {
+      "name": "M3-host-predicate",
+      "single_source_delta": {
+        "before": "static options => !string.IsNullOrWhiteSpace(options.Host),",
+        "after": "static options => true,"
+      },
+      "native_result_sha256": "6fc15c4cc1d83a5b4071d7dec4544fd7b8f456e3d0d14715f3f6a1eae82f694f",
+      "PE_binding_sha256": "d61eda6df2addb64a8aa5a5d992204df79091857fd3a809d9b649c01daac24d9",
+      "finite_first_red_oracles": [
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: Host, property: \"Host\")",
+          "first_assertion": "Assert.Throws() Failure: No exception was thrown",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(InvalidOption invalid, String property) in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs:22",
+          "line": 22,
+          "observed_startup_failure": [],
+          "observed_state": [],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.InvalidSecondSelectedBusFailsBeforeEitherRuntime",
+          "first_assertion": "Assert.IsType() Failure: Value is not the exact type",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.InvalidSecondSelectedBusFailsBeforeEitherRuntime() in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs:53",
+          "line": 53,
+          "observed_startup_failure": [
+            "ACTUAL_STARTUP_FAILURE: ViciOne.ServiceBus.ConfigurationException: Bus composition for bus 'ViciOne.ServiceBus.RabbitMq.Tests:ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests+IBillingBus': The RabbitMQ host must not be null, empty, or whitespace. (Parameter 'host'). Correct the named configuration before starting the host."
+          ],
+          "observed_state": [
+            "STATE barrier=0 orders=1 billing=1 cleanupFailures=0 startTerminal=True"
+          ],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Host, reason: \"Host must not be empty\")",
+          "first_assertion": "Assert.IsType() Failure: Value is not the exact type",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs:21",
+          "line": 21,
+          "observed_startup_failure": [
+            "ACTUAL_STARTUP_FAILURE: ViciOne.ServiceBus.ConfigurationException: Bus composition for bus 'ViciOne.ServiceBus.RabbitMq.Tests:ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests+IOrdersBus': The RabbitMQ host must not be null, empty, or whitespace. (Parameter 'host'). Correct the named configuration before starting the host."
+          ],
+          "observed_state": [
+            "STATE barrier=0 orders=1 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        }
+      ],
+      "healthy_case_ids": [
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.CoherentDefaults_PassTheSameStartupBoundary",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: VirtualHost, property: \"VHost\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: TlsProtocol, property: \"Protocol\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: Credentials, property: \"User and Pass\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: CertificatePassphrase, property: \"CertPassphrase\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: Port, property: \"Port\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: ManagementPort, property: \"ManagementPort\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.UnusedInvalidDefaultAndOtherNameCannotRejectSelectedBus",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: CertificatePassphrase, reason: \"CertPassphrase is set without CertPath\")"
+      ],
+      "four_actual_host_observed_states": [
+        [
+          "0",
+          "1",
+          "1",
+          "0",
+          "True"
+        ],
+        [
+          "1",
+          "1",
+          "0",
+          "0",
+          "True"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "True"
+        ],
+        [
+          "0",
+          "1",
+          "0",
+          "0",
+          "True"
+        ]
+      ]
+    },
+    {
+      "name": "M4-certificate-path-predicate",
+      "single_source_delta": {
+        "before": "static options => options.CertPassphrase is null || !string.IsNullOrWhiteSpace(options.CertPath),",
+        "after": "static options => true,"
+      },
+      "native_result_sha256": "37131fbca4cea2fcc73cc7ba10701b251146c6cf588c701aa4767869cf53f51b",
+      "PE_binding_sha256": "d2dd937b8f3922ed977299ac5a1ca370c97822cdfbf8ac3acdd8f2f6cf60ec98",
+      "finite_first_red_oracles": [
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: CertificatePassphrase, property: \"CertPassphrase\")",
+          "first_assertion": "Assert.Throws() Failure: No exception was thrown",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(InvalidOption invalid, String property) in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs:22",
+          "line": 22,
+          "observed_startup_failure": [],
+          "observed_state": [],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: CertificatePassphrase, reason: \"CertPassphrase is set without CertPath\")",
+          "first_assertion": "Assert.IsType() Failure: Value is not the exact type",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs:21",
+          "line": 21,
+          "observed_startup_failure": [
+            "ACTUAL_STARTUP_FAILURE: System.InvalidOperationException: chosen local RabbitMQ pre-runtime startup barrier"
+          ],
+          "observed_state": [
+            "STATE barrier=1 orders=1 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        }
+      ],
+      "healthy_case_ids": [
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.CoherentDefaults_PassTheSameStartupBoundary",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: VirtualHost, property: \"VHost\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: TlsProtocol, property: \"Protocol\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: Credentials, property: \"User and Pass\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.InvalidSecondSelectedBusFailsBeforeEitherRuntime",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: Port, property: \"Port\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: ManagementPort, property: \"ManagementPort\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: Host, property: \"Host\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.UnusedInvalidDefaultAndOtherNameCannotRejectSelectedBus",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Host, reason: \"Host must not be empty\")"
+      ],
+      "four_actual_host_observed_states": [
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "True"
+        ],
+        [
+          "1",
+          "1",
+          "0",
+          "0",
+          "True"
+        ],
+        [
+          "1",
+          "1",
+          "0",
+          "0",
+          "True"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "True"
+        ]
+      ]
+    },
+    {
+      "name": "M5-typed-diagnostic-name",
+      "single_source_delta": {
+        "before": "        AddSharedServices(configurator.Services, typeof(TBus).Name, typeof(TBus).FullName ?? typeof(TBus).Name);",
+        "after": "        AddSharedServices(configurator.Services, typeof(TBus).Name, typeof(TBus).Name);"
+      },
+      "native_result_sha256": "d400ec4ca0b9be96499f2600ad6a17fa6afa93a1b7262cf345f58868ea46e715",
+      "PE_binding_sha256": "1c9383706e61330b5580b7cd823f95021ee83729df2f989f29e2c56434aafb30",
+      "finite_first_red_oracles": [
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.InvalidSecondSelectedBusFailsBeforeEitherRuntime",
+          "first_assertion": "Assert.Contains() Failure: Sub-string not found",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.InvalidSecondSelectedBusFailsBeforeEitherRuntime() in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs:57",
+          "line": 57,
+          "observed_startup_failure": [
+            "ACTUAL_STARTUP_FAILURE: Microsoft.Extensions.Options.OptionsValidationException: RabbitMQ transport for bus 'IBillingBus': Host must not be empty. Set a resolvable broker host name."
+          ],
+          "observed_state": [
+            "STATE barrier=0 orders=0 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: CertificatePassphrase, reason: \"CertPassphrase is set without CertPath\")",
+          "first_assertion": "Assert.Contains() Failure: Sub-string not found",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs:25",
+          "line": 25,
+          "observed_startup_failure": [
+            "ACTUAL_STARTUP_FAILURE: Microsoft.Extensions.Options.OptionsValidationException: RabbitMQ TLS for bus 'IOrdersBus': CertPassphrase is set without CertPath. Set the certificate path or remove the passphrase."
+          ],
+          "observed_state": [
+            "STATE barrier=0 orders=0 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Host, reason: \"Host must not be empty\")",
+          "first_assertion": "Assert.Contains() Failure: Sub-string not found",
+          "source_frame": "um ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs:25",
+          "line": 25,
+          "observed_startup_failure": [
+            "ACTUAL_STARTUP_FAILURE: Microsoft.Extensions.Options.OptionsValidationException: RabbitMQ transport for bus 'IOrdersBus': Host must not be empty. Set a resolvable broker host name."
+          ],
+          "observed_state": [
+            "STATE barrier=0 orders=0 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "unreached_later_assertions_receive_no_kill_credit": true
+        }
+      ],
+      "healthy_case_ids": [
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.CoherentDefaults_PassTheSameStartupBoundary",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: VirtualHost, property: \"VHost\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: TlsProtocol, property: \"Protocol\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: Credentials, property: \"User and Pass\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: CertificatePassphrase, property: \"CertPassphrase\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: Port, property: \"Port\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: ManagementPort, property: \"ManagementPort\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqTransportOptionsStartupTests.InvalidOption_FailsBeforeAnyBrokerConnection(invalid: Host, property: \"Host\")",
+        "ViciOne.ServiceBus.RabbitMq.Tests.Configuration.RabbitMqGenericHostStartupTests.UnusedInvalidDefaultAndOtherNameCannotRejectSelectedBus"
+      ],
+      "four_actual_host_observed_states": [
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "True"
+        ],
+        [
+          "1",
+          "1",
+          "0",
+          "0",
+          "True"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "True"
+        ],
+        [
+          "0",
+          "0",
+          "0",
+          "0",
+          "True"
+        ]
+      ]
+    }
+  ],
+  "total_native_slots": 60,
+  "finite_first_red_oracles": 19,
+  "healthy_controls": 41,
+  "each_variant_default_coherent_control_and_cases_exact": true,
+  "limits": "No compiler/watchdog/zero discovery/survivor credit. Observed diagnostic callback/barrier state for redcases is independent stdout observation, not credit to unreached assertions. Originalbefore exact12 present in whole599; restoredpost12 and independentexecutedreview still pending. Root first mechanical ledger extractor selected an exception diagnostic helper frame rather than oracle .cs:number and stopped before writing; corrected extraction to exact numeric native test oracle frame."
+}

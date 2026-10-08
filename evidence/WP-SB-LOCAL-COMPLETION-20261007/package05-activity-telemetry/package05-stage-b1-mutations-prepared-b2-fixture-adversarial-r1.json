@@ -1,0 +1,226 @@
+{
+  "status": "READ_ONLY_B1_THREE_ACTUAL_SINGLE_CAUSE_PREPARATIONS_VERIFIED__NO_NATIVE_MUTANT_ACCEPTANCE__B2_BOUNDED_FIXTURE_RISKS",
+  "reviewer": "/root/continuation_adversarial",
+  "bindings": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_B1_FREEZE_R3.json",
+      "sha256": "9fb62ca5340c1754fc9c81b16a8bdac0b34d9954666f9b9b56b7bc22755da22b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE802_STAGE_B1_READ_CLOSURE_R2.json",
+      "sha256": "2d3018195a6b6bcef722635d7067323a0f3648f95de89063c174b162423e1bc8"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "f825ec82e2e3f71fd8daac77f770a875f2f5172b5d75c1e637dd9ecb635f62b7",
+      "bytes": 22994
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/ActivitySourceActivationIsolationTests.cs",
+      "sha256": "b6a17dfa23f716c485cc0a6a152b9037676eb623eb8b74f8a4afbccacd158832",
+      "bytes": 7440
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+      "sha256": "4d008ca99020815d1453376e277cc06ea57ca2db75d0a7ffb6fea279a4ab64c4",
+      "bytes": 15567
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchRuntimeSettings.cs",
+      "sha256": "55f86c6399c0f9ee6f971853a7f05ef58a04f3cd714817ea64c9eef223ed0e29",
+      "bytes": 1680
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Util/TaskExecutor.cs",
+      "sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "bytes": 14849
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchRuntimeStateTests.cs",
+      "sha256": "6cfab285e557388ccbb05f3657f0c8d7f3a02506e07f053ee3036b75803735cf",
+      "bytes": 51632
+    },
+    {
+      "path": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs",
+      "sha256": "d418b48fcfab4651883083f6cef6a642c076a296fc0dd79758d046e59a17ad12",
+      "bytes": 20144
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/ObservableTimeProvider.cs",
+      "sha256": "e3bf439b800f4f8cf7b96dc8a9a21be05d637157104efa4c72514eadb59c6f5c",
+      "bytes": 8888
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs",
+      "sha256": "f4df2034de77fdb77e3169622dc0f3806032cf230d74e53082fe0aea39bc61db",
+      "bytes": 35094
+    }
+  ],
+  "mutants": [
+    {
+      "id": "m1-source-guard-escapes",
+      "prep_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b1-mutants-r1/m1-source-guard-escapes/MUTATION_PREPARED.json",
+      "prep_sha256": "68cbf7d79dbc340a807d4826d3943927311560bcb5892259b7f6168b61a4ccdd",
+      "diff_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b1-mutants-r1/m1-source-guard-escapes/MUTATION.diff",
+      "diff_sha256": "3229002c65dba096f16ad6ea9bd3993482d03b892c270bec452d079b5397ffe2",
+      "all_pathsets_equal": true,
+      "compared_source_test_tool_files": 6084,
+      "only_changed_file": {
+        "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+        "fixed_sha256": "f825ec82e2e3f71fd8daac77f770a875f2f5172b5d75c1e637dd9ecb635f62b7",
+        "mutant_sha256": "b5c7f5667209acfc5af73c779ff7bf5db39f7935b3edabbf3d7b128fc27e3ade"
+      },
+      "exact_single_replacement": {
+        "before": "            // A host listener can reject source creation without disabling independent metrics.\n            return null;",
+        "after": "            throw;"
+      },
+      "complete_unified_diff_verified_against_actual_clone": true,
+      "native_executed_by_reviewer": false,
+      "prediction_only": {
+        "cases": 2,
+        "hostile_true_first_red_line": 67,
+        "failed": 1,
+        "healthy": 1,
+        "skip": 0
+      }
+    },
+    {
+      "id": "m2-source-failure-disables-meter",
+      "prep_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b1-mutants-r1/m2-source-failure-disables-meter/MUTATION_PREPARED.json",
+      "prep_sha256": "773f0f5b53023f5bd795854e443eb8fbc225d07dcfc74c6236dda0f919d8fbdc",
+      "diff_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b1-mutants-r1/m2-source-failure-disables-meter/MUTATION.diff",
+      "diff_sha256": "e690117c77829d89611d186a28bb9d6b58d3f0f400ce5c887729ad8c08a86fb9",
+      "all_pathsets_equal": true,
+      "compared_source_test_tool_files": 6084,
+      "only_changed_file": {
+        "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+        "fixed_sha256": "f825ec82e2e3f71fd8daac77f770a875f2f5172b5d75c1e637dd9ecb635f62b7",
+        "mutant_sha256": "892414e52a9f26051e96c4de6d72cea0b007028eaf59de4de5819cc1044a959b"
+      },
+      "exact_single_replacement": {
+        "before": "_meter = new Lazy<Meter?>(() => TryCreateMeter(meterFactory, version, meterTags), LazyThreadSafetyMode.ExecutionAndPublication);",
+        "after": "_meter = new Lazy<Meter?>(() => _activitySource is null ? null : TryCreateMeter(meterFactory, version, meterTags), LazyThreadSafetyMode.ExecutionAndPublication);"
+      },
+      "complete_unified_diff_verified_against_actual_clone": true,
+      "native_executed_by_reviewer": false,
+      "prediction_only": {
+        "cases": 2,
+        "hostile_true_first_red_line": 73,
+        "failed": 1,
+        "healthy": 1,
+        "skip": 0
+      }
+    },
+    {
+      "id": "m3-source-ambient-not-restored",
+      "prep_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b1-mutants-r1/m3-source-ambient-not-restored/MUTATION_PREPARED.json",
+      "prep_sha256": "fcf7e948d67681a818cc4786959f2d57c59dabe87bacbaf2dba54e1d6e6eb22a",
+      "diff_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b1-mutants-r1/m3-source-ambient-not-restored/MUTATION.diff",
+      "diff_sha256": "8a43f7a98e23f8cff14cfb644c494b5febb2779a35a5cb62679592555a514361",
+      "all_pathsets_equal": true,
+      "compared_source_test_tool_files": 6084,
+      "only_changed_file": {
+        "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+        "fixed_sha256": "f825ec82e2e3f71fd8daac77f770a875f2f5172b5d75c1e637dd9ecb635f62b7",
+        "mutant_sha256": "de6293f32764cb77d725e92902ed437123f1d462f9dd10f111b90a577ab68f40"
+      },
+      "exact_single_replacement": {
+        "before": "            ActivityObservation.TrySetCurrent(parent);",
+        "after": "            _ = parent;"
+      },
+      "complete_unified_diff_verified_against_actual_clone": true,
+      "native_executed_by_reviewer": false,
+      "prediction_only": {
+        "cases": 2,
+        "hostile_true_first_red_line": 68,
+        "failed": 1,
+        "healthy": 1,
+        "skip": 0
+      }
+    }
+  ],
+  "findings_b1": [],
+  "predicted_distinctions": [
+    {
+      "id": "m1",
+      "first_red": "Assert.Null(escaped), line67: actual ShouldListenTo exception escapes constructor, finally restore retained",
+      "healthy": "false variant actual span/parent/schema and independent metrics remain mandatory"
+    },
+    {
+      "id": "m2",
+      "first_red": "Assert.Equal(1, factory.Creates), line73: actual0 after both metric calls when null source wrongly gates Lazy Meter",
+      "healthy": "false variant has real source so meter, span and ownership checks remain green"
+    },
+    {
+      "id": "m3",
+      "first_red": "Assert.Same(caller, Activity.Current), line68: actualnull from hostile target callback; constructor and independent meter guard retained",
+      "healthy": "false listener leaves caller unchanged and restoration omission is harmless in this variant"
+    }
+  ],
+  "case_count_precision": "Predicted6 individual events=3 red+3 healthy across3 clones; one distinct hostile theory case, independently three first failing assertion boundaries. Predictions do not qualify compiled/native result.",
+  "native_acceptance_prerequisites": [
+    "Root strict builds/actual packaged first-party PE-PDB/source binding; identical test bytes/discovery2 each, no skips",
+    "Detailed individual finite assertion failures at stated boundaries; compile/setup/discovery/process/watchdog/cleanup errors excluded",
+    "Healthy false variant checks all actual values1/5/1/3, actual span parent/schema, independent host meter after subject idempotent disposal",
+    "Post-mutants fixed replay and immutable logs/results required"
+  ],
+  "B2_direct_fixture": {
+    "recommended_route": "Direct canonical friend-owner test calls actual BatchConsumer constructor and public AddAsync/ConsumeAsync with real two TaskExecutor instances; no private DeliverAsync invocation or reflection.",
+    "setup_order": [
+      "Create and start caller Activity; instantiate both TaskExecutor workers under caller (constructor starts workers immediately)",
+      "Create admission Activity as child, then explicitly Activity.Current=caller before arming callback; keep admission live until workers fully drained",
+      "Build validated BatchRuntimeSettings with ConcurrencyLimit1/MessageLimit1/TimeLimit1day/FromFirst; actual ObservableTimeProvider and existing InMemoryOutboxTestContextFactory context",
+      "Register selective CurrentChanged handler unarmed, then arm one-shot matching ReferenceEquals(args.Current, admission); handler throws one exact chosen observation exception, no other global callbacks",
+      "AddAsync(context, admission) forces actual Size completion and enqueues DeliverAsync; await real ConsumeAsync terminal outcome; retain native actual exception stack for original causal boundary",
+      "Unarm/remove callback before fixture teardown; await both actual executor DisposeAsync to join owned work; assert timer created/disposed/active accounting; stop/dispose admission and caller"
+    ],
+    "minimal_dependencies": [
+      "BatchConsumer<T>, BatchRuntimeSettings, BatchOptions, TaskExecutor(2) real owned workers",
+      "IPipe<ConsumeContext<IMessageBatch<T>>> small recording actual pipe with success/business-throw/token-cancel outcomes",
+      "InMemoryOutboxTestContextFactory.Create existing public test helper: internally uses DispatchProxy, disclose fixture double",
+      "ObservableTimeProvider existing FakeTimeProvider wrapper: actual batch timer accounting",
+      "OpenTelemetryGlobalCollection serialization and RequirementCoverage exact appended projection for actual new cases"
+    ],
+    "unnecessary_dependencies": [
+      "BatchCollector/grouped/reflection helpers",
+      "DI harness, providers/cloud, transport endpoints",
+      "private DeliverAsync invocation, AssemblyLoadContext reset, fake source ownership or sleeps"
+    ],
+    "outcome_matrix": [
+      {
+        "variant": "healthy observer + success pipe",
+        "oracle": "real pipe exactly1; actual batch Count1/ModeSize/item identity; observed admission Activity; ConsumeAsync succeeds"
+      },
+      {
+        "variant": "ordinary hostile handoff + success pipe",
+        "oracle": "fixed pipe1 and same success/batch/admission; original finite completion error provenance at explicit Activity.Current handoff before pipe (pipe0)"
+      },
+      {
+        "variant": "ordinary hostile handoff + chosen business exception",
+        "oracle": "pipe1; exact original chosen business exception object reaches ConsumeAsync; observation exception cannot replace it"
+      },
+      {
+        "variant": "ordinary hostile handoff + pipe OperationCanceledException(context.CancellationToken)",
+        "oracle": "pipe1; same real context token in terminal cancellation, no watchdog cancellation oracle"
+      }
+    ],
+    "causal_constraints": [
+      "Worker ExecutionContext was captured under caller before admission existed; unlike full harness, no predecessor TryCreate restoration consumes the selected fault",
+      "AsyncLocal/ExecutionContext transitions still invoke CurrentChanged. Callback count1 or matching Activity alone cannot qualify exact DeliverAsync assignment. Original native finite exception provenance must establish actual explicit handoff",
+      "Use actual completion, never guard timeout as product failure. Keep guard only for fixture cleanup/run bounds",
+      "Cancel actual pipe with context token after admission, not prematurely context-canceling to trigger RemoveCanceledMessage race; token-cancellation control should assert terminal semantics not invented original counterexample"
+    ],
+    "restoration_limit": {
+      "finding": "Assert.Same(caller, Activity.Current) after awaited ConsumeAsync, or a subsequent dispatcher probe, does not independently prove explicit new finally restoration: async ExecutionContext already restores caller on return. _completed may also signal before finally executes.",
+      "required_response": "Drain owned dispatcher/executor for cleanup completion. Do not credit omission-of-finally mutant unless a finite actual public/canonical observation independently distinguishes explicit restore from runtime context restoration. Throwing at an implicit context-transition callback may crash process; such crash is excluded, not a causal kill.",
+      "scope_option": "Accept bounded handoff isolation/preserved actual business outcomes only if direct restoration cannot be independently qualified; keep restoration assurance claim and related mutation explicitly pending."
+    }
+  },
+  "B2_public_supplement": {
+    "fixture": "BatchDeliveryIntegrationTests public AddViciOneServiceBusTestHarness/Start/Publish/real IConsumer<IMessageBatch<T>>/Stop/providerDispose pattern with messageLimit1",
+    "scope": "Public NuGet consumer supplements end-to-end success and Fault DTO contract; Testing harness expands first-party dependencies beyond Core/Abstractions. Serialized Fault cannot prove exception object identity. Subject public route must still establish real Batch Deliver explicit handoff, not an earlier guarded CurrentChanged.",
+    "mandatory_exclusions": "No business exception/cancellation swallowing; no callback-count-only handoff claim, reflection selection, artificial timing or native-failure claims before execution"
+  },
+  "root_personal_read_credit": "None from reviewer; current hashes bind review only, Root attestations remain Root-owned.",
+  "reviewer_execution": "Read source/test/tool bytes and three existing mutation artifacts only; wrote only this reviewer report. No dotnet/build/test/provider/product edits."
+}

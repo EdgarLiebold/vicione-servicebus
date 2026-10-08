@@ -1,0 +1,7 @@
+{
+  "kind": "ROOT_DOCUMENTATION_SUCCESSOR_ACCEPTANCE",
+  "status": "ACCEPTED_BOUNDED_DOCUMENTATION_R4",
+  "freeze_sha256": "f9c7d4c86464336e6f046d94c4c59ff71d6e57b76f5627c4ef1d5894addc0d1e",
+  "review_sha256": "9849771e718c30465c8f298fb5a23f537ee3b306a26fd82f159158205d39b601",
+  "limits": "No retirement of historical SQL gap, currentcoverage, startup, adaptertime, cache, cloud or hardware obligations."
+}

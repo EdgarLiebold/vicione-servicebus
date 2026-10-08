@@ -1,0 +1,44 @@
+{
+  "kind": "ROOT_RELIABLE_HOST_STARTUP_CLEANUP_ORIGINAL_THREE_FIRST_FINITE_CAUSE_R1",
+  "finding": "RELIABLE-HOST-STARTUP-CLEANUP-01",
+  "status": "CONFIRMED_ORIGINAL_SCOPED_TWO_REPRODUCTIONS_ONE_FINDING_FIX_PENDING",
+  "native_sha256": "b990c604d1021b4f594005eaad7b4ba3d3034110ec002bd01a255e183adc064b",
+  "physical_sha256": "25532b1cff7c00e6946ddb1474da2fdea784db4c705cbb2f09adc5ffc19741dd",
+  "independent_native_sha256": "a9a69711becac856d3832a957b79aba250b866105d7e38f59f40114377f6e8f8",
+  "rows": [
+    {
+      "case_id": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.PlainDefaultAndTypedReliableBusesDeliverAndStopWithUnusedReliablePoison",
+      "outcome": "erfolgreich",
+      "first_finite_assertion": null,
+      "native_cause": null,
+      "health": "Complete actualdefault+typednormal messaging/lifecycle/probe1 andownedcleanup assertions PASS",
+      "unreached_extra_kill_or_health_credit": 0
+    },
+    {
+      "case_id": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.SelectedTypedReliableZeroPollFailsBeforeEitherEndpointStart",
+      "outcome": "fehlerhaft",
+      "first_finite_assertion": "Assert.Null(result.StopFailure), source/nativeAssertCleanup90",
+      "native_cause": "ArgumentNullException(source) from Host.StopAsync Enumerable.Reverse; own registeredpolicy factory80 in StartHost hostedserviceenumeration",
+      "health": null,
+      "unreached_extra_kill_or_health_credit": 0
+    },
+    {
+      "case_id": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.ReliableMessagingGenericHostStartupTests.SelectedDefaultReliableNaNJitterFailsBeforeEndpointStart",
+      "outcome": "fehlerhaft",
+      "first_finite_assertion": "Assert.Null(result.StopFailure), source/nativeAssertCleanup90",
+      "native_cause": "ArgumentNullException(source) from Host.StopAsync Enumerable.Reverse; own registeredpolicy factory80 in StartHost hostedserviceenumeration",
+      "health": null,
+      "unreached_extra_kill_or_health_credit": 0
+    }
+  ],
+  "aggregate": {
+    "actual_slots": 3,
+    "first_finite_RED": 2,
+    "healthy": 1,
+    "new_findings": 1,
+    "skipped": 0
+  },
+  "root_personal_read": "All3 complete stdout cases/summary andempty stderr pluswholelockedrestore/strictstdout andempty stderr read untruncated. SourceR1whole330+main194, 17owner researchwhole andactualCodeBindingTargetHashes independentlyRootfreshPE/PDB12/3810. CurrentprimaryMicrosoftHost relevantStart/Stop exactmetadataRepositoryCommit source read, no HostingruntimeILfieldinspection.",
+  "lower_assertion_limits": "Invalidcasesprimary directOptionsException/type/emptyname/fullSingleDiag andendpoint/probe0 assertspass beforeStopFailure90. First92/91dispose-observer assertions not reached0extra credit, loggednull observed separately. No globaltransaction/lifecycle/leak/disposalbudget claim.",
+  "limits": "Actual originalRED retained, notexcludedcompiler/discovery/timeout. R1fixture probes0 describeoriginalearlyabort. R2refinement permits0or1admission withexactperownedStop/Dispose andactualWorkerjoin; futureOriginalR2/fixnative/counter/Post/Core/canonical3 needactualsourcebinding. No newmutationkillcreditorfixedclaim; frozen234 unchanged."
+}

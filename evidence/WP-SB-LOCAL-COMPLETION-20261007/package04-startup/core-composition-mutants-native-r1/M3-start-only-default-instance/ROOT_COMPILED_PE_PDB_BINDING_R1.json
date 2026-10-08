@@ -1,0 +1,509 @@
+{
+  "kind": "ROOT_ACTUAL_CORE_COMPOSITION_FRESH_PHYSICAL_PE_PDB_SOURCE_BINDING_R1",
+  "native_sha256": "8cb1a2e0417c0259844efd50aa2a08683109b0f0626a66377ed6b9325f156719",
+  "actual_images": 12,
+  "actual_document_checksums": 3808,
+  "actual_runtime_files": 17,
+  "actual_assets": 12,
+  "images": [
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-mutants-native-r1/M3-start-only-default-instance/runtime/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "27728cbf7ae0be593cd5a1d276ca380747aaf5ec0e433b641e50f447557ba96d",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2460082152,
+          "guid": "1f719ee5-6ea3-4905-b2cb-871c8eb3a87e",
+          "path": "ViciOne.ServiceBus.Abstractions.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "e59e711fa36e0549b2cb871c8eb3a87ee8dfa192",
+        "sha256": "38492c66d9d20d3afd11de063e4272893462e3b5d85b723c661f8fcb53c48e84",
+        "documents": 700,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 697,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "b787e16dfa85890a91b402605e54fa316a19db649dbee34859b33966a0291752",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-mutants-native-r1/M3-start-only-default-instance/runtime/ViciOne.ServiceBus.Courier.dll",
+      "sha256": "3907c28f163a439db3e2bcc51599b90af34610ce747ed6d41a174babf326e732",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3403697552,
+          "guid": "1acf28ec-f66e-4271-977c-02bd654c0d47",
+          "path": "ViciOne.ServiceBus.Courier.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "ec28cf1a6ef67142977c02bd654c0d47904de0ca",
+        "sha256": "6ecd58cc127dd83bb807b74597ba57b4297427ff11cefb13afa0abc9e790db4c",
+        "documents": 146,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 143,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "e4a78bbaaf17124dfb3d3f8b47c2a1041637e85534880677df902933e8d6e29b",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-mutants-native-r1/M3-start-only-default-instance/runtime/ViciOne.ServiceBus.Futures.dll",
+      "sha256": "9436c8935261673fcceb65c7274e45ce6dbe716f32a314d41e4e9816ce9adc33",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3946000284,
+          "guid": "0cde6302-60b1-43b6-b34d-1fa5f22590a7",
+          "path": "ViciOne.ServiceBus.Futures.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "0263de0cb160b643b34d1fa5f22590a79c2f33eb",
+        "sha256": "930920dc87291f771170a5900efd47ca375413a09adcf2e6c5b0c29c331f6d5c",
+        "documents": 61,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 58,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "1aaafb39728698ef2107d4132c12318286b7f6f46dec2b2f1834b82cb14ec10e",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-mutants-native-r1/M3-start-only-default-instance/runtime/ViciOne.ServiceBus.Initializers.dll",
+      "sha256": "839446d27d4c6df7be96972b4970792e421a4a8cdd0be942844b56b2ccc6d8c6",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3670357160,
+          "guid": "93e9162f-8efb-4084-a186-c999bfacd966",
+          "path": "ViciOne.ServiceBus.Initializers.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "2f16e993fb8e8440a186c999bfacd966a834c5da",
+        "sha256": "2b3b4cf9ec39aec58fb3c3ba33b66c64025b39dd826e475edd46b182624ad6ca",
+        "documents": 11,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 8,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "02995fd5ac0510877e31bc21a2a3418e4c7a4b68c005a26061ee798a0e06b18c",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-mutants-native-r1/M3-start-only-default-instance/runtime/ViciOne.ServiceBus.JobService.dll",
+      "sha256": "223147e3b9420fafebd0651c6ed85f6646e878d415f8e4d965e7d797eff09741",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2905138095,
+          "guid": "53cb68ff-fdd5-4657-9c54-ef29533b3128",
+          "path": "ViciOne.ServiceBus.JobService.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "ff68cb53d5fd57469c54ef29533b3128afe328ad",
+        "sha256": "be8bc5ff9e78ab5357b1aad2ebe73e6457114d43154380f1aefab5b8707f4f53",
+        "documents": 175,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 172,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "e5c11d8ab19ebd1146f3c35e968b8ff5a75217ba5c2d8c2f65fb9667931c69c4",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-mutants-native-r1/M3-start-only-default-instance/runtime/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "483ca2f6980b998f71bed304329602d9e49a34f18f3705f91a16d5f756a97647",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3662126566,
+          "guid": "c8c458b0-b81f-4ffc-81c6-72aecfe7c213",
+          "path": "ViciOne.ServiceBus.Mediator.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "b058c4c81fb8fc4f81c672aecfe7c213e69d47da",
+        "sha256": "0c1ece2c6e3554ca0d213b8b9af4fd579006502757533ab58a6b71c74414e5cd",
+        "documents": 31,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 28,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "a123833d99706c4815625820524103ba5ca29f362ee256779e1a6e8db9429a07",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-mutants-native-r1/M3-start-only-default-instance/runtime/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "10e418b112e98e6fa30a9a576cac8def59338c2b5fae90c3b677211bd0bdd634",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4018246408,
+          "guid": "bd862d0d-72a7-4932-91fb-5bb6813072e0",
+          "path": "ViciOne.ServiceBus.Sagas.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "0d2d86bda772324991fb5bb6813072e0089381ef",
+        "sha256": "60737d0bea172999893f7d1bd8bbc14ce7c4c5b1651a9783dc008991a8274322",
+        "documents": 374,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 371,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "45ca0e43539a95eed49555b3614671797b4dfd0b4e5b874010a3eebedb064045",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-mutants-native-r1/M3-start-only-default-instance/runtime/ViciOne.ServiceBus.Testing.dll",
+      "sha256": "4746ada8c0efa74f9f50aff27c280f4e0f23b43fd28c0eb83c0d5b205a745fb7",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3715385394,
+          "guid": "0ffd62b3-48da-4f19-947f-bb962df2cf43",
+          "path": "ViciOne.ServiceBus.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "b362fd0fda48194f947fbb962df2cf43324874dd",
+        "sha256": "922286e579c530c64b935c9f2aa6ad28fc242115fda67be6309097108e2212c1",
+        "documents": 104,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 101,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "3d148d2fb3b59d22ac60521b9b18046b4d85b2bf8967e49a462ab05856b6b16a",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-mutants-native-r1/M3-start-only-default-instance/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "04a3b40a484e4603c9eda749bfdb1bdf71493e864cc25afaf0f0cf0abc6cfc2c",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3071701508,
+          "guid": "30b1bda0-080b-473b-8f78-4e09a6770a7e",
+          "path": "ViciOne.ServiceBus.Tests.Infrastructure.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "a0bdb1300b083b478f784e09a6770a7e047216b7",
+        "sha256": "f6214a3325813073acc9e43dc03b69bf7807dcbc33d5ee66905f93a46b1b69eb",
+        "documents": 9,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 6,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "ef309a36ff2e977cabed090e74768c3a1de15fe4ecae707afb764e3f20400aa4",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-mutants-native-r1/M3-start-only-default-instance/runtime/ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "sha256": "a78da6440f51a73cd4723c42211a890e77050647f34dba7681aaf8a6042a8356",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3121552107,
+          "guid": "ac405207-d001-43c7-981d-996805dade85",
+          "path": "ViciOne.ServiceBus.Tests.InternalAccess.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "075240ac01d0c743981d996805dade85eb1a0fba",
+        "sha256": "04a6b25762ff57c3c346df58a6337a714c724070dbe1ed50e4cdd8629469c7b8",
+        "documents": 38,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 35,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "af41155d5a5c8ff467dfd360597e294c473e355d7437ad7a8ff22d7e58c1a6fa",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-mutants-native-r1/M3-start-only-default-instance/runtime/ViciOne.ServiceBus.Tests.dll",
+      "sha256": "a2ea40aeeafc371121fbb4dff8c80046b773278d54cae6a7058c286071d94ce5",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2203355349,
+          "guid": "85abe5ad-84f0-41a4-b6de-c4a9ea948e83",
+          "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-composition/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "ade5ab85f084a441b6dec4a9ea948e83d5885483",
+        "sha256": "aa18dea24943bd2c644369ccbc0d99fc43ed33db36fb7fec4805a4d5c3a333c8",
+        "documents": 818,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 812,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 6
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "df2905e972641357c79817e9987db9744aecfb45f12c2e901e2111b5c5a973b8",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-composition/tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/BusCompositionGenericHostStartupTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "a43abd4150e7bd888a30ae5486e491080bc0477919beffc9a53999fec69d8450",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "a43abd4150e7bd888a30ae5486e491080bc0477919beffc9a53999fec69d8450"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": false
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-mutants-native-r1/M3-start-only-default-instance/runtime/ViciOne.ServiceBus.dll",
+      "sha256": "1e553c596bf2d332052c38380c3bf5079061f733a4d7b00866b57b571f7924a8",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2712959092,
+          "guid": "49c9c539-1c9b-45ba-afd5-56f64920ed55",
+          "path": "ViciOne.ServiceBus.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "39c5c9499b1cba45afd556f64920ed557478b4a1",
+        "sha256": "ed28ec0392f9eb85c9dbb56db53825fc02e76be580e915ef290ee0c2c8382419",
+        "documents": 1341,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 1293,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 4,
+          "EMBEDDED_SOURCE": 44
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "1096ec6021adaf2336ac90a10430a73655eb62a7b49df041acf8312afed36ad3",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-composition/src/ViciOne.ServiceBus/Configuration/BusCompositionValidation.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "e4985f3a853502302a13fdef52231289282fa19e005da011a6e47e854e847a6b"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-composition/src/ViciOne.ServiceBus/DependencyInjection/PayloadAdmissionServiceCollectionExtensions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "48d376f6543f54d6b7a4f4c9f20d89422c9a5a71c4d44078a292bf7690761d08"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-composition/src/ViciOne.ServiceBus/Transports/Hosting/BusDepot.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "60c2c965ba007096d2331164b153d69292eece4e950a89dacc70cba59582eb83",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "60c2c965ba007096d2331164b153d69292eece4e950a89dacc70cba59582eb83"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    }
+  ],
+  "parser_source_sha256": "1bc09397fe31d1edaa74ae0f2ddc92b3d79b81240ec2ce571064652e7217fe1f",
+  "root_driver_sha256": "5e68a16e1e9515cbcfa37cabf146cc62afcd517807011dee636ce9476bf79d0c",
+  "generated_source_sha256": "636bf263d138cd213713ab12b1c9777b509330d570c4e76442d697332886303e",
+  "limits": "Pure byte/metadata reads only. Fresh twelve actual images and all PDB document checksums; generated source and mutant owner override are immutable. Compiled Requirements resource/method attrs and finite native causal review are separate; no source-read credit transfer, no current coverage/whole suite/globalA+ claim."
+}

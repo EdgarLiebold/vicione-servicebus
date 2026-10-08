@@ -1,0 +1,14 @@
+{
+  "kind": "ROOT_DOCUMENTATION_ACCEPTANCE_R14",
+  "freeze_sha256": "cb1482a43fc48e83af029de3923595db8521f65eb026fbfaa217e2c4f215806d",
+  "review_sha256": "404cf9c398ac1e4e8d4cab11cd2ec6966fa782a669e4d34f275172386d7651c0",
+  "source_sha256": {
+    "CHANGELOG.md": "8286200969e289b3b5c1be8554040f68e7e4899b890802e810ada687d641624b",
+    "TODO.md": "731c52e5a8fae5ab08f74c2210b94b624479c0d150287d190e886bd9b7b2ca7d",
+    ".testagent/status.md": "3503d43cc36955ad0678b182a1d8acf1619380c46ca4256c6b5c530f7e1ba1ef",
+    ".testagent/plan.md": "afd0bb3465cefa2798e44b3d4937f49358d2134d010b0205d5272b9e4ffd81b6",
+    ".testagent/local-completion-plan.md": "56455098d0a4350e0a7ba18961b88c0ad95eb54f3c252fe26aa8446683a6022d",
+    "docs/quality-status.md": "796f49c9739f94961be46ed204ff4719836381c9cc8607a405d864ddccf4de03"
+  },
+  "scope": "C5 bounded checkpoint only. CorrectedfourtimerDisposewordings, unchanged physicalafterrelease fault injection semantics. Historical234/62OBL/priorcheckpoints unchanged; C6/currentcoverage/providers/CI/cloud/hardware stillpending."
+}

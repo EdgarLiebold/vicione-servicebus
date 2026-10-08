@@ -1,0 +1,74 @@
+{
+  "kind": "INDEPENDENT_READONLY_TWO_HISTORICAL_SECRET_ALERTS_CLASSIFICATION_R1",
+  "verdict": "BOTH_REVIEWED_LOCATIONS_ARE_SOURCE_CONTEXT_FALSE_POSITIVES_FOR_DEPLOYED_SECRET_EXPOSURE",
+  "findings": [
+    {
+      "commit": "be715fa56161a3259f400b7e9d02a76fdcad3c0c",
+      "reported_path": "build/verification/expected/sql-transport.txt",
+      "reported_line": 19,
+      "classification": "PARAMETERIZED_PARSING_TEST_IDENTITY",
+      "source_path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/PgSql/Migration_Specs.cs",
+      "source_lines": "55..96",
+      "supporting_path": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/SqlTransport/PostgreSql/PostgresSqlTransportConnection.cs",
+      "supporting_lines": "12..15;56..65",
+      "checks": {
+        "expected_identity_exactly_contains_one_TestCase_literal": true,
+        "password_matches_explicit_expected_test_assertion": true,
+        "loopback_host_literal": true,
+        "parsing_case_has_no_Open_or_Start_call": true,
+        "admin_helper_constructs_connection_without_Open_call": true
+      },
+      "rationale": "Expected NUnit identity records a literal input to connection-string/options parsing assertions. Inspected targeted test constructs a provider and connection object; it does not start the harness or open the database connection. The neighboring actual harness-starting test is a separate method and is not the alert identity."
+    },
+    {
+      "commit": "211e73fdd045b306799cf7c7a82eaaec09fe0690",
+      "reported_path": "tools/ci/policies/__init__.py",
+      "reported_line": 99,
+      "classification": "KNOWN_DEFAULT_CREDENTIAL_DENYLIST",
+      "consumer_path": "tools/ci/policies/fixtures.py",
+      "consumer_lines": "107..120",
+      "checks": {
+        "KNOWN_CREDENTIALS_tuple_length": 2,
+        "for_loop_at_117_references_exact_identifier": true,
+        "matching_effective_fixture_credentials_calls_self_fail": true
+      },
+      "rationale": "The two literals are known public default-word entries used to reject effective credentials in deployment-fixture/workflow lines. At this location they are forbidden examples, not configured credentials or private access tokens."
+    }
+  ],
+  "blob_bindings": [
+    {
+      "commit": "be715fa56161a3259f400b7e9d02a76fdcad3c0c",
+      "path": "build/verification/expected/sql-transport.txt",
+      "sha256": "76c7d0dac6b9f9e94420907bfa9c66d48cd5f808a34940885763d3750a12fa76"
+    },
+    {
+      "commit": "be715fa56161a3259f400b7e9d02a76fdcad3c0c",
+      "path": "tests/Transports/ViciOne.ServiceBus.SqlTransport.Tests/PgSql/Migration_Specs.cs",
+      "sha256": "fd2588b351e908acc97cebb07093b81495ac0f19a3ee98d4634211fc7457830d"
+    },
+    {
+      "commit": "be715fa56161a3259f400b7e9d02a76fdcad3c0c",
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport.PostgreSql/SqlTransport/PostgreSql/PostgresSqlTransportConnection.cs",
+      "sha256": "76d1204c74095fd3301d65914368283e07426ec2cd22c344ff50b94e60ca58c4"
+    },
+    {
+      "commit": "211e73fdd045b306799cf7c7a82eaaec09fe0690",
+      "path": "tools/ci/policies/__init__.py",
+      "sha256": "14773511315fea50df95ba7c18510c00e487ffa5a704f2a6e91054f9b5363394"
+    },
+    {
+      "commit": "211e73fdd045b306799cf7c7a82eaaec09fe0690",
+      "path": "tools/ci/policies/fixtures.py",
+      "sha256": "02f203336b68bf44c7cd284b766b078a564f6d28be6defe2e142e9e5a5b205fa"
+    }
+  ],
+  "read_provenance": "Read-only git show captured into Python memory; full107-line test and119-line connection helper examined with every string redacted in tool output, expected line19 compared internally. Policy declaration at99 and complete consumer method107..120 examined and statically parsed, without executing/importing historical CI code. No credential value or connection string is retained in report.",
+  "limits": [
+    "Localhost alone never proves harmless: a local forwarded/developer/service endpoint can be real. Classification rests on exact test identity/assertion data flow and denylist use.",
+    "These source locations provide no evidence of a deployed/private credential, but do not prove that the same literal was never used elsewhere or in any historical deployment. No repository-wide reuse search, remote secret validity test, provider authentication or external scanner rule verification performed.",
+    "No native test was executed. Repository method construction/no-Open behavior is inspected source; third-party Npgsql constructor internals and all transitive DI side effects were not decoded here.",
+    "Public default words remain weak if actually configured; this particular tuple detects and fails such use.",
+    "No alert dismissed remotely, no git-history rewrite, no rotation or current canonical code change recommended solely from these two matches. Current path removal does not erase immutable historical scanner matches."
+  ],
+  "actions": "RETAIN_REDACTED_CLASSIFICATION_FOR_ROOT_USER_RESPONSE; no source or remote write authorized/performed"
+}

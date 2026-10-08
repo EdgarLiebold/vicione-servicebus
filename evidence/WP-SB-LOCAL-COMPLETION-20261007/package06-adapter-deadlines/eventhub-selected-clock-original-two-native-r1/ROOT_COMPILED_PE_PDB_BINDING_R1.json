@@ -1,0 +1,522 @@
+{
+  "kind": "ROOT_ACTUAL_EVENTHUB_SELECTED_CLOCK_TWELVE_IMMUTABLE_OWNERS_PHYSICAL_PE_PDB_SOURCE_BINDING_R1",
+  "native_sha256": "18f792caf37357e4235b6d6f23451e1b1bbfc73f6bf6eecac8a980a52c6edacb",
+  "actual_images": 11,
+  "actual_document_checksums": 2904,
+  "actual_runtime_files": 16,
+  "actual_assets": 11,
+  "images": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-original-two-native-r1/runtime/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "5fb927ed3cea126c7c1d0bde49755f26ca036eca893f9a82fb721f48b1349725",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3974902765,
+          "guid": "dfde4b8b-47f2-4455-a831-ef15b2445276",
+          "path": "ViciOne.ServiceBus.Abstractions.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "8b4bdedff2475544a831ef15b2445276ed33ecec",
+        "sha256": "9bc7bdfb47b00d9e1443bc761d5ff8af28896622041cc8bb4d589f47e251855a",
+        "documents": 700,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 696,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 4
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "079e17c382e073ab13efa40f3af742460b3f390c3b3070413b323dffab36db9a",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-eventhub-selected-clock-original/src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContextTimeProviderExtensions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-original-two-native-r1/runtime/ViciOne.ServiceBus.Courier.dll",
+      "sha256": "8035d4d9e6d0f8488a181935ab71e32550d5beebb11a7ed1c7f69c5f3a1e1e8c",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2634232677,
+          "guid": "ed62673f-7000-44cc-b0b5-3872a8227acf",
+          "path": "ViciOne.ServiceBus.Courier.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "3f6762ed0070cc44b0b53872a8227acf6533039d",
+        "sha256": "30b362e2e9de8a681e58627cadae861b8c6fa8b14a9980e795cee4508028a020",
+        "documents": 146,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 143,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "b3856e5cc16d9fa5b9a6b31c2b4f695c11c0869d8f19997a52bcb84f83656a11",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-original-two-native-r1/runtime/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.dll",
+      "sha256": "b6b4c74d4b03f393dd38b2c783bfa9a376462739d36b44d0a414e23c5047ee35",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3909181162,
+          "guid": "7790613d-ef7c-41e6-9b56-b028ce176b86",
+          "path": "/private/tmp/vicione-servicebus-local-completion-20261007-eventhub-selected-clock-original/artifacts/sdk/obj/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "3d6190777cefe6419b56b028ce176b86ea5e01e9",
+        "sha256": "ba055b3bdb68f352a183b1dad18a040cfe011461cb6243c60de6289845b6275a",
+        "documents": 41,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 35,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 6
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "5c22862bbfdb7afca3fd8b6c18ef7dad38b406402bc31739e13b287a735ed416",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-eventhub-selected-clock-original/tests/Transports/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/EventHubIntegration/CheckpointSelectedClockTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "e5ddb978de6828f14712e5786dc2ff9ba8cb414217ae5ab86dda08c5f884a19e",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "e5ddb978de6828f14712e5786dc2ff9ba8cb414217ae5ab86dda08c5f884a19e"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-original-two-native-r1/runtime/ViciOne.ServiceBus.EventHubs.Testing.dll",
+      "sha256": "c4e7ff3307aadffd76bd9d4902f0195aab5f069241257b4860d9a798026b544e",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2542947541,
+          "guid": "fdd4099a-3e9a-4c38-b0e8-8fbc4154b6b9",
+          "path": "ViciOne.ServiceBus.EventHubs.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "9a09d4fd9a3e384cb0e88fbc4154b6b9d54c9297",
+        "sha256": "ee359ce95cbdb6f144316579ee6280fe200927bb75f397659272f3e35f63da00",
+        "documents": 4,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 1,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "645412eff3d9f08ea7cf1e86c1e0c65cd7a4a24f6260a1b0ed60c22826bc4613",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-original-two-native-r1/runtime/ViciOne.ServiceBus.EventHubs.dll",
+      "sha256": "de2e704a97a8c3dfca350dafbb7592a6e3cb70539d640212874a557a6ac7acba",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4135168301,
+          "guid": "71531de8-6399-4f1a-b4de-e3ba12cb9b2b",
+          "path": "ViciOne.ServiceBus.EventHubs.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "e81d537199631a4fb4dee3ba12cb9b2b2da979f6",
+        "sha256": "ec0a5394f0679fa1c3a0af2b7b9973fb2b1eb892f3780ed1c497d0ceaa56883e",
+        "documents": 93,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 82,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 11
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "ce1be3ada3fd664aace514b19a39ee5223783816f9bdde6bcf373dece6372cca",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-eventhub-selected-clock-original/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/BatchCheckpointer.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "f0a40085e9b4ce10bced4f7ddb8ee99db8144a0b8e9e5d78fa724f0680a99f9b",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "f0a40085e9b4ce10bced4f7ddb8ee99db8144a0b8e9e5d78fa724f0680a99f9b"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-eventhub-selected-clock-original/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/PendingConfirmation.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "7c7d1d8bfd36dfc38e1339f65a1c8956a921db471b3a53ef9c6a9f9c493c44ef",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "7c7d1d8bfd36dfc38e1339f65a1c8956a921db471b3a53ef9c6a9f9c493c44ef"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-eventhub-selected-clock-original/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/PendingConfirmationCollection.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "c9777d4eb9a46a35b7a41d36e90a095de80e3dd3aec0fca9b4f66a231e10a660",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "c9777d4eb9a46a35b7a41d36e90a095de80e3dd3aec0fca9b4f66a231e10a660"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-eventhub-selected-clock-original/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubDataReceiver.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "ad9e68540c889e7f4e8b043edab9262590bf7c9f8db60ca138855e3e550ad875",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "ad9e68540c889e7f4e8b043edab9262590bf7c9f8db60ca138855e3e550ad875"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-eventhub-selected-clock-original/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProcessorContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "998db6d69265b24ff6cd2a83a0f67d75f22726b4cc678a194700729e22172946",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "998db6d69265b24ff6cd2a83a0f67d75f22726b4cc678a194700729e22172946"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-eventhub-selected-clock-original/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/PartitionCheckpointData.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "86a4814e69d78eb6171b8d12426f66b0f7dcf3bb21d436bb74e101625e407eba",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "86a4814e69d78eb6171b8d12426f66b0f7dcf3bb21d436bb74e101625e407eba"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-eventhub-selected-clock-original/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "2a80f48fb20b7ca7a82d14faf4374ef18a149e5757a5dd2602470f198ad9645e",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "2a80f48fb20b7ca7a82d14faf4374ef18a149e5757a5dd2602470f198ad9645e"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-eventhub-selected-clock-original/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "8f75eb7f25c12d4ed7adc1e59387ed10be97100d2608044d9e43f01d2e8e5d6a",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "8f75eb7f25c12d4ed7adc1e59387ed10be97100d2608044d9e43f01d2e8e5d6a"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-original-two-native-r1/runtime/ViciOne.ServiceBus.Futures.dll",
+      "sha256": "d547af1be1d78bba0de8dd7f08296fbce2fb80e7ad0e5aa5848754fc5a929228",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2286653429,
+          "guid": "9d418f24-347d-426b-b54f-f01890c9a121",
+          "path": "ViciOne.ServiceBus.Futures.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "248f419d7d346b42b54ff01890c9a121f58f4b88",
+        "sha256": "fac6d51d6d86e1985e6d33083738f08a035357e4a8c743de406e00b5e1d07f5f",
+        "documents": 61,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 58,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "3c5ef1b5725ffa7b619a1a24537996c0655ed8e88bf8d0bdae54c61fe30fcd03",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-original-two-native-r1/runtime/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "1b763766d21934fd02fe2b87c1356290f95458159ce169be7e8cf514ba039249",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4134575680,
+          "guid": "f6aa0c43-a0cb-47c9-b518-590f42e6aec6",
+          "path": "ViciOne.ServiceBus.Mediator.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "430caaf6cba0c947b518590f42e6aec6409e70f6",
+        "sha256": "0d72221bba497ef4288c8ce4a7a8c9892717db8a79b28c75790944abc585bd8e",
+        "documents": 31,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 28,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "6655545543f5dd7a7a5b6f957b194e32984445b7a0379d75806fb356e702c570",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-original-two-native-r1/runtime/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "c54a46ce5212df4a977381cf17b07a37ad3d8eb07eeff7ec986319bb5cc74a28",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3408763367,
+          "guid": "6ef899a1-4f07-4231-b94d-1761cde93e8e",
+          "path": "ViciOne.ServiceBus.Sagas.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "a199f86e074f3142b94d1761cde93e8ee7992dcb",
+        "sha256": "b0204ae3a15e136140a5249c02d1db1e5e7fb7dbe0f4614ca524b0a41a820d7e",
+        "documents": 374,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 371,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "98b6a46a5211886fc0448805f481a45b754aef47e4e36f27ba79d9cf6d36822b",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-original-two-native-r1/runtime/ViciOne.ServiceBus.Testing.dll",
+      "sha256": "128198b54ab39f84d25fb47d127ae3e567388c60e1c8607651606c7c25096939",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4042093157,
+          "guid": "291f698a-c32a-44fe-bf03-fe73a1c3cfed",
+          "path": "ViciOne.ServiceBus.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "8a691f292ac3fe44bf03fe73a1c3cfed6572edf0",
+        "sha256": "c2d7965ee6b48a048ae57a21a1e071645dd93744f7510f565d9646f428d813a1",
+        "documents": 104,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 101,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "f9e6ec822222adb6531338def416a160146870db48815c977f5bf59c74bce474",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-original-two-native-r1/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "d0d47b33577402710868aea3fb4733eb3e09e56d3e4ea9054c658772d3c11f34",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3433690614,
+          "guid": "a6d46ad4-968d-4f69-b654-561495082468",
+          "path": "ViciOne.ServiceBus.Tests.Infrastructure.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "d46ad4a68d96694fb654561495082468f6f5a9cc",
+        "sha256": "085d1034d2dca1b9f0ef0db52de85fa2bdd46e589dbf29dfa0fcb9673eb85746",
+        "documents": 9,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 6,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "501539a9dbc250430091ab971d93dc8bd80b7d19658da70c7c2fa59676f5e262",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-original-two-native-r1/runtime/ViciOne.ServiceBus.dll",
+      "sha256": "ca16083e43069bb3c380faaca05a58362e325da942916d07bdba005b3dd728a5",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2634978172,
+          "guid": "45589971-a5fa-4249-b4dc-a9b889133d9b",
+          "path": "ViciOne.ServiceBus.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "71995845faa54942b4dca9b889133d9b7c930e9d",
+        "sha256": "abaf394471b4feb4df656485c8747e0eac8ea642ac3bc255c774b50bbfb43767",
+        "documents": 1341,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 1293,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 4,
+          "EMBEDDED_SOURCE": 44
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "b485d3e21314302b991ede62375c7588199d13b565fe27d589df568c10efe0e6",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-eventhub-selected-clock-original/src/ViciOne.ServiceBus/Transports/Receiving/ConsumerAgent.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "ee1afc2cf94e4d8f4c9ef24edf7dc3ae559d68371db2f5668225e273a7392088",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "ee1afc2cf94e4d8f4c9ef24edf7dc3ae559d68371db2f5668225e273a7392088"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    }
+  ],
+  "parser_source_sha256": "1bc09397fe31d1edaa74ae0f2ddc92b3d79b81240ec2ce571064652e7217fe1f",
+  "root_driver_sha256": "df6560df3a91c9aec8a79245ea42421a62dc95b7c0d8b4d3d8f6bdc95c8fab05",
+  "generated_source_sha256": "ea09410c71f2d1fd67a9d68df212419ebcbcf5b34dfa0c2c02700f5ef1012416",
+  "source_owners_sha256": "6334d0b0c3144b6199390b322a398eacf0e3fbc698a41b64c0609ac494d26a8e",
+  "limits": "Pure byte/metadata reads only. Fresh actual runtime images and all PDB document checksums; generated source and mutant owner override are immutable. Compiled Requirements100 resource/method attrs and finite native causal review are separate; no source-read credit transfer, no current coverage/whole suite/globalA+ claim."
+}

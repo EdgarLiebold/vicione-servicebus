@@ -1,0 +1,37 @@
+{
+  "status": "INDEPENDENT_B2_SOURCE3_CURRENT_HASH_PATHSET_AND_ROOT803_84_PROVENANCE_VERIFIED__NO_REVIEWER_READ_TRANSFER",
+  "root803_sha256": "34d56c2d06ef1339159b9b4ca3a20b2dceb0d8b89d8ee63da4680382cab51bb1",
+  "root802_sha256": "2d3018195a6b6bcef722635d7067323a0f3648f95de89063c174b162423e1bc8",
+  "all_current_owner_count": 803,
+  "git_tracked_count": 800,
+  "explicit_new_owners": [
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchActivityHandoffIsolationTests.cs",
+    "tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs",
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/ActivitySourceActivationIsolationTests.cs"
+  ],
+  "prior_unchanged_personal_root_reuse": 801,
+  "whole_new_owner_lines": 140,
+  "whole_new_owner_sha256": "f097715bd98b8d9fbbfd516733f8aba4a17de24f57de3ac9c73ba9db2921e213",
+  "sole_changed_old_owner": [
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json"
+  ],
+  "requirements_ordered_semantic_prefix_rows": 4691,
+  "requirements_exact_appended_rows": [
+    {
+      "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "Delivery_PreservesPipelineOutcomeWhenActivityHandoffObserverThrowsAsync",
+      "testType": "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchActivityHandoffIsolationTests",
+      "variantKey": "batch-handoff-preserves-required-pipeline-outcome"
+    }
+  ],
+  "total_unique_rows": 4692,
+  "all_shared84_equal_current_and_prior": true,
+  "fixed3_snapshots_match_current": true,
+  "original3_snapshots_exact_bound": true,
+  "product_delta_only_namespace_and_single_handoff": true,
+  "product_whole_old429_plus_root_authored_import_assignment_delta": "Root attestations referenced in freeze; no agent substitution",
+  "whole_current_corrected_product_lines": 430,
+  "prior_root57_original_product_sha256": "4d008ca99020815d1453376e277cc06ea57ca2db75d0a7ffb6fea279a4ab64c4",
+  "corrected_product_sha256": "da6a9cb0359b3f6d401a5f8a9026565309cb8c4a1936666bae3ba726d8a61eb9"
+}

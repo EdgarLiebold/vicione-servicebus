@@ -1,0 +1,46 @@
+{
+  "kind": "ROOT_BOUNDED_STAGE_B2_BATCH_HANDOFF_ACCEPTANCE",
+  "status": "ACCEPTED",
+  "product_owners": 1,
+  "new_native_cases": 6,
+  "requirements_rows_added": 1,
+  "freeze_sha256": "08babf3223a56a0e053c3e1f53ea7ef090d91589e5a7200b671f3e8b958efb7d",
+  "source_sha256": {
+    "src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs": "da6a9cb0359b3f6d401a5f8a9026565309cb8c4a1936666bae3ba726d8a61eb9",
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchActivityHandoffIsolationTests.cs": "f097715bd98b8d9fbbfd516733f8aba4a17de24f57de3ac9c73ba9db2921e213",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "cf28573d00c8b37459c630a708c8a98a20da16b2a781f26c35799dd79fb3a136"
+  },
+  "root_complete_read_closure_sha256": "34d56c2d06ef1339159b9b4ca3a20b2dceb0d8b89d8ee63da4680382cab51bb1",
+  "independent_reviews_sha256": {
+    "package05-stage-b2-source-tests-original-adversarial-r1.json": "d420fa6f0db476e18b67c9424a2517efb32bdca586aa9a6ae38b1d5a9b2433cd",
+    "package05-stage-b2-original-native-artifact-review-r1.json": "1045a93e0c90b4fb8b8c8bbe2efac1d19155cc9868baf41b8852b436553475d4",
+    "package05-stage-b2-fixed-native-artifact-review-r1.json": "138247ae34791d1d72907e3362c6d1be97b682ce44d91def2068bf1448938d99",
+    "package05-stage-b2-mutant-native-artifact-review-r1.json": "95e4417768209cb747f19fd57cc8045ce582068d5ecda940a1c15065cd496722",
+    "package05-stage-b2-final-native-artifact-review-r1.json": "e9cac53fda539cc0fb4570f2bd809d570ab4cc7ab29aa2bb6bbea4edaff4c38b"
+  },
+  "native_summary": {
+    "original_finite_failed": 3,
+    "original_named_healthy": 3,
+    "fixed_focused_pass": 6,
+    "fixed_whole_core_pass": 7974,
+    "compiled_single_cause_mutants": 1,
+    "finite_mutant_reds": 3,
+    "named_mutant_healthy": 3,
+    "fixed_post_pass": 6,
+    "focused_event_slots": 24,
+    "unique_closed_binlogs": 9
+  },
+  "root_personal_native_parent_exits": {
+    "original_build25945": 0,
+    "original_focus79269": 2,
+    "fixed_build35981": 0,
+    "fixed_focus45822": 0,
+    "fixed_core54169": 0,
+    "mutant_restore39046": 0,
+    "mutant_build24396": 0,
+    "mutant_focus50797": 2,
+    "fixed_post90076": 0
+  },
+  "requirements_reuse": "4691 identical ordered semantic JSON objects plus one exact purpose row; normalizes prior indentation, no byteprefix claim",
+  "limits": "Protected explicit handoff only; Success/Failure original+mutant directChanged57\u2192Deliver371/372; Cancellation red only actualInvalidOperationException vs requiredOperationCanceledException type, no originreference/stack claim. Corrected cases verify actual context token. No new explicitfinally/restoration contract or fullP05/allUnit/provider/package/coverage/CI/cloud/hardware acceptance."
+}

@@ -1,0 +1,341 @@
+{
+  "status": "READ_ONLY_COLD_PROCESS_FIXTURE_DESIGN_AND_CURRENT_APPHOST_INVENTORY__NO_CODE_OR_NATIVE_EXECUTION_CREDIT",
+  "reviewer": "/root/continuation_adversarial",
+  "previous_plan": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-b-creation-monitor-plan-readonly-r1.json",
+    "sha256": "5dcc450e4712845ff66d4e52b3828f16d242c21f732fd30c81d08c6393362f12"
+  },
+  "bindings": [
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs",
+      "sha256": "bc9bdd069b20785457700ff8cfde1ffb996f8b0f07c8522898201bbdb4e4ef7c",
+      "lines": 218,
+      "matches_complete_Root57": true,
+      "read_by_reviewer": "whole body current; never Root credit"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "6bc0539808fb6237280c50550743f04d5d0fc1d6cf454e7432e5c7befa6dac1b",
+      "lines": 215,
+      "matches_complete_Root57": true,
+      "read_by_reviewer": "whole body current; never Root credit"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "sha256": "8647373561a105ff543247438d3239f869009b6e2efc829f533d45bdfb235291",
+      "lines": 316,
+      "matches_complete_Root57": true,
+      "read_by_reviewer": "whole body current; never Root credit"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+      "sha256": "d941d74bc5ac55af42d7c2abde5537489cd2850dcc325ecadfd7e93ff80931b9",
+      "lines": 54,
+      "matches_complete_Root57": true,
+      "read_by_reviewer": "whole body current; never Root credit"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/DependencyInjection/ViciOneServiceBusTestingServiceCollectionExtensions.cs",
+      "sha256": "4fcb66dd722ee22d11e9f91bcf1375f46b7321882bf8d13c54cc83815d4239a1",
+      "lines": 303,
+      "matches_complete_Root57": true,
+      "read_by_reviewer": "whole body current; never Root credit"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/DependencyInjection/Internal/ContainerTestHarness.cs",
+      "sha256": "c45b3d2faa01d87e4f4e34e40b745a3f111256ee6d2b4db0e3e935e68492bcfc",
+      "lines": 603,
+      "matches_complete_Root57": true,
+      "read_by_reviewer": "whole body current; never Root credit"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/DependencyInjection/TestingServiceProviderExtensions.cs",
+      "sha256": "5a89de4e002025ca8f29b47b4aba42db49db87e54a0bf88fe33a8bc60343e078",
+      "lines": 237,
+      "matches_complete_Root57": false,
+      "read_by_reviewer": "whole body current; never Root credit"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Util/RollingTimer.cs",
+      "sha256": "58b73f24ebf7a6115065a0c8d7fbcb226ca0404b3ff70f1888f62e0c9d55acee",
+      "lines": 115,
+      "matches_complete_Root57": false,
+      "read_by_reviewer": "whole body current; never Root credit"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/IPublishEndpoint.cs",
+      "sha256": "71a2cf0a5e52f6301e42236b56acfd4238eb4f753155095684bb62553d337338",
+      "lines": 32,
+      "matches_complete_Root57": false,
+      "read_by_reviewer": "whole body current; never Root credit"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Observers/IPublishObserverConnector.cs",
+      "sha256": "3acee1cd5064f069518a99ff71b8d90a604f4bffd7cc2798d94f1520a1a0d95c",
+      "lines": 10,
+      "matches_complete_Root57": false,
+      "read_by_reviewer": "whole body current; never Root credit"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/OpenTelemetryGlobalCollection.cs",
+      "sha256": "bf37ae4bc28f82905a7cbc8663b440ed2d81f6d41247418b717ff3b48ff37df6",
+      "lines": 13,
+      "matches_complete_Root57": false,
+      "read_by_reviewer": "whole body current; never Root credit"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/ObservableTimeProvider.cs",
+      "sha256": "e3bf439b800f4f8cf7b96dc8a9a21be05d637157104efa4c72514eadb59c6f5c",
+      "lines": 285,
+      "matches_complete_Root57": false,
+      "read_by_reviewer": "whole body current; never Root credit"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/QueuedCallbackTimeProvider.cs",
+      "sha256": "12dc6778a86c55c4ffd880d9e7d9e02571759f60b3a7886ea9e6f447293f04ae",
+      "lines": 36,
+      "matches_complete_Root57": false,
+      "read_by_reviewer": "whole body current; never Root credit"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/Diagnostics/TrackedActivityTests.cs",
+      "sha256": "77a935c0cd20bbc4545e158e3a7d5c75828efecc240e3699be405bc5b3c6cee6",
+      "lines": 362,
+      "matches_complete_Root57": false,
+      "read_by_reviewer": "whole body current; never Root credit"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Testing/TestingServiceCollectionExtensionsTests.cs",
+      "sha256": "291a208d726b4ec0c8522c039cb68f34b6b0ca1789d9875046cc43140b9a7b37",
+      "lines": 195,
+      "matches_complete_Root57": false,
+      "read_by_reviewer": "whole body current; never Root credit"
+    }
+  ],
+  "root57": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_TELEMETRY57_COMPLETE_SOURCE_READ_R1.json",
+    "sha256": "87c47890f03ff587088d3a13d6b17fcefdc2234b9ab0bde6e420b15c39cf9e72",
+    "qualification": "Only matching unchanged source bytes may reuse Root personal proof. Reviewer whole reads do not transfer. Extra sources/proxy/new process fixture owner must be independently qualified by Root before canonical editing."
+  },
+  "smallest_recommended_boundary": {
+    "choice": "Reuse existing native Core MTP apphost, same selected Fact per child, no new executable project, no reflection/reset/AssemblyLoadContext or test-order requirements",
+    "canonical_scope": "Four cold public-path Facts in one new owner; fifth constructor-unwind Fact mandatory if unwind changed. Efficient separate optional2-owner package and required3-case package possible; freeze each bounded source/test delta. WholeCore adds four (or five) parent Facts; child native events are separate corroboration, never added to wholeCore total.",
+    "alternative": "A small public NuGet-only probe executable may be used if same-apphost launch fails native qualification; it needs explicitly bound new build/pack/lock/manifest scope and a parent canonical launch test. Do not silently insert a console/project or claim an alternative was run."
+  },
+  "actual_apphost_inventory": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests",
+      "sha256": "a485b3d277bb128b832f9ac839cc04ed7da029ba9aaf40f0d4001582d08c513e",
+      "bytes": 88920,
+      "mode": "0o755",
+      "magic_first8_hex": "cffaedfe07000001"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll",
+      "sha256": "14f9208ce175e6442075519275024fd83a774d62b6b68d1505349c480f5cf52b",
+      "bytes": 18427904,
+      "mode": "0o644",
+      "magic_first8_hex": "4d5a900003000000"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.runtimeconfig.json",
+      "sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+      "bytes": 330,
+      "mode": "0o644",
+      "magic_first8_hex": "7b0a20202272756e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.testconfig.json",
+      "sha256": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+      "bytes": 66,
+      "mode": "0o644",
+      "magic_first8_hex": "7b0a20202278556e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.deps.json",
+      "sha256": "ebd7e9743b85cadf35d729ceb9e51687088d9e1a60a6f25d8f8c8a09de8ed223",
+      "bytes": 63167,
+      "mode": "0o644",
+      "magic_first8_hex": "7b0a20202272756e"
+    }
+  ],
+  "platform_detection": {
+    "config_hashes": {
+      "global.json": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93",
+      "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21",
+      "Directory.Build.props": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf",
+      "tests/Directory.Build.props": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8",
+      "Directory.Packages.props": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e"
+    },
+    "facts": "net10.0, OutputType Exe, UseMicrosoftTestingPlatformRunner true; global test runner MTP; xunit.v3.mtp-v2 4.0.0 and CodeCoverage18.10.0. Current built apphost Mach-O x86_64,755. No inventory execution performed.",
+    "runtime_requirement": "Resolve sibling apphost from exact typeof(new fixture).Assembly.Location basename, .exe on Windows; never assume Environment.ProcessPath is test apphost (it can be dotnet). Match current DLL/hash/TFM/runtimeconfig. Inherit required architecture-specific DOTNET_ROOT/runtime selection consistently; apphost launch/missing runtime/permission/zero discoveries is invalid fixture, not productred."
+  },
+  "parent_child_protocol": [
+    "Each public Fact returns Task without async keyword and is NoInlining. Router inspects only owned sentinel metadata and dispatches synchronously to child probe before first await; parent path never touches either source owner. This keeps synchronous attributed Fact frame for public AddTelemetry.GetTestMethodInfo and protects installer from prematurely JIT-initializing subject helper.",
+    "No sentinel => parent builds ProcessStartInfo for own sibling apphost, UseShellExecute false, RedirectStandardOutput/Error true, ArgumentList tokens only. Child Environment fields contain selected full Fact name, depth1, parent PID and unique nonce. Mutate only child environment, never global parent Environment.",
+    "Proposed exact argv: --filter-class ViciOne.ServiceBus.Tests.Testing.Diagnostics.ColdTelemetrySourceIsolationTests --filter-method ViciOne.ServiceBus.Tests.Testing.Diagnostics.ColdTelemetrySourceIsolationTests.<ExactFactMethod> --minimum-expected-tests 1 --output Detailed --results-directory <unique owned child directory>. No shell escaping, project discovery, dotnet test, restore or build inside tests.",
+    "Owned sentinel present => assert exact own full Fact name, depth1 and current PID differs from parent PID, then execute probe. Unexpected case/depth or child filter selecting another Fact fails invalid fixture; never fall back to spawn. Emit nonce/case/currentPID/parentPID entry marker to captured output and assertion-complete marker only after actual assertions, with no marker-only pass acceptance.",
+    "Read stdout and stderr concurrently from process start. Await exit with bounded guard/test cancellation; on abnormal exit preserve complete raw streams before asserting expected exact child named one-case summary/zero skips/exit0. A product causal kill requires child finite source/test stack; parent nonzero-exit assertion alone is insufficient.",
+    "finally kill owned process tree only if still running, await termination and drain both streams before Process.Dispose; remove only owned temporary paths after archiving evidence. Guard timeout/process crash/output-read failure is fixture failure and zero causal credit. Never use real sleeps to drive product behavior.",
+    "Record exact apphost/DLL/PDB/runtime/config/first-party graph hashes before and after children; root external parent build/test commands retain unique binlogs. Direct already-built apphost has no MSBuild invocation and therefore no child-generated MSBuild binlog; preserve command metadata and raw native output instead. Child PID and selected case bind fresh-process evidence."
+  ],
+  "cold_prerequisite_and_arming": [
+    "Before any subject activation use ordinary caller Activity and unique unrelated source; register target-name-specific foreign ActivityListener UNARMED. ShouldListenTo increments targetSeen count for matching target and always returns false; it does not sample unrelated/runtime sources. Assert targetSeen==0 immediately after registration, then assert unrelated baseline StartActivity returns null. Any existing target source is explicit invalid fixture.",
+    "Arm chosen one-shot fault only after those finite assertions; count every target callback whether throw enabled or not. Invoke source-owning public path through separate NoInlining helper after arming, with optional registration before any await so methodName is nonnull. If eager runtime initialization makes cold invalid, keep error as fixture and adjust invocation boundary; do not reset or patch static state.",
+    "After first hostile attempt DISARM THROW but KEEP RECORDER REGISTERED for second invocation. This proves source ctor total1 across cached optional null or required cached original fault. Removing observer would conceal retry attempts. After assertions remove fixture recorder and sources normally.",
+    "ActivitySource constructor registers itself before external ShouldListenTo; throwing constructor yields no returned disposable handle. One attempt/process-exit bounds hidden partial source lifetime; never claim product disposed a never-returned object or zero global hidden instances."
+  ],
+  "case_catalog": [
+    {
+      "id": "L-Healthy",
+      "suggested_fact": "OptionalTimeline_ColdHealthyPublicActivationWorksInFreshProcess",
+      "target": "ViciOne.ServiceBus.TestHarness",
+      "public_path": "synchronous AddViciOneServiceBusTestHarness(writer) + AddViciOneServiceBusTestTelemetry(writer) -> BuildServiceProvider -> GetTestHarness; no bus StartAsync, no cloud/provider",
+      "oracles": [
+        "pre-arm targetCount0 and unrelated-source baseline unsampled",
+        "exact source construction callback count1 across two separate provider activations",
+        "after each activation actual current root source TestHarness and OperationName current NoInlining Fact name; after disposal exact live caller restored",
+        "one harmless actual harness-use action count1/result from configured public options, no optional activation failure",
+        "timeline observes a separately created root work operation while Current temporarily null, then fixture restores owned test root; provider disposal produces writer row for that operation",
+        "after each provider teardown unrelated source remains unsampled; all providers and writers disposed"
+      ],
+      "original_prediction": "healthy native PASS; not a regression kill"
+    },
+    {
+      "id": "L-Hostile",
+      "suggested_fact": "OptionalTimeline_ColdSourceFailureRemainsInertAcrossPublicActivations",
+      "target": "ViciOne.ServiceBus.TestHarness",
+      "fault": "ShouldListenTo for target first actual source constructor increments counter, sets Current null and throws one chosen ordinary exception; other sources return false",
+      "oracles": [
+        "pre-arm targetCount0, baseline probe unsampled; callback count1 before any finite product assertion",
+        "public harness activation escaped exception null; one actual harmless harness-use action count1/result valid; same caller restored and no own root",
+        "disarm throw but retain counting predicate for second separate provider activation; target callback total remains1 and both activations inert",
+        "unrelated activity remains null before and after teardown (otherwise-live own optional listener detected); no invented timeline event from failed source",
+        "optional cached-null policy is explicit; no CLR TypeInitializationException or unbounded retry success"
+      ],
+      "original_prediction": "finite null-activation-error assertion fails with TypeInitializationException wrapping chosen source-constructor exception; action may not reach; record actual original native stack before credit"
+    },
+    {
+      "id": "M-Healthy",
+      "suggested_fact": "RequiredMonitor_ColdHealthyPublicActionObeysExactIdleDeadline",
+      "target": "ViciOne.ServiceBus.Testing.Monitor",
+      "public_path": "strict public IPublishEndpoint proxy -> actual ExecuteAndWaitForIdleAsync(endpoint action, max10min, idle1min, recording ObservableTimeProvider, owned cancellation)",
+      "oracles": [
+        "cold targetCount0; healthy source callback count1; action count1 and endpoint argument identical; strict proxy invocation count0",
+        "actual action current root Source.Name Monitor, real trace and caller parent, no rootless/inert success",
+        "once action completed actual timer DueTime idle1min; advance idle-minus-one-tick => wait incomplete; final tick => native operation completed",
+        "actual TimerCount1 and ActiveTimerCount0 after public operation disposal; root stopped, caller restored, unrelated activity unsampled"
+      ],
+      "original_prediction": "healthy native PASS; exact FakeTimeProvider boundaries, no real sleep"
+    },
+    {
+      "id": "M-Hostile",
+      "suggested_fact": "RequiredMonitor_ColdSourceFailurePreservesOriginalAndCachesOneAttempt",
+      "target": "ViciOne.ServiceBus.Testing.Monitor",
+      "fault": "same target-source constructor ordinary cause, optionally Current null; no action entered",
+      "oracles": [
+        "cold targetCount0 and actual construction callback count1 before cause assertion",
+        "public call throws same chosen exception object (not CLR wrapper/replacement); actionCount0 and strict endpoint invocation0",
+        "actual timersCreated0/active0, caller restored and unrelated source unsampled after constructor unwind",
+        "throw disabled but counter listener retained; repeat public call same exception object/actionCount0/constructorCount1; required Lazy ExecutionAndPublication failure-cache policy explicit",
+        "fixture cleanup disconnects foreign listener; no required success/null root fallback"
+      ],
+      "original_prediction": "finite Same(originalException,escaped) fails on original TypeInitializationException; action0 alone is not counterproof"
+    },
+    {
+      "id": "M-Unwind",
+      "suggested_fact": "RequiredMonitor_StartFailureKeepsPrimaryWhenOwnedTimerDisposeThrows",
+      "required_when": "MUST include if changing TrackedActivity constructor catch/unwind; this is additional fifth canonical Fact, beyond four first-source cases",
+      "public_path": "same actual public ExecuteAndWaitForIdleAsync with own real ObservableTimeProvider(timerDisposeException=secondary)",
+      "fault": "healthy target source; external root ActivityStarted starts one related child from own source (own tracker sees it and allocates timer), then throws chosen primary; actual timer Dispose releases real inner timer/decrements owned count then throws chosen secondary",
+      "oracles": [
+        "record chosen root actual Activity and related child; confirm actual TimerCount1 before throwing primary",
+        "public exception same primary, action0, endpoint invocation0; secondary may be recorded but never replaces primary",
+        "timer disposal attempted once, ActiveTimerCount0; root stopped and unrelated source unsampled after owner unwind",
+        "finally fixture detaches hostile callbacks, disposes child/foreign sources/listeners and joins owned operations even when finite cause assertion fails"
+      ],
+      "original_prediction": "finite cause-identity failure if secondary currently replaces primary; requires actual native source stack, no prediction acceptance"
+    }
+  ],
+  "counts": {
+    "first_source_cases": 4,
+    "required_if_constructor_unwind_changes": 1,
+    "full_proposed_with_unwind": 5,
+    "predicted_original_first_source": {
+      "finite_red": 2,
+      "healthy": 2
+    },
+    "predicted_original_with_unwind": {
+      "finite_red": 3,
+      "healthy": 2
+    },
+    "predictions_only": true
+  },
+  "minimal_product_design": {
+    "optional": "Lazy<ActivitySource?> ExecutionAndPublication with optional ctor-only factory guard and bounded ambient restoration; cached null keeps instance fully inert. Acquire only when requested methodName requires root, before own ActivityListener registration if possible. Inert instance DisposeAsync idempotent and cannot retain listener. No required validation/business operations caught.",
+    "required": "Lazy<ActivitySource> ExecutionAndPublication caches ORIGINAL exception, no nullable/inert fallback. Acquire Value inside constructor owned try so original failure unwinds own listener/root/timer and restores caller through accepted bounded helper. Suppress secondary only while preserving existing primary; normal required deadlines/timer operations remain required.",
+    "context": "Current RollingTimer creates actual ITimer only on Restart/Start. Required cold source failure should create zero timers; related child in real root-start callback creates timer before selected primary, enabling real unwind control."
+  },
+  "fixture_pitfalls": [
+    "Do not implement child Fact as async after an earlier await before AddTelemetry registration: GetTestMethodInfo scans attributed synchronous stack and otherwise returns null, hiding optional source creation. Task-returning non-async NoInlining Fact with synchronous child prefix avoids this; healthy actual root OperationName assertion corroborates.",
+    "Optional healthy root parent caller is not present in TestActivityListener captured chart; BuildChart top rows require empty ParentId. Do not falsely assert healthy root row in writer under preexisting caller. Inspect actual root via public current Activity source/name, and create a separate root work span with Current temporarily null to test real writer row, restoring owned root afterward.",
+    "Disposal must use asynchronous ServiceProvider disposal for IAsyncDisposable-only listener; avoid synchronous provider.Dispose setup failure. Do not start actual in-memory bus unless intentional separate behavior is required.",
+    "Own listener samples all sources; unrelated probe null before activation and after disposal is a finite ownership oracle. Host MTP may have its own listeners: baseline probe assert detects incompatible environment; no false universal no-listener claim.",
+    "Source-null optional timeline has no direct metrics owner. Core B1 already proved typed independent meters. If extra optional-independent-metric control desired, use actual DI host IMeterFactory and scoped real listener, not a global fallback; do not claim optional test timeline owned or disabled host meters.",
+    "Keep child metadata and complete output in artifact archive even when product assertions fail; new native events require exact same test bytes for original/fixed/mutants. Filter miss/discovery/prewarmed/type-init before act/watchdog failures are excluded."
+  ],
+  "root_author_read_list": {
+    "unchanged_Root57_reuse_if_current_hash": [
+      "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs",
+      "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+      "src/ViciOne.ServiceBus.Testing/DependencyInjection/ViciOneServiceBusTestingServiceCollectionExtensions.cs",
+      "src/ViciOne.ServiceBus.Testing/DependencyInjection/Internal/ContainerTestHarness.cs"
+    ],
+    "extra_or_reconfirm_complete_prior_proof": [
+      "src/ViciOne.ServiceBus.Testing/DependencyInjection/TestingServiceProviderExtensions.cs",
+      "src/ViciOne.ServiceBus/Util/RollingTimer.cs",
+      "src/ViciOne.ServiceBus.Abstractions/IPublishEndpoint.cs",
+      "src/ViciOne.ServiceBus.Abstractions/Observers/IPublishObserverConnector.cs",
+      "tests/ViciOne.ServiceBus.Tests/Testing/OpenTelemetryGlobalCollection.cs",
+      "tests/ViciOne.ServiceBus.Tests/Testing/ObservableTimeProvider.cs",
+      "tests/ViciOne.ServiceBus.Tests/Testing/QueuedCallbackTimeProvider.cs",
+      "tests/ViciOne.ServiceBus.Tests/Testing/Diagnostics/TrackedActivityTests.cs",
+      "tests/ViciOne.ServiceBus.Tests/Testing/TestingServiceCollectionExtensionsTests.cs"
+    ],
+    "new_owners": "Entire new canonical ColdTelemetrySourceIsolationTests owner including process router/proxy and all new exact requirements rows. Hash-qualified previous entireCore805/84 reuse for unchanged existing test/fixture paths only. Root owns source deltas and actual new full body before canonical freeze.",
+    "build_context": "Existing testproject/global/Directory props, lock/project graph already qualified from freshcheckout and current native runtimes; apphost inventory here is read-only corroboration. New helper must be same test owner to avoid unnecessary build graph changes."
+  },
+  "remaining_required_caller_cleanup_issue": {
+    "paths": [
+      "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs"
+    ],
+    "fact": "After successful initialization, using Dispose still can replace action-primary with required ITimer.Dispose secondary; constructor-only fix does not close it.",
+    "bounded_rule": "Leave explicitly pending if no caller edits. If caller scope included, add real public action-chosenPrimary+actualsecondaryTimerDispose test and standalone requiredcleanup failure control; preserve primary where exists, propagate standalone required failure. No blanket required Dispose suppression."
+  },
+  "skills": {
+    "read_only_case_design": "Applied existing Microsoft OpenTelemetry ownership/isolation rules, test-anti-patterns, focused code-testing-agent planning contract and run-tests platform/filter rules. No writing/test role delegated or native execution.",
+    "skill_files": [
+      "/Users/edgar.liebold/.codex/plugins/cache/dotnet-agent-skills/dotnet-test/0.2.0/skills/test-anti-patterns/SKILL.md",
+      "/Users/edgar.liebold/.codex/plugins/cache/dotnet-agent-skills/dotnet-test/0.2.0/skills/code-testing-agent/SKILL.md",
+      "/Users/edgar.liebold/.codex/plugins/cache/dotnet-agent-skills/dotnet-test/0.2.0/skills/run-tests/SKILL.md"
+    ]
+  },
+  "primary_references": [
+    {
+      "url": "https://xunit.net/docs/getting-started/v3/microsoft-testing-platform",
+      "supports": "MTP test assemblies are directly executable; --filter-class/--filter-method support and output/report options"
+    },
+    {
+      "url": "https://api.xunit.net/v3/3.2.1/v3.3.2.1-Xunit.Runner.Common.XunitFilters.AddIncludedMethodFilter.html",
+      "supports": "Simple method filter matches fully qualified method name"
+    },
+    {
+      "url": "https://xunit.net/docs/query-filter-language",
+      "supports": "Simple filters match fully qualified class/method; query and simple filters must not mix"
+    }
+  ],
+  "exclusions": "No native first-source proof, compile/discovery success, process launch, .NET/providers, private reflection/reset/ALC or order-dependent acceptance performed here; no allP05/A+/release/cloud/hardware claim. Prior plan Batch finally assertion was superseded by accepted B2 bounded handoff scope, not revived by this cold plan."
+}

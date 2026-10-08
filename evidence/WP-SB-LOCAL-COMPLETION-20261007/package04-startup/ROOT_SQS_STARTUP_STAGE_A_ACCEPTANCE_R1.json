@@ -1,0 +1,56 @@
+{
+  "kind": "ROOT_ACCEPTED_BOUNDED_NAMED_SQS_ACTUAL_GENERIC_HOST_STARTUP_R1",
+  "status": "ROOT_ACCEPTED_LOCAL_SQS_STAGE_A__OTHER_STARTUP_ADAPTER_OBSERVER_COVERAGE_PROVIDER_CI_HARDWARE_CLOUD_WORK_OPEN",
+  "independent_final_review_sha256": "8fddf37a4e085e177bd31aea2161c332a4d1877d691d6b6edd4c71cde8a98a63",
+  "source_sha256": {
+    "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/packages.lock.json": "162287410b5a1d1c6460acbd1ebf8226c5558d9557a4c09c08f6223327ad5973",
+    "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f",
+    "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs": "694ffbfb2fb103e081e1de064c1f4d7a875c32d971e3beb2b91ebe79e60a98d8",
+    "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa",
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsBusFactoryConfiguratorExtensions.cs": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a"
+  },
+  "root_source_read_receipt": "ROOT_STARTUP27_COMPLETE_SOURCE_READ_R1.json",
+  "original6": {
+    "red": 4,
+    "healthy": 2,
+    "result_sha256": "4dae3dc4c6c0cc9ea6b0051718370bee11b7822f11c4ffdbbef628f327fd4914"
+  },
+  "fixed6_result_sha256": "f2261b92f30aa6fcc2e1da84c5e56b2ff5a8886e9e99360d9f04c2b597345366",
+  "whole_module": {
+    "passed": 417,
+    "failed": 0,
+    "skipped": 0,
+    "result_sha256": "426241207468a72d293808121794c570430997bff7c954623a9b61df8421d702"
+  },
+  "mutants": {
+    "variants": 6,
+    "slots": 36,
+    "first_causal_failures": 15,
+    "healthy_controls": 21,
+    "review_sha256": "bc92066eaa40e4aed8e5ffaaf36150511468a3a7760892af7c6c86a436c1670c",
+    "root_matrix_sha256": "1b71e59d63841d2363ced4156a88b9cb6fef8d898bbe9fa1edb5649305ac1917"
+  },
+  "post6_result_sha256": "bf0131a571f79bce8cd99685b54e07b271219d05a7fe7ee2ff6a264a344556ef",
+  "scoped_api": {
+    "native_result_sha256": "697c00c182bc8a06ae7223b04e786f909e3dd6c4ddf15c50227cfc5f3365a69c",
+    "original_to_original": 0,
+    "original_to_fixed": 0,
+    "fixed_to_original": 1,
+    "addition": "UsingAmazonSqs<TBus>; exact one CP0002, no missing references",
+    "global_packed_baseline": "OPEN"
+  },
+  "preapplication_guards": {
+    "canonical_file_count": 6096,
+    "private_fixed_file_count": 6097,
+    "whole_manifests_exact": true,
+    "root_configuration13_exact": true,
+    "all_final_review_inputs_hashchecked": true
+  },
+  "Root_read_credit": "Root original27/57 exact source/context receipt reused, authored whole194 test/79 owner/one-cause variants/driver. Own pure PE/PDB qualifications for original5/6/fixed6/mutants/post; assessed complete substantive final post and aggregate fields plus input machine hashes. No blanket whole55 owner read or whole final hash-index prose read claim.",
+  "limits": [
+    "Local selected typed/default SQS three predicates, unused default isolation and useful typed FullName diagnostics through real Generic Host before chosen pre-runtime sentinel. Positive sentinel is not successful full ServiceBus/cloud runtime.",
+    "Materializations counts ConfigureBus callbacks only; zero client factory calls does not establish every SDK constructor uncalled.",
+    "Mutant M2 actual raw exposed ConfigurationException at composition182; OptionsMonitor.Get origin only compiled-source/control-flow inference. Later assertions after first red receive zero failure credit.",
+    "Historical original5/6 overlap remains historical. No wholeUnit/currentcoverage/CI/telemetry/adapter/cache observer/HW/cloud/global API acceptance."
+  ]
+}

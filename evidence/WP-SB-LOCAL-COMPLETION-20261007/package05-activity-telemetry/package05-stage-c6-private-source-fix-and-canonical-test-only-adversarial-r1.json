@@ -1,0 +1,148 @@
+{
+  "status": "NO_BLOCK_PRIVATE_TWO_CALLER_FIX_DRAFTS_AND_CANONICAL_TEST_ONLY_R2_PROVENANCE__NATIVE_ORIGINAL_PENDING",
+  "reviewer": "continuation_adversarial internal independent read-only",
+  "private_source_drafts": [
+    {
+      "owner": "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "original_sha256": "8647373561a105ff543247438d3239f869009b6e2efc829f533d45bdfb235291",
+      "original_lines": 316,
+      "private_path": "/private/tmp/TelemetryActivityExtensions.c6-fix-draft.cs",
+      "draft_sha256": "5d87f3120de34a96403e05378a1d0b5f9e834aedb45cf526b4b131281f864849",
+      "draft_lines": 364,
+      "canonical_original_unchanged": true,
+      "whole_draft_personally_read_untruncated": true,
+      "complete_diff": "--- src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs\n+++ /private/tmp/TelemetryActivityExtensions.c6-fix-draft.cs\n@@ -42,17 +42,23 @@\n         ArgumentNullException.ThrowIfNull(timeProvider);\n         cancellationToken.ThrowIfCancellationRequested();\n \n-        using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);\n+        var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);\n+        bool bodyCompleted = false;\n \n         try\n         {\n             await action(publishEndpoint).ConfigureAwait(false);\n             await trackedActivity.WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);\n-        }\n-        catch\n-        {\n-            trackedActivity.StopWaiting();\n-            throw;\n+            bodyCompleted = true;\n+        }\n+        catch\n+        {\n+            trackedActivity.StopWaiting();\n+            throw;\n+        }\n+        finally\n+        {\n+            DisposeTracker(trackedActivity, bodyCompleted);\n         }\n     }\n \n@@ -90,17 +96,23 @@\n         ArgumentNullException.ThrowIfNull(timeProvider);\n         cancellationToken.ThrowIfCancellationRequested();\n \n-        using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);\n+        var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);\n+        bool bodyCompleted = false;\n \n         try\n         {\n             await action(sendEndpoint).ConfigureAwait(false);\n             await trackedActivity.WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);\n-        }\n-        catch\n-        {\n-            trackedActivity.StopWaiting();\n-            throw;\n+            bodyCompleted = true;\n+        }\n+        catch\n+        {\n+            trackedActivity.StopWaiting();\n+            throw;\n+        }\n+        finally\n+        {\n+            DisposeTracker(trackedActivity, bodyCompleted);\n         }\n     }\n \n@@ -148,18 +160,24 @@\n         ArgumentNullException.ThrowIfNull(timeProvider);\n         cancellationToken.ThrowIfCancellationRequested();\n \n-        using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);\n+        var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);\n+        bool bodyCompleted = false;\n \n         try\n         {\n             Response<TResponse> response = await action(client).ConfigureAwait(false);\n             await trackedActivity.WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);\n+            bodyCompleted = true;\n             return response;\n         }\n         catch\n         {\n             trackedActivity.StopWaiting();\n             throw;\n+        }\n+        finally\n+        {\n+            DisposeTracker(trackedActivity, bodyCompleted);\n         }\n     }\n \n@@ -211,18 +229,24 @@\n         ArgumentNullException.ThrowIfNull(timeProvider);\n         cancellationToken.ThrowIfCancellationRequested();\n \n-        using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);\n+        var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);\n+        bool bodyCompleted = false;\n \n         try\n         {\n             Response<TResponse1, TResponse2> response = await action(client).ConfigureAwait(false);\n             await trackedActivity.WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);\n+            bodyCompleted = true;\n             return response;\n         }\n         catch\n         {\n             trackedActivity.StopWaiting();\n             throw;\n+        }\n+        finally\n+        {\n+            DisposeTracker(trackedActivity, bodyCompleted);\n         }\n     }\n \n@@ -278,18 +302,42 @@\n         ArgumentNullException.ThrowIfNull(timeProvider);\n         cancellationToken.ThrowIfCancellationRequested();\n \n-        using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);\n+        var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);\n+        bool bodyCompleted = false;\n \n         try\n         {\n             Response<TResponse1, TResponse2, TResponse3> response = await action(client).ConfigureAwait(false);\n             await trackedActivity.WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);\n+            bodyCompleted = true;\n             return response;\n         }\n         catch\n         {\n             trackedActivity.StopWaiting();\n             throw;\n+        }\n+        finally\n+        {\n+            DisposeTracker(trackedActivity, bodyCompleted);\n+        }\n+    }\n+\n+    static void DisposeTracker(TrackedActivity tracker, bool bodyCompleted)\n+    {\n+        if (bodyCompleted)\n+        {\n+            tracker.Dispose();\n+            return;\n+        }\n+\n+        try\n+        {\n+            tracker.Dispose();\n+        }\n+        catch (Exception)\n+        {\n+            // Cleanup cannot replace the action or wait failure already propagating.\n         }\n     }\n \n"
+    },
+    {
+      "owner": "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+      "original_sha256": "d941d74bc5ac55af42d7c2abde5537489cd2850dcc325ecadfd7e93ff80931b9",
+      "original_lines": 54,
+      "private_path": "/private/tmp/ActiveTestHarnessExtensions.c6-fix-draft.cs",
+      "draft_sha256": "8c7532245dc15130c4adf8d06e6b4434061c6a3a60a57f682621d7489e407a34",
+      "draft_lines": 85,
+      "canonical_original_unchanged": true,
+      "whole_draft_personally_read_untruncated": true,
+      "complete_diff": "--- src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs\n+++ /private/tmp/ActiveTestHarnessExtensions.c6-fix-draft.cs\n@@ -1,4 +1,5 @@\n using System;\n+using System.Runtime.ExceptionServices;\n using System.Threading.Tasks;\n using ViciOne.ServiceBus.Testing.Internal;\n \n@@ -11,6 +12,9 @@\n     /// Executes one test action, captures messages produced while that action and its resulting activity chain are active,\n     /// and completes only after the chain becomes idle or the harness timeout expires.\n     /// The capture is independent from the harness' historical context save mode.\n+    /// An action, setup or wait failure is preserved while all owned cleanup is attempted.\n+    /// After a successful action and wait, multiple owner cleanup failures are aggregated in disposal order;\n+    /// an observation owner's aggregate remains one inner owner failure.\n     /// </summary>\n     /// <param name=\"harness\">The harness that supplies observations and timeout settings.</param>\n     /// <param name=\"action\">The operation whose causal message activity is captured.</param>\n@@ -24,31 +28,58 @@\n         ArgumentNullException.ThrowIfNull(action);\n         cancellationToken.ThrowIfCancellationRequested();\n \n-        using var activity = new TrackedActivity(operationName ?? \"test act\", harness.TestTimeout, harness.TestInactivityTimeout,\n+        var activity = new TrackedActivity(operationName ?? \"test act\", harness.TestTimeout, harness.TestInactivityTimeout,\n             harness.TimeProvider);\n-        using var observations = new ActiveTestObservationScope(harness, harness.TimeProvider, activity.TraceId);\n-\n+        ActiveTestObservationScope? observations = null;\n+        bool bodyCompleted = false;\n         try\n         {\n+            observations = new ActiveTestObservationScope(harness, harness.TimeProvider, activity.TraceId);\n             await action().ConfigureAwait(false);\n             activity.ActionCompleted();\n+            await activity.WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);\n+            ActiveTestResult result = observations.Snapshot();\n+            bodyCompleted = true;\n+            return result;\n         }\n         catch\n         {\n             activity.StopWaiting();\n             throw;\n         }\n+        finally\n+        {\n+            DisposeOwners(observations, activity, bodyCompleted);\n+        }\n+    }\n+\n+    static void DisposeOwners(ActiveTestObservationScope? observations, TrackedActivity activity, bool bodyCompleted)\n+    {\n+        Exception? observationFailure = null;\n+        try\n+        {\n+            observations?.Dispose();\n+        }\n+        catch (Exception exception)\n+        {\n+            observationFailure = exception;\n+        }\n \n         try\n         {\n-            await activity.WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);\n+            activity.Dispose();\n         }\n-        catch\n+        catch (Exception exception)\n         {\n-            activity.StopWaiting();\n-            throw;\n+            if (bodyCompleted)\n+            {\n+                if (observationFailure is not null)\n+                    throw new AggregateException(\"Active test observation and tracker cleanup both failed.\", observationFailure, exception);\n+                throw;\n+            }\n         }\n \n-        return observations.Snapshot();\n+        if (bodyCompleted && observationFailure is not null)\n+            ExceptionDispatchInfo.Capture(observationFailure).Throw();\n     }\n }\n"
+    }
+  ],
+  "source_scope": {
+    "only_proposed_product_owners": 2,
+    "unchanged_scope_owner": {
+      "path": "src/ViciOne.ServiceBus.Testing/Internal/Observations/ActiveTestObservationScope.cs",
+      "sha256": "676b3732bd05212d1196a7fbd59fa6a3d8268df88d9a2e30539197e3c27a9ec3",
+      "lines": 201,
+      "Root57exact_whole_read_reuse": true
+    },
+    "acceptedC5_tracker": {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "90a781b81f734a2be9b4b3a4e4272b49afb842d46cd62bb9f05df823ec33126e",
+      "acceptance_sha256": "20995730c2e3bd017045ba1a3d81c7ff08f3328a445d0ab23b58965a042b9a94",
+      "accepted_root_personal_product_read_sha256": "b5326ea45615fd45e1d0e54a42a2c85a65bbc46de1e8d3496eb0faec615391f2"
+    },
+    "rule": "Private source drafts not applied; canonical original caller bytes exact Root57. Source review remains static, cannot count predicted fixes/native proof."
+  },
+  "source_assessment": {
+    "all_five_endpoint_paths": "Guards/cancellation precheck unchanged. Each owns actual tracker after successful constructor; bodyCompleted false until action and WaitForCompletionAsync both finish. Barethrow preserves required body exception. Finally always DisposeTracker: successful body propagates required original Dispose failure; exceptional body guards only secondary cleanup. Request return response preserved after actualwait and successful cleanup; shared privatehelper used by allfive.",
+    "Act_lifetime": "Observation construction now inside body try including actualaction/ActionCompleted/wait/Snapshot. Constructor failure before observations assignment retains null; internal partial-connection cleanup retains existing startup-plus-cleanup AggregateException. Tracker cleanup still attempted. bodyCompleted true only after Snapshot produced actual result.",
+    "Act_cleanup_order": "DisposeOwners attempts observation scope before tracker, catching ordinary owner cleanup so tracker always attempted. Body primary remains propagating, all cleanup secondaries isolated. Normal body one observation failure retains exact object+stack via ExceptionDispatchInfo; single timer failure barethrow; simultaneous owners create outer AggregateException(observationFailure,timerFailure) in disposal order. Existing observation aggregate remains one nested inner owner error; no Flatten.",
+    "non_changes": "No accepted C5 source-cache/start/constructor-unwind policy change. No business clock/action/wait/cancellation treated as success. ObservationScope existing normal aggregation/partial-startup policy remains unchanged.",
+    "static_limits": "No compiler/analyzer/runtime success inferred. Catastrophic process failure or arbitrary resource that throws before release is not guaranteed; tests use actual owned lease/timer release before chosen ordinary exception."
+  },
+  "canonical_test_only": {
+    "freeze": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C6_TEST_ONLY_ORIGINAL_FREEZE_R2.json",
+      "sha256": "053a3b474a338dcc1b0b9ca101371f204e4811e1c4967f94e5280cdc306811d3"
+    },
+    "root810": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE810_STAGE_C6_READ_CLOSURE_R2.json",
+      "sha256": "0398e2960671b582484cca755d5467b6284ec45862053a89ac8d93734e2fdb3a",
+      "unique_current_rows": 810,
+      "current_hash_mismatches": [],
+      "unique_shared_context_rows": 84,
+      "shared_hash_mismatches": [],
+      "prior808same": 807,
+      "only_prior_changed": "CoreRequirements.json",
+      "new_whole_Root_authored_owners": 2,
+      "no_reviewer_transfer": "Root authorship and personal fullbody reading freeze is Root-only; review hashes do not grant it."
+    },
+    "tests": [
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/PublicTelemetryCleanupIsolationTests.cs",
+        "sha256": "cd45b4f583f32312ba3eb8f58aa18eaf2b8f115fa3f4c831fbfab7405f30126c",
+        "content_lines": 216,
+        "inline_cases": 25,
+        "entire_current_canonical_body_personally_read_untruncated": true,
+        "canonical_equals_reviewed_private_draft": true
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Monitoring/ActiveTelemetryCleanupIsolationTests.cs",
+        "sha256": "4ba3b7f61891cfff983161224666d108ef776aaa4cad00675a395928affdd635",
+        "content_lines": 233,
+        "inline_cases": 13,
+        "entire_current_canonical_body_personally_read_untruncated": true,
+        "canonical_equals_reviewed_private_draft": true
+      }
+    ],
+    "requirements": {
+      "sha256": "6e93640a343c2d9328c9d40b410a060ed2052307a6e6482ee17c3026a26e0503",
+      "exact_prior_ordered4706": true,
+      "exact_new_purpose_rows": [
+        {
+          "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testMethod": "CallerPreservesBodyOutcomeAndReleasesActualTracker",
+          "testType": "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests",
+          "variantKey": "public-five-telemetry-callers-primary-and-required-cleanup"
+        },
+        {
+          "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+          "testAssembly": "ViciOne.ServiceBus.Tests",
+          "testMethod": "ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome",
+          "testType": "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests",
+          "variantKey": "public-active-harness-primary-and-all-owned-cleanup"
+        }
+      ],
+      "current4708": true
+    },
+    "native_theory_methods": 2,
+    "planned_focused_native_cases": 38,
+    "new_focused_child_processes": 0,
+    "existingC5completeCore_child_cases_separate": 7,
+    "wholeCore8112": "planned only; no actual result from this report"
+  },
+  "metadata_finding_resolved": {
+    "old_root810_R1_sha256": "fe5ea61e2fd3020a0dc967e3c8696c69cfa59ce03cdc16f0ea225de6b42c2397",
+    "finding": "Inherited C5 native parentFacts7/child7 and originalproductsize prose were misleading in current C6 top-level context.",
+    "resolution": "Immutable Root810R2 and FreezeR2 retain source/test/Req/owner/shared hashes unchanged; inherited C5 fields moved explicit historical_c5_only_context linked acceptedC5productread b5326... and acceptance209957...; current2Theory/38cases/newchild0 explicit.",
+    "whole_successor_metadata_delta_read": true
+  },
+  "case_and_oracle_assessment": {
+    "public25": "Full canonical216 read: exactfivefamily×fivescenario matrix, strict public endpoints/client+realresponse branches, chosen action taskfault, real owned linkedtoken cancellation, actual fake-clock timer1/idlebounds/release0/rootstopped; required normal timer failure identity and healthy response/branchtask/message identity. No actual backend work scripted.",
+    "Act13": "Full canonical233 read: actual3 connector attempts/2partial or3full ownedleases; registryreference removed before chosen release errors; allleases once physicalrelease and actual root same/live at release before tracker teardown; exactchosen action/setup/normalcleanup failure, real ownedtoken canceledwait, nested observationaggregate+timer and partialstartup aggregate primary. Strong order/aggregate oracles bound to actual selected paths.",
+    "predictions_only": "Original25 endpoint predicted10red15healthy; Act13 predicted7red6healthy; overall38 predicted17red21healthy. Actualfirstfailure/native may differ; Rootstrict50181/native38 pending.",
+    "cleanup_limits": "Testfinally cancels/advances/drains incomplete operation; watchdog/drain failure is excluded as product kill unless an actual finite source-qualified firstfailure proves cause. Pending responsebranch TCS are passive retained data, not runningbackgroundoperations."
+  },
+  "reviewed_prior_test_report": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c6-private-draft-review-r2.json",
+    "sha256": "644b9a88494fb83b27f1feca369fe3f619c2c6d2b6d90db21ff06132ede6b896",
+    "own_test_body_read": "Bothcanonical current whole bodies separately read; no other reviewer reading substituted."
+  },
+  "research_plan": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C6_PUBLIC_CALLER_CLEANUP_RESEARCH_PLAN_R1.md",
+    "sha256": "3bfb3e6044c77090fbf2efdbad4de51308a91666f16838d04edbabb2ac06a7ed",
+    "chosen_normal_twoowner_nested_aggregation": true
+  },
+  "blocking_findings": [],
+  "remaining": [
+    "Original strict/native38 and exactfinitecausal baseline must be archived before canonical product application.",
+    "After Root applies corrected source, exact canonical bytes must match reviewed5d87/8c75 drafts or re-review successor; five-owner snapshot/test/Req/code freeze and source author full-read binding required.",
+    "Fixedfocus38/wholeCore8112, actual meaningful one-cause mutants+healthy controls and final unchanged replay remain necessary, no credit from current static review."
+  ],
+  "skills": "Applicable Microsoft OpenTelemetry and test-anti-patterns guidance already read; test-gap-analysis static candidate rules reused without empirical survivor score.",
+  "execution": {
+    "reviewer_dotnet_docker_process_provider_started": false,
+    "product_test_tool_governance_or_private_draft_written": false,
+    "only_own_report_written": true,
+    "native_credit": 0
+  }
+}

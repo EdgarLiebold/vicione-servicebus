@@ -1,0 +1,21 @@
+{
+  "kind": "P05_C6_FIXED_TWO_CALLER_FROZEN_SOURCE",
+  "source_sha256": {
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/PublicTelemetryCleanupIsolationTests.cs": "cd45b4f583f32312ba3eb8f58aa18eaf2b8f115fa3f4c831fbfab7405f30126c",
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/ActiveTelemetryCleanupIsolationTests.cs": "4ba3b7f61891cfff983161224666d108ef776aaa4cad00675a395928affdd635",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "6e93640a343c2d9328c9d40b410a060ed2052307a6e6482ee17c3026a26e0503",
+    "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs": "5d87f3120de34a96403e05378a1d0b5f9e834aedb45cf526b4b131281f864849",
+    "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs": "8c7532245dc15130c4adf8d06e6b4434061c6a3a60a57f682621d7489e407a34"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-owner-r1",
+  "root_core810_sha256": "0398e2960671b582484cca755d5467b6284ec45862053a89ac8d93734e2fdb3a",
+  "research_plan_sha256": "3bfb3e6044c77090fbf2efdbad4de51308a91666f16838d04edbabb2ac06a7ed",
+  "c5_accepted_sha256": "20995730c2e3bd017045ba1a3d81c7ff08f3328a445d0ab23b58965a042b9a94",
+  "native_cases": 38,
+  "planned_whole_core_total": 8112,
+  "limits": "Two caller sources exactly reviewedRoot-authored drafts. Real original38=17causalred21healthy. No fixed/aggregate/mutant acceptance before native qualification. ObservationScope201 and acceptedC5 twoowners unchanged.",
+  "prior_freeze_sha256": "d5c6b4bde802aa85b4aa18f3e28e4111f7364e13a7fb9c6d4cd59381b84cc1ba",
+  "prior_original_freeze_sha256": "053a3b474a338dcc1b0b9ca101371f204e4811e1c4967f94e5280cdc306811d3",
+  "original_native_result_sha256": "94097ca965871d6e32e819bf8f3863ee2255c5166263fa1afd4dcfa92ad790ac",
+  "source_adversarial_sha256": "0454dc6c41b83ccdc617dd4029c83ba74e51eca897f536eb660ecbccaefbbc89"
+}

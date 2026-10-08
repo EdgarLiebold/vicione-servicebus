@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:2e974e8f5cddd4930b8f822f1d350640d6c41d3f6a1e2017c34f4d70003c53cb",
+  "claims": [
+    {
+      "id": "claim_9ac2e44664624ef485e38a078f67d080",
+      "statement": "Instrumentation uses application-owned DI meter scopes and the ViciOne.ServiceBus meter/activity-source names.",
+      "evidence": [
+        {
+          "resource": "repo://docs/observability.md",
+          "version": "repo-file-v1:sha256:4e5459090cb867e65456876dcaeceaeb03af655c36519b022adbe4b2a398bbdc"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+          "version": "repo-file-v1:sha256:ac536dd009f59ea5cbe8898d464969da3ba3a2b2e4390fb6fa1272e2380ed11c"
+        }
+      ]
+    },
+    {
+      "id": "claim_debb6cfcffaf4ceab5810267847e5941",
+      "statement": "The reliable health check evaluates outgoing-store reachability, hard capacity, quarantine and pending age; retry counts are reported as data.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Operations/ReliableMessaging/DurableSenderHealthCheck.cs",
+          "version": "repo-file-v1:sha256:5480b657b64df7e5f08b1ed91c588fec77037308dfedc6bdd17b5bca12c6d60a"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

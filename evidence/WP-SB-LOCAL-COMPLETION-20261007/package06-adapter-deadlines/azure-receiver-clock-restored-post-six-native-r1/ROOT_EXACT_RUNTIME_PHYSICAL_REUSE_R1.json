@@ -1,0 +1,134 @@
+{
+  "kind": "ROOT_ACTUAL_POST6_EXACT18_FIXED_RUNTIME_PHYSICAL_METADATA_REUSE_R1",
+  "post_native_sha256": "5658d1c509764ae6e60758d2c04515a9d5a930ceb55e5abcac4d676b71fc34e1",
+  "fixed_native_sha256": "113fb467045930d5d445c4f9c77c1dd89e9f5fe66d65496d5e0114f59e945810",
+  "fixed_root_physical_sha256": "baaff9aa35b99f02a7177c1f56c134461da0b01c458281fc4c3cc8c1e48e1b13",
+  "actual_native6_pass": true,
+  "runtime18": [
+    {
+      "name": "ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "52890950e02e04a186d7ab2b8f34e4a636d161ac6abc78f093c140cdeb15b24f",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.AzureServiceBus.dll",
+      "sha256": "eb8fd59de5b6d0e8793a7111fb0c2e4b593751df3b12cc0ae3ce52e8cfaab85a",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.Testing.dll",
+      "sha256": "52af2ed7725b33d2f6e7845a463d445fdc93b3e897cae081775d741cbe3127ae",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.Courier.dll",
+      "sha256": "2be1acd70f7f79310505d8482423ac7bbc0eeb2f1f5ef95c932fe76c68447816",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.Futures.dll",
+      "sha256": "1c92117bc4a9135f9a7012ddf952a87f450ef12233a1e6d4e52645014ab78830",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "4f338bc10c54441d776388b51b7500c1fff366a0f507be9e76e2ffaff508c762",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.ActiveMq.dll",
+      "sha256": "cda8752e7c482cc857c798655272441847acab390910ac5f31d6715c24aaf5ab",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "49b11df29538fb77ce736661286d509927056dc420febd246c168168e799daa3",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "ef11e76d3acf30d4313ac6008494827b0a7b561acfd3afe13d1bcace008a39bf",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.AzureServiceBus.Testing.dll",
+      "sha256": "2ab759b7ddc6fd64adcdd1d15a841ddc781ea7916aea6a080c02ad2c16457c42",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.dll",
+      "sha256": "6741b7e2d22ffd0029c479e19e4c84b5528803c8ef49a7ca7704334f62ac0421",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "sha256": "e19c8917a4773bdc52c8e8897728c35fab07e9f64f50b11758f16b6b02e2cd5c",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.AzureServiceBus.Tests.dll",
+      "sha256": "aba3c0ce343042e398ede7886714205154bdbc75c153876d0b0941361a0489bb",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.AzureServiceBus.Tests.pdb",
+      "sha256": "53aa0f0a62298ee0b955e1dcef2f959e0ee764b9fc5978fe7d89aaaa4604c841",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.AzureServiceBus.Tests",
+      "sha256": "719f44b6049c75c054ea9090c564b8c4750c68f720775adc49bd969f07247a38",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.AzureServiceBus.Tests.deps.json",
+      "sha256": "56429b3ac75ad4fffe7efbb776cd9a60fce4a189721d297611e8d75bda65c0bf",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.AzureServiceBus.Tests.runtimeconfig.json",
+      "sha256": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+      "fixed_post_live_byteequal": true
+    },
+    {
+      "name": "ViciOne.ServiceBus.AzureServiceBus.Tests.testconfig.json",
+      "sha256": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+      "fixed_post_live_byteequal": true
+    }
+  ],
+  "assets13_owner12_generated41_exactBytes": true,
+  "raw6CRC2": [
+    {
+      "name": "strict-rebuild.stdout.log",
+      "sha256": "51c83c673955d57d4b4da583b933c32d41555f5f2dbb3931cad10d74dd5bb536",
+      "crc_bytes": null
+    },
+    {
+      "name": "strict-rebuild.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crc_bytes": null
+    },
+    {
+      "name": "p06-azure-receiver-clock-restored-post-six-strict-rebuild-r1-20261008-012940--58449--bslQ0x.binlog",
+      "sha256": "b497a633c53a740feb05ced091186643dc846e13a07e5ec92b52144191e5d292",
+      "crc_bytes": 3958058
+    },
+    {
+      "name": "focused-six.stdout.log",
+      "sha256": "1b3de43f2edfa8940eebe130decf38515337d39e1aa22dda1621f6cd7653e6d5",
+      "crc_bytes": null
+    },
+    {
+      "name": "focused-six.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "crc_bytes": null
+    },
+    {
+      "name": "p06-azure-receiver-clock-restored-post-six-focused-six-r1-20261008-013029--58506--hDvldk-dotnet-test.binlog",
+      "sha256": "19185d9cba482b200a000eef699e4e1e11ed0239b0b57d3f11cd8d584eb6dc89",
+      "crc_bytes": 3036359
+    }
+  ],
+  "read_scope": "Root personally complete2 stdout+2emptyerr/all6nativeBodies+summary, matched original whole398+exactfixed2Source delta. Exactbyte checks actualarchives/live support reuse ownfreshFixed13PE3257; no freshpost PE/233 parse or transferred reviewer credit.",
+  "limits": "Source/runtime restored after all4countervariants. Independent actual post/finalcanonicalgate still needed before exactsix application; no concurrentrace/global/cloud/HW/API/coverage closure."
+}

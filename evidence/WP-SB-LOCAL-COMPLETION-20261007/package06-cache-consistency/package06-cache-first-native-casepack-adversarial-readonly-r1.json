@@ -1,0 +1,388 @@
+{
+  "kind": "INTERNAL_READ_ONLY_P06_CACHE_FIRST_NATIVE_CASEPACK_ADVERSARIAL_DESIGN_R1",
+  "utc": "2026-10-07T05:17:41.794074+00:00",
+  "status": "BOUNDED_PREAUTHORING_RECOMMENDATION_ONLY_NATIVE_SOURCE_TEST_CREDIT_ZERO",
+  "authority": "Internal independent reviewer; Root alone authors product/tests/tools and executes native validation. No external product-team role.",
+  "inputs": {
+    "transaction_design": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/package06-cache-consistency-transaction-design-research-r1.json",
+      "sha256": "3526656c6c529417fd8037cd38b6f84498a7b6fa53e95b3a4b00e7b816f02de0"
+    },
+    "Root18": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/ROOT_CACHE18_COMPLETE_SOURCE_READ_R1.json",
+      "sha256": "5e59a3d4b0496fd9b3dc07476cb499aad865ad642464c8c0fdd2257382f571d8"
+    },
+    "all26_current_owner_hashes": [
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs",
+        "sha256": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12",
+        "content_lines": 32,
+        "bytes": 2180,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs",
+        "sha256": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69",
+        "content_lines": 32,
+        "bytes": 2007,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs",
+        "sha256": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c",
+        "content_lines": 13,
+        "bytes": 399,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs",
+        "sha256": "bba8eeb8b9366996b489c820d793bb568d47c396127095a18ef45426fd2a164e",
+        "content_lines": 24,
+        "bytes": 1059,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs",
+        "sha256": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4",
+        "content_lines": 24,
+        "bytes": 733,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs",
+        "sha256": "907772e0d3f688f3b11b0542b79d45e76f098559a0fb99e2ad1395ebdb13112d",
+        "content_lines": 27,
+        "bytes": 845,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+        "sha256": "d6ce8980172e278b8ce7eae72fed4f6c89f74e23778a24f93e8524ab0b99c5d9",
+        "content_lines": 117,
+        "bytes": 4072,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+        "sha256": "54c895f4d2ccb95316a7ae3f521022cea3a25e4014d9b22fabaf75a53211625d",
+        "content_lines": 25,
+        "bytes": 1084,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs",
+        "sha256": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743",
+        "content_lines": 82,
+        "bytes": 4412,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+        "sha256": "a593b0fa0dc498210a20d4669ab68a743a2f13542fe9dbe53aa814ed463f6366",
+        "content_lines": 287,
+        "bytes": 10796,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs",
+        "sha256": "0aeb97aeae8196ed5918ccafb7401cdb2bc6f176c74f9e4b8de89833d8a3d00d",
+        "content_lines": 163,
+        "bytes": 4429,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs",
+        "sha256": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+        "content_lines": 102,
+        "bytes": 3346,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+        "sha256": "d33d153e2de28609ec362672c5637c97c9bfa95cc2895af236857b0181f7abd0",
+        "content_lines": 351,
+        "bytes": 10042,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+        "sha256": "98da72d0f863585936f1c9ad702bb3d27b62a7e1d606d0a21f8c8f290c56b4a2",
+        "content_lines": 368,
+        "bytes": 15452,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs",
+        "sha256": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7",
+        "content_lines": 11,
+        "bytes": 420,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs",
+        "sha256": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76",
+        "content_lines": 75,
+        "bytes": 3933,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs",
+        "sha256": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4",
+        "content_lines": 16,
+        "bytes": 1086,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "src/ViciOne.ServiceBus/Caching/ResourceFactory.cs",
+        "sha256": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc",
+        "content_lines": 13,
+        "bytes": 777,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheConcurrencyTests.cs",
+        "sha256": "7087567d31ff3d8d42df1dcef4763d11f90cdfe6a97b9265ad8edc8528ed6063",
+        "content_lines": 488,
+        "bytes": 23824,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs",
+        "sha256": "fe08a94c9d3339cc2a83c85bfcc19c90e3b4f6decd3d55810d9147811062d5db",
+        "content_lines": 383,
+        "bytes": 18577,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpirationTests.cs",
+        "sha256": "8f128a449bc35bf7012638d79237393754c1e823fb33f34d68f34005996299ba",
+        "content_lines": 542,
+        "bytes": 24726,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpiredDuplicateOwnershipTests.cs",
+        "sha256": "75455c54efa1c5388e92ac8f577b73a52c330785e2d7e8dd9b933f073010c430",
+        "content_lines": 180,
+        "bytes": 7285,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheGenerationAndLockingTests.cs",
+        "sha256": "56e5e5b8ba01517ba221441930ecfdd9c50f8c6d1279c29220d626d96da63fdf",
+        "content_lines": 586,
+        "bytes": 24973,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheInitializationTests.cs",
+        "sha256": "23871810ed2cdd3bcec89ae6f336a3dc1e8433ae6fbdfe1391f69c3515627a9a",
+        "content_lines": 141,
+        "bytes": 5853,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheLifecycleTests.cs",
+        "sha256": "4c791cd63c5708a51015d250c943a9e376aa4ddc17518b87add6fafb69823866",
+        "content_lines": 497,
+        "bytes": 21824,
+        "O_C3_equal_priorRootProof": true
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverAndDisposalTests.cs",
+        "sha256": "d2c10c5e7cd989c7f747c043bf8a583adec22d721de23544abcda1b6e315836e",
+        "content_lines": 622,
+        "bytes": 26841,
+        "O_C3_equal_priorRootProof": true
+      }
+    ]
+  },
+  "personal_read_scope": {
+    "production": "All18 current source bodies personally consumed completely and untruncated in four bounded source selections; exact O/C3/hash checks re-confirmed all18.",
+    "canonical_tests": "Contract383, ExpiredDuplicate180 and Initialization141 whole bodies personally consumed. Scoped actual bodies/helpers in Concurrency1-341+410-488, Generation264-374+417-475, Expiration1-51+185-230+488-542, Lifecycle1-160 and Observer1-100 personally consumed. This is not a claim of personally rereading all8 whole test files; unchanged full test-owner coverage is Root historical complete read and exact current hashes, not transferred reviewer credit.",
+    "prior_research": "All design semantic fields consumed in complete bounded JSON projection; source/test manifest separately verified. Initial oversized full JSON and rg dumps confer no missing-body read credit.",
+    "skills": "Microsoft dotnet-test:test-gap-analysis plus test-analysis-extensions/.NET reference; all future mutation outcomes remain static hypotheses because this assignment explicitly prohibits edits and .NET execution."
+  },
+  "first_pack": {
+    "direct_theories": 4,
+    "direct_native_cases_proposed": 8,
+    "isolated_pending_parent_facts": 2,
+    "isolated_pending_child_native_cases_proposed": 2,
+    "parent_case_slots_proposed_total": 10,
+    "description": "Healthy/hostile twins for each of five physical ownership paths. Pending-origin twins alone need fresh owned apphost processes to prevent known original stranded ownership from poisoning the full Core process. Parent/child statuses remain separate, never silently add child counts to parent totals. All counts are a proposal, not actual discovery or execution."
+  },
+  "public_SPI": [
+    "ResourceCache<T>.AddIndex<TK>(name, selector, missingValueFactory?, comparer?)",
+    "ResourceCache<T>.AddAsync(value, token)",
+    "IResourceCacheIndex<TK,T>.GetAsync/GetOrAddAsync/RemoveAsync",
+    "ResourceCache<T>.Statistics/GetValues/ClearAsync/DisposeAsync",
+    "IResourceCacheObserver<T> through Connect; actual IAsyncDisposable/IResourceUsageSource candidates",
+    "ResourceCacheOptions with capacity1 or2, Absolute expiration and FakeTimeProvider; long CleanupInterval prevents accidental timer expiry during explicit-clock cases"
+  ],
+  "five_caseplans": [
+    {
+      "id": "K1_REMOVE_SECONDARY_COMPARER",
+      "public_setup": "Capacity1, ordered healthy primary then armable secondary index. Successfully commit one actual disposable while comparer unarmed. Arm persistently for the stored secondary key only after admission. Remove through healthy primary. Capture operation error/result and comparer trace before disarming for public postreads.",
+      "chosen_future_slot_contract": "A healthy requested-key lookup must remove through stable stored handles; secondary comparer is never needed for committed retirement. Under the proposed identity-slot implementation Remove succeeds, removes all indices, emits actual removal once and releases actual resource once. An atomic failed-removal/retained-ownership alternative would need a separate explicitly selected contract; do not silently mix the two.",
+      "first_finite_physical_oracles": [
+        "Record candidate DisposeCalls immediately after real Remove terminal outcome, require1 before error-null/result assertions.",
+        "Snapshot Count0/Pending0/GetValuesempty; capture both public postread outcomes before assertions, neither may expose detached candidate.",
+        "Require actual removed observer1 and no secondary armed comparer callback in the corrected slot implementation; then normal operation success/true.",
+        "Join cache Dispose and require DisposeCalls still1.",
+        "Capacity1 fresh replacement can commit after release, with exact replacement ownership and final disposal."
+      ],
+      "source_original_prediction": "RemoveEntry removes master, marks inactive/increments retiring before secondary dictionary RemoveKey throws. Original DisposeCalls0 and stale secondary/public-empty mismatch are finite candidates; no original native proof yet.",
+      "healthy_twin": "Same sequence comparer unarmed. Original/fixed success true, absent all index keys, actual release1, replacement admission succeeds.",
+      "cleanup": "Restore comparer, join all started actual tasks, await real cache terminal disposal. Only then fallback manual release of original leaked candidate, explicitly marked fixture rescue and not product cleanup credit."
+    },
+    {
+      "id": "K2_DIRECT_ADD_SECOND_INDEX_COMMIT",
+      "public_setup": "Two initially empty indexes, primary healthy and secondary comparer throwing on first armed GetHashCode. Candidate is caller-owned. Empty dictionary lookup hashing is .NET10 implementation observation only; actual original exception trace must show CommitKey/CommitValue, not precheck. Corrected preparation may throw earlier while still preserving state.",
+      "first_finite_physical_oracles": [
+        "Capture real Add error and emit its actual captured trace before physical assertions; never print chosen Expected exception stack as Actual.",
+        "Caller candidate DisposeCalls0, master Count0/Pending0/TotalCreated0/GetValuesempty.",
+        "After disarm, actual primary GetAsync must be missing; original can expose candidate from earlier index commit and this is the first ghost-reference assertion. Capture secondary outcome too.",
+        "Require no Added observer event, then captured error Same chosen comparerE (only if reached).",
+        "Cache.Dispose must not release rejected caller candidate; caller release exactly once after cache terminal."
+      ],
+      "healthy_twin": "Exact candidate appears in both indices and GetValues, TotalCreated1, Added1, caller DisposeCalls0 until normal cache disposal1.",
+      "anti_false_red": "Do not infer second-index Commit fault from comparer count alone or from a red due to precheck; archived actual native/source trace must bind phase. Stable comparer remains stable except ordinary armed failure."
+    },
+    {
+      "id": "K3_FACTORY_SECOND_INDEX_COMMIT",
+      "public_setup": "Originating primary comparer healthy; same secondary initially empty hostile comparer. Actual public primary.GetOrAdd invokes synchronous real ValueTask factory exactly once returning tracked candidate. Existing pending-origin cleanup remains healthy.",
+      "first_finite_physical_oracles": [
+        "Actual factory calls1 and candidate disposal1 before any primary exception-identity assertion.",
+        "Actual request terminal; Count0/Pending0/TotalCreated0/GetValuesempty and CreationFaults1.",
+        "After disarm, primary and secondary public reads must both miss; original can expose already-disposed candidate through primary.",
+        "Added observer0, then captured real fault Same comparerE if reached.",
+        "Capacity1 next healthy factory successfully admits exact fresh candidate, demonstrating released reservation. Finally cache Dispose releases only admitted candidate, no double release of rejected one."
+      ],
+      "healthy_twin": "Factory calls1, pending0, candidate undisposed while live, exact same references from request/each index/snapshot, Added1, terminal release1.",
+      "ownership_limit": "Caller never manually disposes a candidate rejected by factory-owned creation unless explicit terminal-owner rescue is needed; ordinary factory rejection already owns its release."
+    },
+    {
+      "id": "K4_PERSISTENT_ORIGIN_PENDING_CLEANUP",
+      "public_setup": "Separate fresh owned native apphost child, one primary armable comparer. GetOrAdd admits reservation with comparer healthy. Synchronous factory arms only GetHashCode persistently immediately before returning an actual synchronously disposable candidate; Equals stays ordinary. Factory returned/disposal callbacks and comparer attempted-key/throw traces are concrete synchronous phase markers.",
+      "why_process_boundary_is_required": "Original first commit/precheck hash fault enters rejection/disposal, then persistent RemovePending hash fault can terminate ignored CompleteCreation Task without completing public pending.Completion or OwnershipReleased. Unarming comparer later cannot restart that terminated task. Normal await-using Dispose can therefore wait forever. A fresh process bounds the ORIGINAL failure; its join is never claimed as product task/slot cleanup.",
+      "first_finite_physical_oracles": [
+        "Before any await of public request, require actual factory calls/return marker1 and rejected resource DisposeCalls1 (synchronous completed factory/disposal route).",
+        "Require Statistics.PendingCreations0; original predicted1 is immediate finite first red, not timeout. Also record request.IsCompleted without awaiting it before finite state check.",
+        "Corrected request must be terminal faulted with actual comparerE, Count0/GetValuesempty/CreationFaults1 and no index ghosts after disarm.",
+        "Only corrected/healthy branches subsequently join actual request, admit fresh candidate at capacity1, and join real cache Dispose with timer/candidate ownership released.",
+        "Original failed child may terminate with stranded public completion documented; do not fabricate a successful original product task join, suppress a disposal timeout or mutate private pending state."
+      ],
+      "native_protocol": "Same built apphost direct --filter-class/--filter-method exactsingleFact, explicit depth/parent/nonce sentinel, native oneevent and1/0/1/0 or1/1/0/0 summaries, immutable runtime/source digests, logs/stdout/stderr on all outcomes, owned parent-death cleanup. Exact protocol design can reuse qualified C5 pattern, but no test-source/cache cold initialization promise. A watchdog or killed child is invalid native causal credit. Distinct parent/child native outcome accounting required.",
+      "healthy_twin": "Factory never arms comparer; synchronous factory commit completes public request, pending0, fresh removal/admission normal, timer and resource terminal cleanup joined.",
+      "bounded_error_credit": "Original unfinished request cannot provide Same(primary exception) proof. Actual comparer throw traces and first finite pending count are the qualified candidate evidence; native original and compiled graph required before classifying as finding."
+    },
+    {
+      "id": "K5_EXPIRED_RETIRED_RELEASE_AFTER_LOOKUP_FAULT",
+      "public_setup": "Absolute lifetime, FakeTimeProvider and long cleanup interval. Commit one tracked expired value under ordinary keys. Advance MaxAge+1tick, never trigger periodic cleanup. Arm comparer only for a different requested missing lookup key: all existing-entry retirement/removal keys remain healthy. Public GetAsync(missingKey) first retires expired entry, then selected missing-key GetHashCode throws.",
+      "first_finite_physical_oracles": [
+        "Capture actual lookup fault and exact key/stage trace; require expired resource DisposeCalls1 before Same(comparerE).",
+        "Require Count0/Pending0/GetValuesempty/Evictions1 and actual removed notification1.",
+        "Disarm comparer and admit a healthy capacity1 replacement; finite successful admission proves no stranded retiring capacity.",
+        "Actual cache terminal disposal leaves expired release1 and replacement release1."
+      ],
+      "healthy_twin": "Same expiration and missing-key read without comparator failure: KeyNotFound outcome, expired release1/removal1, replacement admission/terminal release valid.",
+      "distinction": "This is a later requested-key lookup fault AFTER retirement. It is not the withdrawn duplicate-Add hypothesis; duplicate expiration still releases before retry/reprojection on existing indexVersion path.",
+      "cleanup": "If original detached resource was never released, actual cache Dispose may finish without seeing it; fixture rescue only after cache terminal and never credited to production. Do not start a capacity-blocked recovery before first finite release assertion in original."
+    }
+  ],
+  "concrete_preexecution_corrections": [
+    {
+      "id": "DESIGN-PENDING-PROCESS",
+      "priority": "required-before-original-pending-test",
+      "recommendation": "Use process boundary for K4; do not write a normal await-using test whose finally hangs. Original finite pending-state error precedes watchdog and unknown/stranded cleanup is documented. Healthy/corrected native branches must prove actual factory/request/cache/owned slot joins."
+    },
+    {
+      "id": "DESIGN-COMMIT-PHASE",
+      "priority": "required-before-original-Add/factory-credit",
+      "recommendation": "Record captured actual comparator fault trace while deriving public ghost-state oracle. Initial empty Dictionary hash call count is not a stable general ABI. Native red during key precheck alone is not the proposed partial-commit counterexample."
+    },
+    {
+      "id": "DESIGN-RETIRE-EXCEPTION-OWNERSHIP",
+      "priority": "required-before-release-list-fix-acceptance",
+      "recommendation": "Operation-owned release list must exist before lock/retirement, and collector should append into that owned list or fully plan all retirements before publishing. Merely wrapping ReleaseEntriesAsync in finally after removed=CollectExpired_NoLock is inadequate when collector itself throws after retiring earlier entries, because assignment never completed. Keep required clock failure primary; do not swallow business TimeProvider operations."
+    },
+    {
+      "id": "DESIGN-NEW-SLOT-SAFETY-CONTROLS",
+      "priority": "required-before-general-prepared-map-closure",
+      "recommendation": "Five twin cases exercise Hash failures, not every Equals collision or replacement-pending identity branch. Add bounded equality/collision preparation control and old-invalidated-vs-still-pending-replacement control, or retain these explicit limits. Existing same-key replacement test completes replacement before late old factory and does not by itself prove live replacement pending slot safety."
+    }
+  ],
+  "smallest_prepared_stable_hash_map_contract": {
+    "public_impact": "No new public API or cache admission/observer policy. One internal generic typed map utility may service both committed and pending maps, with stable prepared slots and identity-based unlink. New utility must be added to Root owner/source read freeze before authored changes.",
+    "keys": "Store original typed key plus exact cached int hash; do not Math.Abs(int.MinValue). Ordinary equality/hash semantics remain stable collection prerequisite. Hash/equality can throw persistently on lookup/preparation; lookup is allowed to fail without ownership corruption.",
+    "prepare": "Resolve bucket by builtin-int hash, perform user Equals/GetHashCode and uniqueness/pending checks before ANY logical publication. Preallocate candidate entry, per-index slots, absent buckets and needed backing structural capacity. Validate indexVersion and pending-invalidated/owner availability after final user callback before publish.",
+    "publish": "One owner-lock phase links only builtin-int bucket slots, entry handle metadata, long-id master entry and exact original pending bookkeeping. No selector, comparer, notification, usage accessor, disposal or awaiting after logical publish begins. Direct caller ownership transfers only at complete publication; factory prepublication rejection releases produced candidate1.",
+    "identity_remove": "Each linked slot carries owner/bucket and stable identity. Entry/pending handle removal must be idempotent and only unlink exact same live slot, never key-based search. Correctly maintain previous/next/head/tail and map cardinality; clear payload/key/link references and remove empty builtin-int bucket. A removed old handle must not unlink a new equal-key slot.",
+    "pending": "Admission adds prepared pending slot and _pendingCreations object as one stable phase, after linked CTS allocation and metadata preparation. Clear detaches pending map reservation but retains old factory capacity until actual rejected value release and OwnershipReleased. Late old factory cleanup removes old slot by identity/no-op if already detached; must not remove replacement pending. Signal public Completion and OwnershipReleased exactly once with existing required result/cancel/fault policy.",
+    "capacity": "Preserve Count(committed)+PendingCreations+retiring <= Capacity in owned-resource admission; public Statistics omits retiring, so blocked disposal/capacity-gate probes supplement it. No empty prepared bucket can be published when later index prepare fails. Bound backing growth to owned slots/buckets, never append retained failed/dead tombstones. User-configured number of indexes remains unbounded as before; no byte/RSS promise.",
+    "cost": "Ordinary lookup/preparation visits only hashed collision bucket; expected local O(bucket chain + index count). Adversarial constant-hash worst-case O(C) remains possible. No clone of every existing dictionary per operation and no O(C*I) allocation per mutation. Existing expiration scan may remain O(C), and full Clear/Dispose necessarily visit retained entries. Extra handles/buckets are per retained resource/index/pending, not per historical failed attempt.",
+    "bulk_index": "AddIndex builds entirely unpublished map/handles, completes all selector and comparer work then validates original snapshot before publishing both index reference and existing-entry metadata. Failed AddIndex must not leave metadata pointing to hidden index, because later Remove would otherwise consult it.",
+    "retirement": "Remove/CleanupExpired/eviction/Clear/Dispose unlink stored handles without user callbacks, update main/Active/retiring/version coherently, hand actual owned release list to outside-lock cleanup even if a later required lookup/preparation/clock throws. Keep serialized awaited observer dispatch and cancellation ownership unchanged.",
+    "boundaries": "No universal OOM/fatal-error transaction guarantee, no malicious changing equality/hash semantics, no arbitrary comparer reentrant mutation contract, no full RAM proof. Structural no-dead-slot proof must accompany native public churn/admission controls; public Count/Pending alone cannot prove hidden bucket/key retention absent."
+  },
+  "required_extra_utility_controls": [
+    {
+      "id": "U1_EQUALS_AND_COLLISION",
+      "proposal": "Public capacity2/two-index setup with preexisting anchor and constant-hash comparer. Healthy distinct colliding key commits; armed Equals on candidate-vs-anchor faults in preparation and must leave anchor exact in all indices, caller candidate undisposed and absent, Counts/TotalCreated unchanged, no Added. This is a healthy existing behavior/control, not a claimed new original failure. Two proposed native cases outside minimal10."
+    },
+    {
+      "id": "U2_LATE_OLD_CLEANUP_VS_LIVE_REPLACEMENT_PENDING",
+      "proposal": "Capacity2: original same-key factory held, start Clear to invalidate original and observe original public cancellation. Start replacement same-key factory still gated. Release only old factory and join Clear/old candidate disposal while replacement remains pending. Public GetAsync and another GetOrAdd must attach to replacement, third factory calls0. Finally release replacement and join all request/clear/dispose tasks with exact releases and pending0. One additional proposed native case, using actual public gates and no reflection; existing new-generation test completes replacement earlier and is insufficient for this specific live-pending branch."
+    }
+  ],
+  "future_single_cause_negative_controls": [
+    {
+      "cause": "Committed Remove reintroduces secondary user-key comparer",
+      "finite_target": "K1 hostile releases/index consistency first physical red; K1 healthy named control."
+    },
+    {
+      "cause": "Publish first prepared index before second-index preparation completes",
+      "finite_target": "K2/K3 hostile public ghost lookup absent assertion; compilation/source clone must prove single phase-order cause, no guessed literal before actual owner authored."
+    },
+    {
+      "cause": "Omit factory rejected-candidate release",
+      "finite_target": "K3 hostile resource disposal1 first physical assertion; direct Add caller-ownership twin remains healthy."
+    },
+    {
+      "cause": "Pending cleanup restores key-based comparer lookup instead of stable handle",
+      "finite_target": "K4 finite PendingCreations0 versus actual1; child watchdog/disposal timeout never kill evidence."
+    },
+    {
+      "cause": "Omit operation-owned retired-list finally handoff on later lookup failure",
+      "finite_target": "K5 hostile actual expired disposal1, healthy requested miss unaffected."
+    },
+    {
+      "cause": "Drop pending-slot exact identity/idempotence so old detached handle unlinks replacement",
+      "finite_target": "U2 public replacement-pending read/request/factory-call oracle; no manufactured source mutation or score now."
+    }
+  ],
+  "existing8_suite_pattern_mapping": {
+    "ResourceCacheContractTests": "Direct Add identity/factory bypass, multi-index publication/removal, pending removal false, duplicate caller ownership and key mismatch/precheck contracts.",
+    "ResourceCacheConcurrencyTests": "RunContinuationsAsynchronously owned gates, exact winning factory, healthy creation failure/waiter cause, real pending capacity backpressure, clear/cancel and task terminal accounting.",
+    "ResourceCacheExpirationTests": "FakeTimeProvider, strict MaxAge+1tick, long interval, actual dispose signals/counts, hard capacity and timestamp-frequency semantics.",
+    "ResourceCacheExpiredDuplicateOwnershipTests": "Whole180 existing duplicatefalse/true stays withdrawn as defect; owned task list, exact validated fault observation, unconditional terminal owner cleanup before fallback resource rescue are suitable pattern.",
+    "ResourceCacheGenerationAndLockingTests": "Actual old/new candidate disposal counts, selector/invalidation gates, no lock inversion; existing completed replacement control must be supplemented for still-pending replacement branch.",
+    "ResourceCacheInitializationTests": "Exact timer lifetime ownership and forwarded due/period policy. Existing failed-constructor private-field reflection is narrowly justified there and should not be imported into new public comparer consistency fixtures.",
+    "ResourceCacheLifecycleTests": "Factory-owned rejected disposal1, async preference, real CTS cancellation, actual factoryExited and joined cache disposal; no fake persistent-pending cleanup success.",
+    "ResourceCacheObserverAndDisposalTests": "Exact real removed notifications, later observer fanout and failure isolation, awaited asynchronous disposal/retiring backpressure; preserve policy and full affected-suite regression."
+  },
+  "root_before_authoring": {
+    "already_qualified": "Exact Root18 whole source proof and unchanged8 canonical test bodies remain reusable only for same hashes; this review transfers no Root personal read credit.",
+    "new_owner": "Before new canonical tests or internal map owner, bind exact new plan/owner and actual latest whole Core closure after parallel C7 work; whole new author body and exact RequirementProjection append. Do not freeze old Core810/4708 as if current future cache baseline were fixed.",
+    "unchanged_context": "Recheck current relevant build/bootstrap/requirements/shared84 and selected public caller/project graph before native test-only original freeze. Prior design TODO/plan/Requirements hashes are historical, not current authority.",
+    "product_edit_sequence": "Root authored minimal public cases first, strict/native original finite qualification next, only then cache product correction and hash-bound independent review plus compiled one-cause experiments/post. No supplied proposal code is authored in this report."
+  },
+  "withdrawn_hypothesis": "Expired duplicate Add remains withdrawn. Existing version increment forces ReleaseEntriesAsync before reprojected duplicate rejection; K5 is a different requested lookup exception following retirement. No change to historical disposition.",
+  "claims_not_made": [
+    "No new cache native finding or mutation survivor/kill accepted; all five paths are source-derived proposals.",
+    "No score, covered method/branch percentage, new whole Core/Unit acceptance or deployment readiness.",
+    "Observer commit-order/failure sink/total external-caller RAM TODOs remain separate; no unbounded notification queue, implicit caller cap or swallowed required clock/factory/store operation.",
+    "No hardware/cloud/provider execution, product/test/tool changes, process launches, .NET/Docker/SSH or private state mutation."
+  ],
+  "execution": "Read-only local file/body/hash inspection and applied analysis skill guidance; own distinct immutable JSON research report only."
+}

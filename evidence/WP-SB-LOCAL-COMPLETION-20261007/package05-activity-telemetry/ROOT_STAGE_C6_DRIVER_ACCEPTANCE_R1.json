@@ -1,0 +1,14 @@
+{
+  "status": "ACCEPTED_BOUNDED_OPERATIONAL_DRIVER_NO_NATIVE_KILL_CREDIT",
+  "script_sha256": "7f40c6ac4043360659577d5de828903011cc24c37c88c550949aaccb260064d0",
+  "review_sha256": "5cbb3cb0682cfa24d55b5100563bf27dcd3621c839692f2fcb399175b45e3462",
+  "root_personal_read": "Whole 29-line script consumed, review operational fields and six fresh preconditions inspected; actual native causal acceptance remains separate.",
+  "limits": [
+    "Run only the six inspected Root-owned names with Python assertions enabled. Tool is private bounded orchestration, not arbitrary user argv service. Empty argv executes zero clones and grants no acceptance.",
+    "On unexpected restore/build/native parser error, the runner aborts with original clone logs intact and no valid RESULT; Root must preserve/qualify excluded attempt before retry. It does not claim every infrastructure failure is automatically archived as a valid mutant receipt.",
+    "Normal Popen.wait path joins each command. There is no independent watchdog/interrupt-finally group retirement policy in this inherited driver; on interruption Root must join/retire its known owned CLI process before starting another operation. No arbitrary abort/quiescence guarantee.",
+    "Runtime17/raw6 counts and hashes in RESULT are provenance candidates; native reviewer must verify copied bytes, all unique closed/gzip-valid actual binlogs and actual compiled source/requirements full binding. Current source guard is not an autonomous full canonical graph check per command.",
+    "The runner computes structural native counts before archiving, then writes neutral failure-pending-review or survivor status before printing finite diagnostic summaries. It does not itself classify a failure as a causal kill.",
+    "No future six-mutant results, Core8112 acceptance, final replay, full P05/current coverage/provider/CI/cloud/hardware acceptance. Root reports Core run joined; its archive/review remain separate."
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "kind": "ROOT_EVENTHUB_WHOLE_LOCAL_EXECUTION_GATE_R1",
+  "driver_sha256": "99f3173ba30d3be0978fd4ad1a6d10aeae0037fe5447a715ed032152b8ddb375",
+  "forwarder_sha256": "00653caae37621b310eb111ec3b27ed8ff7f731a984b536c642f81c17932eda8",
+  "peer_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-whole-local-driver-preflight-adversarial-r5.json",
+  "peer_sha256": "d125b0fe12d13f7fba60f6e6862ee6e1b5b4684fcbaee45ca15dc34bfe2ab0f1",
+  "inputs_sha256": "272d28b6e6b1644527558a8ebab611cf987c8e66a3af016f1f43b02542b93b07",
+  "scope": "One root-owned whole local profile unfiltered EventHub executable, exactacceptedfixed16runtime/11assets. Native outcome unknown; no controls/canonical/global credit."
+}

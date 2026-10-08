@@ -1,0 +1,14 @@
+{
+  "kind": "ROOT_COMPOSITION_RESTORED_RUNTIME_EXACT_BYTE_PRIOR_FRESH_PHYSICAL_BINDING_REUSE_R1",
+  "native_sha256": "78b97c02dcad666da092c3b7d1305f03200b887ddcb48b6415a5915ce6e1daf4",
+  "original3_baseline_sha256": "1c42773a2ab6928c867680cec672645b9d5691b44fb4f905432c57e6b179746e",
+  "prior_root_fresh_binding_sha256": "69d55a9f25bc89bb7251b3ff972568299ae0853dc3ae82e9ac3827ec7f7e47b0",
+  "actual_runtime17_archive_bytes_exact_original3": true,
+  "actual_assets12_exact_original3": true,
+  "actual_generated39_document_hashes_exact_original3": true,
+  "root_prior_pe_images": 12,
+  "root_prior_pdb_checksums": 3808,
+  "fresh_PE_parse_this_receipt": false,
+  "independent_compiled4725_method_resource_metadata_reuse_sha256": "b784e7a564e994abdf067d098ef9a54fbb3abcdbc9b5473e23d6c6d37cd956d8",
+  "limits": "Root personally read complete new focused3 and strict stdout/stderr; actual3 PASS and zero warnings/errors. Byte exact prior OWN Root12PE3808 and all17 archives plus source/config guards and39generated docs justify reuse; no fresh parse or Root all4725metadata decode claim. New independent postqualification/canonical2 transfer pending; no broad startup/cloud/device/coverage/globalA+ closure."
+}

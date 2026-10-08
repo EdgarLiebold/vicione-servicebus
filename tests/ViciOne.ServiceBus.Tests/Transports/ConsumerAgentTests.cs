@@ -965,8 +965,16 @@ public sealed class ConsumerAgentTests
                 $"get_{nameof(ReceiveEndpointContext.StopTimeout)}" => OperationTimeout,
                 $"get_{nameof(ReceiveEndpointContext.ConsumerStopTimeout)}" => _consumerStopTimeout,
                 $"get_{nameof(ReceiveEndpointContext.InputAddress)}" => new Uri("loopback://consumer-agent/input"),
+                nameof(PipeContext.TryGetPayload) when targetMethod.IsGenericMethod
+                    && targetMethod.GetGenericArguments()[0] == typeof(TimeProvider) => NoTimeProvider(args),
                 _ => throw new NotSupportedException(targetMethod.Name),
             };
+        }
+
+        private static bool NoTimeProvider(object?[]? args)
+        {
+            args![0] = null;
+            return false;
         }
     }
 

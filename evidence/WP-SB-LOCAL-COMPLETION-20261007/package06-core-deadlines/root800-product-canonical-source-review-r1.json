@@ -1,0 +1,93 @@
+{
+  "status": "SOURCE_NO_BLOCK_PRODUCT2_AND_CANONICAL_PROXY8__ROOT800_READ_CLOSURE_PROVENANCE_QUALIFIED_BOUNDED",
+  "role": "Internal separate reviewer of ROOT new reading attestation and product/test delta. This reviewer earlier prepared delta packs; that preparation itself confers no Root read credit or independent external assurance.",
+  "root_read_receipt": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/ROOT_CORE_OWNER_COMPLETE_READ_R1.json",
+    "sha256": "5e807c7f46275c714dcb6e8c3b6f478f5f6846299510c58a2fcac60b763c6b08",
+    "attestor": "/root",
+    "reading_attestation_basis": "Root alone explicitly attests all57packs read untruncated plus sharedBusDepot whole currentread. Reviewer verifies exact coverage/reconstruction/provenance; cannot independently observe hidden cognitive reading."
+  },
+  "computational_proof": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-root800-closure-and-canonical-proxy8-independent-proof-r1.json",
+    "sha256": "cfa3058edb6858da34758728764b5b9e4cedcd4227fa246ea5d3c8e00ef9a2e9",
+    "precision_erratum": "R1 test_method_count15 enumerates public async methods including1 dispatcherhelper; final actual annotated test methods14 /25staticallydeclared cases. R1 preserved, not15-test execution credit."
+  },
+  "closure": {
+    "owner800_baseline_exact_Git_pathset": true,
+    "prior_Root_same715": true,
+    "explicit_Root_current17": true,
+    "complete_Root_attested_delta68": true,
+    "every57pack_hash_bytes_range_reconcatenation_checked": true,
+    "all766_old_snapshot_hashes_checked": true,
+    "shared84": {
+      "prior_same83": true,
+      "wholechangedBusDepot_Root_attested_and_currenthash_checked": true
+    },
+    "JSON": {
+      "independent_actual_ROOT_display_decoding_not_unseen_codec_only": true,
+      "old4538_reused_exactly_once": true,
+      "new147_displayed_exactly_once": true,
+      "all4685_currentordered_rows_checked": true,
+      "all3formats5gaps_prefix_checked": true,
+      "reconstructed_current_JSON_byte_identical": true
+    }
+  },
+  "canonical_test_delta": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Transports/ConsumerAgentTests.cs",
+    "current_sha256": "160ccfa858b1cdd4524bf9b352b9dd6042994bdaa450994617dae7716c217dfd",
+    "added_lines": 8,
+    "whole_file_read_receipts": [
+      "a906d2 lines1..335",
+      "2393e9 lines336..685",
+      "2259c3 lines686..EOF"
+    ],
+    "annotated_test_methods": [
+      "ConsumerStoppingDiagnostic_DoesNotSkipManualLoopCompletionAsync",
+      "UnexpectedConsumeLoopExit_StopsTheAgentAndMarksTheShutdownAsUngracefulAsync",
+      "ExplicitStop_WaitsForTheFirstRegisteredTaskAndRemainsGracefulAsync",
+      "ManualConsumeLoopOutcome_IsObservedAndOwnedAsync",
+      "ParallelDispatch_CoordinatesSameKeysAndPreservesIndependentKeysAsync",
+      "RenewedIdentity_RetainsDuplicatesWhileTheNewDeliveryIsPendingAsync",
+      "ManualCancellation_CancelsActiveAndEveryRetainedDeliveryAsync",
+      "ManualFailure_CompletesTheConsumeSourceDespiteCancellationCallbackFailureAsync",
+      "DispatchStartupFailure_DetachesTrackedIdentityAndAdmitsRetryAsync",
+      "SettledGenerationLateFailure_DoesNotCancelTheNewPendingGenerationAsync",
+      "ConsumerStopTimeout_OwnsCallbackFailureAndJoinsTheConsumeTaskAsync",
+      "DispatchFailure_PreservesThePrimaryAndCallbackCausesAndAdmitsRetryAsync",
+      "StopBudgetCancellation_ReportsTheOwnedCallbackFailureAsync",
+      "StopDiagnostics_DoNotReplaceOwnedCancellationFailuresAsync"
+    ],
+    "annotated_test_method_count": 14,
+    "statically_declared_case_count": 25,
+    "new_test_cases": 0,
+    "new_Requirement_rows": 0,
+    "inverse_delta_equals_entire_baseline": true,
+    "analysis": [
+      "Only exact generic TryGetPayload<TimeProvider> is supported with outnull+false. PipeContext.GetTimeProvider therefore follows documented TimeProvider.System fallback for no explicit payload.",
+      "Other unexpected proxy invocations retain the default NotSupportedException; no broad permissive stub or product catch hides invalidfixture calls.",
+      "Every assertion, deadline value, outcome/control, cleanup guard and test trait is byte-identical outside exact8-line helper delta.",
+      "Existing tests retain exact faults/tokens, dispatcher/consume lifetime and callback-failure outcomes. No skip, swallowed verdict, weak equality or unawaited assertion added.",
+      "New13-case fake-time package supplies explicit custom-provider boundary proofs; existing canonical System-fallback cases are not relabelled as deterministic fake-time proofs."
+    ]
+  },
+  "product2_prior_source_review": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-core-deadlines-product2-source-review-r1.json",
+    "sha256": "19ca16b2305ec8129f247798492fd7209d3818d2270cb4ec84f10756bdc20f7f",
+    "both_current_source_hashes_still_identical_to_review": true
+  },
+  "exact_Product2_Test1_git_diff_sha256": "2f14cce73fee3de4e1a76c0c91a1ea4e70f025ca1458a8ab8d4fcaf90245fdfb",
+  "findings": [],
+  "informational_precision": [
+    "Root receipt counts.root_delta_pending68 is inherited preparation cohort wording; completed reading is explicit. Prefer completed68 label in future status navigation without rewriting historicalprep."
+  ],
+  "mandatory_test_skill_applied": [
+    "dotnet-test:test-anti-patterns",
+    "dotnet-test:test-analysis-extensions; .NET extension"
+  ],
+  "limits": [
+    "Full Root reading is scoped to pre-canonical-edit800baseline plus exact separately reviewed8-line canonicaldelta, not self-produced whole800semanticquality grade.",
+    "Fresh package01 strict Unit/Engineering baseline parser and13,460case evidence is not personal reading or corrected-code Native acceptance.",
+    "Strict corrected package13 native, compiled one-cause mutations/rollback, canonical currentUnit and feasibleprovider gates remain pending.",
+    "No .NET/Docker/provider processes or product/test writes by reviewer."
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "kind": "LOCAL_COMPLETION_DOCUMENTATION_FREEZE_R9",
+  "files_sha256": {
+    "CHANGELOG.md": "1b54840368624be2363badff03da6e82c333d4310a4949ffe9eabf4bbc23ae31",
+    "TODO.md": "ccd5788111bda00474868957f7d1b0c3b7573ee835f7e9a842c00b489de4dc13",
+    ".testagent/status.md": "8bcb65953a6549d659227a066cd205da562a4cd7ec3b8cd30ebbfa0eff2d627c",
+    ".testagent/plan.md": "486e70a67a911133d9dc9689874f9e27e4cea6e406982d3e16478994d285e89f",
+    ".testagent/local-completion-plan.md": "a70d0ba0bd3925fabfac3b81eacc22d1fc42820599e32a58c5b4c14b0c7255da",
+    "docs/quality-status.md": "e861cccb3a80ef3d987b810b08318aae0ef9ff1f6704e7c7de2e218c038018ba"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r9",
+  "prior_root_acceptance_sha256": "c9d6a3577cbf15bfc7e5b41de88e34ac8f618afb46530c508bd9f22ace5fdb21",
+  "c1_root_acceptance_sha256": "184d9ad51f24761fc5ab42a48225cbbedf8d91a21888cbbba5fe92b7c8685af1",
+  "limits": "Only bounded C1 acceptance; C2 research/new fixture pending; hardware/cloud/coverage/CI/provider/package pending preserved."
+}

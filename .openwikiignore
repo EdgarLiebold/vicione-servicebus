@@ -1,0 +1,15 @@
+# Generated files, local state and private material
+.git/
+**/bin/
+**/obj/
+artifacts/
+TestResults/
+.testagent/
+evidence/
+**/.DS_Store
+**/*.snk
+**/*.pfx
+**/*.pem
+**/.env
+**/.env.*
+**/*.log

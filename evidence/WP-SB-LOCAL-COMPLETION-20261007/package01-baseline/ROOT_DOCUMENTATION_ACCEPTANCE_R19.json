@@ -1,0 +1,21 @@
+{
+  "kind": "ROOT_ACCEPTED_SIX_EXACT_DOCUMENTATION_R19",
+  "published_freeze_sha256": "febd96b5a763973309c9de598210a58aea80faf41b1a4574ab50515dacdd6162",
+  "independent_review_sha256": "0887b7ea04b1c2717b247d197a72347f19794c60ad2146eb9c163537c408225e",
+  "source_sha256": {
+    "CHANGELOG.md": "6acdc3e48220b554fa38312ffa1524ae20d82a7806a6fdeb2bb7cd06a63a23ca",
+    "TODO.md": "2a450034162d953f610577485d968d1efc4a33b4f99710b117e2a0023fa51d1e",
+    ".testagent/status.md": "5a28e0dfb369102357b8681f34cf6d8c4c888f4005a212325a75d7d7461234c4",
+    ".testagent/plan.md": "2b81b39f77418a2df0d970feb13ae7031c2df9e853c2920701a92134462d7dc8",
+    ".testagent/local-completion-plan.md": "efef30efb10cca300f0195ebf3fc11e150f98d39a74ac8227dee5db20cf1e9fc",
+    "docs/quality-status.md": "c3b6167d014a4c69d5ea35c3bbd4852ca2ec4e3596ba57430f1240adb3f8918c"
+  },
+  "receipt_sha256": {
+    "asb30": "e750c4d37f81c86d1b129c7c6f1f5d5195b9b767056b61725624404b6a1b1036",
+    "logrepair": "d2a42f437ac2c735f54fce9b70f4709ee70dd23874cb04c48b55252b001acb4a",
+    "bootstraptool": "59b8616112b6bedd2977b26ad03321de6d68379dd6005b54a579aa226e09e7aa"
+  },
+  "Root_author_read": "Authored complete six deltas against exact R18 with explicit sourceguards; independent123checks accepts samecurrentonly additions; no unchanged historical bodyreadcredittransfer.",
+  "limits": "CurrentASB30functional acceptance only; knownliteral logrepairclosed, newASB-BROKER-INVARIANT-01open; otherprovider/coverage/unit/startup/adapter/observer/telemetry/CI/cloud/hardware gatesopen.",
+  "preservation": "Onlycurrentdocumentation additions andlocalplan03row successor. Allother11 TODO sections exact, all62orderedOBL IDs retained. Original234audit and historicalnotes immutable. Sourcecanonicaldocs remain R18 until readonlyreview."
+}

@@ -1,0 +1,48 @@
+{
+  "kind": "ROOT_ACTUAL_SHELL_ONLY_JOURNEY_RETENTION_PROBE_R1",
+  "source_sha256": "37af997d9f12503fb2f4d12bcd5ee9652c7496ce3365dbd0455ea628bfd4ebf7",
+  "private_probe_root": "/private/tmp/vicione-servicebus-journey-retention-shell-probe-r1",
+  "actual_rows": [
+    {
+      "case": "default",
+      "child_pid": 65033,
+      "joined_exit": 73,
+      "owned_timeout10": true,
+      "retained_run_count": 0,
+      "xml_actual_attribute_roundtrip": false,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "relative",
+      "child_pid": 65049,
+      "joined_exit": 73,
+      "owned_timeout10": true,
+      "retained_run_count": 1,
+      "xml_actual_attribute_roundtrip": true,
+      "stdout": "Retained developer journey evidence: /private/tmp/vicione-servicebus-journey-retention-shell-probe-r1/repo/retained-relative/run.EkpcBT\n",
+      "stderr": ""
+    },
+    {
+      "case": "xml-specials",
+      "child_pid": 65066,
+      "joined_exit": 73,
+      "owned_timeout10": true,
+      "retained_run_count": 1,
+      "xml_actual_attribute_roundtrip": true,
+      "stdout": "Retained developer journey evidence: /private/tmp/vicione-servicebus-journey-retention-shell-probe-r1/repo/retained & \"quote\" <greater>/run.8PFurS\n",
+      "stderr": ""
+    },
+    {
+      "case": "control-rejected",
+      "child_pid": 65083,
+      "joined_exit": 2,
+      "owned_timeout10": true,
+      "retained_run_count": 0,
+      "xml_actual_attribute_roundtrip": false,
+      "stdout": "",
+      "stderr": "Evidence directory must not contain control characters.\n"
+    }
+  ],
+  "limits": "Actual candidate shell script with layout18placeholderfiles and DOTNET_CLI stub firstrestoreexit73. No .NET command/build/package/consumer/journey/API execution or qualification. Default cleanup onaftertrapfailure andoptionalretention/XML/controlpath demonstrated; beforetrapcountfail remains existinglimit. No canonicalapplication."
+}

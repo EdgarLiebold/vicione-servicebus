@@ -1,0 +1,1561 @@
+{
+  "kind": "ROOT_FRESH_COMPILED_SQS_BATCH_CLOCK_ALL216_MAPPING_R1",
+  "native_sha256": "71a09bdd59260fdd37fa01004898d6a52e4146d7ce4dd88c96c162d3764b04c2",
+  "test_DLL_sha256": "95cd500bb6743fac38498211f5d4a860a8b08b7f9ebb9cd09c3320dc450ce26d",
+  "parser_source_sha256": "3f0bca13a37c7ba18c3a0c4315df0229aeb190329b92d44c2c18a7154e8352df",
+  "helper_sha256": "31091433d847a9b9fefbed462f2b7494ea37aafaa8940323b1b6cbd29f48bab8",
+  "resource_sha256": "ebd653ac871c0bdc51ae32e5d1bf9e9775cba5808f411620b57288b7b2026f9b",
+  "actual_METHOD_rows": 216,
+  "all_METHOD_coverage_projection": [
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-HEADERS",
+      "variantKey": "provider-filters-observe-normalized-values-in-both-overloads",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests",
+      "testMethod": "SnsFilter_ReceivesInvariantScalarAndControlsProviderAttribute"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HEADERS",
+      "variantKey": "provider-filters-observe-normalized-values-in-both-overloads",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests",
+      "testMethod": "SqsFilter_ReceivesInvariantScalarAndControlsProviderAttribute"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-HEADERS",
+      "variantKey": "unsupported-values-never-invoke-provider-filter",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests",
+      "testMethod": "SnsUnsupportedValues_DoNotInvokeFilter"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HEADERS",
+      "variantKey": "unsupported-values-never-invoke-provider-filter",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonHeaderValueConverterTests",
+      "testMethod": "SqsUnsupportedValues_DoNotInvokeFilter"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-BATCH-CANCELLATION",
+      "variantKey": "pre-canceled-entry-not-admitted",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests",
+      "testMethod": "ExecuteAsync_PreCanceledToken_DoesNotAdmitEntryOrCallProviderAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-BATCH-CANCELLATION",
+      "variantKey": "cancel-before-dispatch-filter-and-reindex",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests",
+      "testMethod": "CancellationAfterCollectionBeforeDispatch_FiltersEntryAndReindexesSurvivorAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-BATCH-CANCELLATION",
+      "variantKey": "cancel-after-dispatch-only-cancels-caller-wait",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests",
+      "testMethod": "CancellationAfterDispatch_CancelsOnlyCallerWaitAndPreservesSharedProviderRequestAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-BATCH-CANCELLATION",
+      "variantKey": "canceled-caller-not-overwritten-by-provider-failure",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests",
+      "testMethod": "CanceledCaller_RemainsCanceledWhenSharedProviderRequestFailsAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-BATCH-CANCELLATION",
+      "variantKey": "empty-filtered-batch-skips-provider",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests",
+      "testMethod": "DisposeAsync_WithOnlyCanceledCollectedEntries_DoesNotCallProviderAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-BATCH-CANCELLATION",
+      "variantKey": "provider-owner-cancellation-cancels-dispatched-entries",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests",
+      "testMethod": "ProviderOwnerCancellation_CancelsEveryDispatchedEntryAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-BATCH-CANCELLATION",
+      "variantKey": "queue-send-caller-cancellation-after-dispatch",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests",
+      "testMethod": "QueueInfoSendAsync_CallerCancellationAfterDispatch_DoesNotCancelProviderRequestAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-BATCH-CANCELLATION",
+      "variantKey": "queue-delete-caller-cancellation-after-dispatch",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests",
+      "testMethod": "QueueInfoDeleteAsync_CallerCancellationAfterDispatch_DoesNotCancelProviderRequestAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-BATCH-CANCELLATION",
+      "variantKey": "queue-disposal-drains-admitted-send-and-delete",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests",
+      "testMethod": "QueueInfoDispose_WaitsForAdmittedSendAndDeleteProviderWorkAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-BATCH-CANCELLATION",
+      "variantKey": "topic-publish-caller-cancellation-after-dispatch",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatcherCancellationTests",
+      "testMethod": "TopicInfoPublishAsync_CallerCancellationAfterDispatch_DoesNotCancelProviderRequestAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-BATCH",
+      "variantKey": "mixed-reordered-outcomes-preserve-caller-identity",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchIdentityTests",
+      "testMethod": "MixedReorderedResponse_PreservesEveryCallersOwnOutcomeAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-BATCH",
+      "variantKey": "duplicate-outcome-rejects-whole-batch-before-completion",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchIdentityTests",
+      "testMethod": "DuplicateResponseIdentity_FaultsEveryCallerBeforeAnyPartialCompletionAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-BATCH",
+      "variantKey": "absent-opposite-result-list-preserves-every-outcome",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchIdentityTests",
+      "testMethod": "OneSidedResponse_WithAbsentOppositeListPreservesEveryOutcomeAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-BATCH",
+      "variantKey": "every-request-entry-accounted-for",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchResponseTests",
+      "testMethod": "PartialBatchResponse_FaultsEveryUnaccountedRequestAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-BATCH",
+      "variantKey": "immutable-process-defaults",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchResponseTests",
+      "testMethod": "BatchDefaults_AreImmutableSnapshots"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-BATCH",
+      "variantKey": "entry-size-counts-every-attribute-component",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchResponseTests",
+      "testMethod": "SqsEntryLength_CountsUtf8NamesDataTypesStringAndBinaryValuesAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-BATCH",
+      "variantKey": "entry-size-counts-every-attribute-component",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchResponseTests",
+      "testMethod": "SnsEntryLength_CountsUtf8NamesDataTypesStringAndBinaryValuesAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-BATCH-CLOCK",
+      "variantKey": "all-resource-paths-use-selected-owner-timer",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests",
+      "testMethod": "ConnectionOwnerClock_FlushesPartialBatchAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-BATCH-CLOCK",
+      "variantKey": "owner-clock-captured-before-resolution-and-kept-across-scopes",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests",
+      "testMethod": "ConnectionOwnerClock_RemainsFixedAfterPayloadAndScopeUpdatesAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-BATCH-CLOCK",
+      "variantKey": "legacy-constructors-preserve-request-local-accounting-and-drain",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests",
+      "testMethod": "LegacyConstructors_TenEntriesKeepProviderAccountingAndDrainAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-BATCH-CLOCK",
+      "variantKey": "timer-failure-closes-and-faults-all-queued-work-before-cleanup",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests",
+      "testMethod": "TimerCreationFailure_FaultsAdmittedWorkAndKeepsDisposalJoinableAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-API",
+      "variantKey": "delete-message-uses-logical-queue-name",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextApiTests",
+      "testMethod": "DeleteMessage_ConsistentlyNamesItsLogicalQueueParameter"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-API",
+      "variantKey": "one-provider-connection-exception",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextApiTests",
+      "testMethod": "PublicApi_ExposesOneUnambiguousConnectionException"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "client-retries-evicted-queue-before-batch-admission",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextQueueEvictionTests",
+      "testMethod": "Client_ReresolvesAnEvictedQueueBeforeSendOrDeleteAdmissionAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "client-does-not-retry-after-provider-batch-failure",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextQueueEvictionTests",
+      "testMethod": "Client_DoesNotReplayAnAdmittedBatchAfterProviderFailureAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "client-bounds-retries-of-repeatedly-evicted-queue",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextQueueEvictionTests",
+      "testMethod": "Client_StopsAfterTwoEvictedQueueResolutionsWithoutCallingProviderAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "client-retries-only-unadmitted-entry-after-full-batch-channel-closes",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientContextQueueEvictionTests",
+      "testMethod": "Client_RetriesAWaitingBatchEntryAfterEvictionClosesTheFullChannelAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "client-owned-diagnostics-preserve-sdk-success-and-business-failures",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsClientOwnedDiagnosticsTests",
+      "testMethod": "ClientOperation_OwnDiagnosticDoesNotReplaceProviderOutcomeAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-CONFIGURED-CONNECTION-PIPE",
+      "variantKey": "endpoint-declared-context-filter-precedes-actual-provider-topology",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConfiguredPipelinesAndSendTopologyTests",
+      "testMethod": "ConfiguredContextFilters_ExecuteBeforeProviderTopologyAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-SEND-TOPOLOGY-METADATA",
+      "variantKey": "send-settings-preserve-declared-queue-attributes-subscriptions-and-tags",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConfiguredPipelinesAndSendTopologyTests",
+      "testMethod": "QueueSendTopology_PreservesConfiguredMetadataToProviderAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-CONFIGURED-PIPE-VALIDATION",
+      "variantKey": "client-and-connection-specification-failures-reach-endpoint-validation",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConfiguredPipeValidationTests",
+      "testMethod": "ConfiguredPipeSpecification_ReportsItsFailureBeforeEndpointBuild"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "connection-own-diagnostics-preserve-client-admission-and-primary-failure",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests",
+      "testMethod": "ConnectionCreation_OptionalDiagnosticPreservesTheFactoryOutcomeAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "topology-own-diagnostics-preserve-real-declarations-and-next",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionAndTopologyDiagnosticsTests",
+      "testMethod": "TopologyDeclaration_OptionalDiagnosticPreservesTheContinuationAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-CONNECTION-CREATION-LIFETIME",
+      "variantKey": "configured-creation-next-fault-cancel-and-unpublished-resource-ownership",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationMiddlewareLifetimeTests",
+      "testMethod": "ConfiguredCreation_ControlsPublicationAndRetiresUnpublishedContextsAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-CONNECTION-CREATION-LIFETIME",
+      "variantKey": "two-endpoint-configurations-share-connection-with-separate-client-owners",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationMiddlewareLifetimeTests",
+      "testMethod": "TwoEndpointBuilders_KeepTheirConfiguredFiltersAndClientOwnersSeparateAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "connection-factory-handle-owns-provider-connection",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationTests",
+      "testMethod": "CreateContext_UsesConfiguredConnectionAndOwnsItsLifetimeAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "connection-factory-preserves-provider-failure-cause",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationTests",
+      "testMethod": "CreateContext_PreservesProviderFailureAsConnectionFailureAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-CANCELLATION",
+      "variantKey": "connection-factory-stopping-guard-prevents-provider-open",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationTests",
+      "testMethod": "CreateContext_WhenStopping_DoesNotOpenAConnectionAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-CANCELLATION",
+      "variantKey": "connection-factory-propagates-provider-cancellation",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConnectionCreationTests",
+      "testMethod": "CreateContext_PropagatesProviderCancellationWithoutWrappingAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-CONSUME-TOPOLOGY",
+      "variantKey": "subscription-requires-endpoint-option-and-message-consent",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsConsumeTopologyConnectionTests",
+      "testMethod": "ConnectConsumePipe_SubscribesOnlyWhenAllTopologyFlagsAllowIt"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-DELAY",
+      "variantKey": "fractional-delay-rounds-up-within-service-boundary",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsDelayTests",
+      "testMethod": "MessageDelay_RoundsUpWithoutDeliveringEarlyAndEnforcesTheSqsRange"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-DELAY",
+      "variantKey": "destination-capability-boundary",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsDelayTests",
+      "testMethod": "FifoQueuesAndSnsTopics_RejectUnsupportedPerMessageDelay"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ADDRESS",
+      "variantKey": "host-and-endpoint-region-scope-path",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests",
+      "testMethod": "HostAndEndpointAddresses_PreserveRegionScopeAndPath"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ADDRESS",
+      "variantKey": "queue-address-classification-roundtrip",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests",
+      "testMethod": "QueueAddress_IsClassifiedAndRoundTrips"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-ADDRESS",
+      "variantKey": "topic-lifetime-flags",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests",
+      "testMethod": "TopicAddress_PreservesLifetimeFlags"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-ADDRESS",
+      "variantKey": "relative-topic-address-preserves-entity-and-lifetime",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests",
+      "testMethod": "RelativeTopicAddress_ResolvesToTheSameEntityAndLifetime"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-ADDRESS",
+      "variantKey": "queue-has-no-relative-topic-address",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests",
+      "testMethod": "QueueAddress_RejectsRelativeTopicProjection"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-ADDRESS",
+      "variantKey": "unscoped-name-cannot-be-projected-under-scoped-host",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests",
+      "testMethod": "ExplicitTopicName_RejectsAnAmbiguousRelativeProjection"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ADDRESS",
+      "variantKey": "invalid-or-ambiguous-options-fail-fast",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests",
+      "testMethod": "InvalidOrAmbiguousEndpointOptions_AreRejected"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-ADDRESS",
+      "variantKey": "caller-topic-names-are-data",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointAddressTests",
+      "testMethod": "TopologyDestinationNames_AreValidatedAsData"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION",
+      "variantKey": "prefetch-and-concurrency-inheritance",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests",
+      "testMethod": "ConcurrencyAndPrefetch_ResolveFromEndpointAndBusSettings"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-FAULT-OWNERSHIP",
+      "variantKey": "native-redrive-conflict-rejected",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests",
+      "testMethod": "NativeRedrivePolicy_IsRejectedWhileProductErrorAndSkippedQueuesOwnSettlement"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION",
+      "variantKey": "sns-envelope-requirement-is-explicit",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests",
+      "testMethod": "SnsNotificationEnvelope_IsOptionalByDefaultAndCanBeExplicitlyRequired"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION",
+      "variantKey": "sns-envelope-and-raw-delivery-conflicts-are-rejected",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests",
+      "testMethod": "SnsNotificationEnvelopeAndRawDelivery_RejectContradictoryConfiguration"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION",
+      "variantKey": "case-variant-raw-delivery-cannot-bypass-envelope-validation",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests",
+      "testMethod": "SnsNotificationEnvelopeAndCaseVariantRawDelivery_RejectContradictoryConfiguration"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION",
+      "variantKey": "mutable-receive-settings-cannot-bypass-operational-bounds",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests",
+      "testMethod": "MutableReceiveSettings_RejectOutOfRangeOperationalLimitsBeforeStartup"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION",
+      "variantKey": "mutable-negative-receive-settings-are-rejected",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests",
+      "testMethod": "MutableReceiveSettings_RejectNegativePollingAndVisibilityValues"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION",
+      "variantKey": "purge-warning-tracks-the-effective-setting",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests",
+      "testMethod": "PurgeOnStartup_WarnsOnlyWhileDestructiveStartupIsEnabled"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION",
+      "variantKey": "required-sns-envelope-rejects-removed-raw-delivery-setting",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests",
+      "testMethod": "RequiredSnsEnvelope_RejectsRemovalOfItsRawDeliverySetting"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION",
+      "variantKey": "mutable-visibility-timeout-stays-within-aws-bounds",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests",
+      "testMethod": "MutableVisibilityTimeout_RejectsBothOutOfRangeValuesWithItsOwnKey"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION",
+      "variantKey": "mutable-maximum-visibility-cannot-exceed-aws-limit",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests",
+      "testMethod": "MutableMaximumVisibility_RejectsDurationAboveTwelveHours"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION",
+      "variantKey": "mutable-maximum-visibility-must-be-positive",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests",
+      "testMethod": "MutableMaximumVisibility_RejectsZeroDuration"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION",
+      "variantKey": "mutable-visibility-renewal-enforces-minimum",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests",
+      "testMethod": "MutableVisibilityRenewal_RejectsValuesBelowEffectiveMinimum"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION",
+      "variantKey": "validation-order-and-deferred-settings",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests",
+      "testMethod": "Validation_PreservesLocalDiagnosticOrderAndReadsSettingsWhenEnumerated"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENDPOINT-CONFIGURATION",
+      "variantKey": "raw-delivery-attribute-must-be-boolean-text",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEndpointConfigurationTests",
+      "testMethod": "RawMessageDelivery_RejectsMalformedTextAndNonStringAttributes"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-ENTITY-NAME",
+      "variantKey": "queue-topic-entity-name-rejects-final-lf-crlf-nul",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEntityNameTests",
+      "testMethod": "QueueAndTopicNameValidation_RejectsUnsupportedTrailingCharacters"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENTITY-NAME",
+      "variantKey": "queue-service-limit",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEntityNameTests",
+      "testMethod": "QueueNameBeyondTheServiceLimit_IsRejected"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-ENTITY-NAME",
+      "variantKey": "queue-and-topic-aws-grammar-fifo-suffix",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEntityNameTests",
+      "testMethod": "QueueAndTopicNames_EnforceAwsGrammarAndFifoSuffix"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENVELOPE",
+      "variantKey": "cross-and-intra-region-exact-payload",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests",
+      "testMethod": "CrossAndIntraRegionBodies_DecodeToExactPayload"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENVELOPE",
+      "variantKey": "application-json-with-notification-fields-remains-direct",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests",
+      "testMethod": "DirectJsonWithNotificationLikeFields_IsNeverSilentlyUnwrapped"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENVELOPE",
+      "variantKey": "complete-sns-shaped-application-json-remains-direct-by-default",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests",
+      "testMethod": "CompleteSnsShapedApplicationJson_RemainsDirectUnlessUnwrappingIsExplicitlyEnabled"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENVELOPE",
+      "variantKey": "required-envelope-rejects-every-invalid-provider-discriminator",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests",
+      "testMethod": "RequiredNotificationEnvelope_RejectsEveryInvalidProviderDiscriminator"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENVELOPE",
+      "variantKey": "required-envelope-rejects-every-missing-provider-field",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests",
+      "testMethod": "RequiredNotificationEnvelope_RejectsEveryMissingProviderField"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-ENVELOPE",
+      "variantKey": "required-envelope-rejects-malformed-or-non-object-json",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsEnvelopeTests",
+      "testMethod": "RequiredNotificationEnvelope_RejectsMalformedOrNonObjectJson"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "header-provider-rejects-missing-constructor-dependencies",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHeaderProviderTests",
+      "testMethod": "Constructor_RejectsMissingMessageOrBodyWithExactOwnership"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "absent-native-message-id-is-not-reported",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHeaderProviderTests",
+      "testMethod": "MissingNativeMessageId_DoesNotViolateTheSuccessfulHeaderLookupContract"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "sns-envelope-message-attributes-become-transport-headers",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHeaderProviderTests",
+      "testMethod": "NotificationMessageAttributes_AreExposedWithoutLosingTheirNamesOrValues"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "native-sqs-attributes-override-sns-envelope-attributes",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHeaderProviderTests",
+      "testMethod": "NativeMessageAttribute_TakesPrecedenceOverTheNotificationAttribute"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "malformed-sns-envelope-attributes-are-rejected-after-native-admission",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHeaderProviderTests",
+      "testMethod": "MalformedNotificationAttribute_IsRejectedOnlyWhenEnvelopeMetadataIsRead"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "provider-sent-timestamp-parses-exact-unix-milliseconds",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHeaderProviderTests",
+      "testMethod": "ProviderSentTimestamp_ParsesExactUnixMillisecondsAsUtc"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-CREDENTIALS",
+      "variantKey": "secret-free-public-api",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests",
+      "testMethod": "PublicConfiguration_ContainsNoRawCredentialOrProductTestHarnessSurface"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-CREDENTIALS",
+      "variantKey": "sdk-chain-or-explicit-credential-object",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests",
+      "testMethod": "HostComposition_UsesTheSdkChainOrAnExplicitCredentialObject"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+      "variantKey": "default-host-with-explicit-credentials-creates-both-sdk-clients-in-the-configured-region",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests",
+      "testMethod": "DefaultHost_WithExplicitCredentialsCreatesBothSdkClientsInTheConfiguredRegion"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+      "variantKey": "connection-preserves-distinct-sqs-and-sns-sdk-service-endpoints",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests",
+      "testMethod": "Connection_PreservesDistinctSuppliedSdkServiceEndpoints"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-CREDENTIALS",
+      "variantKey": "uri-credentials-and-control-components-rejected",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests",
+      "testMethod": "HostUris_RejectCredentialsAndControlComponents"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+      "variantKey": "host-uri-requires-absolute-address-and-host",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests",
+      "testMethod": "HostUris_RequireAnAbsoluteAddressWithAHost"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+      "variantKey": "string-host-rejects-null-empty-or-whitespace",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests",
+      "testMethod": "StringHostConstruction_RejectsMissingHost"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+      "variantKey": "immutable-host-snapshot-and-client-factories",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests",
+      "testMethod": "HostConfiguration_IsFrozenAndRejectsAmbiguousOrNullClientSources"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+      "variantKey": "low-level-host-accepts-only-sealed-immutable-snapshots",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests",
+      "testMethod": "LowLevelHost_AcceptsOnlyTheSealedSnapshotProducedByTheTypedBuilder"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+      "variantKey": "fresh-owned-client-pair-per-reconnect",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests",
+      "testMethod": "ClientFactories_CreateAFreshOwnedPairForEveryConnection"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+      "variantKey": "owned-client-disposal-attempts-both-clients-and-preserves-failures",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests",
+      "testMethod": "OwnedClientDisposal_AttemptsBothClientsAndPreservesFailures"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+      "variantKey": "partial-client-construction-preserves-primary-and-cleans-sqs",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests",
+      "testMethod": "PartialClientConstruction_PreservesPrimaryFailureAndAlwaysCleansSqs"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+      "variantKey": "per-host-cache-options-are-immutable-validated-and-time-provider-driven",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests",
+      "testMethod": "ClientContextCacheOptions_ArePerHostAndExpireThroughTheConfiguredTimeProviderAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+      "variantKey": "host-equality-and-hash-contract",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostConfigurationTests",
+      "testMethod": "HostSettingsEquality_UsesTheSameIdentityForEqualityAndHashing"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "host-own-debug-preserves-connected-endpoint-start",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostSendReceiverDiagnosticsTests",
+      "testMethod": "HostConnection_OptionalDiagnosticPreservesActualEndpointStartAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "send-creation-own-debug-preserves-real-child-and-transport-admissions",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostSendReceiverDiagnosticsTests",
+      "testMethod": "SendCreation_OptionalDiagnosticPreservesBothRealOwnerAdmissionsAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "visibility-own-debug-preserves-real-poll-admission",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsHostSendReceiverDiagnosticsTests",
+      "testMethod": "ReceiverVisibility_OptionalDiagnosticPreservesActualReceiveAdmissionAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "purge-is-single-flight-and-retryable",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests",
+      "testMethod": "PurgeOnStartup_IsSingleFlightAndRetriesAfterFailureAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "topology-entities-declared-exactly-once",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests",
+      "testMethod": "TopologyDeclaration_CreatesEachEntityExactlyOnceAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "attribute-update-failure-propagates",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests",
+      "testMethod": "ExistingSubscriptionAttributeUpdateFailure_IsNotReportedAsSuccessAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "attribute-read-failure-rejects-existing-subscription",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests",
+      "testMethod": "ExistingSubscriptionAttributeReadFailure_DoesNotAcceptStaleSubscriptionAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "all-changed-attributes-precede-queue-policy",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests",
+      "testMethod": "ExistingSubscription_ReconcilesChangedAttributesBeforeQueuePolicyAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "outbound-raw-delivery-name-is-canonical",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsLifecycleBoundaryTests",
+      "testMethod": "QueueSubscription_CanonicalizesTheOutboundRawMessageDeliveryNameAsync"
+    },
+    {
+      "requirementId": "OBL-R0-CLOUD-0218",
+      "variantKey": "length-first-exact-utf8",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests",
+      "testMethod": "LengthFirst_EqualsExactUtf8Bytes"
+    },
+    {
+      "requirementId": "OBL-R0-CLOUD-0219",
+      "variantKey": "string-first-stable-length-and-bytes",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests",
+      "testMethod": "StringFirst_DoesNotChangeLengthOrBytes"
+    },
+    {
+      "requirementId": "OBL-R0-CLOUD-0220",
+      "variantKey": "non-ascii-counts-utf8-bytes",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests",
+      "testMethod": "NonAsciiLength_CountsUtf8BytesNotCharacters"
+    },
+    {
+      "requirementId": "OBL-R0-CLOUD-0221",
+      "variantKey": "whitespace-roundtrips-exactly",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests",
+      "testMethod": "WhitespaceBody_RoundTripsExactly"
+    },
+    {
+      "requirementId": "OBL-R0-CLOUD-0222",
+      "variantKey": "read-stream-rejects-write-and-preserves-body",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests",
+      "testMethod": "ReadStream_IsReadOnlyAndBodyRemainsUnchanged"
+    },
+    {
+      "requirementId": "OBL-R0-CLOUD-0223",
+      "variantKey": "all-access-orders-use-owned-snapshot",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests",
+      "testMethod": "AllAccessOrders_UseOwnedSnapshotAndExternalOracles"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-MESSAGE-BODY",
+      "variantKey": "invalid-utf16-is-rejected-before-size-admission",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests",
+      "testMethod": "Constructor_RejectsTextThatCannotBeEncodedAsUtf8"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-MESSAGE-BODY",
+      "variantKey": "required-message-and-absent-native-body",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsMessageBodyTests",
+      "testMethod": "Constructor_OwnsTheNativeMessageBoundaryAndNormalizesAnAbsentBody"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-TOPOLOGY",
+      "variantKey": "namespace-discovery-selects-valid-contracts-and-preserves-callback-identity",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsPublishTopologyDiscoveryTests",
+      "testMethod": "NamespaceDiscovery_PublishesOnlySelectedClosedContractsWithMatchingCallbacks"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-TOPOLOGY",
+      "variantKey": "explicit-publish-types-preserve-order-and-callback-identity",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsPublishTopologyDiscoveryTests",
+      "testMethod": "ExplicitTypes_PreserveInputOrderAndCallbackIdentity"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-TOPOLOGY",
+      "variantKey": "namespace-discovery-rejects-missing-configurator-and-marker",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsPublishTopologyDiscoveryTests",
+      "testMethod": "NamespaceDiscovery_RejectsMissingConfiguratorAndMarkerBeforeScanning"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-TOPOLOGY",
+      "variantKey": "invalid-explicit-publish-list-has-no-partial-registration",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsPublishTopologyDiscoveryTests",
+      "testMethod": "InvalidExplicitTypes_RejectBeforeAnyPublishRegistration"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-TOPOLOGY",
+      "variantKey": "namespace-filter-failure-has-no-partial-registration",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsPublishTopologyDiscoveryTests",
+      "testMethod": "NamespaceFilterFailure_DoesNotPartlyRegisterDiscoveredMessages"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "wire-carrier-remains-encoded-until-common-admission",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveContextTests",
+      "testMethod": "Body_PreservesTheWireCarrierUntilTheCommonAdmissionBoundary"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "sns-wrapped-binary-carrier-selects-envelope-content-type-after-admission",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveContextTests",
+      "testMethod": "NotificationEnvelope_PreservesCarrierAndSelectsItsDeclaredSerializer"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "nullable-transport-property-contract",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveContextTests",
+      "testMethod": "TransportProperties_ReturnAnnotationMatchesTheNullableInterfaceContract"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "missing-fifo-properties-return-null",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveContextTests",
+      "testMethod": "TransportProperties_WithoutUsableFifoAttributes_ReturnsNull"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "fifo-properties-use-canonical-keys",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveContextTests",
+      "testMethod": "TransportProperties_WithFifoAttributes_ReturnsExactCanonicalValues"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "provider-cancellation-is-not-silently-converted",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests",
+      "testMethod": "ReceiveLoop_PropagatesUnrequestedProviderCancellationAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY",
+      "variantKey": "monotonic-renewal-bounded-by-total-duration",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests",
+      "testMethod": "VisibilityRenewal_UsesMonotonicTimeAndNeverExtendsBeyondTheTotalLimitAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY",
+      "variantKey": "unrequested-renewal-cancellation-loses-lock",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests",
+      "testMethod": "UnrequestedProviderCancellationDuringRenewal_MarksTheReceiveLockLostAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY",
+      "variantKey": "maximum-renewal-window-expiry-loses-lock",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests",
+      "testMethod": "MaximumRenewalWindowExpiry_MarksTheReceiveLockLostAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY",
+      "variantKey": "settings-snapshot-and-settlement-order",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests",
+      "testMethod": "Complete_CancelsTheSnapshottedRenewalBeforeDeletingTheMessageAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY",
+      "variantKey": "failed-or-cancelled-completion-preserves-error-and-loses-lock",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests",
+      "testMethod": "FailedOrCancelledComplete_PreservesTheOriginalFailureAndMarksTheLockLostAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY",
+      "variantKey": "settlement-links-caller-lifetime",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLifecycleTests",
+      "testMethod": "Settlement_LinksCallerCancellationToTheProviderOperationAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY",
+      "variantKey": "complete-callback-failure-observed-sdk-completion-order",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockCallbackOrderTests",
+      "testMethod": "Complete_RealSdkCancellationCallbackPreservesObservedWorkerOrderAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY",
+      "variantKey": "faulted-callback-failure-observed-sdk-completion-order",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockCallbackOrderTests",
+      "testMethod": "Faulted_RealSdkCancellationCallbackPreservesObservedWorkerOrderAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY",
+      "variantKey": "complete-own-renewal-error-preserves-real-worker-join-and-delete",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockDiagnosticsTests",
+      "testMethod": "Complete_OptionalRenewalDiagnosticPreservesActualDeleteAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY",
+      "variantKey": "faulted-own-renewal-redelivery-diagnostics-preserve-real-settlement",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockDiagnosticsTests",
+      "testMethod": "Faulted_OptionalDiagnosticsPreserveActualRenewalAndRedeliveryAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY",
+      "variantKey": "maximum-own-warning-preserves-real-batch-delete",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiveLockDiagnosticsTests",
+      "testMethod": "MaximumVisibility_OptionalDiagnosticsPreserveActualDeleteAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "fifo-group-dispatch-uses-numeric-sequence-order",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverFifoTests",
+      "testMethod": "FifoReceiver_DispatchesOneGroupInNumericSequenceOrderAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "fifo-groups-preserve-per-group-order-with-interleaved-batch",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverFifoTests",
+      "testMethod": "FifoReceiver_OrdersEachInterleavedGroupIndependentlyAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "blocked-fifo-group-does-not-stop-other-group",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverFifoTests",
+      "testMethod": "FifoReceiver_BlockedGroupDoesNotStopAnotherPartitionAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "wide-prefetch-does-not-collapse-fifo-partition-capacity",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverFifoTests",
+      "testMethod": "FifoReceiver_WidePrefetchAdmitsQueuedMessagesWhileFirstIsBlockedAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "invalid-fifo-metadata-stops-before-dispatch",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverFifoTests",
+      "testMethod": "FifoReceiver_RejectsMissingOrInvalidOrderingAttributesBeforeDispatchAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "receiver-resolves-queue-before-poll-and-adopts-visibility",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverPollingTests",
+      "testMethod": "Receiver_ResolvesQueueBeforePollingAndUsesValidProviderVisibilityAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-RECEIVE",
+      "variantKey": "successful-empty-poll-after-stop-does-not-repoll",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsReceiverPollingTests",
+      "testMethod": "Receiver_SuccessfulEmptyPollAfterStopCompletesWithoutPollingAgainAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-SEND-FAILURE",
+      "variantKey": "status-typed-chain-and-permanent-precedence",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendFailureClassifierTests",
+      "testMethod": "TypedFailures_UseStatusCodesAndTheCompleteChainWithPermanentPrecedence"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-SEND-FAILURE",
+      "variantKey": "registration-is-singleton-and-idempotent",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendFailureClassifierTests",
+      "testMethod": "BusRegistration_AddsExactlyOneClassifierDescriptor"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-CANCELLATION",
+      "variantKey": "send-links-caller-lifetime-through-topology",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportContextTests",
+      "testMethod": "Send_LinksCallerCancellationThroughTopologyAndProviderOperationsAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-TELEMETRY",
+      "variantKey": "topic-identifies-aws-sns",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportContextTests",
+      "testMethod": "TopicTransport_ReportsTheCanonicalAmazonSnsMessagingSystem"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-HEADERS",
+      "variantKey": "correlation-id-uses-canonical-header",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportContextTests",
+      "testMethod": "TopicSend_UsesTheCanonicalCorrelationIdHeaderAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HEADERS",
+      "variantKey": "queue-send-filters-host-and-fault-detail-at-provider-boundary",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportContextTests",
+      "testMethod": "QueueSend_EmitsOnlyPermittedHeadersInProviderRequestAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-TOPOLOGY",
+      "variantKey": "send-transport-address-selects-provider-dispatch",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportDispatchTests",
+      "testMethod": "CreatedTransport_DispatchesToTheAddressSelectedProviderAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-TOPOLOGY",
+      "variantKey": "send-transport-queue-topology-lookup-follows-address-kind",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportSelectionTests",
+      "testMethod": "CreateSendTransport_SelectsQueueTopologyAndRegistersOwnedAgentsAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-CANCELLATION",
+      "variantKey": "canceled-transport-creation-does-not-register-agents",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSendTransportSelectionTests",
+      "testMethod": "CreateSendTransport_CanceledRequestDoesNotResolveAddressOrRegisterAgentsAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY",
+      "variantKey": "renewal-failure-stops-and-retains-redelivery-identity",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSettlementBoundaryTests",
+      "testMethod": "RenewalFailure_StopsRenewalAndRetainsFaultSettlementIdentityAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY",
+      "variantKey": "pre-canceled-settlement-retains-active-delivery",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSettlementBoundaryTests",
+      "testMethod": "CanceledSettlement_LeavesTheActiveDeliveryAvailableForAnotherCallerAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY",
+      "variantKey": "settlement-awaits-canceled-renewal-drain",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsSettlementBoundaryTests",
+      "testMethod": "Settlement_DrainsCanceledRenewalBeforeAnyTerminalProviderEffectAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "successful-startup-purge-survives-own-debug-and-keeps-once-state",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsStartupPurgeDiagnosticsTests",
+      "testMethod": "StartupPurge_SuccessPreservesContinuationAndOnceStateDespiteDebugAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "topic-discovery-does-not-readmit-after-owner-cancellation",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicDiscoveryLifetimeTests",
+      "testMethod": "TopicLookup_LifetimeEndsDiscoveryWithoutReadmissionAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "disposed-cold-topic-rejects-publish-without-creating-batcher",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+      "testMethod": "DisposedColdTopic_RejectsPublishWithoutCreatingBatcherAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "every-topic-disposal-waits-for-admitted-provider-work",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+      "testMethod": "ConcurrentDisposals_BothWaitForAdmittedProviderWorkAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "client-reresolves-disposed-topic-before-publish-admission",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+      "testMethod": "Client_ReresolvesDisposedTopicBeforeAdmissionAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "client-reresolves-only-unadmitted-publish-after-channel-close",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+      "testMethod": "Client_ReresolvesOnlyUnadmittedEntryAfterFullChannelClosesAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "client-never-replays-admitted-publish-after-provider-failure",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+      "testMethod": "Client_DoesNotReplayAdmittedProviderFailureAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "pre-canceled-client-publish-does-not-resolve-topic",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+      "testMethod": "Client_PreCanceledPublishDoesNotResolveOrCallProviderAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "cancellation-after-stale-topic-resolution-stops-relookup",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+      "testMethod": "Client_CancellationAfterStaleResolutionStopsBeforeSecondLookupAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "client-bounds-disposed-topic-reresolution-to-two-lookups",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+      "testMethod": "Client_TwoStaleTopicsStopWithoutCallingProviderAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "live-topic-preserves-publish-metadata-usage-and-provider-token",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopicLifecycleTests",
+      "testMethod": "LiveTopic_PreservesMetadataUsageAndProviderTokenAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-TOPOLOGY",
+      "variantKey": "failed-declaration-retry-keeps-one-cleanup-owner",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyCleanupTests",
+      "testMethod": "Configure_FailedDeclarationThenRetryRegistersOneCleanupAgentAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-TOPOLOGY",
+      "variantKey": "auto-delete-agent-registers-once-and-deletes-only-expiring-entities",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyCleanupTests",
+      "testMethod": "Configure_RegistersCleanupOnlyForAutoDeleteAndRemovesExactlyThoseEntitiesAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "probe-reports-complete-topology",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyTests",
+      "testMethod": "BrokerTopologyProbe_ReportsEntityLifetimeAndEverySubscriptionPair"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "one-source-can-target-multiple-queues",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyTests",
+      "testMethod": "QueueSubscriptions_PreserveEveryDistinctSourceAndDestinationPair"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "explicit-raw-delivery-setting-is-preserved",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyTests",
+      "testMethod": "Topic_PreservesAnExplicitRawMessageDeliverySetting"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-API",
+      "variantKey": "broker-topology-uses-provider-native-names",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsTopologyTests",
+      "testMethod": "BrokerTopology_UsesProviderNativeNamesAndContainsNoUnsupportedTopicChaining"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-VISIBILITY",
+      "variantKey": "duration-and-service-boundaries",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsVisibilityConfigurationTests",
+      "testMethod": "VisibilityDurations_ValidateAndClampAtAwsBoundaries"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "durable-store-single-flight-and-caller-cancellation-isolation",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests",
+      "testMethod": "ConcurrentWaiters_ShareOneFactoryAndCallerCancellationDoesNotOwnCreationAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "durable-store-faulted-creation-is-retryable",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests",
+      "testMethod": "FaultedFactory_IsEvictedAndTheNextAttemptCanRecoverAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "durable-store-pending-removal-releases-late-value",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests",
+      "testMethod": "RemoveAsync_WaitsForPendingOwnershipAndDisposesALateValueExactlyOnceAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "durable-store-cancellation-callbacks-run-outside-state-lock",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests",
+      "testMethod": "OwnershipCancellationCallbacks_CanReadStoreStateWithoutLockInversionAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "durable-store-cancellation-callback-fault-is-contained",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests",
+      "testMethod": "ThrowingOwnershipCancellationCallback_DoesNotAbortReleaseAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "durable-store-retains-values-until-explicit-release",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests",
+      "testMethod": "CompletedResources_RemainOwnedUntilRemovalOrStoreDisposalAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "durable-store-disposal-cancels-pending-and-is-idempotent",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests",
+      "testMethod": "DisposeAsync_CancelsPendingCreationAndReleasesCommittedResourcesExactlyOnceAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "durable-store-concurrent-disposal-shares-one-completion",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests",
+      "testMethod": "ConcurrentDisposeAsync_WaitsForTheSamePendingOwnershipAndReleasesTheLateResourceOnceAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "durable-store-disposal-fault-is-contained",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceStoreTests",
+      "testMethod": "DisposalFault_DoesNotPreventRemainingResourcesFromBeingReleasedAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "durable-warning-cannot-abandon-pending-owned-release",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceWarningOwnershipTests",
+      "testMethod": "WarningFromCancellation_DoesNotFinishRemovalOrDisposalBeforeHeldOwnershipAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "durable-warning-cannot-skip-remaining-resource-disposal",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.DurableResourceWarningOwnershipTests",
+      "testMethod": "WarningFromDisposal_DoesNotSkipTheRemainingCommittedResourceAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "missing-queue-creation-preserves-declared-provider-metadata",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheCreationTests",
+      "testMethod": "MissingQueue_CreatesWithExactAttributesAndTagsThenCachesReturnedIdentityAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "missing-fifo-queue-adds-required-flag-without-mutating-declaration",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheCreationTests",
+      "testMethod": "MissingFifoQueue_AddsRequiredFlagWithoutMutatingDeclarationAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "failed-create-response-does-not-cache-queue-and-allows-retry",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheCreationTests",
+      "testMethod": "FailedCreateResponse_DoesNotFetchAttributesAndAllowsCleanRetryAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "post-create-attribute-failure-retries-existing-queue-without-duplicate-create",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheCreationTests",
+      "testMethod": "AttributeReadFailureAfterCreation_RediscoversExistingQueueWithoutCreatingAgainAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "pending-ephemeral-resolution-does-not-overlap-durable-ownership",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheOwnershipTests",
+      "testMethod": "DurableTransition_WaitsForPendingEphemeralResolutionBeforeStartingItsOwnAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "pending-durable-resolution-is-shared-with-name-lookup",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheOwnershipTests",
+      "testMethod": "NameLookup_JoinsPendingDurableResolutionWithoutCreatingAnEphemeralCopyAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "caller-cancellation-preserves-owner-and-other-queues-progress",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheOwnershipTests",
+      "testMethod": "CanceledCallers_DoNotReleasePendingOwnershipOrBlockAnotherQueueAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "failed-resolution-releases-name-gate-for-retry",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheOwnershipTests",
+      "testMethod": "FailedResolution_ReleasesTheNameForASecondProviderAttemptAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "remove-waits-for-pending-resolution-and-prevents-stale-reappearance",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheOwnershipTests",
+      "testMethod": "Removal_WaitsForPendingResolutionAndAllowsFreshLookupAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "evicted-queue-rejects-send-and-delete-after-disposal",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheOwnershipTests",
+      "testMethod": "EvictedQueue_RejectsSendAndDeleteWithoutRestartingBatchWorkersAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-LIFECYCLE",
+      "variantKey": "disposal-waits-for-inflight-policy-update-and-rejects-new-work",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueueCacheOwnershipTests",
+      "testMethod": "Dispose_WaitsForPolicyWriteAndPreservesItsSuccessfulResultAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "unrelated-policy-condition-does-not-grant-sns-send",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests",
+      "testMethod": "UnrelatedMatchingCondition_StillAddsSnsSendAllowAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "explicit-deny-rejects-ineffective-allow",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests",
+      "testMethod": "ExplicitSnsSendDeny_RejectsAnIneffectivePolicyUpdateAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "negative-source-arn-deny-excludes-target-topic",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests",
+      "testMethod": "DenyForEveryOtherTopic_DoesNotBlockThisTopicAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "wildcard-principal-deny-blocks-sns-send",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests",
+      "testMethod": "WildcardPrincipalDeny_RejectsAnIneffectivePolicyUpdateAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "existing-sns-send-allow-is-idempotent",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests",
+      "testMethod": "ExistingSnsSendAllow_DoesNotRewritePolicyAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "unrestricted-existing-allow-is-preserved",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests",
+      "testMethod": "UnrestrictedExistingAllow_IsNotNarrowedByAddingAConditionAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "other-policy-conditions-remain-isolated",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests",
+      "testMethod": "AdditionalRestriction_DoesNotLeakIntoTheNewSnsAllowAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "arn-equals-sns-allow-is-idempotent",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests",
+      "testMethod": "ExistingArnEqualsAllow_DoesNotRewritePolicyAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SNS-SUBSCRIPTION",
+      "variantKey": "dedicated-allow-reuses-one-statement-for-multiple-topics",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.QueuePolicyPermissionTests",
+      "testMethod": "DedicatedSnsAllow_AddsAnotherTopicWithoutGrowingStatementCountAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-CANCELLATION",
+      "variantKey": "cache-removal-links-shared-lifetime",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.SharedConnectionContextTests",
+      "testMethod": "CacheRemoval_LinksTheSharedLifetimeToTheUnderlyingOperationAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-CANCELLATION",
+      "variantKey": "client-context-links-both-lifetimes",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.SharedConnectionContextTests",
+      "testMethod": "CreatedClientContext_LinksSharedAndCallerLifetimes"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-MOVE",
+      "variantKey": "dead-letter-reason-respects-ten-attribute-provider-limit",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.SqsMoveTransportTests",
+      "testMethod": "DeadLetterMove_HandlesTheSqsAttributeLimitBeforeProviderSubmissionAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-MOVE",
+      "variantKey": "failed-provider-send-redeclares-destination-before-retry",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.SqsMoveTransportTests",
+      "testMethod": "Move_ProviderFailureEvictsTopologySoRetryRedeclaresDestinationAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-MOVE",
+      "variantKey": "provider-request-uses-context-body-and-fifo-only-for-fifo-destinations",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.SqsMoveTransportTests",
+      "testMethod": "Move_SendsContextBodyAndCustomAttributesWithoutStaleTransportHeadersAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-CANCELLATION",
+      "variantKey": "move-links-caller-lifetime",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.SqsMoveTransportTests",
+      "testMethod": "Move_LinksCallerCancellationToTopologyAndProviderOperationsAsync"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-REQUIREMENT-PROJECTION",
+      "variantKey": "compiled-metadata-matches-projection",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.Requirements.RequirementCoverageProjectionTests",
+      "testMethod": "AmazonSqsRequirements_MatchCompiledRequirementMetadata"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+      "variantKey": "selected-named-options-validated-by-generic-host-before-runtime",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests",
+      "testMethod": "SelectedNamedInvalidOptionsFailBeforeRuntime"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+      "variantKey": "unselected-default-options-do-not-reject-selected-named-sqs",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests",
+      "testMethod": "UnusedInvalidDefaultCannotRejectCoherentNamedBus"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+      "variantKey": "selected-default-options-remain-validated-before-runtime",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests",
+      "testMethod": "SelectedInvalidDefaultStillFailsBeforeRuntime"
+    },
+    {
+      "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+      "variantKey": "coherent-named-sqs-reaches-selected-pre-runtime-boundary",
+      "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+      "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests",
+      "testMethod": "CoherentNamedBusReachesExactlyTheSameRuntimeBoundary"
+    }
+  ],
+  "four_methods": {
+    "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_FlushesPartialBatchAsync": {
+      "kind": "Xunit.TheoryAttribute",
+      "inline": [
+        "send-existing",
+        "send-created",
+        "delete-existing",
+        "delete-created",
+        "publish-existing",
+        "publish-created"
+      ],
+      "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatchSelectedClockTests.cs",
+      "caller_line": 26,
+      "named_arguments": 0
+    },
+    "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.ConnectionOwnerClock_RemainsFixedAfterPayloadAndScopeUpdatesAsync": {
+      "kind": "Xunit.FactAttribute",
+      "inline": [],
+      "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatchSelectedClockTests.cs",
+      "caller_line": 42,
+      "named_arguments": 0
+    },
+    "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.LegacyConstructors_TenEntriesKeepProviderAccountingAndDrainAsync": {
+      "kind": "Xunit.FactAttribute",
+      "inline": [],
+      "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatchSelectedClockTests.cs",
+      "caller_line": 70,
+      "named_arguments": 0
+    },
+    "ViciOne.ServiceBus.AmazonSqs.Tests.AmazonSqsBatchSelectedClockTests.TimerCreationFailure_FaultsAdmittedWorkAndKeepsDisposalJoinableAsync": {
+      "kind": "Xunit.FactAttribute",
+      "inline": [],
+      "caller_file": "/private/tmp/vicione-servicebus-local-completion-20261007-sqs-batch-selected-clock-fixed/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatchSelectedClockTests.cs",
+      "caller_line": 111,
+      "named_arguments": 0
+    }
+  },
+  "limits": "Fresh actual CLI resource and full216METHOD attributes, Theory6+Facts3 without Skip. No SDK/CLR/native assertion/ABI/global module acceptance inferred."
+}

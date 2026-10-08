@@ -1,0 +1,264 @@
+{
+  "kind": "ROOT_BOUNDED_CACHE_COMPARER_PUBLICATION_PENDING_AND_RETIREMENT_ACCEPTANCE_R1",
+  "author": "Root",
+  "status": "ROOT_ACCEPTED_BOUNDED_LOCAL_CACHE_FAILURE_PACKAGE__OBSERVER_BACKPRESSURE_AND_OTHER_P06_WORK_OPEN",
+  "source_freeze_sha256": "471e5d7fdb482febf9f3119b822241e530a6b5ad906eccd00626e6b09599b7c1",
+  "source22": {
+    "src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12",
+    "src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69",
+    "src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c",
+    "src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs": "4c94c5a3c336a4d90f40079265e5391604641e80ee93ecc2f7517b32430f10c3",
+    "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4",
+    "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceMap.cs": "2db6ae5fa7ed933ec1aa037e77a63b09cc4a53294f3195d94703b10af03da271",
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs": "686047b3c5af1ce34adca10173a4c668cd8ba17726fc126adb0f4ddbd7b3ff4d",
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs": "84f6d67e2e3724120b394367b413325f353f7a9423a713431e8a6f4449b78f18",
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs": "a129973c648355c3a05efe9f8531632db97d1c78a0ef9474e127705ae6f171de",
+    "src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs": "45bb92aea5df9ed96396604d8ef2b63afc888537ca4f49815f05ea734af41a6a",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs": "fcb891b5e80f4249002a3871fbdb318842b70972e7b7537d9d36f73d8d97b441",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs": "a77ab4864f0e44b8692c308371817a831f0a231a40aec57ebcbba7793d7b65d1",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.cs": "9a23ca99892af8349c960056c26b8969c2b677f7c8634a1518f8b3e1dbc43925",
+    "src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7",
+    "src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76",
+    "src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4",
+    "src/ViciOne.ServiceBus/Caching/ResourceFactory.cs": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc",
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs": "0162159c1324fc18093618ceb25b9055be204a4a18b3f6d8e5505738dd814bb6",
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs": "fd3f1172f759ff7e7531e2d52da73efb570ce72af1db44bbc55479b4aa31e2a6",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "b1cba734eaa3752541dd6dce522af0b35924b909930609ca17e5676425692750"
+  },
+  "product_changed9": [
+    "src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs",
+    "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceMap.cs",
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs",
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+    "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+    "src/ViciOne.ServiceBus/Caching/ResourceCache.cs"
+  ],
+  "read_and_independent_review_dependencies": {
+    "ROOT_CORE812_CACHE_CURRENT_READ_CLOSURE_R6.json": "d1da8b8b3936d9ad8d47ba3d24cc199a520fca34660f7b73e4dbd0707422298d",
+    "ROOT_CACHE19_PRIVATE_AUTHOR_SOURCE_READ_R2.json": "1d3caebc040fc1a224a7b71a9c9046aecf106a7e115e8177666c94f83a5438bc",
+    "ROOT_CACHE_PRIVATE_PERFORMANCE_SKILL_SCAN_R2.json": "60b970e46e0d203c70d2919a2a0cd824ab1428d849c3663974bb3daa81407e9f",
+    "ROOT_MUTATION_CANDIDATE_AND_DRIVER_AUTHOR_REVIEW_R1.json": "26981e5daef0842ac14973ecaf24fba8007a2295a0c1eec8209b99d12eb68232",
+    "ROOT_MUTANT_PE_VERIFICATION_ATTEMPT_LIMIT_CORRECTION_R1.json": "a82978671cb959b365123dfa721a0bffb6175550dc9a738a0795dcd7230c0069",
+    "package06-cache-original-r4-native-artifact-adversarial-r1.json": "6e153d02d57f667a59fa3219cf216c18d51db52fed5efc3fbb9ca59d21cb8ee1",
+    "package06-cache-final-fixed30-wholecache142-native-adversarial-r1.json": "9d49e2662c17beed53532a295c9c8a7b7c809a5766ffb0d6de33dbef09c61b6a",
+    "package06-cache-fixed-source-r3-current-root812-r6-preflight-r1.json": "ab859bc6010bc3988d223f8b05c8ffccf1264b603d229ad228e129ca592fcc32",
+    "package06-cache-whole-core8142-native-artifact-review-r1.json": "6771e783d3803f045325e558282092f8914f50968785a47ae1efe4fbbf35af4c",
+    "package06-cache-eight-private-mutant-candidates-adversarial-r2.json": "d7b18c6390cf7cd7d2806264c2fecbaedc41abaf6a83958566a199c6cf893844",
+    "package06-cache-native-mutant-runner-r1-preexecution-adversarial.json": "ecbfb13219e24927330c1874be79ff79e7f308275ae8bc75b7798b64d4c22276",
+    "package06-cache-mutants-m1-m4-native-adversarial-r2.json": "080e335d282494c802de7eb35175b8fd2a922ce17e291612ce261b37b8616c2f",
+    "package06-cache-mutants-m5-m8-native-combined-adversarial-r1.json": "245ff1eb2f93907866de3fe861e8c887c9129c48e19c415257ab17a8ca8c407e",
+    "package06-cache-post-and-bounded-aggregate-adversarial-r2.json": "e83aaa6740081148ba62bd0009b1dc9269186cae8d5a3b6f8a2e126b29652ec2"
+  },
+  "native_results": {
+    "original-native-r4": "6da6e164748c44526c868cd1598b9e74bdf4512391c19988ab10cceba3fcfa5f",
+    "fixed-native-r2": "badab50a9696c18c5b725753a9e6aef31f442b8e3a7291fee6b9204fa955cd8e",
+    "whole-cache-native-r2": "57b6c4ebed671384feccd15e626e2231c8af318e20ecb962be3930ec6f5d8308",
+    "whole-core-native-r1": "6f723aa1f5ac173ffd2f15f2b244b02b2385ed4087192208381a90c19fd48e1c",
+    "post-fixed-native-r1": "350e80148412687de8b8069f7a35097ec0ea6e31bfea1544e28ee660f34e4ed4"
+  },
+  "original30": {
+    "failed": 12,
+    "healthy": 18,
+    "pending_fixture": "historical249"
+  },
+  "final_focused30": {
+    "passed": 30,
+    "failed": 0,
+    "skipped": 0,
+    "pending_fixture": "current250"
+  },
+  "whole_cache142": {
+    "passed": 142,
+    "failed": 0,
+    "skipped": 0
+  },
+  "whole_core8142": {
+    "passed": 8142,
+    "failed": 0,
+    "skipped": 0,
+    "separate_C5_children": 7,
+    "separate_cache_children": 2
+  },
+  "compiled_mutants": [
+    {
+      "name": "m1-retirement-comparer-callback",
+      "result_sha256": "e9f9e1450e5d20b1c079609db873f6879c419875323ed0abdddf31e61f7c175b",
+      "Root12PE3806_sha256": "dd052eef45ac9a78dbbd63b64797118e9d0ec23236b122c00caf80d3aaae9052",
+      "counts": {
+        "total": 30,
+        "failed": 1,
+        "passed": 29,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "m2-interleaved-index-publication",
+      "result_sha256": "77f34389c502cfd043244a1c54a1612cf5987f113a0015d5b1b5dfd960e8eb5a",
+      "Root12PE3806_sha256": "f70fab2220ff87ea695fb445a65979f2508fe330b729aa36ebba1851e692a823",
+      "counts": {
+        "total": 30,
+        "failed": 2,
+        "passed": 28,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "m3-rejected-factory-value-not-disposed",
+      "result_sha256": "7115ee436343d35efb954842e9dfd79063f3fcc39567f4d8de79b8a13c8ba617",
+      "Root12PE3806_sha256": "8d1ba2674bb3551f7117b454d3440ddb0c4b1a77ac47146324eeff19b2fb5d16",
+      "counts": {
+        "total": 30,
+        "failed": 2,
+        "passed": 28,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "m4-pending-cleanup-comparer-callback",
+      "result_sha256": "8d7465b27465b2ec7d8dcac4a00e0871b19bb3a980fb380cbcb4010940fcc1a5",
+      "Root12PE3806_sha256": "1e3c2171b4ee6f8e3a4ea70d7ec9d6241890cbb9c51866aad8def91fec9ddcf2",
+      "counts": {
+        "total": 30,
+        "failed": 1,
+        "passed": 29,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "m5-public-get-retirement-finally-removed",
+      "result_sha256": "e87bc3d7ff9815980b48742c5946c726b09161336ba303d0f41115090b43f051",
+      "Root12PE3806_sha256": "12422cc9ff97e9f13a4622d5d61edb1a2d8658197f6046e48e84554c7f2f5bfc",
+      "counts": {
+        "total": 30,
+        "failed": 2,
+        "passed": 28,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "m6-timed-retirement-finally-removed",
+      "result_sha256": "b073f2b91981a97584c6b78f570ba75712f28663fd0b652728d9a661d741f284",
+      "Root12PE3806_sha256": "46dcc7828a6c27bb33ee36d64fe49da355c6a8e8f987e7807e344c5daffe1118",
+      "counts": {
+        "total": 30,
+        "failed": 1,
+        "passed": 29,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "m7-collision-successor-backlink-lost",
+      "result_sha256": "083fb2ce4d5c42a4f58ba38d5e7e1800cff1c0a1661907acf58cd5a57851fe46",
+      "Root12PE3806_sha256": "b06ea26155c01c5d1756d56f4faa3cfcc2204ad271ac4ecdddcbcc135b2f75ff",
+      "counts": {
+        "total": 30,
+        "failed": 1,
+        "passed": 29,
+        "skipped": 0
+      }
+    },
+    {
+      "name": "m8-key-removal-instead-of-owned-pending-slot",
+      "result_sha256": "a56c9817765a4c7463cf621c2f444d8c4860e0f0df19cbff857cfdea443f134c",
+      "Root12PE3806_sha256": "ceba375981dc6a16db2646ac5cf23a149a8f944b7484ebb29e3bed0f97f3dc94",
+      "counts": {
+        "total": 30,
+        "failed": 2,
+        "passed": 28,
+        "skipped": 0
+      }
+    }
+  ],
+  "compiled_mutant_parent_slots": {
+    "total": 240,
+    "finite_failed": 12,
+    "healthy": 228,
+    "skipped": 0
+  },
+  "separate_mutant_child_slots": {
+    "total": 16,
+    "finite_failed": 3,
+    "healthy": 13,
+    "wrapper_additional_credit": 0,
+    "stranded_M4_M8_product_join_credit": 0
+  },
+  "final_post": {
+    "passed": 30,
+    "separate_cache_children": 2,
+    "all17_runtime_byte_identical_to_fixed30R2": true
+  },
+  "Root_first_causes": [
+    {
+      "mutant": "m1",
+      "oracle": "RemoveRetiresEveryIndexAndReleasesResource",
+      "first_assert_line": 32,
+      "physical_expected": 1,
+      "actual": 0
+    },
+    {
+      "mutant": "m2",
+      "oracles": [
+        "DirectAdmissionPublishesAllIndicesTogether:74 null versus visiblecandidate",
+        "FactoryAdmissionPublishesAllIndicesTogether:121 null versus disposedvisiblecandidate"
+      ]
+    },
+    {
+      "mutant": "m3",
+      "oracles": [
+        "FactoryAdmissionPublishesAllIndicesTogether:112 physical1 versus0",
+        "separatePersistentOriginComparerFailureReleasesPendingOwnership:175 physical1 versus0; parent103 is only wrapper"
+      ]
+    },
+    {
+      "mutant": "m4",
+      "oracle": "separatePersistentOriginComparerFailureReleasesPendingOwnership:180 Pending0 versus1",
+      "logged_state": "factoryCalls1 returns1 release1 pending1 requestTerminalFalse comparerThrows2",
+      "product_join_credit": 0
+    },
+    {
+      "mutant": "m5",
+      "oracles": [
+        "PartialExpirationClockFailureCannotLoseRetiredOwnership(get,hostile):451 physicalsum1 versus0",
+        "LookupFailureCannotStrandAlreadyExpiredOwnership:162 physical1 versus0"
+      ]
+    },
+    {
+      "mutant": "m6",
+      "oracle": "PartialExpirationClockFailureCannotLoseRetiredOwnership(timer,hostile):451 physicalsum1 versus0",
+      "logged_frequency_reads": 3
+    },
+    {
+      "mutant": "m7",
+      "oracle": "CollidingResourceRemovalPreservesEveryOtherOwnedResource(position1): actualsurvivorlookupGet58 KeyNotFound first; fixturesource523 indicatesfailurephase, rawObserve679retainedEDIstack shift",
+      "limits": "No Assert.Same523 success/failure execution credited; healthypositions0/2 observed."
+    },
+    {
+      "mutant": "m8",
+      "oracles": [
+        "LateOldFactoryCannotUnlinkPendingReplacement:298 unwantedfactory0 versus1",
+        "separatePersistentOriginComparerFailureReleasesPendingOwnership:180 pending0 versus1"
+      ],
+      "stranded_product_join_credit": 0
+    }
+  ],
+  "Root_read_limits": "Ownwhole19source+whole812testowner/shared84 exactreuse; allmutantcomplete deltas personallyauthored/read, unchangedfixedbodyreuse at exact hashes; actual12PE3806/docs8variants+fixed/post personallydecoded. Whole firstpublicfailureblocks read; childcausalheaders/productchains/STATE read, giantunrelatedframeworkstack not falselyclaimed fullread. Agentreadcredit nevertransferred.",
+  "performance_disposition": "InheritedperlookupexpiryToArray allocation/linearcapacity scan remains Info requiringlocalbenchmark; no measuredspeed/heap/RSS orfailed-bulk-metadata mutationkill claim.",
+  "not_closed": [
+    "cache observer failure-channel/order/backpressure resource envelope",
+    "remaining adapter deadlines",
+    "startup18/otherfamilies",
+    "P05schema/aggregate",
+    "current coverage/CRAP",
+    "wholeUnit/providerreplay/historicalSQLcause/ASBbootstrap",
+    "developer journeys/localbenchmarks",
+    "CI",
+    "realcloud",
+    "ARM64/512MiB/noSwap"
+  ],
+  "limits": "Accept onlystablekey comparer ordinary-fault/preparation/publication/exactslot unlink/retiredlist lifetime and scopedpending ownership. NofatalOOM/reentrantcomparer/mutablekeys/universalphysicalDispose/globalA+API/release acceptance. Original compiler and unlabelledfailedPEoneoff checks zero qualification. Historicalreceipts preserved."
+}

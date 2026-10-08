@@ -1,0 +1,265 @@
+{
+  "kind": "INDEPENDENT_READONLY_SEVEN_DOCUMENTATION_R28_BOUNDED_SQS_RECONCILIATION_R1",
+  "verdict": "NO_BLOCK_FOR_GUARDED_R28_DOCUMENT_PUBLICATION",
+  "findings": [],
+  "bindings": {
+    "proposed_freeze": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/DOCUMENTATION_PROPOSED_FREEZE_R28_WITH_ACCEPTANCE_R1.json",
+      "sha256": "17d4873a72b2dc8d8e82863adf4ccfbdb1db1324bf7a164302b8e1379268068a"
+    },
+    "lossless_diff": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r28/LOSSLESS_DIFF.patch",
+      "sha256": "17100fcfc9f1b040579d7c2d6ed4f257e14e0d424769bad1f46c2f95c533c412",
+      "content_lines": 162,
+      "exact_all_seven_diff_reconstructed": true
+    },
+    "acceptance": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/ROOT_SQS_TOPIC_LIFECYCLE_ACCEPTANCE_R1.json",
+      "sha256": "8bd79cc01b9ab31e27665469be22d575837908a836ecc08b5fc6a92b6df60f68"
+    },
+    "prior_published_R27_sha256": "3187570d32d1f2ce80ed772593810bdd79299e39cc4412cd8e36d1b2c76632d4",
+    "prior_own_R27_review": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-documentation-r27-adversarial-r1.json",
+      "sha256": "0f397c37cc8c70d4aedbed1fb64519b15805604f9cbfb196cf015a79800300bf"
+    },
+    "seven_prior_and_proposed_hashes": {
+      "prior": {
+        "CHANGELOG.md": "d58f8049f0eee5a6da4b497b72ef4bfb77432a52a58f635549c1a1fda7081e9c",
+        "TODO.md": "6a6478837d493096d4d574e74b527bee5078dc1eeaff33d64e24ea2898914f83",
+        ".testagent/status.md": "b9bba960687bacb17ca0a646e47756b267a73783b198b41a4113662e7a839040",
+        ".testagent/plan.md": "4773dfedbd31ac7a30042c30e70e311c1f6a633e6a0894c3e8dc6cdeb8d6b2b0",
+        ".testagent/local-completion-plan.md": "880e3e73f81e71c69efbd39fda4181e1d5296752cfb4624883bd14dde8be4208",
+        "docs/quality-status.md": "d9f1d51944f966803b9b008b3797e9aae6e8c5a034b6239f18b03ffd7d115a83",
+        "docs/servicebus-local-completion-report.txt": "71b7cd6261e85e1a138b580fcf597b7899861cd8f0dfdb8a0c7a37cbaa10dc3b"
+      },
+      "proposed": {
+        "CHANGELOG.md": "40801b4308e33bec3971489e01820031e1836aca90c0d91e0f46c27bbaa52501",
+        "TODO.md": "1fc570aaa6711d6e377c414d3811e9d2b9a1d190b6616f4881cb723fc28f4e92",
+        ".testagent/status.md": "d7aac115b52c67f289c55da03fa9ac5e5d5f390389d12210cbe83193bdec60db",
+        ".testagent/plan.md": "2cff85081bef76df2fd094568b74de3c103552be39c845b573790d4e9b6365c1",
+        ".testagent/local-completion-plan.md": "3c70f69affb3d8026afbe0a7ec4d07396155afdb237b4032c3f08a93b4437c1d",
+        "docs/quality-status.md": "63c571f514f9c764b8cf4b179d0d7dd759f93d829478406229a4975c8ab7d11a",
+        "docs/servicebus-local-completion-report.txt": "8fbba0585fb270d9063cfd5596d3b878bf00a38f937f356efcd2d8ddebd84afb"
+      }
+    }
+  },
+  "personal_read": "Entire current 162-line seven-file delta, full 84-line PO report, bounded SQS acceptance receipt, small freeze and selected actual/native/peer disposition/count fields personally consumed. Exact prior published seven bodies and historical/preamble/block preservation are byte checks; no newly inferred full historical human-read credit. Prior own matched source/counter/post-driver reviews and R27 delta can be reused only at exact hashes.",
+  "actual_documented_evidence": {
+    "references_rehashed": [
+      {
+        "key": "original",
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-original-eleven-native-r2/RESULT.json",
+        "sha256": "c20eafa4413eb60589d3484d5750e3b76ac6830cf763f474dff62410a01f80dc"
+      },
+      {
+        "key": "fixed",
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-fixed-eleven-native-r1/RESULT.json",
+        "sha256": "f110dacf1168b74e6f2a46688bdbf14516862dc840b8b5d38dbbb0ab26ebb7fc"
+      },
+      {
+        "key": "whole",
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-whole-sqs-native-r1/RESULT.json",
+        "sha256": "e6b350971c1964afee847cdf977f65c567d4d2a5ce377def1def2e317c44c56f"
+      },
+      {
+        "key": "controls",
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-seven-counters-native-r1/RESULT.json",
+        "sha256": "de5d93f0af3ccc334e9f1c782ea5951c6b92918ce2b30fc04491071c420d8d5d"
+      },
+      {
+        "key": "post",
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-post-eleven-native-r1/RESULT.json",
+        "sha256": "8146ca543acb55cda3b3a334f0bbd20307b6190f3ad1f4632b23d40b9b079c2b"
+      },
+      {
+        "key": "application",
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-canonical-four-application-r1/RESULT.json",
+        "sha256": "624936c69abba50ece9c9a0e332cf05826f3d0fc11b40f36f9bc8f3c8a8d8a3c"
+      },
+      {
+        "key": "root_original_physical",
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-original-eleven-native-r2/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+        "sha256": "f04d86e9e9ac7bbb0891679a4de760b4600b3637c4cc317835649a8d7249273d"
+      },
+      {
+        "key": "root_fixed_physical",
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-fixed-eleven-native-r1/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+        "sha256": "89f671fa69f4f70ee928298ec66f945f7b2fc96c55edafd73f5896c568192f1a"
+      },
+      {
+        "key": "root_controls",
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-seven-counters-native-r1/ROOT_QUALIFICATION_R1.json",
+        "sha256": "2d147a5aebe75eb81f0cbdc5836442822cf8d59b00710b68d58314ee77e9c040"
+      },
+      {
+        "key": "root_post",
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-post-eleven-native-r1/ROOT_QUALIFICATION_R1.json",
+        "sha256": "4dc28cbe5295295239d71815b6be8047582bf419a99e51e184a839766943627b"
+      }
+    ],
+    "original": {
+      "total": 11,
+      "passed": 5,
+      "failed": 6,
+      "skipped": 0
+    },
+    "fixed": {
+      "total": 11,
+      "passed": 11,
+      "failed": 0,
+      "skipped": 0
+    },
+    "whole": {
+      "PASS_slots": 428,
+      "distinct_visible_labels": 428,
+      "exact_focused11_overlap": true,
+      "skipped": 0
+    },
+    "seven_controls": {
+      "repeat_slots": 77,
+      "first_finite_RED": 14,
+      "healthy": 63,
+      "variants": [
+        {
+          "variant": "M1-disposed-admission-guard",
+          "result_sha256": "b13d5d101966c22129077539d394344136ff482f87544c8cd71c42c27ef85467",
+          "counts": {
+            "total": 11,
+            "passed": 8,
+            "failed": 3,
+            "skipped": 0
+          }
+        },
+        {
+          "variant": "M2-second-dispose-early-return",
+          "result_sha256": "b401639b7d1d8734b7a6cdcf317df11e2dc4d8e8892474d9a4f987ecd430235a",
+          "counts": {
+            "total": 11,
+            "passed": 10,
+            "failed": 1,
+            "skipped": 0
+          }
+        },
+        {
+          "variant": "M3-null-stale-success",
+          "result_sha256": "eb2f0904ef527fc1ff2d4134b8eab58d06512abe657319c6a9085ba862c2f4b7",
+          "counts": {
+            "total": 11,
+            "passed": 8,
+            "failed": 3,
+            "skipped": 0
+          }
+        },
+        {
+          "variant": "M4-prewrite-marker-propagation",
+          "result_sha256": "e58d402160a3b03538a2808f72a1ebf66ffa548bbd4e8359b42f0a8ce9ea1899",
+          "counts": {
+            "total": 11,
+            "passed": 10,
+            "failed": 1,
+            "skipped": 0
+          }
+        },
+        {
+          "variant": "M5-admitted-fault-retry",
+          "result_sha256": "be0c1d9b3830aba44aa0c1a69a3088d8d03268fe8a61c45e55700e1e53c08ddb",
+          "counts": {
+            "total": 11,
+            "passed": 8,
+            "failed": 3,
+            "skipped": 0
+          }
+        },
+        {
+          "variant": "M6-third-stale-lookup",
+          "result_sha256": "086c8ae80d3c1a224e11ba245298d863fba5b4f67db912fad50ec49f424beb5a",
+          "counts": {
+            "total": 11,
+            "passed": 10,
+            "failed": 1,
+            "skipped": 0
+          }
+        },
+        {
+          "variant": "M7-caller-prelookup-boundary-omitted",
+          "result_sha256": "87c9996246e3b3b58ed1b8be18923f33e35c3c653d29f65d4cd6cbfba00ee8d6",
+          "counts": {
+            "total": 11,
+            "passed": 9,
+            "failed": 2,
+            "skipped": 0
+          }
+        }
+      ],
+      "same11_identity_counters_verified": true,
+      "finite_oracle_semantics_reuse": "Exact independently qualified actual-counter report; no new own fresh PE parse or full error-body audit claimed here."
+    },
+    "post": {
+      "focused": {
+        "total": 11,
+        "passed": 11,
+        "failed": 0,
+        "skipped": 0
+      },
+      "all15_Fixed_archive_Post_archive_current_live_DIRECT_BYTE_EQUAL": true,
+      "fresh_Post_PE_parse_claimed": false
+    },
+    "raw_and_binlog_binding": {
+      "all_referenced_raw_files_verified": 66,
+      "closed_gzip_binlogs_verified": 22,
+      "claim": "Hash/CRC receipt validation, not a fresh MSBuild semantic/binlog execution audit."
+    },
+    "canonical": {
+      "exact_four_current_after_hashes_verified": true,
+      "before": 6107,
+      "after": 6108,
+      "peer_afterapply_sha256": "7b7836bad8d161d493a7380bb0c696cbb73bceb583bd7252188e5719efb998e5"
+    },
+    "qualified_peer_reports": [
+      {
+        "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-seven-counters-native-adversarial-r1.json",
+        "sha256": "b44db5308dc817fb9c447cf45df9e9ee906f3af74346dc0421f0bb8504ae7b9b",
+        "disposition": "QUALIFIED_ACTUAL14_FIRST_FINITE_RED63_HEALTHY_POST_ONLY_RELEASE"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-whole-sqs-native-adversarial-r1.json",
+        "sha256": "0bbfe0ac8446c4af98776611b619c04bd2a9903422fb0212c45627b97b9758da",
+        "disposition": "QUALIFIED_ACTUAL_WHOLE428_PASS_RELEASE_FOR_SEPARATELY_GATED_REVIEWED_COUNTER_PREPARATION"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-post-eleven-native-adversarial-r1.json",
+        "sha256": "4dcc53bf364995f1db9f31112f1b153b743cedadac77561d65fe66dc26cd238d",
+        "disposition": "QUALIFIED_ACTUAL_POST11_GREEN_AND_FULL15_FIXED_IMAGE_RESTORATION"
+      },
+      {
+        "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-canonical-four-afterapply-adversarial-r1.json",
+        "sha256": "7b7836bad8d161d493a7380bb0c696cbb73bceb583bd7252188e5719efb998e5",
+        "disposition": "NO_BLOCK_BOUNDED_SOURCE_APPLICATION_ACCEPTED_SOURCE_HOLD_RELEASED"
+      }
+    ]
+  },
+  "preservation": {
+    "other11_TODO_blocks_byteexact": true,
+    "TODO_preamble_byteexact": true,
+    "changed_TODO_block": "Continue deterministic time normalization beyond envelope materialization",
+    "ordered_external_obligation_count": 62,
+    "obligation_categories": {
+      "CLOUD": 55,
+      "PER": 6,
+      "BRK": 1
+    },
+    "all62_order_unchanged": true,
+    "four_historical_suffixes_including_headers_byteexact": true,
+    "only_local_table_row06_changed": true,
+    "frozen234_STATE_sha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+    "PO_content_lines": 84
+  },
+  "semantic_scope": [
+    "Three bounded SQS findings are supported by the accepted actual source/native/application chain; seven controls and fourteen reached errors are not fourteen distinct bugs or new test identities.",
+    "Focused11 recur within whole428 and post11. Seventy PE parse slots are repeated image qualification, and 212 METHOD mappings are resource rows rather than runtime test cases; newly written text respects this distinction.",
+    "Local derived-provider/SDK tests and exact lifecycle transitions do not prove real SNS/SQS, cloud/device behavior, broad concurrent races or every cache-eviction integration.",
+    "SQS/SNS and EventHub batching clocks remain explicitly open. Current API/coverage/aggregate replay/CI, global A+, live cloud/device and new remote commit remain unclosed.",
+    "The OP report keeps historical baseline13460/23 separate from individual newer module replays; no full-current-unit claim is introduced."
+  ],
+  "gate": "Root may publish exactly the seven proposed R28 hashes after unchanged-prior guards. Canonical docs still R27 during this review. No product/test/tool/doc mutation, SDK/native/provider/process action or operational import was executed by this reviewer."
+}

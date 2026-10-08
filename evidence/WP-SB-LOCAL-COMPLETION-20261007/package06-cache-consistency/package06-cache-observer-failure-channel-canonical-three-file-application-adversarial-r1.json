@@ -1,0 +1,103 @@
+{
+  "kind": "INDEPENDENT_READONLY_ADVERSARIAL_ACTUAL_CACHE_OBSERVER_CANONICAL_THREE_TEST_FILE_APPLICATION_R1",
+  "disposition": "QUALIFIED_ACTUAL_AFTERAPPLY_BOUNDED_SOURCE_NATIVE_CHAIN_NO_BLOCKER",
+  "inputs": {
+    "application_receipt_sha256": "95e328def748ec2195b51b1c8180396dc71207645dfcf431fa6a075dbf09ddef",
+    "dated_before_INPUTS_sha256": "70d7975a0044ef93e712292dc68d0c649e0297180dc30c08750676630bccfeec",
+    "own_exact_transfer_gate_sha256": "9d7ccd5ea76e903b74c12889d23fa5248116db3f08299545f73c85947ebf0ef7",
+    "original59_native_RESULT_sha256": "440532083d6fa627c02bf95c78dcb5e17e0fa7ce12ca9efde5d62d11e285df0a",
+    "whole8206_native_RESULT_sha256": "df7c036ea4bef0fd0549a5d98ebaf0fa806b3e150e66bfe6d4fcecb85d5aa87c",
+    "own_three_mutants_native_peer_sha256": "8237590f179c4a725c9cb7d18838cf6e590f11fbdc256977108717c9a3122717",
+    "own_latest_ledger_R2_precision_peer_sha256": "0f8e3bf37717d5549733ec720525738c57a986ded4f742682260cb2957994214",
+    "restored59_native_RESULT_sha256": "bd58547a4dcafc8abea37dee9f0625c2074b78cbe0a0959d1f89eab3536b3825",
+    "own_fresh_compiled4727_peer_sha256": "a9a73a02cb1b6196ddfde6da7336c3e63522c5034be67e12e2582e0b4310b5cf"
+  },
+  "actual_after_application": {
+    "canonical_source_files": 6103,
+    "qualified_C16_source_files": 6103,
+    "full_PATH_sha256_manifests_equal_to_qualified_private": true,
+    "canonical_before_dated_source_count": 6102,
+    "actual_exact_three_file_changes": [
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverAndDisposalTests.cs",
+        "before_sha256": "d2c10c5e7cd989c7f747c043bf8a583adec22d721de23544abcda1b6e315836e",
+        "after_sha256": "bbdd3f8c640ddd41cd845cb25aa45223abdc5aa957ca2c82c7c6acf2cb25617d"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverFailureChannelTests.cs",
+        "before_sha256": null,
+        "after_sha256": "9e9d6719ba1751e46f40c0dc7d9494b395ca3c941518fa683fbc588cfe3918ea"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+        "before_sha256": "9bb63defc04475044e30a7f91fefa56c7f9eb9a8960ec6f79b587da1093aa292",
+        "after_sha256": "a4d0f99c1d388a4ef1afea6d3bd55ea5990f13f63f354d8eaa8d7d9d69596357"
+      }
+    ],
+    "unchanged_common_source_files": 6100,
+    "product_src_changes": 0,
+    "config14_bytehash_unchanged": true,
+    "all_three_directsourcebytes_equal_currentC16_and_R3_candidates": true,
+    "no_unexpected_new_removed_sourcepaths": true
+  },
+  "requirements": {
+    "old4725_snapshot_sha256": "9bb63defc04475044e30a7f91fefa56c7f9eb9a8960ec6f79b587da1093aa292",
+    "canonical4727_sha256": "a4d0f99c1d388a4ef1afea6d3bd55ea5990f13f63f354d8eaa8d7d9d69596357",
+    "canonical_resource_bytes": 1681543,
+    "all_old4725_rows_exact_order": true,
+    "old_literal_prefix_bytes": 1680815,
+    "two_new_METHODrows": [
+      {
+        "requirementId": "REQ-VSB-CACHE-OBSERVER",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "ObserverFailures_PreserveCommittedStateCompleteFanoutAndBestEffortDiagnosticsAsync",
+        "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheObserverFailureChannelTests",
+        "variantKey": "complete-fanout-and-best-effort-failure-channel"
+      },
+      {
+        "requirementId": "REQ-VSB-CACHE-OBSERVER",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "HealthyObservers_CompleteEachCommittedChangeWithoutFailureDiagnosticsAsync",
+        "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheObserverFailureChannelTests",
+        "variantKey": "healthy-fanout-emits-no-failure-diagnostic"
+      }
+    ],
+    "compiled4727_current_metadata_and_source_mapping_exact_via_own_a9a73_and_post_image_reuse": true
+  },
+  "bounded_acceptance_chain": {
+    "new_case_ids": 57,
+    "focused_cases": 59,
+    "whole_Core_PASS": 8206,
+    "whole_Cache_subset_PASS": 199,
+    "deliberate_mutants": 3,
+    "mutant_same59_repeated_slots": 177,
+    "mutant_first_finite_RED": 117,
+    "mutant_healthy_controls": 60,
+    "restored_same59_PASS": 59,
+    "restored_runtime_files_directbytes_exact_original": 17,
+    "canonical_root_native_execution_claim": false,
+    "overlap_note": "57new withinCache199 andwhole8206;focus59 includes57new+oldClear+Projection;mutant177/post59 repeatsidentities andnotadded asnewdistincttests.",
+    "M3_frame_precision": "Printed105 vs sourceoperationcompletionFalse110 inference only; laterFalse141 tokenstate andalllowerunreachedassertions zeroadditionalcredit."
+  },
+  "current_private_runtime": {
+    "17_post_archive_live_original_directbytes_exact": true,
+    "12_assets_exact": true,
+    "source_C16_released_for_next_private_packets": true,
+    "no_runtime_or_source_mutations_performed_by_reviewer": true
+  },
+  "history_preservation": {
+    "INPUTS_current_hash_70d_unchanged": true,
+    "dated_canonical6102_before_application_snapshot_retained": true,
+    "dated_before_not_misused_as_current_canonicalguard": true,
+    "history_rewritten": false,
+    "user_AGENTS_openwiki_scope": "Application receipt/Root reportsotheruserfiles untouched andexact3guardedcopy. Independentfullguardcovers src/tests/tools plus14configs; no outsidefamilywholeworkspace beforeaftercensus claimed."
+  },
+  "own_read_scope": "Ownsourcewhole295+R3exactdelta/currentfixture296/newTheories/helpers andwholeoldcleanupfixture priorread atmatchedhashes reused. Fullpaths/hash/sourcebyte comparison mechanical; no sourcebodyreadcredittransfer. Ownoriginalfresh12PE/3809PDB/4727METHODresource andall35refs accepted atoriginalcurrentbytes; postimagebyteReuse holds. No fresh PE/CLIparse orcanonicalnativeexecute inthisafterapplyreview.",
+  "findings": [],
+  "limits": [
+    "Actual exact3sourceapplication qualifies; furthercacheobserver/order/concurrency/retirement/time/memory/performance/fullP06/globalA+worknotclosed.",
+    "No cloud/provider/hardware/currentcoverage/CRAP/APIcensus/newwholeallmodule/profile/release/remotecommitpush acceptance.",
+    "Native evidence remains sourceboundprivatewitness; canonicalsourceequivalence doesnotclaimnewcanonicalbuild/output/nativeexecution.",
+    "Purebytes/hash/JSONreads plusownimmutable reportonly; no .NET/native/provider/processcontrols/operationalimports/product/test/tool/docs edits."
+  ]
+}

@@ -97,12 +97,19 @@ public sealed class ResourceCacheObserverAndDisposalTests
         await cache.AddAsync(disposal, TestContext.Current.CancellationToken);
 
         Task clear = cache.ClearAsync(TestContext.Current.CancellationToken).AsTask();
-        await disposal.Started.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+        try
+        {
+            await disposal.Started.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
+            Assert.False(clear.IsCompleted);
+            Assert.Equal(0, cache.Statistics.Count);
+        }
+        finally
+        {
+            // A failed assertion must release and join the owned clear before cache teardown awaits it.
+            disposal.Release();
+            await clear;
+        }
 
-        Assert.False(clear.IsCompleted);
-        Assert.Equal(0, cache.Statistics.Count);
-        disposal.Release();
-        await clear.WaitAsync(OperationTimeout, TestContext.Current.CancellationToken);
         Assert.Equal(1, disposal.DisposeCount);
     }
 

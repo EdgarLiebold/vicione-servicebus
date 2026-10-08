@@ -1,0 +1,32 @@
+{
+  "kind": "ROOT_SQS_ORIGINAL_ELEVEN_EXECUTION_GATE_R1",
+  "driver_sha256": "228259bc08c3cde8edfd77d86344cea8e27afd506c3eae00038c4db747c5ae06",
+  "inputs": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-private-preparation-r3/INPUTS.json",
+    "sha256": "81076e9cbc3d5b3ee004d8cc8fcf17c1f229833a79241e93cfea41b90ff86c6f"
+  },
+  "reviewed_files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-source-candidate-r4-adversarial-r1.json",
+      "sha256": "a2353ad73d041150bd4a791bd1aadd84717dcb1d8e25f4f6fa481636df6581e6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-original-eleven-driver-r4-preflight-adversarial-r1.json",
+      "sha256": "63edd822cd7e2b5d155ca5ba7ba3f98a4ce4211dc56a38280804cd8e64949d4a"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-source-candidate-r4/PREPARED.json",
+      "sha256": "10d5eb8395e49c54f1b707bf713287932d35d616b2821f63425e610945380355"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-source-candidate-r4/METADATA_ERRATUM_R1.json",
+      "sha256": "765989d84574e8003fb53823a830e6252dd368a3aa19530b010fed4150253e8e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-original-eleven-driver-r4/PREPARED.json",
+      "sha256": "1186a4208663928f284c082933d468f6e6c903beaa15c6d0ce16d4cc3874e5e9"
+    }
+  ],
+  "root_qualified_source_and_driver": true,
+  "limits": "Exact9methods11 prospective native slots; original product6107 unchanged. Rootwhole R4source semantic delta/driver140closure and complete source/driver peers consumed; compilerfailedpriorNativezero preserved. Fresh native-r2/forceRebuild, all10lockedasset bytes frozen. Only actual finite test failures may confirm findings after independent qualification."
+}

@@ -21,10 +21,8 @@ namespace ViciOne.ServiceBus.EntityFrameworkCore;
 internal sealed class InboxCleanupService<TDbContext> : BackgroundService
     where TDbContext : DbContext
 {
-    readonly IsolationLevel _isolationLevel;
-    readonly ILockStatementProvider _lockStatementProvider;
+    readonly Lazy<Settings> _settings;
     readonly ILogger<InboxCleanupService<TDbContext>> _logger;
-    readonly InboxCleanupServiceOptions<TDbContext> _options;
     readonly IServiceProvider _provider;
     readonly IRetryPolicy _retryPolicy;
     readonly TimeProvider _timeProvider;
@@ -44,20 +42,34 @@ internal sealed class InboxCleanupService<TDbContext> : BackgroundService
     {
         ArgumentNullException.ThrowIfNull(options);
         ArgumentNullException.ThrowIfNull(outboxOptions);
-        _options = options.Value;
-        EntityFrameworkOutboxOptions<TDbContext> persistenceOptions = outboxOptions.Value;
-        _lockStatementProvider = persistenceOptions.LockStatementProvider
-            ?? throw new ArgumentException("A lock-statement provider is required.", nameof(outboxOptions));
-        _isolationLevel = Enum.IsDefined(persistenceOptions.IsolationLevel)
-            ? persistenceOptions.IsolationLevel
-            : throw new ArgumentOutOfRangeException(
-                nameof(outboxOptions),
-                persistenceOptions.IsolationLevel,
-                "The transaction isolation level is undefined.");
+        // Options are evaluated after the Host has retained its hosted-service list.
+        _settings = new Lazy<Settings>(() =>
+        {
+            InboxCleanupServiceOptions<TDbContext> cleanupOptions = options.Value;
+            EntityFrameworkOutboxOptions<TDbContext> persistenceOptions = outboxOptions.Value;
+            ILockStatementProvider lockProvider = persistenceOptions.LockStatementProvider
+                ?? throw new ArgumentException("A lock-statement provider is required.", nameof(outboxOptions));
+            IsolationLevel isolationLevel = Enum.IsDefined(persistenceOptions.IsolationLevel)
+                ? persistenceOptions.IsolationLevel
+                : throw new ArgumentOutOfRangeException(
+                    nameof(outboxOptions),
+                    persistenceOptions.IsolationLevel,
+                    "The transaction isolation level is undefined.");
+            return new Settings(cleanupOptions, lockProvider, isolationLevel);
+        });
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
         _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _retryPolicy = Retry.Exponential(1000, TimeSpan.FromSeconds(3), TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(3));
+    }
+
+    /// <summary>Validates the selected settings before launching the cleanup loop.</summary>
+    /// <param name="cancellationToken">The host-start cancellation token.</param>
+    /// <returns>The task that starts the cleanup worker.</returns>
+    public override Task StartAsync(CancellationToken cancellationToken)
+    {
+        _ = _settings.Value;
+        return base.StartAsync(cancellationToken);
     }
 
     /// <summary>Polls for expired inbox rows and removes bounded batches while the host is running.</summary>
@@ -65,13 +77,14 @@ internal sealed class InboxCleanupService<TDbContext> : BackgroundService
     /// <returns>A task that completes when host shutdown stops the cleanup loop.</returns>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        Settings settings = _settings.Value;
         var removed = 0;
         while (!stoppingToken.IsCancellationRequested)
         {
             try
             {
                 if (removed == 0)
-                    await Task.Delay(_options.QueryDelay, _timeProvider, stoppingToken).ConfigureAwait(false);
+                    await Task.Delay(settings.Options.QueryDelay, _timeProvider, stoppingToken).ConfigureAwait(false);
                 else
                     removed = 0;
 
@@ -90,20 +103,21 @@ internal sealed class InboxCleanupService<TDbContext> : BackgroundService
 
     internal async Task<int> CleanUpInboxStateAsync(CancellationToken cancellationToken)
     {
+        Settings settings = _settings.Value;
         await using var scope = _provider.CreateAsyncScope();
         await using var dbContext = scope.ServiceProvider.GetRequiredService<TDbContext>();
 
-        using var queryTimeout = new CancellationTokenSource(_options.QueryTimeout, _timeProvider);
+        using var queryTimeout = new CancellationTokenSource(settings.Options.QueryTimeout, _timeProvider);
         using var queryToken = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, queryTimeout.Token);
 
-        _cleanupLockStatement ??= _lockStatementProvider.GetInboxCleanupLockStatement(dbContext);
+        _cleanupLockStatement ??= settings.LockProvider.GetInboxCleanupLockStatement(dbContext);
         var strategy = dbContext.Database.CreateExecutionStrategy();
 
         return await EntityFrameworkExecutionStrategy.ExecuteAsync(dbContext, strategy, ExecuteAttemptAsync, queryToken.Token).ConfigureAwait(false);
 
         async Task<int> ExecuteAttemptAsync()
         {
-            await using var transaction = await dbContext.Database.BeginTransactionAsync(_isolationLevel, queryToken.Token).ConfigureAwait(false);
+            await using var transaction = await dbContext.Database.BeginTransactionAsync(settings.IsolationLevel, queryToken.Token).ConfigureAwait(false);
             try
             {
                 if (!await AcquireCleanupLockAsync(dbContext, transaction, _cleanupLockStatement, queryToken.Token).ConfigureAwait(false))
@@ -112,7 +126,7 @@ internal sealed class InboxCleanupService<TDbContext> : BackgroundService
                     return 0;
                 }
 
-                DateTime removeTimestamp = _timeProvider.GetUtcNow().UtcDateTime - _options.DuplicateDetectionWindow;
+                DateTime removeTimestamp = _timeProvider.GetUtcNow().UtcDateTime - settings.Options.DuplicateDetectionWindow;
                 IQueryable<InboxState> deliveredQuery = dbContext.Set<InboxState>()
                     .AsNoTracking()
                     .Where(x => x.Delivered != null);
@@ -124,7 +138,7 @@ internal sealed class InboxCleanupService<TDbContext> : BackgroundService
                     : deliveredQuery.OrderBy(x => x.Delivered).ThenBy(x => x.Id);
 
                 var candidates = await orderedQuery
-                    .Take(_options.QueryMessageLimit)
+                    .Take(settings.Options.QueryMessageLimit)
                     .Select(x => new { x.Id, x.Delivered })
                     .ToListAsync(queryToken.Token)
                     .ConfigureAwait(false);
@@ -178,4 +192,7 @@ internal sealed class InboxCleanupService<TDbContext> : BackgroundService
         object? result = await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
         return result != null && result != DBNull.Value && Convert.ToInt32(result) == 1;
     }
+
+    sealed record Settings(InboxCleanupServiceOptions<TDbContext> Options,
+        ILockStatementProvider LockProvider, IsolationLevel IsolationLevel);
 }

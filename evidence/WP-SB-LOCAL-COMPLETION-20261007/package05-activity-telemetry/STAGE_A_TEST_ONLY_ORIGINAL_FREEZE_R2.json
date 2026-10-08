@@ -1,0 +1,50 @@
+{
+  "kind": "P05_STAGE_A_TEST_ONLY_FREEZE_BEFORE_SOURCE_CORRECTION",
+  "source_original": {
+    "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+    "src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs": "4bcc34ae5f7127d24f423c8e7471b088a89a31ac135d2c35db9686136a69b44f"
+  },
+  "test_sha256": "21f7290640fbe910bac4c87bb3b3ee1881dcafcfaa9255acd85e1c131ed16589",
+  "requirement_sha256": "d25a434309bd395ff5b34a3864ea292a9ec2eff4f63c3e30ebca0cff486638a1",
+  "new_requirement_rows": [
+    {
+      "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "TryCreate_RestoresCallerDespiteOrdinaryCurrentChangedFailure",
+      "testType": "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests",
+      "variantKey": "sampler-restore-currentchanged-isolated"
+    },
+    {
+      "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "Stop_PreservesBusinessFailureWhenStopAndRestoreObserversThrow",
+      "testType": "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests",
+      "variantKey": "stop-and-restore-cannot-replace-business-failure"
+    },
+    {
+      "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "TryStart_RetainsOriginalStartFailureWhenCleanupObserversThrow",
+      "testType": "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests",
+      "variantKey": "failed-start-retains-primary-over-cleanup-callbacks"
+    },
+    {
+      "requirementId": "REQ-VSB-ACTIVITY-OUTCOME",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "AddExceptionEvent_PreservesBusinessFailureAndStatusWhenDiagnosticClockThrows",
+      "testType": "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests",
+      "variantKey": "exception-event-clock-failure-preserves-error-status-and-cause"
+    },
+    {
+      "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "Stop_RestoresNearestLiveAncestorWhenCapturedParentStopped",
+      "testType": "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests",
+      "variantKey": "stopped-parent-restores-nearest-live-ancestor"
+    }
+  ],
+  "prior_requirement_rows": 4685,
+  "new_native_cases": 8,
+  "research_plan_sha256": "0acec8d749bf307dd0f42bd05f71cb35a9e751df271d83d739ebfe40072ef4c8",
+  "supersedes": "R1 failed compilation only; explicit synchronous Action overload fixes xUnit selection, additional unrelated-current healthy theory control"
+}

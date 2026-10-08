@@ -1,0 +1,28 @@
+{
+  "kind": "ROOT_SQS_ORIGINAL_ELEVEN_EXECUTION_GATE_R1",
+  "driver_sha256": "c9fba8b6b800623bbb44f1e9476bc481681c3272278e0386a82083e284c46572",
+  "inputs": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-private-preparation-r2/INPUTS.json",
+    "sha256": "08ef2d467c5c7a79c710fc83c677e13a900271c1676364cee0bc27d8cc83d717"
+  },
+  "reviewed_files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-source-candidate-r3-adversarial-r1.json",
+      "sha256": "c336f509755b1049e81e51239656a31b8713960c01e3befaf3de72e41e9fa10b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-original-eleven-driver-r2-preflight-adversarial-r1.json",
+      "sha256": "4e3f8b800678af3b6d32d32a54f9ca222f7e7fc2484de03e4822db08a4d9f309"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-source-candidate-r3/PREPARED.json",
+      "sha256": "dc16966c7a3524f34a8ec50711e964f65fe2e7e5cd3dff73fcfb786244401ce5"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-source-candidate-r3/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "sha256": "d9c16e5dc15c40ead163dc6b172343b73e92e068aadc18de78235e01454bd209"
+    }
+  ],
+  "root_qualified_source_and_driver": true,
+  "actual_run_limits": "Original unchanged product; allsource/operationalfindings resolved beforeSDK. Actualobserved nativefirstfail only; 300restore/build75native/ownnewPG joins; compiler/watchdog excluded. Whole139driver25delta and full487fixture Rootpersonally read."
+}

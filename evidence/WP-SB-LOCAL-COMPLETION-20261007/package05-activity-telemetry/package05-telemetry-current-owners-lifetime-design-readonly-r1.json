@@ -1,0 +1,2750 @@
+{
+  "status": "READ_ONLY_P05_TELEMETRY_CURRENT_INVENTORY_AND_DESIGN_RECOMMENDATIONS__NOT_IMPLEMENTED_NOT_ACCEPTED",
+  "reviewer": "/root/continuation_adversarial",
+  "root_personal_read_credit": "NONE. This reviewer inventory/hash scan is not author Root personal whole-owner reading; existing author receipt referenced without extending credit.",
+  "root_existing_receipt": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/ROOT_CORE_OWNER_COMPLETE_READ_R1.json",
+    "sha256": "5e807c7f46275c714dcb6e8c3b6f478f5f6846299510c58a2fcac60b763c6b08"
+  },
+  "scan": {
+    "root": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "included": "Product src/**/*.cs excluding bin/obj; actual Diagnostic Activity syntax/type/helper/caller patterns plus explicit optional-duration/contract owners. Not a source/test pairing audit.",
+    "file_count": 57,
+    "hit_count": 266,
+    "scope_precision": "Lexical ownership and exact cross-call sites, with bounded manual semantic owner/caller review; no whole repository/canonical test suite reread claim. Some callers are listed through lexical binding only."
+  },
+  "files": [
+    {
+      "path": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs",
+      "sha256": "152d185032cee3ade09fdb1d83af32a8d14e778b68968224fd0d5579725b6079",
+      "bytes": 10345,
+      "sites": []
+    },
+    {
+      "path": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkTransactionalOutboxSource.cs",
+      "sha256": "67aa72ab20c2f4789975e1c77c503fd614ebce2e5a736f0771e1a4fe9dad28bd",
+      "bytes": 23888,
+      "sites": [
+        {
+          "line": 343,
+          "text": "StartedActivity? activity = MessageActivity.TryStartOutboxDelivery(message);"
+        },
+        {
+          "line": 352,
+          "text": "activity?.AddExceptionEvent(exception);"
+        }
+      ]
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+      "sha256": "f9a346f850a05cde08ebf003fbf86758834c89ed8bfe919fa7991f619676c754",
+      "bytes": 7348,
+      "sites": [
+        {
+          "line": 86,
+          "text": "StartedActivity? activity = MessageActivity.TryStart(\"Configure Topology\");"
+        }
+      ]
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusSendTransportContext.cs",
+      "sha256": "b38bafcc6bf219a745f69e70ca967a0a079bb52e41e67cccf342f6cbc2fcd55c",
+      "bytes": 13497,
+      "sites": [
+        {
+          "line": 113,
+          "text": "if (Activity.Current?.IsAllDataRequested ?? false)"
+        },
+        {
+          "line": 116,
+          "text": "Activity.Current.SetTag(nameof(context.PartitionKey), context.PartitionKey);"
+        },
+        {
+          "line": 118,
+          "text": "Activity.Current.SetTag(nameof(context.SessionId), context.SessionId);"
+        }
+      ]
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+      "sha256": "168bc3f45a8e4f69fd89fe4749bdb5106e94a23c4a7b8ddf69e40af85a240174",
+      "bytes": 20114,
+      "sites": [
+        {
+          "line": 201,
+          "text": "StartedActivity? activity = MessageActivity.TryStartSend(_context, sendContext);"
+        },
+        {
+          "line": 231,
+          "text": "activity?.AddExceptionEvent(exception);"
+        },
+        {
+          "line": 299,
+          "text": "StartedActivity? activity = MessageActivity.TryStartSend(_context, sendContext);"
+        },
+        {
+          "line": 356,
+          "text": "int[] pendingIndices, StartedActivity? activity)"
+        },
+        {
+          "line": 386,
+          "text": "activity?.AddExceptionEvent(exception);"
+        },
+        {
+          "line": 431,
+          "text": "static void TryLogSent<T>(EventHubSendContext<T> sendContext, StartedActivity? activity) where T : class"
+        }
+      ]
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducerBatchSender.cs",
+      "sha256": "35a61c8a3e11a3a9f3c8d25ea9d8e8dc33ec70847e36abb2665382af5f80f36c",
+      "bytes": 10039,
+      "sites": [
+        {
+          "line": 221,
+          "text": "Activity? activity = Activity.Current;"
+        }
+      ]
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducerSendTransportContext.cs",
+      "sha256": "e2fad19e46024568be6f1eaacf45a47a563962147020b8c855f08b6692e1092a",
+      "bytes": 9279,
+      "sites": [
+        {
+          "line": 106,
+          "text": "if (Activity.Current?.IsAllDataRequested ?? false)"
+        },
+        {
+          "line": 109,
+          "text": "Activity.Current.SetTag(nameof(context.PartitionId), options.PartitionId);"
+        },
+        {
+          "line": 111,
+          "text": "Activity.Current.SetTag(nameof(context.PartitionKey), options.PartitionKey);"
+        }
+      ]
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqSendTransportContext.cs",
+      "sha256": "361d20a085a76bc38fa9ca850ba76b09a040fef498291890ba9edc85c95566f4",
+      "bytes": 20066,
+      "sites": [
+        {
+          "line": 303,
+          "text": "if (Activity.Current is { IsAllDataRequested: true } activity && routingKey.Length > 0)"
+        }
+      ]
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSendTransportContext.cs",
+      "sha256": "c22e67354bb1e7cf80af519084e25c427879f218e56647ce757e5d93edc13feb",
+      "bytes": 6317,
+      "sites": [
+        {
+          "line": 115,
+          "text": "if (Activity.Current?.IsAllDataRequested ?? false)"
+        },
+        {
+          "line": 118,
+          "text": "Activity.Current.SetTag(nameof(context.RoutingKey), context.RoutingKey);"
+        },
+        {
+          "line": 120,
+          "text": "Activity.Current.SetTag(nameof(context.PartitionKey), context.PartitionKey);"
+        }
+      ]
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/TopicSendTransportContext.cs",
+      "sha256": "3c4b06e31cc9dc56467277bcb64e0bfa7f405bc20fbea71fdb4eed622eac7e3e",
+      "bytes": 5812,
+      "sites": [
+        {
+          "line": 113,
+          "text": "if (Activity.Current?.IsAllDataRequested ?? false)"
+        },
+        {
+          "line": 116,
+          "text": "Activity.Current.SetTag(nameof(context.RoutingKey), context.RoutingKey);"
+        },
+        {
+          "line": 118,
+          "text": "Activity.Current.SetTag(nameof(context.PartitionKey), context.PartitionKey);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Util/ExceptionUtil.cs",
+      "sha256": "25c3db75271aa4d7f6e3f4d931ed3618b305426a302b9105065753e470f2a858",
+      "bytes": 3492,
+      "sites": []
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/CompensateActivityHost.cs",
+      "sha256": "c8474b4bb4456ac7197826d7c93079b4c5290431de716282791ef41872309b90",
+      "bytes": 5872,
+      "sites": [
+        {
+          "line": 42,
+          "text": "StartedActivity? activity = CourierActivity.TryStartCompensation<TActivity, TLog>(context);"
+        },
+        {
+          "line": 59,
+          "text": "activity?.AddExceptionEvent(exception);"
+        },
+        {
+          "line": 70,
+          "text": "activity?.AddExceptionEvent(exception);"
+        },
+        {
+          "line": 88,
+          "text": "StartedActivity? activity,"
+        },
+        {
+          "line": 112,
+          "text": "activity?.AddExceptionEvent(exception);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/ExecuteActivityHost.cs",
+      "sha256": "31c81a902a744e42cb880897aba7a29d0ff3312467d43b15d3fc84c2996f5535",
+      "bytes": 6264,
+      "sites": [
+        {
+          "line": 45,
+          "text": "StartedActivity? activity = CourierActivity.TryStartExecution<TActivity, TArguments>(context);"
+        },
+        {
+          "line": 62,
+          "text": "activity?.AddExceptionEvent(exception);"
+        },
+        {
+          "line": 73,
+          "text": "activity?.AddExceptionEvent(exception);"
+        },
+        {
+          "line": 91,
+          "text": "StartedActivity? activity,"
+        },
+        {
+          "line": 115,
+          "text": "activity?.AddExceptionEvent(exception);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Logging/CourierActivity.cs",
+      "sha256": "ae7f2c1462036bcf9ad4942bcc2e320c76b86b156f907b0712b22197ed5abf5c",
+      "bytes": 2836,
+      "sites": [
+        {
+          "line": 16,
+          "text": "public static StartedActivity? TryStartExecution<TActivity, TArguments>(ConsumeContext<IRoutingSlip> context)"
+        },
+        {
+          "line": 19,
+          "text": "MessageActivity.TryStartProcess(context.Advanced(), activity =>"
+        },
+        {
+          "line": 21,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.CourierTrackingNumber, context.Message.TrackingNumber.ToString(\"D\"));"
+        },
+        {
+          "line": 22,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ProcessorName, TypeCache<TActivity>.ShortName);"
+        },
+        {
+          "line": 23,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContract, MessageTypeCache<TArguments>.DiagnosticAddress);"
+        },
+        {
+          "line": 31,
+          "text": "public static StartedActivity? TryStartCompensation<TActivity, TLog>(ConsumeContext<IRoutingSlip> context)"
+        },
+        {
+          "line": 34,
+          "text": "MessageActivity.TryStartProcess(context.Advanced(), activity =>"
+        },
+        {
+          "line": 36,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.CourierTrackingNumber, context.Message.TrackingNumber.ToString(\"D\"));"
+        },
+        {
+          "line": 37,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ProcessorName, TypeCache<TActivity>.ShortName);"
+        },
+        {
+          "line": 38,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContract, MessageTypeCache<TLog>.DiagnosticAddress);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/InitiatedByOrOrchestratesSagaMessageFilter.cs",
+      "sha256": "3f9ae2a7dcca59adac060e1421c5aa47ed42422f49057f75f8ea2776a300a4d1",
+      "bytes": 3097,
+      "sites": [
+        {
+          "line": 37,
+          "text": "StartedActivity? activity = SagaActivity.TryStart(context);"
+        },
+        {
+          "line": 57,
+          "text": "activity?.AddExceptionEvent(ex);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/InitiatedBySagaMessageFilter.cs",
+      "sha256": "5df0438ebc2cf9c37b79e8588517c31cf9af31289ba8e30aef0b079f997d7635",
+      "bytes": 3032,
+      "sites": [
+        {
+          "line": 37,
+          "text": "StartedActivity? activity = SagaActivity.TryStart(context);"
+        },
+        {
+          "line": 57,
+          "text": "activity?.AddExceptionEvent(ex);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/ObservesSagaMessageFilter.cs",
+      "sha256": "7d93c97006f0fadd8e5c389c695995341a7296f1be04e241bbc814d062c920ca",
+      "bytes": 2997,
+      "sites": [
+        {
+          "line": 39,
+          "text": "StartedActivity? activity = SagaActivity.TryStart(context);"
+        },
+        {
+          "line": 59,
+          "text": "activity?.AddExceptionEvent(ex);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/OrchestratesSagaMessageFilter.cs",
+      "sha256": "d6f40348352aff215e72362b7fe0e48e74d224afe092978ca3b96362676120ce",
+      "bytes": 3034,
+      "sites": [
+        {
+          "line": 39,
+          "text": "StartedActivity? activity = SagaActivity.TryStart(context);"
+        },
+        {
+          "line": 59,
+          "text": "activity?.AddExceptionEvent(ex);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/StateMachineSagaMessageFilter.cs",
+      "sha256": "15b2ae4f0d170c6e7f1c94b6fad6e807e1b06dc83054f460111031e5cd6804e2",
+      "bytes": 8853,
+      "sites": [
+        {
+          "line": 68,
+          "text": "StartedActivity? activity = SagaActivity.TryStartStateMachine(behaviorContext);"
+        },
+        {
+          "line": 82,
+          "text": "activity?.AddExceptionEvent(stateMachineException);"
+        },
+        {
+          "line": 93,
+          "text": "activity?.AddExceptionEvent(exception);"
+        },
+        {
+          "line": 107,
+          "text": "StartedActivity? activity)"
+        },
+        {
+          "line": 135,
+          "text": "StartedActivity? activity,"
+        },
+        {
+          "line": 180,
+          "text": "StartedActivity activity,"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RequestStartedActivity.cs",
+      "sha256": "23303d43c763e1e15b54af66fb7fa63504977e89212685b384e62a70eedda6aa",
+      "bytes": 2722,
+      "sites": [
+        {
+          "line": 13,
+          "text": "public class RequestStartedActivity<TSaga, TMessage> :"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/Logging/SagaActivity.cs",
+      "sha256": "20e4beb82a2f9210600eb1da1ef1da04266bad43b567140a9f655a1a53011830",
+      "bytes": 2614,
+      "sites": [
+        {
+          "line": 14,
+          "text": "public static StartedActivity? TryStart<TSaga, TMessage>(SagaConsumeContext<TSaga, TMessage> context)"
+        },
+        {
+          "line": 17,
+          "text": "MessageActivity.TryStartProcess(context, activity =>"
+        },
+        {
+          "line": 19,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.SagaId, context.Saga.CorrelationId.ToString(\"D\"));"
+        },
+        {
+          "line": 20,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ProcessorName, TypeCache<TSaga>.ShortName);"
+        },
+        {
+          "line": 21,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContract, MessageTypeCache<TMessage>.DiagnosticAddress);"
+        },
+        {
+          "line": 29,
+          "text": "public static StartedActivity? TryStartStateMachine<TInstance, TMessage>(IBehaviorContext<TInstance, TMessage> context)"
+        },
+        {
+          "line": 32,
+          "text": "MessageActivity.TryStartProcess(context, activity =>"
+        },
+        {
+          "line": 34,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.SagaId, context.Saga.CorrelationId.ToString(\"D\"));"
+        },
+        {
+          "line": 35,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ProcessorName, context.StateMachine.Name);"
+        },
+        {
+          "line": 36,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContract, MessageTypeCache<TMessage>.DiagnosticAddress);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/RequestEventExtensions.cs",
+      "sha256": "09b1a2199c904a4fa0aad703b7e861ecc0591114db50f533c4b21c17bd238466",
+      "bytes": 4235,
+      "sites": [
+        {
+          "line": 23,
+          "text": "return source.Add(new RequestStartedActivity<TInstance, TData>());"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/DependencyInjection/Internal/ContainerTestHarness.cs",
+      "sha256": "c45b3d2faa01d87e4f4e34e40b745a3f111256ee6d2b4db0e3e935e68492bcfc",
+      "bytes": 22891,
+      "sites": [
+        {
+          "line": 74,
+          "text": "provider.GetService<TestActivityListener>();"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/DependencyInjection/ViciOneServiceBusTestingServiceCollectionExtensions.cs",
+      "sha256": "4fcb66dd722ee22d11e9f91bcf1375f46b7321882bf8d13c54cc83815d4239a1",
+      "bytes": 15480,
+      "sites": [
+        {
+          "line": 166,
+          "text": "services.TryAddSingleton(_ => new TestActivityListener(textWriter, methodName, className, includeDetails));"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "sha256": "8647373561a105ff543247438d3239f869009b6e2efc829f533d45bdfb235291",
+      "bytes": 17839,
+      "sites": [
+        {
+          "line": 45,
+          "text": "using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);"
+        },
+        {
+          "line": 93,
+          "text": "using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);"
+        },
+        {
+          "line": 151,
+          "text": "using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);"
+        },
+        {
+          "line": 214,
+          "text": "using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);"
+        },
+        {
+          "line": 281,
+          "text": "using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs",
+      "sha256": "bc9bdd069b20785457700ff8cfde1ffb996f8b0f07c8522898201bbdb4e4ef7c",
+      "bytes": 6586,
+      "sites": [
+        {
+          "line": 17,
+          "text": "sealed class TestActivityListener :"
+        },
+        {
+          "line": 20,
+          "text": "static readonly ActivitySource _source = new ActivitySource(\"ViciOne.ServiceBus.TestHarness\");"
+        },
+        {
+          "line": 30,
+          "text": "public TestActivityListener(TextWriter writer, string? methodName, string? className, bool includeDetails)"
+        },
+        {
+          "line": 46,
+          "text": "ActivitySource.AddActivityListener(_listener);"
+        },
+        {
+          "line": 49,
+          "text": "_testActivity = ActivityObservation.TryStartSource(_source, methodName, ActivityKind.Internal);"
+        },
+        {
+          "line": 58,
+          "text": "ActivityObservation.TryDispose(activity);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "6bc0539808fb6237280c50550743f04d5d0fc1d6cf454e7432e5c7befa6dac1b",
+      "bytes": 6926,
+      "sites": [
+        {
+          "line": 12,
+          "text": "sealed class TrackedActivity :"
+        },
+        {
+          "line": 15,
+          "text": "static readonly ActivitySource _source = new ActivitySource(\"ViciOne.ServiceBus.Testing.Monitor\");"
+        },
+        {
+          "line": 31,
+          "text": "public TrackedActivity(string? methodName, TimeSpan? timeout, TimeSpan? idleTimeout, TimeProvider timeProvider)"
+        },
+        {
+          "line": 52,
+          "text": "Activity? previousActivity = Activity.Current;"
+        },
+        {
+          "line": 55,
+          "text": "ActivitySource.AddActivityListener(_listener);"
+        },
+        {
+          "line": 63,
+          "text": "Activity.Current = previousActivity;"
+        },
+        {
+          "line": 65,
+          "text": "if (!ActivityObservation.TryStart(_testActivity, out Exception? listenerFailure))"
+        },
+        {
+          "line": 83,
+          "text": "Activity.Current = previousActivity;"
+        },
+        {
+          "line": 134,
+          "text": "ActivityObservation.TryDispose(activity);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+      "sha256": "d941d74bc5ac55af42d7c2abde5537489cd2850dcc325ecadfd7e93ff80931b9",
+      "bytes": 2155,
+      "sites": [
+        {
+          "line": 27,
+          "text": "using var activity = new TrackedActivity(operationName ?? \"test act\", harness.TestTimeout, harness.TestInactivityTimeout,"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Internal/Observations/ActiveTestObservationScope.cs",
+      "sha256": "676b3732bd05212d1196a7fbd59fa6a3d8268df88d9a2e30539197e3c27a9ec3",
+      "bytes": 6061,
+      "sites": [
+        {
+          "line": 183,
+          "text": "return Activity.Current?.TraceId == _traceId;"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+      "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525",
+      "bytes": 13959,
+      "sites": [
+        {
+          "line": 51,
+          "text": "return CollectCoreAsync(context, Activity.Current, cancellationToken);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+      "sha256": "4d008ca99020815d1453376e277cc06ea57ca2db75d0a7ffb6fea279a4ab64c4",
+      "bytes": 15567,
+      "sites": [
+        {
+          "line": 371,
+          "text": "Activity.Current = _currentActivity;"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Context/Consumption/BaseConsumeContext.cs",
+      "sha256": "f196ec3e96bd9bf4551f2aa15d599b5c9e1b3bcb4bc8e15c12d16e46c6d74951",
+      "bytes": 24714,
+      "sites": []
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "bytes": 5633,
+      "sites": [
+        {
+          "line": 9,
+          "text": "internal static class ActivityObservation"
+        },
+        {
+          "line": 11,
+          "text": "const string PreviousActivityProperty = \"ViciOne.ServiceBus.ActivityObservation.PreviousActivity\";"
+        },
+        {
+          "line": 18,
+          "text": "public static Activity? TryStartSource(ActivitySource source, string name, ActivityKind kind,"
+        },
+        {
+          "line": 22,
+          "text": "Activity? previousActivity = Activity.Current;"
+        },
+        {
+          "line": 37,
+          "text": "Activity.Current = previousActivity;"
+        },
+        {
+          "line": 43,
+          "text": "public static Activity? TryCreate(Lazy<ActivitySource> source, string name, ActivityKind kind,"
+        },
+        {
+          "line": 48,
+          "text": "Activity? previousActivity = Activity.Current;"
+        },
+        {
+          "line": 52,
+          "text": "Activity.Current = null;"
+        },
+        {
+          "line": 62,
+          "text": "Activity.Current = previousActivity;"
+        },
+        {
+          "line": 72,
+          "text": "Activity? previousActivity = Activity.Current;"
+        },
+        {
+          "line": 78,
+          "text": "Activity.Current = null;"
+        },
+        {
+          "line": 82,
+          "text": "Activity.Current = previousActivity;"
+        },
+        {
+          "line": 85,
+          "text": "Activity.Current = activity;"
+        },
+        {
+          "line": 93,
+          "text": "Activity.Current = previousActivity;"
+        },
+        {
+          "line": 148,
+          "text": "Activity? previousActivity = Activity.Current;"
+        },
+        {
+          "line": 168,
+          "text": "Activity.Current = expectedActivity;"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "bytes": 20420,
+      "sites": [
+        {
+          "line": 13,
+          "text": "internal static class MessageActivity"
+        },
+        {
+          "line": 20,
+          "text": "public static StartedActivity? TryStartSend<T>(SendTransportContext transportContext, SendContext<T> context)"
+        },
+        {
+          "line": 23,
+          "text": "var currentActivity = System.Diagnostics.Activity.Current;"
+        },
+        {
+          "line": 28,
+          "text": "var activity = ActivityObservation.TryCreate(Cached.Source, transportContext.ActivityName, ActivityKind.Producer, parentActivityContext);"
+        },
+        {
+          "line": 36,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessagingSystem, transportContext.ActivitySystem);"
+        },
+        {
+          "line": 37,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.DestinationName, transportContext.ActivityDestination);"
+        },
+        {
+          "line": 46,
+          "text": "public static StartedActivity? TryStartOutboxSend<T>(SendContext<T> context)"
+        },
+        {
+          "line": 49,
+          "text": "var currentActivity = System.Diagnostics.Activity.Current;"
+        },
+        {
+          "line": 54,
+          "text": "var activity = ActivityObservation.TryCreate(Cached.Source, \"outbox send\", ActivityKind.Producer, parentActivityContext);"
+        },
+        {
+          "line": 69,
+          "text": "public static StartedActivity? TryStartOutboxDelivery(OutboxMessageContext context)"
+        },
+        {
+          "line": 73,
+          "text": "var activity = ActivityObservation.TryCreate(Cached.Source, \"outbox process\", ActivityKind.Client, parentActivityContext);"
+        },
+        {
+          "line": 78,
+          "text": "if (!ActivityObservation.TryStart(activity))"
+        },
+        {
+          "line": 81,
+          "text": "return new StartedActivity(activity);"
+        },
+        {
+          "line": 90,
+          "text": "public static StartedActivity? TryStartReceive(string name, string inputAddress, string endpointName,"
+        },
+        {
+          "line": 101,
+          "text": "\"Link\" => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer, default,"
+        },
+        {
+          "line": 103,
+          "text": "\"New\" => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer, newRoot: true),"
+        },
+        {
+          "line": 104,
+          "text": "_ => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer, parentActivityContext)"
+        },
+        {
+          "line": 106,
+          "text": "false => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer, parentActivityContext)"
+        },
+        {
+          "line": 113,
+          "text": "ActivityObservation.TrySetTag("
+        },
+        {
+          "line": 117,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.DestinationName, endpointName);"
+        },
+        {
+          "line": 121,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.InputAddress, inputAddress);"
+        },
+        {
+          "line": 126,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageId, text);"
+        },
+        {
+          "line": 129,
+          "text": "if (!ActivityObservation.TryStart(activity, newRoot))"
+        },
+        {
+          "line": 132,
+          "text": "return new StartedActivity(activity, context.GetTimeProvider());"
+        },
+        {
+          "line": 140,
+          "text": "public static StartedActivity? TryStartConsumer<TConsumer, T>(ConsumeContext<T> context)"
+        },
+        {
+          "line": 145,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ProcessorName, TypeCache<TConsumer>.ShortName);"
+        },
+        {
+          "line": 146,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContract, MessageTypeCache<T>.DiagnosticAddress);"
+        },
+        {
+          "line": 154,
+          "text": "public static StartedActivity? TryStartHandler<T>(ConsumeContext<T> context)"
+        },
+        {
+          "line": 159,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ProcessorName, \"Handler\");"
+        },
+        {
+          "line": 160,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContract, MessageTypeCache<T>.DiagnosticAddress);"
+        },
+        {
+          "line": 167,
+          "text": "public static StartedActivity? TryStart(string operationName)"
+        },
+        {
+          "line": 169,
+          "text": "var activity = ActivityObservation.TryCreate(Cached.Source, operationName, ActivityKind.Client);"
+        },
+        {
+          "line": 173,
+          "text": "if (!ActivityObservation.TryStart(activity))"
+        },
+        {
+          "line": 176,
+          "text": "return new StartedActivity(activity);"
+        },
+        {
+          "line": 187,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageId, context.MessageId.Value.ToString(\"D\"));"
+        },
+        {
+          "line": 189,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ConversationId, context.ConversationId.Value.ToString(\"D\"));"
+        },
+        {
+          "line": 191,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.CorrelationId, context.CorrelationId.Value.ToString(\"D\"));"
+        },
+        {
+          "line": 193,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.InitiatorId, context.InitiatorId.Value.ToString(\"D\"));"
+        },
+        {
+          "line": 195,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.RequestId, context.RequestId.Value.ToString(\"D\"));"
+        },
+        {
+          "line": 197,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.SourceAddress, context.SourceAddress.ToString());"
+        },
+        {
+          "line": 199,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.DestinationAddress, context.DestinationAddress.ToString());"
+        },
+        {
+          "line": 201,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContracts, string.Join(\",\", context.SupportedMessageTypes));"
+        },
+        {
+          "line": 205,
+          "text": "ActivityObservation.TrySetBaggage(activity, ServiceBusTelemetry.Attributes.CorrelationId, context.CorrelationId.Value.ToString(\"D\"));"
+        },
+        {
+          "line": 207,
+          "text": "ActivityObservation.TrySetBaggage(activity, ServiceBusTelemetry.Attributes.ConversationId, context.ConversationId.Value.ToString(\"D\"));"
+        },
+        {
+          "line": 215,
+          "text": "ActivityObservation.TrySetBaggage(activity, value.Key, text);"
+        },
+        {
+          "line": 219,
+          "text": "static StartedActivity? PopulateSendActivity(SendContext context, System.Diagnostics.Activity activity,"
+        },
+        {
+          "line": 225,
+          "text": "if (!ActivityObservation.TryStart(activity))"
+        },
+        {
+          "line": 232,
+          "text": "return new StartedActivity(activity, context.GetTimeProvider());"
+        },
+        {
+          "line": 238,
+          "text": "ActivityObservation.TrySetBaggage(activity, ServiceBusTelemetry.Attributes.CorrelationId, correlationId.ToString(\"D\"));"
+        },
+        {
+          "line": 240,
+          "text": "ActivityObservation.TrySetBaggage(activity, ServiceBusTelemetry.Attributes.ConversationId, conversationId.ToString(\"D\"));"
+        },
+        {
+          "line": 250,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContracts, string.Join(\",\", context.SupportedMessageTypes));"
+        },
+        {
+          "line": 256,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageId, messageId.ToString(\"D\"));"
+        },
+        {
+          "line": 258,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ConversationId, conversationId.ToString(\"D\"));"
+        },
+        {
+          "line": 260,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.CorrelationId, correlationId.ToString(\"D\"));"
+        },
+        {
+          "line": 262,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.RequestId, requestId.ToString(\"D\"));"
+        },
+        {
+          "line": 264,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.InitiatorId, initiatorId.ToString(\"D\"));"
+        },
+        {
+          "line": 270,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.SourceAddress, sourceAddress.ToString());"
+        },
+        {
+          "line": 272,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.DestinationAddress, destinationAddress.ToString());"
+        },
+        {
+          "line": 323,
+          "text": "internal static StartedActivity? TryStartProcess(ConsumeContext context, Action<System.Diagnostics.Activity> configure)"
+        },
+        {
+          "line": 325,
+          "text": "var currentActivity = System.Diagnostics.Activity.Current;"
+        },
+        {
+          "line": 331,
+          "text": "var activity = ActivityObservation.TryCreate(Cached.Source, operationName, ActivityKind.Consumer);"
+        },
+        {
+          "line": 336,
+          "text": "ActivityObservation.TrySetTag("
+        },
+        {
+          "line": 344,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageId, context.MessageId.Value.ToString(\"D\"));"
+        },
+        {
+          "line": 346,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.ConversationId, context.ConversationId.Value.ToString(\"D\"));"
+        },
+        {
+          "line": 348,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.CorrelationId, context.CorrelationId.Value.ToString(\"D\"));"
+        },
+        {
+          "line": 350,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.RequestId, context.RequestId.Value.ToString(\"D\"));"
+        },
+        {
+          "line": 352,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.InitiatorId, context.InitiatorId.Value.ToString(\"D\"));"
+        },
+        {
+          "line": 354,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.SourceAddress, context.SourceAddress.ToString());"
+        },
+        {
+          "line": 356,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.DestinationAddress, context.DestinationAddress.ToString());"
+        },
+        {
+          "line": 358,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.MessageContracts, string.Join(\",\", context.SupportedMessageTypes));"
+        },
+        {
+          "line": 363,
+          "text": "if (!ActivityObservation.TryStart(activity))"
+        },
+        {
+          "line": 366,
+          "text": "return new StartedActivity(activity, context.GetTimeProvider());"
+        },
+        {
+          "line": 381,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.OperationName, operation);"
+        },
+        {
+          "line": 382,
+          "text": "ActivityObservation.TrySetTag(activity, ServiceBusTelemetry.Attributes.OperationType, operation);"
+        },
+        {
+          "line": 388,
+          "text": "internal static readonly Lazy<ActivitySource> Source = new Lazy<ActivitySource>(() =>"
+        },
+        {
+          "line": 389,
+          "text": "new ActivitySource(ServiceBusTelemetry.ActivitySourceName, HostMetadataCache.Host.ViciOneServiceBusVersion));"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs",
+      "sha256": "4bcc34ae5f7127d24f423c8e7471b088a89a31ac135d2c35db9686136a69b44f",
+      "bytes": 2625,
+      "sites": [
+        {
+          "line": 10,
+          "text": "internal sealed class StartedActivity : IDisposable"
+        },
+        {
+          "line": 15,
+          "text": "public StartedActivity(Activity activity, TimeProvider? timeProvider = null)"
+        },
+        {
+          "line": 29,
+          "text": "ActivityObservation.TrySetTag(Activity, key, value);"
+        },
+        {
+          "line": 40,
+          "text": "public void AddExceptionEvent(Exception exception)"
+        },
+        {
+          "line": 63,
+          "text": "ActivityObservation.TryAddEvent(Activity, activityEvent);"
+        },
+        {
+          "line": 64,
+          "text": "ActivityObservation.TrySetStatus(Activity, ActivityStatusCode.Error, exceptionMessage);"
+        },
+        {
+          "line": 73,
+          "text": "ActivityObservation.TrySetStatus(Activity, ActivityStatusCode.Ok);"
+        },
+        {
+          "line": 75,
+          "text": "ActivityObservation.TryDispose(Activity);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs",
+      "sha256": "2422998fb8458a9f1916d759b99d523a7d13d9e1b51f9fc5d1d43108d31e5614",
+      "bytes": 19146,
+      "sites": []
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Monitoring/MetricOperation.cs",
+      "sha256": "f813f52ec2d9db43471027d4de638b14e52762c9c36e5985d7ccb0ad7794560f",
+      "bytes": 1365,
+      "sites": []
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "bytes": 6793,
+      "sites": [
+        {
+          "line": 25,
+          "text": "private readonly ActivitySource? _activitySource;"
+        },
+        {
+          "line": 51,
+          "text": "ActivitySource? source = null;"
+        },
+        {
+          "line": 56,
+          "text": "source = new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);"
+        },
+        {
+          "line": 84,
+          "text": "Activity? parent = Activity.Current;"
+        },
+        {
+          "line": 91,
+          "text": "Activity? activity = ActivityObservation.TryStartSource(_activitySource,"
+        },
+        {
+          "line": 162,
+          "text": "ActivityObservation.TryDispose(activity, scope.Parent);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+      "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26",
+      "bytes": 4896,
+      "sites": []
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerTelemetry.cs",
+      "sha256": "a436cdfb37e80f981b60f9285bfaccf47020f56058ea9511207b2e1697e82c38",
+      "bytes": 4133,
+      "sites": [
+        {
+          "line": 26,
+          "text": "Activity? activity = ActivityObservation.TryStartSource(_instruments.Value.ActivitySource,"
+        },
+        {
+          "line": 37,
+          "text": "ActivityObservation.TryDispose(activity);"
+        },
+        {
+          "line": 51,
+          "text": "Activity? activity = ActivityObservation.TryStartSource(_instruments.Value.ActivitySource,"
+        },
+        {
+          "line": 61,
+          "text": "ActivityObservation.TryDispose(activity);"
+        },
+        {
+          "line": 79,
+          "text": "Activity? activity = ActivityObservation.TryStartSource(_instruments.Value.ActivitySource,"
+        },
+        {
+          "line": 89,
+          "text": "ActivityObservation.TryDispose(activity);"
+        },
+        {
+          "line": 106,
+          "text": "ActivitySource = new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);"
+        },
+        {
+          "line": 112,
+          "text": "public ActivitySource ActivitySource { get; }"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumerIngressFailure.cs",
+      "sha256": "70f6a75c0bfa33b5714faef3df94b0fd78c986b30e8512113280b4d8818799e7",
+      "bytes": 3026,
+      "sites": []
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs",
+      "sha256": "4f60e9e0f8e62b031ba6453b4ab45f3bc3b388dac9f76fbf67cdae9ebe09521d",
+      "bytes": 3432,
+      "sites": [
+        {
+          "line": 46,
+          "text": "StartedActivity? activity = MessageActivity.TryStartConsumer<TConsumer, TMessage>(context);"
+        },
+        {
+          "line": 60,
+          "text": "activity?.AddExceptionEvent(exception);"
+        },
+        {
+          "line": 70,
+          "text": "activity?.AddExceptionEvent(exception);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/DeserializeFilter.cs",
+      "sha256": "4ef4e1185ff1f1b008ece58caf0678a0fd3f9d6b341b90e2a41ce22b1586a0f3",
+      "bytes": 3340,
+      "sites": [
+        {
+          "line": 70,
+          "text": "Activity.Current?.AddConsumeContextTags(consumeContext);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/HandlerMessageFilter.cs",
+      "sha256": "b322fbf344b45bdb50ad02bf45749798100dc8ad8cf486da1686682d80623248",
+      "bytes": 3135,
+      "sites": [
+        {
+          "line": 40,
+          "text": "StartedActivity? activity = MessageActivity.TryStartHandler(context);"
+        },
+        {
+          "line": 56,
+          "text": "activity?.AddExceptionEvent(exception);"
+        },
+        {
+          "line": 66,
+          "text": "activity?.AddExceptionEvent(ex);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/InstanceMessageFilter.cs",
+      "sha256": "8541189d535bcc65f60385602d2ab032ba56186000e03a7397105bdba35b8adf",
+      "bytes": 3536,
+      "sites": [
+        {
+          "line": 46,
+          "text": "StartedActivity? activity = MessageActivity.TryStartConsumer<TConsumer, TMessage>(context);"
+        },
+        {
+          "line": 60,
+          "text": "activity?.AddExceptionEvent(exception);"
+        },
+        {
+          "line": 70,
+          "text": "activity?.AddExceptionEvent(exception);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/Outbox/OutboxSendEndpoint.cs",
+      "sha256": "cbeba9bb7829fdab807e3dd0f45c5a406ddc7fbb6f12213d7fcf3dda7bec7366",
+      "bytes": 14887,
+      "sites": [
+        {
+          "line": 254,
+          "text": "StartedActivity? activity = MessageActivity.TryStartOutboxSend(context);"
+        },
+        {
+          "line": 263,
+          "text": "activity?.AddExceptionEvent(ex);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "sha256": "e4b191aef095e8f9480f1b6b7cfbbfb069196909628130b96a73260a593cea72",
+      "bytes": 8016,
+      "sites": [
+        {
+          "line": 161,
+          "text": "StartedActivity? activity = MessageActivity.TryStartOutboxDelivery(message);"
+        },
+        {
+          "line": 169,
+          "text": "activity?.AddExceptionEvent(exception);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/ServiceBusTelemetry.cs",
+      "sha256": "226db4576e261af6e6c8cbb7e3b54dddc317af66cb04659b1bf010549a26b2f6",
+      "bytes": 15017,
+      "sites": [
+        {
+          "line": 5,
+          "text": "/// <c>ActivitySource</c> and <c>Meter</c> APIs."
+        },
+        {
+          "line": 11,
+          "text": "/// <summary>The <see cref=\"System.Diagnostics.ActivitySource\"/> name used for distributed traces.</summary>"
+        },
+        {
+          "line": 12,
+          "text": "public const string ActivitySourceName = Name;"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/SafeActivityScope.cs",
+      "sha256": "542b4841562b4445fc89ad0d06ae121633b51375d9ab241378ec0aece767b2eb",
+      "bytes": 1640,
+      "sites": [
+        {
+          "line": 9,
+          "text": "internal sealed class SafeActivityScope : IDisposable"
+        },
+        {
+          "line": 13,
+          "text": "private SafeActivityScope()"
+        },
+        {
+          "line": 17,
+          "text": "public static SafeActivityScope None { get; } = new();"
+        },
+        {
+          "line": 19,
+          "text": "public SafeActivityScope(Activity activity)"
+        },
+        {
+          "line": 63,
+          "text": "ActivityObservation.TryDispose(activity);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "bytes": 22480,
+      "sites": [
+        {
+          "line": 21,
+          "text": "readonly ActivitySource _activitySource;"
+        },
+        {
+          "line": 57,
+          "text": "_activitySource = new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);"
+        },
+        {
+          "line": 61,
+          "text": "public SafeActivityScope StartDurableAdmission(SerializedDurableSend message)"
+        },
+        {
+          "line": 65,
+          "text": "return SafeActivityScope.None;"
+        },
+        {
+          "line": 70,
+          "text": "activity = ActivityObservation.TryStartSource("
+        },
+        {
+          "line": 73,
+          "text": "return SafeActivityScope.None;"
+        },
+        {
+          "line": 84,
+          "text": "return new SafeActivityScope(activity);"
+        },
+        {
+          "line": 89,
+          "text": "ActivityObservation.TryDispose(activity);"
+        },
+        {
+          "line": 90,
+          "text": "return SafeActivityScope.None;"
+        },
+        {
+          "line": 94,
+          "text": "public SafeActivityScope StartDurableDelivery(DurableSendDelivery delivery)"
+        },
+        {
+          "line": 98,
+          "text": "return SafeActivityScope.None;"
+        },
+        {
+          "line": 103,
+          "text": "activity = ActivityObservation.TryStartSource("
+        },
+        {
+          "line": 106,
+          "text": "return SafeActivityScope.None;"
+        },
+        {
+          "line": 117,
+          "text": "return new SafeActivityScope(activity);"
+        },
+        {
+          "line": 122,
+          "text": "ActivityObservation.TryDispose(activity);"
+        },
+        {
+          "line": 123,
+          "text": "return SafeActivityScope.None;"
+        },
+        {
+          "line": 156,
+          "text": "public void RecordDurableDelivery("
+        },
+        {
+          "line": 184,
+          "text": "public void RecordDurableConsumerCompletion(bool retired, double elapsedSeconds)"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendAdmission.cs",
+      "sha256": "c16c5ed64e9ae5c0a9f197b81305ee8120acd77bea809d73083845137908b373",
+      "bytes": 4490,
+      "sites": [
+        {
+          "line": 45,
+          "text": "using SafeActivityScope activity = _instrumentation.StartDurableAdmission(message);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+      "sha256": "94c9fb781e42f0e164f62730684a18f2ec7df7d35cf7067171a086182dc56bed",
+      "bytes": 2062,
+      "sites": [
+        {
+          "line": 43,
+          "text": "_instrumentation.RecordDurableConsumerCompletion("
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "sha256": "551075235d378635bc7a9ffc7729cc9b348cd1b7b1b53fd662bf9bd7452ccb2f",
+      "bytes": 7884,
+      "sites": [
+        {
+          "line": 14,
+          "text": "using SafeActivityScope activity = _instrumentation.StartDurableDelivery(delivery);"
+        },
+        {
+          "line": 139,
+          "text": "SafeActivityScope activity,"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "sha256": "0658c31e41c2cc96aeae7f33948a046b49189c263580df97a1fe71414594dcb9",
+      "bytes": 8208,
+      "sites": [
+        {
+          "line": 16,
+          "text": "SafeActivityScope activity,"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "sha256": "158dceacfcfe2a05effc59b02c79efa67e6664a02fd80bad29ecb00715d96ba8",
+      "bytes": 3422,
+      "sites": [
+        {
+          "line": 13,
+          "text": "SafeActivityScope activity,"
+        },
+        {
+          "line": 21,
+          "text": "_instrumentation.RecordDurableDelivery("
+        },
+        {
+          "line": 27,
+          "text": "void RecordCanceled(SafeActivityScope activity, long started)"
+        },
+        {
+          "line": 34,
+          "text": "SafeActivityScope activity,"
+        },
+        {
+          "line": 39,
+          "text": "_instrumentation.RecordDurableDelivery("
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/ReceivePipeDispatcher.cs",
+      "sha256": "3411fe95f72972528c4dbe3e93b274dd485e62a2494b3d8206fe1a334db592d1",
+      "bytes": 14035,
+      "sites": [
+        {
+          "line": 76,
+          "text": "StartedActivity? activity = MessageActivity.TryStartReceive(_activityName, _inputAddress, _endpointName, context);"
+        },
+        {
+          "line": 129,
+          "text": "StartedActivity? activity,"
+        },
+        {
+          "line": 174,
+          "text": "static void RecordFailure(StartedActivity? activity, MetricOperation? instrument, Exception failure)"
+        },
+        {
+          "line": 176,
+          "text": "activity?.AddExceptionEvent(failure);"
+        }
+      ]
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Sending/SendTransport.cs",
+      "sha256": "9c3ae2d9e4976a94b3f4c4ab5ba9132d53438197568ebba8fed0f8e34c0efb19",
+      "bytes": 10332,
+      "sites": [
+        {
+          "line": 149,
+          "text": "StartedActivity? activity = MessageActivity.TryStartSend(_sendTransportContext, sendContext);"
+        },
+        {
+          "line": 213,
+          "text": "StartedActivity? activity,"
+        },
+        {
+          "line": 237,
+          "text": "activity?.AddExceptionEvent(sendFailure);"
+        }
+      ]
+    }
+  ],
+  "activitysource_construction_sites": [
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs",
+      "sha256": "bc9bdd069b20785457700ff8cfde1ffb996f8b0f07c8522898201bbdb4e4ef7c",
+      "line": 20,
+      "text": "static readonly ActivitySource _source = new ActivitySource(\"ViciOne.ServiceBus.TestHarness\");"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "6bc0539808fb6237280c50550743f04d5d0fc1d6cf454e7432e5c7befa6dac1b",
+      "line": 15,
+      "text": "static readonly ActivitySource _source = new ActivitySource(\"ViciOne.ServiceBus.Testing.Monitor\");"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 389,
+      "text": "new ActivitySource(ServiceBusTelemetry.ActivitySourceName, HostMetadataCache.Host.ViciOneServiceBusVersion));"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "line": 56,
+      "text": "source = new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerTelemetry.cs",
+      "sha256": "a436cdfb37e80f981b60f9285bfaccf47020f56058ea9511207b2e1697e82c38",
+      "line": 106,
+      "text": "ActivitySource = new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "line": 57,
+      "text": "_activitySource = new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);"
+    }
+  ],
+  "ambient_assignment_sites": [
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "6bc0539808fb6237280c50550743f04d5d0fc1d6cf454e7432e5c7befa6dac1b",
+      "line": 63,
+      "text": "Activity.Current = previousActivity;"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "6bc0539808fb6237280c50550743f04d5d0fc1d6cf454e7432e5c7befa6dac1b",
+      "line": 83,
+      "text": "Activity.Current = previousActivity;"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+      "sha256": "4d008ca99020815d1453376e277cc06ea57ca2db75d0a7ffb6fea279a4ab64c4",
+      "line": 371,
+      "text": "Activity.Current = _currentActivity;"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "line": 37,
+      "text": "Activity.Current = previousActivity;"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "line": 52,
+      "text": "Activity.Current = null;"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "line": 62,
+      "text": "Activity.Current = previousActivity;"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "line": 78,
+      "text": "Activity.Current = null;"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "line": 82,
+      "text": "Activity.Current = previousActivity;"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "line": 85,
+      "text": "Activity.Current = activity;"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "line": 93,
+      "text": "Activity.Current = previousActivity;"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "line": 168,
+      "text": "Activity.Current = expectedActivity;"
+    }
+  ],
+  "source_emission_lifetime_calls": [
+    {
+      "path": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkTransactionalOutboxSource.cs",
+      "sha256": "67aa72ab20c2f4789975e1c77c503fd614ebce2e5a736f0771e1a4fe9dad28bd",
+      "line": 343,
+      "text": "StartedActivity? activity = MessageActivity.TryStartOutboxDelivery(message);"
+    },
+    {
+      "path": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkTransactionalOutboxSource.cs",
+      "sha256": "67aa72ab20c2f4789975e1c77c503fd614ebce2e5a736f0771e1a4fe9dad28bd",
+      "line": 352,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+      "sha256": "f9a346f850a05cde08ebf003fbf86758834c89ed8bfe919fa7991f619676c754",
+      "line": 86,
+      "text": "StartedActivity? activity = MessageActivity.TryStart(\"Configure Topology\");"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+      "sha256": "168bc3f45a8e4f69fd89fe4749bdb5106e94a23c4a7b8ddf69e40af85a240174",
+      "line": 201,
+      "text": "StartedActivity? activity = MessageActivity.TryStartSend(_context, sendContext);"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+      "sha256": "168bc3f45a8e4f69fd89fe4749bdb5106e94a23c4a7b8ddf69e40af85a240174",
+      "line": 231,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+      "sha256": "168bc3f45a8e4f69fd89fe4749bdb5106e94a23c4a7b8ddf69e40af85a240174",
+      "line": 299,
+      "text": "StartedActivity? activity = MessageActivity.TryStartSend(_context, sendContext);"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+      "sha256": "168bc3f45a8e4f69fd89fe4749bdb5106e94a23c4a7b8ddf69e40af85a240174",
+      "line": 356,
+      "text": "int[] pendingIndices, StartedActivity? activity)"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+      "sha256": "168bc3f45a8e4f69fd89fe4749bdb5106e94a23c4a7b8ddf69e40af85a240174",
+      "line": 386,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+      "sha256": "168bc3f45a8e4f69fd89fe4749bdb5106e94a23c4a7b8ddf69e40af85a240174",
+      "line": 431,
+      "text": "static void TryLogSent<T>(EventHubSendContext<T> sendContext, StartedActivity? activity) where T : class"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/CompensateActivityHost.cs",
+      "sha256": "c8474b4bb4456ac7197826d7c93079b4c5290431de716282791ef41872309b90",
+      "line": 42,
+      "text": "StartedActivity? activity = CourierActivity.TryStartCompensation<TActivity, TLog>(context);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/CompensateActivityHost.cs",
+      "sha256": "c8474b4bb4456ac7197826d7c93079b4c5290431de716282791ef41872309b90",
+      "line": 59,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/CompensateActivityHost.cs",
+      "sha256": "c8474b4bb4456ac7197826d7c93079b4c5290431de716282791ef41872309b90",
+      "line": 70,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/CompensateActivityHost.cs",
+      "sha256": "c8474b4bb4456ac7197826d7c93079b4c5290431de716282791ef41872309b90",
+      "line": 88,
+      "text": "StartedActivity? activity,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/CompensateActivityHost.cs",
+      "sha256": "c8474b4bb4456ac7197826d7c93079b4c5290431de716282791ef41872309b90",
+      "line": 112,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/ExecuteActivityHost.cs",
+      "sha256": "31c81a902a744e42cb880897aba7a29d0ff3312467d43b15d3fc84c2996f5535",
+      "line": 45,
+      "text": "StartedActivity? activity = CourierActivity.TryStartExecution<TActivity, TArguments>(context);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/ExecuteActivityHost.cs",
+      "sha256": "31c81a902a744e42cb880897aba7a29d0ff3312467d43b15d3fc84c2996f5535",
+      "line": 62,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/ExecuteActivityHost.cs",
+      "sha256": "31c81a902a744e42cb880897aba7a29d0ff3312467d43b15d3fc84c2996f5535",
+      "line": 73,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/ExecuteActivityHost.cs",
+      "sha256": "31c81a902a744e42cb880897aba7a29d0ff3312467d43b15d3fc84c2996f5535",
+      "line": 91,
+      "text": "StartedActivity? activity,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Courier/ExecuteActivityHost.cs",
+      "sha256": "31c81a902a744e42cb880897aba7a29d0ff3312467d43b15d3fc84c2996f5535",
+      "line": 115,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Logging/CourierActivity.cs",
+      "sha256": "ae7f2c1462036bcf9ad4942bcc2e320c76b86b156f907b0712b22197ed5abf5c",
+      "line": 16,
+      "text": "public static StartedActivity? TryStartExecution<TActivity, TArguments>(ConsumeContext<IRoutingSlip> context)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Logging/CourierActivity.cs",
+      "sha256": "ae7f2c1462036bcf9ad4942bcc2e320c76b86b156f907b0712b22197ed5abf5c",
+      "line": 19,
+      "text": "MessageActivity.TryStartProcess(context.Advanced(), activity =>"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Logging/CourierActivity.cs",
+      "sha256": "ae7f2c1462036bcf9ad4942bcc2e320c76b86b156f907b0712b22197ed5abf5c",
+      "line": 31,
+      "text": "public static StartedActivity? TryStartCompensation<TActivity, TLog>(ConsumeContext<IRoutingSlip> context)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Courier/Logging/CourierActivity.cs",
+      "sha256": "ae7f2c1462036bcf9ad4942bcc2e320c76b86b156f907b0712b22197ed5abf5c",
+      "line": 34,
+      "text": "MessageActivity.TryStartProcess(context.Advanced(), activity =>"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/InitiatedByOrOrchestratesSagaMessageFilter.cs",
+      "sha256": "3f9ae2a7dcca59adac060e1421c5aa47ed42422f49057f75f8ea2776a300a4d1",
+      "line": 37,
+      "text": "StartedActivity? activity = SagaActivity.TryStart(context);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/InitiatedByOrOrchestratesSagaMessageFilter.cs",
+      "sha256": "3f9ae2a7dcca59adac060e1421c5aa47ed42422f49057f75f8ea2776a300a4d1",
+      "line": 57,
+      "text": "activity?.AddExceptionEvent(ex);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/InitiatedBySagaMessageFilter.cs",
+      "sha256": "5df0438ebc2cf9c37b79e8588517c31cf9af31289ba8e30aef0b079f997d7635",
+      "line": 37,
+      "text": "StartedActivity? activity = SagaActivity.TryStart(context);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/InitiatedBySagaMessageFilter.cs",
+      "sha256": "5df0438ebc2cf9c37b79e8588517c31cf9af31289ba8e30aef0b079f997d7635",
+      "line": 57,
+      "text": "activity?.AddExceptionEvent(ex);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/ObservesSagaMessageFilter.cs",
+      "sha256": "7d93c97006f0fadd8e5c389c695995341a7296f1be04e241bbc814d062c920ca",
+      "line": 39,
+      "text": "StartedActivity? activity = SagaActivity.TryStart(context);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/ObservesSagaMessageFilter.cs",
+      "sha256": "7d93c97006f0fadd8e5c389c695995341a7296f1be04e241bbc814d062c920ca",
+      "line": 59,
+      "text": "activity?.AddExceptionEvent(ex);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/OrchestratesSagaMessageFilter.cs",
+      "sha256": "d6f40348352aff215e72362b7fe0e48e74d224afe092978ca3b96362676120ce",
+      "line": 39,
+      "text": "StartedActivity? activity = SagaActivity.TryStart(context);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/OrchestratesSagaMessageFilter.cs",
+      "sha256": "d6f40348352aff215e72362b7fe0e48e74d224afe092978ca3b96362676120ce",
+      "line": 59,
+      "text": "activity?.AddExceptionEvent(ex);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/StateMachineSagaMessageFilter.cs",
+      "sha256": "15b2ae4f0d170c6e7f1c94b6fad6e807e1b06dc83054f460111031e5cd6804e2",
+      "line": 68,
+      "text": "StartedActivity? activity = SagaActivity.TryStartStateMachine(behaviorContext);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/StateMachineSagaMessageFilter.cs",
+      "sha256": "15b2ae4f0d170c6e7f1c94b6fad6e807e1b06dc83054f460111031e5cd6804e2",
+      "line": 82,
+      "text": "activity?.AddExceptionEvent(stateMachineException);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/StateMachineSagaMessageFilter.cs",
+      "sha256": "15b2ae4f0d170c6e7f1c94b6fad6e807e1b06dc83054f460111031e5cd6804e2",
+      "line": 93,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/StateMachineSagaMessageFilter.cs",
+      "sha256": "15b2ae4f0d170c6e7f1c94b6fad6e807e1b06dc83054f460111031e5cd6804e2",
+      "line": 107,
+      "text": "StartedActivity? activity)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/StateMachineSagaMessageFilter.cs",
+      "sha256": "15b2ae4f0d170c6e7f1c94b6fad6e807e1b06dc83054f460111031e5cd6804e2",
+      "line": 135,
+      "text": "StartedActivity? activity,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Middleware/StateMachineSagaMessageFilter.cs",
+      "sha256": "15b2ae4f0d170c6e7f1c94b6fad6e807e1b06dc83054f460111031e5cd6804e2",
+      "line": 180,
+      "text": "StartedActivity activity,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RequestStartedActivity.cs",
+      "sha256": "23303d43c763e1e15b54af66fb7fa63504977e89212685b384e62a70eedda6aa",
+      "line": 13,
+      "text": "public class RequestStartedActivity<TSaga, TMessage> :"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/Logging/SagaActivity.cs",
+      "sha256": "20e4beb82a2f9210600eb1da1ef1da04266bad43b567140a9f655a1a53011830",
+      "line": 14,
+      "text": "public static StartedActivity? TryStart<TSaga, TMessage>(SagaConsumeContext<TSaga, TMessage> context)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/Logging/SagaActivity.cs",
+      "sha256": "20e4beb82a2f9210600eb1da1ef1da04266bad43b567140a9f655a1a53011830",
+      "line": 17,
+      "text": "MessageActivity.TryStartProcess(context, activity =>"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/Logging/SagaActivity.cs",
+      "sha256": "20e4beb82a2f9210600eb1da1ef1da04266bad43b567140a9f655a1a53011830",
+      "line": 29,
+      "text": "public static StartedActivity? TryStartStateMachine<TInstance, TMessage>(IBehaviorContext<TInstance, TMessage> context)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/Logging/SagaActivity.cs",
+      "sha256": "20e4beb82a2f9210600eb1da1ef1da04266bad43b567140a9f655a1a53011830",
+      "line": 32,
+      "text": "MessageActivity.TryStartProcess(context, activity =>"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Sagas/Sagas/RequestEventExtensions.cs",
+      "sha256": "09b1a2199c904a4fa0aad703b7e861ecc0591114db50f533c4b21c17bd238466",
+      "line": 23,
+      "text": "return source.Add(new RequestStartedActivity<TInstance, TData>());"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/DependencyInjection/ViciOneServiceBusTestingServiceCollectionExtensions.cs",
+      "sha256": "4fcb66dd722ee22d11e9f91bcf1375f46b7321882bf8d13c54cc83815d4239a1",
+      "line": 166,
+      "text": "services.TryAddSingleton(_ => new TestActivityListener(textWriter, methodName, className, includeDetails));"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "sha256": "8647373561a105ff543247438d3239f869009b6e2efc829f533d45bdfb235291",
+      "line": 45,
+      "text": "using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "sha256": "8647373561a105ff543247438d3239f869009b6e2efc829f533d45bdfb235291",
+      "line": 93,
+      "text": "using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "sha256": "8647373561a105ff543247438d3239f869009b6e2efc829f533d45bdfb235291",
+      "line": 151,
+      "text": "using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "sha256": "8647373561a105ff543247438d3239f869009b6e2efc829f533d45bdfb235291",
+      "line": 214,
+      "text": "using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "sha256": "8647373561a105ff543247438d3239f869009b6e2efc829f533d45bdfb235291",
+      "line": 281,
+      "text": "using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs",
+      "sha256": "bc9bdd069b20785457700ff8cfde1ffb996f8b0f07c8522898201bbdb4e4ef7c",
+      "line": 20,
+      "text": "static readonly ActivitySource _source = new ActivitySource(\"ViciOne.ServiceBus.TestHarness\");"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs",
+      "sha256": "bc9bdd069b20785457700ff8cfde1ffb996f8b0f07c8522898201bbdb4e4ef7c",
+      "line": 46,
+      "text": "ActivitySource.AddActivityListener(_listener);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs",
+      "sha256": "bc9bdd069b20785457700ff8cfde1ffb996f8b0f07c8522898201bbdb4e4ef7c",
+      "line": 49,
+      "text": "_testActivity = ActivityObservation.TryStartSource(_source, methodName, ActivityKind.Internal);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs",
+      "sha256": "bc9bdd069b20785457700ff8cfde1ffb996f8b0f07c8522898201bbdb4e4ef7c",
+      "line": 58,
+      "text": "ActivityObservation.TryDispose(activity);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "6bc0539808fb6237280c50550743f04d5d0fc1d6cf454e7432e5c7befa6dac1b",
+      "line": 15,
+      "text": "static readonly ActivitySource _source = new ActivitySource(\"ViciOne.ServiceBus.Testing.Monitor\");"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "6bc0539808fb6237280c50550743f04d5d0fc1d6cf454e7432e5c7befa6dac1b",
+      "line": 55,
+      "text": "ActivitySource.AddActivityListener(_listener);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "6bc0539808fb6237280c50550743f04d5d0fc1d6cf454e7432e5c7befa6dac1b",
+      "line": 65,
+      "text": "if (!ActivityObservation.TryStart(_testActivity, out Exception? listenerFailure))"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "6bc0539808fb6237280c50550743f04d5d0fc1d6cf454e7432e5c7befa6dac1b",
+      "line": 134,
+      "text": "ActivityObservation.TryDispose(activity);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+      "sha256": "d941d74bc5ac55af42d7c2abde5537489cd2850dcc325ecadfd7e93ff80931b9",
+      "line": 27,
+      "text": "using var activity = new TrackedActivity(operationName ?? \"test act\", harness.TestTimeout, harness.TestInactivityTimeout,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "line": 18,
+      "text": "public static Activity? TryStartSource(ActivitySource source, string name, ActivityKind kind,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4",
+      "line": 43,
+      "text": "public static Activity? TryCreate(Lazy<ActivitySource> source, string name, ActivityKind kind,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 20,
+      "text": "public static StartedActivity? TryStartSend<T>(SendTransportContext transportContext, SendContext<T> context)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 28,
+      "text": "var activity = ActivityObservation.TryCreate(Cached.Source, transportContext.ActivityName, ActivityKind.Producer, parentActivityContext);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 46,
+      "text": "public static StartedActivity? TryStartOutboxSend<T>(SendContext<T> context)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 54,
+      "text": "var activity = ActivityObservation.TryCreate(Cached.Source, \"outbox send\", ActivityKind.Producer, parentActivityContext);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 69,
+      "text": "public static StartedActivity? TryStartOutboxDelivery(OutboxMessageContext context)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 73,
+      "text": "var activity = ActivityObservation.TryCreate(Cached.Source, \"outbox process\", ActivityKind.Client, parentActivityContext);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 78,
+      "text": "if (!ActivityObservation.TryStart(activity))"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 81,
+      "text": "return new StartedActivity(activity);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 90,
+      "text": "public static StartedActivity? TryStartReceive(string name, string inputAddress, string endpointName,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 101,
+      "text": "\"Link\" => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer, default,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 103,
+      "text": "\"New\" => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer, newRoot: true),"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 104,
+      "text": "_ => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer, parentActivityContext)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 106,
+      "text": "false => ActivityObservation.TryCreate(Cached.Source, name, ActivityKind.Consumer, parentActivityContext)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 129,
+      "text": "if (!ActivityObservation.TryStart(activity, newRoot))"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 132,
+      "text": "return new StartedActivity(activity, context.GetTimeProvider());"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 140,
+      "text": "public static StartedActivity? TryStartConsumer<TConsumer, T>(ConsumeContext<T> context)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 154,
+      "text": "public static StartedActivity? TryStartHandler<T>(ConsumeContext<T> context)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 167,
+      "text": "public static StartedActivity? TryStart(string operationName)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 169,
+      "text": "var activity = ActivityObservation.TryCreate(Cached.Source, operationName, ActivityKind.Client);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 173,
+      "text": "if (!ActivityObservation.TryStart(activity))"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 176,
+      "text": "return new StartedActivity(activity);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 219,
+      "text": "static StartedActivity? PopulateSendActivity(SendContext context, System.Diagnostics.Activity activity,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 225,
+      "text": "if (!ActivityObservation.TryStart(activity))"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 232,
+      "text": "return new StartedActivity(activity, context.GetTimeProvider());"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 323,
+      "text": "internal static StartedActivity? TryStartProcess(ConsumeContext context, Action<System.Diagnostics.Activity> configure)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 331,
+      "text": "var activity = ActivityObservation.TryCreate(Cached.Source, operationName, ActivityKind.Consumer);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 363,
+      "text": "if (!ActivityObservation.TryStart(activity))"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 366,
+      "text": "return new StartedActivity(activity, context.GetTimeProvider());"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 388,
+      "text": "internal static readonly Lazy<ActivitySource> Source = new Lazy<ActivitySource>(() =>"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+      "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4",
+      "line": 389,
+      "text": "new ActivitySource(ServiceBusTelemetry.ActivitySourceName, HostMetadataCache.Host.ViciOneServiceBusVersion));"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs",
+      "sha256": "4bcc34ae5f7127d24f423c8e7471b088a89a31ac135d2c35db9686136a69b44f",
+      "line": 10,
+      "text": "internal sealed class StartedActivity : IDisposable"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs",
+      "sha256": "4bcc34ae5f7127d24f423c8e7471b088a89a31ac135d2c35db9686136a69b44f",
+      "line": 15,
+      "text": "public StartedActivity(Activity activity, TimeProvider? timeProvider = null)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs",
+      "sha256": "4bcc34ae5f7127d24f423c8e7471b088a89a31ac135d2c35db9686136a69b44f",
+      "line": 40,
+      "text": "public void AddExceptionEvent(Exception exception)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs",
+      "sha256": "4bcc34ae5f7127d24f423c8e7471b088a89a31ac135d2c35db9686136a69b44f",
+      "line": 75,
+      "text": "ActivityObservation.TryDispose(Activity);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "line": 25,
+      "text": "private readonly ActivitySource? _activitySource;"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "line": 51,
+      "text": "ActivitySource? source = null;"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "line": 56,
+      "text": "source = new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "line": 91,
+      "text": "Activity? activity = ActivityObservation.TryStartSource(_activitySource,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+      "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d",
+      "line": 162,
+      "text": "ActivityObservation.TryDispose(activity, scope.Parent);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerTelemetry.cs",
+      "sha256": "a436cdfb37e80f981b60f9285bfaccf47020f56058ea9511207b2e1697e82c38",
+      "line": 26,
+      "text": "Activity? activity = ActivityObservation.TryStartSource(_instruments.Value.ActivitySource,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerTelemetry.cs",
+      "sha256": "a436cdfb37e80f981b60f9285bfaccf47020f56058ea9511207b2e1697e82c38",
+      "line": 37,
+      "text": "ActivityObservation.TryDispose(activity);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerTelemetry.cs",
+      "sha256": "a436cdfb37e80f981b60f9285bfaccf47020f56058ea9511207b2e1697e82c38",
+      "line": 51,
+      "text": "Activity? activity = ActivityObservation.TryStartSource(_instruments.Value.ActivitySource,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerTelemetry.cs",
+      "sha256": "a436cdfb37e80f981b60f9285bfaccf47020f56058ea9511207b2e1697e82c38",
+      "line": 61,
+      "text": "ActivityObservation.TryDispose(activity);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerTelemetry.cs",
+      "sha256": "a436cdfb37e80f981b60f9285bfaccf47020f56058ea9511207b2e1697e82c38",
+      "line": 79,
+      "text": "Activity? activity = ActivityObservation.TryStartSource(_instruments.Value.ActivitySource,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerTelemetry.cs",
+      "sha256": "a436cdfb37e80f981b60f9285bfaccf47020f56058ea9511207b2e1697e82c38",
+      "line": 89,
+      "text": "ActivityObservation.TryDispose(activity);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerTelemetry.cs",
+      "sha256": "a436cdfb37e80f981b60f9285bfaccf47020f56058ea9511207b2e1697e82c38",
+      "line": 106,
+      "text": "ActivitySource = new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerTelemetry.cs",
+      "sha256": "a436cdfb37e80f981b60f9285bfaccf47020f56058ea9511207b2e1697e82c38",
+      "line": 112,
+      "text": "public ActivitySource ActivitySource { get; }"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs",
+      "sha256": "4f60e9e0f8e62b031ba6453b4ab45f3bc3b388dac9f76fbf67cdae9ebe09521d",
+      "line": 46,
+      "text": "StartedActivity? activity = MessageActivity.TryStartConsumer<TConsumer, TMessage>(context);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs",
+      "sha256": "4f60e9e0f8e62b031ba6453b4ab45f3bc3b388dac9f76fbf67cdae9ebe09521d",
+      "line": 60,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/ConsumerMessageFilter.cs",
+      "sha256": "4f60e9e0f8e62b031ba6453b4ab45f3bc3b388dac9f76fbf67cdae9ebe09521d",
+      "line": 70,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/HandlerMessageFilter.cs",
+      "sha256": "b322fbf344b45bdb50ad02bf45749798100dc8ad8cf486da1686682d80623248",
+      "line": 40,
+      "text": "StartedActivity? activity = MessageActivity.TryStartHandler(context);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/HandlerMessageFilter.cs",
+      "sha256": "b322fbf344b45bdb50ad02bf45749798100dc8ad8cf486da1686682d80623248",
+      "line": 56,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/HandlerMessageFilter.cs",
+      "sha256": "b322fbf344b45bdb50ad02bf45749798100dc8ad8cf486da1686682d80623248",
+      "line": 66,
+      "text": "activity?.AddExceptionEvent(ex);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/InstanceMessageFilter.cs",
+      "sha256": "8541189d535bcc65f60385602d2ab032ba56186000e03a7397105bdba35b8adf",
+      "line": 46,
+      "text": "StartedActivity? activity = MessageActivity.TryStartConsumer<TConsumer, TMessage>(context);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/InstanceMessageFilter.cs",
+      "sha256": "8541189d535bcc65f60385602d2ab032ba56186000e03a7397105bdba35b8adf",
+      "line": 60,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/InstanceMessageFilter.cs",
+      "sha256": "8541189d535bcc65f60385602d2ab032ba56186000e03a7397105bdba35b8adf",
+      "line": 70,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/Outbox/OutboxSendEndpoint.cs",
+      "sha256": "cbeba9bb7829fdab807e3dd0f45c5a406ddc7fbb6f12213d7fcf3dda7bec7366",
+      "line": 254,
+      "text": "StartedActivity? activity = MessageActivity.TryStartOutboxSend(context);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/Outbox/OutboxSendEndpoint.cs",
+      "sha256": "cbeba9bb7829fdab807e3dd0f45c5a406ddc7fbb6f12213d7fcf3dda7bec7366",
+      "line": 263,
+      "text": "activity?.AddExceptionEvent(ex);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "sha256": "e4b191aef095e8f9480f1b6b7cfbbfb069196909628130b96a73260a593cea72",
+      "line": 161,
+      "text": "StartedActivity? activity = MessageActivity.TryStartOutboxDelivery(message);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Middleware/OutboxMessagePipe.cs",
+      "sha256": "e4b191aef095e8f9480f1b6b7cfbbfb069196909628130b96a73260a593cea72",
+      "line": 169,
+      "text": "activity?.AddExceptionEvent(exception);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/ServiceBusTelemetry.cs",
+      "sha256": "226db4576e261af6e6c8cbb7e3b54dddc317af66cb04659b1bf010549a26b2f6",
+      "line": 5,
+      "text": "/// <c>ActivitySource</c> and <c>Meter</c> APIs."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/ServiceBusTelemetry.cs",
+      "sha256": "226db4576e261af6e6c8cbb7e3b54dddc317af66cb04659b1bf010549a26b2f6",
+      "line": 11,
+      "text": "/// <summary>The <see cref=\"System.Diagnostics.ActivitySource\"/> name used for distributed traces.</summary>"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/ServiceBusTelemetry.cs",
+      "sha256": "226db4576e261af6e6c8cbb7e3b54dddc317af66cb04659b1bf010549a26b2f6",
+      "line": 12,
+      "text": "public const string ActivitySourceName = Name;"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/SafeActivityScope.cs",
+      "sha256": "542b4841562b4445fc89ad0d06ae121633b51375d9ab241378ec0aece767b2eb",
+      "line": 63,
+      "text": "ActivityObservation.TryDispose(activity);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "line": 21,
+      "text": "readonly ActivitySource _activitySource;"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "line": 57,
+      "text": "_activitySource = new ActivitySource(ServiceBusTelemetry.ActivitySourceName, version);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "line": 70,
+      "text": "activity = ActivityObservation.TryStartSource("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "line": 89,
+      "text": "ActivityObservation.TryDispose(activity);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "line": 103,
+      "text": "activity = ActivityObservation.TryStartSource("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "line": 122,
+      "text": "ActivityObservation.TryDispose(activity);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "line": 156,
+      "text": "public void RecordDurableDelivery("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "line": 184,
+      "text": "public void RecordDurableConsumerCompletion(bool retired, double elapsedSeconds)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+      "sha256": "94c9fb781e42f0e164f62730684a18f2ec7df7d35cf7067171a086182dc56bed",
+      "line": 43,
+      "text": "_instrumentation.RecordDurableConsumerCompletion("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "sha256": "158dceacfcfe2a05effc59b02c79efa67e6664a02fd80bad29ecb00715d96ba8",
+      "line": 21,
+      "text": "_instrumentation.RecordDurableDelivery("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "sha256": "158dceacfcfe2a05effc59b02c79efa67e6664a02fd80bad29ecb00715d96ba8",
+      "line": 39,
+      "text": "_instrumentation.RecordDurableDelivery("
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/ReceivePipeDispatcher.cs",
+      "sha256": "3411fe95f72972528c4dbe3e93b274dd485e62a2494b3d8206fe1a334db592d1",
+      "line": 76,
+      "text": "StartedActivity? activity = MessageActivity.TryStartReceive(_activityName, _inputAddress, _endpointName, context);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/ReceivePipeDispatcher.cs",
+      "sha256": "3411fe95f72972528c4dbe3e93b274dd485e62a2494b3d8206fe1a334db592d1",
+      "line": 129,
+      "text": "StartedActivity? activity,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/ReceivePipeDispatcher.cs",
+      "sha256": "3411fe95f72972528c4dbe3e93b274dd485e62a2494b3d8206fe1a334db592d1",
+      "line": 174,
+      "text": "static void RecordFailure(StartedActivity? activity, MetricOperation? instrument, Exception failure)"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Receiving/ReceivePipeDispatcher.cs",
+      "sha256": "3411fe95f72972528c4dbe3e93b274dd485e62a2494b3d8206fe1a334db592d1",
+      "line": 176,
+      "text": "activity?.AddExceptionEvent(failure);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Sending/SendTransport.cs",
+      "sha256": "9c3ae2d9e4976a94b3f4c4ab5ba9132d53438197568ebba8fed0f8e34c0efb19",
+      "line": 149,
+      "text": "StartedActivity? activity = MessageActivity.TryStartSend(_sendTransportContext, sendContext);"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Sending/SendTransport.cs",
+      "sha256": "9c3ae2d9e4976a94b3f4c4ab5ba9132d53438197568ebba8fed0f8e34c0efb19",
+      "line": 213,
+      "text": "StartedActivity? activity,"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Transports/Sending/SendTransport.cs",
+      "sha256": "9c3ae2d9e4976a94b3f4c4ab5ba9132d53438197568ebba8fed0f8e34c0efb19",
+      "line": 237,
+      "text": "activity?.AddExceptionEvent(sendFailure);"
+    }
+  ],
+  "lifetime_and_caller_matrix": [
+    {
+      "area": "Shared optional Activity boundary",
+      "callers": "MessageActivity, typed instrumentation, journal/circuit, testing listener/monitor, downstream StartedActivity callers",
+      "lifetime": "Each created activity must be started or abandoned/disposed; Stop/SafeScope.Dispose are once-only. Record previous ambient at successful start; disposal uses captured prior activity when current is owned activity, leaves unrelated current unchanged.",
+      "risks": "All current assignments in creation finally, failed start/catch and disposal finally remain unguarded. CurrentChanged may throw after AsyncLocal write. StartedActivity.AddExceptionEvent prepares GetUtcNow/tags/event before observation guards.",
+      "design": "Shared bounded TrySetCurrent helper with failure reporting where mandatory. Guard entire diagnostic event preparation including injected GetUtcNow; preserve validation arguments outside guard. Never let cleanup replace primary operation failure.",
+      "owner_bindings": [
+        {
+          "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+          "sha256": "b9d459986921411cfec1918bed057497eee26a3aab9eec9e641241203c2e4cd4"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs",
+          "sha256": "4bcc34ae5f7127d24f423c8e7471b088a89a31ac135d2c35db9686136a69b44f"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/SafeActivityScope.cs",
+          "sha256": "542b4841562b4445fc89ad0d06ae121633b51375d9ab241378ec0aece767b2eb"
+        }
+      ]
+    },
+    {
+      "area": "Core process source / trace propagation",
+      "callers": "SendTransport, ReceivePipeDispatcher, Consumer/Instance/Handler filters, OutboxSendEndpoint/OutboxMessagePipe/EFTransactionalOutboxSource, Courier/Saga wrappers, EventHubProducer, ConfigureServiceBusTopologyFilter, DeserializeFilter",
+      "lifetime": "Process static Lazy<ActivitySource> with per-operation optional StartedActivity. Caller awaits actual business operation then stops activity in finally. Trace parent remote/link/new behavior and baggage/header propagation remain defined.",
+      "risks": "Lazy factory caches exception but is called inside TryCreate; final ambient restore may still escape. Source name/version must remain unchanged. Preparing context metadata/configure/propagation is currently beyond core observation catch.",
+      "design": "Nullable/inert cached source factory without static type poisoning; do not add exporters/config endpoints. Preserve successful source sampling, recorded flags, traceparent/baggage/newRoot semantics; independently qualify any additional context/propagation changes.",
+      "owner_bindings": [
+        {
+          "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/MessageActivity.cs",
+          "sha256": "c0317171fce2e8e8165eab75421b6adbb37d9b0c6a02f07e04a2173e06bd9ac4"
+        }
+      ]
+    },
+    {
+      "area": "Typed bus metrics+spans",
+      "callers": "DurableSendPipeline, reliable delivery/consumer completion, payload admission, reliable operator operations",
+      "lifetime": "Per typed-bus DI singleton owns ActivitySource; host IMeterFactory owns Meter. Lazy metric initialization once; counters/gauges atomics; Dispose idempotent source only.",
+      "risks": "ActivitySource constructor outside guard can fail DI activation via hostile ShouldListenTo. Constructor failure must not prevent independent metric creation. Existing Record methods catch too late for caller-evaluated elapsed duration.",
+      "design": "Guard source creation only and permit null source with continuing host Meter; existing no-observability-fallback and bounded metric dimensions stay. Own/dispose any successfully returned source; no cached half-initialized factory result.",
+      "owner_bindings": [
+        {
+          "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+          "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/SafeActivityScope.cs",
+          "sha256": "542b4841562b4445fc89ad0d06ae121633b51375d9ab241378ec0aece767b2eb"
+        }
+      ]
+    },
+    {
+      "area": "Batch ambient handoff",
+      "callers": "BatchCollector passes caller current activity into BatchConsumer",
+      "lifetime": "Batch retains selected parent until actual queued DeliverAsync; consumer pipe owns execution task and completion promise; async ExecutionContext flow still applies.",
+      "risks": "BatchConsumer.DeliverAsync Activity.Current assignment executes inside business catch, so hostile CurrentChanged incorrectly faults batch before consumer pipe.",
+      "design": "Apply optional ambient helper locally without catching consumer work. Keep cancellation token identity, retry payload propagation, completion task and cleanup semantics.",
+      "owner_bindings": [
+        {
+          "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchCollector.cs",
+          "sha256": "2df5848d1d97dc82a849390198d3f03ee0ffe8c41bfed9f48de2ae2022ccc525"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+          "sha256": "4d008ca99020815d1453376e277cc06ea57ca2db75d0a7ffb6fea279a4ab64c4"
+        }
+      ]
+    },
+    {
+      "area": "Optional test timeline",
+      "callers": "AddViciOneServiceBusTestTelemetry registers singleton; ContainerTestHarness ctor eagerly resolves optional listener",
+      "lifetime": "Static TestHarness source; instance listener registration and optional root owned by DI; DisposeAsync once stops root, removes listener, writes chart.",
+      "risks": "Static new ActivitySource type initializer can poison future activation. AddActivityListener can fail after partially registering; constructor lacks unwind. Root cleanup/output exception may suppress listener removal or change teardown result.",
+      "design": "Optional activation/factory/registration failure must make timeline inert and clean every returned owned registration/activity; preserve public argument validation. Decide explicit TextWriter output-failure policy rather than silently treating it as product business.",
+      "owner_bindings": [
+        {
+          "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs",
+          "sha256": "bc9bdd069b20785457700ff8cfde1ffb996f8b0f07c8522898201bbdb4e4ef7c"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Testing/DependencyInjection/ViciOneServiceBusTestingServiceCollectionExtensions.cs",
+          "sha256": "4fcb66dd722ee22d11e9f91bcf1375f46b7321882bf8d13c54cc83815d4239a1"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Testing/DependencyInjection/Internal/ContainerTestHarness.cs",
+          "sha256": "c45b3d2faa01d87e4f4e34e40b745a3f111256ee6d2b4db0e3e935e68492bcfc"
+        }
+      ]
+    },
+    {
+      "area": "Required causal test monitor",
+      "callers": "ActAsync and 5 ExecuteAndWaitForIdleAsync cores create monitor before invoking action; scope captures monitor.TraceId",
+      "lifetime": "Required root trace + listener + RollingTimer; action owns actual work; monitor idle clock/deadline bounds owned wait; cleanup disconnects listener/disposes timer even on start failure.",
+      "risks": "Static new ActivitySource type initializer poisoned by ShouldListenTo. Any catch returning inert success would permit false assertion/capture success. Required startup root listener failure already rethrows actual exception with ExceptionDispatchInfo; unsafe ambient finally could replace it.",
+      "design": "Keep factory/create/register/start original failure identity and propagate to caller before action. Expose failure through shared safe helpers; cleanup preserves original primary while attempting all owned releases and safe ambient restoration. Monitor TimeProvider/idle timers are required semantics and must not be replaced by generic optional elapsed helper.",
+      "owner_bindings": [
+        {
+          "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+          "sha256": "6bc0539808fb6237280c50550743f04d5d0fc1d6cf454e7432e5c7befa6dac1b"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+          "sha256": "8647373561a105ff543247438d3239f869009b6e2efc829f533d45bdfb235291"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+          "sha256": "d941d74bc5ac55af42d7c2abde5537489cd2850dcc325ecadfd7e93ff80931b9"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Testing/Internal/Observations/ActiveTestObservationScope.cs",
+          "sha256": "676b3732bd05212d1196a7fbd59fa6a3d8268df88d9a2e30539197e3c27a9ec3"
+        }
+      ]
+    },
+    {
+      "area": "Durable optional duration vs authoritative clocks",
+      "callers": "ReliableMessagingDeliveryService attempts/dispatch/cancel/state persistence; process-local completion token handed to in-memory transport and awaited after actual consumer completion",
+      "lifetime": "Per-attempt SafeActivityScope; duration start at delivery and completion capability; metric only after authoritative generation-fenced store transition.",
+      "risks": "GetTimestamp before dispatch, duration GetElapsedTime in RecordOutcome/RecordStatePersistenceFailure and after CompleteConsumerDeliveryAsync escape metric catches. Can suppress cancellation, obscure persistence failure or throw after successful retirement.",
+      "design": "Explicit optional timestamp/duration capture validity, guard only diagnostic reads/preparation; allow skipped duration or documented zero convention, preserve outcome counts. Keep CompleteConsumerDeliveryAsync GetUtcNow, lease/retry/schedule timestamps, all storage/dispatch/actual cancellation exceptions authoritative.",
+      "owner_bindings": [
+        {
+          "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+          "sha256": "551075235d378635bc7a9ffc7729cc9b348cd1b7b1b53fd662bf9bd7452ccb2f"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+          "sha256": "158dceacfcfe2a05effc59b02c79efa67e6664a02fd80bad29ecb00715d96ba8"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+          "sha256": "94c9fb781e42f0e164f62730684a18f2ec7df7d35cf7067171a086182dc56bed"
+        }
+      ]
+    },
+    {
+      "area": "EF receive outbox duration vs transaction",
+      "callers": "EF receive pipeline transaction Begin/SaveChanges/Commit failure notifications",
+      "lifetime": "Per transaction optional duration capture; actual DbContext/transaction scope, execution strategy retries, rollback and delivery/caller token normalization are authoritative.",
+      "risks": "GetTimestamp before BeginTransaction and GetElapsedTime evaluated in SaveChanges/Commit catch may block work or replace original error. NotifyFaultedAsync also creates/awaits a message Fault; it is not optional telemetry.",
+      "design": "Guard duration preparation only; keep NotifyFaultedAsync invocation/tokens/fault and observer contracts; do not wrap whole transaction or observer operation in an optional catch. Preserve original exception handling and retry behavior; avoid duplicate fault notifications.",
+      "owner_bindings": [
+        {
+          "path": "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs",
+          "sha256": "152d185032cee3ade09fdb1d83af32a8d14e778b68968224fd0d5579725b6079"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Context/Consumption/BaseConsumeContext.cs",
+          "sha256": "f196ec3e96bd9bf4551f2aa15d599b5c9e1b3bcb4bc8e15c12d16e46c6d74951"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Middleware/ConsumerIngressFailure.cs",
+          "sha256": "70f6a75c0bfa33b5714faef3df94b0fd78c986b30e8512113280b4d8818799e7"
+        }
+      ]
+    },
+    {
+      "area": "Journal and circuit optional instrumentation",
+      "callers": "MessageJournalWriter and message observers; CircuitBreaker state transition/probe/rejection paths",
+      "lifetime": "Journal DI source+host meter or explicit process source/meter fallback; circuit process Lazy<Instrumentation> owns source/meter; per-event activity disposed.",
+      "risks": "Journal constructor already catches source creation and releases returned objects; existing writer elapsed helper returns zero on clock failure. Completion finally still relies on unsafe shared ambient restore. Circuit lazy constructor may cache exception and leak successfully created Meter if ActivitySource ctor fails; existing outer observation catch protects business.",
+      "design": "Reuse shared protected ambient/source helpers only where it improves ownership. Preserve no DI→process fallback; retain circuit/Journal outcomes and meter identity. On partial constructor failure release only returned resources; process ownership never claimed host Meter disposal.",
+      "owner_bindings": [
+        {
+          "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalTelemetry.cs",
+          "sha256": "4051fd83c635d08f273fea0993e25742b88c971fe48594c4a9b181e675d87e3d"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/MessageJournal/MessageJournalWriter.cs",
+          "sha256": "504ea7b710126ceedd8d9669952e8ba29dd3354b16f82efadc54be6b0c1c1c26"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Middleware/CircuitBreaker/CircuitBreakerTelemetry.cs",
+          "sha256": "a436cdfb37e80f981b60f9285bfaccf47020f56058ea9511207b2e1697e82c38"
+        }
+      ]
+    },
+    {
+      "area": "Provider activity tags / infrastructure spans",
+      "callers": "Topology one-time setup; provider transport send and Event Hubs batch route tagging",
+      "lifetime": "Topology StartedActivity held across all admitted create tasks. EventHubs producer wraps batch/provider send; batch tags existing ambient activity, owns EventDataBatch separately.",
+      "risks": "Topology Stop and EventHub producer cleanup rely on shared restore; tagging happens ahead of provider send/batch try. Route validation/materialization/confirmation/cleanup are business and must remain visible.",
+      "design": "Keep activity tags optional with local activity capture; only tag mutation guard. Await all started topology tasks; actual broker failure/cancellation, exact EventDataBatch confirmations and dispose diagnostics retain existing behavior.",
+      "owner_bindings": [
+        {
+          "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Middleware/ConfigureServiceBusTopologyFilter.cs",
+          "sha256": "f9a346f850a05cde08ebf003fbf86758834c89ed8bfe919fa7991f619676c754"
+        },
+        {
+          "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusSendTransportContext.cs",
+          "sha256": "b38bafcc6bf219a745f69e70ca967a0a079bb52e41e67cccf342f6cbc2fcd55c"
+        },
+        {
+          "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducer.cs",
+          "sha256": "168bc3f45a8e4f69fd89fe4749bdb5106e94a23c4a7b8ddf69e40af85a240174"
+        },
+        {
+          "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducerBatchSender.cs",
+          "sha256": "35a61c8a3e11a3a9f3c8d25ea9d8e8dc33ec70847e36abb2665382af5f80f36c"
+        },
+        {
+          "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducerSendTransportContext.cs",
+          "sha256": "e2fad19e46024568be6f1eaacf45a47a563962147020b8c855f08b6692e1092a"
+        },
+        {
+          "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/QueueSendTransportContext.cs",
+          "sha256": "c22e67354bb1e7cf80af519084e25c427879f218e56647ce757e5d93edc13feb"
+        },
+        {
+          "path": "src/Transports/ViciOne.ServiceBus.SqlTransport/TopicSendTransportContext.cs",
+          "sha256": "3c4b06e31cc9dc56467277bcb64e0bfa7f405bc20fbea71fdb4eed622eac7e3e"
+        },
+        {
+          "path": "src/Transports/ViciOne.ServiceBus.RabbitMq/RabbitMqTransport/RabbitMqSendTransportContext.cs",
+          "sha256": "361d20a085a76bc38fa9ca850ba76b09a040fef498291890ba9edc85c95566f4"
+        }
+      ]
+    },
+    {
+      "area": "Courier/Saga shared consumer spans",
+      "callers": "Execute/CompensateActivityHost; InitiatedBy/InitiatedByOrOrchestrates/Orchestrates/Observes/StateMachineSagaMessageFilter",
+      "lifetime": "Wrappers share Core MessageActivity/StartedActivity, tag bounded processor/contract/correlation identities; finally Stop after actual handling.",
+      "risks": "Shared exception event Utc preparation and ambient cleanup may replace execution/persistence exception. NotifyConsumed/NotifyFaulted durations and operations are consumer contracts, not blanket optional telemetry.",
+      "design": "Shared Core helper improvements cover many callers; independently bind caller contracts and retain actual execution/compensation/saga faults and cancellation identities.",
+      "owner_bindings": [
+        {
+          "path": "src/ViciOne.ServiceBus.Courier/Logging/CourierActivity.cs",
+          "sha256": "ae7f2c1462036bcf9ad4942bcc2e320c76b86b156f907b0712b22197ed5abf5c"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus.Sagas/Sagas/Logging/SagaActivity.cs",
+          "sha256": "20e4beb82a2f9210600eb1da1ef1da04266bad43b567140a9f655a1a53011830"
+        }
+      ]
+    },
+    {
+      "area": "Already guarded logging metrics",
+      "callers": "Send/receive/consumer/saga/courier/outbox metric scopes",
+      "lifetime": "TryStart catches start metadata/timestamp; MetricOperation completes once; Observe guards individual emissions including GetElapsedTime evaluation",
+      "risks": "No equivalent escaped optional duration found here; avoid expanding generic business clock catches based solely on clock occurrence.",
+      "design": "Reuse current stable contract; counter decrements/completion idempotence and low-cardinality metric tags remain.",
+      "owner_bindings": [
+        {
+          "path": "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs",
+          "sha256": "2422998fb8458a9f1916d759b99d523a7d13d9e1b51f9fc5d1d43108d31e5614"
+        },
+        {
+          "path": "src/ViciOne.ServiceBus/Logging/Monitoring/MetricOperation.cs",
+          "sha256": "f813f52ec2d9db43471027d4de638b14e52762c9c36e5985d7ccb0ad7794560f"
+        }
+      ]
+    }
+  ],
+  "priority_work_packages": [
+    {
+      "id": "P05-A",
+      "scope": "Shared ActivityObservation guarded ambient assignment/restore and StartedActivity entire exception event preparation; BatchConsumer handoff; typed ActivitySource ctor safety",
+      "requirement": "No telemetry listener or optional TimeProvider diagnostic throw may change messaging outcome or primary failure. Optional activity unavailable is allowed; metrics may continue."
+    },
+    {
+      "id": "P05-B",
+      "scope": "Testing optional timeline source/registration unwinding vs required TrackedActivity source/create/start original exception and complete cleanup",
+      "requirement": "Required monitor initialization failure propagates, action does not run; no null/rootless fake success. Static source initialization must not permanently poison CLR type."
+    },
+    {
+      "id": "P05-C",
+      "scope": "Durable delivery/consumer completion and EF duration preparation narrow helper",
+      "requirement": "Only diagnostic timestamp/duration reads guarded; all business clock reads, persistence errors and cancellation/fault-generation contracts unchanged."
+    },
+    {
+      "id": "P05-D",
+      "scope": "Dependent topology/EventHubs/Courier/Saga/Journal/Circuit lifetime/ambient proof and existing healthy behaviors",
+      "requirement": "Hash-bind actual owners and callers; no provider/hardware operations needed for bounded local source proof; native fresh consumer assertions subsequently needed."
+    }
+  ],
+  "adversarial_design_risks": [
+    "Guarded Activity.Current write must never recursively retry under arbitrary CurrentChanged reentrancy. Ordinary throw occurs after AsyncLocal write; handler can reenter and change ambient again. No universal restoration guarantee or global listener/event suppression.",
+    "ActivitySource constructor adds itself to runtime active source list before invoking ShouldListenTo. If constructor throws, public call returns no disposable handle, so a wrapper cannot prove removal of that hidden half-constructed source. Bound creation attempts; do not promise zero runtime-global allocation/leak or infinite healthy retry.",
+    "Do not cache constructor exceptions in static readonly initialization. Optional Lazy factory may return null without type poisoning; required monitor needs original failure reporting and an explicit bounded recovery/lifetime policy.",
+    "Typed ActivitySource null must not disable independent host-owned metrics. No IMeterFactory instance ownership transfer or disposal; returned source is instance-owned.",
+    "A safe helper receiving a prepared duration cannot catch caller argument evaluation. Guard TimeProvider.GetTimestamp/GetElapsedTime/GetUtcNow only at identified optional preparation call sites.",
+    "Do not invent valid timestamps/durations after failed reads. Explicit unavailable/nullable start and skip duration or established documented zero convention; preserve outcome counters when duration cannot be observed.",
+    "Monitor idle deadlines and timer callbacks are correctness, not optional diagnostic timing. Do not silently complete a failed monitor. Preserve actual task cancellation and exception identity; callback failure must be delivered through owned monitor completion if modified.",
+    "Dispose cleanup must attempt every owned resource even when another fails, and secondary ambient/logging failures may not replace required primary startup/operation failure. Any recovery scope narrower than framework-global behavior must be stated.",
+    "Trace header propagation/context metadata and NotifyFaultedAsync may execute declared provider/caller/fault behavior. Do not swallow arbitrary body/context/business methods through a blanket telemetry catch.",
+    "Circuit/Journal constructor partial cleanup must dispose successfully returned process-owned objects while respecting host Meter ownership; preserve no DI-to-process fallback."
+  ],
+  "skill": {
+    "name": "dotnet-aspnetcore:configuring-opentelemetry-dotnet",
+    "path": "/Users/edgar.liebold/.codex/plugins/cache/dotnet-agent-skills/dotnet-aspnetcore/0.1.0/skills/configuring-opentelemetry-dotnet/SKILL.md",
+    "sha256": "51e763e7b387a1ded4234ebe28675ba803061a38fded398b73b17a6dfb55fac0",
+    "applied": "Library matching ActivitySource identity, parent context, host IMeterFactory/source lifetime and cardinality. Host/exporter installation/configuration steps do not apply to this library research package."
+  },
+  "primary_runtime_sources": [
+    {
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/v10.0.0/src/libraries/System.Diagnostics.DiagnosticSource/src/System/Diagnostics/Activity.cs",
+      "lines": "1159-1171",
+      "supports": "SetCurrent writes AsyncLocal then invokes CurrentChanged without event exception guard. Versioned runtime source reference; installed exact runtime binding requires later native test evidence."
+    },
+    {
+      "url": "https://raw.githubusercontent.com/dotnet/runtime/v10.0.0/src/libraries/System.Diagnostics.DiagnosticSource/src/System/Diagnostics/ActivitySource.cs",
+      "lines": "38-65",
+      "supports": "Constructor registers source before invoking listeners ShouldListenTo without catch; registered-but-unreturned object public cleanup limitation."
+    }
+  ],
+  "validation_recommendations": [
+    "Before source edits Root binds current owners/caller contracts and new files to authorization; no new canonical test edits before appropriate complete owner reading.",
+    "Use isolated unchanged native consumers, fresh packages/locks/private caches/PE-PDB bindings. Test hostile CurrentChanged at start/failed-start/dispose/batch handoff, source ShouldListenTo constructor/registration separately, and exact required monitor original exception/owned cleanup.",
+    "Optional time fault checks must show real dispatch/retirement/transaction original success/failure unchanged, while required Utc provider/storage/consumer faults still propagate. Existing healthy parent/link/newRoot and exact lifecycle outputs remain controls.",
+    "Mutation single cause and finite assertion proof needed for each newly protected boundary. Provider startup/cloud/device claims remain excluded."
+  ],
+  "limitations": [
+    "No .NET/test/provider execution or product/test/tool/governance edits. Only this reviewer report written.",
+    "This is preparation/research inventory, not implementation, tests grade, canonical coverage, overall API acceptance or release evidence."
+  ]
+}

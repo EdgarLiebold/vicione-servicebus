@@ -1,0 +1,2311 @@
+{
+  "status": "QUALIFIED_C3_FIXED63_NAMEDPASS_WHOLECORE8054AGGREGATE_SOURCE6_PE_PDB_REQ4697__COMPILED_MUTANTS_POST_PENDING",
+  "reviewer": "/root/telemetry_adversarial",
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/RESULT.json": "c1af43417ef21c782908a7b9b193b7303901069ebf001ea01d3a5f0ea8121090",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C3_FREEZE_R1.json": "a4e3c749f56cc901e53e4a3a3d230ae5b6686c03673d4dc21496b57b64625227",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C3_PATCH_R1.diff": "8baeb28f9d166011c9590801a63fa2ee5476b6fd59580fb7f702c0ce1bb90bdc",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE806_STAGE_C3_READ_CLOSURE_R2.json": "956f7ed527a243575b13c78a0dd7133ee7b451dcf6b054083d65cb6c86a7efa5",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c3-source4-fixed6-adversarial-r1.json": "1c12d7e55c56fad9bf1ac86116ee1d92878bb6055583ecc2d21b336ac1b4a84e",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c3-original-native-artifact-review-r1.json": "993790935874261df620247a20d471a1e4b98c4cfc8af9c485be848b896778db",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c3-canonical63-tests-root806-preexecution-adversarial-r3.json": "8094e802de3dcd36b0f5ad834fcff77665d557aa57532107ae58daf5fdd166e8"
+  },
+  "checks": {
+    "fixed_freeze_archive_source6_snapshot_O_C3_bound": true,
+    "all4_fixedproducts_436test_PDB_freeze_exact": true,
+    "all26_Root14extra12store_actualPDB_currenthashes": true,
+    "all12PE_PDB_ids": true,
+    "all3799_actualC3_generated_source_documentchecksums": true,
+    "all6raw16runtimehashes": true,
+    "all12_firstparty_deps_archive_actualoutput_projectbuild_equal": true,
+    "Req4697_entire_compiled_resource_exact": true,
+    "exact63_nativeIDs_individualPASS_match_receipt": true,
+    "focused63summary0fail0skip": true,
+    "wholeCore8054aggregate_allPASS0skip": true,
+    "same_nativeDLL_focused_and_whole_actualoutput": true,
+    "Root_strict87211_focused43720_whole63742_all0_strict0warnings_errors": true,
+    "3_unique_closed_nonempty_complete_binlogs": true,
+    "Root806_shared84_current_exact": true,
+    "whole_source4_minimal_delta_review_no_findings_all_checks": true,
+    "fixed_Core_differs_original": true
+  },
+  "source6_hashchecks": {
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs": true,
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs": true,
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs": true,
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": true
+  },
+  "Root806_hashchecks": {
+    "tests/ViciOne.ServiceBus.Tests/ApiSurfaceGlobalUsings.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Architecture/OutboundNetworkBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Architecture/RemovalBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheConcurrencyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpirationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpiredDuplicateOwnershipTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheGenerationAndLockingTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheInitializationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverAndDisposalTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Clients/ClientFactoryExtensionsBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Clients/ClientFactoryRequestContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Clients/ContainerRequestClientRegistrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Clients/ReceiveEndpointClientFactoryContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Clients/RequestClientBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Clients/RequestClientLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Clients/RequestClientMetadataTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Clients/RequestExtensionsBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Clients/RequestExtensionsContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Clients/ResponseAcceptanceTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Clients/ResponseMatchingTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Components/RequestStateMachineDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/BindPipeSpecificationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/CircuitBreakerOptionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ActivityObserverRegistrationCleanupTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/BuiltPipelineConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/CompositeFilterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConfigurationObserverTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConfigurationValidationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConsumerMessageConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ConsumerSpecificationObserverAdmissionCleanupTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/MessageLimitsConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/PublishPipeConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/ReceiverConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/Retry/ConsumeContextRetryPipeSpecificationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/Retry/RetryPipeSpecificationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/Configuration/SendPipeConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/AsyncBusHandleLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/BusCompositionStartupValidationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/FeatureOptionsStartupValidationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/HostedServiceLifecycleOwnershipTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/RegistrationConfiguratorExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/ViciOneServiceBusHostOptionsValidationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjectionSagaConfigurationDiagnosticTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjectionSagaReceiveEndpointExtensionsDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjectionSagaRegistrationExtensionsDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjectionSagaStateMachineRegistrationExtensionsDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/EndpointNaming/EndpointNameFormatterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/EndpointNaming/FormatterJoinSeparatorNullabilityOriginalTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/InMemorySagaRepositoryServiceCollectionExtensionsDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/KillSwitchOptionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/MessageJournalConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/MessageRetryConfigurationExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/NonContainerOptionsValidationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/PartitionMessageConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/Qos/EndpointQosTopologyValidatorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/RegistrationServiceCollectionExtensionsDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/RetryConfigurationExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConfiguratorPipeDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnectorDiscoveryCacheDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnectorFactoryDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnectorPipelineDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnectorPublicContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaConnectorSpecificationAdapterDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaDefinitionDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaEndpointDefinitionDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaExtensionsDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaInstanceFactoryDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaMessageObserverAdapterDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaMetadataAndSpecificationDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaMissingInstanceRedeliveryDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaPipeConfiguratorExtensionsDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaPublicPartitionContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaQueryPropertySelectorDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaRegistrationCompletionParticipantDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaRegistrationConfiguratorExtensionsDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaRegistrationConfiguratorRuntimeExtensionsDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaRegistrationExtensionsDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaRegistrationPublicContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaRepositoryRegistrationProviderDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaRetryCorrelationMissingInstanceDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SagaStateMachineReceiveEndpointExtensionsDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/ServiceInstanceEndpointTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/SpecificationOptionsValidationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/StateMachineBuilderModifierDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/StateMachineEventCorrelationConfiguratorDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/StateMachineInterfaceTypeFactoryDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/StateMachineRequestScheduleTimeoutDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/StateMachineSagaMessageConnectorDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Configuration/TransactionConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchActivityHandoffIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchCollectorLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchCollectorLifetimeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchConfigurationComponentTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchConsumeContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchConsumerConnectHandleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchConsumerFactoryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchDeliveryIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchRuntimeStateTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchTimeProviderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Concurrency/ConsumerConcurrencyConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Concurrency/ConsumerConcurrencyGateTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerAndSagaConcurrencyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerConfigurationBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerConnectionRollbackTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerConventionIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerConventionStateCollection.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerFactoryLifetimeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerMetadataCacheImmutabilityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/ConsumerRegistrationDiagnosticTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Contexts/ConsumerConsumeContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/DynamicConsumePipeConnectionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/InstanceConnectionAdmissionCleanupTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/InstanceExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Metadata/ConsumerRegistrationMetadataTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Context/Activities/ActivityContextAdapterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Context/Consumption/ApplicationConsumeContextOutgoingTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Context/Consumption/BaseConsumeContextLifetimeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Context/Consumption/ConsumeContextEndpointExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Context/Consumption/ConsumeContextOutgoingMessagesTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Context/Consumption/ConsumeContextProxyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Context/Consumption/ConsumeContextScopeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Context/Consumption/ConsumeNotificationContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Context/Consumption/ConversationContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Context/Consumption/DeserializerConsumeContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Context/Consumption/EndpointResolutionContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Context/Consumption/MessageConsumeContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Context/Consumption/MessageContextFlowTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Context/Consumption/UnavailableConsumeContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Context/SagaConsumeContextProxyDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Contracts/InterfaceMessageDispatchTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Contracts/MessageContractCatalogTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Contracts/SagaAdvancedRequestContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/ActivityDefinitionContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/ActivityEndpointConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/ActivityRedeliveryMessageIdentityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/ActivityRegistrationLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/ActivityScopeLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/ContainerActivityRegistrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/ContainerRoutingSlipOutboxRequestTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityAndRoutingSlipContractDeepTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityContextApiContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityFactoryContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityFactoryRegistrationDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityObserverFailureTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityRegistrationAndScopeFactoryDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityScopeContextDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityScopeProviderDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierActivityScopeProviderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierCompensationResultEvaluationContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierConfigurationSurfaceTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierConsumerKindContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierContextContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierConventionSerializationDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierExecutionResultEvaluationContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierHostContextDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierHostPipelineContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierHostRegistrationDiagnosticsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierHostResultContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierHostResultParameterContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierMessageContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierMessageDataIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierOutboxJourneyIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierRegistrationBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierResultMessageStateContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierRoutingSlipBuilderDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierRoutingSlipEventPublisherDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierRoutingSlipExecutorDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierRoutingSlipMessageModelDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierRoutingSlipRequestResponseDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierRoutingSlipSubscriptionDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierTestSupport.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierTimeoutOutboxJourneyIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/CourierTraceTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipArgumentIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipBuilderContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipEventAccessorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipEventPublisherContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipExecutorContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipFaultIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipHostConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipLifecycleIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipPayloadIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRequestIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRequestProxyContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRetryIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipRevisionAndSubscriptionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Courier/RoutingSlipSubscriptionCaptureEndpointTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ActivityAndFilterScopeLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/BindEqualityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/BusObserverOwnershipTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ConfigureEndpointExclusionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ConsumeContextActivatorExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ConsumeScopeLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ConsumerKindExtensionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumeContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerConsumerRegistrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerDiscovery/ContainerDiscoveryTypes.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerEndpointRoutingTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerNamespaceDiscoveryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerOutboxScopeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ContainerScopedEndpointTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/CoreRegistrationOracleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/DependencyInjectionConfigurationContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/DependencyInjectionSagaRepositoryRuntimeDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/EndpointConfigurationIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/EndpointConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/EndpointRegistrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/GenericRequestClientTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/HandlerRegistrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/MessageHandlerConsumerTaskContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/MessageScopeHandlerIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusHostOwnershipIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusRequestTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusSchedulerOwnershipIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/MultiBusScopeIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ProviderDefinitionIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ProviderRuntimeConfigurationIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/PublicScopedFilterSelectionContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ReceiveEndpointDependencyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/RequestHandlerConsumerOutcomeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/RuntimeRegistrationTypeContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/SagaRegistrationConfiguratorDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/SagaRegistrationRuntimeDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedBusContextProviderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedBusContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedClientFactoryContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedConsumeContextProviderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedConsumeEndpointProviderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedEndpointProviderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedPipelineTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DependencyInjection/ScopedSendEndpointTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Diagnostics/MessageDiagnosticRedactorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderDeliveryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DurableSend/InMemoryConsumerCommitTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DurableSend/InMemoryReliableInboxContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DurableSend/InMemoryReliableStoreTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingProviderGuardTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/DurableSend/TypedDurableSenderConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Events/BusReadyEventTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Events/FaultExceptionInfoTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Events/HostReadyEventTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Events/PolymorphicFaultDispatchTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Events/ReceiveLifecycleEventTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Exceptions/CapabilityExceptionOwnershipTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/BatchFutureIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureBehaviorContextFactory.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureConfigurationContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureConsumerKindContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureCustomRegistrarSpiTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureEventAdmissionContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureLocationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureMachineOverrideCompatibilityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureMessageTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureRegistrationBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureRequestConsumerIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureRequestDispatchContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureRoutingSlipContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureSameTypeBusOwnershipTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureSelectedDefinitionAndSharedEventTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureStateExtensionContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureStateTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureSubscriberFanoutContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureSubscriptionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureTerminalConfiguratorContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureTerminalDispatchContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Futures/FutureVariableContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/GlobalUsings.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/ApplicationOutgoingOptionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusFactoryConfiguratorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryBusLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryDelayProviderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryDurableSendBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryDurableSendIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryErrorTransportTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryFaultPublicationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryPublishEndpointTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryReceiveContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryReceiveEndpointConcurrencyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryScheduledPublishTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemorySendEndpointTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryTransportBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryTransportHeaderMapperTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/InMemoryTransport/InMemoryTransportIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/AdvancedMessageInitializerExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/AdvancedRequestInitializerExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/AdvancedScheduleInitializerExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/Contexts/InitializerContextContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/Conventions/DefaultInitializerConventionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/Conventions/DictionaryInitializerConventionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/DynamicContractIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/Factories/MessageInitializerBuilderContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/HeaderInitializers/HeaderInitializerContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/InitializerCacheOwnershipTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/InitializerConventionRegistryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/InitializerProviderLifetimeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerCacheContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerFactoryContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerLifetimeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerObjectGraphTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerRequestResponseTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/MessageInitializerScalarConversionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/ArrayPropertyConverterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/CollectionPropertyConverterContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/DictionaryPropertyConverterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/ListPropertyConverterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/MessageDataPropertyConverterContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/PropertyConverterContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/PropertyConverterOwnershipTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/ScalarPropertyConverterContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/ScalarPropertyConverterOwnershipTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/StatePropertyConverterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/TaskPropertyConverterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyConverters/VariablePropertyConverterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyInitializers/PropertyInitializerContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/AsyncPropertyProviderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryArrayTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryContractMatrixTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryDictionaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryObjectGraphTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryScalarTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderFactoryVariableTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderOwnershipTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderStateMatrixTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/PropertyProviderTestContext.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/PropertyProviders/TaskPropertyProviderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/TaskInitializerExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/DateTimeTypeConverterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/ExceptionTypeConverterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/NumericTypeConverterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/SpecialTypeConverterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/TemporalTypeConverterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Initializers/TypeConverters/TypeConverterContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Internals/Reflection/DynamicImplementationBuilderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Internals/Reflection/MessageImplementationCacheTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Internals/Reflection/PropertyCacheContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Internals/Reflection/ReadWritePropertyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Api/ApiJob.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Api/JobServiceContractArchitectureTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Api/JobServiceEventExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Api/JobServiceExceptionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Api/JobServiceExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Api/JobStateResponseTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Api/RecordingPublishEndpoint.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Api/RecordingSubmitJobClient.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Api/RecurringJobExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Api/ResponseFactory.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/JobConsumerKindContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/JobConsumerTimeProviderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/JobSagaPartitionKeyConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/JobServiceCorrelationConventionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/JobServiceEndpointConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/JobServicePublicConfigurationApiTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/JobServiceReceivePartitioningTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Configuration/RecurringJobScheduleConfiguratorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Integration/ContainerJobConsumerDiscoveryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Integration/ContainerJobDiscovery/ContainerJobDiscoveryTypes.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Integration/InMemoryJobServiceTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/JobService/ConsumeJobContextCancellationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobConsumerMessageFilterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobDistributionStrategyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobIdentityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobProgressBufferTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobServiceBusObserverTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/JobService/JobServiceLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/JobService/StartJobConsumerTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/JobService/SubmitJobConsumerTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/JobService/SuperviseJobConsumerTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionBoundaryRegressionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionCalendarTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionDaylightSavingTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionParsingTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/CronExpressionSchedulingTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Scheduling/TimeZoneResolverTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Serialization/JobPropertyCollectionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/Serialization/JobPropertySnapshotTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/StateMachine/JobAttemptGenerationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/StateMachine/JobAttemptStateMachineTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/StateMachine/JobStateMachineLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/StateMachine/JobTypeCapacityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/StateMachine/JobTypeStateMachineTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/JobService/StateMachine/StateMachineTestScheduler.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Logging/LogContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Logging/MessageActivityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Logging/StartedActivityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/CallbackConfiguredDispatchTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/ContainerMediatorIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorMessageBodySerializerContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorReceiveContextContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorSendObserverTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/Contexts/MediatorSerializationContextContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/ExpiredForwardingMediatorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorAdvancedApiTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorConfigurationDependencyInjectionDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorDispatchTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorEndpointContextDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorFactoryContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorObserverContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorRequestApiContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorRequestHandlerContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorRequestTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/MediatorRuntimeRequestDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Mediator/ScopedMediatorContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageData/AesGcmMessageDataEncryptionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataConfigurationApiTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataConverterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataEndpointIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataInitializerIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataPublicApiTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataRepositoryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataTestSupport.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataTransportIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageData/MessageDataValueTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageData/PropertyProviders/GetMessageDataPropertyProviderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageData/PropertyProviders/PutMessageDataPropertyProviderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageData/TestEncryptionKeyProvider.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalCaptureFactoryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalTelemetryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/MessageJournal/MessageJournalWriterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerFilterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/CircuitBreaker/CircuitBreakerSettingsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/ConsumeContextPayloadPropagationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/ConsumeOutputObserverContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/ConsumerIngressFilterContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/ContextFilterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Contexts/BindContextProxyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/DynamicRoutingTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/FilterObserverTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/ForkFilterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxCheckpointTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxFilterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxMessageSchedulerBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxReleaseAdmissionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/InMemoryOutbox/InMemoryOutboxSchedulingLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/LatestFilterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextHandleLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorFailureTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorOwnedStopAdmissionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorShutdownTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/PipeContextSupervisorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Lifecycle/SupervisorAgentCreationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/ObserverMessageFilterFailureTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/BusOutboxNotificationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/ExpiredForwardingOutboxTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxAttemptIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxFaultTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxMessageRepositoryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/InMemoryOutboxRedeliveryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/OutboxSendEndpointBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/PersistentOutboxCancellationHandoffTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/ReceiveOutboxCancellationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/ReceiveOutboxMessageIdentityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Outbox/RequestClientOutboxTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/OutboxConsumerIdentityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/OutboxMessagePipeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/PartitionerTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/PipeCompositionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/RateAndConcurrencyLimitTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/ReceiveErrorPipelineCancellationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Redelivery/DelayedRedeliveryIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/RequestFilterFaultTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/RescueContextProjectionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/RescueFilterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/RethrowErrorTransportFilterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/RetryBusObserverTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/RetryFilterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/RetryOperationOwnershipTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/RetryRescueJourneyIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/SagaIngressRedeliveryDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/SagaInitiationMessageFilterDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/SagaMessageFilterContractDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/SagaObservationMessageFilterDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/SagaRepositoryLifecycleDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/SagaSplitMergeRescueDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/ScopedCompensationFilterIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/TenantScopeIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutActivityContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutCancellationIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutConfigurationSurfaceTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutConsumeContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/Timeout/TimeoutFilterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Middleware/TransactionFilterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/ActivitySourceActivationIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/BusHealthCheckTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableConsumerCompletionClockIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineActivityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/MessagePipelineMetricsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/MessageProcessingMetricPreparationIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/PayloadAdmissionTelemetryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/ServiceBusInstrumentationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/ServiceBusTelemetryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Observers/MessageObserverTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Observers/PublishObserverTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Observers/ReceiveObserverTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Observers/SendObserverTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Operations/BusProbeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Operations/HealthReportExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Operations/ProbeContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Partitioning/Murmur3PartitionHashGeneratorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Partitioning/PartitionedTaskExecutorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/ReliableMessaging/ReliableInMemoryIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": true,
+    "tests/ViciOne.ServiceBus.Tests/Requirements/RequirementCoverageProjectionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/RetryPolicies/BaseRetryPolicyContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/RetryPolicies/ConsumeContextRetryPolicyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/RetryPolicies/DefaultTechnicalFailureClassifierTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/RetryPolicies/ExceptionFilterContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/RetryPolicies/ExponentialRetryPolicyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/RetryPolicies/ImmediateRetryPolicyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/RetryPolicies/IncrementalRetryPolicyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/RetryPolicies/IntervalRetryPolicyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/RetryPolicies/NoRetryPolicyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/RetryPolicies/PendingFaultCollectionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/RetryPolicies/PipeRetryExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/RetryPolicies/RetryFactoryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/RetryPolicies/TechnicalRetryPolicyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Runtime/ServiceBusRuntimeLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/InMemorySagaConsumeContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/InMemorySagaRepositoryContextFactoryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/InMemorySagaRepositoryContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/InMemorySagaRepositoryQueryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/IndexedSagaDictionaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Saga/InMemoryRepository/IndexedSagaPropertyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Saga/InMemorySagaIndexDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Saga/SagaConsumeContextFactoryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Saga/SagaInstanceEqualityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Saga/SagaPolicyContextQueryDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Saga/SagaQueryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/CompositeEventStatusTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/ContainerStateMachineScopeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/DataEventActivityBinderCoverageContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/EventCorrelationExpressionQueryDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/MissingInstanceRedeliveryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/RequestStateMachineOwnershipTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/SagaPublicContractShapeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActionActivitiesDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineActivityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineBehaviorActivityPublicContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineBehaviorBuilderDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineBehaviorFaultDispatchDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineBehaviorProxyObserverDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCallbackJourneyIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCancellationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCompositeConversionRetryActivitiesDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCompositeDeclarationAtomicityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCompositeEventStatusAccessorDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCompositeEventTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConcurrencyIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConditionFaultActivitiesDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConditionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConditionalActivityBindersDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConfigurationContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineConfigurationMetadataDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineContainerFaultActivitiesDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineCoreActivityBindersDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDeclarationOwnershipTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDefinitionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineDualResponseCorrelationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineEventExceptionActivityBindersDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineEventTypesDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineExceptionBehaviorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineFactoryAdapterActivitiesDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineFaultRecoveryRequestIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineFaultedRequestScheduleActivitiesDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineGraphContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineGraphNodeDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineGraphSnapshotDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineGraphVisitorDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineLifecycleIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineMessageFactoriesDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineNestedRequestIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineObservationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineOutboxSchedulingIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachinePolicyIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachinePublishSendRespondActivitiesDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRecoveryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRequestCompletionPublicationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRequestForwardingTimeoutActivitiesDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRequestIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRequestLifecyclePublicationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineResponseAndFaultIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRuntimeContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRuntimeMetadataContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineRuntimeSurfacePublicContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineScheduleActivityContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineSchedulingIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineSelectorTransitionOutcomeDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineSignalSendCallbackIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateAccessorDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateEventFilterDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineStateStorageTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTelephoneTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTerminalBehaviorDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTestExecution.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineTransportIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/StateMachineUnhandledEventCallbackDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/SagaStateMachine/TriggerEventActivityBinderCoverageContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/Configuration/SagaConnectorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/ContainerSagaIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/InMemorySagaRepositoryConcurrencyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/LegacySagaIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaActivityRequestExtensionDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaBehaviorTransitionExtensionDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaFactoryProviderDelegateContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaMessageFilterBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaPartitionerConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaPipelineAndStateMachineConfigurationDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaPublicRoleContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaPublishExtensionDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaRegistrationRuntimeDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaRepositoryCapabilityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaRepositoryFactoryPolicyDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaRepositoryPublicContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaRepositoryQueryDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaRepositoryRuntimeDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaRespondExtensionDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaScheduleDateTimeExtensionDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaScheduleTimeSpanExtensionDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaSendByConventionExtensionDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaSendExtensionDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/SagaStateQueryRuntimeExtensionDeepContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Sagas/StateMachineConditionCallbackDelegateContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Scheduling/AdvancedSchedulerDefaultAdapterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Scheduling/ApplicationScheduleOptionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Scheduling/ExplicitRedeliveryIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Scheduling/MessageSchedulerInitializedContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Scheduling/MessageSchedulerRuntimeContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringCancellationAdmissionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringControlOwnershipTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringPublishAdmissionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringSchedulerContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Scheduling/RecurringSchedulingCompletionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Scheduling/RedeliverExtensionsContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Scheduling/SchedulerProviderContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Scheduling/SchedulerTimeProviderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Scheduling/SchedulingExtensionContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Scheduling/ScopedSchedulingTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/ArrayMessageTypeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/BoundedSerializerAdmissionContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/ConfiguredJsonCopyAdmissionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/CoreMessageBodyContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/DeserializeVariableExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/DictionarySendHeadersTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/EnvelopeMetadataProjectionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/ForwardExtensionsBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/ForwardMessageTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/HeaderRoundTripTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/HostMetadataRoundTripTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/JsonForwardBranchIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/JsonMessageTypeMappingRegistryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/JsonObjectConsumptionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/JsonValueReceiveBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/MessageBodyContractAssertions.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/MessageIdHeadersTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/MinimalEnvelopeRedeliveryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionEvaluatorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionTransportBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/PayloadAdmissionTransportIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/Protobuf/ProtobufCompatibilityPayload.Populate.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/Protobuf/ProtobufCompatibilityPayload.proto": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/RawMessageContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/RejectingMessageSerializer.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SerializationConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SerializationContractIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SerializationFaultTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SerializerContextContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/ServiceBusMetadataSerializerTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonApplicationFormatCompatibilityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonCollectionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonConstructorBindingTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDateOnlyTimeOnlyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDateTimeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDecimalTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonDictionaryConverterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonExtensionDataTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonForwardingSerializerTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonInterfaceMetadataTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonMessageBodyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonMessageSerializerOptionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonMessageTypeAdmissionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonObjectMessageBodyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonPerMessageConfigurationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonPolymorphismTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonRawMessageBodyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonRoundTrip.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonRuntimeIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonScalarTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/SystemTextJsonTypeSafetyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Serialization/TransportTextMessageBodyNormalizerTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/TestAssemblyBootstrap.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/ActivityTestHarnessTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/AsyncElementListTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/AsyncInactivityObserverTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/BusObserverDisposalFailureBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/BusTestHarnessLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/ConsumeObserverTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/DependencyInjectionTestHarnessTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/DiagnosticOutputTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/Diagnostics/TrackedActivityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/DynamicReceiveEndpointConnectorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/HarnessAdditionalFailureBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/HostedServiceLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/InMemoryTestHarnessBehaviorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/MediatorTestHarnessBehaviorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/MessageFilterTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/MessageObservationListTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/MultiTestConsumerAdmissionCleanupTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/MultiTestConsumerBehaviorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/ObservableTimeProvider.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/OpenTelemetryGlobalCollection.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/QueuedCallbackTimeProvider.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/RecordedMessageTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/SagaPollingTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/SagaTestHarnessBehaviorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/StateMachineObservationCollectorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/TelemetryActivityExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessObservationPolicyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessOptionsStartupValidationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessTimeProviderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/TestingServiceCollectionExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/TestingServiceProviderExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Testing/TextWriterLoggerTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Topology/Configuration/ApplicationMessageTopologyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Topology/Configuration/CorrelationIdConventionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Topology/Configuration/EndpointConventionExtensionsContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Topology/Configuration/EndpointConventionIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Topology/Configuration/TopologyConventionExtensionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Topology/Configuration/TopologyConventionIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Topology/ConsumeTopologyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Topology/EntityNameShortenerUnicodeContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Topology/MessageConsumeTopologyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Topology/MessageCorrelationIdTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Topology/NamedEntityCollectionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Topology/SendTopologyConventionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Topology/TopologyBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Topology/TopologyEntityNameTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transactions/AmbientTransactionBusTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transactions/BufferedBusTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transactions/DeferredBusContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transactions/DeferredBusRegistrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transactions/SystemTransactionContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transactions/TransactionContextExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transformation/ActivityTransformAsyncTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transformation/TransformPipelineTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transformation/TransformPropertyContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/BusDepotTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/BusHealthLifecycleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchIntegrationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchSettingsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/Components/KillSwitch/KillSwitchTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/ConsumerAgentTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/ConsumerDuplicateAndTypedObserverAdmissionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/EndpointProviderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/Fabric/MessageExchangeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/Fabric/MessageFabricTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/Fabric/MessageFabricTopologyBuilderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/Fabric/MessageReceiverCollectionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/Fabric/TopicMessageExchangeTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/HostConfigurationRetryExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/HostHandleApiTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/HostOwnedShutdownDrainTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/HostStartingDiagnosticTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/JsonTransportHeaderConversionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/ReceiveEndpointDispatcherTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/ReceiveEndpointProviderResetFailureTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/ReceiveLifecycleTerminalityTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/ReceiveMessageLimitsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/ReceivePipeDispatcherTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/Receiving/PendingReceiveSettlementBoundaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/Receiving/ReceiveContextProxyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/Receiving/ReceiveLockContextTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/Receiving/ReceiveNotificationContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/RequestOutcomeTimeToLiveTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/RiderCollectionTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/SendEndpointCacheTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/SendEndpointContractTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/SendTransportTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/Sending/MessageSendContextPropertyTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/Sending/SentMessageMetadataTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Transports/TransportValueFormattingTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Util/AssemblyFinderTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Util/AssemblyScannerTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Util/AssemblyTypeCacheTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Util/CancellationTokenExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Util/DisposeAsyncExtensionsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Util/MultipleConnectHandleTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Util/SingleThreadedDictionaryTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Util/TaskBlockingTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Util/TaskCompletionSourcesTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Util/TaskExecutorTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Util/TaskResultsTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj": true,
+    "tests/ViciOne.ServiceBus.Tests/packages.lock.json": true
+  },
+  "shared84_hashchecks": {
+    ".editorconfig": true,
+    ".gitattributes": true,
+    ".github/workflows/native-tests.yml": true,
+    "Directory.Build.props": true,
+    "Directory.Build.targets": true,
+    "Directory.Packages.props": true,
+    "NuGet.config": true,
+    "README.md": true,
+    "ViciOne.ServiceBus.Engineering.slnx": true,
+    "ViciOne.ServiceBus.Tests.Unit.slnx": true,
+    "ViciOne.ServiceBus.slnx": true,
+    "ViciOne.ServiceBus.snk": true,
+    "global.json": true,
+    "signing.props": true,
+    "src/Directory.Build.props": true,
+    "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj": true,
+    "src/ViciOne.ServiceBus.Abstractions/packages.lock.json": true,
+    "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj": true,
+    "src/ViciOne.ServiceBus.Courier/packages.lock.json": true,
+    "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj": true,
+    "src/ViciOne.ServiceBus.Futures/packages.lock.json": true,
+    "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj": true,
+    "src/ViciOne.ServiceBus.Initializers/packages.lock.json": true,
+    "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj": true,
+    "src/ViciOne.ServiceBus.JobService/packages.lock.json": true,
+    "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj": true,
+    "src/ViciOne.ServiceBus.Mediator/packages.lock.json": true,
+    "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj": true,
+    "src/ViciOne.ServiceBus.Sagas/packages.lock.json": true,
+    "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj": true,
+    "src/ViciOne.ServiceBus.Testing/packages.lock.json": true,
+    "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj": true,
+    "src/ViciOne.ServiceBus/packages.lock.json": true,
+    "tests/Directory.Build.props": true,
+    "tests/Directory.Build.targets": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers/BrokerOutageControlClient.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Databases/TestDatabaseName.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ApiSurfaceGlobalUsings.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryConsumerCommitTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryInboxPipelineTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Events/HostReadyEventTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxCheckpointDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/OutboxConsumerIdentityTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Initializers/InitializerConventionRegistryTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Internals/ReflectionImplementationTestDrivers.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalEntryTestFactory.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/OutboxTelemetryTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Operations/ProbeResultBuilderTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Rescue/RescueContextTestFactory.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Retry/RetryFilterTestFactory.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Runtime/ServiceBusRuntimeLifecycleTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/SagaStateMachine/SagaStateMachineExecutionTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/PayloadAdmissionSerializationTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Topology/GlobalTopologyTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionBusTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionNotificationTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/BufferedBusTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/UnusedBus.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/AsyncBusHandleLifecycleTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/BusDepotTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/ReceiveMessageLimitsTestContext.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/RiderCollectionTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json": true,
+    "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj": true,
+    "tests/ViciOne.ServiceBus.Tests/packages.lock.json": true,
+    "tests/testconfig.json": true,
+    "tests/testsettings.json": true
+  },
+  "raw_hashchecks": {
+    "p05-c3-fixed-build-r1.log": true,
+    "p05-c3-fixed-build-r1-20261007-022128--74640--VWZcuh.binlog": true,
+    "p05-c3-fixed-focused-r1-20261007-022321--74731--TIzmrt-dotnet-test.binlog": true,
+    "p05-c3-fixed-focused-r1.log": true,
+    "p05-c3-fixed-core-r1-20261007-022401--74792--WzaOzo-dotnet-test.binlog": true,
+    "p05-c3-fixed-core-r1.log": true
+  },
+  "runtime_hashchecks": {
+    "ViciOne.ServiceBus.Tests.runtimeconfig.json": true,
+    "ViciOne.ServiceBus.Mediator.dll": true,
+    "ViciOne.ServiceBus.JobService.dll": true,
+    "ViciOne.ServiceBus.Tests.testconfig.json": true,
+    "ViciOne.ServiceBus.Testing.dll": true,
+    "ViciOne.ServiceBus.Courier.dll": true,
+    "ViciOne.ServiceBus.Futures.dll": true,
+    "ViciOne.ServiceBus.Abstractions.dll": true,
+    "ViciOne.ServiceBus.Initializers.dll": true,
+    "ViciOne.ServiceBus.Sagas.dll": true,
+    "ViciOne.ServiceBus.Tests.pdb": true,
+    "ViciOne.ServiceBus.Tests.Infrastructure.dll": true,
+    "ViciOne.ServiceBus.dll": true,
+    "ViciOne.ServiceBus.Tests.dll": true,
+    "ViciOne.ServiceBus.Tests.InternalAccess.dll": true,
+    "ViciOne.ServiceBus.Tests.deps.json": true
+  },
+  "assemblies": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/runtime/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "a28e0008303678d3638e39626955583ca3b3cc21c8ea59041a07365f6a09d26c",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4274475132,
+          "guid": "3cbb930b-7da8-4168-960c-f946f40fc97c",
+          "path": "ViciOne.ServiceBus.Abstractions.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "0b93bb3ca87d6841960cf946f40fc97c7c50c7fe",
+        "sha256": "7c89b67e5857032ebe37b36360d319986712d35fb7cfd665fa3d8fc59452350b",
+        "documents": 700,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 700
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "defb9383f38577b507584af212fd30787dc5817c4f2d5a19c0ad9ab63c0ab966",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/DurableSend/DurableSendId.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "6b752fbd7adc68bcb32e1406ec5010470c1cafa0eadfd1031c0ca59408317db6",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "6b752fbd7adc68bcb32e1406ec5010470c1cafa0eadfd1031c0ca59408317db6"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendFailureKind.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "020874905a000f23311fdc7e7c33613d26ab64013fb3adb75cc6b68d805786b5",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "020874905a000f23311fdc7e7c33613d26ab64013fb3adb75cc6b68d805786b5"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendStoreSnapshot.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "1578782accb4f5fc0a2bcfd902ba2c1dbe762255bca61abb9ec8816fe14d4a58",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "1578782accb4f5fc0a2bcfd902ba2c1dbe762255bca61abb9ec8816fe14d4a58"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendAdmissionResult.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "101a6c140fb669cbc4fa8984394343b2edb620ae00006c928bfe0a8c29eb73bd",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "101a6c140fb669cbc4fa8984394343b2edb620ae00006c928bfe0a8c29eb73bd"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendCompletionMode.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "7a14471296d353916f2b2349cfec1aabcaa3a79024451c2a72bfa1ef31d697a3",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "7a14471296d353916f2b2349cfec1aabcaa3a79024451c2a72bfa1ef31d697a3"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDelivery.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "4345e43534aa1b6da7753e1723b81cae3067d6e4708edd4fb372012142365e2d",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "4345e43534aa1b6da7753e1723b81cae3067d6e4708edd4fb372012142365e2d"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "6a9b7e31ae5a53d4321d28b953287f790d0fe1841ebdb9fafd9b9fbf2f24c94f",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "6a9b7e31ae5a53d4321d28b953287f790d0fe1841ebdb9fafd9b9fbf2f24c94f"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchResult.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "c893789c5529d7629cc9bdee017221e218285254e63da661597da074d70544a9",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "c893789c5529d7629cc9bdee017221e218285254e63da661597da074d70544a9"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendLease.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "82ecace9c57247e84c10a68a3f2105f05f35754fdf5b17ea2adf2efddbb1e0d8",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "82ecace9c57247e84c10a68a3f2105f05f35754fdf5b17ea2adf2efddbb1e0d8"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendStoreLimits.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "c733f035ebcd74208bdc3353b1b0197d807d7bae6539100cb9738820b923abd7",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "c733f035ebcd74208bdc3353b1b0197d807d7bae6539100cb9738820b923abd7"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendConsumerCompletion.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "eae0d3d24b8983a6fdc5518daf4d27547fe74384fab9b12b3acdae2ecd2ef06b",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "eae0d3d24b8983a6fdc5518daf4d27547fe74384fab9b12b3acdae2ecd2ef06b"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendDispatcher.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "47f679ff9cf7564b4bd1a57dcc7ae661f1336a54acf243613173e179c0a18b4c",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "47f679ff9cf7564b4bd1a57dcc7ae661f1336a54acf243613173e179c0a18b4c"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IOutboxStore.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "f8b1f8ad6f7dfc1d0f5ce5cdaac48b4faf9cb5c40d476f6767008e9e9400166d",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "f8b1f8ad6f7dfc1d0f5ce5cdaac48b4faf9cb5c40d476f6767008e9e9400166d"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Transports/ITransportSendFailureClassifier.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "53133b7b9b87ead3d361c718e96b82ba17696cd2fcd217a1547e6652ff2b945a",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "53133b7b9b87ead3d361c718e96b82ba17696cd2fcd217a1547e6652ff2b945a"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/runtime/ViciOne.ServiceBus.Courier.dll",
+      "sha256": "ed55de69a6f75a4ab24c0829b7d07d3fae32d18343800a66b9a5a4ea704f737e",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2950488015,
+          "guid": "344a4f94-63c3-4580-827e-e5a2a9503b31",
+          "path": "ViciOne.ServiceBus.Courier.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "944f4a34c3638045827ee5a2a9503b31cfdfdcaf",
+        "sha256": "63bcfcc1afcc1a6f71b58e539d6a5bade36bb823b819b55da05c6d44f38e8410",
+        "documents": 146,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 146
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "03e1e0b0173596b24497ad8a53727daa328d6255889d92e88bf2cd50b017dfd3",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/runtime/ViciOne.ServiceBus.Futures.dll",
+      "sha256": "3e990f0478b7962a4067b0ab8079b242b277b3113245485eecd7455f79535fd4",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2439557638,
+          "guid": "0e0191d2-d020-453d-8c67-abcfb4b82b44",
+          "path": "ViciOne.ServiceBus.Futures.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "d291010e20d03d458c67abcfb4b82b4406b26891",
+        "sha256": "92a9369c90e39ef2227a90a3470a5de7730c7633a13a1e16ca59ccdb696d749d",
+        "documents": 61,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 61
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "fd9f454f7b44ca7af65540b0eacc67d98e65c1fd43c22580bf22f5e3bf70df1d",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/runtime/ViciOne.ServiceBus.Initializers.dll",
+      "sha256": "50e8c38f1b27b2347711d2521c7035930aee4ee4b67f04c51d03f49745a1648f",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3766899978,
+          "guid": "1d7ea7b5-664e-4105-8cc9-1e0dd2e53688",
+          "path": "ViciOne.ServiceBus.Initializers.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "b5a77e1d4e6605418cc91e0dd2e536880a5586e0",
+        "sha256": "71111499ead90615c993429b48134cb5ad9bedef957c526973c4d40d3ca1eccc",
+        "documents": 11,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 11
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "8eb152b1f4b6add5262ca0457d3066de75c39660b09bdd32af4f49e2a497e5db",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/runtime/ViciOne.ServiceBus.JobService.dll",
+      "sha256": "14ad434d790d2c3f205322ecc780c4d5daafac5ea94d3503b23fb30673daa103",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3751028006,
+          "guid": "aacd3ab6-95e7-464d-9a8c-897390f37e37",
+          "path": "ViciOne.ServiceBus.JobService.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "b63acdaae7954d469a8c897390f37e37262594df",
+        "sha256": "1050e13cecff473a9545d080f486be3cb847ceeb2e1af2118ea5e95089f9753a",
+        "documents": 175,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 175
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "7b5df0d54aea99ac22258ce0706992df1eb88fd8791954e24c7ecd1615eadd64",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/runtime/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "e1a4ee81e9d3a47373892276e23877e12b38e5a4b04b3d3394742bb1e68deb35",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2888721928,
+          "guid": "fa3ac339-5314-4e9e-9b7c-908f9e2650e6",
+          "path": "ViciOne.ServiceBus.Mediator.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "39c33afa14539e4e9b7c908f9e2650e608662eac",
+        "sha256": "343af7be7bb30c1a93f10ba694ac29d83c3166d8fff681b5e0008d537411cf8c",
+        "documents": 31,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 31
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "95d80554b380bd4c92b7dff52977a8541956f862a0632dd8296f4168a6fbac0d",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/runtime/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "e6b1930e6aca7f3224c27cce4cfa1da46c5eddb552e7c2b72c27a470be334890",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2938479152,
+          "guid": "912ee69d-a937-4e67-a567-001a0124417a",
+          "path": "ViciOne.ServiceBus.Sagas.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "9de62e9137a9674ea567001a0124417a30a225af",
+        "sha256": "ce505a9bc8a90fea07d519ae0d60c7212b4f463908c49d2e4d08884f36b5c765",
+        "documents": 374,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 374
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "f224463786968110e7bb284636bb74d7e180d29243f4d69b7905fe91396f3b5d",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/runtime/ViciOne.ServiceBus.Testing.dll",
+      "sha256": "2916e4d7b3029620657bb5ceebed43a9f38dc29001790bdd806c31ded93cff38",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4192142760,
+          "guid": "27b8def5-5df3-41f6-97ea-b839a53bc514",
+          "path": "ViciOne.ServiceBus.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "f5deb827f35df64197eab839a53bc514a805dff9",
+        "sha256": "56cee0fd595b61ece1970ca961f8a2a0ee0efbc38c30c695da9beef2ec1d1ee5",
+        "documents": 104,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 104
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "c361aa2cabf34278210b75bb53bb24408ac89159e4407db5734f30a6cee40a80",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "a80ecbeadeb3f179dcbdc44b19253a46e8575aaefa0f35b586bddf0e6af77cc9",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3584832143,
+          "guid": "27b306cc-c92a-4f5a-81bc-b22c33955e7b",
+          "path": "ViciOne.ServiceBus.Tests.Infrastructure.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "cc06b3272ac95a4f81bcb22c33955e7b8f32acd5",
+        "sha256": "58411e4352baa551fc3c5b6506dada7487710382f759cb554567f49fbf454978",
+        "documents": 9,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 9
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "7e3ccd6af526efd9be798fd0ab19eae50e25bf9142108f4ffb1cd32e833847d8",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/runtime/ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "sha256": "7ea6eee7971bc6ea1a1b860ec1c120c3becd662d8648606da57c2310c14c5f6b",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2455468917,
+          "guid": "be620ef9-ca4d-4a26-af56-f0e04db472d8",
+          "path": "ViciOne.ServiceBus.Tests.InternalAccess.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "f90e62be4dca264aaf56f0e04db472d8757b5b92",
+        "sha256": "3bef047e88d09154220582cb223927da188f3b6dbdaa294b291a87af70bb8033",
+        "documents": 38,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 38
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "a622c2ddc60864fefe0c1a6e43023f809d4ca9f4542b0121757631e9904d2e8f",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "4ff7066cdd86cda1ea8e3890e4e6e437be99c4690192aeae750e392133ac2f96",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "4ff7066cdd86cda1ea8e3890e4e6e437be99c4690192aeae750e392133ac2f96"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/runtime/ViciOne.ServiceBus.Tests.dll",
+      "sha256": "2c1807aa20c77a088745b0b49c30fa363dcda1061fc50b5aea519a6993d377a4",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2970487794,
+          "guid": "f55771f1-334a-40a0-9e89-38ac3e9f2972",
+          "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "f17157f54a33a0409e8938ac3e9f2972f20b0eb1",
+        "sha256": "3d375b7e3fe5783aa931641e0504234e712a79850b04f87ceaf59d9e1db7ad83",
+        "documents": 810,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 810
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "36ecb3518d6f4d842a4917a448946f3f384a8f21644c71dc05730488ae1ef341",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "e6a0563a8a2584d08b9bed6f0b6ef6b78f7fac2888f7344d9ec6ad562a709a13",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "e6a0563a8a2584d08b9bed6f0b6ef6b78f7fac2888f7344d9ec6ad562a709a13"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "8ff64032beabbffab0518f90bb7a62b12df83a5dd886e3d69ecbeab501cf58c5",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "8ff64032beabbffab0518f90bb7a62b12df83a5dd886e3d69ecbeab501cf58c5"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "41c159a7730682a1c30d57d6c7e1c81c430fba11d9a9fb70ff827df85c7fb8ee",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "41c159a7730682a1c30d57d6c7e1c81c430fba11d9a9fb70ff827df85c7fb8ee"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/runtime/ViciOne.ServiceBus.dll",
+      "sha256": "42d2913ee2d18c22548b87ffd1ccd326011830d6d386aaa5d44d6fceb32da35f",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3074851584,
+          "guid": "d0e1c595-c0f1-4ea1-b08b-ef760d01fe46",
+          "path": "ViciOne.ServiceBus.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "95c5e1d0f1c0a14eb08bef760d01fe46008346b7",
+        "sha256": "77a1d194d7bfe263a677c1348d5054c4f888b3ea3bf0ad0ca9f5727693acfa07",
+        "documents": 1340,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 1296,
+          "EMBEDDED_SOURCE": 44
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "d731778abdbe8ffc03c189b9f89aca07585c7aba0aaab94c6cd562f1282915cb",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingPolicy.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "8641f388275391cc57c72dc9fc9a49b860a3c98edde716ebc6a639a1db82c5a9",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "8641f388275391cc57c72dc9fc9a49b860a3c98edde716ebc6a639a1db82c5a9"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "c206f81c611584f1982f03f55b1044cae4613d3775650fa291b43a910134d625",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "c206f81c611584f1982f03f55b1044cae4613d3775650fa291b43a910134d625"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "77d371f9f003e617a6f2fa250c3b170fa2cc9a3dd1fe98c44d6b2e8f70e40fb2",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "77d371f9f003e617a6f2fa250c3b170fa2cc9a3dd1fe98c44d6b2e8f70e40fb2"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Monitoring/Telemetry/DurableSendDeliveryOutcome.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "a2e7a8b5e75f9bfad968743804c3666bd50597471f8281bbfa3fa82619660840",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "a2e7a8b5e75f9bfad968743804c3666bd50597471f8281bbfa3fa82619660840"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "ac536dd009f59ea5cbe8898d464969da3ba3a2b2e4390fb6fa1272e2380ed11c",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "ac536dd009f59ea5cbe8898d464969da3ba3a2b2e4390fb6fa1272e2380ed11c"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Inbox.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "266f7c5d4ae0ef666477c276b8a44f5c28275094c1233f3f0e441160e7c18383",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "266f7c5d4ae0ef666477c276b8a44f5c28275094c1233f3f0e441160e7c18383"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Outbox.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Scheduling.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "38ec8bca10734bbe111e26b39d0504f4e0818ca6f65ea1a4e8e9b878afec638c",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "38ec8bca10734bbe111e26b39d0504f4e0818ca6f65ea1a4e8e9b878afec638c"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "6ca9990d84571b6bf927087a19190c5f32c77bddb70edec61728d1d19f60d3b9",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "6ca9990d84571b6bf927087a19190c5f32c77bddb70edec61728d1d19f60d3b9"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "25d8ef5caa05e004b191561e29d557ee865c7d28b645ea853826b8b0d6101f6a",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "25d8ef5caa05e004b191561e29d557ee865c7d28b645ea853826b8b0d6101f6a"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingProviderGuard.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "0c3a96b9115fef19f138533be24b111265b66508d03998d7ea4d808f34fb9b4d",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "0c3a96b9115fef19f138533be24b111265b66508d03998d7ea4d808f34fb9b4d"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    }
+  ],
+  "fixed4_test436_extra26_PDBtargets": {
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "25d8ef5caa05e004b191561e29d557ee865c7d28b645ea853826b8b0d6101f6a",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "25d8ef5caa05e004b191561e29d557ee865c7d28b645ea853826b8b0d6101f6a"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "6ca9990d84571b6bf927087a19190c5f32c77bddb70edec61728d1d19f60d3b9",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "6ca9990d84571b6bf927087a19190c5f32c77bddb70edec61728d1d19f60d3b9"
+    },
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "ac536dd009f59ea5cbe8898d464969da3ba3a2b2e4390fb6fa1272e2380ed11c",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "ac536dd009f59ea5cbe8898d464969da3ba3a2b2e4390fb6fa1272e2380ed11c"
+    },
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "8ff64032beabbffab0518f90bb7a62b12df83a5dd886e3d69ecbeab501cf58c5",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "8ff64032beabbffab0518f90bb7a62b12df83a5dd886e3d69ecbeab501cf58c5"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingProviderGuard.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingProviderGuard.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "0c3a96b9115fef19f138533be24b111265b66508d03998d7ea4d808f34fb9b4d",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "0c3a96b9115fef19f138533be24b111265b66508d03998d7ea4d808f34fb9b4d"
+    },
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/DurableSendDeliveryOutcome.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Monitoring/Telemetry/DurableSendDeliveryOutcome.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "a2e7a8b5e75f9bfad968743804c3666bd50597471f8281bbfa3fa82619660840",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "a2e7a8b5e75f9bfad968743804c3666bd50597471f8281bbfa3fa82619660840"
+    },
+    "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingPolicy.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingPolicy.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "8641f388275391cc57c72dc9fc9a49b860a3c98edde716ebc6a639a1db82c5a9",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "8641f388275391cc57c72dc9fc9a49b860a3c98edde716ebc6a639a1db82c5a9"
+    },
+    "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendDispatcher.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendDispatcher.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "47f679ff9cf7564b4bd1a57dcc7ae661f1336a54acf243613173e179c0a18b4c",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "47f679ff9cf7564b4bd1a57dcc7ae661f1336a54acf243613173e179c0a18b4c"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchContext.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchContext.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "6a9b7e31ae5a53d4321d28b953287f790d0fe1841ebdb9fafd9b9fbf2f24c94f",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "6a9b7e31ae5a53d4321d28b953287f790d0fe1841ebdb9fafd9b9fbf2f24c94f"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchResult.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchResult.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "c893789c5529d7629cc9bdee017221e218285254e63da661597da074d70544a9",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "c893789c5529d7629cc9bdee017221e218285254e63da661597da074d70544a9"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendCompletionMode.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendCompletionMode.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "7a14471296d353916f2b2349cfec1aabcaa3a79024451c2a72bfa1ef31d697a3",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "7a14471296d353916f2b2349cfec1aabcaa3a79024451c2a72bfa1ef31d697a3"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendFailureKind.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendFailureKind.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "020874905a000f23311fdc7e7c33613d26ab64013fb3adb75cc6b68d805786b5",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "020874905a000f23311fdc7e7c33613d26ab64013fb3adb75cc6b68d805786b5"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Transports/ITransportSendFailureClassifier.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Transports/ITransportSendFailureClassifier.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "53133b7b9b87ead3d361c718e96b82ba17696cd2fcd217a1547e6652ff2b945a",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "53133b7b9b87ead3d361c718e96b82ba17696cd2fcd217a1547e6652ff2b945a"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendLease.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendLease.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "82ecace9c57247e84c10a68a3f2105f05f35754fdf5b17ea2adf2efddbb1e0d8",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "82ecace9c57247e84c10a68a3f2105f05f35754fdf5b17ea2adf2efddbb1e0d8"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendAdmissionResult.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendAdmissionResult.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "101a6c140fb669cbc4fa8984394343b2edb620ae00006c928bfe0a8c29eb73bd",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "101a6c140fb669cbc4fa8984394343b2edb620ae00006c928bfe0a8c29eb73bd"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/DurableSend/DurableSendId.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/DurableSend/DurableSendId.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "6b752fbd7adc68bcb32e1406ec5010470c1cafa0eadfd1031c0ca59408317db6",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "6b752fbd7adc68bcb32e1406ec5010470c1cafa0eadfd1031c0ca59408317db6"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "f8b1f8ad6f7dfc1d0f5ce5cdaac48b4faf9cb5c40d476f6767008e9e9400166d",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "f8b1f8ad6f7dfc1d0f5ce5cdaac48b4faf9cb5c40d476f6767008e9e9400166d"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDelivery.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDelivery.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "4345e43534aa1b6da7753e1723b81cae3067d6e4708edd4fb372012142365e2d",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "4345e43534aa1b6da7753e1723b81cae3067d6e4708edd4fb372012142365e2d"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendStoreLimits.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendStoreLimits.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "c733f035ebcd74208bdc3353b1b0197d807d7bae6539100cb9738820b923abd7",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "c733f035ebcd74208bdc3353b1b0197d807d7bae6539100cb9738820b923abd7"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendConsumerCompletion.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendConsumerCompletion.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "eae0d3d24b8983a6fdc5518daf4d27547fe74384fab9b12b3acdae2ecd2ef06b",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "eae0d3d24b8983a6fdc5518daf4d27547fe74384fab9b12b3acdae2ecd2ef06b"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IOutboxStore.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IOutboxStore.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendStoreSnapshot.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendStoreSnapshot.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "1578782accb4f5fc0a2bcfd902ba2c1dbe762255bca61abb9ec8816fe14d4a58",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "1578782accb4f5fc0a2bcfd902ba2c1dbe762255bca61abb9ec8816fe14d4a58"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Scheduling.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Scheduling.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "38ec8bca10734bbe111e26b39d0504f4e0818ca6f65ea1a4e8e9b878afec638c",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "38ec8bca10734bbe111e26b39d0504f4e0818ca6f65ea1a4e8e9b878afec638c"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Outbox.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Outbox.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Inbox.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Inbox.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "266f7c5d4ae0ef666477c276b8a44f5c28275094c1233f3f0e441160e7c18383",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "266f7c5d4ae0ef666477c276b8a44f5c28275094c1233f3f0e441160e7c18383"
+    }
+  },
+  "deps_archive_output_build_chains": [
+    {
+      "dependency": "ViciOne.ServiceBus.Tests/1.0.0",
+      "asset": "ViciOne.ServiceBus.Tests.dll",
+      "archive_sha256": "2c1807aa20c77a088745b0b49c30fa363dcda1061fc50b5aea519a6993d377a4",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus/1.0.0",
+      "asset": "ViciOne.ServiceBus.dll",
+      "archive_sha256": "42d2913ee2d18c22548b87ffd1ccd326011830d6d386aaa5d44d6fceb32da35f",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Abstractions/1.0.0",
+      "asset": "ViciOne.ServiceBus.Abstractions.dll",
+      "archive_sha256": "a28e0008303678d3638e39626955583ca3b3cc21c8ea59041a07365f6a09d26c",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Abstractions.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Courier/1.0.0",
+      "asset": "ViciOne.ServiceBus.Courier.dll",
+      "archive_sha256": "ed55de69a6f75a4ab24c0829b7d07d3fae32d18343800a66b9a5a4ea704f737e",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Courier.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Futures/1.0.0",
+      "asset": "ViciOne.ServiceBus.Futures.dll",
+      "archive_sha256": "3e990f0478b7962a4067b0ab8079b242b277b3113245485eecd7455f79535fd4",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Futures.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Initializers/1.0.0",
+      "asset": "ViciOne.ServiceBus.Initializers.dll",
+      "archive_sha256": "50e8c38f1b27b2347711d2521c7035930aee4ee4b67f04c51d03f49745a1648f",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Initializers.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Initializers/release/ViciOne.ServiceBus.Initializers.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.JobService/1.0.0",
+      "asset": "ViciOne.ServiceBus.JobService.dll",
+      "archive_sha256": "14ad434d790d2c3f205322ecc780c4d5daafac5ea94d3503b23fb30673daa103",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.JobService.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Mediator/1.0.0",
+      "asset": "ViciOne.ServiceBus.Mediator.dll",
+      "archive_sha256": "e1a4ee81e9d3a47373892276e23877e12b38e5a4b04b3d3394742bb1e68deb35",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Mediator.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Sagas/1.0.0",
+      "asset": "ViciOne.ServiceBus.Sagas.dll",
+      "archive_sha256": "e6b1930e6aca7f3224c27cce4cfa1da46c5eddb552e7c2b72c27a470be334890",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Sagas.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Testing/1.0.0",
+      "asset": "ViciOne.ServiceBus.Testing.dll",
+      "archive_sha256": "2916e4d7b3029620657bb5ceebed43a9f38dc29001790bdd806c31ded93cff38",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Testing.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Testing/release/ViciOne.ServiceBus.Testing.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Tests.Infrastructure/1.0.0",
+      "asset": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "archive_sha256": "a80ecbeadeb3f179dcbdc44b19253a46e8575aaefa0f35b586bddf0e6af77cc9",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Tests.InternalAccess/1.0.0",
+      "asset": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "archive_sha256": "7ea6eee7971bc6ea1a1b860ec1c120c3becd662d8648606da57c2310c14c5f6b",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "equal": true
+    }
+  ],
+  "embedded_requirements4697": {
+    "sha256": "2d1b6f28a89e52ad2ba396143ac976f61d88da8bfad931c133984dc24cad71d5",
+    "offset": 16782388,
+    "bytes": 1670669,
+    "lengthprefix_matches": true,
+    "logicalname_present": true
+  },
+  "native63events": [
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: InvalidMode)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: Timeout)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: Claim)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: Mark)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: Await)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: ClassifiedFailure)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: TransportAccepted)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: DispatchCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: FailurePersistenceCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: PersistenceFailure)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: ClassifiedTransient)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: TimeoutPersistenceFailure)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: AwaitConsumerCompletion)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: CompleteBeforeQuarantine)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: FailurePersistenceFailure)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: InvalidMode)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: FailurePersistenceCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: TimeoutCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: CompleteBeforeMark)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: ClassifiedTransient)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: AwaitConsumerCompletion)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: Unclassified)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: TimeoutCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: StateCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: ClassifiedPermanent)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: CompleteBeforeAwait)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: ClassifiedTransient)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: AwaitConsumerCompletion)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: CompleteBeforeQuarantine)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: StateCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: CompleteBeforeAwait)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: ClassifiedPermanent)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: CompleteBeforeRetry)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: FailurePersistenceFailure)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: TransportAccepted)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: InvalidMode)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: TransportAccepted)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: RetryExhausted)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: DispatchCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: ClassifiedPermanent)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: RetryExhausted)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: ConsumerTimeout)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: CompleteBeforeAwait)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: TimeoutCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: DispatchCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: FailurePersistenceFailure)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: TimeoutPersistenceFailure)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: InvalidMode)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: RetryExhausted)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: CompleteBeforeMark)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: ConsumerTimeout)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: CompleteBeforeMark)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: Unclassified)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: StateCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: CompleteBeforeQuarantine)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: ConsumerTimeout)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: TimeoutPersistenceFailure)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: FailurePersistenceCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: Unclassified)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: CompleteBeforeRetry)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: PersistenceFailure)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: CompleteBeforeRetry)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: PersistenceFailure)"
+    }
+  ],
+  "binlogs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/raw/p05-c3-fixed-build-r1-20261007-022128--74640--VWZcuh.binlog",
+      "sha256": "ec173c27393a3ed86c29d8e48cab17ff9575934691319142bb7a7a4c803acfb8",
+      "uncompressed_bytes": 4034444,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/raw/p05-c3-fixed-core-r1-20261007-022401--74792--WzaOzo-dotnet-test.binlog",
+      "sha256": "c92f95f426a8e0b463c969c31ce1d7e88a7809e759d71a4f5e84156f4d879798",
+      "uncompressed_bytes": 3237737,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-fixed-r1/raw/p05-c3-fixed-focused-r1-20261007-022321--74731--TIzmrt-dotnet-test.binlog",
+      "sha256": "a89b33d8416f3699c2f1cc3875207b594c05664869eafe3f47f4d480e2b17bcf",
+      "uncompressed_bytes": 3237740,
+      "closed": true
+    }
+  ],
+  "parent_records": {
+    "strict_build": {
+      "parent_session": 87211,
+      "parent_exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "parent_session": 43720,
+      "parent_exit": 0,
+      "total": 63,
+      "passed": 63,
+      "failed": 0,
+      "skipped": 0
+    },
+    "whole_core": {
+      "parent_session": 63742,
+      "parent_exit": 0,
+      "total": 8054,
+      "passed": 8054,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "findings": [],
+  "assessment": "Actualfresh corrected fourowners2760/25d8/6ca9/ac536 bind actual12PE/PDB/3799 source docs and extra26 API/realstore contexts, unchanged436R2test/embeddedReq4697. All63 exactnamed PASS reach prior realclaim/dispatch/classification/lease/transitionargs/actualbool/state outcomes plus latecounter1/exacttags/healthy7duration-or-missinghistogram. Three selectedprimarySPI failures preserve exactreference; fourcancellations exactactualownedtoken; sixrequiredUTC controls preserve exactexception and realtiming/state. Same native module graph qualifies wholeCore8054aggregatePASS. Independent guards omit unknown timing without fakezero while preserving observedoutcomecounter and requiredUTC/store behavior.",
+  "causal_precision": "Original38 red paths stop at firstfiniteNull57/Null108/Same100/type103, with stateproofonlybeforeactualfirstfailure; no late metrics credit. Fixed63PASS genuinely execute complete metric/caller/store oracles. Originalfourcancellation logs remain type-only failures, while correctedcases do assert exact owned caller token. Compiled initial/elapsed singlecause counterproofs and fixedpost remain required before finalboundedacceptance.",
+  "limits": [
+    "8054 nativeaggregate only, not individually8054 identity inventory/fullUnit/provider persistence/cloud/restart/currentNuGet/coverage/hardware/fullP05 guarantee.",
+    "No originalwholeCore or mutant/post results yet.",
+    "Standardnativehost/deps/archive/output/build/source/PEPDB/resource selection binding; no fullAssemblyLoadtrace.",
+    "Modeled selectedcollaborator SPI persistence errors beforeapply; no physicaldatabase failure evidence.",
+    "Snapshotcadence UTC observation remains separateopenowner; no universal arbitraryclock/globalobserver no-throw promise.",
+    "Root owns structuredparent exits and personalreading; reviewer independently checks immutable/current artifacts. No.NET/MSBuild/Docker/provider/SSH/test execution or product/test/tool edits."
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "kind": "COVERAGE_BINLOG_PROVENANCE_TOOL_FREEZE",
+  "status": "10_PYTHON_CONTRACT_PASS_PENDING_REVIEW_NO_NATIVE_MEASUREMENT",
+  "prior_freeze": "TOOL_FREEZE_R1.json",
+  "fix": "Reject any pre-existing stage-family binlog before starting its native command",
+  "causal_preexisting_regression": "One unchanged new method fails against frozen R1 producer because rejection does not happen; corrected passes and subprocess remains unstarted",
+  "corrected_python_contracts": {
+    "total": 10,
+    "passed": 10,
+    "failed": 0,
+    "exit_code": 0
+  },
+  "files": {
+    "tool-owner-r2/aggregate_coverage_receipts.py": "3249ba9322e31437a328e4a72f3e54eb97b5d469981ff44954b8e8c88b02ae6b",
+    "tool-owner-r2/coverage-corrected-contracts-r3.log": "3c23d8f17c75b4a88a884a93656544aa78c4d37005270e5a8f48c97eb6d6f4f6",
+    "tool-owner-r2/test_coverage_binlog_contracts.py": "354263bf6f0db4973440dfc8e665bbdf7d0e362fdb5222f5f7e19606db57dba3",
+    "tool-owner-r2/tool.patch": "3f62aa691ffc867525474b024a2ea4f5c5a1343d3690bfabba292c7bc60025e9",
+    "tool-owner-r2/RESEARCH_PLAN.md": "9ed04496c56af73894b9c41322ab9823b7d4b695212829a6e644c323b8faa81f",
+    "tool-owner-r2/coverage-preexisting-original-r1.log": "d184c1523e78390a0e7d37d0ff4014640f053601988a48bdd35ce86dc0a94e91",
+    "tool-owner-r2/coverage_receipt.py": "510d1ae6b7def49e2fa413b565b3de50c79a32c34b914cf4642248b78ad7519d",
+    "tool-owner-r2/coverage-binlog-tool-review-r1.json": "04ecdf389335d3b9a8b110c14590cc2f265ac62c5d7fd5612818511fb6e00f14"
+  }
+}

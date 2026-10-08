@@ -1,0 +1,41 @@
+{
+  "kind": "ROOT_ACTUAL_EVENTHUB_ORIGINAL_FIRST_FINITE_CLOCK_BOUNDARY_AND_LOCKED_ASSETS_R1",
+  "native_sha256": "18f792caf37357e4235b6d6f23451e1b1bbfc73f6bf6eecac8a980a52c6edacb",
+  "root_physical_sha256": "c246dc7390e197a55009e156f2d46f1ed3d74b7de78404c400d0b6ac7067b008",
+  "actual_images": 11,
+  "actual_document_checksums": 2904,
+  "actual_runtime_files": 16,
+  "actual_stages": {
+    "locked-restore": {
+      "pid": 70350,
+      "joined": true,
+      "returncode": 0,
+      "deadline_exceeded": false
+    },
+    "strict-rebuild": {
+      "pid": 70376,
+      "joined": true,
+      "returncode": 0,
+      "deadline_exceeded": false
+    },
+    "focused-two": {
+      "pid": 70432,
+      "joined": true,
+      "returncode": 2,
+      "deadline_exceeded": false
+    }
+  },
+  "focused": {
+    "total": 2,
+    "passed": 1,
+    "failed": 1,
+    "skipped": 0
+  },
+  "first_cause": "Clock fullcount1 actualSDKcheckpoint gate reached before finite SingleEmpty source/raw33. Selected provider recorded0 intervaltimers; configured interval/period/token assertions belowSingle and entirepartialCount2phase unreached, zero causal credit.",
+  "healthy": "LegacyactualBatchpublicconstructor fullbatchSDKcheckpoint/exactownerToken anddrain passed.",
+  "cleanup": "ActualPrimarySingle preserved withoutAggregateException/timeout; qualifiedsource releasesprovider andclosesactualpartition beforestop. Nativepassofcleanupdoesnotproveallfault/race/fullmanagedDispose variants.",
+  "locked_assets11_exact_metadata_only_successor": true,
+  "raw9_sha256_crc3_verified": true,
+  "personal_read": "Whole focused two stdout and allsmall actualcounts/stages freshly read. Strictzero warning/error summaries checked; full locked assetJSON semantic diffs mechanical. Fresh11PE/2904PDBdocuments parsed byRoot pure qualifiedparser.",
+  "limits": "Bounded actual localoriginalclockboundary only. IndependentfreshPE/PDB/compiled100/finitecause review required beforeproductauthoring. No currentcloud/wholemodule/API/coverage/globalA+ closure."
+}

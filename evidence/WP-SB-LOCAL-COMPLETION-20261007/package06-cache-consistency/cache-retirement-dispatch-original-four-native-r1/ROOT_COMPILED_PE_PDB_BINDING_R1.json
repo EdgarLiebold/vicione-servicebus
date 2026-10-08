@@ -1,0 +1,552 @@
+{
+  "kind": "ROOT_ACTUAL_CACHE_RETIREMENT_DISPATCH_TEN_IMMUTABLE_OWNERS_PHYSICAL_PE_PDB_SOURCE_BINDING_R1",
+  "native_sha256": "6294dc9f39421de02763b7c00c60438902cada7a855dd760dccfd203d320f334",
+  "actual_images": 12,
+  "actual_document_checksums": 3811,
+  "actual_runtime_files": 17,
+  "actual_assets": 12,
+  "images": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-original-four-native-r1/runtime/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "b8ba8a734f2aa1533788a74a899799b167b7bc767262cf7e5b751266d82b9562",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2693648963,
+          "guid": "98c5ddbf-ea27-47e0-9129-96b0e9e1a245",
+          "path": "ViciOne.ServiceBus.Abstractions.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "bfddc59827eae047912996b0e9e1a24543d28da0",
+        "sha256": "22eecdce0526865e154fba54a8eda38eb935b9c5fc7e206e2dedbe7992a08054",
+        "documents": 700,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 697,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "31c87878e8358e8bd0ae229a19a5f6230e75c34132b0571816aff72db498cf7d",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-original-four-native-r1/runtime/ViciOne.ServiceBus.Courier.dll",
+      "sha256": "eb12672bb89bf7a8be9dab5bd7b9ad5ecf3dce93dbfedb5ae81b265eb360e7cc",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3615075064,
+          "guid": "e0a054db-c1be-40b4-b94e-9e4da8563568",
+          "path": "ViciOne.ServiceBus.Courier.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "db54a0e0bec1b440b94e9e4da8563568f8aa79d7",
+        "sha256": "93bf7e199cc68af5a169b417cd6bbba49de1a98c243e27853859a4d230ecc38e",
+        "documents": 146,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 143,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "3df21052f8d97031396e6d744e2e2f43b47af1b0d4dba2c12ca8d258f5a3b174",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-original-four-native-r1/runtime/ViciOne.ServiceBus.Futures.dll",
+      "sha256": "a80295de90ecb6dfcb2df7d06563d2637e8a6e833eb42bd15e749784f2bd1f64",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2848185690,
+          "guid": "3f2c6ffb-6a15-42e4-bd24-409993e20151",
+          "path": "ViciOne.ServiceBus.Futures.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "fb6f2c3f156ae442bd24409993e201515addc3a9",
+        "sha256": "30ed27d9b2dcdf887acbda2c7625e6faabe5bedf61d4e876dcd1780db095544c",
+        "documents": 61,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 58,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "135af8c36061ef69ce7357980cbe9ca7473da4566a1c0610133d34081e9a0675",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-original-four-native-r1/runtime/ViciOne.ServiceBus.Initializers.dll",
+      "sha256": "92f3caa0502e2295236d86323c6d51eecf64f3d2a4f46d947f0a9806edcbe28f",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2349883355,
+          "guid": "ad56b81c-d7e9-4e22-97e7-5c0ff3787bbe",
+          "path": "ViciOne.ServiceBus.Initializers.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "1cb856ade9d7224e97e75c0ff3787bbedb5f108c",
+        "sha256": "e8745797a60d494fbc7afb57138e5508e0cf9892edc3f86f30c8e48e8d69e6ff",
+        "documents": 11,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 8,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "bbcda2f215a1774288e36d1bd09ec0cab0de9e8d92cd9a6c9b60ab46505d77ee",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-original-four-native-r1/runtime/ViciOne.ServiceBus.JobService.dll",
+      "sha256": "fede6507d16501c5835d8493fa6a7e17c7173dbe07292072e5b878a5b7bd3908",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4154568878,
+          "guid": "09aa67b0-0c88-4eff-8233-cfdec323d23d",
+          "path": "ViciOne.ServiceBus.JobService.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "b067aa09880cff4e8233cfdec323d23daeb0a1f7",
+        "sha256": "6ae4f504e30951e6481feb883ed88f5a2dc31c13b53d3bee9ef15a6e1a6f26da",
+        "documents": 175,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 172,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "7fae9d6f3e2128eece78eee4ee7fcc18efb4b031282d17452316e0c8e342b93d",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-original-four-native-r1/runtime/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "bc572671cc6d610267f89edd52149ba9d823701cd13b5510569d67969463acd0",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2683033515,
+          "guid": "27673518-f00f-4c9e-85a7-49f9631d9a61",
+          "path": "ViciOne.ServiceBus.Mediator.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "183567270ff09e4c85a749f9631d9a61abd7eb9f",
+        "sha256": "658106b7d7848a322760ad66839a53eb98dec47540f1c9fe15e2c74b2bc8d243",
+        "documents": 31,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 28,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "468e96c6728b7060771ff4b52f3d998045bf1a9eccc7ea6904b2769f94105d10",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-original-four-native-r1/runtime/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "7862906e8a5d79517c4a871e8d80fb281cc6e30059d890ded6a6fbbfa2421423",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4194455246,
+          "guid": "3b5f8a24-5fb8-4646-bf52-2c6d7dd79e0a",
+          "path": "ViciOne.ServiceBus.Sagas.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "248a5f3bb85f4646bf522c6d7dd79e0ace4e02fa",
+        "sha256": "ff9312d64f4461fccf6e864d00910294221730bd1d421ab6892069f565c71003",
+        "documents": 374,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 371,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "8f1ae5f743df83581a25a70ecf51e6828b00824283756cbabcba5b787138d1f3",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-original-four-native-r1/runtime/ViciOne.ServiceBus.Testing.dll",
+      "sha256": "fdae60b947e2f27b018cb2cedf8740374308cfc51122d7c24d6aca3a55207697",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3157394327,
+          "guid": "1b4ed8c0-053b-4e8d-b9c7-9d0e78201472",
+          "path": "ViciOne.ServiceBus.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "c0d84e1b3b058d4eb9c79d0e78201472970332bc",
+        "sha256": "cb2e533fe940b48419332f2ce7169c9feab6e3afd931d94c15e2a28a879f7703",
+        "documents": 104,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 101,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "d6807b3c5136c75d4f8fd6c11f56fab4acb9b246db9d5f94a000e59180b560ff",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-original-four-native-r1/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "0b3783f8ef4a49547a9f562f1955fc6b5da511268d09f3be287f9ec6d8fe9356",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3504401227,
+          "guid": "17a8af7f-190f-40ff-a785-0e5c444f98d8",
+          "path": "ViciOne.ServiceBus.Tests.Infrastructure.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "7fafa8170f19ff40a7850e5c444f98d84bebe0d0",
+        "sha256": "f5b7694b37622ba5fe1bdf9640dd0c49e44ecb6a8744bb5f15e2bed41fd498f3",
+        "documents": 9,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 6,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "f810aa911c6be6c9f37615ca9e52512ebab93c6dcbdad498f9013054696bedf3",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-original-four-native-r1/runtime/ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "sha256": "456ddca508c05149134c6a25d7865cc2bebf6ad1fe3515c252b503936e01282e",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3918531766,
+          "guid": "21523659-0ba0-4e61-a58a-03c26e641363",
+          "path": "ViciOne.ServiceBus.Tests.InternalAccess.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "59365221a00b614ea58a03c26e641363b60c90e9",
+        "sha256": "1752e89c140dad73f026c18f8fee8390010e205d0c84e440d7f850cdf0f8198b",
+        "documents": 38,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 35,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "626051cd50ea23f13053322ea0d34a629016f507d830e7a1fc84cd6083fda67f",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-original-four-native-r1/runtime/ViciOne.ServiceBus.Tests.dll",
+      "sha256": "52ae735f63f601f15eda700341be602de25dfcd93e1afa622bf174930e52419a",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2486356079,
+          "guid": "b9a7f8b7-3e8f-4fc5-97d5-4d69014fbbef",
+          "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-retirement-dispatch-original/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "b7f8a7b98f3ec54f97d54d69014fbbef6fc83294",
+        "sha256": "ba0e7e54284c4ab53d2da4e3a8d7858b6a8ea5bb5f9089e23446c50ee5b44cad",
+        "documents": 821,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 814,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 7
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "b7168e53f51266d3654e52e0c33de0edc074197dd16193b4c47b787a431bace3",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-retirement-dispatch-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheRetirementAndDispatchTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "fce87e33c7087c13ef1d5ae890cd521f648e8d4bc914ea93ecb77e3f915a89a9",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "fce87e33c7087c13ef1d5ae890cd521f648e8d4bc914ea93ecb77e3f915a89a9"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-cache-consistency/cache-retirement-dispatch-original-four-native-r1/runtime/ViciOne.ServiceBus.dll",
+      "sha256": "03a62f5389631448a85cb56e6a597286f51513f10d7f8fb100c8b75957b76166",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2630990394,
+          "guid": "a5b791dc-4791-484f-9d2d-7bf305c67218",
+          "path": "ViciOne.ServiceBus.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "dc91b7a591474f489d2d7bf305c672183abad19c",
+        "sha256": "255c36364df3dde056d050b93c89f6559d40afefee525f4a00544557d553e4c5",
+        "documents": 1341,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 1285,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 12,
+          "EMBEDDED_SOURCE": 44
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "5e24f5771e598adec754bc9fc2c2d695ebf2ecfd6b54a4f106a5f761ac32929c",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-retirement-dispatch-original/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "84f6d67e2e3724120b394367b413325f353f7a9423a713431e8a6f4449b78f18",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "84f6d67e2e3724120b394367b413325f353f7a9423a713431e8a6f4449b78f18"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-retirement-dispatch-original/src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-retirement-dispatch-original/src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-retirement-dispatch-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "45bb92aea5df9ed96396604d8ef2b63afc888537ca4f49815f05ea734af41a6a",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "45bb92aea5df9ed96396604d8ef2b63afc888537ca4f49815f05ea734af41a6a"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-retirement-dispatch-original/src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "9a23ca99892af8349c960056c26b8969c2b677f7c8634a1518f8b3e1dbc43925",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "9a23ca99892af8349c960056c26b8969c2b677f7c8634a1518f8b3e1dbc43925"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-retirement-dispatch-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "fcb891b5e80f4249002a3871fbdb318842b70972e7b7537d9d36f73d8d97b441",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "fcb891b5e80f4249002a3871fbdb318842b70972e7b7537d9d36f73d8d97b441"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-retirement-dispatch-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-retirement-dispatch-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "a77ab4864f0e44b8692c308371817a831f0a231a40aec57ebcbba7793d7b65d1",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "a77ab4864f0e44b8692c308371817a831f0a231a40aec57ebcbba7793d7b65d1"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-retirement-dispatch-original/src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    }
+  ],
+  "parser_source_sha256": "1bc09397fe31d1edaa74ae0f2ddc92b3d79b81240ec2ce571064652e7217fe1f",
+  "root_driver_sha256": "7df96ee88a7f6cdacc37e5b9e95a141b2070bb153c2933eb5364e2fcc6e5138a",
+  "generated_source_sha256": "f8c266f0099ae2e0b75f38be32fadfe39ec571186e96d873867a4c1327d03b24",
+  "source_owners_sha256": "8e25313ae9bcf3215445b261f7cf1cacac8b993221d43a9fc47da4636a994bb5",
+  "limits": "Pure byte/metadata reads only. Fresh twelve actual images and all PDB document checksums; generated source and mutant owner override are immutable. Compiled Requirements resource/method attrs and finite native causal review are separate; no source-read credit transfer, no current coverage/whole suite/globalA+ claim."
+}

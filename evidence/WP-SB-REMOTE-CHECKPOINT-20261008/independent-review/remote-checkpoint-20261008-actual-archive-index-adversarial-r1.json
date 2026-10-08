@@ -1,0 +1,124 @@
+{
+  "kind": "INDEPENDENT_ACTUAL_ENCRYPTED_ARCHIVE_RESTORE_AND_STAGED_INDEX_QUALIFICATION_R1",
+  "disposition": "NO_BLOCK_AUTHORIZED_UNRELEASED_MAIN_CHECKPOINT_WITH_FINAL_EXACT_METADATA_DELTA_CHECK",
+  "review_role": "Readonly technical reviewer. No archive/AES/restore/SDK/provider execution, Git mutation/commit/push, key read/hash or product edits. Readonly Gitblob/hash/JSON/stat inspection only.",
+  "current_actual_index_tree": "710c189711a8b407a29fd9a17962ce352ea583e3",
+  "current_index_all_entries_match_tree": true,
+  "own_fresh_proofs": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/remote-checkpoint-20261008-archive-byte-audit-adversarial-r1.json",
+      "sha256": "26af4ac4719dd78405ade9d6c273789514fc734a12e9b02f801f2f67cc11faf0",
+      "scope": "Own35 plain/cipher hashes,size,header,nonce,AAD/order; both19465 complete restored pathsets/mode/size/hash/hardlinkgroups; all19465 dated original sources byteexact."
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/remote-checkpoint-20261008-index-byte-audit-adversarial-r1.json",
+      "sha256": "27d4f7b9a767795d4c9a222aea90d7973667b06f89a24d3598dc4fd238eea480",
+      "scope": "Own all unique selected actualGitblob payloads streamed/hashchecked; complete currentchangedpaths plus6110canonical and Root7016baseline snapshot."
+    }
+  ],
+  "archive": {
+    "members": 19465,
+    "source_bytes": 5459271041,
+    "compressed_bytes": 1460943410,
+    "archive_sha256": "41733eb92c3b3a0651087145d50f5eecbde371c6c2631cab8ddeb4bed68d78ef",
+    "physical_regular_inodes_each_restore": 9162,
+    "hardlinked_duplicates_each": 10303,
+    "cipher_parts": 35,
+    "unique_nonce_count": 35,
+    "all_headers_hashes_sizes_aad_and_order_exact": true,
+    "both_existing_restores_complete_size_hash_mode_and_pathset_exact": true,
+    "all19465_dated_captured_source_rows_current_exact": true,
+    "limits": "No fresh Tar/AES/restore execution. Existing full restored bytes and physical inode groups independently inspected; no PE/PDB/SDK claims."
+  },
+  "Root_actual_crypto_consumed": {
+    "receipt_sha256": "55706752c569e7fa39711cf886e287ae8f48cbd2855f6416a7c4c038f7d220fa",
+    "encrypted_manifest_sha256": "7462ecd3e34abbc5e9ec0911295a3c22fa8dbae11ec7e213c26b117001b2bae8",
+    "sourcegate_sha256": "c5e24fcbcd029afc6ba20221cd628b07d7b289afc15e2b0902088bdce065f8f0",
+    "observed_encrypt_and_encrypted_restore_exits": 0,
+    "tamper_wrong_AAD_rejected_before_output": "Root actual accepted-source execution evidence, never relabeled reviewer execution. Reviewer independently verifies actual35 framing/nonces/order and both existing full restoration byte sets.",
+    "encrypted_restore_receipt_sha256": "000ea4c4e2f3fda106ed759070c0221d96d0beaa8e6dbc368d553f196571c398"
+  },
+  "index": {
+    "Root_bindings_sha256": "9dc8900b76d0cdd7b46c9d6d01808ac43c4823c17716d29eba5237bd0837e53d",
+    "base_tree": "da1fa90ff4cc72cb21bfcec4c92e9bf4c583b939",
+    "selected_blobs": 7019,
+    "unique_blob_payloads_fresh_read": 6997,
+    "logical_bytes": 1562677789,
+    "changed_paths": 1006,
+    "all_selected_index_payloads_equal_current_worktree": true,
+    "all6110source_hashes_and_pathset_exact": true,
+    "all758forced_entrypoints_and112normal_newpaths_in_own_byteproof": true,
+    "all35actual_cipher_blobs_staged": true,
+    "no_new_plaintext_chunks_or_AESkey_staged": true,
+    "no_staged_deletions": true,
+    "late_delta_paths": [
+      ".gitattributes",
+      ".testagent/local-completion-plan.md",
+      "evidence/WP-SB-REMOTE-CHECKPOINT-20261008/DOCUMENT_WHITESPACE_RECEIPT.json",
+      "evidence/WP-SB-REMOTE-CHECKPOINT-20261008/INDEX_BINDINGS.json"
+    ],
+    "late_delta_verified": "Exactly INDEX_BINDINGS and DOCUMENT_WHITESPACE_RECEIPT additions; localplan exactlyone finalLF removed, allformertextbytes retained; exactonegeneratedwiki-path whitespace attribute, wikibytes unchanged.",
+    "cached_diff_check_pass": true,
+    "APIbaseline_e961_exact": true,
+    "STATE_ebbed_exact": true,
+    "local_HEAD": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+    "local_working_branch": "work/servicebus-local-completion-20261007",
+    "requested_remote_target": "main",
+    "limits": "Full mechanical selectedbyte proof, not blanket human review of every historical source/test/evidence body. Root alone may commit/push authorizedmain; notalreadyremote."
+  },
+  "prior_dependency": {
+    "existing_manifest_and_inputs_and3parts_actualGitindex_bytes_verified": [
+      {
+        "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/MANIFEST.json",
+        "bytes": 1707,
+        "sha256": "a956938156856b1ad9e8e16e033cf25d3a6d0deaf221fe00a6da901a45e04d50"
+      },
+      {
+        "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/ARCHIVE_INPUTS.json",
+        "bytes": 3165275,
+        "sha256": "923188ff1079af7737704e2ed3a928d2e0199b4b7faaa6fa01e1ce5ac301e516"
+      },
+      {
+        "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/review-evidence.tar.gz.part-001",
+        "bytes": 41943040,
+        "sha256": "89d632a13590472771fe71e5935d20abe97e373d5181e9ba3b50d8eaef7cab70"
+      },
+      {
+        "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/review-evidence.tar.gz.part-002",
+        "bytes": 41943040,
+        "sha256": "c1033e24e2b8fef7d9192355f3d91a4721297c879da4256d8a9f9081c69037c2"
+      },
+      {
+        "path": "evidence/WP-SB-API-REVIEW-REPAIR-20261002/remote-backup-20261006/review-evidence.tar.gz.part-003",
+        "bytes": 16914012,
+        "sha256": "0e0d9c5ddb503425c0fe494c7afb2dd9980e9b42d109c20bff7de3abd2c00839"
+      }
+    ],
+    "old_files_reused": 6819,
+    "new_confirmations_in_newarchive": 4,
+    "limits": "Old6Octplaintextarchive intentionally remains a separate prior dependency. No newoldarchive restore/remotefetch or retroactiveconfidentiality claim."
+  },
+  "publication_claims": {
+    "PUBLICATION_TARGET_sha256": "2e474e7bcff0ab10a2cc90a5994fe44a2fa452c8a51ceae041703fddb1fc58a8",
+    "visibility": "Root current GitHubmetadataPUBLIC attestation, nothistoricalPRIVATE assumption.",
+    "README_whole_read_sha256": "fbfd6073131d207aa80679625a281662a0c7ef479f8142aadef7244a3b8f2e46",
+    "truthful_scope": "UNRELEASED/nonproduction; Runtime3PASS/retryobservationfailed/fourlaterunreached; ConsumerLockR2OPEN_INCOMPLETE34preparedunexecuted perREADME withstalecopieddocs/finalreviewpending; Visibilitysourceprivateunexecuted; broaderaggregate/coverage/provider/CI/cloud/hardwareopen.",
+    "normal_source_recovery": "Source/tests/changelog directlyGit-readable withoutarchivekey. Newrawarchiverequiresseparatelyheld32bytekey. Offsitekeybackupnotperformedorclaimed; explicitownerrecoverydependency, notinventedpermissionflow.",
+    "sourcepeers_normal_sidecars_hashmatch": true,
+    "SIDECAR_RETENTION_sha256": "99d9554f241d5bfdfdb4788c461bd4ed4266760d047b283599bf512703805195",
+    "Root_patternscan_sha256": "1c147546c7dd6faba608929bd3a249725606ff210e2cd83ac5066c9711bd15c5",
+    "secret_scan_limits": "Root1753review+4confirmation narrowpatternszero andNtextsubsetscan consumed. Existing3testfixtures distinguished; binaries/largefiles notcovered. No blanketcredentialabsence asserted."
+  },
+  "gate": {
+    "Root_exact_tree_commit_and_authorized_main_push_NO_BLOCK": true,
+    "new_user_permission_required": false,
+    "remaining_final_check": "Only new ownbyteproof/finalreport/Rootacceptance metadata sidecars may be added. Root must hashcheck actualstagedbytes, require6110sources/cipher35 unchanged, nokey/rawpart stage, cachedcheckclean. Any other substantive delta needs independent review.",
+    "already_remote_success_claimed": false
+  },
+  "limits": [
+    "No globalGreen/Release/A+/Suiteaggregate/ABI/coverage/provider/cloud/hardware closure.",
+    "No key contents or hash inspected; no credentialstrings/privatebinaryvalues displayed.",
+    "Fresh reports created aftertarclosure are normal hashbound sidecars, not claimed insidealreadycapturedtar.",
+    "No reviewerSDK/crypto/archive/restore/processexecution or push."
+  ]
+}

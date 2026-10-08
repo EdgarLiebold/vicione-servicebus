@@ -1,0 +1,38 @@
+{
+  "kind": "ROOT_ACTUAL_AZURE_CLOCK_ORIGINAL_SIX_FIRST_FINITE_AND_PHYSICAL_REVIEW_R1",
+  "native_sha256": "742a374496740358f27fd2ca54410b28ce19b21cde5ad1c00f67e9cf3e510c86",
+  "own_fresh_physical_sha256": "82829cedec90f51e93c39cfed542f9389618d1e3334fdb6f524568eb74031519",
+  "focused": {
+    "total": 6,
+    "passed": 4,
+    "failed": 2,
+    "skipped": 0
+  },
+  "first_finite_failures": [
+    {
+      "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.SessionCancellation_UsesSelectedClockForGraceAndDisposesTimerAsync",
+      "oracle": "Assert.Single63 selectedClockTimers empty after actual synchronous SDK cancellation",
+      "lower_assertions_uncredited": "dueTime64/period65/productDisposed66/token67/exactboundary69-71 and later assertions unreached",
+      "finally_actual_owned_tasks_joined": true,
+      "duplicate_teardown_frame98_additional_credit": 0
+    },
+    {
+      "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.ProcessorCancellation_UsesSelectedClockForGraceAndDisposesTimerAsync",
+      "oracle": "Assert.Single63 selectedClockTimers empty after actual synchronous SDK cancellation",
+      "lower_assertions_uncredited": "dueTime64/period65/productDisposed66/token67/exactboundary69-71 and later assertions unreached",
+      "finally_actual_owned_tasks_joined": true,
+      "duplicate_teardown_frame98_additional_credit": 0
+    }
+  ],
+  "healthy_controls": [
+    "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.SessionCompletion_RemovesBrokerCancellationRegistrationByCallbackCompletionAsync",
+    "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.SessionCancellation_WithoutGraceCancelsImmediatelyAsync",
+    "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.ProcessorCancellation_WithoutGraceCancelsImmediatelyAsync",
+    "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.ProcessorCompletion_RemovesBrokerCancellationRegistrationByCallbackCompletionAsync"
+  ],
+  "raw9_CRC3_valid": true,
+  "actual13_metadata_successor_only_bool_true": true,
+  "fresh13PE3257PDB_checks_exact12_absolute_immutable_owner_targets": true,
+  "root_read": "Wholeactual locked restore/strict stdoutstderr/all6native bodies andsummary personallyread. Entire35purehelper/newtargets read; ownfresh13images/pdb IDs and every3257checksum mechanicallyparsed, target12metadata personallyread. Nothumanwholeall3257sources.",
+  "limits": "Twoactual finite wrongclock regressions, fourhealthy controls; originalindependentfresh13/ALL233 compiledmetadata pending beforeproductfix. No direct native cancellation-publication race proof, no globaladapter/API/coverage/provider/CI/cloud/HWclosure."
+}

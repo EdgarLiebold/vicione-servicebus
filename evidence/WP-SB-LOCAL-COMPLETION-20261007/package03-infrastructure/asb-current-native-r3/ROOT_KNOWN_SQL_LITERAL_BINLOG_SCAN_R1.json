@@ -1,0 +1,22 @@
+{
+  "kind": "ROOT_BOUND_KNOWN_SQL_LITERAL_SCAN_THREE_ACTUAL_ASB_BINLOGS_R1",
+  "tested_known_value_count": 1,
+  "binlogs": [
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-current-native-r3/p03-asb-current-native-r3-20261007-102435--1766--PmpbPg-dotnet-test.binlog",
+      "sha256": "89993b89fe08d3fc8ec0d045cbc6086066a04b97484d446007a7a3af283c64e0",
+      "known_literal_present_in_gzip_decoded_bytes": false
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-workspace-build-raw-r1/p03-asb-workspace-restore-r1-20261007-101650--1381--_4Hemk.binlog",
+      "sha256": "70a279272a56b4bcff0885300aa683437ced9a8d04004aa439c37db61b1ea8b8",
+      "known_literal_present_in_gzip_decoded_bytes": false
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-infrastructure/asb-workspace-build-raw-r1/p03-asb-workspace-build-r1-20261007-101900--1439--W56BQS.binlog",
+      "sha256": "a4d4a2778e5e5befcdb2e3ebdde5a60a2aa593c95922e577fb299bedce02e4f7",
+      "known_literal_present_in_gzip_decoded_bytes": false
+    }
+  ],
+  "limits": "Only exact known SQL literal UTF8/UTF16LE scan of three current native/restore/rebuild compressedlogs; not arbitrary secret/encoding census. Prior char-diff extraction interrupted130 before scanning and has no result/acceptance credit. No values printed."
+}

@@ -52,6 +52,8 @@ internal sealed class EntityFrameworkOutboxContextFactory<TBus, TDbContext> :
     /// <param name="next">The outbox pipeline to execute after the inbox row is loaded.</param>
     /// <param name="cancellationToken">The token used to cancel the operation.</param>
     /// <returns>A task that completes when the inbox transaction and any required delivery passes finish.</returns>
+    /// <remarks>Diagnostic duration prefers the selected clock. If its timestamp or elapsed-time measurement fails,
+    /// fault notification receives the actual monotonic System-clock duration of this transaction attempt.</remarks>
     public async Task SendAsync<T>(ConsumeContext<T> context, OutboxConsumeOptions options, IPipe<OutboxConsumeContext<T>> next, CancellationToken cancellationToken = default)
         where T : class
     {
@@ -84,7 +86,16 @@ internal sealed class EntityFrameworkOutboxContextFactory<TBus, TDbContext> :
 
             var lockId = NewId.NextGuid();
 
-            long startedAt = _timeProvider.GetTimestamp();
+            long systemStartedAt = TimeProvider.System.GetTimestamp();
+            long? startedAt = null;
+            try
+            {
+                startedAt = _timeProvider.GetTimestamp();
+            }
+            catch (Exception)
+            {
+                // Optional measurement cannot prevent the authoritative database operation.
+            }
 
             await using var transaction = await _dbContext.Database.BeginTransactionAsync(_isolationLevel, operationCancellationToken)
                 .ConfigureAwait(false);
@@ -136,7 +147,7 @@ internal sealed class EntityFrameworkOutboxContextFactory<TBus, TDbContext> :
                     catch (Exception exception)
                     {
                         await context.NotifyFaultedAsync(
-                            _timeProvider.GetElapsedTime(startedAt),
+                            GetFaultDuration(startedAt, systemStartedAt),
                             TypeCache<T>.ShortName,
                             exception,
                             cancellationToken: operationCancellationToken).ConfigureAwait(false);
@@ -154,7 +165,7 @@ internal sealed class EntityFrameworkOutboxContextFactory<TBus, TDbContext> :
                 catch (Exception exception)
                 {
                     await context.NotifyFaultedAsync(
-                        _timeProvider.GetElapsedTime(startedAt),
+                        GetFaultDuration(startedAt, systemStartedAt),
                         TypeCache<T>.ShortName,
                         exception,
                         cancellationToken: operationCancellationToken).ConfigureAwait(false);
@@ -205,6 +216,23 @@ internal sealed class EntityFrameworkOutboxContextFactory<TBus, TDbContext> :
             cancellationToken.ThrowIfCancellationRequested();
             throw;
         }
+    }
+
+    TimeSpan GetFaultDuration(long? startedAt, long systemStartedAt)
+    {
+        if (startedAt.HasValue)
+        {
+            try
+            {
+                return _timeProvider.GetElapsedTime(startedAt.Value);
+            }
+            catch (Exception)
+            {
+                // Preserve required fault notification with an independently measured duration.
+            }
+        }
+
+        return TimeProvider.System.GetElapsedTime(systemStartedAt);
     }
 
     /// <summary>Adds the EF Core provider identity to the pipeline probe.</summary>

@@ -122,7 +122,7 @@ public abstract class ConsumerAgent<TKey> :
             LogContext.SetCurrentIfNull(_context.LogContext);
 
             using var tokenSource = _context.StopTimeout.HasValue
-                ? new CancellationTokenSource(_context.StopTimeout.Value)
+                ? new CancellationTokenSource(_context.StopTimeout.Value, _context.GetTimeProvider())
                 : new CancellationTokenSource();
 
             await this.StopAsync("Consume Loop Exited", tokenSource.Token).ConfigureAwait(false);
@@ -246,7 +246,7 @@ public abstract class ConsumerAgent<TKey> :
 
             if (_context.ConsumerStopTimeout != null)
             {
-                cancellationTokenSource = new CancellationTokenSource(_context.ConsumerStopTimeout.Value);
+                cancellationTokenSource = new CancellationTokenSource(_context.ConsumerStopTimeout.Value, _context.GetTimeProvider());
                 registration = cancellationTokenSource.Token.Register(CancelAndCaptureFailures);
             }
 

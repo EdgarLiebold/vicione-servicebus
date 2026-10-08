@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:29fe160a2b915f54b7bec48467d1ed3b7db7526fcaf357179d0d8f4aae021ff8",
+  "claims": [
+    {
+      "id": "claim_2f3e9d3faff0492ca2a660e0df2a5aea",
+      "statement": "The repository demonstrates consumer/request registration, endpoint configuration and InMemory operation in an executable SuiteComposition.",
+      "evidence": [
+        {
+          "resource": "repo://samples/SuiteComposition/Program.cs",
+          "version": "repo-file-v1:sha256:75e71fec6e23b9176ed3024ceee04d276cee0847f0c39b61881ba52edd620a9d"
+        },
+        {
+          "resource": "repo://samples/SuiteComposition/SuiteCompositionTypes.cs",
+          "version": "repo-file-v1:sha256:e5fd7e466519a6fba332053b5cb75a50d415aed0dd70c0f551c430181a3508d5"
+        }
+      ]
+    },
+    {
+      "id": "claim_f1a19d9de3d440e9957df96f53681ae4",
+      "statement": "Consumer response and request client application methods use typed asynchronous operations.",
+      "evidence": [
+        {
+          "resource": "repo://samples/DeveloperJourneys/Journey04RequestResponse.cs",
+          "version": "repo-file-v1:sha256:08d0f17f02cde473558d68c41bf0cb87d720b662cef55d19693a1df6913707ec"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Abstractions/ConsumeContext.cs",
+          "version": "repo-file-v1:sha256:794be20f8ca3e1aa76d3641938f91d8045b80b44b732d6fdd629d5ba96cd3d24"
+        }
+      ]
+    },
+    {
+      "id": "claim_a6c6631229d042a19c044981d8c80b4f",
+      "statement": "Automatic endpoint names can be derived from DefaultEndpointNameFormatter.Consumer.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Configuration/DefaultEndpointNameFormatter.cs",
+          "version": "repo-file-v1:sha256:aabcd1fef862ef31a67d794ac0ab4449493b5e896ecea965accc2583ee8f9616"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:44:57.086Z"
+  }
+}

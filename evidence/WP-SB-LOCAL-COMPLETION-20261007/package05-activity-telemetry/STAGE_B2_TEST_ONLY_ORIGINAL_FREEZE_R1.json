@@ -1,0 +1,15 @@
+{
+  "kind": "P05_B2_TEST_ONLY_ORIGINAL_FREEZE",
+  "source_sha256": {
+    "src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs": "4d008ca99020815d1453376e277cc06ea57ca2db75d0a7ffb6fea279a4ab64c4",
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchActivityHandoffIsolationTests.cs": "f097715bd98b8d9fbbfd516733f8aba4a17de24f57de3ac9c73ba9db2921e213",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "cf28573d00c8b37459c630a708c8a98a20da16b2a781f26c35799dd79fb3a136"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-test-only-original-owner-r1",
+  "native_cases": 6,
+  "new_requirement_rows": 1,
+  "root803_read_sha256": "34d56c2d06ef1339159b9b4ca3a20b2dceb0d8b89d8ee63da4680382cab51bb1",
+  "research_plan_sha256": "f1cbe31a2db2c342555616458d19972c974ce6e2174c9a95971f472d9ef20566",
+  "original_checkout": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed",
+  "limits": "Batchoriginal; accepted P06/A/B1 present. No B2 native run or product correction yet."
+}

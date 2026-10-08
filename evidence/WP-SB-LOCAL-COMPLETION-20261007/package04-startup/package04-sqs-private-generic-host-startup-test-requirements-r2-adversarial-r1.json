@@ -1,0 +1,237 @@
+{
+  "kind": "INTERNAL_READONLY_P04_PRIVATE_SQS_STARTUP_REQUIREMENT_SUCCESSOR_R2_DELTA_REVIEW_R1",
+  "utc": "2026-10-07T08:14:46.912772+00:00",
+  "status": "NO_BLOCK_FOR_PRIVATE_DRAFT_NATIVE_PREPARATION",
+  "findings": [],
+  "reviewer": "todo_reconciliation_review",
+  "inputs": {
+    "prepared": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/PREPARED.json",
+    "sha256": "9cdd967d24e090bbef0c24331f20eebc99b59599e9bb35334e177dc0c8bf82b6",
+    "prior_review": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-sqs-private-generic-host-startup-test-adversarial-r1.json",
+    "prior_review_sha256": "5c5b4a819647ad13d31aea433ef7584eaefcaead0551ad846f8f27a23dcddebc",
+    "test": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/AmazonSqsGenericHostStartupTests.cs",
+    "test_sha256": "074654ee59e1c22a382a702352d2a656c766f08b50f827c83dc5351c9cf698d3",
+    "project": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+    "project_sha256": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f",
+    "requirements": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/AmazonSqsRequirements.json",
+    "requirements_sha256": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa",
+    "prior_canonical_requirements_sha256": "4cac888fdd0a09ec5b3d9077fe49f4c9fbe5b617ce9ed37f069e174f99d08c05"
+  },
+  "delta": {
+    "one_using_four_passive_attributes_only": true,
+    "R1_original183_behavior_byte_exact_after_removing5_added_lines": true,
+    "R2_lines": 188,
+    "project_same_R1_reviewed_Hosting_delta": true,
+    "old199_ordered_records_and_raw_prefix_bytes": 71240,
+    "new_requirement_rows": [
+      {
+        "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+        "variantKey": "selected-named-options-validated-by-generic-host-before-runtime",
+        "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+        "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests",
+        "testMethod": "SelectedNamedInvalidOptionsFailBeforeRuntime"
+      },
+      {
+        "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+        "variantKey": "unselected-default-options-do-not-reject-selected-named-sqs",
+        "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+        "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests",
+        "testMethod": "UnusedInvalidDefaultCannotRejectCoherentNamedBus"
+      },
+      {
+        "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+        "variantKey": "selected-default-options-remain-validated-before-runtime",
+        "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+        "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests",
+        "testMethod": "SelectedInvalidDefaultStillFailsBeforeRuntime"
+      },
+      {
+        "requirementId": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+        "variantKey": "coherent-named-sqs-reaches-selected-pre-runtime-boundary",
+        "testAssembly": "ViciOne.ServiceBus.AmazonSqs.Tests",
+        "testType": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests",
+        "testMethod": "CoherentNamedBusReachesExactlyTheSameRuntimeBoundary"
+      }
+    ],
+    "total_rows": 203,
+    "four_method_metadata_rows_bind_five_theory_expanded_planned_cases": true
+  },
+  "projection_semantics": {
+    "requirement_owner": "REQ-VSB-AWS-SQS-HOST-CONFIGURATION",
+    "owner_ID_preexisted": true,
+    "new_attribute_projection_pairs_exact": true,
+    "all203_distinct_keys": true,
+    "existing_verifier": "Requires exactlyone passive attribute per test method, five canonical JSON fields, unique requirementId/variantKey keys, matching actual declared method/FQN/assembly. One row for a Theory method is the existing method-level metadata contract; two native data IDs remain separate executor evidence.",
+    "compiled_projection_check_pending": true,
+    "owner_hashes": {
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs": "d78d054d54468692e35500dca6c90e706e6a77bfcbb7d1878bcb4bc97fba4e9e",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs": "130f488a8ff8ddc7d43561f77f6188e5d3088de109aef1ba588c454e73180c66",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/RequirementCoverageProjectionTests.cs": "beb543a437438a862898af22a961af26408d04c97bac4d2c6efa90c70c97cc34"
+    }
+  },
+  "module_decision": {
+    "existing_test_owner": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+    "canonical_Unit_profile": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/ViciOne.ServiceBus.Tests.Unit.slnx",
+    "Unit_sha256": "ac102688f92ab8ee214af159e05703a6d0bc43dde268efe78c4ca41e82f45091",
+    "Unit_membership_exactly_once": true,
+    "new_test_project_or_profile_filter_addition_needed": false,
+    "no_whole_SQS_module_read_or_run_acceptance": true
+  },
+  "prior_behavior_review_reused": {
+    "sha256": "5c5b4a819647ad13d31aea433ef7584eaefcaead0551ad846f8f27a23dcddebc",
+    "cases": 5,
+    "methods": 4,
+    "blocking_findings": 0,
+    "no_startup_runtime_or_cloud_grade": true,
+    "Dispose_physical_join_without_hard_independent_timeout_limit_retained": true
+  },
+  "checks": [
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/PREPARED.json",
+      "pass": true,
+      "details": {
+        "actual": "9cdd967d24e090bbef0c24331f20eebc99b59599e9bb35334e177dc0c8bf82b6"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r1/PREPARED.json",
+      "pass": true,
+      "details": {
+        "actual": "e7ff915ec5d7c2294d8d9fba9a46de7348c491f3395b5ee19b15e0871b46c477"
+      }
+    },
+    {
+      "check": "SHA /private/tmp/vicione-servicebus-local-completion-reviews-20261007/package04-sqs-private-generic-host-startup-test-adversarial-r1.json",
+      "pass": true,
+      "details": {
+        "actual": "5c5b4a819647ad13d31aea433ef7584eaefcaead0551ad846f8f27a23dcddebc"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "074654ee59e1c22a382a702352d2a656c766f08b50f827c83dc5351c9cf698d3"
+      }
+    },
+    {
+      "check": "sole one using plus four attributes exact R1 bytebehavior",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "e780f58cd17b8d4b1ad7e937dbc3d4903513be2d68cb8ddbb2f339a965cb696f"
+      }
+    },
+    {
+      "check": "project exact accepted R1 draft",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/ViciOne.ServiceBus.AmazonSqs.Tests.csproj",
+      "pass": true,
+      "details": {
+        "actual": "1fa6b10f5273864ee89a9059b9eb6d7d37762a86137744a82ac364dae3241b84"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Requirements/AmazonSqsRequirements.json",
+      "pass": true,
+      "details": {
+        "actual": "4cac888fdd0a09ec5b3d9077fe49f4c9fbe5b617ce9ed37f069e174f99d08c05"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/AmazonSqsRequirements.json",
+      "pass": true,
+      "details": {
+        "actual": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa"
+      }
+    },
+    {
+      "check": "199 prior ordered objects preserved203 total exactly4 appended",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "all prior raw record bytes preserved except closing3",
+      "pass": true,
+      "details": {
+        "preserved_bytes": 71240,
+        "prior_closing3_hex": "0a5d0a"
+      }
+    },
+    {
+      "check": "exact four method projections/attributes full FQN identities",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "entire203 projection exact fivefield canonical distinct requirement variants",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "same host-config requirement ID already established",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "three Facts one Theory/two InlineData still five actual planned cases",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "existing SQS module exactlyonce canonical Unit membership",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "normal passive projection owners exist",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "no canonical test installed/no project or projection mutation",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "R1 behavior source hash exact still preserved",
+      "pass": true,
+      "details": null
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/AmazonSqsGenericHostStartupTests.cs",
+      "pass": true,
+      "details": {
+        "actual": "074654ee59e1c22a382a702352d2a656c766f08b50f827c83dc5351c9cf698d3"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/AmazonSqsRequirements.json",
+      "pass": true,
+      "details": {
+        "actual": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa"
+      }
+    },
+    {
+      "check": "SHA /Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/sqs-stage-a-private-test-preparation-r2/PREPARED.json",
+      "pass": true,
+      "details": {
+        "actual": "9cdd967d24e090bbef0c24331f20eebc99b59599e9bb35334e177dc0c8bf82b6"
+      }
+    }
+  ],
+  "check_count": 23,
+  "limits": [
+    "Private passive metadata/project delta only; no canonical application, compiler, lock restore, native original/fixed or product startup acceptance.",
+    "Reviewed Hosting lock successor still follows actual Root private clone restore; current original lock remains unchanged here.",
+    "No manual untested classification or failed tree-sitter output is used as evidence; finite syntax extraction here only binds these explicit four draft methods and JSON rows.",
+    "R1 report/prepared/private draft retained exactly. No reviewer read credit transfers to Root. No .NET/MSBuild/Docker/SSH/process execution or source/test/tool/doc mutations; only this new immutable report written."
+  ]
+}

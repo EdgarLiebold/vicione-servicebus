@@ -1,0 +1,2634 @@
+{
+  "status": "QUALIFIED_C3_M2_ACTUAL63_19FINITE_RED44NAMED_HEALTHY_6088COMPILED_ONECAUSE__FINAL_POST_PENDING",
+  "reviewer": "/root/telemetry_adversarial",
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/RESULT.json": "372ef86abe95095c085538acb1e68470778716b832caa9e6e55b226c5cf9ac74",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/MUTATION_PREPARED.json": "ef331696327559046f68ca8d09a10feb4f7f69352e85b796394844c2676800e6",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/MUTATION.diff": "52737d483f9b52a016b8c868991ad2317b8a45104b74d7fce637e30437ba5f72",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C3_FREEZE_R1.json": "a4e3c749f56cc901e53e4a3a3d230ae5b6686c03673d4dc21496b57b64625227",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE806_STAGE_C3_READ_CLOSURE_R2.json": "956f7ed527a243575b13c78a0dd7133ee7b451dcf6b054083d65cb6c86a7efa5",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/package05-stage-c3-actual-two-mutants-prepared-adversarial-r1.json": "0c6ab54b3bfd2ec7eddb0a507876ce2b3bf7ae5f273f76efca9e5d5b973c6390",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c3-source4-fixed6-adversarial-r1.json": "1c12d7e55c56fad9bf1ac86116ee1d92878bb6055583ecc2d21b336ac1b4a84e",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c3-original-native-artifact-review-r1.json": "993790935874261df620247a20d471a1e4b98c4cfc8af9c485be848b896778db",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c3-fixed-native-artifact-review-r1.json": "55664a0099b043243c88ddfb1c097cb4f46bac1e1888532e2e677a160393378d"
+  },
+  "checks": {
+    "all6088_Ocanonical_clone_equalpathsets": true,
+    "exact_onefile_literal_guard_removal_cause": true,
+    "canonical_and_mutant_manifest_digest_exact_rootprep": true,
+    "prep_result_independent_prediff_hashes_bound": true,
+    "whole_diff_archived_exact": true,
+    "all6raw16runtimehashes": true,
+    "all12_PE_PDB_ids": true,
+    "all3799_actualclone_generated_documentchecksums": true,
+    "mutant4product_test_PDB_actualclone_paths_hashes": true,
+    "all26_Root14extra12store_PDB_actualclone_unchanged": true,
+    "other3products_test_Req_frozenfixedsame": true,
+    "all84_sharedbuildtest_contexts_clone_exact": true,
+    "Req4697_wholecompiledresource_exact": true,
+    "all12_deps_archive_actualclone_output_build_equal": true,
+    "native_exact63_fullIDevents_receipt": true,
+    "only_selected19finiteRed44namedHealthy": true,
+    "native63summary19fail44pass0skip": true,
+    "actual_native_module_mutantclone_bound": true,
+    "Root_lockedrestore_build0_strict0_0_native2": true,
+    "3_unique_closed_nonempty_complete_binlogs": true,
+    "O_C3_reference_only_two_noncompiled_coveragepy": true,
+    "no_setup_timeout_fatal_compiler_credit": true,
+    "elapsed19_exact12Null108_3Same100_4Type103": true,
+    "elapsed15_nonCancel_actualClock310_helper_Telemetry_origin": true,
+    "actual_mutant_elapsed_helper54_bound_nonCancel15": true,
+    "four_cancellation_typeonly_limit_no_exposedclockstack": true
+  },
+  "source_path_count": 6088,
+  "exact_changed_paths": [
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs"
+  ],
+  "canonical_source_reference": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+  "canonical_manifest_sha256": "b634f906efb01cfeae5d3694b85ea4ed7edb4224b44fa24cd6fbd190c7459359",
+  "mutant_manifest_sha256": "0c579cb05a7abc573ff5c93a6e5605eae96d84e822b8e6d2631f9af83ee006d6",
+  "cause": {
+    "before": "        try\n        {\n            return _timeProvider.GetElapsedTime(timestamp).TotalSeconds;\n        }\n        catch\n        {\n            // An unavailable duration cannot replace the actual persisted, failed or canceled outcome.\n            return null;\n        }",
+    "after": "        return _timeProvider.GetElapsedTime(timestamp).TotalSeconds;"
+  },
+  "O_vs_C3_noncompiled_coverage_differences": [
+    "tools/ci/aggregate_coverage_receipts.py",
+    "tools/ci/coverage_receipt.py"
+  ],
+  "other_fixed5_hashchecks": {
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs": true,
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs": true,
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs": true,
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": true
+  },
+  "shared84_hashchecks": {
+    ".editorconfig": true,
+    ".gitattributes": true,
+    ".github/workflows/native-tests.yml": true,
+    "Directory.Build.props": true,
+    "Directory.Build.targets": true,
+    "Directory.Packages.props": true,
+    "NuGet.config": true,
+    "README.md": true,
+    "ViciOne.ServiceBus.Engineering.slnx": true,
+    "ViciOne.ServiceBus.Tests.Unit.slnx": true,
+    "ViciOne.ServiceBus.slnx": true,
+    "ViciOne.ServiceBus.snk": true,
+    "global.json": true,
+    "signing.props": true,
+    "src/Directory.Build.props": true,
+    "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj": true,
+    "src/ViciOne.ServiceBus.Abstractions/packages.lock.json": true,
+    "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj": true,
+    "src/ViciOne.ServiceBus.Courier/packages.lock.json": true,
+    "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj": true,
+    "src/ViciOne.ServiceBus.Futures/packages.lock.json": true,
+    "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj": true,
+    "src/ViciOne.ServiceBus.Initializers/packages.lock.json": true,
+    "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj": true,
+    "src/ViciOne.ServiceBus.JobService/packages.lock.json": true,
+    "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj": true,
+    "src/ViciOne.ServiceBus.Mediator/packages.lock.json": true,
+    "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj": true,
+    "src/ViciOne.ServiceBus.Sagas/packages.lock.json": true,
+    "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj": true,
+    "src/ViciOne.ServiceBus.Testing/packages.lock.json": true,
+    "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj": true,
+    "src/ViciOne.ServiceBus/packages.lock.json": true,
+    "tests/Directory.Build.props": true,
+    "tests/Directory.Build.targets": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Brokers/BrokerOutageControlClient.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/TestConfigurationProvider.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Configuration/ViciOneTestOptions.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Databases/TestDatabaseName.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/packages.lock.json": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ApiSurfaceGlobalUsings.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Brokers/ReceiveEndpointRecoveryObserver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryConsumerCommitTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/InMemoryInboxPipelineTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Events/HostReadyEventTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxCheckpointDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/InMemoryOutboxTestContextFactory.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/InMemoryOutbox/OutboxConsumerIdentityTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Initializers/InitializerConventionRegistryTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Internals/ReflectionImplementationTestDrivers.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/KillSwitch/KillSwitchTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalEntryTestFactory.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/MessageJournal/MessageJournalWriterTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/MessagingSystemNormalizerTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Monitoring/OutboxTelemetryTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Operations/ProbeResultBuilderTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Rescue/RescueContextTestFactory.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Retry/RetryFilterTestFactory.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Runtime/ServiceBusRuntimeLifecycleTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/SagaStateMachine/SagaStateMachineExecutionTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/ForwardingExpirationTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Serialization/PayloadAdmissionSerializationTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Topology/GlobalTopologyTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionBusTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/AmbientTransactionNotificationTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/BufferedBusTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/TransactionFilterTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transactions/UnusedBus.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/AsyncBusHandleLifecycleTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/BusDepotTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/HostedServiceLifecycleTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/ReceiveMessageLimitsTestContext.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/Transports/RiderCollectionTestDriver.cs": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj": true,
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/packages.lock.json": true,
+    "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj": true,
+    "tests/ViciOne.ServiceBus.Tests/packages.lock.json": true,
+    "tests/testconfig.json": true,
+    "tests/testsettings.json": true
+  },
+  "raw_hashchecks": {
+    "p05-c3-m2-restore-r1.log": true,
+    "p05-c3-m2-restore-r1-20261007-023046--75136--6P23Na.binlog": true,
+    "p05-c3-m2-build-r1-20261007-023125--75188--na9Ona.binlog": true,
+    "p05-c3-m2-build-r1.log": true,
+    "p05-c3-m2-focused-r1-20261007-023250--75251--2UmSPc-dotnet-test.binlog": true,
+    "p05-c3-m2-focused-r1.log": true
+  },
+  "runtime_hashchecks": {
+    "ViciOne.ServiceBus.Tests.runtimeconfig.json": true,
+    "ViciOne.ServiceBus.Mediator.dll": true,
+    "ViciOne.ServiceBus.JobService.dll": true,
+    "ViciOne.ServiceBus.Tests.testconfig.json": true,
+    "ViciOne.ServiceBus.Testing.dll": true,
+    "ViciOne.ServiceBus.Courier.dll": true,
+    "ViciOne.ServiceBus.Futures.dll": true,
+    "ViciOne.ServiceBus.Abstractions.dll": true,
+    "ViciOne.ServiceBus.Initializers.dll": true,
+    "ViciOne.ServiceBus.Sagas.dll": true,
+    "ViciOne.ServiceBus.Tests.pdb": true,
+    "ViciOne.ServiceBus.Tests.Infrastructure.dll": true,
+    "ViciOne.ServiceBus.dll": true,
+    "ViciOne.ServiceBus.Tests.dll": true,
+    "ViciOne.ServiceBus.Tests.InternalAccess.dll": true,
+    "ViciOne.ServiceBus.Tests.deps.json": true
+  },
+  "assemblies": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/runtime/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "904b31611c37e9c7d2ed6f64057c82343dad1a804bfcf7e64462bb6979852a00",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3785472434,
+          "guid": "619bad19-cadb-4562-9ccf-9de0ae253d9b",
+          "path": "ViciOne.ServiceBus.Abstractions.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "19ad9b61dbca62459ccf9de0ae253d9bb2b9a1e1",
+        "sha256": "d25fc77697e04aba8d12503a444f54e3ee97bbe80673ed31734cb4ddbeb70551",
+        "documents": 700,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 700
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "1c435e5e5110aa3a01190207009c9ce20ce3f3efc17910da4c6648ab5028173e",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/DurableSend/DurableSendId.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "6b752fbd7adc68bcb32e1406ec5010470c1cafa0eadfd1031c0ca59408317db6",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "6b752fbd7adc68bcb32e1406ec5010470c1cafa0eadfd1031c0ca59408317db6"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendFailureKind.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "020874905a000f23311fdc7e7c33613d26ab64013fb3adb75cc6b68d805786b5",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "020874905a000f23311fdc7e7c33613d26ab64013fb3adb75cc6b68d805786b5"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendStoreSnapshot.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "1578782accb4f5fc0a2bcfd902ba2c1dbe762255bca61abb9ec8816fe14d4a58",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "1578782accb4f5fc0a2bcfd902ba2c1dbe762255bca61abb9ec8816fe14d4a58"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendAdmissionResult.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "101a6c140fb669cbc4fa8984394343b2edb620ae00006c928bfe0a8c29eb73bd",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "101a6c140fb669cbc4fa8984394343b2edb620ae00006c928bfe0a8c29eb73bd"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendCompletionMode.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "7a14471296d353916f2b2349cfec1aabcaa3a79024451c2a72bfa1ef31d697a3",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "7a14471296d353916f2b2349cfec1aabcaa3a79024451c2a72bfa1ef31d697a3"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDelivery.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "4345e43534aa1b6da7753e1723b81cae3067d6e4708edd4fb372012142365e2d",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "4345e43534aa1b6da7753e1723b81cae3067d6e4708edd4fb372012142365e2d"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchContext.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "6a9b7e31ae5a53d4321d28b953287f790d0fe1841ebdb9fafd9b9fbf2f24c94f",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "6a9b7e31ae5a53d4321d28b953287f790d0fe1841ebdb9fafd9b9fbf2f24c94f"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchResult.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "c893789c5529d7629cc9bdee017221e218285254e63da661597da074d70544a9",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "c893789c5529d7629cc9bdee017221e218285254e63da661597da074d70544a9"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendLease.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "82ecace9c57247e84c10a68a3f2105f05f35754fdf5b17ea2adf2efddbb1e0d8",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "82ecace9c57247e84c10a68a3f2105f05f35754fdf5b17ea2adf2efddbb1e0d8"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendStoreLimits.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "c733f035ebcd74208bdc3353b1b0197d807d7bae6539100cb9738820b923abd7",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "c733f035ebcd74208bdc3353b1b0197d807d7bae6539100cb9738820b923abd7"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendConsumerCompletion.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "eae0d3d24b8983a6fdc5518daf4d27547fe74384fab9b12b3acdae2ecd2ef06b",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "eae0d3d24b8983a6fdc5518daf4d27547fe74384fab9b12b3acdae2ecd2ef06b"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendDispatcher.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "47f679ff9cf7564b4bd1a57dcc7ae661f1336a54acf243613173e179c0a18b4c",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "47f679ff9cf7564b4bd1a57dcc7ae661f1336a54acf243613173e179c0a18b4c"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IOutboxStore.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "f8b1f8ad6f7dfc1d0f5ce5cdaac48b4faf9cb5c40d476f6767008e9e9400166d",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "f8b1f8ad6f7dfc1d0f5ce5cdaac48b4faf9cb5c40d476f6767008e9e9400166d"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Transports/ITransportSendFailureClassifier.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "53133b7b9b87ead3d361c718e96b82ba17696cd2fcd217a1547e6652ff2b945a",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "53133b7b9b87ead3d361c718e96b82ba17696cd2fcd217a1547e6652ff2b945a"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/runtime/ViciOne.ServiceBus.Courier.dll",
+      "sha256": "be4c39ad0254df462fb64437c75befc258274c052b777ce2b794428fec94c359",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3468210053,
+          "guid": "ee2391ef-971a-4730-b1f2-650d347a5dff",
+          "path": "ViciOne.ServiceBus.Courier.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "ef9123ee1a973047b1f2650d347a5dff85afb8ce",
+        "sha256": "6831f7317ad55ab0de4b325c59845e0f47565cf2ad19947b76d2a20b0bb6444b",
+        "documents": 146,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 146
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "12a47ee17faa23d7c2d64ca3d963ad47fa82ac64ce3d30b83ddd5f0e06568923",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/runtime/ViciOne.ServiceBus.Futures.dll",
+      "sha256": "093eb11583bb4e9b2c0793c10bcc17b75551dfc223e58db35cbb225395033f6b",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3581699053,
+          "guid": "522cd14c-baf9-4221-b64d-831a96511b68",
+          "path": "ViciOne.ServiceBus.Futures.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "4cd12c52f9ba2142b64d831a96511b68ed637cd5",
+        "sha256": "c0a4c2084b38dabb0678335d42a2753ef122ed51c2438a9485507737aac53adb",
+        "documents": 61,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 61
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "144e22b300af854c82c420a5bc75ad8864ac520574ae9c6c114c0e2618ddc3e5",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/runtime/ViciOne.ServiceBus.Initializers.dll",
+      "sha256": "64bb21b8574eaa5e93f57d3e0aa5def86a3806a1e46f80e1332dbe27a2dfbc6c",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3429294699,
+          "guid": "57ddabad-db4c-4516-88b4-28fe40662c77",
+          "path": "ViciOne.ServiceBus.Initializers.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "adabdd574cdb164588b428fe40662c776be266cc",
+        "sha256": "9ed2d8e7f978b7c2bdb2ae3d0319ab2134bc5ef010184daa008668021585f692",
+        "documents": 11,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 11
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "dc8ea2c4d5eddc64e5ce5d768be6e0148ca1ef4b70a3130f67efa5084df8e9e3",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/runtime/ViciOne.ServiceBus.JobService.dll",
+      "sha256": "6b2c28f033141618696ca6bac8e26423ec41edc56339e948c75623a826c82ce5",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3204409886,
+          "guid": "54fb920d-0264-4e60-b657-fd89bcf2cdb9",
+          "path": "ViciOne.ServiceBus.JobService.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "0d92fb546402604eb657fd89bcf2cdb91e6affbe",
+        "sha256": "71195170656c4e57de0fff6d3d39ff9cc0600278a33a3d89c16f25dd39cc3b61",
+        "documents": 175,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 175
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "c93297f7738e9cbaac5f786d378cb9c7b018dcfac862f17f4b67c7b27df71ea7",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/runtime/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "edd72e03c3cd8602bac89767c4350d95a570031f757cf410159de2f9eb0af6a7",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3758735501,
+          "guid": "7f31dbe0-972b-40dd-a97e-2e8d8f102ddf",
+          "path": "ViciOne.ServiceBus.Mediator.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "e0db317f2b97dd40a97e2e8d8f102ddf8dc009e0",
+        "sha256": "96b5978854124079e570b7e22feba3de81d3a35c8d3599e212a5004fd860eb1f",
+        "documents": 31,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 31
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "3126bc9f3572f012c55fdfd20c24b8116f36a846a5117f20399ed273e4a4dfa9",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/runtime/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "50575b4085b0fced0f34ee16bb9e5d507d47508f00a3db4f80a2bc7f27dcbb8b",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4129308551,
+          "guid": "eeff1245-b5be-45b8-8430-6724d3610eba",
+          "path": "ViciOne.ServiceBus.Sagas.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "4512ffeebeb5b84584306724d3610eba873f20f6",
+        "sha256": "0739d04a3bfcd67f75541ebd8d29f27b80275c19dd385955ccff3b10269d5f28",
+        "documents": 374,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 374
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "3180e0a8058ac483bd908e0c54125a33f3a9cd45a9faed1587fe97c645c02716",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/runtime/ViciOne.ServiceBus.Testing.dll",
+      "sha256": "1e9a71da71598289dcc51a48961f1775f5fa9d6c0cecce8e0aaa62bcc5c1638c",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2168287417,
+          "guid": "45cc4b4e-1486-4b2f-939f-e05c046902c9",
+          "path": "ViciOne.ServiceBus.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "4e4bcc4586142f4b939fe05c046902c9b9703d81",
+        "sha256": "53c2aee59f592acb87230ffee2d776ceac182e8c9d9e84df4dc561af1827ad50",
+        "documents": 104,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 104
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "cac17dff6af3f0fe91656ca33e097b21a6537caf1fd6eab8bd6342187b9232d7",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "89343cb1e1469df2ced73a5dca19281d7dda5bd87c555f2418de34c3d4041f93",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2202635069,
+          "guid": "b7fd0f86-700c-46fc-857f-c18b39858a77",
+          "path": "ViciOne.ServiceBus.Tests.Infrastructure.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "860ffdb70c70fc46857fc18b39858a773d8b4983",
+        "sha256": "b3c6e4d5bb3ac81807001d5f39e92a3b6c278ff3649f99a435203beb744c386c",
+        "documents": 9,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 9
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "00b016d6705a3ad2a27d29b7417db0ebc08f6ead4f6b52ad00eb41724127f677",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/runtime/ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "sha256": "fa41b256d1ee5f882e9616e0095c3baab9dc39f067da99bc97e5c33730e95240",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2935366491,
+          "guid": "88820343-40a0-42af-af8b-03a71c472f26",
+          "path": "ViciOne.ServiceBus.Tests.InternalAccess.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "43038288a040af42af8b03a71c472f265b23f6ae",
+        "sha256": "7ccea8ac1fb738a664bdcb1a98a1aa103a1ca9bf3bef5fc1dce5032f0135d38d",
+        "documents": 38,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 38
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "a6d61ba0cb937ddc7f548a74ae7e2f02874f49ffd004fbde491708db514587c9",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "4ff7066cdd86cda1ea8e3890e4e6e437be99c4690192aeae750e392133ac2f96",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "4ff7066cdd86cda1ea8e3890e4e6e437be99c4690192aeae750e392133ac2f96"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/runtime/ViciOne.ServiceBus.Tests.dll",
+      "sha256": "7a17eccea69b7efd6b64368fdf20005d91e124ad342716668099b62b1835341a",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3293067424,
+          "guid": "a1d3c25b-d8a8-4829-af69-d7f18bcaed48",
+          "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "5bc2d3a1a8d82948af69d7f18bcaed48a03848c4",
+        "sha256": "4a6678fc8f9e772c9e3b4254d8171e37f49043ed51d14e2bea8c6ef51aba6c97",
+        "documents": 810,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 810
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "22acf6a046e0cfccac5363aeb2de0a97bea658a76dedae7ad91c99fe1ba939e1",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "e6a0563a8a2584d08b9bed6f0b6ef6b78f7fac2888f7344d9ec6ad562a709a13",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "e6a0563a8a2584d08b9bed6f0b6ef6b78f7fac2888f7344d9ec6ad562a709a13"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "8ff64032beabbffab0518f90bb7a62b12df83a5dd886e3d69ecbeab501cf58c5",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "8ff64032beabbffab0518f90bb7a62b12df83a5dd886e3d69ecbeab501cf58c5"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/tests/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "41c159a7730682a1c30d57d6c7e1c81c430fba11d9a9fb70ff827df85c7fb8ee",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "41c159a7730682a1c30d57d6c7e1c81c430fba11d9a9fb70ff827df85c7fb8ee"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/runtime/ViciOne.ServiceBus.dll",
+      "sha256": "e35a5bb1fda0d267eeba381811a1c480b9635d8121d4e69af85d99b33407c9e5",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2812804869,
+          "guid": "25c68c60-1cf5-4e02-bb3a-3c4599521796",
+          "path": "ViciOne.ServiceBus.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "608cc625f51c024ebb3a3c459952179605ffa7a7",
+        "sha256": "8e89d7c5326a62bbe4554125769bb025a6e144f0456c7bb19c19cf62b142851b",
+        "documents": 1340,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 1296,
+          "EMBEDDED_SOURCE": 44
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "69ab00446675e59d4e42be0a16e7f1dab20b6c9cdac77fab062adc8863f380dc",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingPolicy.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "8641f388275391cc57c72dc9fc9a49b860a3c98edde716ebc6a639a1db82c5a9",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "8641f388275391cc57c72dc9fc9a49b860a3c98edde716ebc6a639a1db82c5a9"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "c206f81c611584f1982f03f55b1044cae4613d3775650fa291b43a910134d625",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "c206f81c611584f1982f03f55b1044cae4613d3775650fa291b43a910134d625"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "77d371f9f003e617a6f2fa250c3b170fa2cc9a3dd1fe98c44d6b2e8f70e40fb2",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "77d371f9f003e617a6f2fa250c3b170fa2cc9a3dd1fe98c44d6b2e8f70e40fb2"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Monitoring/Telemetry/DurableSendDeliveryOutcome.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "a2e7a8b5e75f9bfad968743804c3666bd50597471f8281bbfa3fa82619660840",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "a2e7a8b5e75f9bfad968743804c3666bd50597471f8281bbfa3fa82619660840"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "ac536dd009f59ea5cbe8898d464969da3ba3a2b2e4390fb6fa1272e2380ed11c",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "ac536dd009f59ea5cbe8898d464969da3ba3a2b2e4390fb6fa1272e2380ed11c"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Inbox.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "266f7c5d4ae0ef666477c276b8a44f5c28275094c1233f3f0e441160e7c18383",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "266f7c5d4ae0ef666477c276b8a44f5c28275094c1233f3f0e441160e7c18383"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Outbox.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Scheduling.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "38ec8bca10734bbe111e26b39d0504f4e0818ca6f65ea1a4e8e9b878afec638c",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "38ec8bca10734bbe111e26b39d0504f4e0818ca6f65ea1a4e8e9b878afec638c"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "6ca9990d84571b6bf927087a19190c5f32c77bddb70edec61728d1d19f60d3b9",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "6ca9990d84571b6bf927087a19190c5f32c77bddb70edec61728d1d19f60d3b9"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "0f5fe36c20509eb198daf963a02eff04dce24858aac4470614afaf3729ab4472",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "0f5fe36c20509eb198daf963a02eff04dce24858aac4470614afaf3729ab4472"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingProviderGuard.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "0c3a96b9115fef19f138533be24b111265b66508d03998d7ea4d808f34fb9b4d",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "0c3a96b9115fef19f138533be24b111265b66508d03998d7ea4d808f34fb9b4d"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    }
+  ],
+  "mutant4_test_extra26_PDBtargets": {
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "0f5fe36c20509eb198daf963a02eff04dce24858aac4470614afaf3729ab4472",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "0f5fe36c20509eb198daf963a02eff04dce24858aac4470614afaf3729ab4472"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "6ca9990d84571b6bf927087a19190c5f32c77bddb70edec61728d1d19f60d3b9",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "6ca9990d84571b6bf927087a19190c5f32c77bddb70edec61728d1d19f60d3b9"
+    },
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "ac536dd009f59ea5cbe8898d464969da3ba3a2b2e4390fb6fa1272e2380ed11c",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "ac536dd009f59ea5cbe8898d464969da3ba3a2b2e4390fb6fa1272e2380ed11c"
+    },
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "8ff64032beabbffab0518f90bb7a62b12df83a5dd886e3d69ecbeab501cf58c5",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "8ff64032beabbffab0518f90bb7a62b12df83a5dd886e3d69ecbeab501cf58c5"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingProviderGuard.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingProviderGuard.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "0c3a96b9115fef19f138533be24b111265b66508d03998d7ea4d808f34fb9b4d",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "0c3a96b9115fef19f138533be24b111265b66508d03998d7ea4d808f34fb9b4d"
+    },
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/DurableSendDeliveryOutcome.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Monitoring/Telemetry/DurableSendDeliveryOutcome.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "a2e7a8b5e75f9bfad968743804c3666bd50597471f8281bbfa3fa82619660840",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "a2e7a8b5e75f9bfad968743804c3666bd50597471f8281bbfa3fa82619660840"
+    },
+    "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingPolicy.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingPolicy.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "8641f388275391cc57c72dc9fc9a49b860a3c98edde716ebc6a639a1db82c5a9",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "8641f388275391cc57c72dc9fc9a49b860a3c98edde716ebc6a639a1db82c5a9"
+    },
+    "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendDispatcher.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendDispatcher.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "47f679ff9cf7564b4bd1a57dcc7ae661f1336a54acf243613173e179c0a18b4c",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "47f679ff9cf7564b4bd1a57dcc7ae661f1336a54acf243613173e179c0a18b4c"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchContext.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchContext.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "6a9b7e31ae5a53d4321d28b953287f790d0fe1841ebdb9fafd9b9fbf2f24c94f",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "6a9b7e31ae5a53d4321d28b953287f790d0fe1841ebdb9fafd9b9fbf2f24c94f"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchResult.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchResult.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "c893789c5529d7629cc9bdee017221e218285254e63da661597da074d70544a9",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "c893789c5529d7629cc9bdee017221e218285254e63da661597da074d70544a9"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendCompletionMode.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendCompletionMode.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "7a14471296d353916f2b2349cfec1aabcaa3a79024451c2a72bfa1ef31d697a3",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "7a14471296d353916f2b2349cfec1aabcaa3a79024451c2a72bfa1ef31d697a3"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendFailureKind.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendFailureKind.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "020874905a000f23311fdc7e7c33613d26ab64013fb3adb75cc6b68d805786b5",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "020874905a000f23311fdc7e7c33613d26ab64013fb3adb75cc6b68d805786b5"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Transports/ITransportSendFailureClassifier.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Transports/ITransportSendFailureClassifier.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "53133b7b9b87ead3d361c718e96b82ba17696cd2fcd217a1547e6652ff2b945a",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "53133b7b9b87ead3d361c718e96b82ba17696cd2fcd217a1547e6652ff2b945a"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendLease.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendLease.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "82ecace9c57247e84c10a68a3f2105f05f35754fdf5b17ea2adf2efddbb1e0d8",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "82ecace9c57247e84c10a68a3f2105f05f35754fdf5b17ea2adf2efddbb1e0d8"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendAdmissionResult.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendAdmissionResult.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "101a6c140fb669cbc4fa8984394343b2edb620ae00006c928bfe0a8c29eb73bd",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "101a6c140fb669cbc4fa8984394343b2edb620ae00006c928bfe0a8c29eb73bd"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Contracts/MessageContractIdentity.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "1f5ea0e77adc35a8e9c13be82da56c9fe2b5df936d882008dd56872ea13bb7cb"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/DurableSend/DurableSendId.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/DurableSend/DurableSendId.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "6b752fbd7adc68bcb32e1406ec5010470c1cafa0eadfd1031c0ca59408317db6",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "6b752fbd7adc68bcb32e1406ec5010470c1cafa0eadfd1031c0ca59408317db6"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/SerializedDurableSend.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "f8b1f8ad6f7dfc1d0f5ce5cdaac48b4faf9cb5c40d476f6767008e9e9400166d",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "f8b1f8ad6f7dfc1d0f5ce5cdaac48b4faf9cb5c40d476f6767008e9e9400166d"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDelivery.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDelivery.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "4345e43534aa1b6da7753e1723b81cae3067d6e4708edd4fb372012142365e2d",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "4345e43534aa1b6da7753e1723b81cae3067d6e4708edd4fb372012142365e2d"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendStoreLimits.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendStoreLimits.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "c733f035ebcd74208bdc3353b1b0197d807d7bae6539100cb9738820b923abd7",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "c733f035ebcd74208bdc3353b1b0197d807d7bae6539100cb9738820b923abd7"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendConsumerCompletion.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendConsumerCompletion.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "eae0d3d24b8983a6fdc5518daf4d27547fe74384fab9b12b3acdae2ecd2ef06b",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "eae0d3d24b8983a6fdc5518daf4d27547fe74384fab9b12b3acdae2ecd2ef06b"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IOutboxStore.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IOutboxStore.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6"
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendStoreSnapshot.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendStoreSnapshot.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "1578782accb4f5fc0a2bcfd902ba2c1dbe762255bca61abb9ec8816fe14d4a58",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "1578782accb4f5fc0a2bcfd902ba2c1dbe762255bca61abb9ec8816fe14d4a58"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Scheduling.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Scheduling.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "38ec8bca10734bbe111e26b39d0504f4e0818ca6f65ea1a4e8e9b878afec638c",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "38ec8bca10734bbe111e26b39d0504f4e0818ca6f65ea1a4e8e9b878afec638c"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Outbox.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Outbox.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72"
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Inbox.cs": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Inbox.cs",
+      "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+      "checksum": "266f7c5d4ae0ef666477c276b8a44f5c28275094c1233f3f0e441160e7c18383",
+      "binding": "ACTUAL_DOCUMENT_PATH",
+      "bound_sha256": "266f7c5d4ae0ef666477c276b8a44f5c28275094c1233f3f0e441160e7c18383"
+    }
+  },
+  "deps_archive_actualclone_output_build_chains": [
+    {
+      "dependency": "ViciOne.ServiceBus.Tests/1.0.0",
+      "asset": "ViciOne.ServiceBus.Tests.dll",
+      "archive_sha256": "7a17eccea69b7efd6b64368fdf20005d91e124ad342716668099b62b1835341a",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus/1.0.0",
+      "asset": "ViciOne.ServiceBus.dll",
+      "archive_sha256": "e35a5bb1fda0d267eeba381811a1c480b9635d8121d4e69af85d99b33407c9e5",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus/release/ViciOne.ServiceBus.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Abstractions/1.0.0",
+      "asset": "ViciOne.ServiceBus.Abstractions.dll",
+      "archive_sha256": "904b31611c37e9c7d2ed6f64057c82343dad1a804bfcf7e64462bb6979852a00",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Abstractions.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions/release/ViciOne.ServiceBus.Abstractions.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Courier/1.0.0",
+      "asset": "ViciOne.ServiceBus.Courier.dll",
+      "archive_sha256": "be4c39ad0254df462fb64437c75befc258274c052b777ce2b794428fec94c359",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Courier.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Courier/release/ViciOne.ServiceBus.Courier.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Futures/1.0.0",
+      "asset": "ViciOne.ServiceBus.Futures.dll",
+      "archive_sha256": "093eb11583bb4e9b2c0793c10bcc17b75551dfc223e58db35cbb225395033f6b",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Futures.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Futures/release/ViciOne.ServiceBus.Futures.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Initializers/1.0.0",
+      "asset": "ViciOne.ServiceBus.Initializers.dll",
+      "archive_sha256": "64bb21b8574eaa5e93f57d3e0aa5def86a3806a1e46f80e1332dbe27a2dfbc6c",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Initializers.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Initializers/release/ViciOne.ServiceBus.Initializers.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.JobService/1.0.0",
+      "asset": "ViciOne.ServiceBus.JobService.dll",
+      "archive_sha256": "6b2c28f033141618696ca6bac8e26423ec41edc56339e948c75623a826c82ce5",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.JobService.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.JobService/release/ViciOne.ServiceBus.JobService.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Mediator/1.0.0",
+      "asset": "ViciOne.ServiceBus.Mediator.dll",
+      "archive_sha256": "edd72e03c3cd8602bac89767c4350d95a570031f757cf410159de2f9eb0af6a7",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Mediator.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Mediator/release/ViciOne.ServiceBus.Mediator.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Sagas/1.0.0",
+      "asset": "ViciOne.ServiceBus.Sagas.dll",
+      "archive_sha256": "50575b4085b0fced0f34ee16bb9e5d507d47508f00a3db4f80a2bc7f27dcbb8b",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Sagas.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Sagas/release/ViciOne.ServiceBus.Sagas.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Testing/1.0.0",
+      "asset": "ViciOne.ServiceBus.Testing.dll",
+      "archive_sha256": "1e9a71da71598289dcc51a48961f1775f5fa9d6c0cecce8e0aaa62bcc5c1638c",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Testing.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Testing/release/ViciOne.ServiceBus.Testing.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Tests.Infrastructure/1.0.0",
+      "asset": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "archive_sha256": "89343cb1e1469df2ced73a5dca19281d7dda5bd87c555f2418de34c3d4041f93",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Infrastructure/release/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "equal": true
+    },
+    {
+      "dependency": "ViciOne.ServiceBus.Tests.InternalAccess/1.0.0",
+      "asset": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "archive_sha256": "fa41b256d1ee5f882e9616e0095c3baab9dc39f067da99bc97e5c33730e95240",
+      "native_output_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "compiled_build_path": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.InternalAccess/release/ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "equal": true
+    }
+  ],
+  "embedded_requirements4697": {
+    "sha256": "2d1b6f28a89e52ad2ba396143ac976f61d88da8bfad931c133984dc24cad71d5",
+    "offset": 16886604,
+    "bytes": 1670669,
+    "lengthprefix_matches": true,
+    "logicalname_present": true
+  },
+  "native63events": [
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: RetryExhausted)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: DispatchCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: RetryExhausted)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: Unclassified)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: DispatchCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: TransportAccepted)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: FailurePersistenceFailure)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: PersistenceFailure)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: CompleteBeforeRetry)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: TimeoutPersistenceFailure)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: CompleteBeforeRetry)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: CompleteBeforeQuarantine)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: ClassifiedTransient)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: CompleteBeforeQuarantine)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: TransportAccepted)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: ClassifiedPermanent)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: ClassifiedTransient)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: CompleteBeforeAwait)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: TransportAccepted)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: PersistenceFailure)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: ConsumerTimeout)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: ClassifiedTransient)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: TimeoutPersistenceFailure)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: CompleteBeforeAwait)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: TimeoutCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: CompleteBeforeMark)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: TimeoutCancellation)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: RetryExhausted)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: CompleteBeforeRetry)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: StateCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: Unclassified)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: InvalidMode)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: AwaitConsumerCompletion)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: DispatchCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: InvalidMode)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: AwaitConsumerCompletion)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: CompleteBeforeMark)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: StateCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: ConsumerTimeout)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: FailurePersistenceFailure)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: ConsumerTimeout)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: ClassifiedPermanent)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: TimeoutPersistenceFailure)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: InvalidMode)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: TimeoutCancellation)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: Unclassified)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: FailurePersistenceCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: FailurePersistenceCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: FailurePersistenceFailure)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: CompleteBeforeQuarantine)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: FailurePersistenceCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: AwaitConsumerCompletion)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: PersistenceFailure)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: CompleteBeforeMark)"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: ClassifiedPermanent)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: StateCancellation)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: CompleteBeforeAwait)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: ClassifiedFailure)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: Mark)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: InvalidMode)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: Timeout)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: Await)"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: Claim)"
+    }
+  ],
+  "native_finite_oracles": [
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: RetryExhausted)",
+      "scenario": "RetryExhausted",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: DispatchCancellation)",
+      "scenario": "DispatchCancellation",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: RetryExhausted)",
+      "scenario": "RetryExhausted",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: Unclassified)",
+      "scenario": "Unclassified",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: DispatchCancellation)",
+      "scenario": "DispatchCancellation",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: TransportAccepted)",
+      "scenario": "TransportAccepted",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: FailurePersistenceFailure)",
+      "scenario": "FailurePersistenceFailure",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: PersistenceFailure)",
+      "scenario": "PersistenceFailure",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: CompleteBeforeRetry)",
+      "scenario": "CompleteBeforeRetry",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "Null"
+      ],
+      "fixture_lines": [
+        "310",
+        "47",
+        "108"
+      ],
+      "actual_product_stack_lines": [
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "54"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "39"
+        ],
+        [
+          "ReliableMessagingDeliveryService.FailureHandling.cs",
+          "33"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "57"
+        ],
+        [
+          "ReliableMessagingDeliveryService.cs",
+          "106"
+        ]
+      ],
+      "elapsed_clock_origin_exposed": true,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: TimeoutPersistenceFailure)",
+      "scenario": "TimeoutPersistenceFailure",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "Same"
+      ],
+      "fixture_lines": [
+        "400",
+        "310",
+        "47",
+        "100"
+      ],
+      "actual_product_stack_lines": [
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "153"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "54"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "39"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "175"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "27"
+        ],
+        [
+          "ReliableMessagingDeliveryService.cs",
+          "106"
+        ]
+      ],
+      "elapsed_clock_origin_exposed": true,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: CompleteBeforeRetry)",
+      "scenario": "CompleteBeforeRetry",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: CompleteBeforeQuarantine)",
+      "scenario": "CompleteBeforeQuarantine",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "Null"
+      ],
+      "fixture_lines": [
+        "310",
+        "47",
+        "108"
+      ],
+      "actual_product_stack_lines": [
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "54"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "39"
+        ],
+        [
+          "ReliableMessagingDeliveryService.FailureHandling.cs",
+          "33"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "57"
+        ],
+        [
+          "ReliableMessagingDeliveryService.cs",
+          "106"
+        ]
+      ],
+      "elapsed_clock_origin_exposed": true,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: ClassifiedTransient)",
+      "scenario": "ClassifiedTransient",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "Null"
+      ],
+      "fixture_lines": [
+        "310",
+        "47",
+        "108"
+      ],
+      "actual_product_stack_lines": [
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "54"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "39"
+        ],
+        [
+          "ReliableMessagingDeliveryService.FailureHandling.cs",
+          "33"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "57"
+        ],
+        [
+          "ReliableMessagingDeliveryService.cs",
+          "106"
+        ]
+      ],
+      "elapsed_clock_origin_exposed": true,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: CompleteBeforeQuarantine)",
+      "scenario": "CompleteBeforeQuarantine",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: TransportAccepted)",
+      "scenario": "TransportAccepted",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "Null"
+      ],
+      "fixture_lines": [
+        "310",
+        "47",
+        "108"
+      ],
+      "actual_product_stack_lines": [
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "54"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "39"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "135"
+        ],
+        [
+          "ReliableMessagingDeliveryService.cs",
+          "106"
+        ]
+      ],
+      "elapsed_clock_origin_exposed": true,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: ClassifiedPermanent)",
+      "scenario": "ClassifiedPermanent",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: ClassifiedTransient)",
+      "scenario": "ClassifiedTransient",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: CompleteBeforeAwait)",
+      "scenario": "CompleteBeforeAwait",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: TransportAccepted)",
+      "scenario": "TransportAccepted",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: PersistenceFailure)",
+      "scenario": "PersistenceFailure",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: ConsumerTimeout)",
+      "scenario": "ConsumerTimeout",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "Null"
+      ],
+      "fixture_lines": [
+        "310",
+        "47",
+        "108"
+      ],
+      "actual_product_stack_lines": [
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "54"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "21"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "188"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "27"
+        ],
+        [
+          "ReliableMessagingDeliveryService.cs",
+          "106"
+        ]
+      ],
+      "elapsed_clock_origin_exposed": true,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: ClassifiedTransient)",
+      "scenario": "ClassifiedTransient",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: TimeoutPersistenceFailure)",
+      "scenario": "TimeoutPersistenceFailure",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: CompleteBeforeAwait)",
+      "scenario": "CompleteBeforeAwait",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "Null"
+      ],
+      "fixture_lines": [
+        "310",
+        "47",
+        "108"
+      ],
+      "actual_product_stack_lines": [
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "54"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "39"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "135"
+        ],
+        [
+          "ReliableMessagingDeliveryService.cs",
+          "106"
+        ]
+      ],
+      "elapsed_clock_origin_exposed": true,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: TimeoutCancellation)",
+      "scenario": "TimeoutCancellation",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: CompleteBeforeMark)",
+      "scenario": "CompleteBeforeMark",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: TimeoutCancellation)",
+      "scenario": "TimeoutCancellation",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "IsAssignableFrom"
+      ],
+      "fixture_lines": [
+        "103"
+      ],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": "ActualInvalidOperationException type only; own Clockorigin/reference stack unexposed"
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: RetryExhausted)",
+      "scenario": "RetryExhausted",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "Null"
+      ],
+      "fixture_lines": [
+        "310",
+        "47",
+        "108"
+      ],
+      "actual_product_stack_lines": [
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "54"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "39"
+        ],
+        [
+          "ReliableMessagingDeliveryService.FailureHandling.cs",
+          "33"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "57"
+        ],
+        [
+          "ReliableMessagingDeliveryService.cs",
+          "106"
+        ]
+      ],
+      "elapsed_clock_origin_exposed": true,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: CompleteBeforeRetry)",
+      "scenario": "CompleteBeforeRetry",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: StateCancellation)",
+      "scenario": "StateCancellation",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: Unclassified)",
+      "scenario": "Unclassified",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: InvalidMode)",
+      "scenario": "InvalidMode",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "Null"
+      ],
+      "fixture_lines": [
+        "310",
+        "47",
+        "108"
+      ],
+      "actual_product_stack_lines": [
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "54"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "39"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "135"
+        ],
+        [
+          "ReliableMessagingDeliveryService.cs",
+          "106"
+        ]
+      ],
+      "elapsed_clock_origin_exposed": true,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: AwaitConsumerCompletion)",
+      "scenario": "AwaitConsumerCompletion",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "Null"
+      ],
+      "fixture_lines": [
+        "310",
+        "47",
+        "108"
+      ],
+      "actual_product_stack_lines": [
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "54"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "39"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "135"
+        ],
+        [
+          "ReliableMessagingDeliveryService.cs",
+          "106"
+        ]
+      ],
+      "elapsed_clock_origin_exposed": true,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: DispatchCancellation)",
+      "scenario": "DispatchCancellation",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "IsAssignableFrom"
+      ],
+      "fixture_lines": [
+        "103"
+      ],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": "ActualInvalidOperationException type only; own Clockorigin/reference stack unexposed"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: InvalidMode)",
+      "scenario": "InvalidMode",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: AwaitConsumerCompletion)",
+      "scenario": "AwaitConsumerCompletion",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: CompleteBeforeMark)",
+      "scenario": "CompleteBeforeMark",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: StateCancellation)",
+      "scenario": "StateCancellation",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "IsAssignableFrom"
+      ],
+      "fixture_lines": [
+        "103"
+      ],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": "ActualInvalidOperationException type only; own Clockorigin/reference stack unexposed"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: ConsumerTimeout)",
+      "scenario": "ConsumerTimeout",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: FailurePersistenceFailure)",
+      "scenario": "FailurePersistenceFailure",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "Same"
+      ],
+      "fixture_lines": [
+        "400",
+        "310",
+        "47",
+        "100"
+      ],
+      "actual_product_stack_lines": [
+        [
+          "ReliableMessagingDeliveryService.FailureHandling.cs",
+          "55"
+        ],
+        [
+          "ReliableMessagingDeliveryService.FailureHandling.cs",
+          "22"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "54"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "39"
+        ],
+        [
+          "ReliableMessagingDeliveryService.FailureHandling.cs",
+          "33"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "57"
+        ],
+        [
+          "ReliableMessagingDeliveryService.cs",
+          "106"
+        ]
+      ],
+      "elapsed_clock_origin_exposed": true,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: ConsumerTimeout)",
+      "scenario": "ConsumerTimeout",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: ClassifiedPermanent)",
+      "scenario": "ClassifiedPermanent",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: TimeoutPersistenceFailure)",
+      "scenario": "TimeoutPersistenceFailure",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: InvalidMode)",
+      "scenario": "InvalidMode",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: TimeoutCancellation)",
+      "scenario": "TimeoutCancellation",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: Unclassified)",
+      "scenario": "Unclassified",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "Null"
+      ],
+      "fixture_lines": [
+        "310",
+        "47",
+        "108"
+      ],
+      "actual_product_stack_lines": [
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "54"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "39"
+        ],
+        [
+          "ReliableMessagingDeliveryService.FailureHandling.cs",
+          "33"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "57"
+        ],
+        [
+          "ReliableMessagingDeliveryService.cs",
+          "106"
+        ]
+      ],
+      "elapsed_clock_origin_exposed": true,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: FailurePersistenceCancellation)",
+      "scenario": "FailurePersistenceCancellation",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: FailurePersistenceCancellation)",
+      "scenario": "FailurePersistenceCancellation",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: FailurePersistenceFailure)",
+      "scenario": "FailurePersistenceFailure",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: None, scenario: CompleteBeforeQuarantine)",
+      "scenario": "CompleteBeforeQuarantine",
+      "mode": "None",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: FailurePersistenceCancellation)",
+      "scenario": "FailurePersistenceCancellation",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "IsAssignableFrom"
+      ],
+      "fixture_lines": [
+        "103"
+      ],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": "ActualInvalidOperationException type only; own Clockorigin/reference stack unexposed"
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: AwaitConsumerCompletion)",
+      "scenario": "AwaitConsumerCompletion",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: PersistenceFailure)",
+      "scenario": "PersistenceFailure",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "Same"
+      ],
+      "fixture_lines": [
+        "400",
+        "310",
+        "47",
+        "100"
+      ],
+      "actual_product_stack_lines": [
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "67"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "54"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "39"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "135"
+        ],
+        [
+          "ReliableMessagingDeliveryService.cs",
+          "106"
+        ]
+      ],
+      "elapsed_clock_origin_exposed": true,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: CompleteBeforeMark)",
+      "scenario": "CompleteBeforeMark",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "Null"
+      ],
+      "fixture_lines": [
+        "310",
+        "47",
+        "108"
+      ],
+      "actual_product_stack_lines": [
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "54"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "39"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "135"
+        ],
+        [
+          "ReliableMessagingDeliveryService.cs",
+          "106"
+        ]
+      ],
+      "elapsed_clock_origin_exposed": true,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "fehlerhaft",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: ElapsedFrequency, scenario: ClassifiedPermanent)",
+      "scenario": "ClassifiedPermanent",
+      "mode": "ElapsedFrequency",
+      "finite_assertion": [
+        "Null"
+      ],
+      "fixture_lines": [
+        "310",
+        "47",
+        "108"
+      ],
+      "actual_product_stack_lines": [
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "54"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Telemetry.cs",
+          "39"
+        ],
+        [
+          "ReliableMessagingDeliveryService.FailureHandling.cs",
+          "33"
+        ],
+        [
+          "ReliableMessagingDeliveryService.Delivery.cs",
+          "57"
+        ],
+        [
+          "ReliableMessagingDeliveryService.cs",
+          "106"
+        ]
+      ],
+      "elapsed_clock_origin_exposed": true,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: StateCancellation)",
+      "scenario": "StateCancellation",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync(failure: InitialTimestamp, scenario: CompleteBeforeAwait)",
+      "scenario": "CompleteBeforeAwait",
+      "mode": "InitialTimestamp",
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: ClassifiedFailure)",
+      "scenario": null,
+      "mode": null,
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: Mark)",
+      "scenario": null,
+      "mode": null,
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: InvalidMode)",
+      "scenario": null,
+      "mode": null,
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: Timeout)",
+      "scenario": null,
+      "mode": null,
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: Await)",
+      "scenario": null,
+      "mode": null,
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    },
+    {
+      "outcome": "erfolgreich",
+      "display_name": "ViciOne.ServiceBus.Tests.Monitoring.DurableDeliveryClockIsolationTests.Delivery_PreservesRequiredUtcFailuresAsync(boundary: Claim)",
+      "scenario": null,
+      "mode": null,
+      "finite_assertion": [],
+      "fixture_lines": [],
+      "actual_product_stack_lines": [],
+      "elapsed_clock_origin_exposed": false,
+      "cancellation_limit": null
+    }
+  ],
+  "binlogs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/raw/p05-c3-m2-build-r1-20261007-023125--75188--na9Ona.binlog",
+      "sha256": "e5c9cbf3fe1a166ea9255c6df192f9b2431f11fe6da59c3f57d0d766a46b66d1",
+      "uncompressed_bytes": 4278469,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/raw/p05-c3-m2-focused-r1-20261007-023250--75251--2UmSPc-dotnet-test.binlog",
+      "sha256": "0189134939cec732e776c58fbdc64cd5c1efc194f884f062d9704629b9965aa0",
+      "uncompressed_bytes": 3247317,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-mutants-r1/m2-elapsed-helper-unguarded/raw/p05-c3-m2-restore-r1-20261007-023046--75136--6P23Na.binlog",
+      "sha256": "93163f08519af8b8c2adf5128a0640ab3c1f2f4f7904455e51a9940a02b64e94",
+      "uncompressed_bytes": 2228107,
+      "closed": true
+    }
+  ],
+  "parent_records": {
+    "restore": {
+      "parent_session": 88577,
+      "parent_exit": 0
+    },
+    "strict_build": {
+      "parent_session": 70968,
+      "parent_exit": 0,
+      "warnings": 0,
+      "errors": 0
+    },
+    "focused": {
+      "parent_session": 85258,
+      "parent_exit": 2,
+      "total": 63,
+      "passed": 44,
+      "failed": 19,
+      "skipped": 0
+    }
+  },
+  "findings": [],
+  "assessment": "Actualfresh canonicalO6088path clone changes only selected src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs guard with literal source replacement; exact manifest/prep/diff binding. Nullable duration/signature, other guard, other3productowners, test436/Req4697/shared84/extras26 retain corrected bytes. Actual12freshPE/PDB/3799 source docs and complete embedded resource bind actualclone paths; all12 deps/archive/output/projectbuild chains exact. Native63exactIDs yields19selected ElapsedFrequency finite reds and44namedhealthy None/otherdiagnostic/requiredUTC controls. Counterproof isolates selected diagnosticguard necessity in the same real-store fixture.",
+  "causal_precision": "M1 Initial19 chosenexceptionclock315\u2192actualDelivery13 yields finiteNull57 after realclaim1/dispatch0/transition0/retained1bytes3. M2 Elapsed19 actual realtransitionargs/bool/state precede finite12Null108/3Same100/4type103;15noncancel show clock310/helper origin, fourcancellation ONLYactualInvalidOperationException type, no ownclockorigin/reference stack. Allredpaths receive no late metriccredit;44healthy execute completeoutcome/state/counter/duration/tag/token/reference oracles.",
+  "limits": [
+    "No mutantwholeCore/fullUnit/providerdurability/cloud/restart/currentNuGet/coverage/hardware/fullP05 guarantee.",
+    "Native standardhost/deps/archive/output/build/PEPDB/source/resource selection binding, no fullAssemblyLoadtrace.",
+    "Root structuredparent exits/readattribution remainRoot; reviewer consumes compact actual63ID/finiteboundary records and full data programmatically, no fullraw wholeloghumanreading claim.",
+    "Ocanonical clones differ from fullC3 by two noncompiled coverage Python scripts in addition to selectedmutation; comparison baseline is O, not C3.",
+    "No.NET/MSBuild/Docker/provider/SSH/test execution or product/test/tool edits; ownreport only."
+  ]
+}

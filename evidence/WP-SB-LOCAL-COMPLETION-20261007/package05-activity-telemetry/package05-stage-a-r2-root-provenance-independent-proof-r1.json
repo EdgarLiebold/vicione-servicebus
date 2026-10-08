@@ -1,0 +1,101 @@
+{
+  "status": "PASS_STAGE_A_R2_FOUR_FILE_SOURCE_FREEZE_AND_ROOT_PROVENANCE__NO_NATIVE_ACCEPTANCE",
+  "inputs": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_A_FREEZE_R2.json": "962ee505e8b8340dfa06324e984785ddabcdb28e1ca3d14c1b6e2c221c80a496",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE801_STAGE_A_READ_CLOSURE_R3.json": "9e1242a8e5d8e149df746afd8e24357bdcb3d0368e071568ee0abfe4acff868e",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_TELEMETRY57_COMPLETE_SOURCE_READ_R1.json": "87c47890f03ff587088d3a13d6b17fcefdc2234b9ab0bde6e420b15c39cf9e72",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/telemetry-root-read-r1/MANIFEST.json": "ebd54d65bbf052c66b8b12c8325bde51e59269d8ce64899d167170840fe0d99e",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/ROOT_CORE_OWNER_COMPLETE_READ_R1.json": "5e807c7f46275c714dcb6e8c3b6f478f5f6846299510c58a2fcac60b763c6b08",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_A_TEST_ONLY_ORIGINAL_FREEZE_R3.json": "1bc311db82677373e9fffad60da10b725eb4b2d368685f35563ccc9bc0cb611e",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_A_PATCH_R2.diff": "eb7fee65c0e9da61f09294e6a75a96c491f1619c4568b73d70307145f921d560"
+  },
+  "freeze_four_current_and_snapshot_hashes_verified": {
+    "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs": "c206f81c611584f1982f03f55b1044cae4613d3775650fa291b43a910134d625",
+    "src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs": "77d371f9f003e617a6f2fa250c3b170fa2cc9a3dd1fe98c44d6b2e8f70e40fb2",
+    "tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs": "e6a0563a8a2584d08b9bed6f0b6ef6b78f7fac2888f7344d9ec6ad562a709a13",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "d25a434309bd395ff5b34a3864ea292a9ec2eff4f63c3e30ebca0cff486638a1"
+  },
+  "root57": {
+    "packs": 37,
+    "bytes": 512603,
+    "all_bodies_reconstructed_exact_sha": true,
+    "current_changed_only_expected_product2": [
+      "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "src/ViciOne.ServiceBus/Logging/Diagnostics/StartedActivity.cs"
+    ],
+    "author_personal_read_attestation": "Root only; reviewer verifies exact provenance and bytes, not hidden human cognition"
+  },
+  "root801": {
+    "tracked_owner800_plus_author_new1_equal": true,
+    "all801_current_hashes_verified": true,
+    "same_prior798": 798,
+    "explicit_personal_deltas3": [
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs",
+        "sha256": "e6a0563a8a2584d08b9bed6f0b6ef6b78f7fac2888f7344d9ec6ad562a709a13",
+        "basis": "Root complete new body authored/read, 231lines; explicit childcaller context after stoppedparent."
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+        "sha256": "d25a434309bd395ff5b34a3864ea292a9ec2eff4f63c3e30ebca0cff486638a1",
+        "basis": "Complete4685priorqualifiedrows unchanged, Root authored and read all5newexactrows; validated lossless projectionappend"
+      },
+      {
+        "path": "tests/ViciOne.ServiceBus.Tests/Transports/ConsumerAgentTests.cs",
+        "sha256": "160ccfa858b1cdd4524bf9b352b9dd6042994bdaa450994617dae7716c217dfd",
+        "basis": "AcceptedP06 exact8line Root-read fallback proxy delta/source-review qualification"
+      }
+    ],
+    "all84_shared_equal_prior_complete_and_current": true
+  },
+  "requirements": {
+    "old4685_preserved_exact_fields_and_order": true,
+    "old_byte_prefix_preserved_except_appending_comma_closing_bracket": true,
+    "five_new_rows": [
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "TryCreate_RestoresCallerDespiteOrdinaryCurrentChangedFailure",
+        "testType": "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests",
+        "variantKey": "sampler-restore-currentchanged-isolated"
+      },
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "Stop_PreservesBusinessFailureWhenStopAndRestoreObserversThrow",
+        "testType": "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests",
+        "variantKey": "stop-and-restore-cannot-replace-business-failure"
+      },
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "TryStart_RetainsOriginalStartFailureWhenCleanupObserversThrow",
+        "testType": "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests",
+        "variantKey": "failed-start-retains-primary-over-cleanup-callbacks"
+      },
+      {
+        "requirementId": "REQ-VSB-ACTIVITY-OUTCOME",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "AddExceptionEvent_PreservesBusinessFailureAndStatusWhenDiagnosticClockThrows",
+        "testType": "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests",
+        "variantKey": "exception-event-clock-failure-preserves-error-status-and-cause"
+      },
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "Stop_RestoresNearestLiveAncestorWhenCapturedParentStopped",
+        "testType": "ViciOne.ServiceBus.Tests.Logging.ActivityObservationIsolationTests",
+        "variantKey": "stopped-parent-restores-nearest-live-ancestor"
+      }
+    ],
+    "total4690_unique": true,
+    "annotation_projection_exact": true
+  },
+  "new_test": {
+    "lines": 231,
+    "methods": 5,
+    "expanded_cases": 8,
+    "setup_successor_only_adds_public_child_ambient": true,
+    "all_assertion_bodies_same": true
+  }
+}

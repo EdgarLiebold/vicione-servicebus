@@ -1,0 +1,85 @@
+{
+  "kind": "READ_ONLY_PRIVATE_CACHE_DIRECT_R3_AND_PENDING_CHILD_R1_ADVERSARIAL_REVIEW",
+  "utc": "2026-10-07T05:39:33.197365+00:00",
+  "reviewer": "/root/continuation_adversarial",
+  "status": "DIRECT10_NO_BLOCK_PREEXECUTION__PENDING2_OWNERSCOPE_AND_ACTUALTASK_REPAIR_REQUIRED",
+  "direct_fixture": {
+    "path": "/private/tmp/ResourceCacheComparerIsolationTests.draft-r3.cs",
+    "sha256": "e2ed157acffabba59ecfc0ceba71eb80447faf5563ba875f64052414159b0979",
+    "content_lines": 331,
+    "case_expansion_proposed": 10,
+    "previous_draft_path": "/private/tmp/ResourceCacheComparerIsolationTests.draft-r2.cs",
+    "previous_draft_sha256": "e80027bd1df8be6531dc0b5df8952483cf2bd8b4e44526bfc79bf5d2323c6f21",
+    "exact_only_change": "Rescue requires stop.IsCompleted and every retained actual _operations task.IsCompleted.",
+    "qualified_prior_full_read_review": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-initial-fixture-adversarial-r2.json",
+      "sha256": "3b763fd0daccaf468c85b2ac40bfa64b2929ba500fc2eaced2efd1f0f9a83f9c"
+    },
+    "all_R1_blocking_findings_now_resolved_static": true,
+    "current_result": "NO_BLOCK_BOUNDED_PRIVATE10_PREEXECUTION",
+    "native_or_compile_credit": 0,
+    "limits": "Qualification remains private exact same331-byte-source scope plus exact one-line delta, five theories10case expansion; does not accept future K4/U2 or whole utility/cache."
+  },
+  "pending_fixture": {
+    "path": "/private/tmp/ResourceCachePendingComparerIsolationTests.draft.cs",
+    "sha256": "d5f91918c1653778d9c233ac82a3cfb1e6ade4fa7aa8ed0c11dfaaee5c90b370",
+    "content_lines": 228,
+    "whole_body_personally_read_untruncated": true,
+    "facts": 2,
+    "proposed_parent_native_cases": 2,
+    "proposed_separate_fresh_child_native_cases": 2,
+    "native_or_compile_credit": 0
+  },
+  "pending_protocol_strengths": [
+    "Same built apphost, no MSBuild or .NET child build: absolute owning apphost/path/arguments retained.",
+    "Two public facts route by exact fullName sentinel, child depth1, positive parentPID != ownPID and valid nonce. No recursive parent launch once child sentinel selected.",
+    "Unique child receipt directory, ProcessStart redirect drains,45s owned cancellation watchdog and parent-death exit argument; finally kill only owned running process then actual WaitForExit join.",
+    "Seven actual runtime digests before/after include apphost/testDLL/testPDB/deps/runtimeconfig/Core/Abstractions; complete firstparty PE/build graph remains Root native artifact review, never inferred from only seven digests.",
+    "stdout/stderr and PROCESS archived before parent pass assertions, successful unique actual event and fullName marker, localized total1/failed0/passed1/skipped0 fields. Parent failure preserves child finite transcript for explicit Root causal classification.",
+    "Child comparator records actual attempted key with current StackTrace inside real callback, not an Expected exception stack or invented secondary origin.",
+    "The controlled factory returns completed ValueTask and actual resource Dispose is synchronously completed. Current source therefore can exhibit finite candidate disposal1/pending1/unfinished request after two ordinary persistent origin hash throws without any elapsed wait."
+  ],
+  "pending_findings": [
+    {
+      "id": "P1_FULL_OWNERSCOPE_EXCEPT_QUALIFIED_STRAND",
+      "severity": "High",
+      "blocking_before_canonical_freeze": true,
+      "location": "ExecuteCaseAsync118-148",
+      "evidence": "After real cache constructor, AddIndex, request admission and marker assertions136-138 all precede try/finally148. Any ordinary setup failure or marker assertion failure skips request/cache cleanup just like the intentional original pending-strand branch. The exception to normal product joins currently applies to more than a demonstrated stranded owner.",
+      "required_minimal_correction": "Start owning try/finally immediately after successful cache construction. Retain nullable request/disposal and candidates/actual operation tasks as created. Only set an explicit strand exemption after validated factory-called/returned/synchronous-release markers plus actual pending reservation and unfinished public request demonstrate the intended persistent cleanup fault; keep first pending0 assertion finite before awaiting stranded request. All other setup/marker/body assertion failures must still attempt known actual joins and cache stop. Native exception/timeout from those cleanup attempts is invalid fixture/guard evidence, never product kill.",
+      "boundary": "Original known stranded public completion has no public repair/restart. Its isolated child process join is honest bounded isolation and confers zero product task/slot/cache join credit. No fatal/OOM/unknown reentrant claim."
+    },
+    {
+      "id": "P2_ALL_ACTUAL_CHILD_OPERATION_TASKS",
+      "severity": "High",
+      "blocking_before_canonical_freeze": true,
+      "location": "ExecuteCaseAsync160,167,173-198",
+      "evidence": "Primary request and replacement request are retained/joined, but missing lookup160 and healthy actual Remove167 create temporary AsTask().WaitAsync tasks without registering actual task ownership. If their wait times out or body assertion fails, the underlying operation can remain running while outer finally only observes request and cache stop. Replacement disposal/candidate cleanup only covers the successful selected path.",
+      "required_minimal_correction": "Track every actual GetAsync/RemoveAsync/GetOrAddAsync/cache disposal Task before wrapping it in a deadline. Record exact already-observed terminal faults and independently join all recorded actual tasks on every non-stranded cleanup path using None; always attempt remaining joins and cache disposal in finally. Any manual candidate rescue must require cache terminal AND every actual task terminal and be separate from physical assertions/product credit, following qualified DirectR3 helper contract."
+    }
+  ],
+  "pending_expected_bounded_native_paths": [
+    {
+      "fact": "HealthyOriginPendingSlotReleasesOwnership",
+      "predicted_current_original": "Healthy parent+freshchild control; factory1/return1/dispose0/pending0/requestterminal, actual same candidate/master. Actual removal releases1, fresh capacity1 replacement admits, cache terminal releases replacement1. These counts currently have no native credit."
+    },
+    {
+      "fact": "PersistentOriginComparerFailureReleasesPendingOwnership",
+      "predicted_current_original": "Origin initially admits pending with comparer healthy; synchronous factory arms only GetHashCode before completed return. Empty committed precheck skips hash; initial CommitKey hashes/throws, produced candidate disposes1, faulted-pending cleanup hashes/throws again, leaving pending1/requestunfinished. First native candidate finite Assert.Equal pending0 at143 AFTER validated markers; no await timeout proof. Actual original graph/trace required.",
+      "predicted_corrected": "Prepared index hash may throw sooner; corrected identity-owned pending cleanup must yield pending0, terminal exact primary comparer fault, no value in main/public index, CreationFaults1 and rejected dispose1. Then real request/cache/replacement joins required."
+    }
+  ],
+  "accounting_and_interpretation": [
+    "Direct10 private subset and pending2 parent/2child proposal are distinct; no current native12 claim and no adding child tests to whole Core parent totals.",
+    "No pending cold-source predicate needed: cache state is per-case instance. Fresh process serves stranded original ownership isolation, not static ActivitySource initialization.",
+    "Watchdog/canceled parent/minimum discovery failure/setup guard/unknown cleanup exception receive no finite product counterexample or mutation-kill credit.",
+    "Native original branch must validate actual comparer attempted source stack and physical/synchronous markers, rather than concluding from parent child-exit assertion alone.",
+    "Seven before/after digests and apphost marker are necessary protocol checks, not a substitute for full compiled Runtime/PE/PDB/source/requirements/deps graph review."
+  ],
+  "out_of_scope": [
+    "U2 late old factory cleanup against still-pending replacement absent, future private owner still needed.",
+    "No parent/coldproc launched by reviewer, no source/test/tool edits or .NET/Docker/SSH.",
+    "No general cache/utility allocation bound/provider/cloud/hardware/coverage/A+ closure."
+  ],
+  "execution": "Read-only exact private bodies/diff/hash inspections with reused Microsoft test-anti-patterns/test-gap-analysis/.NET skill guidance; own immutable JSON report only."
+}

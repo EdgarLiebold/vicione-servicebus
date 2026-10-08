@@ -1,0 +1,35 @@
+{
+  "kind": "ROOT_NEXT_ADAPTER_COMPLETE_CALLER_SOURCE_READ_R1",
+  "whole_read_files": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsConnectionContext.cs",
+      "sha256": "b1639c38ff15b71aeca975a5d9704087c8be3fd9eaabfb584f84d7e3abc3cb5b",
+      "lines": 118
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContextFactory.cs",
+      "sha256": "ac2e6d1a1c1a493358476f130a383c8791137aca3cc6cdda7ada1b8637e73ba0",
+      "lines": 93
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ClientContextFactory.cs",
+      "sha256": "6120307a3e55c01dbc0e3d1c504a617777a478086ba1076ed8974e068594e20b",
+      "lines": 131
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ScopeClientContextFactory.cs",
+      "sha256": "807877981ef13277bf190de98e3864e3626a4347ec2294a7b5602f9aa3ac160a",
+      "lines": 52
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubDataReceiver.cs",
+      "sha256": "ad9e68540c889e7f4e8b043edab9262590bf7c9f8db60ca138855e3e550ad875",
+      "lines": 220
+    }
+  ],
+  "observations": [
+    "EventHubDataReceiver owns ReceiveEndpointContext; current ProcessorLockContext construction omits selected clock. Preserve old public constructors through explicit new overloads if needed and qualify all intermediate partition/checkpointer propagation.",
+    "SQS connection owns shared queue/topic caches independent of endpoint. Existing cacheOptions.TimeProvider governs cache expiry only and must not automatically become batching clock. Caller and shared batching ownership still needs design."
+  ],
+  "limits": "Root personally whole5 read. Static observations and hypotheses only, no product/test changes or native results."
+}

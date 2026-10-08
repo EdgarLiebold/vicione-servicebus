@@ -1,0 +1,15 @@
+{
+  "kind": "ROOT_PROPOSED_DOCUMENTATION_R17",
+  "source_sha256": {
+    "CHANGELOG.md": "a03a4c23ab10ecd21e56f07a3472c2d91384bc094da615cbb8da73a41a1b6c8d",
+    "TODO.md": "acd39b04f176990bb393977c5bb6b0ad0cfbaf026511408f19b7975000b1ac57",
+    ".testagent/status.md": "4d7d6ff35126213f826826f41a80146007a6e7003b3c105d3b3b97739e40c931",
+    ".testagent/plan.md": "96969c0f52373e342497cd2012766c2fdee6941e918f16fb9fa344908ce6bb47",
+    ".testagent/local-completion-plan.md": "b070491aa3f0963a8a619bc2d69909f0c3dd81781974cca2f4a81dc35d3cc5a4",
+    "docs/quality-status.md": "f14670182624bdd1c984434478a095970dbecd907617d74a7ea96bcc242bc77f"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r17",
+  "prior_freeze_sha256": "2dfe7010201b4b14f6974c0b4e3079e60ae61a33fcbae62bec7e021d4bb1a46a",
+  "cache_acceptance_sha256": "4f171d6aff540947873b1a093ab0f2d50fc93130428d20c4205bccf47b0b354c",
+  "limits": "Onlysixauthoreddocumentdeltas; historical234audit/oldcoverage/other11TODOsections/62externalOBLpreserved. Bounded cachefailureacceptance only, observer/adapter/startup/coverage/provider/CI/cloud/HWopen. No SQSprivateprepNativecredit."
+}

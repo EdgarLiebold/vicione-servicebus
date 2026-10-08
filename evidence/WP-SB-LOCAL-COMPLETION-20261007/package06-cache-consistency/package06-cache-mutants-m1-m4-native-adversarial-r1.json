@@ -1,0 +1,1189 @@
+{
+  "kind": "INTERNAL_READONLY_P06_M1_M4_NATIVE_CAUSAL_REVIEW",
+  "status": "QUALIFIED_FOUR_SINGLE_CAUSE_VARIANTS_6RED_114HEALTHY",
+  "findings": [],
+  "M1_exact_review_sha256": "7bb9e0d43b8fb68d2a404c5f6d6e153bbc38cfa2bbd09015c6ee8409db948518",
+  "exact_fixed_source_runtime_reference_sha256": "9d49e2662c17beed53532a295c9c8a7b7c809a5766ffb0d6de33dbef09c61b6a",
+  "M2_M4": [
+    {
+      "name": "m2-interleaved-index-publication",
+      "result_sha256": "77f34389c502cfd043244a1c54a1612cf5987f113a0015d5b1b5dfd960e8eb5a",
+      "prepared_sha256": "9f8b24569b94d4bd58d0e7e4a8d1b792708e122c861591fabe8d823d311495b6",
+      "driver_inputs_sha256": "a0aaf4d85fa52a40cadcf496eb2976edc21ebf3679a18ea99d5bb93aa547bc5a",
+      "effective_source_manifest_sha256": "99ec10643b46c8fddf13749903026c616f211c03d6923ac4b2be31065db3cf83",
+      "sole_changed_owner": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "compiled_owner_sha256": "dafc843597008a8532a6c73b1cf9a46deb5eae93f2c0ec906367e9fd4d83ab1f",
+      "baseline6096_O_equal": true,
+      "Root812_shared84_current_match": true,
+      "all22_snapshot_plus_sole_variant_overrides": true,
+      "counts": {
+        "total": 30,
+        "failed": 2,
+        "passed": 28,
+        "skipped": 0
+      },
+      "all30_case_IDs_equal_frozen_set": true,
+      "failed_case_IDs": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: True)"
+      ],
+      "healthy_case_IDs": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.RemoveRetiresEveryIndexAndReleasesResource(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.RemoveRetiresEveryIndexAndReleasesResource(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LateOldFactoryCannotUnlinkPendingReplacement",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollidingResourceRemovalPreservesEveryOtherOwnedResource(position: 0)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollidingResourceRemovalPreservesEveryOtherOwnedResource(position: 2)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollidingResourceRemovalPreservesEveryOtherOwnedResource(position: 1)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"cleanup\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get-or-add\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"add\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"add\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"timer\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"cleanup\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get-or-add\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"remove\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"remove\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"timer\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FailedBulkIndexCannotCorruptExistingRetirement(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FailedBulkIndexCannotCorruptExistingRetirement(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LookupFailureCannotStrandAlreadyExpiredOwnership(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LookupFailureCannotStrandAlreadyExpiredOwnership(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollisionEqualityFailureLeavesExistingOwnershipIntact(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollisionEqualityFailureLeavesExistingOwnershipIntact(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership"
+      ],
+      "joined_actual_stages": {
+        "build": {
+          "pid": 93370,
+          "process_group": 93370,
+          "exit": 0,
+          "arguments": [
+            "dotnet",
+            "build",
+            "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "--warnaserror",
+            "-t:Rebuild",
+            "/bl:artifacts/local-completion/p06-cache-m2-interleaved-index-publication-build-r1-{}.binlog"
+          ],
+          "deadline_exceeded": false,
+          "joined": true
+        },
+        "focused": {
+          "pid": 93386,
+          "process_group": 93386,
+          "exit": 2,
+          "arguments": [
+            "dotnet",
+            "test",
+            "--project",
+            "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+            "-c",
+            "Release",
+            "--no-build",
+            "--no-restore",
+            "--filter-class",
+            "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+            "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests",
+            "--minimum-expected-tests",
+            "30",
+            "--output",
+            "Detailed",
+            "--progress",
+            "off",
+            "--no-ansi",
+            "--show-stdout",
+            "All",
+            "--show-stderr",
+            "All",
+            "--results-directory",
+            "artifacts/local-completion/p06-cache-m2-interleaved-index-publication-focused-r1-results",
+            "/bl:artifacts/local-completion/p06-cache-m2-interleaved-index-publication-focused-r1-{}.binlog"
+          ],
+          "deadline_exceeded": false,
+          "joined": true
+        }
+      },
+      "first_actual_failure_blocks": [
+        "fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(hostile: True) (5ms)\n  von /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)\n  Assert.Null() Failure: Value is not null\n  Expected: null\n  Actual:   Owned { DisposeCalls = 0, Id = \"candidate\" }\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:74\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:91\n    --- End of stack trace from previous location ---\n  Standardausgabe\n    ACTUAL_ADMISSION_FAILURE: System.InvalidOperationException: chosen stable comparer failure\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.Comparer.GetHashCode(String key) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 585\n       at ViciOne.ServiceBus.Caching.Implementation.PreparedResourceMap`2.Prepare(TKey key, TValue value) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceMap.cs:line 58\n       at ViciOne.ServiceBus.Caching.Implementation.ResourceCacheIndex`2.PrepareEntry(ResourceCacheEntry`1 entry, Object key) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs:line 97\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.CommitValue_NoLock(TValue value, PreparedResourceKeys`1 prepared, Int64 timestamp, PendingResourceCreation`1 pending) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs:line 99\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.AddAsync(TValue value, CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.cs:line 228\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.AddAsync(TValue value, CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.cs:line 236\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.Fixture.RunAsync(Task operation) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 663\n       at Xunit.Record.ExceptionAsync(Func`1 testCode) in /_/src/xunit.v3.core/Record.cs:line 93\n    \n  Fehlerausgabe\n",
+        "fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: True) (4ms)\n  von /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)\n  Assert.Null() Failure: Value is not null\n  Expected: null\n  Actual:   Owned { DisposeCalls = 1, Id = \"candidate\" }\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:121\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:145\n    --- End of stack trace from previous location ---\n  Standardausgabe\n    ACTUAL_FACTORY_FAILURE: System.InvalidOperationException: chosen stable comparer failure\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.Comparer.GetHashCode(String key) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 585\n       at ViciOne.ServiceBus.Caching.Implementation.PreparedResourceMap`2.Prepare(TKey key, TValue value) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceMap.cs:line 58\n       at ViciOne.ServiceBus.Caching.Implementation.ResourceCacheIndex`2.PrepareEntry(ResourceCacheEntry`1 entry, Object key) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs:line 97\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.CommitValue_NoLock(TValue value, PreparedResourceKeys`1 prepared, Int64 timestamp, PendingResourceCreation`1 pending) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs:line 99\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.CompleteCreationAsync[TKey](ResourceCacheIndex`2 index, TKey requestedKey, PendingResourceCreation`1 pending, ResourceFactory`2 factory, OperationLease operation) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs:line 239\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.GetOrAddAsync[TKey](ResourceCacheIndex`2 index, TKey key, ResourceFactory`2 factory, CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs:line 152\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.Fixture.RunAsync[T](Task`1 operation) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 656\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.<>c__DisplayClass5_0.<<FactoryAdmissionPublishesAllIndicesTogether>b__2>d.MoveNext() in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 105\n    --- End of stack trace from previous location ---\n       at Xunit.Record.ExceptionAsync(Func`1 testCode) in /_/src/xunit.v3.core/Record.cs:line 93\n    \n  Fehlerausgabe\n"
+      ],
+      "children_separate_from_parents": [
+        {
+          "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+          "parent_OSPID": 93391,
+          "child_OSPID": 93392,
+          "joined_exit": 0,
+          "waitFailure": null,
+          "runtime7_equal_before_after_archive": true,
+          "artifact_sha256": {
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdout.log": "92815e97821010dcfb7023dee7d7716545bbf659c15480b1f2e89115960c6206",
+            "PROCESS.json": "c23e2d0006e35ec2fba08f5acebd3ed611b7dd4ff5d1a07e9dca47a0a9d47300"
+          },
+          "complete_stdout_diff_personally_read": "--- \n+++ \n@@ -1,5 +1,5 @@\n-CACHE_CASE_COMPLETED:2f1f57a84da04d4d9e98e1f235d1b00b:ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership\n-erfolgreich ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership (82ms)\n+CACHE_CASE_COMPLETED:5e567277c64a4a9e81e98ae28aaf3a76:ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership\n+erfolgreich ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership (78ms)\n   Standardausgabe\n     ACTUAL_COMPARER_ATTEMPT: candidate\n        at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.Comparer.GetHashCode(String key)\n@@ -190,4 +190,4 @@\n   fehlerhaft: 0\n   erfolgreich: 1\n   \u00fcbersprungen: 0\n-  Dauer: 2s 626ms\n+  Dauer: 2s 465ms\n",
+          "first_failure_prefix": null,
+          "actual_product_joins_reached": true,
+          "child_failure_same_parent_event_not_double_counted": false
+        },
+        {
+          "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership",
+          "parent_OSPID": 93391,
+          "child_OSPID": 93394,
+          "joined_exit": 0,
+          "waitFailure": null,
+          "runtime7_equal_before_after_archive": true,
+          "artifact_sha256": {
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdout.log": "266afa0aff9994ffdfa3a3ceb4551943b578e100bf9db5ec8556c19136775d78",
+            "PROCESS.json": "7dd976058d7f048856af8996da82ebc167ac50cee76edbe56802af52954d3a44"
+          },
+          "complete_stdout_diff_personally_read": "--- \n+++ \n@@ -1,5 +1,5 @@\n-CACHE_CASE_COMPLETED:0623e662c04a44a49a00aaf5da9582f2:ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership\n-erfolgreich ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership (74ms)\n+CACHE_CASE_COMPLETED:5f06943074494087ba10b32ba8ec24f4:ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership\n+erfolgreich ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership (62ms)\n   Standardausgabe\n     STATE factoryCalls=1 factoryReturns=1 release=0 pending=0 requestTerminal=True comparerThrows=0\n     \n@@ -9,4 +9,4 @@\n   fehlerhaft: 0\n   erfolgreich: 1\n   \u00fcbersprungen: 0\n-  Dauer: 2s 498ms\n+  Dauer: 2s 332ms\n",
+          "first_failure_prefix": null,
+          "actual_product_joins_reached": true,
+          "child_failure_same_parent_event_not_double_counted": false
+        }
+      ],
+      "PE12_PDB3806": [
+        {
+          "name": "ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "c3e17c72838ec5c97874edd14e0854fa7f6846b7949c9afba1ce6f29a7c895ab",
+          "pe_pdb_id_matches": true,
+          "documents": 700,
+          "document_inventory_sha256": "4459d2b268d1cb7a34fcdd51f07658925662288f8d2bc037fe37992d560d7fbe"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Courier.dll",
+          "sha256": "89a3f4cf51b9ad4e7ea00d547989c929160531a87d6db4962611da20d3f964b0",
+          "pe_pdb_id_matches": true,
+          "documents": 146,
+          "document_inventory_sha256": "cf3f7c0a3598ac989b337f1fbf7db1495c5134ad354a9d0982762977bcb272bc"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Futures.dll",
+          "sha256": "568f41d132102532661b5b837400195d20454fd10ffbaad4a52c9ece279de57a",
+          "pe_pdb_id_matches": true,
+          "documents": 61,
+          "document_inventory_sha256": "45753724b7b9038bae2421afd3cb1970b8c4c992dec336585fc973bb9fa6a955"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Initializers.dll",
+          "sha256": "ee2ce6f8d29520f26cb3be4eee1cf69c1772cd754b463bb52a5d9ccaea7a2899",
+          "pe_pdb_id_matches": true,
+          "documents": 11,
+          "document_inventory_sha256": "82795e0d55947cc4215acb9a0054644683c3b7cd8f06c4890a8f99aab65af0c8"
+        },
+        {
+          "name": "ViciOne.ServiceBus.JobService.dll",
+          "sha256": "6c409d392f874d76fa9f5e90f84b2352ca4d3dcbcf1e2db07acdfa679705b5a5",
+          "pe_pdb_id_matches": true,
+          "documents": 175,
+          "document_inventory_sha256": "a92dd7e609fc7022a281f2e706c8e8e1a091452aa01cddc59a48bb9283181e55"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Mediator.dll",
+          "sha256": "d09d831fee4d63a1d8cd352addd873eb4a7c4dd6267d0f5f95c941d90ff66077",
+          "pe_pdb_id_matches": true,
+          "documents": 31,
+          "document_inventory_sha256": "675a479f0659d5b5bb0a25c17ca7a010554747b8a48251a99c4ec2616d955c35"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "7eeddfe28ec76eb2131d16405ca5b99caf8d1e67bf81393431a6fd8f91ac28ee",
+          "pe_pdb_id_matches": true,
+          "documents": 374,
+          "document_inventory_sha256": "6267abd6f59411c4e869aecde16e09604abc152e7ff2674573152d0b5d9b5b64"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Testing.dll",
+          "sha256": "4003917d4cd5d10242c4307555dff06188470ba1ad8ca5cd05b5f00f7a69d458",
+          "pe_pdb_id_matches": true,
+          "documents": 104,
+          "document_inventory_sha256": "4cf3ec005622383b5fb6ba46afcefb5c3efe2e96d3f127e10694d491a0115e78"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+          "sha256": "c17bdd92c1599fa50e37e6cb30fc0b0583c35478bfe856fc951cb97cf8be7b80",
+          "pe_pdb_id_matches": true,
+          "documents": 9,
+          "document_inventory_sha256": "33dcc6f3d152efca9de75915b78a4dc8b5039392a685ad812bfe41952f25aad8"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+          "sha256": "e35823d45f7f7968279bb3ce6f994db695667ae8b9bc337fbd2e3b44e367b3b1",
+          "pe_pdb_id_matches": true,
+          "documents": 38,
+          "document_inventory_sha256": "75fb9054a52367c0da886df2791d8e1b6898c4cd166a8fb9118ad13b867757b2"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Tests.dll",
+          "sha256": "1f034def73f34cd58afc3fce9bff515e415ebabc9992280a4a121617ba056a3c",
+          "pe_pdb_id_matches": true,
+          "documents": 816,
+          "document_inventory_sha256": "d5ba10095be6f69f67ab3f767b524b6dd07333cd0e1137e4e9efb5bfba1444c8"
+        },
+        {
+          "name": "ViciOne.ServiceBus.dll",
+          "sha256": "fce2a36c2566a23caf7e169f337981b31efa526904b0869662e5b6f247e3adad",
+          "pe_pdb_id_matches": true,
+          "documents": 1341,
+          "document_inventory_sha256": "5f477d153b5102b154ede6130564979b9df6151fc13248273354cf0006c24174"
+        }
+      ],
+      "PDB_exact_targets": {
+        "ViciOne.ServiceBus.Tests.dll": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "0162159c1324fc18093618ceb25b9055be204a4a18b3f6d8e5505738dd814bb6",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "0162159c1324fc18093618ceb25b9055be204a4a18b3f6d8e5505738dd814bb6"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "fd3f1172f759ff7e7531e2d52da73efb570ce72af1db44bbc55479b4aa31e2a6",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "fd3f1172f759ff7e7531e2d52da73efb570ce72af1db44bbc55479b4aa31e2a6"
+          }
+        ],
+        "ViciOne.ServiceBus.dll": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceMap.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "2db6ae5fa7ed933ec1aa037e77a63b09cc4a53294f3195d94703b10af03da271",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "2db6ae5fa7ed933ec1aa037e77a63b09cc4a53294f3195d94703b10af03da271"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "84f6d67e2e3724120b394367b413325f353f7a9423a713431e8a6f4449b78f18",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "84f6d67e2e3724120b394367b413325f353f7a9423a713431e8a6f4449b78f18"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "45bb92aea5df9ed96396604d8ef2b63afc888537ca4f49815f05ea734af41a6a",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "45bb92aea5df9ed96396604d8ef2b63afc888537ca4f49815f05ea734af41a6a"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "dafc843597008a8532a6c73b1cf9a46deb5eae93f2c0ec906367e9fd4d83ab1f",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "dafc843597008a8532a6c73b1cf9a46deb5eae93f2c0ec906367e9fd4d83ab1f"
+          }
+        ]
+      },
+      "CoreRequirements4719": {
+        "name": "ViciOne.ServiceBus.Tests.Requirements.CoreRequirements.json",
+        "implementation": 0,
+        "length": 1678587,
+        "sha256": "b1cba734eaa3752541dd6dce522af0b35924b909930609ca17e5676425692750"
+      },
+      "firstparty_edges35": 35,
+      "deps_project12": [
+        "ViciOne.ServiceBus.Abstractions/1.0.0",
+        "ViciOne.ServiceBus.Courier/1.0.0",
+        "ViciOne.ServiceBus.Futures/1.0.0",
+        "ViciOne.ServiceBus.Initializers/1.0.0",
+        "ViciOne.ServiceBus.JobService/1.0.0",
+        "ViciOne.ServiceBus.Mediator/1.0.0",
+        "ViciOne.ServiceBus.Sagas/1.0.0",
+        "ViciOne.ServiceBus.Testing/1.0.0",
+        "ViciOne.ServiceBus.Tests.Infrastructure/1.0.0",
+        "ViciOne.ServiceBus.Tests.InternalAccess/1.0.0",
+        "ViciOne.ServiceBus.Tests/1.0.0",
+        "ViciOne.ServiceBus/1.0.0"
+      ],
+      "assets12_hashes": [
+        {
+          "project": "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+          "assets_sha256": "496576b034f0d0cd4a83a22461372e73fdfd7b8de149a3676b25872102ec2c15",
+          "reference_count": 0
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+          "assets_sha256": "0150869ff717c9ee1e28247d0b480628a4acfdc94d9d0e2da797a6ca08f071d0",
+          "reference_count": 1
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj",
+          "assets_sha256": "49c8ace5980624c60f7ffb83ba99c41418b88fe13b8a9e1d61e15995a6fffd2e",
+          "reference_count": 1
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+          "assets_sha256": "f9d3b2c242f456fa3d9ae7d43d9fc41fa823686d1ef037b6c08f073435b2a23b",
+          "reference_count": 3
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+          "assets_sha256": "fedf0772b898dbfb0242988ed194fefb95c9c3a54034275d38c67157469ae628",
+          "reference_count": 1
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj",
+          "assets_sha256": "e9e41d04e538834d6f5dedbbf19a121e119dc6b27928efa459337f707f0f19eb",
+          "reference_count": 2
+        },
+        {
+          "project": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+          "assets_sha256": "3bc75ba25cbfb14e85f4ea24b3edce21621dcc3cf1271dadd02d0ea19ffd769c",
+          "reference_count": 0
+        },
+        {
+          "project": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+          "assets_sha256": "ec49850e9f1aa833316c7967d31b558e91e4436d42e735e0d4c1ab81cdb41c90",
+          "reference_count": 10
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+          "assets_sha256": "295f455e4260f6862d7997d1c43f2362045655e093f873e7ad2b273e3d89686a",
+          "reference_count": 5
+        },
+        {
+          "project": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+          "assets_sha256": "db2b2d8d0c38c76e12cddd1c1fb1e159f6e41527c4fa6b2fed0052266baaf63b",
+          "reference_count": 3
+        },
+        {
+          "project": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "assets_sha256": "c8691969152b25595a93e5a35cbcedd4ccf2af157bb2a0c383655be7c028f1b8",
+          "reference_count": 1
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+          "assets_sha256": "5b222a61c1accebaeb5b361bdb019d73480165be652cebd9ef5d359a3b7c15c1",
+          "reference_count": 1
+        }
+      ],
+      "raw4_hashes": {
+        "p06-cache-m2-interleaved-index-publication-focused-r1-20261007-075524--93386--1RWI1S-dotnet-test.binlog": "fbe212eccf6858c57561a5bb455854aef7883c68b1819e8eb1aa6da02d1a85b8",
+        "p06-cache-m2-interleaved-index-publication-build-r1-20261007-075453--93370--aazq7B.binlog": "2067aa7881b014bd4c0e45df107908b189b49b7bff1e8f4bdac0590ecdc14882",
+        "p06-cache-m2-interleaved-index-publication-build-r1.log": "86101d0d77420dedb5f3b22ac6a3e220b97276ae02a974a9386c90d1c1743bb4",
+        "p06-cache-m2-interleaved-index-publication-focused-r1.log": "808e82e2fc308aacbb332c75867674f88cb923a07a8658a96d28e4c88fd0a8c2"
+      },
+      "runtime17_manifest_sha256": "b470e91475688cce8f5b925d6cdf43f7e5b1b72601c17dc4788f07b75e09f1b4",
+      "changed_runtime_files_vs_fixed": [
+        "ViciOne.ServiceBus.dll"
+      ],
+      "closed_binlogs2": [
+        {
+          "sha256": "fbe212eccf6858c57561a5bb455854aef7883c68b1819e8eb1aa6da02d1a85b8",
+          "bytes_uncompressed": 3236058,
+          "gzip_integrity": true
+        },
+        {
+          "sha256": "2067aa7881b014bd4c0e45df107908b189b49b7bff1e8f4bdac0590ecdc14882",
+          "bytes_uncompressed": 4233883,
+          "gzip_integrity": true
+        }
+      ]
+    },
+    {
+      "name": "m3-rejected-factory-value-not-disposed",
+      "result_sha256": "7115ee436343d35efb954842e9dfd79063f3fcc39567f4d8de79b8a13c8ba617",
+      "prepared_sha256": "b3a60251292cad48dc3ba5be10ecc6b3a483074f24b9db820967ff9db6864627",
+      "driver_inputs_sha256": "a0aaf4d85fa52a40cadcf496eb2976edc21ebf3679a18ea99d5bb93aa547bc5a",
+      "effective_source_manifest_sha256": "23be5a85ae832592c123089721efae5a7196de6f7f80f1b385501af0a1116d91",
+      "sole_changed_owner": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "compiled_owner_sha256": "43973b5a7e4e81ffb65bd02defb14e92af9d6b72028d850f0c990b492009379c",
+      "baseline6096_O_equal": true,
+      "Root812_shared84_current_match": true,
+      "all22_snapshot_plus_sole_variant_overrides": true,
+      "counts": {
+        "total": 30,
+        "failed": 2,
+        "passed": 28,
+        "skipped": 0
+      },
+      "all30_case_IDs_equal_frozen_set": true,
+      "failed_case_IDs": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership"
+      ],
+      "healthy_case_IDs": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.RemoveRetiresEveryIndexAndReleasesResource(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.RemoveRetiresEveryIndexAndReleasesResource(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LateOldFactoryCannotUnlinkPendingReplacement",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollidingResourceRemovalPreservesEveryOtherOwnedResource(position: 0)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollidingResourceRemovalPreservesEveryOtherOwnedResource(position: 2)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollidingResourceRemovalPreservesEveryOtherOwnedResource(position: 1)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"cleanup\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get-or-add\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"add\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"add\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"timer\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"cleanup\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get-or-add\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"remove\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"remove\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"timer\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FailedBulkIndexCannotCorruptExistingRetirement(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FailedBulkIndexCannotCorruptExistingRetirement(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LookupFailureCannotStrandAlreadyExpiredOwnership(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LookupFailureCannotStrandAlreadyExpiredOwnership(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollisionEqualityFailureLeavesExistingOwnershipIntact(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollisionEqualityFailureLeavesExistingOwnershipIntact(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership"
+      ],
+      "joined_actual_stages": {
+        "build": {
+          "pid": 93440,
+          "process_group": 93440,
+          "exit": 0,
+          "arguments": [
+            "dotnet",
+            "build",
+            "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "--warnaserror",
+            "-t:Rebuild",
+            "/bl:artifacts/local-completion/p06-cache-m3-rejected-factory-value-not-disposed-build-r1-{}.binlog"
+          ],
+          "deadline_exceeded": false,
+          "joined": true
+        },
+        "focused": {
+          "pid": 93451,
+          "process_group": 93451,
+          "exit": 2,
+          "arguments": [
+            "dotnet",
+            "test",
+            "--project",
+            "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+            "-c",
+            "Release",
+            "--no-build",
+            "--no-restore",
+            "--filter-class",
+            "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+            "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests",
+            "--minimum-expected-tests",
+            "30",
+            "--output",
+            "Detailed",
+            "--progress",
+            "off",
+            "--no-ansi",
+            "--show-stdout",
+            "All",
+            "--show-stderr",
+            "All",
+            "--results-directory",
+            "artifacts/local-completion/p06-cache-m3-rejected-factory-value-not-disposed-focused-r1-results",
+            "/bl:artifacts/local-completion/p06-cache-m3-rejected-factory-value-not-disposed-focused-r1-{}.binlog"
+          ],
+          "deadline_exceeded": false,
+          "joined": true
+        }
+      },
+      "first_actual_failure_blocks": [
+        "fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: True) (4ms)\n  von /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)\n  Assert.Equal() Failure: Values differ\n  Expected: 1\n  Actual:   0\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:112\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:145\n    --- End of stack trace from previous location ---\n  Standardausgabe\n    ACTUAL_FACTORY_FAILURE: System.InvalidOperationException: chosen stable comparer failure\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.Comparer.GetHashCode(String key) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 585\n       at ViciOne.ServiceBus.Caching.Implementation.PreparedResourceMap`2.Prepare(TKey key, TValue value) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceMap.cs:line 58\n       at ViciOne.ServiceBus.Caching.Implementation.ResourceCacheIndex`2.PrepareEntry(ResourceCacheEntry`1 entry, Object key) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs:line 97\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.CommitValue_NoLock(TValue value, PreparedResourceKeys`1 prepared, Int64 timestamp, PendingResourceCreation`1 pending) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs:line 98\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.CompleteCreationAsync[TKey](ResourceCacheIndex`2 index, TKey requestedKey, PendingResourceCreation`1 pending, ResourceFactory`2 factory, OperationLease operation) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs:line 239\n       at ViciOne.ServiceBus.Caching.ResourceCache`1.GetOrAddAsync[TKey](ResourceCacheIndex`2 index, TKey key, ResourceFactory`2 factory, CancellationToken cancellationToken) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs:line 152\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.Fixture.RunAsync[T](Task`1 operation) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 656\n       at ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.<>c__DisplayClass5_0.<<FactoryAdmissionPublishesAllIndicesTogether>b__2>d.MoveNext() in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs:line 105\n    --- End of stack trace from previous location ---\n       at Xunit.Record.ExceptionAsync(Func`1 testCode) in /_/src/xunit.v3.core/Record.cs:line 93\n    \n  Fehlerausgabe\n",
+        "fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership (3s 382ms)\n  von /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)\n  The joined child failed; its actual finite cause is preserved in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/cache-pending-child-receipts/e281add241054616964904778fb04f77\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.LaunchAsync(String fullName) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:103\n    --- End of stack trace from previous location ---\n  Standardausgabe\n    Owned cache child receipt: /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/cache-pending-child-receipts/e281add241054616964904778fb04f77\n    \n  Fehlerausgabe\n"
+      ],
+      "children_separate_from_parents": [
+        {
+          "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+          "parent_OSPID": 93452,
+          "child_OSPID": 93453,
+          "joined_exit": 2,
+          "waitFailure": null,
+          "runtime7_equal_before_after_archive": true,
+          "artifact_sha256": {
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdout.log": "89ad6c967e02afe0fea49e6a6a3095a7a20a9d463b45aa4e808cdd8784d4284f",
+            "PROCESS.json": "3739f4fa599dbfbd3779d14501c0fab7a2be48abee0b6146ad4a344c1a1fe51d"
+          },
+          "complete_stdout_diff_personally_read": "--- \n+++ \n@@ -1,5 +1,11 @@\n-CACHE_CASE_COMPLETED:2f1f57a84da04d4d9e98e1f235d1b00b:ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership\n-erfolgreich ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership (82ms)\n+fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership (65ms)\n+  Assert.Equal() Failure: Values differ\n+  Expected: 1\n+  Actual:   0\n+    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:175\n+    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:220\n+    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.RunChildAsync(String name, String fullName, Func`2 action) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:45\n+    --- End of stack trace from previous location ---\n   Standardausgabe\n     ACTUAL_COMPARER_ATTEMPT: candidate\n        at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.Comparer.GetHashCode(String key)\n@@ -182,12 +188,12 @@\n        at System.Threading.PortableThreadPool.WorkerThread.WorkerThreadStart()\n        at System.Threading.Thread.StartCallback()\n     \n-    STATE factoryCalls=1 factoryReturns=1 release=1 pending=0 requestTerminal=True comparerThrows=1\n+    STATE factoryCalls=1 factoryReturns=1 release=0 pending=0 requestTerminal=True comparerThrows=1\n     \n \n-Testlaufzusammenfassung: Bestanden! - /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)\n+Testlaufzusammenfassung: Fehler! - /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)\n   gesamt: 1\n-  fehlerhaft: 0\n-  erfolgreich: 1\n+  fehlerhaft: 1\n+  erfolgreich: 0\n   \u00fcbersprungen: 0\n-  Dauer: 2s 626ms\n+  Dauer: 2s 695ms\n",
+          "first_failure_prefix": "fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership (65ms)\n  Assert.Equal() Failure: Values differ\n  Expected: 1\n  Actual:   0\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:175\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:220\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.RunChildAsync(String name, String fullName, Func`2 action) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:45\n    --- End of stack trace from previous location ---\n",
+          "actual_product_joins_reached": true,
+          "child_failure_same_parent_event_not_double_counted": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership",
+          "parent_OSPID": 93452,
+          "child_OSPID": 93454,
+          "joined_exit": 0,
+          "waitFailure": null,
+          "runtime7_equal_before_after_archive": true,
+          "artifact_sha256": {
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdout.log": "f576a47eee425a40cf48badbe5c43fe6228190a83a044d1cd3e64cfd52398fa2",
+            "PROCESS.json": "0c1517b7c8d35b99642175de8e5fb5ae9efa1d729c0a2a46f7d7bfa321b9fe00"
+          },
+          "complete_stdout_diff_personally_read": "--- \n+++ \n@@ -1,5 +1,5 @@\n-CACHE_CASE_COMPLETED:0623e662c04a44a49a00aaf5da9582f2:ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership\n-erfolgreich ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership (74ms)\n+CACHE_CASE_COMPLETED:75f0bd8f51ac45a4b630ef430fae9b3f:ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership\n+erfolgreich ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership (60ms)\n   Standardausgabe\n     STATE factoryCalls=1 factoryReturns=1 release=0 pending=0 requestTerminal=True comparerThrows=0\n     \n@@ -9,4 +9,4 @@\n   fehlerhaft: 0\n   erfolgreich: 1\n   \u00fcbersprungen: 0\n-  Dauer: 2s 498ms\n+  Dauer: 2s 310ms\n",
+          "first_failure_prefix": null,
+          "actual_product_joins_reached": true,
+          "child_failure_same_parent_event_not_double_counted": false
+        }
+      ],
+      "PE12_PDB3806": [
+        {
+          "name": "ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "c3e17c72838ec5c97874edd14e0854fa7f6846b7949c9afba1ce6f29a7c895ab",
+          "pe_pdb_id_matches": true,
+          "documents": 700,
+          "document_inventory_sha256": "4459d2b268d1cb7a34fcdd51f07658925662288f8d2bc037fe37992d560d7fbe"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Courier.dll",
+          "sha256": "32343920750f806b79c2ddc8b3be58d21e6c178edd67fc1910189410eb03e68c",
+          "pe_pdb_id_matches": true,
+          "documents": 146,
+          "document_inventory_sha256": "cf3f7c0a3598ac989b337f1fbf7db1495c5134ad354a9d0982762977bcb272bc"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Futures.dll",
+          "sha256": "b344c3a857f7c0cec8c3928e1346ff09aee75b384a838916de14985735a2d4d8",
+          "pe_pdb_id_matches": true,
+          "documents": 61,
+          "document_inventory_sha256": "45753724b7b9038bae2421afd3cb1970b8c4c992dec336585fc973bb9fa6a955"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Initializers.dll",
+          "sha256": "edefc31d3419e5f5c704acdebc58a106a479c6255668b1ca3f4bb90befd2d4b3",
+          "pe_pdb_id_matches": true,
+          "documents": 11,
+          "document_inventory_sha256": "82795e0d55947cc4215acb9a0054644683c3b7cd8f06c4890a8f99aab65af0c8"
+        },
+        {
+          "name": "ViciOne.ServiceBus.JobService.dll",
+          "sha256": "586e0ac94d1451a7b8f5b94e8f230533adb61797f411b93a95450257d26d65c8",
+          "pe_pdb_id_matches": true,
+          "documents": 175,
+          "document_inventory_sha256": "a92dd7e609fc7022a281f2e706c8e8e1a091452aa01cddc59a48bb9283181e55"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Mediator.dll",
+          "sha256": "52b26537659a780f4370a536d6e1f05a46f0c9bc85788c9fab72a8bbc72f42bb",
+          "pe_pdb_id_matches": true,
+          "documents": 31,
+          "document_inventory_sha256": "675a479f0659d5b5bb0a25c17ca7a010554747b8a48251a99c4ec2616d955c35"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "8c18490510d5f0644e4813e0d7275a052787b00a48d27a12855ad62054eac492",
+          "pe_pdb_id_matches": true,
+          "documents": 374,
+          "document_inventory_sha256": "6267abd6f59411c4e869aecde16e09604abc152e7ff2674573152d0b5d9b5b64"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Testing.dll",
+          "sha256": "403d2ef5456e5551924ed14d32cb91d13722fdf6a115bd8a4ddfa974f72c7c49",
+          "pe_pdb_id_matches": true,
+          "documents": 104,
+          "document_inventory_sha256": "4cf3ec005622383b5fb6ba46afcefb5c3efe2e96d3f127e10694d491a0115e78"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+          "sha256": "c17bdd92c1599fa50e37e6cb30fc0b0583c35478bfe856fc951cb97cf8be7b80",
+          "pe_pdb_id_matches": true,
+          "documents": 9,
+          "document_inventory_sha256": "33dcc6f3d152efca9de75915b78a4dc8b5039392a685ad812bfe41952f25aad8"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+          "sha256": "5d0e8b1cb2ed55a4aa11b02f4c10e6269831c765faadb5c5227b34ec6773e988",
+          "pe_pdb_id_matches": true,
+          "documents": 38,
+          "document_inventory_sha256": "75fb9054a52367c0da886df2791d8e1b6898c4cd166a8fb9118ad13b867757b2"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Tests.dll",
+          "sha256": "203f1526baabdfffbbb31fbf549395352160b1d4a31ed063f80001099423c246",
+          "pe_pdb_id_matches": true,
+          "documents": 816,
+          "document_inventory_sha256": "d5ba10095be6f69f67ab3f767b524b6dd07333cd0e1137e4e9efb5bfba1444c8"
+        },
+        {
+          "name": "ViciOne.ServiceBus.dll",
+          "sha256": "149e4e386ef60bf7b35f293bc1abc838f895091e27ad9c8ab7acd74702ae8bb0",
+          "pe_pdb_id_matches": true,
+          "documents": 1341,
+          "document_inventory_sha256": "cf935b47a454a956774c395f87488d7fa1d0cb66ffae20fd3e7e91bf480c04a3"
+        }
+      ],
+      "PDB_exact_targets": {
+        "ViciOne.ServiceBus.Tests.dll": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "0162159c1324fc18093618ceb25b9055be204a4a18b3f6d8e5505738dd814bb6",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "0162159c1324fc18093618ceb25b9055be204a4a18b3f6d8e5505738dd814bb6"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "fd3f1172f759ff7e7531e2d52da73efb570ce72af1db44bbc55479b4aa31e2a6",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "fd3f1172f759ff7e7531e2d52da73efb570ce72af1db44bbc55479b4aa31e2a6"
+          }
+        ],
+        "ViciOne.ServiceBus.dll": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceMap.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "2db6ae5fa7ed933ec1aa037e77a63b09cc4a53294f3195d94703b10af03da271",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "2db6ae5fa7ed933ec1aa037e77a63b09cc4a53294f3195d94703b10af03da271"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "84f6d67e2e3724120b394367b413325f353f7a9423a713431e8a6f4449b78f18",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "84f6d67e2e3724120b394367b413325f353f7a9423a713431e8a6f4449b78f18"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "43973b5a7e4e81ffb65bd02defb14e92af9d6b72028d850f0c990b492009379c",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "43973b5a7e4e81ffb65bd02defb14e92af9d6b72028d850f0c990b492009379c"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "a77ab4864f0e44b8692c308371817a831f0a231a40aec57ebcbba7793d7b65d1",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "a77ab4864f0e44b8692c308371817a831f0a231a40aec57ebcbba7793d7b65d1"
+          }
+        ]
+      },
+      "CoreRequirements4719": {
+        "name": "ViciOne.ServiceBus.Tests.Requirements.CoreRequirements.json",
+        "implementation": 0,
+        "length": 1678587,
+        "sha256": "b1cba734eaa3752541dd6dce522af0b35924b909930609ca17e5676425692750"
+      },
+      "firstparty_edges35": 35,
+      "deps_project12": [
+        "ViciOne.ServiceBus.Abstractions/1.0.0",
+        "ViciOne.ServiceBus.Courier/1.0.0",
+        "ViciOne.ServiceBus.Futures/1.0.0",
+        "ViciOne.ServiceBus.Initializers/1.0.0",
+        "ViciOne.ServiceBus.JobService/1.0.0",
+        "ViciOne.ServiceBus.Mediator/1.0.0",
+        "ViciOne.ServiceBus.Sagas/1.0.0",
+        "ViciOne.ServiceBus.Testing/1.0.0",
+        "ViciOne.ServiceBus.Tests.Infrastructure/1.0.0",
+        "ViciOne.ServiceBus.Tests.InternalAccess/1.0.0",
+        "ViciOne.ServiceBus.Tests/1.0.0",
+        "ViciOne.ServiceBus/1.0.0"
+      ],
+      "assets12_hashes": [
+        {
+          "project": "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+          "assets_sha256": "496576b034f0d0cd4a83a22461372e73fdfd7b8de149a3676b25872102ec2c15",
+          "reference_count": 0
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+          "assets_sha256": "0150869ff717c9ee1e28247d0b480628a4acfdc94d9d0e2da797a6ca08f071d0",
+          "reference_count": 1
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj",
+          "assets_sha256": "49c8ace5980624c60f7ffb83ba99c41418b88fe13b8a9e1d61e15995a6fffd2e",
+          "reference_count": 1
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+          "assets_sha256": "f9d3b2c242f456fa3d9ae7d43d9fc41fa823686d1ef037b6c08f073435b2a23b",
+          "reference_count": 3
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+          "assets_sha256": "fedf0772b898dbfb0242988ed194fefb95c9c3a54034275d38c67157469ae628",
+          "reference_count": 1
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj",
+          "assets_sha256": "e9e41d04e538834d6f5dedbbf19a121e119dc6b27928efa459337f707f0f19eb",
+          "reference_count": 2
+        },
+        {
+          "project": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+          "assets_sha256": "3bc75ba25cbfb14e85f4ea24b3edce21621dcc3cf1271dadd02d0ea19ffd769c",
+          "reference_count": 0
+        },
+        {
+          "project": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+          "assets_sha256": "ec49850e9f1aa833316c7967d31b558e91e4436d42e735e0d4c1ab81cdb41c90",
+          "reference_count": 10
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+          "assets_sha256": "295f455e4260f6862d7997d1c43f2362045655e093f873e7ad2b273e3d89686a",
+          "reference_count": 5
+        },
+        {
+          "project": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+          "assets_sha256": "db2b2d8d0c38c76e12cddd1c1fb1e159f6e41527c4fa6b2fed0052266baaf63b",
+          "reference_count": 3
+        },
+        {
+          "project": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "assets_sha256": "c8691969152b25595a93e5a35cbcedd4ccf2af157bb2a0c383655be7c028f1b8",
+          "reference_count": 1
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+          "assets_sha256": "5b222a61c1accebaeb5b361bdb019d73480165be652cebd9ef5d359a3b7c15c1",
+          "reference_count": 1
+        }
+      ],
+      "raw4_hashes": {
+        "p06-cache-m3-rejected-factory-value-not-disposed-build-r1-20261007-075553--93440--NfWr6u.binlog": "d88ad1c6d282dfca3d25bb09647a78a3ffaad5c22d0be3c5b1b498083d518eac",
+        "p06-cache-m3-rejected-factory-value-not-disposed-focused-r1-20261007-075620--93451--HwShPn-dotnet-test.binlog": "c2c329f3fdfa963c2a3d7e31b8904b884fc9d909899bdea1d5b7c5e9a3a111b0",
+        "p06-cache-m3-rejected-factory-value-not-disposed-focused-r1.log": "12bf2f89335314c56cd1ee2a6951d637661db40f08d06557f6872ead01413001",
+        "p06-cache-m3-rejected-factory-value-not-disposed-build-r1.log": "ae72e56cc2a680d0aa8d5aaf68849e1ce88411e71c72d3a3c1a29cdab47b63e1"
+      },
+      "runtime17_manifest_sha256": "e04f244ce3a60385e03475c03f74843215dbdb6e00215c8d5982e139ca171959",
+      "changed_runtime_files_vs_fixed": [
+        "ViciOne.ServiceBus.Mediator.dll",
+        "ViciOne.ServiceBus.JobService.dll",
+        "ViciOne.ServiceBus.Testing.dll",
+        "ViciOne.ServiceBus.Courier.dll",
+        "ViciOne.ServiceBus.Futures.dll",
+        "ViciOne.ServiceBus.Initializers.dll",
+        "ViciOne.ServiceBus.Sagas.dll",
+        "ViciOne.ServiceBus.Tests.pdb",
+        "ViciOne.ServiceBus.dll",
+        "ViciOne.ServiceBus.Tests.dll",
+        "ViciOne.ServiceBus.Tests.InternalAccess.dll"
+      ],
+      "closed_binlogs2": [
+        {
+          "sha256": "d88ad1c6d282dfca3d25bb09647a78a3ffaad5c22d0be3c5b1b498083d518eac",
+          "bytes_uncompressed": 4233532,
+          "gzip_integrity": true
+        },
+        {
+          "sha256": "c2c329f3fdfa963c2a3d7e31b8904b884fc9d909899bdea1d5b7c5e9a3a111b0",
+          "bytes_uncompressed": 3236064,
+          "gzip_integrity": true
+        }
+      ]
+    },
+    {
+      "name": "m4-pending-cleanup-comparer-callback",
+      "result_sha256": "8d7465b27465b2ec7d8dcac4a00e0871b19bb3a980fb380cbcb4010940fcc1a5",
+      "prepared_sha256": "1653d7957bdb5a35964aef12f2bef588729065581dc7acb2ff1b606d039aeb91",
+      "driver_inputs_sha256": "a0aaf4d85fa52a40cadcf496eb2976edc21ebf3679a18ea99d5bb93aa547bc5a",
+      "effective_source_manifest_sha256": "faaead8d0c28fd991f47721b9be3a7a9688a48bf09cfd09d1575d300c5a8f892",
+      "sole_changed_owner": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "compiled_owner_sha256": "e54cf7d68c894f6b2f42282d874eba8a4e1fe5863f6181ba139208498aa82c64",
+      "baseline6096_O_equal": true,
+      "Root812_shared84_current_match": true,
+      "all22_snapshot_plus_sole_variant_overrides": true,
+      "counts": {
+        "total": 30,
+        "failed": 1,
+        "passed": 29,
+        "skipped": 0
+      },
+      "all30_case_IDs_equal_frozen_set": true,
+      "failed_case_IDs": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership"
+      ],
+      "healthy_case_IDs": [
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.RemoveRetiresEveryIndexAndReleasesResource(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.RemoveRetiresEveryIndexAndReleasesResource(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LateOldFactoryCannotUnlinkPendingReplacement",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollidingResourceRemovalPreservesEveryOtherOwnedResource(position: 0)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollidingResourceRemovalPreservesEveryOtherOwnedResource(position: 2)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollidingResourceRemovalPreservesEveryOtherOwnedResource(position: 1)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"cleanup\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get-or-add\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"add\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"add\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"timer\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"cleanup\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"get-or-add\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"remove\", hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"remove\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.PartialExpirationClockFailureCannotLoseRetiredOwnership(operation: \"timer\", hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FailedBulkIndexCannotCorruptExistingRetirement(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FailedBulkIndexCannotCorruptExistingRetirement(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LookupFailureCannotStrandAlreadyExpiredOwnership(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.LookupFailureCannotStrandAlreadyExpiredOwnership(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.DirectAdmissionPublishesAllIndicesTogether(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.FactoryAdmissionPublishesAllIndicesTogether(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollisionEqualityFailureLeavesExistingOwnershipIntact(hostile: False)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests.CollisionEqualityFailureLeavesExistingOwnershipIntact(hostile: True)",
+        "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership"
+      ],
+      "joined_actual_stages": {
+        "build": {
+          "pid": 93478,
+          "process_group": 93478,
+          "exit": 0,
+          "arguments": [
+            "dotnet",
+            "build",
+            "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+            "-c",
+            "Release",
+            "--no-restore",
+            "--warnaserror",
+            "-t:Rebuild",
+            "/bl:artifacts/local-completion/p06-cache-m4-pending-cleanup-comparer-callback-build-r1-{}.binlog"
+          ],
+          "deadline_exceeded": false,
+          "joined": true
+        },
+        "focused": {
+          "pid": 93492,
+          "process_group": 93492,
+          "exit": 2,
+          "arguments": [
+            "dotnet",
+            "test",
+            "--project",
+            "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+            "-c",
+            "Release",
+            "--no-build",
+            "--no-restore",
+            "--filter-class",
+            "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+            "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests",
+            "--minimum-expected-tests",
+            "30",
+            "--output",
+            "Detailed",
+            "--progress",
+            "off",
+            "--no-ansi",
+            "--show-stdout",
+            "All",
+            "--show-stderr",
+            "All",
+            "--results-directory",
+            "artifacts/local-completion/p06-cache-m4-pending-cleanup-comparer-callback-focused-r1-results",
+            "/bl:artifacts/local-completion/p06-cache-m4-pending-cleanup-comparer-callback-focused-r1-{}.binlog"
+          ],
+          "deadline_exceeded": false,
+          "joined": true
+        }
+      },
+      "first_actual_failure_blocks": [
+        "fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership (3s 023ms)\n  von /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.dll (net10.0|x64)\n  The joined child failed; its actual finite cause is preserved in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/cache-pending-child-receipts/61e269acc5f34404ad174ed045986c1b\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.LaunchAsync(String fullName) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:103\n    --- End of stack trace from previous location ---\n  Standardausgabe\n    Owned cache child receipt: /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/artifacts/sdk/bin/ViciOne.ServiceBus.Tests.Unit/release/cache-pending-child-receipts/61e269acc5f34404ad174ed045986c1b\n    \n  Fehlerausgabe\n"
+      ],
+      "children_separate_from_parents": [
+        {
+          "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership",
+          "parent_OSPID": 93493,
+          "child_OSPID": 93494,
+          "joined_exit": 2,
+          "waitFailure": null,
+          "runtime7_equal_before_after_archive": true,
+          "artifact_sha256": {
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdout.log": "7416a96f679ba49418bf28f3a48e3c676d262f94fbf1044e3aa12fbc8fb7c579",
+            "PROCESS.json": "cfec0696eb755d621b6a4f2e084ba3febcceec1650d09b94131fdfc207cc6c25"
+          },
+          "complete_stdout_diff_personally_read": "--- \n+++ \n@@ -1,18 +1,17 @@\n-fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership (67ms)\n+fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership (64ms)\n   Assert.Equal() Failure: Values differ\n   Expected: 0\n   Actual:   1\n-    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:171\n-    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:219\n+    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:180\n+    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:220\n     um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.RunChildAsync(String name, String fullName, Func`2 action) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:45\n     --- End of stack trace from previous location ---\n   Standardausgabe\n     ACTUAL_COMPARER_ATTEMPT: candidate\n        at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.Comparer.GetHashCode(String key)\n-       at System.Collections.Generic.Dictionary`2.TryInsert(TKey key, TValue value, InsertionBehavior behavior)\n-       at System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)\n-       at ViciOne.ServiceBus.Caching.Implementation.ResourceCacheIndex`2.CommitKey(ResourceCacheEntry`1 entry, Object key)\n-       at ViciOne.ServiceBus.Caching.ResourceCache`1.CommitValue_NoLock(TValue value, PreparedResourceKeys`1 prepared, Int64 timestamp)\n+       at ViciOne.ServiceBus.Caching.Implementation.PreparedResourceMap`2.Prepare(TKey key, TValue value)\n+       at ViciOne.ServiceBus.Caching.Implementation.ResourceCacheIndex`2.PrepareEntry(ResourceCacheEntry`1 entry, Object key)\n+       at ViciOne.ServiceBus.Caching.ResourceCache`1.CommitValue_NoLock(TValue value, PreparedResourceKeys`1 prepared, Int64 timestamp, PendingResourceCreation`1 pending)\n        at ViciOne.ServiceBus.Caching.ResourceCache`1.CompleteCreationAsync[TKey](ResourceCacheIndex`2 index, TKey requestedKey, PendingResourceCreation`1 pending, ResourceFactory`2 factory, OperationLease operation)\n        at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n        at ViciOne.ServiceBus.Caching.ResourceCache`1.CompleteCreationAsync[TKey](ResourceCacheIndex`2 index, TKey requestedKey, PendingResourceCreation`1 pending, ResourceFactory`2 factory, OperationLease operation)\n@@ -191,9 +190,8 @@\n     \n     ACTUAL_COMPARER_ATTEMPT: candidate\n        at ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.Comparer.GetHashCode(String key)\n-       at System.Collections.Generic.Dictionary`2.FindValue(TKey key)\n-       at System.Collections.Generic.Dictionary`2.TryGetValue(TKey key, TValue& value)\n-       at ViciOne.ServiceBus.Caching.Implementation.ResourceCacheIndex`2.RemovePending(Object key, PendingResourceCreation`1 pending)\n+       at ViciOne.ServiceBus.Caching.Implementation.PreparedResourceMap`2.TryGetValue(TKey key, TValue& value)\n+       at ViciOne.ServiceBus.Caching.Implementation.ResourceCacheIndex`2.RemovePending(PendingResourceCreation`1 pending)\n        at ViciOne.ServiceBus.Caching.ResourceCache`1.CompleteFaultedPending(PendingResourceCreation`1 pending, Exception exception)\n        at ViciOne.ServiceBus.Caching.ResourceCache`1.CompleteCreationAsync[TKey](ResourceCacheIndex`2 index, TKey requestedKey, PendingResourceCreation`1 pending, ResourceFactory`2 factory, OperationLease operation)\n        at System.Runtime.CompilerServices.AsyncMethodBuilderCore.Start[TStateMachine](TStateMachine& stateMachine)\n@@ -380,4 +378,4 @@\n   fehlerhaft: 1\n   erfolgreich: 0\n   \u00fcbersprungen: 0\n-  Dauer: 2s 372ms\n+  Dauer: 2s 419ms\n",
+          "first_failure_prefix": "fehlerhaft ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.PersistentOriginComparerFailureReleasesPendingOwnership (64ms)\n  Assert.Equal() Failure: Values differ\n  Expected: 0\n  Actual:   1\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:180\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.ExecuteCaseAsync(Boolean hostile) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:220\n    um ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.RunChildAsync(String name, String fullName, Func`2 action) in /private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs:45\n    --- End of stack trace from previous location ---\n",
+          "actual_product_joins_reached": false,
+          "child_failure_same_parent_event_not_double_counted": true
+        },
+        {
+          "case": "ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership",
+          "parent_OSPID": 93493,
+          "child_OSPID": 93496,
+          "joined_exit": 0,
+          "waitFailure": null,
+          "runtime7_equal_before_after_archive": true,
+          "artifact_sha256": {
+            "stderr.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "stdout.log": "1e1c9195eff22ae000965c2facc2da0012465816b1faca33d4c9b0e3816f601d",
+            "PROCESS.json": "6561ebc2d72d015923fb760cd87d913573f3690ad06215f7ff1cd29b194056bf"
+          },
+          "complete_stdout_diff_personally_read": "--- \n+++ \n@@ -1,5 +1,5 @@\n-CACHE_CASE_COMPLETED:0623e662c04a44a49a00aaf5da9582f2:ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership\n-erfolgreich ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership (74ms)\n+CACHE_CASE_COMPLETED:f1d8c787faa849aa99baaa89b85bcffd:ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership\n+erfolgreich ViciOne.ServiceBus.Tests.Caching.ResourceCachePendingComparerIsolationTests.HealthyOriginPendingSlotReleasesOwnership (62ms)\n   Standardausgabe\n     STATE factoryCalls=1 factoryReturns=1 release=0 pending=0 requestTerminal=True comparerThrows=0\n     \n@@ -9,4 +9,4 @@\n   fehlerhaft: 0\n   erfolgreich: 1\n   \u00fcbersprungen: 0\n-  Dauer: 2s 498ms\n+  Dauer: 2s 281ms\n",
+          "first_failure_prefix": null,
+          "actual_product_joins_reached": true,
+          "child_failure_same_parent_event_not_double_counted": false
+        }
+      ],
+      "PE12_PDB3806": [
+        {
+          "name": "ViciOne.ServiceBus.Abstractions.dll",
+          "sha256": "c3e17c72838ec5c97874edd14e0854fa7f6846b7949c9afba1ce6f29a7c895ab",
+          "pe_pdb_id_matches": true,
+          "documents": 700,
+          "document_inventory_sha256": "4459d2b268d1cb7a34fcdd51f07658925662288f8d2bc037fe37992d560d7fbe"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Courier.dll",
+          "sha256": "89a3f4cf51b9ad4e7ea00d547989c929160531a87d6db4962611da20d3f964b0",
+          "pe_pdb_id_matches": true,
+          "documents": 146,
+          "document_inventory_sha256": "cf3f7c0a3598ac989b337f1fbf7db1495c5134ad354a9d0982762977bcb272bc"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Futures.dll",
+          "sha256": "568f41d132102532661b5b837400195d20454fd10ffbaad4a52c9ece279de57a",
+          "pe_pdb_id_matches": true,
+          "documents": 61,
+          "document_inventory_sha256": "45753724b7b9038bae2421afd3cb1970b8c4c992dec336585fc973bb9fa6a955"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Initializers.dll",
+          "sha256": "ee2ce6f8d29520f26cb3be4eee1cf69c1772cd754b463bb52a5d9ccaea7a2899",
+          "pe_pdb_id_matches": true,
+          "documents": 11,
+          "document_inventory_sha256": "82795e0d55947cc4215acb9a0054644683c3b7cd8f06c4890a8f99aab65af0c8"
+        },
+        {
+          "name": "ViciOne.ServiceBus.JobService.dll",
+          "sha256": "6c409d392f874d76fa9f5e90f84b2352ca4d3dcbcf1e2db07acdfa679705b5a5",
+          "pe_pdb_id_matches": true,
+          "documents": 175,
+          "document_inventory_sha256": "a92dd7e609fc7022a281f2e706c8e8e1a091452aa01cddc59a48bb9283181e55"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Mediator.dll",
+          "sha256": "d09d831fee4d63a1d8cd352addd873eb4a7c4dd6267d0f5f95c941d90ff66077",
+          "pe_pdb_id_matches": true,
+          "documents": 31,
+          "document_inventory_sha256": "675a479f0659d5b5bb0a25c17ca7a010554747b8a48251a99c4ec2616d955c35"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Sagas.dll",
+          "sha256": "7eeddfe28ec76eb2131d16405ca5b99caf8d1e67bf81393431a6fd8f91ac28ee",
+          "pe_pdb_id_matches": true,
+          "documents": 374,
+          "document_inventory_sha256": "6267abd6f59411c4e869aecde16e09604abc152e7ff2674573152d0b5d9b5b64"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Testing.dll",
+          "sha256": "4003917d4cd5d10242c4307555dff06188470ba1ad8ca5cd05b5f00f7a69d458",
+          "pe_pdb_id_matches": true,
+          "documents": 104,
+          "document_inventory_sha256": "4cf3ec005622383b5fb6ba46afcefb5c3efe2e96d3f127e10694d491a0115e78"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+          "sha256": "c17bdd92c1599fa50e37e6cb30fc0b0583c35478bfe856fc951cb97cf8be7b80",
+          "pe_pdb_id_matches": true,
+          "documents": 9,
+          "document_inventory_sha256": "33dcc6f3d152efca9de75915b78a4dc8b5039392a685ad812bfe41952f25aad8"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+          "sha256": "e35823d45f7f7968279bb3ce6f994db695667ae8b9bc337fbd2e3b44e367b3b1",
+          "pe_pdb_id_matches": true,
+          "documents": 38,
+          "document_inventory_sha256": "75fb9054a52367c0da886df2791d8e1b6898c4cd166a8fb9118ad13b867757b2"
+        },
+        {
+          "name": "ViciOne.ServiceBus.Tests.dll",
+          "sha256": "1f034def73f34cd58afc3fce9bff515e415ebabc9992280a4a121617ba056a3c",
+          "pe_pdb_id_matches": true,
+          "documents": 816,
+          "document_inventory_sha256": "d5ba10095be6f69f67ab3f767b524b6dd07333cd0e1137e4e9efb5bfba1444c8"
+        },
+        {
+          "name": "ViciOne.ServiceBus.dll",
+          "sha256": "168aa3379f771b45b187ce205645f0b6f789d696cfb60fc7213605eb6958024b",
+          "pe_pdb_id_matches": true,
+          "documents": 1341,
+          "document_inventory_sha256": "5c2682f261fd33774fd091ef6149d2c7592272ae66d68808ca0afc167b370060"
+        }
+      ],
+      "PDB_exact_targets": {
+        "ViciOne.ServiceBus.Tests.dll": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "0162159c1324fc18093618ceb25b9055be204a4a18b3f6d8e5505738dd814bb6",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "0162159c1324fc18093618ceb25b9055be204a4a18b3f6d8e5505738dd814bb6"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCachePendingComparerIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "fd3f1172f759ff7e7531e2d52da73efb570ce72af1db44bbc55479b4aa31e2a6",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "fd3f1172f759ff7e7531e2d52da73efb570ce72af1db44bbc55479b4aa31e2a6"
+          }
+        ],
+        "ViciOne.ServiceBus.dll": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceMap.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "2db6ae5fa7ed933ec1aa037e77a63b09cc4a53294f3195d94703b10af03da271",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "2db6ae5fa7ed933ec1aa037e77a63b09cc4a53294f3195d94703b10af03da271"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "e54cf7d68c894f6b2f42282d874eba8a4e1fe5863f6181ba139208498aa82c64",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "e54cf7d68c894f6b2f42282d874eba8a4e1fe5863f6181ba139208498aa82c64"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "45bb92aea5df9ed96396604d8ef2b63afc888537ca4f49815f05ea734af41a6a",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "45bb92aea5df9ed96396604d8ef2b63afc888537ca4f49815f05ea734af41a6a"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-cache-original/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "a77ab4864f0e44b8692c308371817a831f0a231a40aec57ebcbba7793d7b65d1",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "a77ab4864f0e44b8692c308371817a831f0a231a40aec57ebcbba7793d7b65d1"
+          }
+        ]
+      },
+      "CoreRequirements4719": {
+        "name": "ViciOne.ServiceBus.Tests.Requirements.CoreRequirements.json",
+        "implementation": 0,
+        "length": 1678587,
+        "sha256": "b1cba734eaa3752541dd6dce522af0b35924b909930609ca17e5676425692750"
+      },
+      "firstparty_edges35": 35,
+      "deps_project12": [
+        "ViciOne.ServiceBus.Abstractions/1.0.0",
+        "ViciOne.ServiceBus.Courier/1.0.0",
+        "ViciOne.ServiceBus.Futures/1.0.0",
+        "ViciOne.ServiceBus.Initializers/1.0.0",
+        "ViciOne.ServiceBus.JobService/1.0.0",
+        "ViciOne.ServiceBus.Mediator/1.0.0",
+        "ViciOne.ServiceBus.Sagas/1.0.0",
+        "ViciOne.ServiceBus.Testing/1.0.0",
+        "ViciOne.ServiceBus.Tests.Infrastructure/1.0.0",
+        "ViciOne.ServiceBus.Tests.InternalAccess/1.0.0",
+        "ViciOne.ServiceBus.Tests/1.0.0",
+        "ViciOne.ServiceBus/1.0.0"
+      ],
+      "assets12_hashes": [
+        {
+          "project": "src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+          "assets_sha256": "496576b034f0d0cd4a83a22461372e73fdfd7b8de149a3676b25872102ec2c15",
+          "reference_count": 0
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+          "assets_sha256": "0150869ff717c9ee1e28247d0b480628a4acfdc94d9d0e2da797a6ca08f071d0",
+          "reference_count": 1
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj",
+          "assets_sha256": "49c8ace5980624c60f7ffb83ba99c41418b88fe13b8a9e1d61e15995a6fffd2e",
+          "reference_count": 1
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+          "assets_sha256": "f9d3b2c242f456fa3d9ae7d43d9fc41fa823686d1ef037b6c08f073435b2a23b",
+          "reference_count": 3
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+          "assets_sha256": "fedf0772b898dbfb0242988ed194fefb95c9c3a54034275d38c67157469ae628",
+          "reference_count": 1
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj",
+          "assets_sha256": "e9e41d04e538834d6f5dedbbf19a121e119dc6b27928efa459337f707f0f19eb",
+          "reference_count": 2
+        },
+        {
+          "project": "tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+          "assets_sha256": "3bc75ba25cbfb14e85f4ea24b3edce21621dcc3cf1271dadd02d0ea19ffd769c",
+          "reference_count": 0
+        },
+        {
+          "project": "tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+          "assets_sha256": "ec49850e9f1aa833316c7967d31b558e91e4436d42e735e0d4c1ab81cdb41c90",
+          "reference_count": 10
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+          "assets_sha256": "295f455e4260f6862d7997d1c43f2362045655e093f873e7ad2b273e3d89686a",
+          "reference_count": 5
+        },
+        {
+          "project": "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+          "assets_sha256": "db2b2d8d0c38c76e12cddd1c1fb1e159f6e41527c4fa6b2fed0052266baaf63b",
+          "reference_count": 3
+        },
+        {
+          "project": "src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "assets_sha256": "c8691969152b25595a93e5a35cbcedd4ccf2af157bb2a0c383655be7c028f1b8",
+          "reference_count": 1
+        },
+        {
+          "project": "src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+          "assets_sha256": "5b222a61c1accebaeb5b361bdb019d73480165be652cebd9ef5d359a3b7c15c1",
+          "reference_count": 1
+        }
+      ],
+      "raw4_hashes": {
+        "p06-cache-m4-pending-cleanup-comparer-callback-build-r1-20261007-075654--93478--RS2YkY.binlog": "b9de974f41351ff38ab6bb7bb3230360fb251613644f2c4fb2b2b2fc6b10014b",
+        "p06-cache-m4-pending-cleanup-comparer-callback-focused-r1.log": "a0c6a0275e865af3b60179bf8cd8ec6c2476144429afb1583480ea1044525fdc",
+        "p06-cache-m4-pending-cleanup-comparer-callback-build-r1.log": "cfe3153dd20d316dc0fa7ea439de61c80f98478f134278cce70cb1ce8cd9a344",
+        "p06-cache-m4-pending-cleanup-comparer-callback-focused-r1-20261007-075718--93492--N9UQqf-dotnet-test.binlog": "584ef44d2ad9b719f5b6d8d49dbc298f19e5676753eaa4b283b63deb97aa2195"
+      },
+      "runtime17_manifest_sha256": "8a3c9193f9abee1f23ad5fc36c5841e8430b68871c2d2efec129ddd56d8c01bf",
+      "changed_runtime_files_vs_fixed": [
+        "ViciOne.ServiceBus.dll"
+      ],
+      "closed_binlogs2": [
+        {
+          "sha256": "b9de974f41351ff38ab6bb7bb3230360fb251613644f2c4fb2b2b2fc6b10014b",
+          "bytes_uncompressed": 4233530,
+          "gzip_integrity": true
+        },
+        {
+          "sha256": "584ef44d2ad9b719f5b6d8d49dbc298f19e5676753eaa4b283b63deb97aa2195",
+          "bytes_uncompressed": 3236062,
+          "gzip_integrity": true
+        }
+      ]
+    }
+  ],
+  "finite_credit": {
+    "M2_direct74_ghost_dispose0_factory121_ghost_dispose1": "Both actual Prepare58/PrepareEntry97/mutantCommit99, healthy pairs green; later oracles unreached.",
+    "M3_main112_disposal0_child175_disposal0": "Child first175 reproduces missing candidate disposal; wrapper103 same child event, not additional cause. Terminal known failure captured; ordinary actual cleanup joins reached.",
+    "M4_child180_pending1_expected0": "Physicalrelease1/factory1/returns1/throws2/requestnonterminal actual state validated. Actual firstcomparison Prepare then second TryGet/RemovePending/CompleteFaulted. Parent103 wrapper; productrequest/slot/cache joins zero, child itself actually joined exit2.",
+    "M1": "Exact existing report7bb9 firstDispose32 only."
+  },
+  "limits": [
+    "120 parent slots=6red114healthy; child events separate, wrapper never double counted.",
+    "No compiler/watchdog/discovery/guard kill claim; all strict builds0warnings0errors and joined, no deadlines.",
+    "MutableC8 owner/output excluded; frozen22 snapshot plus each archived soleowner used forPE/PDB, other canonical source6096 guarded.",
+    "Complete prior source and child rawbody reuse only exact equality/full personally consumed differences. No Root personal reading transfer.",
+    "No cache aggregate/post/Core/provider/heapmeasurement/A+ release closure; remaining4 mutations independent review pending."
+  ]
+}

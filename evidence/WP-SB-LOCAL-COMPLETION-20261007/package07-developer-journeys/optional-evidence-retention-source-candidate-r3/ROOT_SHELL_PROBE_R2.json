@@ -1,0 +1,68 @@
+{
+  "kind": "ROOT_ACTUAL_SIX_SHELL_ONLY_JOURNEY_RETENTION_PROBES_R2",
+  "source_sha256": "28a140c4e0b771ef525ca6e6a8803481bfc6e23dd1c67ead1d9208c4ebc60d1d",
+  "private_probe_root": "/private/tmp/vicione-servicebus-journey-retention-shell-probe-r2",
+  "rows": [
+    {
+      "case": "default",
+      "child_pid": 65167,
+      "joined_exit": 73,
+      "deadline10": true,
+      "retained_run_count": 0,
+      "actual_xml_attribute_roundtrip": false,
+      "stdout": "",
+      "stderr": ""
+    },
+    {
+      "case": "relative",
+      "child_pid": 65183,
+      "joined_exit": 73,
+      "deadline10": true,
+      "retained_run_count": 1,
+      "actual_xml_attribute_roundtrip": true,
+      "stdout": "Retained developer journey evidence: /private/tmp/vicione-servicebus-journey-retention-shell-probe-r2/repo/retained-relative/run.ARqMFt\n",
+      "stderr": ""
+    },
+    {
+      "case": "xml-specials",
+      "child_pid": 65201,
+      "joined_exit": 73,
+      "deadline10": true,
+      "retained_run_count": 1,
+      "actual_xml_attribute_roundtrip": true,
+      "stdout": "Retained developer journey evidence: /private/tmp/vicione-servicebus-journey-retention-shell-probe-r2/repo/retained & \"quote\" <greater>/run.JzSOuE\n",
+      "stderr": ""
+    },
+    {
+      "case": "minus-literal",
+      "child_pid": 65219,
+      "joined_exit": 73,
+      "deadline10": true,
+      "retained_run_count": 1,
+      "actual_xml_attribute_roundtrip": true,
+      "stdout": "Retained developer journey evidence: /private/tmp/vicione-servicebus-journey-retention-shell-probe-r2/repo/-/run.2apFd0\n",
+      "stderr": ""
+    },
+    {
+      "case": "option-literal",
+      "child_pid": 65237,
+      "joined_exit": 73,
+      "deadline10": true,
+      "retained_run_count": 1,
+      "actual_xml_attribute_roundtrip": true,
+      "stdout": "Retained developer journey evidence: /private/tmp/vicione-servicebus-journey-retention-shell-probe-r2/repo/-p/run.4nhZ1Z\n",
+      "stderr": ""
+    },
+    {
+      "case": "control-rejected",
+      "child_pid": 65255,
+      "joined_exit": 2,
+      "deadline10": true,
+      "retained_run_count": 0,
+      "actual_xml_attribute_roundtrip": false,
+      "stdout": "",
+      "stderr": "Evidence directory must not contain control characters.\n"
+    }
+  ],
+  "limits": "Actual shell candidate+18layoutplaceholderfiles+stubfirstrestoreexit73; no SDK/.NET/Journey/native/APIexecution. Six ownprocessesjoined, actualdefaultcleanup/optionalretention/XML/specialroot/minus/options/controlrejection. No universalbeforetrapcleanup orcanonicalapplicationclaim."
+}

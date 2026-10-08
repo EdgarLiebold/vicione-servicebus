@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ViciOne.ServiceBus.Batching.Contexts;
 using ViciOne.ServiceBus.Context;
 using ViciOne.ServiceBus.Logging;
+using ViciOne.ServiceBus.Logging.Diagnostics;
 using ViciOne.ServiceBus.Util;
 
 namespace ViciOne.ServiceBus.Batching.Runtime;
@@ -368,7 +369,7 @@ internal sealed class BatchConsumer<TMessage> :
         try
         {
             LogContext.SetCurrentIfNull(_logContext);
-            Activity.Current = _currentActivity;
+            ActivityObservation.TrySetCurrent(_currentActivity);
 
             IMessageBatch<TMessage> batch = new MessageBatch<TMessage>(_firstMessage, _lastMessage, batchCompletionMode, messages);
             batchConsumeContext = new BatchConsumeContext<TMessage>(context, batch);

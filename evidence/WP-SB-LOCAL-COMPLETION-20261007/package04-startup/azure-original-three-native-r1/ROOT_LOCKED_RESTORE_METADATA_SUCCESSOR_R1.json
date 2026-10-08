@@ -1,0 +1,93 @@
+{
+  "kind": "ROOT_ACTUAL_LOCKED_RESTORE13_ASSET_METADATA_ONLY_SUCCESSOR_R1",
+  "locked_restore_sha256": "7a03cb06bfd6a28fe7b1fbb958cfc23e871d15a8c3a77b2c6c29f6c49e3a9e37",
+  "driver_tool_session": 43746,
+  "outer_driver_returncode": 1,
+  "locked_restore_os_pid": 9856,
+  "locked_restore_returncode": 0,
+  "driver_stop": "Reviewed strict pre-unlocked asset guard rejected changed metadata, before build/native. Main native attempt remains excluded, no productpass/kill. Finally repeated strictassetguard failure; direct child already joined.",
+  "assets": [
+    {
+      "path": "ViciOne.ServiceBus.Abstractions/project.assets.json",
+      "before_sha256": "5db05d016d14d42e54cafdba3d6c1477ce46eeb176981e1d63c4311a570f29b8",
+      "after_sha256": "4050fca07fbe65809f7935245aa5a4ff320f708ffe0d8d24518848da0ff9f2ea",
+      "only_semantic_delta": "/project/restore/restoreLockProperties/restoreLockedMode: absent to true"
+    },
+    {
+      "path": "ViciOne.ServiceBus.Courier/project.assets.json",
+      "before_sha256": "832df0eb45ae9d23cddb2543029ca0dc3995162ae163fb9c52ca403efc1a7fdf",
+      "after_sha256": "4efd701a5bd4800a0402b1f0a3b4565aaae6438d13f2bef7ff5f86d124a99122",
+      "only_semantic_delta": "/project/restore/restoreLockProperties/restoreLockedMode: absent to true"
+    },
+    {
+      "path": "ViciOne.ServiceBus.Futures/project.assets.json",
+      "before_sha256": "00caee1c330ffc46060c3db6fa9f5ebf2b0544a7fa6d73a05ef814937cfbc978",
+      "after_sha256": "f295136308e0e84be0cf22dd831cd4b22f0d85ba83e48c1291f3c372318b03f0",
+      "only_semantic_delta": "/project/restore/restoreLockProperties/restoreLockedMode: absent to true"
+    },
+    {
+      "path": "ViciOne.ServiceBus.AzureServiceBus.Tests/project.assets.json",
+      "before_sha256": "a1b945aa6cd3c857981b90c542b004d210c38cce3c9d2b97748fff1bd576c49a",
+      "after_sha256": "f62b77accb21b898e78ef79201ae2b28d44fd6d9136261eae1e5a68b1d20ecba",
+      "only_semantic_delta": "/project/restore/restoreLockProperties/restoreLockedMode: absent to true"
+    },
+    {
+      "path": "ViciOne.ServiceBus.AzureServiceBus/project.assets.json",
+      "before_sha256": "2a38d3d18bc66713cc8affb66c3798d5f61d73c8a9e4d8f74ff162420e0df73c",
+      "after_sha256": "c82be9f7466e859e02d3c4ae4254724755907e55efb20d413f74c726306128b8",
+      "only_semantic_delta": "/project/restore/restoreLockProperties/restoreLockedMode: absent to true"
+    },
+    {
+      "path": "ViciOne.ServiceBus.Mediator/project.assets.json",
+      "before_sha256": "9c9e859fa9176b0a59c0c82164e3bcdb6d2177538ce239f5c188ed47eb226278",
+      "after_sha256": "ec3aaaac4b5c4fc87c5e1035892dd6ad636a9afa341fe2a6df17adee04f449ec",
+      "only_semantic_delta": "/project/restore/restoreLockProperties/restoreLockedMode: absent to true"
+    },
+    {
+      "path": "ViciOne.ServiceBus.Tests.Infrastructure/project.assets.json",
+      "before_sha256": "bade01ff57771c848d0a3b8839a4b018beb2518461b802e244deb5426ca640c0",
+      "after_sha256": "62f6c7963ee0070dd4d360665353a1930778af04974f77181ce46bba532b6e50",
+      "only_semantic_delta": "/project/restore/restoreLockProperties/restoreLockedMode: absent to true"
+    },
+    {
+      "path": "ViciOne.ServiceBus.Testing/project.assets.json",
+      "before_sha256": "8f13b0261a20b7de9540de335c2b5bbc8af9100d8cb6cb05efb68718cb199dd0",
+      "after_sha256": "1723df73ddf9b537b4ec74f352ad3ba66572d4c4b04eb01fc713b24dedc390e9",
+      "only_semantic_delta": "/project/restore/restoreLockProperties/restoreLockedMode: absent to true"
+    },
+    {
+      "path": "ViciOne.ServiceBus.ActiveMq/project.assets.json",
+      "before_sha256": "2e1ad5973788f9c555d96232bda55e18ca44b4a7f1c75cf2eb749616b6fb338f",
+      "after_sha256": "e9be5dec9d15af9ef32d33988fc8856037fde357c3da4b5a8a64dbe304deb131",
+      "only_semantic_delta": "/project/restore/restoreLockProperties/restoreLockedMode: absent to true"
+    },
+    {
+      "path": "ViciOne.ServiceBus.Tests.InternalAccess/project.assets.json",
+      "before_sha256": "3f63af5c5289d377de37571ae62a941e60c9eda8ce9a936a89d09ac10d508ed2",
+      "after_sha256": "8b805f7af57f28ee54588141ecb26fd02a115589dc48e112841bcc1335891e5a",
+      "only_semantic_delta": "/project/restore/restoreLockProperties/restoreLockedMode: absent to true"
+    },
+    {
+      "path": "ViciOne.ServiceBus.AzureServiceBus.Testing/project.assets.json",
+      "before_sha256": "bbdcb30daeed9583be41220f55dc8a7e95f69af34d072850b38eb43af1d79894",
+      "after_sha256": "36eb6ba9e541629457c4b8784b7e4c310a8d1117c72931540f60c6dedd30b5f8",
+      "only_semantic_delta": "/project/restore/restoreLockProperties/restoreLockedMode: absent to true"
+    },
+    {
+      "path": "ViciOne.ServiceBus/project.assets.json",
+      "before_sha256": "d76f7d70627b1af19eba36be87674efdb80a99fb2129d9cdb59b5329a6ec1957",
+      "after_sha256": "16e0ff11a34b044b3c90ad1e3fc127b26578c786a58ff5957f51f98f9292c017",
+      "only_semantic_delta": "/project/restore/restoreLockProperties/restoreLockedMode: absent to true"
+    },
+    {
+      "path": "ViciOne.ServiceBus.Sagas/project.assets.json",
+      "before_sha256": "d7a751ac1ce864caa984e2c9cc5d9c5ef1e6c3ba16dd2735f0ceef4cb2adca45",
+      "after_sha256": "1081a7c7cf60aa0adde78f83376f1665709aca63289a2487a156acb89b7d6a7c",
+      "only_semantic_delta": "/project/restore/restoreLockProperties/restoreLockedMode: absent to true"
+    }
+  ],
+  "all13_complete_JSON_equal_after_removing_exact_new_boolean": true,
+  "current_canonical6099_private6100_source_config14_unchanged": true,
+  "lock75_sourcehashes_unchanged": true,
+  "limits": "Only13 added locked-mode booleans; package target/libraries/contenthashes/P2P/compile/runtime graph complete JSON equality retained. Actual locked restore reuse can be qualified separately after peer successor review; no native test yet."
+}

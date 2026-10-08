@@ -39,7 +39,7 @@ public sealed partial class ResourceCache<TValue>
                 foreach (var creation in pending)
                 {
                     creation.Invalidated = true;
-                    creation.Index.RemovePending(creation.RequestedKey, creation);
+                    creation.Index.RemovePending(creation);
                     creation.Completion.TrySetCanceled(_lifetimeCancellationToken);
                 }
 

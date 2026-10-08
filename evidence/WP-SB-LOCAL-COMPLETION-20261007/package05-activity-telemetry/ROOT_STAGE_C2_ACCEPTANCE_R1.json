@@ -1,0 +1,50 @@
+{
+  "kind": "ROOT_BOUNDED_STAGE_C2_CONSUMER_COMPLETION_ACCEPTANCE",
+  "status": "ACCEPTED",
+  "product_owners": 2,
+  "new_native_cases": 9,
+  "requirements_rows_added": 2,
+  "freeze_sha256": "983ead8fea14aa633138bb87bd31a34d33888aae2104c58dbe3950c7e4b42cf5",
+  "source_sha256": {
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs": "8a01e6f31430b513cea4f35072778ae70a3927d7e71eb6837fc858d9bd2c6404",
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs": "18bcafb43ebe38b70e004864d7efd2e997426f180d29967402d4b754df808302",
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableConsumerCompletionClockIsolationTests.cs": "a14c4f103e3c40a596a04fb58bc70c81c9ba2395fc173a28405818109678e5da",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "1b1172c896c3f63f252b58507f1aea05cdb6f895e0508c7c42ca736f47e29073"
+  },
+  "root_complete_read_closure_sha256": "c17b0e732d723f904ff05a9562615d15ac96e67ddd59c46f917ce2b184435d69",
+  "independent_reviews_sha256": {
+    "package05-stage-c2-source-tests-original-fixed-adversarial-r1.json": "f21afa89e49c1b07431a706b3d1391f64f6086cde6826a739fa0d7054422c99c",
+    "package05-stage-c2-original-native-artifact-review-r1.json": "39f4dc86b2b75a8822bd436ad2809e51c005b4b714c3716b2fe693db2326b65a",
+    "package05-stage-c2-fixed-native-artifact-review-r1.json": "e0767b157f6da0fb1f1e0f56444e6fbfbb82845bd0d9c0c8fc57728d18ad7096",
+    "package05-stage-c2-mutant-m1-native-artifact-review-r1.json": "801e19242c5a5fb97d5662df17f5a88023939ed408087347b46d00a8a83b83e7",
+    "package05-stage-c2-mutant-m2-native-artifact-review-r1.json": "59dae115766f19f57ac6d2ce9baead512897ca2b2165a55c9a944f94126c4671",
+    "package05-stage-c2-final-native-artifact-review-r1.json": "85a2536118e1325e17614d1817d236d04bceed780799596e7ff983dd60ee3788"
+  },
+  "native_summary": {
+    "original_finite_failed": 4,
+    "original_named_healthy": 5,
+    "fixed_focused_pass": 9,
+    "fixed_whole_core_pass": 7991,
+    "compiled_single_cause_mutants": 2,
+    "finite_mutant_reds": 4,
+    "named_mutant_healthy": 14,
+    "fixed_post_pass": 9,
+    "focused_event_slots": 45,
+    "unique_closed_binlogs": 12
+  },
+  "root_personal_native_parent_exits": {
+    "original_build46220": 0,
+    "original_focus33859": 2,
+    "fixed_build51185": 0,
+    "fixed_focus84306": 0,
+    "fixed_core57602": 0,
+    "m1_restore3676": 0,
+    "m1_build35743": 0,
+    "m1_focus60209": 2,
+    "m2_restore42427": 0,
+    "m2_build59205": 0,
+    "m2_focus96864": 2,
+    "fixed_post89636": 0
+  },
+  "limits": "Optional completion timestamp/elapsed only; required UTC/store/await/cancel exact, real process-local generation-fenced state and counter preserved, unknown duration omitted. Original/Mutant red late assertions not credited; no original/mutantwholeCore/providerpersistence/allP05/coverage/CI/cloud/hardware acceptance. Freshclones6087 comparedOcanonical; C3twooldnoncompiledcoveragepy excludedfromcloneC3identityclaim. FirstM1shellredirfailure occurredbefore.NET and excluded."
+}

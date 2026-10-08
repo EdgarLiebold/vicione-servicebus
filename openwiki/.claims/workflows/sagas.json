@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:fae9fe331e98150112ee04e36a40279f05ed65805d4f140b7b65bb745e78de32",
+  "claims": [
+    {
+      "id": "claim_ae25d76abba54488a2e7e804955520a9",
+      "statement": "Saga repository processing correlates and owns per-instance state; a saga request with a positive timeout validates scheduler token capability before issuing work.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Sagas/Saga/SagaRepository.cs",
+          "version": "repo-file-v1:sha256:c05b3048530236fc86a686775a03076719fb007da9d7424e1f96342bb8c219b0"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Sagas/SagaStateMachine/Activities/RequestActivityImpl.cs",
+          "version": "repo-file-v1:sha256:4dffa21d136d19159dffa0ff4f73505a94d358f97d85f375c9a0b800b8d4d6f4"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

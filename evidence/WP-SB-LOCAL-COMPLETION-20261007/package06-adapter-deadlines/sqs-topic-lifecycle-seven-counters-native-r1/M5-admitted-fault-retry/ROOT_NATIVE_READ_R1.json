@@ -1,0 +1,15 @@
+{
+  "kind": "ROOT_ACTUAL_COUNTER_NATIVE_FIRST_FINITE_READ_R1",
+  "variant": "M5-admitted-fault-retry",
+  "native_result_sha256": "be0c1d9b3830aba44aa0c1a69a3088d8d03268fe8a61c45e55700e1e53c08ddb",
+  "physical_receipt_sha256": "d8efc0fa0d36232b9f719bc460dfa77d811378d7aeb9b1df59b9da1413034467",
+  "actual": {
+    "total": 11,
+    "passed": 8,
+    "failed": 3,
+    "skipped": 0
+  },
+  "first_finite": "AllthreeactualfailureKind2/1/0 firstEqual182 expected1lookupactual2 afterSame181 passes andactualSDKenteredphase. LowerSingleSDKrequest183 unreached0additionalcausecredit; no3extraindependentbugs.",
+  "personally_read": "Entire11actualnative/error/summaryblocks plusstrictbuildbody; fixture487 and sourcecause diffs previouslypersonallywhole exacthash. raw6CRC2mechverified.",
+  "limits": "Same11case labels repeated; firstfiniteonly, lowerunreached0credit. No cloud/globalclosure."
+}

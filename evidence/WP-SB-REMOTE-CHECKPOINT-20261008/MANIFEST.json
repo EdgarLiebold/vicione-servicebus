@@ -1,0 +1,192 @@
+{
+  "kind": "UNRELEASED_SERVICEBUS_REMOTE_CHECKPOINT_EVIDENCE_ARCHIVE",
+  "baseline_commit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "repository": "EdgarLiebold/vicione-servicebus",
+  "requested_target": "main",
+  "archive_bytes": 1460943410,
+  "archive_sha256": "41733eb92c3b3a0651087145d50f5eecbde371c6c2631cab8ddeb4bed68d78ef",
+  "member_count": 19465,
+  "source_bytes": 5459271041,
+  "unique_regular_files": 9162,
+  "duplicate_hardlinks": 10303,
+  "parts": [
+    {
+      "file": "review-evidence.tar.gz.part-001",
+      "bytes": 41943040,
+      "sha256": "7fb7809d9995d176e65e9206b7c80fdf24363c8fc4398820d597c7b4b9a132e6"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-002",
+      "bytes": 41943040,
+      "sha256": "829bc4650ad363e5462af6749f0b273e371ab1be12e25723647889595c6f0c16"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-003",
+      "bytes": 41943040,
+      "sha256": "917e44c4dc1247c2ce29872e47de187cff4438a3e9a79e9bbcbb8c4dede7d6ed"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-004",
+      "bytes": 41943040,
+      "sha256": "15bc987cb53438a798880d8369e71f4d3e6757af10084fc0208c754981055de0"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-005",
+      "bytes": 41943040,
+      "sha256": "fe62606e4a481987f361fa3b163830d3451fc8945cdaf6e6c5b8964c21f2aa77"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-006",
+      "bytes": 41943040,
+      "sha256": "9d2738c290d081b0766dd6606a200378153f3b4b068c40c00aaa5d3ccebc0206"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-007",
+      "bytes": 41943040,
+      "sha256": "c7380229bdadf13829b8cf6bf4a60eb6dd4da21b8b08476850b372030d2a7ab4"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-008",
+      "bytes": 41943040,
+      "sha256": "6bc5b857df1b1201c858c894dba3a35e9345837364008519438e280a75cefcd1"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-009",
+      "bytes": 41943040,
+      "sha256": "dec9b32d057599d73dfe0f7a80dc3a4536f2e60e125bd9cc25b7b44106c56fbc"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-010",
+      "bytes": 41943040,
+      "sha256": "dc09245f1a302fe3849edf37101058d81043b1594ebc48c02b450b8e3e1e0f40"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-011",
+      "bytes": 41943040,
+      "sha256": "89fe0fda42a012a85c5f54e9ba5a55896ea41dda1debd4ee2774cb824c18a1fb"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-012",
+      "bytes": 41943040,
+      "sha256": "0481e1d0bff7135a6d28e180c058c0ccbbd893a2262ba14dc34d41b6abc23c19"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-013",
+      "bytes": 41943040,
+      "sha256": "632eb298c13fe62b0d964dd3cface4f93c11ecc7ca069009e0e55e7ef0fef13c"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-014",
+      "bytes": 41943040,
+      "sha256": "b286dabbb253b441bd85243ab3f6b7d14a4bb351771269ace36375b9d2898f25"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-015",
+      "bytes": 41943040,
+      "sha256": "a71bc7abecf102ff72f8405e83ee8452bb931f4178969bc2266c208db51dd287"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-016",
+      "bytes": 41943040,
+      "sha256": "984668200f0cb1b4293f8c770f109ce4848945bd9d9251651e603de66395b134"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-017",
+      "bytes": 41943040,
+      "sha256": "86c05ce73545aa798a8a39f7e4729c303d667fbda64272dceb591b052c616ad8"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-018",
+      "bytes": 41943040,
+      "sha256": "605f2dfdeff828d8910db54d07ded0f054f8cb14450611cde2f09087149add33"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-019",
+      "bytes": 41943040,
+      "sha256": "d3cd3f763aba104abc4a20fca043a4b94ec3563e7358648c50453f6dc917df7e"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-020",
+      "bytes": 41943040,
+      "sha256": "115f5eb708d54f1ef7b8588192b07017a12ddcca5aaeeada528d81062508b648"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-021",
+      "bytes": 41943040,
+      "sha256": "a6c7c986b60116f093bbfeb27055978f050baeedf91aed3cf469b0f9bcd18191"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-022",
+      "bytes": 41943040,
+      "sha256": "6cbf27d1b30d6f53efe958365a5d9f03fca1fb2ff5a53810050087df9606dd21"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-023",
+      "bytes": 41943040,
+      "sha256": "a56c6673673acce5ab5b4c6d9a778f3b056bf180c1ab8c39b3de22d0f59657a7"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-024",
+      "bytes": 41943040,
+      "sha256": "933deb337c21f2727fa6bbf14248d32b666cefd076a94706e35951297794dc71"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-025",
+      "bytes": 41943040,
+      "sha256": "83b464e8c5b5ba3c13af9987bdc7d55b2acc81040c01f79cbe0ad9bde705059e"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-026",
+      "bytes": 41943040,
+      "sha256": "f0e18844a69bdb9ffc04147552cda28b78b873154441167f30feda761ff23300"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-027",
+      "bytes": 41943040,
+      "sha256": "8ed40f711a3e74d3f364ff9ef61b3306dcedd63e59e90902f1c4e5f3299c9346"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-028",
+      "bytes": 41943040,
+      "sha256": "b56f0a85d62e402efa057ef3fe35ff00a5847f8eabe44368f275b9d8d6bece03"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-029",
+      "bytes": 41943040,
+      "sha256": "9996b431648edaddd7d45f21b349388b00c04dcda64495aeb242a9c84dc1afdf"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-030",
+      "bytes": 41943040,
+      "sha256": "4bca98834a0cc70bf6d220dfe33116d10a7e9bd396a299e99769ab8b855359b8"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-031",
+      "bytes": 41943040,
+      "sha256": "eaa9b18ff3e556928ae5caf1eccd4667b8d7d89ca1a93931f1be5f3dcf9b1009"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-032",
+      "bytes": 41943040,
+      "sha256": "cd3b5bc82b97cbca2520f8350005d88124a3082e4dd9627a8ad836b44e290f18"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-033",
+      "bytes": 41943040,
+      "sha256": "414b6b027ea67f5941316aa1cfa37cf37b08d148386fbdb4ef2e915a374d362e"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-034",
+      "bytes": 41943040,
+      "sha256": "a8402e44d694ee0edeae5a7c42c5e9b96064017a53aac30023911990544346f0"
+    },
+    {
+      "file": "review-evidence.tar.gz.part-035",
+      "bytes": 34880050,
+      "sha256": "a4f0551d39f91a8adbb712ec3f8f48e7f5768c828122f19cd74f328ab2d877d9"
+    }
+  ],
+  "inputs_sha256": "b981ec26d8a75413f70712cbbca98f4833e38e54b79918bb359dbf2bc179394b",
+  "prior_references_sha256": "1bd2ae129cf474a6c995971cb11d663dee6206ec3516c2cc650c92cf9ae07101",
+  "limits": "Regular retained evidence and independent reports only. Temporary private SDK checkouts outside retained evidence are excluded. Current product/test/docs are normal Git files. Incomplete candidates and non-green attempts are retained without acceptance; no release, new SDK/test run or aggregate closure."
+}

@@ -1,0 +1,237 @@
+{
+  "P06ReviewChain": {
+    "package06-core-deadlines-fixed-native-artifacts-adversarial-r2.json": {
+      "matchesRootAcceptedHash": true,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/package06-core-deadlines-fixed-native-artifacts-adversarial-r2.json",
+      "sha256": "196d35076aba36c37a9a3bdbefe65af0b89b714af37667daaa8c34a297ee43f7"
+    },
+    "package06-core-deadlines-mutants-final-bindings-adversarial-r4.json": {
+      "matchesRootAcceptedHash": true,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/package06-core-deadlines-mutants-final-bindings-adversarial-r4.json",
+      "sha256": "13c68ce3cc8db75d62e7b27a242da733cfeaf0ba899c826e5f7d6a810cfcb0b6"
+    },
+    "package06-core-deadlines-native-mutant-cases-source-adversarial-r1.json": {
+      "matchesRootAcceptedHash": true,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/package06-core-deadlines-native-mutant-cases-source-adversarial-r1.json",
+      "sha256": "93855dcc8f0ca7fff5c03ad638ae396c352878fb7ace3e441c558e329bbd1c0f"
+    },
+    "root800-product-canonical-source-review-r1.json": {
+      "matchesRootAcceptedHash": true,
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/root800-product-canonical-source-review-r1.json",
+      "sha256": "7af649b346f36a62c67713266f97cde6f8c35ad9e8b67fe46f8c9960267103a1"
+    }
+  },
+  "acceptedFactChecks": {
+    "AggregateReplay": "TODO,status,qualitystatus explicitly retain affected completeUnit/provider replay after Core fixes as separate gate.",
+    "NoBroadClosure": "Current coverage/startup/cache/telemetry/adapterdeadlines/cloud/hardware/CIqualification/globalA+release remain open, completed234audit scope unchanged.",
+    "P01": "13,460 nativeUnit cases/23modules0fail0skip, fresh unchanged6b451 checkout, lockedEngineering/Unit restores and strict0warning/errorRelease builds match accepted P01Root/R2review/baseline receipts.",
+    "P02": "10Python orchestration contracts and finite original counterexamples/tool-only acceptance match Root receipt and exact independently accepted R2tool review3d232f; currentnativecoverage remains NOT_EXECUTED.",
+    "P03": "645nativecases10modules0fail0skip on unchanged6b451sixproviderbaseline match Root acceptance and independent artifact reviewabc474. Acceptedprovider_set postgres/azurite/localstack/activemq/artemis/eventhubs; excludes post-Core replay,RabbitMQ,SQLServer andServiceBus separateprofiles.",
+    "P06": "Three bounded Core deadline fixes and once-per-outbox-operation context clock;13freshpackage,7958Coreaggregate,fourcompiledmutants52events7finitefail45healthy,13unchangedpostcheck match Root acceptance plus four independently accepted review hashes. No broader time/adapter closure.",
+    "RabbitAndSQLBoundary": "FrozenR3 does not promote Rabbit38orSQLasaccepted. At this R3 freeze Rabbitreceipt status38_PASS_PENDING_INDEPENDENT_ARTIFACT_REVIEW; SQL was active perRoot steering. Later accepted Rabbit evidence must be a distinct R4 update, not retroactive R3 rewriting."
+  },
+  "acceptedReceiptBindings": {
+    "package01/BASELINE_FINAL_R2.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/BASELINE_FINAL_R2.json",
+      "sha256": "fa2f696dc7f59157e20d9cecd2918afeec07ebb52438c722ba59edc41466444c"
+    },
+    "package01/ROOT_ACCEPTANCE_R1.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/ROOT_ACCEPTANCE_R1.json",
+      "sha256": "2ff0054854d94f9209bcccd32a1f01a88f373a40f63f047db4a2dc0e0aa49ce3"
+    },
+    "package01/package01-final-review-r2.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/package01-final-review-r2.json",
+      "sha256": "5d9280cbf9cee911427de4320d492047acff13a896e8b27ab9a217a4cef270ab"
+    },
+    "package02-current-coverage/ROOT_COVERAGE_TOOL_ACCEPTANCE_R1.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package02-current-coverage/ROOT_COVERAGE_TOOL_ACCEPTANCE_R1.json",
+      "sha256": "79e6e8af127629b30907482fd48e8f9bf4d662e6aed2119a69755cbbd5f6af56"
+    },
+    "package02-current-coverage/coverage-binlog-tool-review-r2.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package02-current-coverage/coverage-binlog-tool-review-r2.json",
+      "sha256": "3d232f197500d2d62e589b2a3b46b8b3310dcee9917c3fb3482d7cfb13f0159e"
+    },
+    "package03-local-providers/BASELINE_LOCAL_PROVIDER_NATIVE_RESULT_R1.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/BASELINE_LOCAL_PROVIDER_NATIVE_RESULT_R1.json",
+      "sha256": "bd7a1dcb590f505fe7e83177a59db4e44e76cf1f41bb751f6aa2a6e3ddd3ad2f"
+    },
+    "package03-local-providers/BASELINE_RABBITMQ_NATIVE_RESULT_R1.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/BASELINE_RABBITMQ_NATIVE_RESULT_R1.json",
+      "sha256": "080a58aad8b3135f26c2eef44dc560a630016dc113a9b6dbdba5f370dfa7dd59"
+    },
+    "package03-local-providers/ROOT_BASELINE_PROVIDER_ACCEPTANCE_R1.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/ROOT_BASELINE_PROVIDER_ACCEPTANCE_R1.json",
+      "sha256": "f58f654f7f9d9a70a72efd384465c651cf47ea9f7f37d6fbdb6b8040d78415b7"
+    },
+    "package03-local-providers/package03-baseline-local-provider-native-artifact-review-r2.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package03-local-providers/package03-baseline-local-provider-native-artifact-review-r2.json",
+      "sha256": "abc474101f0a7625f3125ec580220b2ce80775854e82bdbc332dc7373da01518"
+    },
+    "package06-core-deadlines/ROOT_CORE_DEADLINE_ACCEPTANCE_R1.json": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/ROOT_CORE_DEADLINE_ACCEPTANCE_R1.json",
+      "sha256": "84ed164f61e1b3695c0bd0b55cad4f2f41be6c09edb052e09645d698c7ac5d4b"
+    }
+  },
+  "externalProductTeamRole": false,
+  "findings": [
+    {
+      "contradiction": "The same 7 October current section later records accepted unchanged six-provider645/10 baseline, and Root accepted receipt explicitly accepts that run. This unqualified pending statement remains from R2 and conflicts with newly reconciled current state.",
+      "id": "DOC-R3-001",
+      "line": 16,
+      "minimalCorrection": "Qualify remaining separate provider profiles and current coverage as pending, or remove the local-provider phrase from this sentence. Keep baseline-only and post-Core aggregate replay boundaries explicit.",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r3/CHANGELOG.md",
+      "requiredRefreeze": "Preserve R3 snapshot/freeze/report; Root writes correction to live docs and freezes a distinct R4 for final review.",
+      "severity": "Medium factual consistency",
+      "text": "Local provider validation and current coverage remain pending."
+    }
+  ],
+  "freeze": {
+    "files": {
+      ".testagent/local-completion-plan.md": {
+        "bytes": 4051,
+        "liveByteMatchesFrozen": true,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r3/.testagent/local-completion-plan.md",
+        "sha256": "a593939735f907c84a67d6c77f23bbfee6d0f0380ab1fc0267877c42c2188400"
+      },
+      ".testagent/plan.md": {
+        "bytes": 13770,
+        "liveByteMatchesFrozen": true,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r3/.testagent/plan.md",
+        "sha256": "89252a79064bfc6ad51aa9a8ea00d24ab7aeabb7ab4745e88c3f50083d6ba3b6"
+      },
+      ".testagent/status.md": {
+        "bytes": 7658,
+        "liveByteMatchesFrozen": true,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r3/.testagent/status.md",
+        "sha256": "5b1b00730f4c8c3027007ba05823506d382ebc57bfe633dfbb05716b325e5973"
+      },
+      "CHANGELOG.md": {
+        "bytes": 5366,
+        "liveByteMatchesFrozen": true,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r3/CHANGELOG.md",
+        "sha256": "b9a2122fa1521ce542b5c8a8a50a3bdd555a797c3770c52c38f2d570e0fcaefc"
+      },
+      "TODO.md": {
+        "bytes": 21398,
+        "liveByteMatchesFrozen": true,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r3/TODO.md",
+        "sha256": "3b3169e531d888cf4a4caa680a2b5ce721437b0a0513ac06d73a629ced9f05c8"
+      },
+      "docs/quality-status.md": {
+        "bytes": 5215,
+        "liveByteMatchesFrozen": true,
+        "matchesFreeze": true,
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r3/docs/quality-status.md",
+        "sha256": "b883c7e124e7d8ac2cd6e1ac49b8891592eb6ffcc5d75ff6da01cc26f1fed2c3"
+      }
+    },
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/DOCUMENTATION_FREEZE_R3.json",
+    "sha256": "f8eb8bca1c6ce4d650deaed4abe3b612e9f41b2ef498eba1ad4eba7782add00e"
+  },
+  "historicalPreservation": {
+    "R1SnapshotErratum": "Original partially-written Engineering binlog erratum remains in immutable BASELINE_FINAL_R2 and prior accepted R2review; no R3 change to those records.",
+    "R2FreezeSha256": "df7a40c9624d9bef63f83d50142c1859526bbd58eed23d0986d04c778e34ab23",
+    "R2PatchSha256": "27f3eeaad8e9b8d73b72571d0657f864a3f2a677cac38e59f6d55ef9428f6d8c",
+    "SQLCause": "Complete historical quality suffix including999distinct/1000publish,missingID,noqueues,75/75retry,causeunproven,nextpublish-countinvestigation byte-identical; passingbaseline doesnotcloseit.",
+    "TODOUnchangedSectionsExceptBoundedTimeUpdate": {
+      "## AWS real-service closure": {
+        "sha256": "25b7df4df7fc790caa0c9ad8ca43df69c6fb7aa4fdbd9a8a4f15cc319ca461d7",
+        "unchanged": true
+      },
+      "## Complete Azure Service Bus validation against the real cloud service": {
+        "sha256": "0d8a955773998f64fdeabf5e3f0c659477ebe6eff1ec727f4d4177e9781aeeb2",
+        "unchanged": true
+      },
+      "## Complete Azure Table persistence validation against the real cloud service": {
+        "sha256": "cb88b3a863d609d5d52d9e306049091bd2753539c93739dc2e41a00b6c18bd5c",
+        "unchanged": true
+      },
+      "## Complete Entity Framework SQL Server and Azure SQL external variant validation": {
+        "sha256": "514b7682cff5b750129f59f967204a995e764b1f6c365fe06689c0f6e71011e5",
+        "unchanged": true
+      },
+      "## Complete Event Hubs validation against the real cloud service": {
+        "sha256": "714f6494487dc039c7e8eb79d632a694f1e03f81919f07b23c8b2a5fbbcfef1c",
+        "unchanged": true
+      },
+      "## Complete MessageJournal external provider validation": {
+        "sha256": "7004d3dd9f288e9cdc5d9bd39fbb41cf4d9cca2470959aef0d773b2ccdf08e44",
+        "unchanged": true
+      },
+      "## Complete RabbitMQ validation against Amazon MQ": {
+        "sha256": "d592562bd69b5747702059ac03a45e7cd07ab7ebda2f2fcff2db3a040f414415",
+        "unchanged": true
+      },
+      "## Complete external benchmark scenarios": {
+        "sha256": "ad94a2fc4505b25478cf256f0b9578be5178fde6ca89c5842c2bee6e7da5f6dd",
+        "unchanged": true
+      },
+      "## Make Activity telemetry observationally no-throw": {
+        "sha256": "56c595bf123c6fdb1bcbf84b7b477d7e74d4e4ad636446a86af5bf0a192171be",
+        "unchanged": true
+      },
+      "## Separate cache index projection from external observation": {
+        "sha256": "7f02f9b9b7f9f65da224a7038b4d1aa3a625510d0858aaffc758acf79d59873f",
+        "unchanged": true
+      },
+      "## Verify startup validation across retained capabilities": {
+        "sha256": "f413caed47f2b994ebb37f749a5f851786076b9b9cfcf752656b192f13107452",
+        "unchanged": true
+      }
+    },
+    "historicalSuffixes": {
+      ".testagent/plan.md": {
+        "byteEqualAcceptedR2": true,
+        "bytes": 13058,
+        "marker": "## Historical API repair execution notes",
+        "sha256": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc"
+      },
+      ".testagent/status.md": {
+        "byteEqualAcceptedR2": true,
+        "bytes": 6160,
+        "marker": "## Historical checkpoints",
+        "sha256": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a"
+      },
+      "CHANGELOG.md": {
+        "byteEqualAcceptedR2": true,
+        "bytes": 2306,
+        "marker": "## Unreleased \u2014 API review completion, 6 October 2026",
+        "sha256": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21"
+      },
+      "docs/quality-status.md": {
+        "byteEqualAcceptedR2": true,
+        "bytes": 3174,
+        "marker": "## Historical product-wide coverage and CRAP checkpoint",
+        "sha256": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5"
+      }
+    },
+    "localCompletionPlan": "New continuation schedule evolves package02/03/06states; it is not historical repair text. .testagent/plan.md historicalbody remains exact.",
+    "method": "R2 original document bodies reconstructed in memory by applying immutable accepted documentation-r2.patch to HEAD originals; every reconstructed body exactly matches DOCUMENTATION_FREEZE_R2 hash before comparison. No repository or evidence edits.",
+    "planWholeDocumentUnchanged": true,
+    "reconstructedR2Bodies": {
+      ".testagent/plan.md": "89252a79064bfc6ad51aa9a8ea00d24ab7aeabb7ab4745e88c3f50083d6ba3b6",
+      ".testagent/status.md": "0c93a0cc41aa64d7ce61eddf99a8ef3087b7ba9648ac4203f753a00ff1ad60a3",
+      "CHANGELOG.md": "bd458d76d9c9a69754e325e2ee8b807335414158ea75d1f057e495c1b83f4055",
+      "TODO.md": "d86e206a909e13ef3ccf77a8ffac30f99b0a7f2efb4dd07f78f740be9804ab90",
+      "docs/quality-status.md": "f7cdbc8d8fade5f3706ac5567d2f82cf971383c9dbc4c7c208f79419005c551f"
+    },
+    "sameExternalObligationIdentifiers": true,
+    "sameTODOHeadings": true
+  },
+  "kind": "INTERNAL_READ_ONLY_DOCUMENTATION_RECONCILIATION_REVIEW_R3",
+  "limits": [
+    "Reviewer ran only read-only file/Git/hash/patch-reconstruction checks; no .NET/MSBuild/Docker/provider processes, tests, network or product/frozen-evidence mutations.",
+    "Accepted artifacts referenced here are not re-audited as fresh runtime acceptance by this documentation review.",
+    "No raw current coverage percentage, CRAP conclusion, full post-Core Unit/provider rerun or SQL missing-delivery causal closure.",
+    "Historical F030/startup and prior open plan/status language retained under historical headings; no claim those old pending states override completed234audit.",
+    "No canonical Package05source/test writing is authorized by these docs; package05Research status is a schedule, not owner closure."
+  ],
+  "rootAuthoredChanges": true,
+  "scope": "All six whole frozen current documentation files and accepted bounded receipt/review chains. Documentation consistency and historical preservation only; no new native execution/artifact re-audit or product behavior/whole-owner acceptance.",
+  "verdict": "CHANGES_REQUIRED"
+}

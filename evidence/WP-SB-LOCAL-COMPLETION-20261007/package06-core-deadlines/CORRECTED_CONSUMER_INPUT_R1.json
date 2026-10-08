@@ -1,0 +1,21 @@
+{
+  "kind": "FRESH_CORRECTED_PACKAGE_CONSUMER_INPUT",
+  "source_binding": "CORRECTED_SOURCE_BINDING_R1.json",
+  "source_binding_sha256": "6d01c06afa9845cce578fedabf6b0852950209954f4e8f744fe9b58faaaeca74",
+  "run_directory": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed-contracts",
+  "fixtures": {
+    "CoreDeadlineTests.cs": "911d97e8259f3b9b6a364b977d61eac8c93e9a3f5387812c0fdbc0e79a083b7c",
+    "CoreDeadlines.Contracts.csproj": "82782092a64563679e14d3caa9ea83bfeb814e82c4424262cded0e0aea8eafe4",
+    "Directory.Build.props": "0d632cfdad946e089def53891e35dd60ce64568b32fba46210990691808246c5",
+    "Directory.Build.targets": "17284cb74605517cbec8a8153505da71a685b28694b67b5ef80608cd79b1c0ea",
+    "NuGet.Config": "8bf6a078527ecaae0acc9d039f362e612662155512529af0540e52c3c306f4d4",
+    "global.json": "ede42ccb3b0ec814f36117a0ed63265c6727e8a98188ce659c96c496b4912db5",
+    "testconfig.json": "b6438a7e23ed7751ce7b7624eb8c0e69f75f60e9ed1a65dab849b98329d1669d"
+  },
+  "packages": {
+    "ViciOne.ServiceBus.1.0.0.nupkg": "a0dbfb2e00976a5ea52df76298064dc14f586abb8537cb1aef3cc76a058a46b9",
+    "ViciOne.ServiceBus.Abstractions.1.0.0.nupkg": "47ab6c49476ccdf0d80019a1202af0dada604da78ee116d013bda4f7256edb4d"
+  },
+  "native_status": "NOT_EXECUTED",
+  "private_package_cache": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed-contracts/restored-packages"
+}

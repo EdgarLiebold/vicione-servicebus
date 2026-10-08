@@ -1,0 +1,21 @@
+{
+  "kind": "ROOT_SCOPED_BASELINE_SQLSERVER_ACCEPTANCE",
+  "status": "ACCEPTED_UNFILTERED_SQLSERVER_BASELINE99",
+  "native": {
+    "total": 99,
+    "passed": 99,
+    "failed": 0,
+    "skipped": 0,
+    "modules": 1,
+    "parent_exit": 0
+  },
+  "native_result_sha256": "df477429b0c8ed4bdb87e7e2cd87d320c9a8a27da22ec661bd04c477d0bd0355",
+  "adversarial_review_sha256": "bb0ba56e1e15c6f9e551cff6a6d95723b9613a355db8d6e880ca9ad70bfbbb98",
+  "scope": "Originalbaseline6b451 SQLServer localintegration99 only",
+  "open": [
+    "Historical999/1000cause",
+    "PostCore replay",
+    "Azure SQL and cloudEF",
+    "Hardware"
+  ]
+}

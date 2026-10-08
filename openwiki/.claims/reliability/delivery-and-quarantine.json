@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:63519e6cae0c79600592a5c769ce0a7514cb2ef8079d64a2792d1b447166b64c",
+  "claims": [
+    {
+      "id": "claim_60c627f1d8bb4215a064fbb1af00976a",
+      "statement": "The reliable delivery service claims bounded due work and separates dispatcher completion from retry and quarantine state.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+          "version": "repo-file-v1:sha256:2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+          "version": "repo-file-v1:sha256:6ca9990d84571b6bf927087a19190c5f32c77bddb70edec61728d1d19f60d3b9"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+          "version": "repo-file-v1:sha256:73be8ecd089c5574b404294ee711c4e1dc72f6b44459083a8de484055a10b13a"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

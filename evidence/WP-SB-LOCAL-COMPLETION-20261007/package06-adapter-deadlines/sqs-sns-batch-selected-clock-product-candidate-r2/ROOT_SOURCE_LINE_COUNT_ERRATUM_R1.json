@@ -1,0 +1,6 @@
+{
+  "kind": "ROOT_SQS_PRODUCT_SOURCE_LINE_COUNT_ERRATUM_R1",
+  "correction": "Root earlier message described removal as4linecatch; actual3 C#content lines (catch and2braces) removed, Batcher240\u2192237. Lossless unifieddiff12lines includes context/headers, not12changedsource lines.",
+  "delta_sha256": "5aeb12bbba00eb8e480070f9e2ac9c76597e9636c6de92768d25989a411f009a",
+  "limits": "Pure source-count correction, no compiler/native/application/credit. R1/R2 candidates remain immutable."
+}

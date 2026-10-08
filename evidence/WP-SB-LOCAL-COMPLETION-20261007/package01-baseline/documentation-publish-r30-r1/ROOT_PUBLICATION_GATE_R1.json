@@ -1,0 +1,193 @@
+{
+  "kind": "ROOT_SQS_R30_SEVEN_DOC_PUBLICATION_GATE_R1",
+  "driver_sha256": "7bae1f3638f4d5fcc348f462faae6f87a94949a2b34a24352d2301f552c92193",
+  "input_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-fixed-preparation-r1/INPUTS.json",
+  "proposal_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/PROPOSAL.json",
+  "acceptance_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/ROOT_SQS_BATCH_SELECTED_CLOCK_ACCEPTANCE_R1.json",
+  "fixed_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-fixed-native-r1/RESULT.json",
+  "post_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/restored-post/RESULT.json",
+  "expected_seven": [
+    "CHANGELOG.md",
+    ".testagent/status.md",
+    ".testagent/plan.md",
+    "docs/quality-status.md",
+    "TODO.md",
+    ".testagent/local-completion-plan.md",
+    "docs/servicebus-local-completion-report.txt"
+  ],
+  "protected85": {
+    "evidence/SERVICEBUS_API_REVIEW_AND_REPAIR/STATE.json": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+    "AGENTS.md": "25f32901134fcb4df0a7e622408b58e1dc0ede946008779fe9f4386b720a9c91",
+    "../../AGENTS.md": "54a331183b55ea73ffaa59ab1a6317de6079b8f00258bd5a610920370ef3beee",
+    ".github/workflows/openwiki-update.yml": "bb97ae74933353bc8cb7293ccf61e9685819bd0a25cb3f5e281ae3aa0bcc9bdc",
+    ".openwikiignore": "daa172f2f254269ba685867e56e1c28a1604cbdb8ce801fc18c6a98c6d792d72",
+    "openwiki/.claims/architecture/conceptual-model.json": "77f3947bcbec0569751871005117c83f06bba78c98bb5fb5fbbe20e7c175a6f5",
+    "openwiki/.claims/architecture/message-lifecycle.json": "a6a4720c8d3976152d2038dcbeb3e8090f49164d03cbf2bce594592bde0d9f5f",
+    "openwiki/.claims/architecture/packages-and-ownership.json": "48fcbced2f31c40bf49e6f7d56eab1138a4211f6214b9de22bd41d83374d227b",
+    "openwiki/.claims/configuration/bus-and-host.json": "3dec2d5bb8f9ef126fb56e0f52392b9b0ea02adea23b786ebf408c6be62c31d5",
+    "openwiki/.claims/configuration/endpoints-and-topology.json": "2f4da6ba4be18d000d70dd6bdeff2b0897e3b39c319c548ed0409f22dc956149",
+    "openwiki/.claims/engineering/build-and-testing.json": "e66284467f641b9dd9f4265443fa4cee736ba26adfabe0e9a100368938ad86d8",
+    "openwiki/.claims/engineering/middleware-and-extensions.json": "aa57357a02a7de4fca28749e6f74c253be6eb724ac3322e9f6194e7cad2f9f68",
+    "openwiki/.claims/integrations/mediator-and-multibus.json": "5481bc6b4a8134e02b2b599c258d2ff7829db7d9f4550fcd4dcb1ae621067ff5",
+    "openwiki/.claims/integrations/persistence-and-message-data.json": "e68751f4d4709f5ba5b9d34f37c25101149a78dcc5cd7176b2b5bb1a69a0629a",
+    "openwiki/.claims/integrations/streaming-and-signalr.json": "1741184766ec493ba5a15131983913a123095201227154985f5e0cffc01f7367",
+    "openwiki/.claims/integrations/transports.json": "b6c1825f702a3f0bfc3a99684174165eaec921972a598de2192ff7faafb35aaa",
+    "openwiki/.claims/learn/first-application.json": "ea6a190c013636e6182c9828ad08c3e4fb800a7cb817bbc397a8e000ef81139a",
+    "openwiki/.claims/learn/messaging-model.json": "092cf41afbcdad749e3dbd65b21d2c8096c75a7d50002951ca4f09099ab30955",
+    "openwiki/.claims/messaging/concurrency-and-batching.json": "59da55238777f043bf5f8493126ca6f51021b98506419ef911fcf582a08ac9a2",
+    "openwiki/.claims/messaging/consumers-and-scopes.json": "a987f190195843e58a8e657763690c2e8458fb4eb870ebd245e97f53a74c93e4",
+    "openwiki/.claims/messaging/contracts-and-serialization.json": "c94ac0be7e6b7b8b8a7f01540d703a88223b897e5f6beddb7f037b6bc2ac5603",
+    "openwiki/.claims/messaging/request-and-response.json": "2e7f398c9aa9e005f2f485cc5ffa0be0fead4f2cfd879fcc87e1d40d257a5929",
+    "openwiki/.claims/messaging/send-and-publish.json": "c50e96bd6efee81e038c2e399374425f4cbc4fdbf690e8501b9c7818c4fa00cb",
+    "openwiki/.claims/operations/deployment-and-troubleshooting.json": "19d4103b79bee95ac969e8c6822b15e0bae1a7f519a0374e49e1bd03093a6406",
+    "openwiki/.claims/operations/message-journal.json": "9f5c250b4b7597741f633bf4e1181dd102a45175d2c4432cab50494961fc5d85",
+    "openwiki/.claims/operations/telemetry-and-health.json": "ab91da2cbc5de04a739096f33422c4b579d069870437f7436be0de7b0e547dce",
+    "openwiki/.claims/quickstart.json": "9a39520fd690c06c933eb1b82a8c0900ca19f84dde7cec8936953173d1c762eb",
+    "openwiki/.claims/reference/glossary.json": "3625c7058b9b04889f914703c8bed8f4b30ed3b104ba423899ee0c018c3fc213",
+    "openwiki/.claims/reference/implementation-gaps.json": "78826612fef91272782f50cba29c462e89500bf818d2317c7179e90a34422dc8",
+    "openwiki/.claims/reliability/delivery-and-quarantine.json": "6e8898473853dcb5be5fd3906a9d562759be442054fd8dc6336431845018ed67",
+    "openwiki/.claims/reliability/failures-and-retries.json": "3b20ed7c1a26a882bce3ae11f76c35da75b0d07d067f353d801595afad729358",
+    "openwiki/.claims/reliability/inbox-and-idempotency.json": "5ce361f0f2d0570915e0a7952c03924877a1ac37fc5319a9b5d4889e39450eec",
+    "openwiki/.claims/reliability/transactions-and-outbox.json": "33497b1bcde2ed063feba1654a0c326ba2154b3f50b715da2b4807c89d7e55d4",
+    "openwiki/.claims/workflows/courier.json": "315ce40855b9737364b50ab9501e77777a66d6ff34955539c28f5f75bb75cfa4",
+    "openwiki/.claims/workflows/futures.json": "b05acf7625dba6ed77ec313a2118c5840aa6204314ceb9422c5b1cb6e7d850f6",
+    "openwiki/.claims/workflows/jobs.json": "b33e23ea76819cf644609234504a3456c9c28e341a07499ced67695c7cf69f95",
+    "openwiki/.claims/workflows/sagas.json": "725d2b7855aaf8d71f9af268d7677445fd9770a0991b9861aaf1ea2d7ebae3ac",
+    "openwiki/.claims/workflows/scheduling.json": "f6b793a728b50b6f11796a668468112f5daff20123d96f224e574a5b8e520bd0",
+    "openwiki/.last-update.json": "fee4ac196924131ab7298ee632383ff7c07114ca43d710692d48b1066e9fab21",
+    "openwiki/.page-manifest.json": "845cb26ccb77996c9b2df78a4faa3ba977706d77fcf8fc0e0bfa15afbad346fc",
+    "openwiki/architecture/conceptual-model.md": "bbf51b95e99ddcfae7cbd05a4b2feb13821422ff71abef252b1ccdee810949b3",
+    "openwiki/architecture/index.md": "e5c30550e691ae8654917e3f3a6af3eb7fc673056a25d1f8cb54f9000d997db3",
+    "openwiki/architecture/message-lifecycle.md": "6a1d99c5644f3f60ca75b0059a6eff2b7756d233b2870a276e7032d1a9807438",
+    "openwiki/architecture/packages-and-ownership.md": "50f0b7a7c6c5bb29662b8397c49e23b5ef108e81640b3e599abf182ddd874f41",
+    "openwiki/configuration/bus-and-host.md": "a3dc57bfb62f922a6b82fab8ebb7e31d78ae8d0a666bedc813a9ec6000c119e5",
+    "openwiki/configuration/endpoints-and-topology.md": "f7450735728b0f5dfc02eeb911592588002a88f352be41e23282fc9cb3ad13bc",
+    "openwiki/configuration/index.md": "6c92b9c80d896bf54384b4e4dd87f2e444bfb145effcc52d7536c8bd68579a31",
+    "openwiki/engineering/build-and-testing.md": "ffcbe3e84fe652cbd68cc6df0d9af1f5da4cdd9c793e6ed5fd71c2270e4e617d",
+    "openwiki/engineering/index.md": "204d825c3de324d221ba70176d66c4124958334145809efd976c135c2eb092f3",
+    "openwiki/engineering/middleware-and-extensions.md": "0acde06f50cdcf92015646051b80c9471e3417bf30bd307d778244af8bb34975",
+    "openwiki/index.md": "0fc6a974302ec059304603e29ce0fd5c96f5fac604adddc7e61129c1d6b5f70b",
+    "openwiki/integrations/index.md": "831afb96908b81302c6e73238a5a299dfbe7ee141dea84718639faf7eeaa2de0",
+    "openwiki/integrations/mediator-and-multibus.md": "a4d5628f4520abceddcb754171735257c12bcb598335d0eec14135a49cea9412",
+    "openwiki/integrations/persistence-and-message-data.md": "793a110f5ae1c8cb073ace5c7d32136ddd6caeacc747d62dd8dd3bca7415323a",
+    "openwiki/integrations/streaming-and-signalr.md": "4ef5ef35e33124b4b2ed66ddcb82ded5ac8764e269f5e31f1ae4004c89af949b",
+    "openwiki/integrations/transports.md": "be59b001d21b7437ee4a043fec89680192fb8240e24e2b34d890a334a6a9addc",
+    "openwiki/learn/first-application.md": "29fe160a2b915f54b7bec48467d1ed3b7db7526fcaf357179d0d8f4aae021ff8",
+    "openwiki/learn/index.md": "89124914f9fd11aee1764729e5f2f0c32b70a1636a5dd444cfcda58834972449",
+    "openwiki/learn/messaging-model.md": "e449d47cc8b2e2697cdddcb348d410e5ed76c0891110ca9c76c19e9aedc0f548",
+    "openwiki/messaging/concurrency-and-batching.md": "887d705ebc9542195463fcc7ab6dc88f31a3a41d64682ee2b092c30149cc6e01",
+    "openwiki/messaging/consumers-and-scopes.md": "40982648dc9b5267624d8b2aaf94b983b5f9d02f5c4088b79da79addcebe16aa",
+    "openwiki/messaging/contracts-and-serialization.md": "77768d33b63ebf5d6b0f6c3cb2b516b73d2e34d46defb9b3bc53cd9382424519",
+    "openwiki/messaging/index.md": "5f01dbdae5e4745d37bbd18e33d48a6ac53bef3c52a30e8b07734ec12d683ee4",
+    "openwiki/messaging/request-and-response.md": "3c926c2407d78e1c62183c7bd043aa037ee65d95c08bb965b8ba210743f07726",
+    "openwiki/messaging/send-and-publish.md": "990ec50c30d4d2f48de395dc4e7d9dd188b74a4209394b54bebc8a24acf9017f",
+    "openwiki/operations/deployment-and-troubleshooting.md": "f962eeb583e33b8bb3bfa5000fd1334aad64fc54507f40a70ae035ac8aca1a56",
+    "openwiki/operations/index.md": "c5cebb61b5da78a62a1b770c7d9b2faadc892ed12d55500257db8021803270a4",
+    "openwiki/operations/message-journal.md": "2df4fa43c450c044cd3c6915e50542a903eaca42462eefcfea55c43994c89a3d",
+    "openwiki/operations/telemetry-and-health.md": "2e974e8f5cddd4930b8f822f1d350640d6c41d3f6a1e2017c34f4d70003c53cb",
+    "openwiki/quickstart.md": "4ff40658b896c38acbdef87d38a7fde90646c64f268524e130996864b61993bf",
+    "openwiki/reference/glossary.md": "28baedcd24588ec338e963634a8b7d916e6e0a99a3e00f686c23fb03121ad393",
+    "openwiki/reference/implementation-gaps.md": "55416ec0b4a14423dae67fe09a2ac16b3799db67cca79251320f804628c5e241",
+    "openwiki/reference/index.md": "3f7137826de77acdec893e11621049b640f7b8305d2de4a46725832820f4c34e",
+    "openwiki/reliability/delivery-and-quarantine.md": "63519e6cae0c79600592a5c769ce0a7514cb2ef8079d64a2792d1b447166b64c",
+    "openwiki/reliability/failures-and-retries.md": "6352b7a66c81adec1967d5f36d33c86860bae0d7e1550ddd0f18e50d68c39479",
+    "openwiki/reliability/inbox-and-idempotency.md": "7c784083e6d43cb204e15442c10f370b3e32ca2385bc65fb4b52727ffe70971f",
+    "openwiki/reliability/index.md": "90733833a8fb63ef018dac844735e46edacf136cc796c33291e25702312f6035",
+    "openwiki/reliability/transactions-and-outbox.md": "d1f63c2ffd377df558f8e636c332e99e26542418fb9cfc1f00594a2711a0c012",
+    "openwiki/servicebus-inconsistencies.md": "a82b015e741b07323b2dbbe7f5048813eaaada54a5f7bf6800846b8c1f96c6de",
+    "openwiki/workflows/courier.md": "cf6bf69cee00980cf209dc2bf03aa0cb9a54b0f1863b3801a315bea26a836f50",
+    "openwiki/workflows/futures.md": "a5f702ddb5403083d8287108d249dc6baf5f57c9a71e377518f7857f9f222cc7",
+    "openwiki/workflows/index.md": "f99f85a75db4c2ee4de11bf9c1dcb5c91aada9a09e0224de2029394db367a76f",
+    "openwiki/workflows/jobs.md": "0097e1231671f1fbd6e94992c5ce7916520951f1abde58a9d97a6ebd27dc1f3e",
+    "openwiki/workflows/sagas.md": "fae9fe331e98150112ee04e36a40279f05ed65805d4f140b7b65bb745e78de32",
+    "openwiki/workflows/scheduling.md": "5ef43199d2e8319c71e39dd3baf1962170fe07122a8d2af0235092378ba50773"
+  },
+  "build11": {
+    "build/test-infrastructure/images.lock.json": "ae9e3a23739b2469ee89dab6c6a0ef5e8f06d0db650a95e953df99cfc904f8f7",
+    "build/test-infrastructure/new-run-credentials.sh": "e3a8fa4ab81a98641730ba9be7ce7f2ba0ff530d8d7c01cf1dc907ac8f457255",
+    "build/test-infrastructure/compose.yaml": "b7e3fff89ac0bb6c3cedd63d31cce72690ddb991aa631e9afd8cb5d2be645ab8",
+    "build/test-infrastructure/activemq/Dockerfile": "4c44e4f5ec0375a3892fea8fdffffd881d98eab699c595bea52691e9d84dd703",
+    "build/test-infrastructure/activemq/groups.properties": "bc723fa3153564758e734d0002f782c97e7ff6a91866e77e7560c04d8d96c8ba",
+    "build/test-infrastructure/activemq/activemq.xml": "920effbdcd0b3156f8cea692b71bdd2ffe6d796f31d25f601366fb0e39d8247c",
+    "build/test-infrastructure/servicebus/config.json": "2f804588a9826a7614e36505ac6873fa442566b6204428a25852e8388b417d15",
+    "build/test-infrastructure/rabbitmq/Dockerfile": "4e066af4b4d37f83ed72ec564f1c72c4252d96c0ce043d7762956fabf22e915f",
+    "build/test-infrastructure/rabbitmq/enabled_plugins": "5b9e43d4cc4e7d2b41903fccf8c78be896ac43f7ea96078e091f15cfb67341f6",
+    "build/test-infrastructure/eventhubs/config.json": "8e45b8d2d316f6cfe613f4cd6844988024707471c9231e4392acd0c311e37a53",
+    "build/test-infrastructure/haproxy/haproxy.cfg": "d03a7edb17bbded2ba124dd598d7b748f41878b40b31f2b35f0d9abbde27862f"
+  },
+  "bound_files": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/PROPOSAL.json",
+      "sha256": "399091a1d5df1a2df7e8058a3bdf80fd5e97112fcfe4065d4887f8ca83df0809"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/LOSSLESS_DIFF.patch",
+      "sha256": "b630813d8bb290e2d8ed70cd5052b3f22f4c61abfa789d571539e64ad86c2566"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/ROOT_SQS_BATCH_SELECTED_CLOCK_ACCEPTANCE_R1.json",
+      "sha256": "ac073f086883b4eeba6828d437bd9cb94bb82261a3da31b436e8b906764cabf9"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-fixed-preparation-r1/INPUTS.json",
+      "sha256": "28bf5e6e9f36a379de57948bd5a655631d44a8ffa5e02ce24b7a00069aca36c8"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-fixed-native-r1/RESULT.json",
+      "sha256": "8beb273152986324bee571c279f45df797cd6304d887ec6708f8498ebd5baff3"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-six-controls-and-post-native-r1/restored-post/RESULT.json",
+      "sha256": "0695ab5321a556a5cb4135406d3c059bb03284006579874904cb9fa269cb5442"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-canonical-transfer-driver-r1/ROOT_APPLICATION_R1.json",
+      "sha256": "2e24787fa699d170e6271e585a4b6e5f8ea09e05a30df844f428592d76d2ded2"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-clock-final-independent-retention-r3/MANIFEST.json",
+      "sha256": "7bf37c4f5131118e9dbe5cae25e5f84dc8da56b68524b7cdf8dc14fd59bf9e72"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-batch-selected-clock-canonical-eleven-afterapply-adversarial-r1.json",
+      "sha256": "4a0e4883816593da7521e4674bac15d9f8ff41c97a3a41d44a0f150b85afda5e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-batch-selected-clock-documentation-r30-source-preflight-adversarial-r2.json",
+      "sha256": "d80b69cb7091f3c2d822fe2826de916f8e374077948ba8a7f2e61078fcfa7de7"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-batch-selected-clock-final-eleven-canonical-gate-adversarial-r1.json",
+      "sha256": "f3ca8b3e40da0b55974fba5b09c39af318a81fe02eb0e16bfafa5ff49490c284"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/CHANGELOG.md",
+      "sha256": "182151c1dc39e8166226194caf3b1d2de5155288313d80e76df122c9960871b0"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/.testagent/status.md",
+      "sha256": "576321b92b25e802f9c0c1d4d2eb4d8f32c713b2486f89a61941e4ee05aa0220"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/.testagent/plan.md",
+      "sha256": "3c889da63a36226cb9817c3fbbd3f936ef7695ce9725c0054ceccddbdc321907"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/docs/quality-status.md",
+      "sha256": "be3f4e8741e7a46a1a9574233949f5b8d1970c4afdc19ce5568616fee3646109"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/TODO.md",
+      "sha256": "df9ee1780f33f17b36d16d92e1f286ae0736f205cb8e37f2c2508101971e7c81"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/.testagent/local-completion-plan.md",
+      "sha256": "58fb6350f4fc36b7c19bc54379d8e493d105aafdf2b9a794cdb97b63a0919178"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-candidate-r30-r2/docs/servicebus-local-completion-report.txt",
+      "sha256": "9fdadc3bc267d21d1ec34ce7b7e28431a926772a313ee3a6b20847d731e0590f"
+    }
+  ],
+  "limits": "Sourceaftercopy acceptedac073; RootwriteexactsevenR30docs only after source/body+finaldatabindingreview. Preserve4historicalsuffixes/other11TODOblocks/62orderedexternalIDs/source6110/config15/protected85/build11/STATE andfixedPost15runtime10assets. No newSDK/global/remoteclaim."
+}

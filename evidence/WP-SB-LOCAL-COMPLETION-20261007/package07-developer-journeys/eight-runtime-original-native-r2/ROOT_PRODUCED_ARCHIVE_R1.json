@@ -1,0 +1,488 @@
+{
+  "kind": "ROOT_HELD_PRODUCED_CONSUMER_ARTIFACT_ARCHIVE_R1",
+  "source_root": "/private/tmp/vicione-servicebus-local-completion-20261008-eight-runtime-original-r3",
+  "files": {
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Azure.Core.Amqp.dll": {
+      "sha256": "d53d832629b76fcae7f0e0352788c43c79e13480247dba11e37961b60e52c142",
+      "bytes": 48672
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Azure.Core.dll": {
+      "sha256": "d0773e2ebfc5dd9f478f82aff0f77f18f446268f22b95dc8201525dcd959d743",
+      "bytes": 896824
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Azure.Identity.dll": {
+      "sha256": "31574a3d35ffeb0e25a00ebb317937222fe5283b91af608613f2e3bf0f26c50a",
+      "bytes": 17952
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Azure.Messaging.EventHubs.Processor.dll": {
+      "sha256": "0ef1b76632d06cf1458da9b0d6f5aa6b2d1598495f3a915ca9e453351d6e1827",
+      "bytes": 173600
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Azure.Messaging.EventHubs.dll": {
+      "sha256": "d358ab1c5ba8c95b72f5b3b483409422f1ebdcb0c2e03abfb1da0bfd1d0932bb",
+      "bytes": 526384
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Azure.Messaging.ServiceBus.dll": {
+      "sha256": "f07a2a15b7a1276970e512e9486de8a2ea8b551833669b40f9c0117544191e5b",
+      "bytes": 722232
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Azure.Storage.Blobs.dll": {
+      "sha256": "6e20e51b1164ae982828251466c57f0fcc08478a792b184bcc909530c506b15b",
+      "bytes": 1428280
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Azure.Storage.Common.dll": {
+      "sha256": "678d23c3df79e6c6b76c3bd46691dc55224e6d7f2acfe86232a42c9beec54353",
+      "bytes": 250688
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/FastExpressionCompiler.dll": {
+      "sha256": "c5f2dd378c5014672cbaf7c4a522d0cef9edad41692cd13e330eaa17f787bf8a",
+      "bytes": 231936
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/MessagePack.Annotations.dll": {
+      "sha256": "bba53a8b44184fce30178502149ada027185e17f4156baf2dc38ad6c1550cdd6",
+      "bytes": 18432
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/MessagePack.dll": {
+      "sha256": "da7762a5931644cbc6c3a44e274a75510117a70d07c48fb71e512e99e69939cc",
+      "bytes": 382464
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Azure.Amqp.dll": {
+      "sha256": "eb58a9058b6cde95081608e1921967cc704d6e411745436b20c68caa37389980",
+      "bytes": 429088
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Bcl.AsyncInterfaces.dll": {
+      "sha256": "94805b8f147e2ace9fd058f5be82aa06dbcb92b8d6f5284dc2cc870905f0a870",
+      "bytes": 20304
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Data.Sqlite.dll": {
+      "sha256": "b98d957462be432895b00dccca012d3c127e118d3d4262418014b92c7bbd66cf",
+      "bytes": 177464
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.EntityFrameworkCore.Abstractions.dll": {
+      "sha256": "74bc17c936d66ea090b6a5b4cc4307d2154c9692e57edd4c55d68dd4a99c11b6",
+      "bytes": 34616
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.EntityFrameworkCore.Relational.dll": {
+      "sha256": "a1e4f36208650b15b75a4b01a5821d61d5be417ac2e86ec3c65e2560a87e0d7d",
+      "bytes": 2194744
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.EntityFrameworkCore.Sqlite.dll": {
+      "sha256": "69683d0960188b56da3d5b69db14e2255f073d355aa6da333d6916303aa1fa33",
+      "bytes": 311648
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.EntityFrameworkCore.dll": {
+      "sha256": "f5b1703d608e241314952b2ede8dcdd1b8d8adda8c91a13cb7e6b1007414cef4",
+      "bytes": 2829152
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.Caching.Abstractions.dll": {
+      "sha256": "eb027242c11808fe0d8faf851bd30d0c6e39944b773713ffb04e17e196bece0f",
+      "bytes": 37672
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.Caching.Memory.dll": {
+      "sha256": "dca415c48a9d6af45c7f28f6481a88baa9cb9f09d3090ca5878d1acbd446048d",
+      "bytes": 47912
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.Configuration.Abstractions.dll": {
+      "sha256": "fb45286fa39f58b9e74b6346e31034e00031170169ee11fd0a15f99b6dca0b56",
+      "bytes": 28456
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.Configuration.Binder.dll": {
+      "sha256": "cdb9894a560842062c820e6335c445351bba26fa92e27b3e703ad07e977c8227",
+      "bytes": 43304
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.Configuration.dll": {
+      "sha256": "c11796ac536b45b6028527bb9543607f6a5fca98b1784339226d68cb98705333",
+      "bytes": 44840
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {
+      "sha256": "da04edc338d5aa0f38a1f5fa5ff3ee7e36affe9c961daf3ea724a428bd746bc6",
+      "bytes": 65872
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.DependencyInjection.dll": {
+      "sha256": "2d0e268bf76b4ce36a55ebb2767354db956c6660de65d6cccfc35c957fb12cfc",
+      "bytes": 95528
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.DependencyModel.dll": {
+      "sha256": "afa9a88cc25e3e2a9b8394c6930adf2a7ed229d20f91f0d03b98164b02bd16de",
+      "bytes": 84816
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.Diagnostics.Abstractions.dll": {
+      "sha256": "623879199a4d98248dbce917e8b2c11b1f5eff24a01cb3b50d772461566dbad4",
+      "bytes": 31016
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll": {
+      "sha256": "cac6303056eda482d9875b6d0acbfde9a39ebcca25e0136bf2cd17651f36693a",
+      "bytes": 23336
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.Diagnostics.HealthChecks.dll": {
+      "sha256": "9b62ed8a60141692f24125a551946d1e210f914832d66fe0d875933b4e504c3a",
+      "bytes": 55080
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.Diagnostics.dll": {
+      "sha256": "c2b5e806a61d40ce428764647e8c2bcad20283a3c87f081ff483923ed113aaa5",
+      "bytes": 36136
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.FileProviders.Abstractions.dll": {
+      "sha256": "0ad9800893013d1e11c6b5afc6ef8a3fc0f14d38fa80bf5d63485fc70f848216",
+      "bytes": 23336
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.Hosting.Abstractions.dll": {
+      "sha256": "37c244f5685ca031be74a49bd23b2634588235f672f3a0b0b352ca8f6f6c3887",
+      "bytes": 54056
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.Logging.Abstractions.dll": {
+      "sha256": "7c242f8ca612fa1acc61f78efd5f8c89e01bd0bd47dc4ecc65e0e6e24f1a1668",
+      "bytes": 66856
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.Logging.dll": {
+      "sha256": "05b76234f2a5eb945b268ced706cb4d81446778ea6bd6910298b5e9111170b4a",
+      "bytes": 51536
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.Options.ConfigurationExtensions.dll": {
+      "sha256": "460a4ac4770f3e134454076aaf02a4774a25a40e03e3cefbd5bc4c5f5a70af9f",
+      "bytes": 21840
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.Options.dll": {
+      "sha256": "b4ff561da6a7b11b68341f9fd32cab3f8b23cdd8b40332b9fd8bed73a9ee7de3",
+      "bytes": 65360
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Extensions.Primitives.dll": {
+      "sha256": "67642533eb87e8dadeb9026de59ff4b66cc9bf35c0cfbedfef7b79bc6d8b30bc",
+      "bytes": 44880
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Identity.Client.Extensions.Msal.dll": {
+      "sha256": "c870717a01751953d40376e1e662127626951871c592235dca806db23ca724e7",
+      "bytes": 66400
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.Identity.Client.dll": {
+      "sha256": "f9bc295d0011112fe4d7d8a728a27a38627739df6cd144c8402b5dae03bf40af",
+      "bytes": 1220960
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.IdentityModel.Abstractions.dll": {
+      "sha256": "24e97b54b6b5c234a124a336757e3116617ac6c30b655cdae74517dc2ecb5746",
+      "bytes": 19504
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Microsoft.NET.StringTools.dll": {
+      "sha256": "e51c8678fd602a21c249b369e833966019935132476f9434da896bef808ba3b1",
+      "bytes": 30880
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/Quartz.dll": {
+      "sha256": "dedb503488e612e9a2929de1f3815da04a8b2d21ff2d669ad89eb2ae4dcb1990",
+      "bytes": 2364928
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/RabbitMQ.Client.dll": {
+      "sha256": "22d9ffa8cc2de798c61ec95b3f0b576c90d3370afa7128998859d3b2734d2910",
+      "bytes": 352256
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/SQLitePCLRaw.batteries_v2.dll": {
+      "sha256": "815ce410c9eab531dd219318e3ba16c5e38e83d361cfbbdbb4bbca222c497b0b",
+      "bytes": 5120
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/SQLitePCLRaw.core.dll": {
+      "sha256": "af340ac9eb9195795660d7fc1114f486b6ab63998f33176e2f24c8e0acb9aa84",
+      "bytes": 51200
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/SQLitePCLRaw.provider.e_sqlite3.dll": {
+      "sha256": "df996bcae63c2cabcfe8d4b9c5110eb39a2a4706178b07d875665391c6eb3995",
+      "bytes": 36864
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/System.ClientModel.dll": {
+      "sha256": "b198eb70311e99edc2afabc101faff3228fb8be6af38386bd14b1d5a1d6ffae9",
+      "bytes": 274792
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/System.IO.Hashing.dll": {
+      "sha256": "ea0be3bcef840a9da018e801f64aeaed01c22cd3b74c0273b4e874b098ee61f6",
+      "bytes": 56624
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/System.Memory.Data.dll": {
+      "sha256": "5864e9b77732b6210689e529e5bdaec8016f96c2e26f81f9800eaa23156907b6",
+      "bytes": 33104
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/System.Security.Cryptography.ProtectedData.dll": {
+      "sha256": "80566f0839ece5946e66bf9f00d723e59e371ba1341a18e00c7c7a7c49298e1d",
+      "bytes": 25232
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/System.Threading.RateLimiting.dll": {
+      "sha256": "95b7e590ae833a7842bb8c0453032661e4110678248b0e43d26c39b2cc00716d",
+      "bytes": 68896
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Abstractions.dll": {
+      "sha256": "89bad9c2dbae3dab3b215d5b23bb81c327d8481be9e5f309110461cf6a6a3112",
+      "bytes": 772608
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.AzureServiceBus.Testing.dll": {
+      "sha256": "723121eb7e461b5c001a9ca62478a4a277eca8ecd18aed85cee75cdb14d4d986",
+      "bytes": 36352
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.AzureServiceBus.dll": {
+      "sha256": "7eec8d2eebd9c17b75f7c961bc1ad87d2806fb2a845a28fe5d995f34d0cf6705",
+      "bytes": 349184
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Courier.dll": {
+      "sha256": "b6aa78a6074588ef5b334200cc170351b5956414b4b8432279c799c86403345f",
+      "bytes": 248832
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.EntityFrameworkCore.dll": {
+      "sha256": "575b557436bcaf3d9b3a76f2a3d1aca268e7f73c0b1138622e64eae169bf6663",
+      "bytes": 423936
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.EventHubs.Testing.dll": {
+      "sha256": "523ac97fbeaee255e0a14cfd320627812abe89e3ba50fa5f64c3523d67fe8050",
+      "bytes": 13824
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.EventHubs.dll": {
+      "sha256": "8f5be08ae15d5d9a0e6decba76c9e92e4aae28c15d455c12708c3ffc81feb0e6",
+      "bytes": 193024
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Futures.dll": {
+      "sha256": "5bad4e802ff5a76cdad36e94deacb84661378e8ad01c226b43ea6f0ae6edbf91",
+      "bytes": 178688
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Mediator.dll": {
+      "sha256": "db5184862fc8e9a35874552e6287a221aa4b5cb5899343f34d1abc62ee0969b2",
+      "bytes": 94720
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.MessagePack.dll": {
+      "sha256": "b11025e9af566174cd74f48bfec6138e3409b67e804c7c91108bf7fcdc49e2ca",
+      "bytes": 54784
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Quartz.dll": {
+      "sha256": "8496d49e8ebea33ad62a06a43b77311957ef459da667c5609f4febee7c2421a9",
+      "bytes": 114688
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.RabbitMq.Testing.dll": {
+      "sha256": "84c6f3bc84de73ee1110c90bda2cae50c7c17b4d594b107b34594e91bdfc550e",
+      "bytes": 56320
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.RabbitMq.dll": {
+      "sha256": "f4c7d19e05aa0e232c65e31d50f12dda618034a867fb3f203e8a8e9a997de780",
+      "bytes": 421376
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Sagas.dll": {
+      "sha256": "ecc51e0a177776cc69e69f35d35d0e0c91ad203684d8b26dd6276bbbcd202279",
+      "bytes": 939520
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys": {
+      "sha256": "9943d7ba17a5574b0f94e61a1529e10151c330ee692339f5e1fbef5aac725c4f",
+      "bytes": 88920
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys.deps.json": {
+      "sha256": "408c02ea4168f331dc386dd100cf9530084c4ffce3006bcec21c256c915027cb",
+      "bytes": 62711
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys.dll": {
+      "sha256": "5d34a1e472f9c56812c329d6f85a6fb96d29e7fd8aec4fb0c3e5809a1aa4975a",
+      "bytes": 89088
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys.runtimeconfig.json": {
+      "sha256": "c56f1c9b40f6831cf560bd039be1e2b2bbd5eaf4e7f8c0cd74414730aabedb7b",
+      "bytes": 503
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys.xml": {
+      "sha256": "07356e649dc20f2cb0d0bfdacd2013cd54f06015349aae02ce94db2df1380ab5",
+      "bytes": 161
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Testing.dll": {
+      "sha256": "41448453a66420ff17c7535b964d274bc7f0bc58f5cef4e791078f87d35bd951",
+      "bytes": 298496
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.dll": {
+      "sha256": "c67e2a9528d1b08387dcda856b58883c8f4611ac9e3a74c70a49b8ab5d90ff81",
+      "bytes": 3046400
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/browser-wasm/nativeassets/net9.0/e_sqlite3.a": {
+      "sha256": "c64ae8d44dc3e1aa03aca4e79ccc501cbc3a3c490e8e2ea9e369367f68cf0f21",
+      "bytes": 1308854
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/linux-arm/native/libe_sqlite3.so": {
+      "sha256": "43556c2f5075857bf57be1136d556733bdc27195884fbdde127cd976d1c25ad5",
+      "bytes": 982224
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/linux-arm64/native/libe_sqlite3.so": {
+      "sha256": "707fff6b18c1f083158e7a543c8d2545d5485f547ffd96db29679a95f52878d5",
+      "bytes": 1534296
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/linux-armel/native/libe_sqlite3.so": {
+      "sha256": "3f4d9b9ca49bb3f100882e78ba85807398cee19b481bfd4c301a8f5f58d48540",
+      "bytes": 1375344
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/linux-mips64/native/libe_sqlite3.so": {
+      "sha256": "985884523e512414f3e50aa359f08dad3ce635e99405e7823de9b26a7db38d09",
+      "bytes": 1756544
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/linux-musl-arm/native/libe_sqlite3.so": {
+      "sha256": "7fec7057d16e8b5ae54fed0c42a0e6b85e40df0d57092ef20cd647a4e1c1e0ed",
+      "bytes": 1322584
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/linux-musl-arm64/native/libe_sqlite3.so": {
+      "sha256": "530e2f74f259fe04faa4b595336e671fab5eedbb6f4e94dad59494efb7b00c2a",
+      "bytes": 1450704
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/linux-musl-riscv64/native/libe_sqlite3.so": {
+      "sha256": "d8e54eb7dc52ea0a7df9b78ac6feb85af429e7264613099df478825dea5805d4",
+      "bytes": 1015888
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/linux-musl-s390x/native/libe_sqlite3.so": {
+      "sha256": "64260c0460ad6efa7dce9263bff7a4b64ad66172ccc580cb09181c845e1a3407",
+      "bytes": 1685752
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/linux-musl-x64/native/libe_sqlite3.so": {
+      "sha256": "647b7b5886526691aed58e0fcbb56dc1e6dea8b1f9f5390782f0c95269250db1",
+      "bytes": 1445336
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/linux-ppc64le/native/libe_sqlite3.so": {
+      "sha256": "1ef00b5e3ac63e491f59ecf587680fc52ad844cea62e0a879a1315ef6bd10fc6",
+      "bytes": 1937408
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/linux-riscv64/native/libe_sqlite3.so": {
+      "sha256": "6b390eecbc6f55c44d9ab8a774f1fe4283dfb33a72e6f29f4e0b173065e7e105",
+      "bytes": 1291896
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/linux-s390x/native/libe_sqlite3.so": {
+      "sha256": "dfd5ab35f6d61155a3c629d0bceff4d6e0f0f190983f3fb8f681fb34ec08c67e",
+      "bytes": 1655776
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/linux-x64/native/libe_sqlite3.so": {
+      "sha256": "b0f5c48026fedcf9f05cf31c6fadf9e1e001ca59cd85aa68b8b6814e52c18a07",
+      "bytes": 1470784
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/linux-x86/native/libe_sqlite3.so": {
+      "sha256": "fe8229e5baeaf21e721cf65626a6b07ec22d9b17d07bd624e7a77927174277f1",
+      "bytes": 1547984
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib": {
+      "sha256": "8d63d80bc6caa754679d6fc89fd741a32c156f136c34759cc8fff8cd51468a93",
+      "bytes": 1695264
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/maccatalyst-x64/native/libe_sqlite3.dylib": {
+      "sha256": "43d27adbc5ba40850bac42a12aea08314a22a43d3ce77cdc7a6cc47ecffb5746",
+      "bytes": 1724352
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/osx-arm64/native/libe_sqlite3.dylib": {
+      "sha256": "09fe20a6c050912a7944b2f2f2981debe31679f7919f523c87251ae8cf0f2daa",
+      "bytes": 1696624
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/osx-x64/native/libe_sqlite3.dylib": {
+      "sha256": "02344e1d0bcb5ed447ad9b79ed19e37a590fb1ece3eba1e63efbc35e36e47bdf",
+      "bytes": 1724472
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/win/lib/netstandard2.0/System.Security.Cryptography.ProtectedData.dll": {
+      "sha256": "7f2b633eed63bf20d558a25ed9686d2f1ef6c6e3fef5c0b19c2c1258d90acabd",
+      "bytes": 32912
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/win-arm64/native/e_sqlite3.dll": {
+      "sha256": "4177542756bd94f75b55fb74367e0cf34e66a88ffaf95755489af14c6ca2f792",
+      "bytes": 1814528
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/win-x64/native/e_sqlite3.dll": {
+      "sha256": "b7385d722c83fb52142a00477a726723745916d22a555711ee89834c1111fb2e",
+      "bytes": 1978880
+    },
+    "artifacts/sdk/bin/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/runtimes/win-x86/native/e_sqlite3.dll": {
+      "sha256": "d13eb819d1353d98c684c88672868bbfcc6a52eb5987bdf2557ec02fabce4ea7",
+      "bytes": 1533952
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/ViciOne.ServiceBus.Samples.DeveloperJourneys.csproj.nuget.dgspec.json": {
+      "sha256": "c2c2a2c677cb02b656080218f84b32012af5da89e0fee624f2d8ff682a2f36b5",
+      "bytes": 24521
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/ViciOne.ServiceBus.Samples.DeveloperJourneys.csproj.nuget.g.props": {
+      "sha256": "8fd4154fdd10eb3e587dd439d9e2f7614d99dec33989d16e6452d89d96cf7114",
+      "bytes": 2090
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/ViciOne.ServiceBus.Samples.DeveloperJourneys.csproj.nuget.g.targets": {
+      "sha256": "d2c9bb010bf10223a9d9035168e4b3eec72436466ac0929ee0598784f91bd72b",
+      "bytes": 1933
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/project.assets.json": {
+      "sha256": "20e54088d523fbcbd460c329289124dd9e859c9588487e4a30510221d4e1aa9a",
+      "bytes": 151724
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/project.nuget.cache": {
+      "sha256": "191cba4013706c1495d8268f1d4d0f21558e79fb6f8b3e0d921d145e405c9261",
+      "bytes": 23849
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/.NETCoreApp,Version=v10.0.AssemblyAttributes.cs": {
+      "sha256": "f79c1ad9a9fc76110b3655f5bfb5ff4e3168e9addceff05b937c0796f0ec34eb",
+      "bytes": 196
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne..E56EB1F2.Up2Date": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys.AssemblyInfo.cs": {
+      "sha256": "836e6215183b49bf2ba25e72c51df7093fe3c998ab0fb9f5d8bc8e874167360e",
+      "bytes": 1045
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys.AssemblyInfoInputs.cache": {
+      "sha256": "30c0d00401b4d3fa25251dd67344552d36c740385cb0d3896e8b7ed574b8d9be",
+      "bytes": 65
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys.GeneratedMSBuildEditorConfig.editorconfig": {
+      "sha256": "e06ced3d8cfec850b138baeb9b140e9cd0014b5bdb2ecb5a77009c06525a77ff",
+      "bytes": 914
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys.GlobalUsings.g.cs": {
+      "sha256": "8f86a2cbf00ff3eee0bda2bc0eb5e1fc19c8544d5dc650c53d0132325956b592",
+      "bytes": 231
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys.assets.cache": {
+      "sha256": "f6b082ca3668f495d5842539264ce45995077bcf4d2679f559d8e4b600e7fcbd",
+      "bytes": 98189
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys.csproj.AssemblyReference.cache": {
+      "sha256": "bd41519c339b45dc1bf807db7f5298bc94073f3ab67cfad2a91fd53cde8ca7e2",
+      "bytes": 45617
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys.csproj.CoreCompileInputs.cache": {
+      "sha256": "06f3d2d011577a24ab111cedad6a037acf9ea8e0d4ed31fcc644637e602ea11c",
+      "bytes": 65
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys.csproj.FileListAbsolute.txt": {
+      "sha256": "a783fec8f8a3f72a6ed1ede01a11159c01b8bc7166f4198dc08d11ca266f41fa",
+      "bytes": 20807
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys.dll": {
+      "sha256": "5d34a1e472f9c56812c329d6f85a6fb96d29e7fd8aec4fb0c3e5809a1aa4975a",
+      "bytes": 89088
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys.genruntimeconfig.cache": {
+      "sha256": "227db127983b90779ebca74796387dec4dc39fe2d3c21408d196832acb86a854",
+      "bytes": 65
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ViciOne.ServiceBus.Samples.DeveloperJourneys.xml": {
+      "sha256": "07356e649dc20f2cb0d0bfdacd2013cd54f06015349aae02ce94db2df1380ab5",
+      "bytes": 161
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/apphost": {
+      "sha256": "9943d7ba17a5574b0f94e61a1529e10151c330ee692339f5e1fbef5aac725c4f",
+      "bytes": 88920
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/ref/ViciOne.ServiceBus.Samples.DeveloperJourneys.dll": {
+      "sha256": "8ff26def47b02e20f9fa841a1a37581591744c243264cde032543519c9f86df7",
+      "bytes": 27136
+    },
+    "artifacts/sdk/obj/ViciOne.ServiceBus.Samples.DeveloperJourneys/release/refint/ViciOne.ServiceBus.Samples.DeveloperJourneys.dll": {
+      "sha256": "8ff26def47b02e20f9fa841a1a37581591744c243264cde032543519c9f86df7",
+      "bytes": 27136
+    }
+  },
+  "archive_sha256": "bd48a79b1239d4aad4066c8813ba67fd42b1b0aa6d8cec2e0f0b5014e228c0c9",
+  "result_sha256": "ba487c99ad3083288789f8d95552d164cb3de480bcbfccc5ce73d069e4b6319d",
+  "all_archived_bytes_roundtrip_verified": true,
+  "own_tool_session": 82859,
+  "observed_tool_exit": 1,
+  "observed_sdk_codes": [
+    0,
+    0,
+    134
+  ],
+  "pass_names": [
+    "SendPreservesBodyAndIdentityAsync",
+    "PublishPreservesBodyAndIdentityAsync",
+    "RequestReturnsExactOrderStatusAsync"
+  ],
+  "first_finite_exception": "OperationCanceledException at Retry consumer.Consumed.AnyAsync predicate observed.Exception is null (R3 source117); cooperativecase20s, NOT external300s watchdog",
+  "later_cases_reached": false,
+  "limits": "This archive binds actual private produced artifacts, not eightPASS or productcause. RETRY sourcefixture observation suspect; no EF journalruntimecausality yet. PrivateC held untouched."
+}

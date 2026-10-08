@@ -17,13 +17,20 @@ public class ProcessorLockContext :
     readonly SingleThreadedDictionary<string, PartitionCheckpointData> _data;
     readonly PendingConfirmationCollection _pending;
     readonly ReceiveSettings _receiveSettings;
+    readonly TimeProvider _timeProvider;
 
     /// <summary>Leases the processor client and creates shared pending-confirmation state.</summary>
     /// <param name="context">The processor context that owns the client.</param>
     /// <param name="receiveSettings">The endpoint concurrency and checkpoint settings.</param>
     /// <param name="cancellationToken">Cancels every outstanding confirmation.</param>
     public ProcessorLockContext(ProcessorContext context, ReceiveSettings receiveSettings, CancellationToken cancellationToken)
+        : this(context, receiveSettings, cancellationToken, TimeProvider.System)
     {
+    }
+
+    internal ProcessorLockContext(ProcessorContext context, ReceiveSettings receiveSettings, CancellationToken cancellationToken, TimeProvider timeProvider)
+    {
+        _timeProvider = timeProvider ?? throw new ArgumentNullException(nameof(timeProvider));
         _context = context;
         _receiveSettings = receiveSettings;
         _pending = new PendingConfirmationCollection(cancellationToken);
@@ -129,7 +136,7 @@ public class ProcessorLockContext :
 
         LogContext.SetCurrentIfNull(_context.LogContext);
 
-        if (_data.TryAdd(eventArgs.PartitionId, _ => new PartitionCheckpointData(_receiveSettings, _pending)))
+        if (_data.TryAdd(eventArgs.PartitionId, _ => new PartitionCheckpointData(_receiveSettings, _pending, _timeProvider)))
         {
             try
             {

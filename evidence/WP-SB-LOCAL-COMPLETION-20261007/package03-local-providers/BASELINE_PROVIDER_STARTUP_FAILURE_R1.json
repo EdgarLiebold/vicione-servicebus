@@ -1,0 +1,36 @@
+{
+  "kind": "LOCAL_PROVIDER_STARTUP_FAILURE",
+  "source_commit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "checkout": "/private/tmp/vicione-servicebus-local-completion-20261007",
+  "exit": 1,
+  "tests_executed": 0,
+  "cause": "Colima cannot bind actual file from /private/tmp; emulator configuration mount path is not a directory/file match inside VM. Host git source is unchanged.",
+  "remedy": "Create independent fresh checkout under workspace /Users shared by Docker; fresh locked restore/build; same provider suite.",
+  "run": "vicione-2d079eaefbce",
+  "cleanup": {
+    "allowedBrokerOutage": "activemq",
+    "brokers": [
+      "postgres",
+      "azurite",
+      "localstack",
+      "activemq",
+      "artemis",
+      "eventhubs"
+    ],
+    "findings": [],
+    "kind": "SERVICEBUS_FIXTURE_FINDINGS",
+    "logs": {
+      "activemq": "83d2a2d489111a1f92cfbf06130cd722cfabef6e50e4c5fe6c41802e560c544c",
+      "artemis": "988fb9528aac1ede47b24244af96834d85ba94d85bd7591ccfd1adee4aee9584",
+      "azurite": "eef9e07cc0ed703d810a68f9d60771e01321ba00b3594c91fdd25c5c70deb506",
+      "eventhubs": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "localstack": "db763b79b13bec91f7e910ae005656225b19008550c0159826b42f20b29412ce",
+      "postgres": "def8395e5e48d60c18b30ba6c1364148862d57c97833a6806eefd622625bd3fe"
+    },
+    "schemaVersion": 1
+  },
+  "docker_ps_exact_project_remaining_containers": 0,
+  "log_sha256": "e7a60a3b3830738f927a6dea4b4d531c3b046632a679568a28570c68d9099bcc",
+  "not_cloud_evidence": true,
+  "not_a_test_failure_cause_or_pass": true
+}

@@ -1,0 +1,106 @@
+{
+  "kind": "COMPLETE_BASELINE_NATIVE_LOCAL_PROVIDER_EXECUTION",
+  "status": "645_PASS_PENDING_SEPARATE_ARTIFACT_REVIEW",
+  "source_commit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "source_clean_before_after": true,
+  "run_root": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/run-output/vicione-f54efe8eb0b4",
+  "compose_identity": "vicione-f54efe8eb0b4",
+  "brokers": [
+    "postgres",
+    "azurite",
+    "localstack",
+    "activemq",
+    "artemis",
+    "eventhubs"
+  ],
+  "allowed_outage": "activemq",
+  "native_count": {
+    "total": 645,
+    "passed": 645,
+    "failed": 0,
+    "skipped": 0
+  },
+  "native_modules": [
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/release/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/release/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests/release/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.dll",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.dll"
+  ],
+  "native_test_dll_pdb_sha256": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.dll": "ab37e2912be268b5a700f76f93c220e765392f1ae0c859ac4940c3a3a11c498f",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests/release/ViciOne.ServiceBus.Abstractions.LocalIntegration.Tests.pdb": "6f87a112520cf9162deecfab7f2f063e84036e66b630edfc5baf13ac1d07b45c",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/release/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests.dll": "4c2f498513d72b55d3de1bb8cda45ed5327f4d5d6888164365fc635d1b5803da",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests/release/ViciOne.ServiceBus.ActiveMq.LocalIntegration.Tests.pdb": "7ac3bcd45bc1332df42c8fe856491649ce377fe99f5455b43db453a0d7833179",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/release/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.dll": "52b9114668e55b1577b0d69d42a335ba45d3cc501d266a8aecf671d366983001",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests/release/ViciOne.ServiceBus.AmazonS3.LocalIntegration.Tests.pdb": "b6890481254c186c149e2726d25a9943be6aa3380299b05d3dfa0fdcdac634bb",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests/release/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests.dll": "2a7ec4a7ee0fde5a180bf36430a257e7b2b5dc0f3ee25c79ada59bb03b803438",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests/release/ViciOne.ServiceBus.AmazonSqs.LocalIntegration.Tests.pdb": "ea0d56a56913a9f2df51bf9151cdc8653aefe4bd9fdd2459e103357f56e1e076",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.dll": "b2ff69d9ae000478b8ce2c10108c86d07840df9bd6c5377320dd507446a89df3",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Storage.LocalIntegration.Tests.pdb": "9a9b1ff6a4218459b685f51f938e82e6724ebd703d3a9d3a8a283099ee02d561",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.dll": "60ef3f01c7150b1ebe94bc376901fd0a74a85b6e5a865624b4123e14168f8dcf",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests/release/ViciOne.ServiceBus.Azure.Table.LocalIntegration.Tests.pdb": "340c9426546bd9b12d888c108172ade7226e853eb680e8d2ee6c8f01c897c4a0",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.dll": "586d13b8b87323a56264be631304d02435b0a0e6aff4ed06e3407a99c0a41180",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests/release/ViciOne.ServiceBus.DynamoDb.LocalIntegration.Tests.pdb": "c37cbacfd97f7a71ba57b030d0b871fe7b74a14b18df0d33abd4083af0d0e05d",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests.dll": "ef231b432d60e0bec16472bb59c549d27f4f2b0ed47938ae12324fb67b984bd8",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.LocalIntegration.Tests.pdb": "e43bd1b904a242cde3d0fb1ecccde796933124d95c344c5b1c897e6315abf884",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.dll": "146e865229c173a3397bd2aa9bd9dbf962a5f1ddfb123a8164893cd40d5bd1e5",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests/release/ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.pdb": "b853b645d051c345caeac36bfe3c06fe97f56bf736b294ddd525583cf1f754d0",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.dll": "789fbc85c96fef4ff69963bbae4d0141bc89fca67533ab0eb561bb0a0b5f6df3",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/.review-temp/servicebus-local-completion-20261007/artifacts/sdk/bin/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests/release/ViciOne.ServiceBus.SqlTransport.PostgreSql.LocalIntegration.Tests.pdb": "4c4ced4aeaf1ed648f8f2519f188b8ba0b87a30f5ed67582eb43b8f0574e6c92"
+  },
+  "parent_exit_observation": {
+    "tool": "exec_command then write_stdin",
+    "session_id": 53641,
+    "exit_code": 0,
+    "observer": "Root personally observed completed structured process return"
+  },
+  "own_forwarding_exit": {
+    "child_exit": 0,
+    "child_pid": 62482,
+    "child_started": true,
+    "cleanup_failures": [],
+    "exit_code": 0,
+    "kind": "LOCAL_COLIMA_FORWARDING_EXPERIMENT",
+    "ports": [
+      36289,
+      36290,
+      36291,
+      36292,
+      36296,
+      36297,
+      36298,
+      36299,
+      36300,
+      36301
+    ],
+    "provider_acceptance": "OWNED_BY_NATIVE_RESULTS_NOT_TCP_PROBE",
+    "schemaVersion": 1,
+    "source_sha256": "ed76a7a4ef8cd45f4ad6a3ea50285cb2995a8c1004bf9b65871c67b331ee0f3d",
+    "ssh_config_sha256": "e7bf007104328f823793af1cada5535c8849ed48bcaedd1831853fa8f824c01a",
+    "ssh_exit": 0,
+    "ssh_pid": 62477
+  },
+  "cleanup": {
+    "canonical_fixture_findings": [],
+    "exact_compose_label_container_query": "0 remaining containers",
+    "own_child_pid_pgid": {
+      "62477": "PID and PGID absent",
+      "62482": "PID and PGID absent"
+    },
+    "foreign_resources": "No operation on foreign compose projects, VM/global config or shared SSH master"
+  },
+  "retained_raw_sha256": {
+    "local-tests-r3-forwarding.log": "ec6da99f4713c3d78df6b4604d954ef8e6a197b202303988ec7e0879cca44047",
+    "local-tests-r3-forwarding-20261006-233129--62482--0Dzysk-dotnet-test.binlog": "550b7ff871aa67f66e8fb018301e602131d1dbc99a555bdcadbff7e733a4bddb",
+    "local-colima-forwarding.json": "d92f455e02105c35ef0187a87a5383e501bcc13e013c4714bb67e1b78c0e2234",
+    "fixture-findings.json": "649df0c106f02700467b8c6be6314a0764f8f1c12166ec2591a2483ba7557ab5"
+  },
+  "historical_sql_999_of_1000": "Not reproduced in this complete baseline run; root cause remains unresolved, no repair claim by retry",
+  "scope": "Original unchanged6b451 fresh baseline with reviewed local forwarding experiment; no post-Core-correction/provider-wide/RabbitMQ/AzureServiceBusEmulator/cloud/hardware acceptance"
+}

@@ -1,0 +1,31 @@
+{
+  "kind": "ROOT_WHOLE_FOUR_EVENTHUB_SELECTED_CLOCK_TRANSITIVE_READ_R1",
+  "files": [
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContextTimeProviderExtensions.cs",
+      "sha256": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206",
+      "lines": 48
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/PartitionCheckpointData.cs",
+      "sha256": "86a4814e69d78eb6171b8d12426f66b0f7dcf3bb21d436bb74e101625e407eba",
+      "lines": 59
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/ProcessorLockContext.cs",
+      "sha256": "8f75eb7f25c12d4ed7adc1e59387ed10be97100d2608044d9e43f01d2e8e5d6a",
+      "lines": 156
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/Checkpoints/BatchCheckpointer.cs",
+      "sha256": "f0a40085e9b4ce10bced4f7ddb8ee99db8144a0b8e9e5d78fa724f0680a99f9b",
+      "lines": 151
+    }
+  ],
+  "observations": [
+    "EndpointselectedprovidercurrentlynotforwardedfromreceiverProcessorLockContext throughPartitionCheckpointData to BatchCheckpointer; actualSystemCTSintervalowner found. No new runtime finding yet.",
+    "Original public constructors must remain through additiveexplicitoverloads if needed. Selectedprovider lifetime must follow endpoint ownership, not cacheTTL.",
+    "Count1positiveactualcheckpoint holds stage after timeoutconstruction; retainedRecordingTimeProviderhistory firstSingle finite failure, lowerfakepartialboundary only after pass. Exact original test SDK/confirmed owner/cleanup source research remains before authoring."
+  ],
+  "limits": "Source research only; no product/test changes, no timer native or cloud/coverage claim."
+}

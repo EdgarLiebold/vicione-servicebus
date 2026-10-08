@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:40982648dc9b5267624d8b2aaf94b983b5f9d02f5c4088b79da79addcebe16aa",
+  "claims": [
+    {
+      "id": "claim_421a3257d6344c649ec6a52f12ca6847",
+      "statement": "ConsumeScopeProvider resolves consumers through existing or newly created scopes and ScopeConsumerFactory awaits execution before releasing owned lifetime.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/DependencyInjection/ConsumeScopeProvider.cs",
+          "version": "repo-file-v1:sha256:3750b38ebbda662be62c63b589fbab1a06d9deb4e2dc58d8884c244dc49d31ce"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/DependencyInjection/ScopeConsumerFactory.cs",
+          "version": "repo-file-v1:sha256:aedf858fa6a40d59ba1e33ccfdefac6f48dd61198684a69d0df4e8127ae9ce6d"
+        }
+      ]
+    },
+    {
+      "id": "claim_1d586b5b19ca4dd3aee5718163985a6b",
+      "statement": "ConsumeContext supplies outgoing operations, responses and tracked completion alongside typed message metadata.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Abstractions/ConsumeContext.cs",
+          "version": "repo-file-v1:sha256:794be20f8ca3e1aa76d3641938f91d8045b80b44b732d6fdd629d5ba96cd3d24"
+        }
+      ]
+    },
+    {
+      "id": "claim_5e2b378a5a09484eb3aaad1d43a53b52",
+      "statement": "Unified EF inbox completion commits business state, consumed identity and outgoing intents through the bound scoped outbox within its transaction.",
+      "evidence": [
+        {
+          "resource": "repo://src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ReliableMessaging/EntityFrameworkReliableInboxContext.cs",
+          "version": "repo-file-v1:sha256:195ccab4d3ea442a2e4be9da0b047a68110d93797e30f0bbd4e5c812e613a631"
+        },
+        {
+          "resource": "repo://src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ReliableMessaging/EntityFrameworkReliableInboxContextFactory.cs",
+          "version": "repo-file-v1:sha256:75dd039898e4e0790df386fbdb5f92e58702225fe1282c16f677bdde0021eeb8"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

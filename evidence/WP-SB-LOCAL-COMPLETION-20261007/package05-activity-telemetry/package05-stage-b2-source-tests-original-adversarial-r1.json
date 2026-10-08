@@ -1,0 +1,107 @@
+{
+  "status": "B2_SOURCE_TESTS_NO_BLOCK__ROOT803_84_PROVENANCE_VERIFIED__ORIGINAL_NATIVE_ORACLES_3_FINITE_RED_3_HEALTHY__FIXED_MUTANT_ACCEPTANCE_PENDING",
+  "reviewer": "/root/continuation_adversarial",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_B2_FREEZE_R1.json",
+    "sha256": "08babf3223a56a0e053c3e1f53ea7ef090d91589e5a7200b671f3e8b958efb7d"
+  },
+  "proof": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-b2-root803-source3-independent-proof-r1.json",
+    "sha256": "7e9e1aaa1217d1b2e25df687a5bddb1f29507e007d39fdb4f4122366feed7c06"
+  },
+  "snapshot_source3_sha256": {
+    "src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs": "da6a9cb0359b3f6d401a5f8a9026565309cb8c4a1936666bae3ba726d8a61eb9",
+    "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchActivityHandoffIsolationTests.cs": "f097715bd98b8d9fbbfd516733f8aba4a17de24f57de3ac9c73ba9db2921e213",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "cf28573d00c8b37459c630a708c8a98a20da16b2a781f26c35799dd79fb3a136"
+  },
+  "product_review": {
+    "whole_current_owner_lines": 430,
+    "whole_new_test_lines": 140,
+    "ordinary_callback_boundary": "Only replace explicit Activity.Current assignment with accepted single-attempt guarded helper. Original required pipe/await/context/cancellation/retry propagation and _completed outcome ownership unchanged; no finally introduced. Namespace import conforms System-first/outside file-scoped repo convention.",
+    "stopped_activity_limit": "Reused accepted helper walks stopped Activity.Parent to nearest live parent. New six Batch cases use live selected admission; no claim they separately prove all stopped-admission Batch situations or arbitrary callback reentrancy.",
+    "helper_sha256": "c206f81c611584f1982f03f55b1044cae4613d3775650fa291b43a910134d625",
+    "findings": []
+  },
+  "test_review": {
+    "methods": 1,
+    "theory_cases": 6,
+    "new_requirement_rows": 1,
+    "whole_case_quality": "Actual real two workers and timer; selected caller->admission object pair; one-shot ordinary callback; real pipe/member/context/mode/token, exact business exception or terminal cancellation token; drain both workers before assertions, handler finally removed, scoped resources disposed. No reflective private delivery or fake completion.",
+    "false_confidence_limit": "Assert.Same caller after await is native context healthy control only, no new explicit finally contract. Guard timeouts/cancellation/process/discovery/setup/cleanup failures never causal credit."
+  },
+  "original_native_log_review": {
+    "result_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/RESULT.json",
+    "result_sha256": "bc889c57c0d3b872ee7fc118f13701853d7c2872a4ab0134c97b880c8daa932c",
+    "case_events": [
+      {
+        "outcome": "erfolgreich",
+        "display_name": "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchActivityHandoffIsolationTests.Delivery_PreservesPipelineOutcomeWhenActivityHandoffObserverThrowsAsync(hostileHandoff: False, outcome: Failure)"
+      },
+      {
+        "outcome": "fehlerhaft",
+        "display_name": "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchActivityHandoffIsolationTests.Delivery_PreservesPipelineOutcomeWhenActivityHandoffObserverThrowsAsync(hostileHandoff: True, outcome: Cancellation)"
+      },
+      {
+        "outcome": "fehlerhaft",
+        "display_name": "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchActivityHandoffIsolationTests.Delivery_PreservesPipelineOutcomeWhenActivityHandoffObserverThrowsAsync(hostileHandoff: True, outcome: Failure)"
+      },
+      {
+        "outcome": "fehlerhaft",
+        "display_name": "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchActivityHandoffIsolationTests.Delivery_PreservesPipelineOutcomeWhenActivityHandoffObserverThrowsAsync(hostileHandoff: True, outcome: Success)"
+      },
+      {
+        "outcome": "erfolgreich",
+        "display_name": "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchActivityHandoffIsolationTests.Delivery_PreservesPipelineOutcomeWhenActivityHandoffObserverThrowsAsync(hostileHandoff: False, outcome: Cancellation)"
+      },
+      {
+        "outcome": "erfolgreich",
+        "display_name": "ViciOne.ServiceBus.Tests.Consumers.Batching.BatchActivityHandoffIsolationTests.Delivery_PreservesPipelineOutcomeWhenActivityHandoffObserverThrowsAsync(hostileHandoff: False, outcome: Success)"
+      }
+    ],
+    "raw_hashes": [
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/raw/p05-b2-original-build-r1.log",
+        "sha256": "ff44c25f1398dde771c45346f31904781f8147a3a94e88340d3950960a3c5e3a"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/raw/p05-b2-original-build-r1-20261007-010338--69790--eZ4z1c.binlog",
+        "sha256": "7291e1c05a077b483d5f7ca8d416263ec464a9ee757356e5b1c3892b5ce535fe"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/raw/p05-b2-original-focused-r1.log",
+        "sha256": "79e5244c89d4469fd465a09c3c255835dcd8d911038bd312a3d1ca43ccad2e82"
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b2-original-r1/raw/p05-b2-original-focused-r1-20261007-010550--69972--Ej9aYm-dotnet-test.binlog",
+        "sha256": "75710f62e2a489e44bd718116774a80c16f802a02fff107ef9a7d4c1cce80697"
+      }
+    ],
+    "runtime_hashes_verified_count": 16,
+    "strict_build": "Archived log successful/0warnings/0errors; structured parent25945exit0 receipt independently read, session not executed by reviewer.",
+    "focused": "All six named Detailed events exactly3 hostile finite assertion reds/3 healthy greens/0skip; parent79269exit2 matches RESULT.",
+    "Success": "Actual observerFailure message and Changed57->BatchConsumer.DeliverAsync compiledoriginal371->Consume72 stack at Assert.Null78 proves explicit handoff before required pipe.",
+    "Failure": "Actual observerFailure message and same direct compiledoriginal371 provenance replaces expected exact requiredFailure object at Assert.Same81.",
+    "Cancellation": "Finite Assert.IsAssignableFrom84 expected OperationCanceledException actual InvalidOperationException. This variant log does not show underlying exception identity or direct Changed/Deliver stack; only bounded type mismatch is credited, unlike the other two variants.",
+    "limits": "Runtime16 raw hashes verified; complete package/compiled PDB/source runtime graph qualification remains separate telemetry reviewer. No original wholeCore B2 credit."
+  },
+  "single_cause_mutant_prediff": {
+    "before": "            ActivityObservation.TrySetCurrent(_currentActivity);",
+    "after": "            Activity.Current = _currentActivity;",
+    "before_occurrences": 1,
+    "fixed_sha256": "da6a9cb0359b3f6d401a5f8a9026565309cb8c4a1936666bae3ba726d8a61eb9",
+    "predicted_mutant_sha256": "4c5544a77a57b822d31aac8b01f489448541de9c15a0263bdaa0f008b26f5a25",
+    "complete_unified_diff": "--- fixed/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs\n+++ mutant/src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs\n@@ -369,7 +369,7 @@\n         try\n         {\n             LogContext.SetCurrentIfNull(_logContext);\n-            ActivityObservation.TrySetCurrent(_currentActivity);\n+            Activity.Current = _currentActivity;\n \n             IMessageBatch<TMessage> batch = new MessageBatch<TMessage>(_firstMessage, _lastMessage, batchCompletionMode, messages);\n             batchConsumeContext = new BatchConsumeContext<TMessage>(context, batch);\n",
+    "one_product_owner_one_changed_assignment": true,
+    "namespace_import": "Retain imported Diagnostics so mutation changes only assignment. No explicit unused-import severity override found in .editorconfig; strict build still mandatory, any style/compiler failure cannot count as kill.",
+    "predicted_native_events_only": "Same immutable6 cases: hostile Success/Failure/Cancellation finite first reds78/81/84, three healthy controls. Original namespace context in mutant causes direct source line372 rather than original371; bind actual clone/PDB rather than copying old line claim.",
+    "not_actual_mutant_result": true
+  },
+  "remaining_required": [
+    "Root strict fixed build and native6 focused plus current fullCore",
+    "Exact actual single-cause clone/source/test/tool/Req pathsets + package/PE-PDB graph and strict native6 replay",
+    "Unchanged fixed replay after mutant, independent telemetry runtime qualification and explicit bounded Root acceptance"
+  ],
+  "skills": "Applied test-anti-patterns/.NET reference and existing Microsoft OpenTelemetry failure-isolation/parent/source lifetime guidance; read-only internal adversarial role only.",
+  "root_read_credit": "Root owns personal-read attestations; independent reviewer validates exact artifact/current path/hash lineage without transferring reading credit.",
+  "reviewer_scope": "Wrote only two own reviewer JSON files under R. No dotnet/process/build/provider/product/test/tool/governance mutation."
+}

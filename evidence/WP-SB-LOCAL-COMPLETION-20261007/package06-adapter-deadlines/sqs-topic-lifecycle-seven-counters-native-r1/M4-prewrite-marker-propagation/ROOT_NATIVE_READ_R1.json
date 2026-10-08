@@ -1,0 +1,15 @@
+{
+  "kind": "ROOT_ACTUAL_COUNTER_NATIVE_FIRST_FINITE_READ_R1",
+  "variant": "M4-prewrite-marker-propagation",
+  "native_result_sha256": "e58d402160a3b03538a2808f72a1ebf66ffa548bbd4e8359b42f0a8ce9ea1899",
+  "physical_receipt_sha256": "e066bf15882425e731cd8d366675b38e6d2f1db2a5e857f7c67075e9132e81d6",
+  "actual": {
+    "total": 11,
+    "passed": 10,
+    "failed": 1,
+    "skipped": 0
+  },
+  "first_finite": "Fullchannel firstNull139 actualdedicatedprewriteBatchAdmissionClosedException. Positiveactualtarget blockedwriter witness129 and10actualSDKheld stage124 precede; rawBatcher44/49/Pub229 providerfailureinnerframes notadditionalfailedassertions. Lower140..149unreached0credit.",
+  "personally_read": "Whole11nativeblocks+strictbuild body; sourcefixture487/singlecausediff earlierwhole atfixedhash; raw6/CRC2 mechanicallyverified.",
+  "limits": "Firstfinite only; same11labels repeated. No cloud/admittedSDKfailure replay evidence from this prewrite-specific case."
+}

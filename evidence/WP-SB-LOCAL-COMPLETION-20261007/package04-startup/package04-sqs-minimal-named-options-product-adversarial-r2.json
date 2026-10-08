@@ -1,0 +1,114 @@
+{
+  "kind": "INTERNAL_READONLY_P04_MINIMAL_NAMED_SQS_PRODUCT_ADVERSARIAL",
+  "status": "NO_BLOCK_PRIVATE_PRODUCT_DELTA__COMPILE_NATIVE_API_ACCEPTANCE_PENDING",
+  "findings": [],
+  "binding": {
+    "prepared_sha256": "b06374cb18f2af2b37bb6b84db556477fd0178afcb08e87a4c09dc6d51dbf67b",
+    "canonical_original62_sha256": "460f2a544eeba0ef91df54cfa502cd90bee19879e5e7d6be3d42ad432eaa1840",
+    "C9_original_owner_equal": true,
+    "C9_root": "/private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original",
+    "private_fixed79_sha256": "e464e1b2838d01f8a6c73589b18425da2fb45316ed53f3ed4e62ce8680cd189a",
+    "original_input_freeze_r2_sha256": "27ac8625ee36bd0c3e4c838eadbabef7fc136c132bd5767f998cbc68a6a241ae",
+    "frozen_test188_sha256": "074654ee59e1c22a382a702352d2a656c766f08b50f827c83dc5351c9cf698d3",
+    "requirements203_sha256": "ffb1a3221382a361401a7b1fc9f5aa1333587274144a675cf1c8a93e44b9deaa",
+    "input5_all_actual_snapshot_hashes_equal": true,
+    "Root_original27_read_receipt_sha256": "a382debb187a078bc547704973cd39f609c9e475c69585a5ed8ac9f4e00c180b",
+    "Root_original27_product_body_hashes_current_equal": true,
+    "Root_private_input_read_receipt_sha256": "00bdf3f4f6e680cb04b2b5f3555995a6b0a4e2102d078b1e93dc524aabf8c569",
+    "no_reviewer_read_transfer_to_Root": true
+  },
+  "complete_original_to_private_delta": "Private original62/fixed79 complete bodies and entire unifieddiff personally consumed. Public source declarations checked:",
+  "unified_diff": "--- \n+++ \n@@ -27,19 +27,36 @@\n     public static void UsingAmazonSqs(this IBusRegistrationConfigurator configurator,\n         Action<IBusRegistrationContext, IAmazonSqsBusFactoryConfigurator>? configure = null)\n     {\n-        configurator.Services.AddOptions<AmazonSqsTransportOptions>(string.Empty)\n+        AddSharedServices(configurator.Services, string.Empty, \"default\");\n+        configurator.SetBusFactory(new AmazonSqsRegistrationBusFactory(configure));\n+    }\n+\n+    /// <summary>Registers Amazon SQS for a typed bus and validates its named transport options before host startup.</summary>\n+    /// <typeparam name=\"TBus\">The typed bus contract that owns the named transport options.</typeparam>\n+    /// <param name=\"configurator\">The typed bus registration configurator.</param>\n+    /// <param name=\"configure\">An optional callback that configures the bus factory.</param>\n+    public static void UsingAmazonSqs<TBus>(this IBusRegistrationConfigurator<TBus> configurator,\n+        Action<IBusRegistrationContext, IAmazonSqsBusFactoryConfigurator>? configure = null)\n+        where TBus : class, IBus\n+    {\n+        AddSharedServices(configurator.Services, typeof(TBus).Name, typeof(TBus).FullName ?? typeof(TBus).Name);\n+        configurator.SetBusFactory(new AmazonSqsRegistrationBusFactory(configure));\n+    }\n+\n+    static void AddSharedServices(IServiceCollection services, string optionsName, string bus)\n+    {\n+        services.AddOptions<AmazonSqsTransportOptions>(optionsName)\n             .Validate(\n                 static options => options.Region is null || !string.IsNullOrWhiteSpace(options.Region),\n-                \"Amazon SQS transport for bus 'default': Region must not be empty when specified. Set an AWS region system name or leave it unset.\")\n+                $\"Amazon SQS transport for bus '{bus}': Region must not be empty when specified. Set an AWS region system name or leave it unset.\")\n             .Validate(\n                 static options => options.Scope is null || !string.IsNullOrWhiteSpace(options.Scope),\n-                \"Amazon SQS transport for bus 'default': Scope must not be empty when specified. Set a non-empty scope or leave it unset.\")\n+                $\"Amazon SQS transport for bus '{bus}': Scope must not be empty when specified. Set a non-empty scope or leave it unset.\")\n             .Validate(\n                 static options => string.IsNullOrWhiteSpace(options.Scope) || !string.IsNullOrWhiteSpace(options.Region),\n-                \"Amazon SQS transport for bus 'default': Scope requires Region. Set Region whenever a scope is configured.\")\n+                $\"Amazon SQS transport for bus '{bus}': Scope requires Region. Set Region whenever a scope is configured.\")\n             .ValidateOnStart();\n-        configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, AmazonSqsSendFailureClassifier>());\n-        configurator.SetBusFactory(new AmazonSqsRegistrationBusFactory(configure));\n+        services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, AmazonSqsSendFailureClassifier>());\n     }\n \n     /// <summary>Configures the default host using the AWS SDK fallback region and credential resolution.</summary>\n",
+  "context_whole_personal_reads": {
+    "src/ViciOne.ServiceBus/Configuration/DependencyInjection/IBusRegistrationConfigurator.cs": {
+      "sha256": "6f087fb1c501c7325ad43a915b07e5c864390569fc6a6d082523a89e3138e7d2",
+      "lines": 16
+    },
+    "src/ViciOne.ServiceBus/Configuration/DependencyInjection/ServiceCollectionBusConfigurator.cs": {
+      "sha256": "d777ee9349f33373b1cc49acbca3ce680cefe17d7e271c56aa84a47ebb56e9ef",
+      "lines": 305
+    },
+    "src/ViciOne.ServiceBus/Configuration/DependencyInjection/TransportRegistrationBusFactory.cs": {
+      "sha256": "8659b5f22016823aea26893f10dd0be31fc1f2efa9590f46e0acc6cb5b34972e",
+      "lines": 293
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Configuration/AmazonSqsRegistrationBusFactory.cs": {
+      "sha256": "4565ae7bbea2c655bc529b3a1cde837de11a60965a37755099c2761d4850a8b8",
+      "lines": 58
+    },
+    "src/Transports/ViciOne.ServiceBus.AmazonSqs/Configuration/AmazonSqsTransportOptions.cs": {
+      "sha256": "fca831dd2d3c2a48ebf183630a2181383bb8f71b8331f3392742e82a6ad431a5",
+      "lines": 10
+    },
+    "src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs": {
+      "sha256": "84e652c0237beb05aaf2d7008f49b70b886163650839c0a0ccded02676eeece2",
+      "lines": 86
+    },
+    "src/Transports/ViciOne.ServiceBus.AzureServiceBus/Configuration/ServiceBusConfigurationExtensions.cs": {
+      "sha256": "d12135b7ba9ada8671b08a00c12f5cf4c3737ad3bf0fd5fbac5376da11ccaa46",
+      "lines": 82
+    },
+    "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsTransportOptionsStartupTests.cs": {
+      "sha256": "e2a08d5a7445cfb0350bc1be384795019cb8041f7965a222b417ee9216a6e77f",
+      "lines": 59
+    }
+  },
+  "additional_context": "Frozen GenericHost188 wholebody read; composition validator114-165 and hostedservice1-95 focused call-order context inspected. Root complete27 proof is Root own reading only. Initial oversized context metadata dump truncated, no wholemanifestbody reading claim. Missing combinedTransport middle repaired full50-120 untruncated.",
+  "analysis": {
+    "overload_binding": "IBusRegistrationConfigurator<in TBus> inherits untyped registration and has exactlysame class/IBus constraints. Statically typed AddViciOneServiceBus<IOrdersBus> lambda selects more specific generic overload by inference; default receiver retains existing overload. This is source-derived; actual current GenericHost native5 and compiled additive ABI must verify before acceptance.",
+    "options_name": "typeof(TBus).Name exactlymatches ServiceCollectionBusConfigurator<TBus,TBusInstance>.CreateBus line298; AmazonSqsRegistrationBusFactory.Get(busName)42 consumes same name. FullName used solely diagnostic bus label, matching Rabbit/Azure typed precedent. No short-name collision contract redesign.",
+    "default_compatibility": "Default AddSharedServices(Services,string.Empty,default) keeps all3 predicate strings/textsemantics/ValidateOnStart/singleton classifier/factorycallback ordering. Public CreateUsing and both UseDefaultHost bodies/signatures/defaults untouched.",
+    "callback_and_factory": "Both paths call SetBusFactory(new AmazonSqsRegistrationBusFactory(configure)); optionalnull configure unchanged; factory options configure host then TransportRegistrationBusFactory invokes configure?.Invoke(context,configurator), preserving caller override precedence and invocation ownership.",
+    "shared_DI": "TryAddEnumerable singleton transport classifier shared between registrations remainssame type/lifetime. AddOptions namedvalidators are intentionallyperbus. Generic SetBusFactory inheritedreal typed implementation guards multiple configuration; no new repeated-call-idempotence claim. Helper registration preceding repeated SetBusFactory rejection is existing default behavior.",
+    "null_policy": "Regionnull andScopenull valid; blank suppliedstrings invalid; nonblankScope requires nonblankRegion. Nullconfigurator still dereferencesServices with originalpolicy; nullcallback remains permitted. No unsolicited new nullguard/exception policy.",
+    "surface": "Four existing public method declarations preserved verbatim plus exactlyone public generic UsingAmazonSqs<TBus> overload; private helper added. Actual compiled public surface after forcedbuild still pending."
+  },
+  "native_original_reference": {
+    "result_sha256": "05095fc277bb3aacc832250a73a89a375599bcf6a83f92cc60426a59edd02309",
+    "claimed_Root_counts": {
+      "total": 5,
+      "failed": 3,
+      "healthy": 2
+    },
+    "this_report_native_qualification": "Separate colleague owns independent original10PE2997/docs/actualfinite stack review; source review here does not claim nativeartifact acceptance."
+  },
+  "finite_single_cause_mutation_proposals_static": [
+    {
+      "name": "typed-options-name-default",
+      "exact_change": "Only generic AddSharedServices optionsName typeof(TBus).Name -> string.Empty; keep diagnosticFullName/factory/helper.",
+      "expected_cases": "Old frozen188: selectedNamedfirstIsType21; poisonDefaultfirstSame38. New194 successor has corresponding22/39. Later assertions not credited unless actual native reaches them.",
+      "predicted_slots": "3red2healthy, UNEXECUTED; actual caseIDs/firstfailures determine qualified result."
+    },
+    {
+      "name": "typed-diagnostic-identity-default",
+      "exact_change": "Only generic AddSharedServices bus diagnosticargument -> default; keep optionsName typeof(TBus).Name.",
+      "expected_cases": "Old frozen188: selectedNamedFullNameContains25; new194:26. Correct optionsName/type/reason precede this assertion. Defaultinvalid and bothnamedcoherent controls remain independent.",
+      "predicted_slots": "2red3healthy, UNEXECUTED."
+    },
+    {
+      "name": "startup-scheduling-removed",
+      "exact_change": "Only helper ValidateOnStart removed; validators/name/factorycallback unchanged.",
+      "expected_cases": "GenericHost bypasses IStartupValidator options scheduling; composition then resolves selected bus/options and aggregates validation failure. SelectedNamed2/defaultinvalid expectedtype maychange first, not nativeIStartupValidator origin credit. Existing direct startup validator4 provides separate public readiness/origin check if included.",
+      "predicted_slots": "Potential3red2healthy Host5; STATIC ONLY actualfirsttype/stack/casequalification required; no fictitious killed claim."
+    },
+    {
+      "name": "callback-propagation-removed_optional_control",
+      "exact_change": "Only generic newAmazonSqsRegistrationBusFactory(configure) argument -> null; do not remove factory or change optionvalidation.",
+      "expected_cases": "Old frozen188: namedcoherent materializations70 and poisonedUnusedDefault materializations40; new194:71/41, after chosenbarrierSame and actualbarrier1. Predictions only.",
+      "predicted_slots": "Potential2red3healthy, UNEXECUTED; optional because callback body itself unchanged."
+    }
+  ],
+  "retained_predicate_oracle": "Current Host5 does not include namedblankScope scenario. Whole existing AmazonSqsTransportOptionsStartupTests4 already includes defaultblankScope; reuse wholelocalunit suite toverify sharedunchanged predicate. Do not count removal ofScope predicate as killed by Host5. No newcase requirement inferred fromunchanged predicate for this minimal repair.",
+  "acceptance_next": "Root bindexact canonical delta AFTER independent original acceptance; forced strictbuild; exactsame frozen5IDs/no fixtureerrors; original/fixed source/runtime10PEPDB/resource203/projectlock/assets/deps + additive1 publicmethod comparison; chosen isolated single-cause mutations and unchangedpost. Source-onlyNO_BLOCK is not execution acceptance.",
+  "limits": [
+    "No .NET/native/provider/process/source/test edits; only private review artifact.",
+    "No arbitrary cast-to-untyped typed guarantee; no equalshortname identity/discriminator redesign.",
+    "No fullSQS provider/network/cloud/hardware/API/coverage/globalstartup closure.",
+    "No inferred actualOptionsValidation/ABI result from predictions; fixed/mutants/post pending."
+  ],
+  "metadata_correction": {
+    "predecessor_sha256": "2709a5732cc0d4e98c9946fd3390c38d475997f5b7b04d0b2aa1a719e76d394d",
+    "reason": "Correct only old static proposal assertion line numbers against exact188 body; generic product acceptance, bytes, behavior and pending native scope unchanged. New194 supersets treated separately.",
+    "predecessor_preserved": true
+  }
+}

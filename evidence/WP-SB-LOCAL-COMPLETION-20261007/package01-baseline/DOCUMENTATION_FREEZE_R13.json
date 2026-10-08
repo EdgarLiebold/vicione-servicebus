@@ -1,0 +1,14 @@
+{
+  "kind": "LOCAL_COMPLETION_DOCUMENTATION_FREEZE_R13",
+  "source_sha256": {
+    "CHANGELOG.md": "8286200969e289b3b5c1be8554040f68e7e4899b890802e810ada687d641624b",
+    "TODO.md": "82cfd2fa13c88af32b557b9550ce7d6d4f3636014bc9bb372639b26573d4da26",
+    ".testagent/status.md": "631bef8549245d2108630fc6108f1ed7f11c9b578410a674da8cc16ae31f6da9",
+    ".testagent/plan.md": "770b60978bc1e326940127b247fac524ef4d3f15be4bd885a215af162cefceb0",
+    ".testagent/local-completion-plan.md": "56455098d0a4350e0a7ba18961b88c0ad95eb54f3c252fe26aa8446683a6022d",
+    "docs/quality-status.md": "b9be592be13e0c516819dd7ad99a23025a1fd7fbfc6aab0d615f000ce0791754"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r13",
+  "c5_acceptance_sha256": "20995730c2e3bd017045ba1a3d81c7ff08f3328a445d0ab23b58965a042b9a94",
+  "limits": "C5 only bounded acceptance; C6/EF/cache/startup/currentcoverage/providerreplay/CI/cloud/hardware remain open. Historical234 audit and prior checkpoints untouched."
+}

@@ -1,0 +1,21 @@
+{
+  "kind": "P05_STAGE_C3_TEST_ONLY_ORIGINAL_FREEZE",
+  "status": "PENDING_ORIGINAL_NATIVE_EXECUTION",
+  "source_sha256": {
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs": "551075235d378635bc7a9ffc7729cc9b348cd1b7b1b53fd662bf9bd7452ccb2f",
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs": "158dceacfcfe2a05effc59b02c79efa67e6664a02fd80bad29ecb00715d96ba8",
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs": "0658c31e41c2cc96aeae7f33948a046b49189c263580df97a1fe71414594dcb9",
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs": "18bcafb43ebe38b70e004864d7efd2e997426f180d29967402d4b754df808302",
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs": "8ff64032beabbffab0518f90bb7a62b12df83a5dd886e3d69ecbeab501cf58c5",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "2d1b6f28a89e52ad2ba396143ac976f61d88da8bfad931c133984dc24cad71d5"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c3-test-only-original-owner-r2",
+  "root806_read_sha256": "956f7ed527a243575b13c78a0dd7133ee7b451dcf6b054083d65cb6c86a7efa5",
+  "research_plan_sha256": "ee65a8e2c376aa9be2071fd91080e37675619e03415de7e01b87dbc555eb39ec",
+  "accepted_C2_root_sha256": "2b235155ea2dfb43d8aac04179aca1e8f98f9f71a11148b7bc50f5d8fa3a726d",
+  "native_cases": 63,
+  "requirements_rows": 4697,
+  "prior_original_freeze_sha256": "84b4854b32d7067e7e697ab988d6706b32b7a3820cc7e5d2c941ccef02d256d8",
+  "fixture_compile_correction": "Three actualxUnit1051 errors fixed by test cancellation token ondirectsnapshot reads; owned subject CTS linked to testtoken. R1analyzerfailure excluded",
+  "excluded_attempt_sha256": "4f4c58a7d7751b3c40804ce0411cb354bbc1757c826bb06f296bfb26fe06fe7d"
+}

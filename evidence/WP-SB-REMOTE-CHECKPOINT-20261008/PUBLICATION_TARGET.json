@@ -1,0 +1,10 @@
+{
+  "repository": "EdgarLiebold/vicione-servicebus",
+  "id": "1325509826",
+  "visibility": "public",
+  "default_branch": "main",
+  "archived": false,
+  "source": "GitHub connector get_repo current metadata",
+  "raw_archive_publication": "AES256-GCM encryptedparts only; plaintext chunks localignored; recoverykey32bytes generatedseparately outsideGit0600",
+  "limits": "Visibilitycheckedforthispublication, not oldprivatebaselineassumption."
+}

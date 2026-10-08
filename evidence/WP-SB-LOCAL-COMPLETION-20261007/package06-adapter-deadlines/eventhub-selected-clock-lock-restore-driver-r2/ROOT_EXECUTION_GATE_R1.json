@@ -1,0 +1,8 @@
+{
+  "kind": "ROOT_APPROVED_EXACT_RESTORE_ONLY_EXECUTION_GATE_R1",
+  "inputs_sha256": "d9925321e563010fcd28eadecf2b1ca6323177cdc2191c65af010d9107fbe523",
+  "driver_sha256": "35a9a935f3b52c550ee1eed79a539667745b0a4104e630b75317fabf6c8a46bb",
+  "peer_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-selected-clock-lock-restore-final-preflight-r1.json",
+  "peer_sha256": "699c8d480e62c34d33c6bdbb322b093d94dd93ef80e1705f3f10091a2fa35866",
+  "limits": "One reviewed restore-only300 stage; no build/native/productfinding/lockadoption"
+}

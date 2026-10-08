@@ -1,0 +1,29 @@
+{
+  "kind": "ROOT_EVENTHUB_WHOLE_LOCAL_R5_SOURCE_DERIVATION_READ",
+  "whole_predecessor_read": {
+    "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-whole-local-driver-r3/driver.py",
+    "lines": 273,
+    "sha256": "f77f8bf9dd89cafc815195047a96cc87becf655e7b98e02d398dfb715a6eab89"
+  },
+  "successor_diffs": [
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-whole-local-driver-r4/LOSSLESS_r3_r4.diff",
+      "sha256": "c546efc108a3cd1fb57fcb18fa06139f170b7d7b882575449e337b3569a52198"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-whole-local-driver-r5/LOSSLESS_r4_r5.diff",
+      "sha256": "4c1042646b9d2dbf0b92cc240dfe2f3310809e07601e53dbf32b6b1bdcff45fb"
+    }
+  ],
+  "current": {
+    "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-whole-local-driver-r5/driver.py",
+    "sha256": "99f3173ba30d3be0978fd4ad1a6d10aeae0037fe5447a715ed032152b8ddb375",
+    "lines": 293
+  },
+  "forwarder": {
+    "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-whole-local-driver-r5/forwarder.py",
+    "sha256": "00653caae37621b310eb111ec3b27ed8ff7f731a984b536c642f81c17932eda8",
+    "read_scope": "Whole233 predecessor plus early-PID-journal31line losslessdelta read;241byteexact successors"
+  },
+  "limits": "Source/AST/hash only, no execution gate yet. Root read273whole and106+18 successor diffs; no separate whole293 freshbody claim. Reviewer will read currentwhole. Native count unknown, no provider/native/control/whole acceptance."
+}

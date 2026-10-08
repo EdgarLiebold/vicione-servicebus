@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:793a110f5ae1c8cb073ace5c7d32136ddd6caeacc747d62dd8dd3bca7415323a",
+  "claims": [
+    {
+      "id": "claim_d30980bbed1e4289a34cf8e04956b066",
+      "statement": "EF reliable registration supplies one store as outbox, inbox and schedule store and installs scoped transactional/inbox integration.",
+      "evidence": [
+        {
+          "resource": "repo://src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ReliableMessaging/EntityFrameworkReliableMessagingServiceCollectionExtensions.cs",
+          "version": "repo-file-v1:sha256:1e8b16ff4e4170fdab1425fb242ac240e3feb1546cb5ab10908f38bfc5c0298f"
+        }
+      ]
+    },
+    {
+      "id": "claim_0f0ce1b5a0e34bff9cd05b49cb83aff4",
+      "statement": "DynamoDB and Azure Table saga context factories reject query correlation while supporting key-based dispatch/load.",
+      "evidence": [
+        {
+          "resource": "repo://src/Persistence/ViciOne.ServiceBus.Azure.Table/Saga/AzureTableSagaRepositoryContextFactory.cs",
+          "version": "repo-file-v1:sha256:a011920d99b874a404b239dc2eb7fdf7666e19c32c964cc9d21e5d8f70d1eb1b"
+        },
+        {
+          "resource": "repo://src/Persistence/ViciOne.ServiceBus.DynamoDb/Saga/DynamoDbSagaRepositoryContextFactory.cs",
+          "version": "repo-file-v1:sha256:c1ff866477288b97c886b929e79667b0bdaa9dddebe939527bd51b293d70e1b8"
+        }
+      ]
+    },
+    {
+      "id": "claim_64f5f9a72b354f2490eecf547e5b11ea",
+      "statement": "A deserialized external MessageData reference is unavailable until consume transformation resolves it.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/MessageData/Values/DeserializedMessageData.cs",
+          "version": "repo-file-v1:sha256:e5a425ff64d54dd2022239c0fbf06646aa79034f54e657f9828d6ab3cf54e078"
+        }
+      ]
+    },
+    {
+      "id": "claim_152322c44a814312844de946e88e852d",
+      "statement": "The EF reliability schema is application-owned and registration does not deploy migrations.",
+      "evidence": [
+        {
+          "resource": "repo://docs/migrations/README.md",
+          "version": "repo-file-v1:sha256:2a25ffeabe244ddcc50c582a7b37b0a55d619415af543145f6ccc54b2699d4bc"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

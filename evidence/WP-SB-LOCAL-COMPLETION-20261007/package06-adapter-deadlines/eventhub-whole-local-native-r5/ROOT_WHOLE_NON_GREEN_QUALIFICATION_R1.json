@@ -1,0 +1,43 @@
+{
+  "kind": "ROOT_ACTUAL_WHOLE_LOCAL_EVENTHUB_NON_GREEN_QUALIFICATION_R1",
+  "whole_native_sha256": "1f4c848b3a9f4711e1a1631c804e09657397e25556d084a8e4b3fc178a6c21ac",
+  "root_exec_session": 1010,
+  "root_exec_session_joined_exit": 0,
+  "actual_sdk_pid": 75413,
+  "actual_sdk_exit": 2,
+  "native_counts": {
+    "total": 196,
+    "passed": 194,
+    "failed": 2,
+    "skipped": 0
+  },
+  "visible_labels": {
+    "occurrences": 196,
+    "distinct": 194,
+    "colliding_labels": {
+      "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.EventHubCheckpointProbeSecurityTests.SerializedProbe_RemovesCredentialsWithoutChangingSdkUri(address: \"https://checkpoint.blob.core.windows.net:8443/chec\"\u00b7\u00b7\u00b7)": 3
+    },
+    "limits": "Visible labels alone do not recover theory argument identities."
+  },
+  "actual_bounded_calls": 45,
+  "own_groups_absent": {
+    "75408": true,
+    "75402": true,
+    "75403": true,
+    "75413": true
+  },
+  "fixture_findings": [],
+  "owned_container_network_volume_absence_checks": "Actualdriverrows45finalexactlabelqueriesexit0empty; no Docker from qualifier.",
+  "physical11_2904_sha256": "cd2b2d77f839d28f37e760459872f36656dd74522f698525f7471a0396277bc0",
+  "source_first_finite": {
+    "fixture": "ConsumerCompletedOwningDiagnosticsTests.cs",
+    "source_sha256": "f4907d8010bf9e6920f9713b2f8b259523bcd9371a521c97e2640f05b12ecbf4",
+    "primary": "Twohostile bool cases Assert.True83:false beforeSDKstart",
+    "underlying": "strictSPIproxy78 rejects TryGetPayloadTimeProvider atrealReceiverCtor36",
+    "lower_unreached_credit": 0,
+    "cleanup": "reobserves sameunexpectedSPIexception, not independentnewdefect"
+  },
+  "private_16_runtime_11_assets_live_match_fixed": true,
+  "private_secret_custody": "Verifiedsdkrawlogs/binlog0600/privateRoot0700; no values readprinted.",
+  "limits": "Root ordinary196NON-GREEN retained. Independentwhole/sourcequalification pending. No forcedallgreen, no controls/canonical/global closure; source adaptation onlycandidate."
+}

@@ -1,0 +1,91 @@
+{
+  "kind": "READ_ONLY_PRIVATE_CACHE_DIRECT_R5_U2_GENERATION_OWNER_ADVERSARIAL_REVIEW",
+  "utc": "2026-10-07T05:48:41.602409+00:00",
+  "status": "NO_BLOCK_BOUNDED_PRIVATE_DIRECT11_AND_PREVIOUSLY_QUALIFIED_PENDING2_PREEXECUTION",
+  "reviewer": "/root/continuation_adversarial",
+  "fixture": {
+    "path": "/private/tmp/ResourceCacheComparerIsolationTests.draft-r5.cs",
+    "sha256": "733ebbbb9647e9bca57064f410089a231e11e1ecb18f77d22eb9f3d12fccb0ae",
+    "content_lines": 439,
+    "bytes": 22665,
+    "private_only": true,
+    "whole_current439_body_and_delta_personally_read_untruncated": true,
+    "theory_methods": 5,
+    "theory_case_expansion_proposed": 10,
+    "additional_fact": "LateOldFactoryCannotUnlinkPendingReplacement",
+    "direct_case_expansion_proposed": 11,
+    "native_or_compile_credit": 0
+  },
+  "precedence": {
+    "DirectR3": {
+      "path": "/private/tmp/ResourceCacheComparerIsolationTests.draft-r3.cs",
+      "sha256": "e2ed157acffabba59ecfc0ceba71eb80447faf5563ba875f64052414159b0979",
+      "static_qualification_report": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-direct-r3-pending-child-r1-adversarial.json",
+      "static_qualification_sha256": "0f66272d85e9396bc61063ec1586e6531f4a34bac4c5b1d058483ed2fcac33f2"
+    },
+    "DirectR4": {
+      "path": "/private/tmp/ResourceCacheComparerIsolationTests.draft-r4.cs",
+      "sha256": "1bd7999a2e8d32b426268ed385af01b9a00698b7e55d4512451f59b2141a8176",
+      "status": "Retained private predecessor with identified static U2 test-oracle gap; no canonical/native execution/empirical survivor evidence."
+    },
+    "PendingR2": {
+      "path": "/private/tmp/ResourceCachePendingComparerIsolationTests.draft-r2.cs",
+      "sha256": "93e9a5bff0c6e13eac03e5858f9466f041e9ad702b6ec76975e10cd204189503",
+      "qualified_review": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-pending-child-r2-adversarial.json",
+      "qualified_review_sha256": "36051455b2f9ecb932fefb4b3804f092b734de942a979e50c5484ce47e0c2591"
+    }
+  },
+  "unchanged10": {
+    "complete_test_body_prefix_byte_text_equal_R3": true,
+    "meaning": "All original five theory bodies and all ten selected physical/identity/snapshot/cause assertions unchanged from independently qualified DirectR3. Whole current body reread; inherited original four causal red/six healthy predictions remain static only."
+  },
+  "helper_delta": {
+    "Own": "Actual Task objects registered before any gate/deadline waits; Contains uses ordinary Task reference equality for these real tasks and prevents RunAsync from registering same previously owned request again.",
+    "Run": "Generic and non-generic RunAsync call Own and retain existing bounded TestContext wait, primary rethrow and exact recorded terminal-error policy.",
+    "cleanup": "Recursive finally visits all actual task identities; exact previously observed terminal cause only, unknown failure/timeout remains visible, real cache Stop always attempted, manual rescue only after Stop and ALL task identities terminal. Gates released in U2 finally before generated await-using fixture disposal."
+  },
+  "U2_actual_public_sequence": [
+    "Capacity2 instance, ordinary public primary index and two distinct actual Owned resources sharing same key. Each old/replacement factory has separate owned started/release TCS, asynchronous continuations, and actual invocation counter.",
+    "Old request Own before awaiting oldStarted. Clear actual Task Own. Public old Completion is faulted with real Clear OperationCanceledException; RunAsync records that exact observed terminal outcome. Clear itself remains unfinished and PendingCreations1 until late old factory ownership released.",
+    "Replacement request Own and factory-start awaited while old factory release remains held. Before-old-cleanup GetAsync and GetOrAdd waiters Own and proven incomplete; PendingCreations2. No third factory call.",
+    "Release only old gate and await actual Clear join. This completes old physical candidate release and ownership handoff while replacement factory still held.",
+    "NOW create fresh laterLookup and laterGetOrAdd waiter through actual public index, Own each before probes. They resolve live pending map after old cleanup, rather than retaining only earlier captured Completion task references.",
+    "If a fresh actual task already terminal, capture its actual terminal outcome through RunAsync/Record.Exception before physical assertions. This registers exact known lookup/factory fault and preserves diagnostic origin, so teardown does not replace finite first test failure with unknown already-observed fault.",
+    "Before releasing replacement: old DisposeCalls1, replacement0, PendingCreations1/masterCount0, old/new factory calls1, unwantedCalls0 and all replacement/pre-/post-cleanup requests still unfinished.",
+    "Release new gate; all five replacement request/read/waiter returns Same actual replacement; unwantedCalls0/pending0, exact singleton master reference, actual cache terminal disposal, exact old1/replacement1 release.",
+    "On all body/gate assertion failures, both release gates signaled unconditionally before real task/cache joins; no timer/factory work manufactured through reflection, fake result or wall-clock sleep."
+  ],
+  "static_gap_R4_and_actual_R5_fix": {
+    "R4_gap": "Only pre-old-cleanup lookup/waiter tasks captured replacement.Completion. An old cleanup that removes only the live replacement pending map can leave _pendingCreations and those captured tasks intact; replacement factory later commits/completes, so R4 state/task/reference assertions can pass that one-cause conceptual defect. This is source-derived static analysis, not a compiled surviving mutation result.",
+    "R5_fix": "Fresh public index operations created AFTER actual Clear/old-cleanup join while replacement remains held must still attach to replacement. A missing pending-map entry would cause fresh missing lookup and/or a forbidden third factory; both are observable immediately before any release or timeout.",
+    "prediction_only": "For current original key-based RemovePending ReferenceEquals guard, U2 should be healthy. A future explicit old-slot identity-removal mutant must be compiled and its actual first finite failure classified; no empirical kill prediction promoted to evidence.",
+    "first_possible_finite_mutant_boundaries": "Depending on exact future mutation/source, early state/pending count may fail; a map-only lost replacement reservation with unchanged owner set can cause third factory unwantedCalls expected0 actual1 before fresh task False checks. No later Same/reference/token assertions get credit after a first failure. Root actual native evidence decides."
+  },
+  "bounded_oracle_quality": [
+    "First original10 operations still actual physical-first with real captured comparer stack output before later Same error identity.",
+    "New U2 cancellation is a real Clear-induced fault of public old Completion, not injected OCE; existing contract selected exact OCE remains intact. Child/process isolation is unnecessary for this healthy original gated fixture because all gates release on ordinary failure and actual owner paths remain joinable.",
+    "Physical old release before Clear completion and replacement still pending are independent actual ownership milestones. Fresh lookup/factory state and unwanted factory0 are public slot-identity invariants, not assertions of internal private map implementation.",
+    "Five final replacement identities plus exact GetValues singleton distinguish shared factory result from cloned/spurious candidate; actual old/new disposal counts distinguish resource generations.",
+    "Task deduplication and exact recorded failure consumption do not hide product failure: captured operation errors still get explicit type/null/Same or physical probe assertions, unknown/timeouts never become accepted healthy outcomes."
+  ],
+  "planning_accounting": {
+    "direct_proposed_parent_cases": 11,
+    "pending_proposed_parent_cases": 2,
+    "combined_proposed_parent_cases": 13,
+    "pending_fresh_child_proposed_cases_separate": 2,
+    "new_RequirementCoverage_purposes_proposed": 8,
+    "native_test_discovery_or_execution": 0,
+    "compiled_native_acceptance": false,
+    "original_static_prediction_parent_only": "Direct four source-derived hostile candidate reds + seven healthy (includes U2), pending one candidate hostile red + one healthy: five candidate reds/eight healthy across13 parent cases. Two separate child executions are never added to13."
+  },
+  "remaining_scope": [
+    "Root must bind next plan/current owned Core/build/requirements closure and exact canonical bodies before any native test-only original execution. Private review is not canonical owner acceptance.",
+    "Original/fixed native artifact qualification must capture true original second-index commit traces, finite persistent-origin pending signature, actual child/PID/nonce/event/runtime graph, all exact13 parent identities and separate2 child outcomes.",
+    "Future prepared-map utility still needs exact source owner review, meaningful single-cause compiled experiments, whole affected suite and unchanged fixed post. No test-only blanket utility guarantee.",
+    "No fixed current whole Core count, coverage/CRAP, memory/RSS limit, provider/cloud/hardware/release/A+ claim.",
+    "No .NET/Docker/SSH/provider/process execution or product/test/tool writes by reviewer."
+  ],
+  "findings": [],
+  "R4_R5_complete_delta": "--- private_direct_r4\n\n+++ private_direct_r5\n\n@@ -240,6 +240,8 @@\n\n         Task<Owned>? newRequest = null;\n         Task<Owned>? lookup = null;\n         Task<Owned>? waiter = null;\n+        Task<Owned>? laterLookup = null;\n+        Task<Owned>? laterWaiter = null;\n         try\n         {\n             oldRequest = fixture.Own(index.GetOrAddAsync(\"shared\", async (_, _) =>\n@@ -275,6 +277,18 @@\n\n             Assert.False(waiter.IsCompleted);\n             oldRelease.TrySetResult();\n             await fixture.RunAsync(clear);\n+            laterLookup = fixture.Own(index.GetAsync(\"shared\").AsTask());\n+            laterWaiter = fixture.Own(index.GetOrAddAsync(\"shared\", (_, _) =>\n+            {\n+                unwantedCalls++;\n+                return ValueTask.FromResult(fixture.New(\"unwanted-later\"));\n+            }).AsTask());\n+            // Fresh reads after old cleanup test the live pending map, rather than merely\n+            // observing waiters that already captured the replacement Completion task.\n+            if (laterLookup.IsCompleted)\n+                output.WriteLine(\"ACTUAL_LATE_LOOKUP: \" + await Record.ExceptionAsync(() => fixture.RunAsync(laterLookup)));\n+            if (laterWaiter.IsCompleted)\n+                output.WriteLine(\"ACTUAL_LATE_WAITER: \" + await Record.ExceptionAsync(() => fixture.RunAsync(laterWaiter)));\n             Assert.Equal(1, old.DisposeCalls);\n             Assert.Equal(0, replacement.DisposeCalls);\n             Assert.Equal(1, fixture.Cache.Statistics.PendingCreations);\n@@ -285,10 +299,14 @@\n\n             Assert.False(newRequest.IsCompleted);\n             Assert.False(lookup.IsCompleted);\n             Assert.False(waiter.IsCompleted);\n+            Assert.False(laterLookup.IsCompleted);\n+            Assert.False(laterWaiter.IsCompleted);\n             newRelease.TrySetResult();\n             Assert.Same(replacement, await fixture.RunAsync(newRequest));\n             Assert.Same(replacement, await fixture.RunAsync(lookup));\n             Assert.Same(replacement, await fixture.RunAsync(waiter));\n+            Assert.Same(replacement, await fixture.RunAsync(laterLookup));\n+            Assert.Same(replacement, await fixture.RunAsync(laterWaiter));\n             Assert.Equal(0, unwantedCalls);\n             Assert.Equal(0, fixture.Cache.Statistics.PendingCreations);\n             Assert.Same(replacement, Assert.Single(fixture.Cache.GetValues()));",
+  "execution": "Complete private439/421 bodies, exact18line successor diff and unchanged10 prefix plus helper ownership examined; applied Microsoft .NET test analysis guidance; own immutable JSON report only."
+}

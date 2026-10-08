@@ -1,0 +1,12 @@
+{
+  "kind": "P05_C7_FIXED_OWNER_FREEZE",
+  "sources": {
+    "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs": "b6a957d494e84e3c082066d2f886157147c04ff3ee9bef4d28877cc2a3a81917",
+    "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/ClassicEfOutboxClockIsolationTests.cs": "6602e22ab00adc38880880312ec0ffb45ad6c5d34ffa825e7db6b517c08ae6d2",
+    "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Requirements/EntityFrameworkRequirements.json": "deb0aec314803b9701ef9bbeff1ee2fa544d6fed9b2c71838363d964d0652e57"
+  },
+  "original_result_sha256": "3f6d201757c861b1b570b4a76f602c8349466a9b769e9f3ff4cd1b1d59fe2246",
+  "root_authored_reviewed_product_draft": "/private/tmp/EntityFrameworkOutboxContextFactory.c7-fix-draft.cs",
+  "private_source_review_sha256": "2c0b58f0f93102bb85713a2de3fdd65e6df8ba7efc19a5512cd595077cb1e7f4",
+  "limits": "Native fixed qualification pending; only optional duration measurement isolated; required UTC, transaction, cancellation, fault notification preserved."
+}

@@ -1,0 +1,39 @@
+{
+  "kind": "ROOT_EXACT_FOUR_CANONICAL_AZURE_STARTUP_TEST_INFRASTRUCTURE_FILE_APPLICATION_R1",
+  "technical_transfer_peer_sha256": "583e3ded4c6035e7adb15c1bcdda23506da0c38a510dcb23e8fce7ef185f8d33",
+  "core_original_other_native_join_guard": {
+    "native_sha256": "336a2db032f9d8bf9b204e8f1d162bdbceb39e7d79e5bbcbcf8c7fed60da5cfd",
+    "peer_sha256": "77d5c88aefdab979b908f105c2dbd3f3af0d122b61b6cdfdc8a308f5b8486981",
+    "root_tool_session": 55558,
+    "outer_returncode": 0,
+    "core_current_private6101_unchanged": true
+  },
+  "files": [
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/packages.lock.json",
+      "canonical_before_sha256": "60d92ca6379fd226c386e8ef735ee9f15da2fb31cb8d288249a51e27ad0b96e9",
+      "accepted_private_sha256": "0c5c5965abd49d1707d6385280f2cfed3e3f22be1b99dd07b3fe0daaabc58447"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+      "canonical_before_sha256": "b12b81a46e099582644c05165ee384fb394431fc36b517e2a980eceac592a6e3",
+      "accepted_private_sha256": "0115d885cf448462222419838477d6c1e2b8e7d21c69b4e2a6aa365d9cf2c3ba"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Configuration/AzureServiceBusGenericHostStartupTests.cs",
+      "canonical_before_sha256": null,
+      "accepted_private_sha256": "4acff27d9e420ad4a0a96df7e4995890d672d2809b5dc10db30e98d46dc80441"
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "canonical_before_sha256": "2f69e90f37908cbd23e0681b6f04deeeb28668f4d8a9ecd66479a28fce58fa6f",
+      "accepted_private_sha256": "3ceca9007a214249ccb66e3206b43519cf5be9df99d5ce4e28f6b3dac2dc91f9"
+    }
+  ],
+  "canonical_before_source_files": 6099,
+  "canonical_after_source_files": 6100,
+  "canonical_after_exact_qualified_azure_private6100": true,
+  "root_configs14_equal": true,
+  "all_product_src_files_unchanged": true,
+  "limits": "Only4acceptedAzuretest/project/generatedlock/requirements transferred. No canonicalAzure native rerun claimed. Originaldated6099 receipts immutable; laterCore source/inputsuccessor required for canonical6100. ExistingRoototherchanges unchanged; no global P04/currentcoverage/Cloud/HW/A+ closure."
+}

@@ -1,0 +1,25 @@
+{
+  "kind": "CORE_DEADLINE_FIXTURE_ORIGINAL_DRAFT",
+  "source_commit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "fixtures": {
+    "CoreDeadlineTests.cs": "911d97e8259f3b9b6a364b977d61eac8c93e9a3f5387812c0fdbc0e79a083b7c",
+    "CoreDeadlines.Contracts.csproj": "82782092a64563679e14d3caa9ea83bfeb814e82c4424262cded0e0aea8eafe4",
+    "Directory.Build.props": "b6908517823aa25f1664638bc3556e2c9ebf15b4852abc51542c65a9feacbb76",
+    "Directory.Build.targets": "17284cb74605517cbec8a8153505da71a685b28694b67b5ef80608cd79b1c0ea",
+    "NuGet.Config": "8bf6a078527ecaae0acc9d039f362e612662155512529af0540e52c3c306f4d4",
+    "global.json": "ede42ccb3b0ec814f36117a0ed63265c6727e8a98188ce659c96c496b4912db5",
+    "testconfig.json": "b6438a7e23ed7751ce7b7624eb8c0e69f75f60e9ed1a65dab849b98329d1669d"
+  },
+  "packages": {
+    "ViciOne.ServiceBus.1.0.0.nupkg": "2c831e6c15f134f61c1db51aa2804670038ee10cc281d37d8bdf0f07ae2c6505",
+    "ViciOne.ServiceBus.Abstractions.1.0.0.nupkg": "23256df679e6923104fe2687a2d1a02f4d607bafe7e671221a19bfc13e39e42f"
+  },
+  "native_status": "NOT_EXECUTED",
+  "no_project_reference": true,
+  "target_cases": 13,
+  "expected_original_causal_failures": 6,
+  "expected_original_healthy_controls": 7,
+  "predecessor": "ORIGINAL_DRAFT_BINDING_R2.json",
+  "correction": "Draft reviewer: record both actual resolution/send tokens; assert same linked token and distinguish it from caller token. Read-only supervisor reflection explicitly disclosed in plan.",
+  "plan_sha256": "fc9e102d3c0c5237210d9dbd0e97df3455b7959c14cfff923b467b61ac40e01b"
+}

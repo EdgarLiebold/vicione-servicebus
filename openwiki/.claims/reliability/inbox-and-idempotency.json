@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:7c784083e6d43cb204e15442c10f370b3e32ca2385bc65fb4b52727ffe70971f",
+  "claims": [
+    {
+      "id": "claim_b1d55cf75a644ded84acf8262af9c2f2",
+      "statement": "The EF reliable inbox integrates receive ownership and consumed state with scoped transactional outgoing work.",
+      "evidence": [
+        {
+          "resource": "repo://src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ReliableMessaging/EntityFrameworkReliableInboxContext.cs",
+          "version": "repo-file-v1:sha256:195ccab4d3ea442a2e4be9da0b047a68110d93797e30f0bbd4e5c812e613a631"
+        },
+        {
+          "resource": "repo://src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ReliableMessaging/EntityFrameworkReliableInboxContextFactory.cs",
+          "version": "repo-file-v1:sha256:75dd039898e4e0790df386fbdb5f92e58702225fe1282c16f677bdde0021eeb8"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

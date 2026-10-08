@@ -1,0 +1,14 @@
+{
+  "kind": "P05_C7_TEST_ONLY_ORIGINAL_FACTORY_FROZEN_SOURCE",
+  "source_sha256": {
+    "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/ClassicEfOutboxClockIsolationTests.cs": "6602e22ab00adc38880880312ec0ffb45ad6c5d34ffa825e7db6b517c08ae6d2",
+    "tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Requirements/EntityFrameworkRequirements.json": "deb0aec314803b9701ef9bbeff1ee2fa544d6fed9b2c71838363d964d0652e57",
+    "src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkOutboxContextFactory.cs": "152d185032cee3ade09fdb1d83af32a8d14e778b68968224fd0d5579725b6079"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-test-only-original-owner-r1",
+  "root_ef35_sha256": "8bd1aa0aa3c6fc4646627eea90f83d526f0d8baee2612cf42eec67a41d368082",
+  "research_plan_sha256": "9f05217e48eed8c2fd19f2b62ed7595af7bde85eae167232496774fc828aa2f7",
+  "native_cases": 13,
+  "original_expected_red_static_prediction": 5,
+  "limits": "Private reviews bind exactcanonicaltest405/Req282; originalfactory218 unchanged. Originalnative/finitecause/nativePEPDB qualification still pending; forecast nevercountsasevidence."
+}

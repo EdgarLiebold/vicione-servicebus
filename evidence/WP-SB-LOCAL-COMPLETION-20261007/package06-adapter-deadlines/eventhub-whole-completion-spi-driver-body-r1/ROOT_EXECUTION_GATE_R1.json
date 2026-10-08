@@ -1,0 +1,11 @@
+{
+  "kind": "ROOT_EVENTHUB_WHOLE_COMPLETION_SPI_NEW_IMAGE_EXECUTION_GATE_R1",
+  "driver_sha256": "bd97dd4be243341eecd9eb1408a09b0f7eeb0ca551affc47ec512780095d9eb0",
+  "forwarder_sha256": "00653caae37621b310eb111ec3b27ed8ff7f731a984b536c642f81c17932eda8",
+  "peer_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-eventhub-whole-completion-spi-driver-body-preflight-adversarial-r1.json",
+  "peer_sha256": "8478cb7a6052c0ebc244410c56cf1d06b575a80e320ea12a432992b5fe35f777",
+  "inputs_sha256": "f0774462920c20a84bf59fa5d56b96142268e7f7fc18dee63226348028632a0b",
+  "fixed_six_sha256": "a6bd55b61c4c40ee60a74224353c68419ae34f65a5a6e0ae374dd1fe1ec4a3a6",
+  "fixed_six_peer_sha256": "0fb65af1321715e5ed10ca4967536bc41d13a0b35e4b11f202c724fd108ce68e",
+  "scope": "One newwholeLOCAL unfiltered onNEW16runtime+11assets. Finalinput/gatebindingreviewrequired beforeSDK/Docker/SSH; allnormal/failclosedcleanup sameapprovedalgorithm."
+}

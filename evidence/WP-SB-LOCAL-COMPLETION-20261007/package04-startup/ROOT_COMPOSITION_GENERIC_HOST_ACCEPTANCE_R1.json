@@ -1,0 +1,68 @@
+{
+  "kind": "ROOT_BOUNDED_CORE_COMPOSITION_GENERIC_HOST_ACCEPTANCE_R1",
+  "status": "ACCEPTED_ORIGINAL3_WHOLE8149_MUTANTS4_RESTORED3_CANONICAL_TWO_FILES",
+  "scope": "Three actual Generic Host composition paths: missing transport plus limits report both ordered diagnostics before runtime; selected typed envelope limit fails via direct eager OptionsValidationException before runtime; default and typed InMemory buses each deliver distinct nonce, start/stop exact once before DI disposal, unused typed payload poison never evaluated. Existing product registration behavior correct; test evidence gap closed, no new product defect or product code modification.",
+  "evidence_sha256": {
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-three-source-candidates-r2/PREPARED.json": "858f41bbd3c0d1aa7ab96acdf198ffb4f5aa28fdfa8ce47378cf1559394d15fd",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-original-three-native-r1/RESULT.json": "1c42773a2ab6928c867680cec672645b9d5691b44fb4f905432c57e6b179746e",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-original-three-native-r1/ROOT_COMPILED_PE_PDB_BINDING_R1.json": "69d55a9f25bc89bb7251b3ff972568299ae0853dc3ae82e9ac3827ec7f7e47b0",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-original-three-native-r1/package04-core-composition-original-three-native-adversarial-r1.json": "b784e7a564e994abdf067d098ef9a54fbb3abcdbc9b5473e23d6c6d37cd956d8",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-whole-module-native-r1/RESULT.json": "7bd2843ec16db68e91dfed48c60f7e73caccb29456b4114bf23d620a480ed4da",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-whole-module-native-r1/package04-core-composition-whole-module-native-adversarial-r1.json": "3f298b255efb3f20121c36aa116ed4956f3d284ed7aaf2606592e634532ed4b1",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-mutants-native-r1/ROOT_FIRST_FINITE_CAUSE_LEDGER_R1.json": "4d015fe2a662c89a314abf7683ac8129aa771e7c14bd2fee1bdbddb668268af3",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-mutants-native-r1/ROOT_MUTANTS_PHYSICAL_BINDING_AGGREGATE_R1.json": "2805a9d39f3de93e88537cbd5ca97805dbb38505c8e7697cf128addac4a61f39",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-mutants-native-r1/package04-core-composition-four-mutants-native-adversarial-r1.json": "0f901b835ca4756db21ea4a7597c77afa48caf06eb67b18dce41a45e4e9e3ae6",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-restored-original-three-native-r1/RESULT.json": "78b97c02dcad666da092c3b7d1305f03200b887ddcb48b6415a5915ce6e1daf4",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-restored-original-three-native-r1/ROOT_RESTORED_RUNTIME_BINDING_REUSE_R1.json": "f68eb225d8329ab45b32266043bf45c64f776518329df6d5baaad2439fc81af1",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/core-composition-restored-original-three-native-r1/package04-core-composition-restored-original-three-native-final-adversarial-r1.json": "9b6fa12dcd57d0130482165555288e569b3bd8d4c65889dfdb086a8716c2d6d1",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ROOT_COMPOSITION_CANONICAL_TWO_FILE_APPLICATION_R1.json": "9ff233ff22b076f04e4d2d5718c1e5af9c4d7fb6e607f817802571a433d95681",
+    "evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/package04-core-composition-canonical-two-file-application-adversarial-r1.json": "abfe50ec48869f3fb36c7e893502652a943f1bd8661eb9cf02b0258496f0f8dd"
+  },
+  "counts": {
+    "new_method_cases": 3,
+    "original_PASS": 3,
+    "whole_module_PASS": 8149,
+    "whole_unique_display_labels": 8149,
+    "whole_fail": 0,
+    "whole_skip": 0,
+    "compiled_requirement_method_rows": 4725,
+    "causal_variants": 4,
+    "mutant_repeated_slots": 12,
+    "mutant_first_finite_RED": 4,
+    "mutant_healthy": 8,
+    "restored_PASS": 3
+  },
+  "physical": {
+    "root_original_fresh_PE": 12,
+    "root_original_PDB_checksums": 3808,
+    "root_mutant_fresh_PE_occurrences": 48,
+    "root_mutant_PDB_checksum_occurrences": 15232,
+    "peer_original_and_M3_M4_fresh_METHOD_attrs": 4725,
+    "peer_M1_M2_metadata": "Own exact TestDLL/PDB bytes reuse only; only CoreDLL differs.",
+    "peer_M3_M4_metadata": "Own fresh all4725 METHOD attributes/resource and35references; actual11different runtimefiles includeTestDLL/PDB.",
+    "post17runtimebytes_exact_original": true,
+    "post_fresh_PE_parse": false,
+    "post_binding": "Exact prior own Root69d and peer0786/ff46 image+source reuse only; no fresh postparse."
+  },
+  "canonical_application": {
+    "receipt_sha256": "9ff233ff22b076f04e4d2d5718c1e5af9c4d7fb6e607f817802571a433d95681",
+    "before_files": 6101,
+    "after_files": 6102,
+    "after_equals_qualified_private": true,
+    "changed_files": [
+      "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/BusCompositionGenericHostStartupTests.cs",
+      "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json"
+    ],
+    "product_changes": 0,
+    "after_application_peer": "abfe50ec48869f3fb36c7e893502652a943f1bd8661eb9cf02b0258496f0f8dd"
+  },
+  "root_read_provenance": "Root complete322 fixture/319 composition/89 payload/78 depot bodies, complete lossless4mutants, complete137/166/154 executabledrivers, all focused original/mutants/post and strict logs personally read; whole8149 event ledger mechanically validated with startup/projection/summary spans personally read, no human8149bodyclaim. Root ownfresh physical12PE3808 +48PE15232, postownexactbytes reuse. Independent all4725decode attribution stays independent; full6102manifest validation is mechanical, not source-bodyreading.",
+  "limits": [
+    "New3 included in whole8149; mutants12/post3 repeat same identities, not new distincttests.",
+    "Four variants deliberately break distinct causes, not four currentproductdefects. Firstfinite only; laterunreached checks carry no kill/healthcredit. M3finallyattemptedcleanup doesnot establishunreachedcleanupassertion success.",
+    "Actual fresh lockedrestore19163 belongs original3; whole/mutant/post use exactassets/historicalrestore byreference only. Compile/discovery/watchdog failures zero counterproofcredit.",
+    "Narrowthree actualcompositionpaths only; other correctnesscriticalstartupowners, providerfullruntime, allUnit/provideraggregate, coverage/CRAP/API/bench/schema/cache/cloud/HW/globalA+/release andremotecommitpush remain separate open work.",
+    "Sourceequivalent canonicaltransfer is not a new canonical native execution; older sourceguards snapshots stay immutable.",
+    "Cooperative startup/stop budgets do not imply hardDispose bound, adversarial usercallbackboundedness or universalprocessdescendantcensus."
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "kind": "ROOT_SQS_BATCH_CLOCK_ORIGINAL9_FIXTURE_R3_RETRY_EXECUTION_GATE_R3",
+  "driver_sha256": "b4c953927af1d481fcc7e7bce54f391b92e16fcf71fa9329b8b87c1178f5f019",
+  "inputs": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-original-preparation-r3/INPUTS.json",
+    "sha256": "a92a446e179dc62185d8761c11d0b15bf03913f885a46e72a0ef24e9b7eacb04"
+  },
+  "reviewed_files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-sns-batch-selected-clock-test-source-preflight-adversarial-r2.json",
+      "sha256": "4781570ad6faed851189f1d4ad98c1693d011894ca7d186a72051a3c54ef4cd0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-batch-selected-clock-original-driver-and-preparer-body-preflight-adversarial-r2.json",
+      "sha256": "7d7715ea784b97b8ccee7244b74d1e2325bb9cf622be3481264cb218a9211f13"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-sns-batch-selected-clock-requirements-source-adversarial-r1.json",
+      "sha256": "5e7756c6217f4eaad2d6f4510f1ccf37168d3ef8f6665bc76e4e067d41066d9d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-sns-batch-selected-clock-test-candidate-r2/PREPARED.json",
+      "sha256": "617d0b03c3667b48a8ce2d5b6e60f01cc2f4643a68db2962e48432d78cd52c92"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-sns-batch-selected-clock-test-candidate-r2/AmazonSqsBatchSelectedClockTests.cs",
+      "sha256": "967dea7912f48e5342265886e98dfa0d3525d9ae36233ea0edf8c47c0e9b391e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-sns-batch-selected-clock-requirements-candidate-r1/PREPARED.json",
+      "sha256": "4a2644e7db9c687034108edec466a0d174a576b0d5f0229ccd3619a5c6a0453b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-sns-batch-selected-clock-requirements-candidate-r1/AmazonSqsRequirements.json",
+      "sha256": "ebd653ac871c0bdc51ae32e5d1bf9e9775cba5808f411620b57288b7b2026f9b"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-original-base-preparation-r1/BASE.json",
+      "sha256": "08236af68bd569b29deadb685a8ce2051752de0d1ffcc6fa50a6c22b79759741"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-original-preparation-r2/prepare.py",
+      "sha256": "925247d4a30307966db790c45aaaf8b584b512df770a516ed3db6baab50db375"
+    },
+    {
+      "path": "evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-original-driver-r2/driver.py",
+      "sha256": "bf4a99fb6fe6854c1249c90c69db934f317e2b16943858c7042698bb9953f69b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-batch-selected-clock-original-nine-final-binding-adversarial-r1.json",
+      "sha256": "419664d42672c8a1ccf0ce815f066a0f8a1ef4cf4463141e0ba9c0c52bbbdc47"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-sns-batch-selected-clock-test-source-preflight-adversarial-r3.json",
+      "sha256": "0cbd49543cd4dc6f3366f51acdd5ed4b7e6726b43724843f0cab8ff0dfe6795a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-batch-selected-clock-private-fixture-r3-preparer-preflight-adversarial-r1.json",
+      "sha256": "30601cbf65f64f2c56cf5375a353e7ef9784e535b72f4af22d4f4a861aa4422d"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-sns-batch-selected-clock-test-candidate-r3/AmazonSqsBatchSelectedClockTests.cs",
+      "sha256": "dca5bd802a1c247ec6b2ecbc9ac40078fb30b67012f86b124fcdc06140493b78"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-sns-batch-selected-clock-test-candidate-r3/PREPARED.json",
+      "sha256": "457eb7042dc2d6a890efd908fc77087a2c29ec6acc557e00a3ad64047e1b8d5e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-batch-selected-clock-original-preparation-r3/prepare.py",
+      "sha256": "a835aa198125e556a138132ad3012d44955a73e7fcd166596d375b56334bf932"
+    }
+  ],
+  "limits": "CurrentR3fixture twoTestContextCTcalls only, canonicalO6109/private6110, Req216 and9originalproducts exact. SourceR3+helperR2 peers bind actualnew metadata separately. Same reviewed algorithm, newnativeD/resultsr3. Restore/defaultsandbox andstrictxunit1051 excluded; Root permissionretry, no inferredfailures."
+}

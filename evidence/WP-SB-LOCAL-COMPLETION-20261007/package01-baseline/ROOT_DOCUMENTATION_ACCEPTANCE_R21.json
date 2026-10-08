@@ -1,0 +1,18 @@
+{
+  "kind": "ROOT_GUARDED_SIX_DOCUMENTATION_PUBLICATION_ACCEPTANCE_R21",
+  "prior_published_freeze_sha256": "ab6b8349daa05c77c3e098593f2b13ab5a393780c086154a3d24420e6baefd85",
+  "proposed_freeze_sha256": "02981dbab242d8d5d51d8aac9a6d26398ac11b2ae09575142fdc63be68557b21",
+  "independent_review_sha256": "9c98cbd88c00d6f4a1b3d59850c0c3550f6e388435856dc4aff41440de5af95a",
+  "published_freeze_sha256": "ee4453dcc460b08062f9be5681f7d0d53a5b10a9d1619112f7d5a319d058e0f5",
+  "canonical_actual_sha256": {
+    "CHANGELOG.md": "3c80e3a1a39c4c94a987c8489655de2fb89cc4088e5fab325af1a286530852be",
+    "TODO.md": "db3e116532a98d9909c97eb7c301f9782a3d467b01c9df7b0aa6e7dd0f4316f1",
+    ".testagent/status.md": "8ff4918212683acf0620c5d61da0c0c536a9c73529be3ba44f221cd256b3cfb6",
+    ".testagent/plan.md": "990efe2601fb29f4ce6257c60cf106c03d5b08053756c0b4bae3ba0567f5a79f",
+    ".testagent/local-completion-plan.md": "0bbe51516ef3094cbc3d3a2d4f227dd6bbc251a04da6c89ac6e9b110a7e50c8c",
+    "docs/quality-status.md": "4b941290692e5ad25df0b743ea17c97bea23c556f100d0c8692643a256b83ffe"
+  },
+  "all_six_canonical_exact_reviewed_snapshot": true,
+  "preservation": "Other11TODOsections,62orderedOBL/frozen234/4historicalsuffixes exactly unchanged betweenactualR20andR21. Rawtailhashes rechecked match current9c98peer; olderR20peer suffix metadata not borrowed as currentrawbytehashes.",
+  "limits": "Bounded Azure selectednamedstartup and Core neverstartedcleanup documentation only. No source/test changes bypublication; no native rerun forprose. Compositioncases/otherP04/coverage/provider/API/performance/cloud/HW/globalA+ remainopen; no remotecommitpush."
+}

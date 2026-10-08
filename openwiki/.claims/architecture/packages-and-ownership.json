@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:50f0b7a7c6c5bb29662b8397c49e23b5ef108e81640b3e599abf182ddd874f41",
+  "claims": [
+    {
+      "id": "claim_fd5ad75317014e9883ee09e5a765715e",
+      "statement": "Core directly references only Abstractions among first-party projects.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+          "version": "repo-file-v1:sha256:382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3"
+        }
+      ]
+    },
+    {
+      "id": "claim_de6ac9c46fe04bd38e4b1de414954fe6",
+      "statement": "Futures depends on Core, Sagas and Courier, while JobService depends on Core and Sagas.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+          "version": "repo-file-v1:sha256:8fe3e90f79ab15806ba2fd38e37e717f02a75eafa5b4c05f08b9ee63dd57ea18"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj",
+          "version": "repo-file-v1:sha256:8212a7535e1eb020e3b0a4f52d4e49443976acd30b7c0a5a3339d1610fb91f01"
+        }
+      ]
+    },
+    {
+      "id": "claim_4ebafd871c204e328cc2d31ec1c6c8b5",
+      "statement": "Base EF and EF Sagas have distinct package dependency scopes.",
+      "evidence": [
+        {
+          "resource": "repo://src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Sagas/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.csproj",
+          "version": "repo-file-v1:sha256:02fb572c3050e80b06b3f11c80194f169474eb2a78c4b03b6eff8a65fa5c4c73"
+        },
+        {
+          "resource": "repo://src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/ViciOne.ServiceBus.EntityFrameworkCore.csproj",
+          "version": "repo-file-v1:sha256:9414b9996008b624eba466673e84d483c4248af5ac2c1c242899df4e9c7b904e"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

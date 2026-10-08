@@ -1,0 +1,15 @@
+{
+  "kind": "LOCAL_COMPLETION_DOCUMENTATION_FREEZE_R10",
+  "files_sha256": {
+    "CHANGELOG.md": "21bd643953bab83a68491206809239a2095f60284d5ecd2767f8e3d316c47fa2",
+    "TODO.md": "58b570fc75dda55a077f80311cad284ed4b0c6fdf12aa2bcbe1c3fb43066b90b",
+    ".testagent/status.md": "c5af877786ff30a99224f457c709f382014dfc6331678452b944fe58154be6f3",
+    ".testagent/plan.md": "2c7eba5bcb8a1ccc70623c59bbc5eb54e35a0597591cd429d005dbe6aec48c6f",
+    ".testagent/local-completion-plan.md": "f20b7950775e2f20d35a44478bd83512f8992eae0dc147b5c8987028ec73d5af",
+    "docs/quality-status.md": "dae6d4698be6a7d4529e2752f9ec458658b1281219ec385d0555892924c7a92d"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r10",
+  "prior_root_acceptance_sha256": "bdeade5055fb891014003eb1d752d6047b56f74d41222ce805cc1fa7722140c7",
+  "c2_root_acceptance_sha256": "2b235155ea2dfb43d8aac04179aca1e8f98f9f71a11148b7bc50f5d8fa3a726d",
+  "limits": "Only bounded C2 acceptance. Real process-local store, no provider durability; C3/cold/cache/startup/adapters/coverage/CI/otherlocal and external gates open."
+}

@@ -68,7 +68,7 @@ public class OutboxMessagePipe<TMessage> :
 
             if (!context.IsOutboxDelivered)
             {
-                await DeliverOutboxMessagesAsync(context).ConfigureAwait(false);
+                await DeliverOutboxMessagesAsync(context, timeProvider).ConfigureAwait(false);
 
                 await context.ConsumeCompleted.ConfigureAwait(false);
 
@@ -120,7 +120,7 @@ public class OutboxMessagePipe<TMessage> :
         _next.Probe(scope);
     }
 
-    async Task DeliverOutboxMessagesAsync(OutboxConsumeContext context)
+    async Task DeliverOutboxMessagesAsync(OutboxConsumeContext context, TimeProvider timeProvider)
     {
         List<OutboxMessageContext> messages = await context.LoadOutboxMessagesAsync().ConfigureAwait(false);
 
@@ -141,7 +141,7 @@ public class OutboxMessagePipe<TMessage> :
             }
             else
             {
-                using var sendToken = new CancellationTokenSource(_options.MessageDeliveryTimeout);
+                using var sendToken = new CancellationTokenSource(_options.MessageDeliveryTimeout, timeProvider);
                 using var token = CancellationTokenSource.CreateLinkedTokenSource(context.CancellationToken, sendToken.Token);
 
                 var pipe = new OutboxMessageSendPipe(message, message.DestinationAddress);

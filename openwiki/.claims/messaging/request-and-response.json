@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:3c926c2407d78e1c62183c7bd043aa037ee65d95c08bb965b8ba210743f07726",
+  "claims": [
+    {
+      "id": "claim_951cefa9c796476f9e648fa770758edd",
+      "statement": "ClientRequestHandle gates sending behind response registration and sets request/reply/accepted-type metadata.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Clients/Requests/ClientRequestHandle.Responses.cs",
+          "version": "repo-file-v1:sha256:abd809bc8583b91a4c96c8bbc13bbcfca03bc4ed19903197aac247c3afbd30e6"
+        },
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Clients/Requests/ClientRequestHandle.cs",
+          "version": "repo-file-v1:sha256:5cdc630fb97a253b6d9fbc36a507f3eebfb51c4837b8817d81ee8c6539d3ede5"
+        }
+      ]
+    },
+    {
+      "id": "claim_76efeee709bf493bacc7e1c5fbafa54e",
+      "statement": "Request terminal failure/cancellation disconnects response and fault handlers and observes send cleanup.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus/Clients/Requests/ClientRequestHandle.Completion.cs",
+          "version": "repo-file-v1:sha256:5f19593d9fd78b497da7f3fe34eb77243db3f030ee1d9fceb6c1b5a4077bd509"
+        }
+      ]
+    },
+    {
+      "id": "claim_e9f3ada431a24d97a1a2a70b73464228",
+      "statement": "RequestOptions exposes deadline separately from transport TimeToLive and other causal metadata.",
+      "evidence": [
+        {
+          "resource": "repo://src/ViciOne.ServiceBus.Abstractions/RequestOptions.cs",
+          "version": "repo-file-v1:sha256:63968287c4d0f261fda846f1098e0d301676410c95c2cebf95e53f0751c93db9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:13:31.418Z"
+  }
+}

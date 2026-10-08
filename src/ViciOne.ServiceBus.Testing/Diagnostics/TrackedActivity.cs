@@ -12,7 +12,8 @@ namespace ViciOne.ServiceBus.Testing;
 sealed class TrackedActivity :
     IDisposable
 {
-    static readonly ActivitySource _source = new ActivitySource("ViciOne.ServiceBus.Testing.Monitor");
+    static readonly Lazy<ActivitySource> _source = new Lazy<ActivitySource>(
+        () => new ActivitySource("ViciOne.ServiceBus.Testing.Monitor"));
 
     readonly HashSet<string> _activeSpans = new HashSet<string>(StringComparer.Ordinal);
     readonly TaskCompletionSource<bool> _completed;
@@ -55,12 +56,12 @@ sealed class TrackedActivity :
             ActivitySource.AddActivityListener(_listener);
             try
             {
-                _testActivity = _source.CreateActivity($"{methodName ?? "test"} process", ActivityKind.Internal)
+                _testActivity = _source.Value.CreateActivity($"{methodName ?? "test"} process", ActivityKind.Internal)
                     ?? throw new InvalidOperationException("The test activity could not be started.");
             }
             finally
             {
-                Activity.Current = previousActivity;
+                ActivityObservation.TrySetCurrent(previousActivity);
             }
             if (!ActivityObservation.TryStart(_testActivity, out Exception? listenerFailure))
             {
@@ -78,9 +79,13 @@ sealed class TrackedActivity :
             {
                 Dispose();
             }
+            catch (Exception)
+            {
+                // Constructor cleanup must preserve the primary activation failure.
+            }
             finally
             {
-                Activity.Current = previousActivity;
+                ActivityObservation.TrySetCurrent(previousActivity);
             }
             throw;
         }

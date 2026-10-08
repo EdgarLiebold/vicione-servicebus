@@ -1,0 +1,29 @@
+{
+  "kind": "ROOT_EXACT_PRIVATE_CORE_CLEANUP_OWNER_FIX_AND_FOUR_CASE_FIXTURE_THREE_FILE_APPLICATION_R1",
+  "canonical_azure_application_sha256": "06e8edd3ef0dab344ceb154d3abbb534acec3eaeda99f059392bee6a650fbee5",
+  "original_native_peer_sha256": "77d5c88aefdab979b908f105c2dbd3f3af0d122b61b6cdfdc8a308f5b8486981",
+  "original_native_sha256": "336a2db032f9d8bf9b204e8f1d162bdbceb39e7d79e5bbcbcf8c7fed60da5cfd",
+  "fixed_source_peer_sha256": "a66720a3903929b3f8d79cf8fdfdf6ad37ab7e1c015df89e429ce69a6b2e79dc",
+  "source_candidate_sha256": "1bc1fd2812c2e2a6467886a1ce9d987586ea1a67e03fb9cc89568c5dc704d0d4",
+  "files": [
+    {
+      "path": "src/ViciOne.ServiceBus/Hosting/ServiceBusHostedService.cs",
+      "before_sha256": "458dd4d37b5c7a062c9a47f7b698ce2c8c8230fd97acc5c812e59da0f4bc9214",
+      "accepted_private_sha256": "fe1c535c4f61e3bfafed00960937f8e7ee4dde065662cc63fd156099ddc2af14"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Configuration/DependencyInjection/CoreGenericHostStartupTests.cs",
+      "before_sha256": "359f83512a781eeb7c11845b36debf14c102741f2bb022eea55b9f7ad7dc08a9",
+      "accepted_private_sha256": "54aea94c20f35fc3cd5bd6d2702202a496331fa272cd090b4c90879b76b8d1f8"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "f0027cf4e392cce7b4905bae6ae31cbd189b931aaa91f00cbcb75893ba5f0d1f",
+      "accepted_private_sha256": "32b49b44106cef7b305183d0885ec53276c96f7ce16f4e522ee07c1574cd61bf"
+    }
+  ],
+  "canonical6100_unmodified": true,
+  "private6101_exact_corrected_manifest": true,
+  "rootconfigs14_assets12_unchanged": true,
+  "limits": "Private three-file application only. Originalsource177/188/4721 archivedbeforechange; original native history6099 preserved. Canonicalproductowner remains188; no nativeFixedPASS/aggregate/coverage/globalA+ beforeexecution."
+}

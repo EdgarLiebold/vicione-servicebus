@@ -1,0 +1,33 @@
+{
+  "kind": "ROOT_BOUNDED_ORIGINAL_BASELINE_LOCAL_PROVIDER_ACCEPTANCE",
+  "status": "ACCEPTED_ORIGINAL6B451_645_NATIVE_LOCAL_CASES_10_MODULES",
+  "source_commit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "native": {
+    "total": 645,
+    "passed": 645,
+    "failed": 0,
+    "skipped": 0,
+    "modules": 10,
+    "parent_exit": 0
+  },
+  "provider_set": [
+    "postgres",
+    "azurite",
+    "localstack",
+    "activemq",
+    "artemis",
+    "eventhubs"
+  ],
+  "actual_forwarding": "Separate accepted17-contract lifetime helper; native child0/SSH0/no cleanup errors; actual default-master forwarding failure bypassed by an owned nonmultiplexed process only",
+  "cleanup": "Root personally checked exactcomposeidentity0containers and own2PID+PGIDabsence; canonicalemptyfixturefindings. Reviewer validated receipt/hash/provenance and attributes OS observations to Root.",
+  "artifact_review_sha256": "abc474101f0a7625f3125ec580220b2ce80775854e82bdbc332dc7373da01518",
+  "source_native_binding": "35 firstpartyPE/PDB identities,4068 document checksum events,10testmodules and baselineCore sources; source-body review credit is not derived from PDB inspection",
+  "raw_receipt_sha256": "bd7a1dcb590f505fe7e83177a59db4e44e76cf1f41bb751f6aa2a6e3ddd3ad2f",
+  "excluded_claims": [
+    "Post-Core-correction/provider aggregate replay",
+    "RabbitMQ, SQLServer and AzureServiceBus emulator separateprofiles",
+    "Historical SQL999/1000 cause resolved by retry",
+    "Real cloud or ARM64/512MiB/noSwap acceptance"
+  ],
+  "previous_infrastructure_failures": "Retained without rewriting as successful tests."
+}

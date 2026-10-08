@@ -1,0 +1,25 @@
+{
+  "kind": "ROOT_ACTUAL_FIXED_SIX_AND_FRESH_PHYSICAL_QUALIFICATION_R1",
+  "native_sha256": "a6bd55b61c4c40ee60a74224353c68419ae34f65a5a6e0ae374dd1fe1ec4a3a6",
+  "root_exec_session": 58778,
+  "root_exec_joined_exit": 0,
+  "actual_strict_pid": 76977,
+  "actual_native_pid": 77068,
+  "strict": "0warnings0errors",
+  "focused": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0
+  },
+  "physical_sha256": "8aab6566cd4d721d45f53d697a13d522a530426c4a9afd2d68b0df5e629568cb",
+  "fresh_images": 11,
+  "fresh_document_checksums": 2904,
+  "source_owners": 14,
+  "actual_changed_runtime_names": [
+    "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.dll",
+    "ViciOne.ServiceBus.EventHubs.LocalIntegration.Tests.pdb"
+  ],
+  "EventHub_product_full_bytes_equal_prior_bounded_API_image": true,
+  "limits": "Actualsixgreen andfreshRoot11PE only. Independent freshphysical/compiled100/actualqualification pending; whole rerun/control/post/canonical/cloud/HW/globalA+ absent."
+}

@@ -1,0 +1,72 @@
+{
+  "kind": "ROOT_AZURE_RECEIVER_CANCELLATION_FOCUSED_TRANSITIVE_RESEARCH_READ_R1",
+  "rows": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Receiver.cs",
+      "sha256": "f5a3e5458b5417d27bb990a987c57d7be6dbd83671b04e250270c947a7d2f567",
+      "lines": 223,
+      "root_personally_whole_untruncated_read": true
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/SessionReceiver.cs",
+      "sha256": "e90a133c7585532587e6a24211fd7e042c000cef181a826e11ec98cef1373841",
+      "lines": 79,
+      "root_personally_whole_untruncated_read": true
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Abstractions/Advanced/Middleware/PipeContextTimeProviderExtensions.cs",
+      "sha256": "99f22f04f8f6ad83ee26753575d91886a69e34e37c9b345332be27ff5eb19206",
+      "lines": 48,
+      "root_personally_whole_untruncated_read": true
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ServiceBusReceiveLockContext.cs",
+      "sha256": "a259b389d481c2fb0fff73c2d8cbd53ac5f71ea15cd3e24f9394abc77c20f8ff",
+      "lines": 84,
+      "root_personally_whole_untruncated_read": true
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusReceiveContext.cs",
+      "sha256": "a02c0198567391fbc7b8ff935b65c451d42fb039d411417b7d64bce8ee154b43",
+      "lines": 126,
+      "root_personally_whole_untruncated_read": true
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusMessageSessionContext.cs",
+      "sha256": "4bf182e49632282f7908f16a777c981807e6d6e18c5271f8b57d841051f9ccd7",
+      "lines": 64,
+      "root_personally_whole_untruncated_read": true
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Contexts/ServiceBusSessionMessageLockContext.cs",
+      "sha256": "912c7dd6424006d58f0e4bc81326524a91453acef677e642b32ec3dd5f303f10",
+      "lines": 93,
+      "root_personally_whole_untruncated_read": true
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/ClientContext.cs",
+      "sha256": "1e4e7219719db099ad8dbeaa715215f3e850c551cd38ea407de42623dbd8bd8b",
+      "lines": 54,
+      "root_personally_whole_untruncated_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusReceiverDispatchOwnershipTests.cs",
+      "sha256": "423976dae04aeb37c6444fa590db952e0577e09883bd300c7f4d234d281283a2",
+      "lines": 387,
+      "root_personally_whole_untruncated_read": true
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusDeadLetterStateTests.cs",
+      "sha256": "991e747772599f88659883364e5909ff7d8a76f3c747e82cd5370289b8280a25",
+      "lines": 214,
+      "root_personally_whole_untruncated_read": true
+    }
+  ],
+  "observations": [
+    "Both real registered SDK callbacks create system CancellationTokenSource for ConsumerStopTimeout, while endpoint TimeProvider is already selected for receive lock checks.",
+    "Existing complete dispatcher proxy and SDK mock boundary tests can support actual session/non-session callback tests without cloud resources; context-selected time is resolved via TryGetPayload<TimeProvider>.",
+    "Pinned SDK non-session ProcessMessageEventArgs mock owns private MessageLockLostCancellationSource and a new fixture must dispose its own mock resource.",
+    "Next tests must observe actual broker token cancellation while dispatcher held, exact FakeTime clock deadline and healthy null-timeout immediate cancel, then release/join actual SDK callback/dispatcher/receiver lifecycle and dispose mock receiver."
+  ],
+  "limits": "Research only; no product/test changes, new confirmed finding or actual test/compiled/provider outcome. Other Agent/ConsumerAgent/BaseReceiveContext/SDK signatures/current project metadata must be read before implementation. Native Cache4 packet is separate and running; no additional SDK/provider execution here."
+}

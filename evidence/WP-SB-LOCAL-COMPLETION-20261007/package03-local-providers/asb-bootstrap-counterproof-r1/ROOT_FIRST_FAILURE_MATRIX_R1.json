@@ -1,0 +1,392 @@
+{
+  "kind": "ROOT_ACTUAL_THREE_PYTHON_TOOL_COUNTERPROOFS_FIRST_FAILURE_MATRIX_R1",
+  "session_id": 41671,
+  "joined": true,
+  "driver_exit_code": 0,
+  "slots": 9,
+  "finite_first_errors_or_failures": 5,
+  "healthy": 4,
+  "rows": [
+    {
+      "name": "f1-digest-preparation-outside-catch",
+      "source_sha256": "ede9651fc013c54078ed3adb0b690550852dc0a8c8df63b1d46dcb6b18636ec5",
+      "result_sha256": "f828686be2dd3fa2bb56f617edcb40175f2db74f4c79fa460ee41fbd250e9cc9",
+      "actual_methods_status": [
+        [
+          "test_digest_read_failure_keeps_known_child29_and_attempts_result_receipt",
+          "ERROR"
+        ],
+        [
+          "test_digest_read_failure_turns_green_child_into_failed_experiment",
+          "ERROR"
+        ],
+        [
+          "test_http200_accepts_zero_child_and_complete_cleanup",
+          "ok"
+        ]
+      ],
+      "finite_red": 2,
+      "healthy": 1,
+      "owned_root_archives": [
+        {
+          "identity": "vicione-98ec3b4fe950",
+          "files": [
+            {
+              "name": "local-colima-asb-owner.json",
+              "sha256": "7dd2675fccb34891a29636bbe1af13f661ead3ad19286df1c1428b6d0d2fe9f4"
+            },
+            {
+              "name": "local-colima-forwarding.json",
+              "sha256": "4572b92bc86fff85373b849d37a56c6a73ee06ba51190704fa7078ffb784257a"
+            },
+            {
+              "name": "local-colima-forwarding.stderr.log",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "name": "local-colima-asb-health.json",
+              "sha256": "363b111ecd7e789dd7e6e665ae618d9d4015364b1851c8b5cd3b2feae7b0479d"
+            },
+            {
+              "name": "endpoints.json",
+              "sha256": "7c5c210d89a75145ab65914272b96161a05a7c0cff6ef54db5088bf538ab2609"
+            },
+            {
+              "name": "contract-health-requests.jsonl",
+              "sha256": "58d3b73eb5a1d43e53044004c86615f123ea4e5f99d83229d8d8b5899c6a8a72"
+            },
+            {
+              "name": "contract-child.marker",
+              "sha256": "df230a7d25b322a897ddc423a1b2ae271ea3325f3517860fd8bcae96c327515a"
+            }
+          ]
+        },
+        {
+          "identity": "vicione-17302b94a52b",
+          "files": [
+            {
+              "name": "local-colima-asb-owner.json",
+              "sha256": "7dd2675fccb34891a29636bbe1af13f661ead3ad19286df1c1428b6d0d2fe9f4"
+            },
+            {
+              "name": "local-colima-forwarding.json",
+              "sha256": "d4e42703ff32d55e7f45fe9da3def9278bb137f593227acea92ce6061a8ad074"
+            },
+            {
+              "name": "local-colima-forwarding.stderr.log",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "name": "local-colima-asb-health.json",
+              "sha256": "363b111ecd7e789dd7e6e665ae618d9d4015364b1851c8b5cd3b2feae7b0479d"
+            },
+            {
+              "name": "endpoints.json",
+              "sha256": "083236ba4b363f5d703836230a4a38500020904b87469328a879d27b0323cfc6"
+            },
+            {
+              "name": "contract-health-requests.jsonl",
+              "sha256": "58d3b73eb5a1d43e53044004c86615f123ea4e5f99d83229d8d8b5899c6a8a72"
+            },
+            {
+              "name": "contract-child.marker",
+              "sha256": "df230a7d25b322a897ddc423a1b2ae271ea3325f3517860fd8bcae96c327515a"
+            }
+          ]
+        },
+        {
+          "identity": "vicione-eda9656f15a8",
+          "files": [
+            {
+              "name": "local-colima-asb-owner.json",
+              "sha256": "7dd2675fccb34891a29636bbe1af13f661ead3ad19286df1c1428b6d0d2fe9f4"
+            },
+            {
+              "name": "local-colima-forwarding.json",
+              "sha256": "8273b88ea32935b0385b883a743b6f6087eacb84ea1d2ef0b45809425d8486ee"
+            },
+            {
+              "name": "local-colima-forwarding.stderr.log",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "name": "local-colima-asb-result.json",
+              "sha256": "687089fb7d0ef78654a12a4c597ba2fc5adb587815209e6c82d4d39d6299f9f9"
+            },
+            {
+              "name": "local-colima-asb-health.json",
+              "sha256": "363b111ecd7e789dd7e6e665ae618d9d4015364b1851c8b5cd3b2feae7b0479d"
+            },
+            {
+              "name": "endpoints.json",
+              "sha256": "a581357f2f9542b066f21481e3d392263a1113b8123bf922d807c2c11bdaefd9"
+            },
+            {
+              "name": "fixture-findings.json",
+              "sha256": "529b3606b57966ca2dd7feb8441dacf7872737a12ac20c1ad7d6784b41b407fc"
+            },
+            {
+              "name": "contract-health-requests.jsonl",
+              "sha256": "f9fab3a3327b61c7ed2d4f123a591036740d238ab9a67f6f5817f1b8f3a5e152"
+            },
+            {
+              "name": "contract-child.marker",
+              "sha256": "df230a7d25b322a897ddc423a1b2ae271ea3325f3517860fd8bcae96c327515a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "f2-cleanup-signal-mask-removed",
+      "source_sha256": "669af30c399676953bf52526711b331ef40029e57b741c224b4780b9dafd5b26",
+      "result_sha256": "5f201ae63268b1b8f8212bedfb2198cf2071d8f5f918a4eb9983d32eb9f4751f",
+      "actual_methods_status": [
+        [
+          "test_http200_accepts_zero_child_and_complete_cleanup",
+          "FAIL"
+        ],
+        [
+          "test_early_interruptions_still_teardown_and_restore_handlers",
+          "ok"
+        ],
+        [
+          "test_original_late_forwarding_cannot_reach_child_before_health",
+          "ok"
+        ]
+      ],
+      "finite_red": 1,
+      "healthy": 2,
+      "owned_root_archives": [
+        {
+          "identity": "vicione-e65533e64f19",
+          "files": [
+            {
+              "name": "local-colima-asb-owner.json",
+              "sha256": "ff107596789801f0917f7c651195d31c44feaeceb6cb5960b83222536d951bd3"
+            },
+            {
+              "name": "local-colima-asb-result.json",
+              "sha256": "4359da1ea2ab6b579442e723b18efd2a132d080a87d2ee7801996378195c1b72"
+            },
+            {
+              "name": "fixture-findings.json",
+              "sha256": "529b3606b57966ca2dd7feb8441dacf7872737a12ac20c1ad7d6784b41b407fc"
+            }
+          ]
+        },
+        {
+          "identity": "vicione-c4786dfda539",
+          "files": [
+            {
+              "name": "local-colima-asb-owner.json",
+              "sha256": "ff107596789801f0917f7c651195d31c44feaeceb6cb5960b83222536d951bd3"
+            },
+            {
+              "name": "local-colima-asb-result.json",
+              "sha256": "89b215cc4f767cdc71c8550476e6b8a585a3ef64805e0e26328c1d023a513e86"
+            },
+            {
+              "name": "fixture-findings.json",
+              "sha256": "529b3606b57966ca2dd7feb8441dacf7872737a12ac20c1ad7d6784b41b407fc"
+            }
+          ]
+        },
+        {
+          "identity": "vicione-0cab22b8e0c6",
+          "files": [
+            {
+              "name": "local-colima-asb-owner.json",
+              "sha256": "ff107596789801f0917f7c651195d31c44feaeceb6cb5960b83222536d951bd3"
+            },
+            {
+              "name": "local-colima-forwarding.json",
+              "sha256": "d0c73c71a14aca983824067ae9d56db1de7775c8b2f628debedb061e47d3c2d2"
+            },
+            {
+              "name": "local-colima-forwarding.stderr.log",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "name": "local-colima-asb-result.json",
+              "sha256": "687089fb7d0ef78654a12a4c597ba2fc5adb587815209e6c82d4d39d6299f9f9"
+            },
+            {
+              "name": "local-colima-asb-health.json",
+              "sha256": "f8e26f97eaaff2b8791908752b48a7184ef1af11bdd02a73392cfe0350fdf97d"
+            },
+            {
+              "name": "endpoints.json",
+              "sha256": "a16a4b7aef05f596eb15b8e077d402f9a867774eb722aa8d0ff7747792fb251b"
+            },
+            {
+              "name": "fixture-findings.json",
+              "sha256": "529b3606b57966ca2dd7feb8441dacf7872737a12ac20c1ad7d6784b41b407fc"
+            },
+            {
+              "name": "contract-health-requests.jsonl",
+              "sha256": "f9fab3a3327b61c7ed2d4f123a591036740d238ab9a67f6f5817f1b8f3a5e152"
+            },
+            {
+              "name": "contract-child.marker",
+              "sha256": "df230a7d25b322a897ddc423a1b2ae271ea3325f3517860fd8bcae96c327515a"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "f3-drain-gate-bypassed",
+      "source_sha256": "545d0e4c3014e4e72bcc356648e8f4f0c6f818c64a8e31a9f047f5e778a06c43",
+      "result_sha256": "08cca8f866cc561d13379ba15c659b24fe5e8d655e6a99679eba484429195fdf",
+      "actual_methods_status": [
+        [
+          "test_unproven_owned_drain_prevents_removal_and_retains_child29",
+          "FAIL"
+        ],
+        [
+          "test_unproven_owned_drain_turns_green_child_red_without_removal",
+          "FAIL"
+        ],
+        [
+          "test_http200_accepts_zero_child_and_complete_cleanup",
+          "ok"
+        ]
+      ],
+      "finite_red": 2,
+      "healthy": 1,
+      "owned_root_archives": [
+        {
+          "identity": "vicione-93d73e9c6886",
+          "files": [
+            {
+              "name": "local-colima-asb-owner.json",
+              "sha256": "28a38f2becdf258e779b28e56055aab598501851128ccf4baa88aff7f28c2493"
+            },
+            {
+              "name": "local-colima-forwarding.json",
+              "sha256": "0a9c1849052bfad0335a2d52dd868410314730ec55de7e039621c07c20ebe5b2"
+            },
+            {
+              "name": "local-colima-forwarding.stderr.log",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "name": "local-colima-asb-result.json",
+              "sha256": "687089fb7d0ef78654a12a4c597ba2fc5adb587815209e6c82d4d39d6299f9f9"
+            },
+            {
+              "name": "local-colima-asb-health.json",
+              "sha256": "6ae7e187f154e68d07f3862e1d7058f5a34f1c70247ad876cdbc0efd078fd252"
+            },
+            {
+              "name": "endpoints.json",
+              "sha256": "5e110131f2941480709dc0532f62957786e4275955d06c85104fbe16acadefc9"
+            },
+            {
+              "name": "fixture-findings.json",
+              "sha256": "529b3606b57966ca2dd7feb8441dacf7872737a12ac20c1ad7d6784b41b407fc"
+            },
+            {
+              "name": "contract-health-requests.jsonl",
+              "sha256": "f9fab3a3327b61c7ed2d4f123a591036740d238ab9a67f6f5817f1b8f3a5e152"
+            },
+            {
+              "name": "contract-child.marker",
+              "sha256": "df230a7d25b322a897ddc423a1b2ae271ea3325f3517860fd8bcae96c327515a"
+            }
+          ]
+        },
+        {
+          "identity": "vicione-5cfce85fbec9",
+          "files": [
+            {
+              "name": "local-colima-asb-owner.json",
+              "sha256": "28a38f2becdf258e779b28e56055aab598501851128ccf4baa88aff7f28c2493"
+            },
+            {
+              "name": "local-colima-forwarding.json",
+              "sha256": "213dcb2109328446c8e4a8e4eddc7109b7942f418373304c66e2f9a2bfcf4678"
+            },
+            {
+              "name": "local-colima-forwarding.stderr.log",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "name": "local-colima-asb-result.json",
+              "sha256": "69e93b8511fc8cbbff0d6de1b2d7764bc21138975db15064a5df7941892d5dcc"
+            },
+            {
+              "name": "local-colima-asb-health.json",
+              "sha256": "6ae7e187f154e68d07f3862e1d7058f5a34f1c70247ad876cdbc0efd078fd252"
+            },
+            {
+              "name": "endpoints.json",
+              "sha256": "2ab22f9207392a7098766ea704c65af2295646215eca8693a5f4633176678fc9"
+            },
+            {
+              "name": "fixture-findings.json",
+              "sha256": "529b3606b57966ca2dd7feb8441dacf7872737a12ac20c1ad7d6784b41b407fc"
+            },
+            {
+              "name": "contract-health-requests.jsonl",
+              "sha256": "58d3b73eb5a1d43e53044004c86615f123ea4e5f99d83229d8d8b5899c6a8a72"
+            },
+            {
+              "name": "contract-child.marker",
+              "sha256": "df230a7d25b322a897ddc423a1b2ae271ea3325f3517860fd8bcae96c327515a"
+            }
+          ]
+        },
+        {
+          "identity": "vicione-29effa94c326",
+          "files": [
+            {
+              "name": "local-colima-asb-owner.json",
+              "sha256": "28a38f2becdf258e779b28e56055aab598501851128ccf4baa88aff7f28c2493"
+            },
+            {
+              "name": "local-colima-forwarding.json",
+              "sha256": "350de334541754624261eea6660c1d49de1fae3cfde4022cc9a2ced40991f675"
+            },
+            {
+              "name": "local-colima-forwarding.stderr.log",
+              "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+            },
+            {
+              "name": "local-colima-asb-result.json",
+              "sha256": "687089fb7d0ef78654a12a4c597ba2fc5adb587815209e6c82d4d39d6299f9f9"
+            },
+            {
+              "name": "local-colima-asb-health.json",
+              "sha256": "6ae7e187f154e68d07f3862e1d7058f5a34f1c70247ad876cdbc0efd078fd252"
+            },
+            {
+              "name": "endpoints.json",
+              "sha256": "534371a45e72f44c09d4e698ecae6aa9156075e82721348162a15048c1bc7690"
+            },
+            {
+              "name": "fixture-findings.json",
+              "sha256": "529b3606b57966ca2dd7feb8441dacf7872737a12ac20c1ad7d6784b41b407fc"
+            },
+            {
+              "name": "contract-health-requests.jsonl",
+              "sha256": "58d3b73eb5a1d43e53044004c86615f123ea4e5f99d83229d8d8b5899c6a8a72"
+            },
+            {
+              "name": "contract-child.marker",
+              "sha256": "df230a7d25b322a897ddc423a1b2ae271ea3325f3517860fd8bcae96c327515a"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "causes": [
+    "F1 two first raised OSError(injected digest read failure) at variant234 outside receipt catch, after helper actual child29/0 recorded; no later exit/assert/receipt credit on red. Teardown ordering source-flow inference, not unobserved callback assertion.",
+    "F2 first testcase run_tool218 handler/sent tuple actual(function interrupt,False) vs(SIG_IGN,True). Test safely did not send repeated signal under wrong handler. Early signal+original late-health controls passed. Later stop/events assertions uncredited on red.",
+    "F3 two first run_tool219 events lists actual extra stop while incomplete-drain collaborator gate was bypassed. Later absence/NotIn/return-code assertions uncredited on red; healthy actual completed-drain HTTP200 passed."
+  ],
+  "Root_read": "Personally read all three complete stderr logs and authored/read all exact onecause deltas; actual variantpath/source hashes bound by fresh interpreter PYTHONPATH and per-phase __file__ source bundles.",
+  "limits": "Tool-only, no CLR or provider mutation kill. First actual line218/219 supersedes one-line-off static prediction217/218. Own group join/no timeout from actual completed calls; no universal process/assembly census, no source edits to acceptedR2."
+}

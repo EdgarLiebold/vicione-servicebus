@@ -1,0 +1,806 @@
+{
+  "kind": "ROOT_RETAINED_DEFAULT_PACKAGE_NATIVE_RECOVERY_AFTER_USER_STEERING",
+  "input_sha256": "9a75fc7b12203d943c44177d71772e962e567b85e0faab654f09c271e78f1c42",
+  "original_driver_seal_sha256": "f19d15d2085fce943431e229ae85199a64983bf33b890cf19a26c5c231424d6c",
+  "steps": [
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-w0m7ypuy",
+      "pid": 94834,
+      "verb": "restore",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "restore",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/ViciOne.ServiceBus.slnx",
+        "--locked-mode",
+        "--disable-build-servers",
+        "-m:1",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-w0m7ypuy/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "b6c720b9ef07508e65771f96d46f68d30b844eea53291b34fff825426f8e3582",
+      "result_sha256": "dfa99d5ec44b11cec9bd39f050f5cb775ef1e2d425e77d498b3b101723ae1717",
+      "raw_sha256": {
+        "stdout.raw.log": "8cd275ec8d2220d3bc057595d1646bb6c5c2d242d3231c79a359f9362cbddc60",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "35161fd4a977601a692cf3333110d2f4d7e1ff7aaa6a182ab0ab2f8d7c7e228c"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-fg443nmg",
+      "pid": 94844,
+      "verb": "restore",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "restore",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+        "--locked-mode",
+        "--disable-build-servers",
+        "-m:1",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-fg443nmg/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "2fa4b372bee9103579ef22a437dbb82d6313e34907541c40ee1d9cbcc7c40f46",
+      "result_sha256": "40c92e1df1c94f5ce3df2296d0ce29154367b1430df6c9813711e25aeaea26b7",
+      "raw_sha256": {
+        "stdout.raw.log": "1f8e473460683b9a468bc8d49a1405ccc0958aef8f26e17c510047b9593f824f",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "bfcb3e41bf079c42171eb25e89bf7755d31434ed22be362f767702a857371d4e"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-cot6mwj4",
+      "pid": 94848,
+      "verb": "restore",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "restore",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/ViciOne.ServiceBus.AzureServiceBus.Testing.csproj",
+        "--locked-mode",
+        "--disable-build-servers",
+        "-m:1",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-cot6mwj4/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "69cfc1b60360dcbebcdb6ebb72d60ef14bdbf118537e30113219d916535e0888",
+      "result_sha256": "9108fe218c556b34936a88001b5de4fdf1fb78d6105a5b9dabb27df0142028ed",
+      "raw_sha256": {
+        "stdout.raw.log": "fe43d0c7ed563eab017dbc5e0f1db169d249eb925bd765840b0d03cb2caca149",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "a2304940b892146a78dd966ddf4ca9b9e9bab8ef57f7a5686f072ae16206bb01"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-ubc3wz73",
+      "pid": 94892,
+      "verb": "restore",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "restore",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/src/Transports/ViciOne.ServiceBus.EventHubs.Testing/ViciOne.ServiceBus.EventHubs.Testing.csproj",
+        "--locked-mode",
+        "--disable-build-servers",
+        "-m:1",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-ubc3wz73/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "618438e193a62de327de44fefa996295cf18aa38dd5dbe8eaf7df3b188ca19af",
+      "result_sha256": "90192d0c831997aad5d3e9075f3486014f87c99482cfbb72849c5106039425a3",
+      "raw_sha256": {
+        "stdout.raw.log": "323a5da3c8436fad2488f20607ec4dd7ab22dc89adc105148aba63c11d247351",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "0c8d863ac1505d308a8919dab65ac6dfb109bed41657c08e0ec678ff9b8f32c5"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-shbsdye5",
+      "pid": 94902,
+      "verb": "restore",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "restore",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/src/Transports/ViciOne.ServiceBus.RabbitMq.Testing/ViciOne.ServiceBus.RabbitMq.Testing.csproj",
+        "--locked-mode",
+        "--disable-build-servers",
+        "-m:1",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-shbsdye5/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "4c0ec4a66f2616e6521b22869c4f1a4b333568a77e55f3e5e6a5498fe6373d5f",
+      "result_sha256": "f1b9b0dd80f9690791b9dfff2cc30e9f4de9702bf13843fb935ce5992ca8dcf7",
+      "raw_sha256": {
+        "stdout.raw.log": "68d64d65d3233c46071f9dd06fbfc88f6532bfc230d91ff129a8abb6847a04a8",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "a53d0dca6d4f22da4ae5c2f60dc904d699eeea639fe7dd19696c3e0c3eb1f2ed"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/pack-9hmebaau",
+      "pid": 94912,
+      "verb": "pack",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "pack",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/ViciOne.ServiceBus.slnx",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "--disable-build-servers",
+        "-m:1",
+        "--output",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/packages",
+        "-p:ContinuousIntegrationBuild=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/pack-9hmebaau/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "9be69d2b1db46d7a1bfd2b1067f9242737f64d0e34d3a1ec40a2d15a1dcfc1ca",
+      "result_sha256": "e6e95563be0a9f3dd3c002e3707a84ede3204500fe8b6d3a63916adfc5ca87fa",
+      "raw_sha256": {
+        "stdout.raw.log": "fc9640dade89ddb42fe10da13efb25e87c06eddfe432747ebe14a7fb99c7a3b1",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "4c5db9b48a55dd68174d0b905db5783b68f4b56267704fa2983e54652abd9ccf"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/pack-z0hybx_c",
+      "pid": 96602,
+      "verb": "pack",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "pack",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "--disable-build-servers",
+        "-m:1",
+        "--output",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/packages",
+        "-p:ContinuousIntegrationBuild=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/pack-z0hybx_c/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "62f603ed604873d176a3aec10cd78dfa5d06beaf653d6e86da8d923a7d7c6047",
+      "result_sha256": "4e65f4dfa91a7e80b53ba79a066f9a69b9355efede6fea1490e7fbf87dd34477",
+      "raw_sha256": {
+        "stdout.raw.log": "60144e7028e3027dd23b20a2aab20a653565739a726752f8f1814c60f9c0eb0d",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "60fac91cbf458084320f23289e3a4f1b95984a4c3483d05aacfbaa45dc0224c7"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/pack-ebc69k_k",
+      "pid": 96618,
+      "verb": "pack",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "pack",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/src/Transports/ViciOne.ServiceBus.AzureServiceBus.Testing/ViciOne.ServiceBus.AzureServiceBus.Testing.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "--disable-build-servers",
+        "-m:1",
+        "--output",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/packages",
+        "-p:ContinuousIntegrationBuild=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/pack-ebc69k_k/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "7ad3794d98f1c4c1cc0ea4d5efc8ac8acf39e09961cbe13242c1e3b108427f39",
+      "result_sha256": "cca15eebc5c236445ff5d511b0e665516e0d97920314bf0bf20fca332765c40c",
+      "raw_sha256": {
+        "stdout.raw.log": "78ca3d1f78e07eda06d0dac71ae3243ac9972254a83ce2b1c3d95364a6939659",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "ffbb8c169099fda923fa5cc42447db4fff23503a022b56a4b554177eb6f1c0e0"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/pack-54up85bz",
+      "pid": 96629,
+      "verb": "pack",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "pack",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/src/Transports/ViciOne.ServiceBus.EventHubs.Testing/ViciOne.ServiceBus.EventHubs.Testing.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "--disable-build-servers",
+        "-m:1",
+        "--output",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/packages",
+        "-p:ContinuousIntegrationBuild=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/pack-54up85bz/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "a1a752f27beff092cb34bbfacc94ab5040ab71798b214e5a8dd0f5bdc56c7dad",
+      "result_sha256": "eefb40cb5f74db2df6fe792881490d83ab51cf1d0acac77e9618d224f098e077",
+      "raw_sha256": {
+        "stdout.raw.log": "4df285d378799e80eb6ebf181ce26b0adbd69d814b6d0407365a905dca327e23",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "2cd856928523d7d500856347956cc70968427f6be7dd8b10bf1f388e9eaccb98"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/pack-j1z58oxi",
+      "pid": 96635,
+      "verb": "pack",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "pack",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/src/Transports/ViciOne.ServiceBus.RabbitMq.Testing/ViciOne.ServiceBus.RabbitMq.Testing.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "--disable-build-servers",
+        "-m:1",
+        "--output",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/packages",
+        "-p:ContinuousIntegrationBuild=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/pack-j1z58oxi/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "69bce063ecd164eb6a689733f3550392a0400e4bb561383c16e277dcd63e35bc",
+      "result_sha256": "cde21e0db8564c828e85603a7ca4b2a25e8868a0b43ba0da2fa7a8ddf83cec8b",
+      "raw_sha256": {
+        "stdout.raw.log": "439e2e05f9717b7738fdd9a3e33a37ff76ecaa7fdbd101c02a64f3b22b1d0d80",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "e19cb95f3423ca10b7d03b9e5d040232f0a173ac9f08bc089677d00d9f7aa01e"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-tczt_u_d",
+      "pid": 96640,
+      "verb": "restore",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "restore",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/tools/public-api-baseline/ViciOne.ServiceBus.Build.PublicApiBaseline.csproj",
+        "--locked-mode",
+        "--disable-build-servers",
+        "-m:1",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-tczt_u_d/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "e2f11b8f590004cc2b24fa18132b35bb9689f362d3f433c039439ae04262136a",
+      "result_sha256": "c517d4e746796270aa9c61568e8aa457a24cc1318e826942ca6dde7c99204d74",
+      "raw_sha256": {
+        "stdout.raw.log": "7bde971191501dd4224dd3621e889bb3785c86e03551f32cd077189626f558e6",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "df0c41ad403c78471922813510a715badf2490adf7ea9a8ad3469d4b753531ff"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-l9zkz4wy",
+      "pid": 96655,
+      "verb": "restore",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "restore",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/DeveloperJourneys/ViciOne.ServiceBus.Samples.DeveloperJourneys.csproj",
+        "--configfile",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/NuGet.config",
+        "--force-evaluate",
+        "-p:NuGetLockFilePath=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/locks/ViciOne.ServiceBus.Samples.DeveloperJourneys.packages.lock.json",
+        "-p:RestoreLockedMode=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-l9zkz4wy/msbuild.binlog",
+        "-p:UseSharedCompilation=false",
+        "--disable-build-servers",
+        "-m:1"
+      ],
+      "start_sha256": "02d6fd5f5a83ad1181624c1cad1a2c3ab9a36557355a523bf8bb51a961c211df",
+      "result_sha256": "a000758b87695d9fb6750f315c26dde5507f4e983d38318cc37c34a9fd4c5307",
+      "raw_sha256": {
+        "stdout.raw.log": "7860e04ee141fd984361b25f18053a4a21fa0d9eafbb75d8a57ff8f3a35ec7c2",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "00b9f6bfd15d74270719fd34d6b3143b88d9cf0d097127d96c8440e9fb3548b7"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/build-twxlx1oj",
+      "pid": 96669,
+      "verb": "build",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "build",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/DeveloperJourneys/ViciOne.ServiceBus.Samples.DeveloperJourneys.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "--no-incremental",
+        "--disable-build-servers",
+        "-m:1",
+        "-p:RestoreLockedMode=true",
+        "-p:TreatWarningsAsErrors=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/build-twxlx1oj/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "5ec03fd2afb28683619266de4ce4d4bb3e8b850bcb5ce0edad175ccab8628498",
+      "result_sha256": "ed07c057658e2d743623a0823947348a9d04542c6df2fdfe64e3d006dd80e503",
+      "raw_sha256": {
+        "stdout.raw.log": "a2718cd81c592b4c038f11a21b12d70564e2f1f7a3295f6bb123b6bc83d09a86",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "ab9883236bc18437ce53b5f4c4a1f521d13de174e1d19fe595077716bad4043d"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/run-nd27hwh1",
+      "pid": 96705,
+      "verb": "run",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "run",
+        "--project",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/DeveloperJourneys/ViciOne.ServiceBus.Samples.DeveloperJourneys.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore"
+      ],
+      "start_sha256": "2efb0aaa9e9ef94751022200a9f6c712cf82b6ed82e1ed450bc86800143a455e",
+      "result_sha256": "3d0e9284acb507e797d3329f5d4860bc9cb6c6d50ff281d6d53abd5c01be39a7",
+      "raw_sha256": {
+        "stdout.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-7jjoio30",
+      "pid": 96711,
+      "verb": "restore",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "restore",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/PackageConsumers/AzureServiceBusTesting/ViciOne.ServiceBus.Samples.AzureServiceBusTestingPackageConsumer.csproj",
+        "--configfile",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/NuGet.config",
+        "--force-evaluate",
+        "-p:NuGetLockFilePath=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/locks/ViciOne.ServiceBus.Samples.AzureServiceBusTestingPackageConsumer.packages.lock.json",
+        "-p:RestoreLockedMode=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-7jjoio30/msbuild.binlog",
+        "-p:UseSharedCompilation=false",
+        "--disable-build-servers",
+        "-m:1"
+      ],
+      "start_sha256": "293e381beace720b35e03bd6843735fa25865d7fee88e8a8d9f6ccd8bec788b2",
+      "result_sha256": "46c699f71d852fed78c38f31c45b77678495dab94f0068f86a4e2c74bb158852",
+      "raw_sha256": {
+        "stdout.raw.log": "b786dd74ee11e01f8adc50c90fa284845c0108569bbdd0ecdaa73b7c58302464",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "7a1569531ae6e0dc06ca2ac3086d9153803101d6bd22ecddc4a3bf924bb66ccd"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/build-w5t5vq2s",
+      "pid": 96713,
+      "verb": "build",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "build",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/PackageConsumers/AzureServiceBusTesting/ViciOne.ServiceBus.Samples.AzureServiceBusTestingPackageConsumer.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "--no-incremental",
+        "--disable-build-servers",
+        "-m:1",
+        "-p:RestoreLockedMode=true",
+        "-p:TreatWarningsAsErrors=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/build-w5t5vq2s/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "9d65e7827605b74463bd3d60a047b4340932dd08ae7b1e33043d610d4406bfaa",
+      "result_sha256": "c2bf1d52dfb7fbae790b6c1609388ef142b59bc5b761cec16a2c6860f18783ed",
+      "raw_sha256": {
+        "stdout.raw.log": "c480023eb629ae73f11c8b2fe32459f42e29650ce7b7429abf504220915371eb",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "dfa52a58ce1db247df389d50547079f9b42c8a5f811a700b3f6441c7618424d1"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/run-76t9ydpg",
+      "pid": 96755,
+      "verb": "run",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "run",
+        "--project",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/PackageConsumers/AzureServiceBusTesting/ViciOne.ServiceBus.Samples.AzureServiceBusTestingPackageConsumer.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore"
+      ],
+      "start_sha256": "2e6d407129e33f9d288b2490511ce38a2d015754e4ff07532459073677105d82",
+      "result_sha256": "9ab58ea513c47f0371e88f28c593a76750b8a026402373c5794cc3bda4d508cb",
+      "raw_sha256": {
+        "stdout.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-np2v4f6w",
+      "pid": 96759,
+      "verb": "restore",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "restore",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/PackageConsumers/EventHubsTesting/ViciOne.ServiceBus.Samples.EventHubsTestingPackageConsumer.csproj",
+        "--configfile",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/NuGet.config",
+        "--force-evaluate",
+        "-p:NuGetLockFilePath=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/locks/ViciOne.ServiceBus.Samples.EventHubsTestingPackageConsumer.packages.lock.json",
+        "-p:RestoreLockedMode=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-np2v4f6w/msbuild.binlog",
+        "-p:UseSharedCompilation=false",
+        "--disable-build-servers",
+        "-m:1"
+      ],
+      "start_sha256": "9dff73e1eb4601ab0c32ebda054cf33a9887a10e358784eeb92a13ba9e594f69",
+      "result_sha256": "c2ba4cea910eae1a574572043880421c246f2500ac146d6ecf0fbcf7616ce4cd",
+      "raw_sha256": {
+        "stdout.raw.log": "61ac6a3cd53ca9e2d175ded02924c24eb87d31e08a7c03593ab7c7e872646796",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "5e27215fb0ebe6c3936fb6f91fad6b54dfaf8689791e48291c6d2a6ac3a5cd73"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/build-ypszpzkm",
+      "pid": 96761,
+      "verb": "build",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "build",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/PackageConsumers/EventHubsTesting/ViciOne.ServiceBus.Samples.EventHubsTestingPackageConsumer.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "--no-incremental",
+        "--disable-build-servers",
+        "-m:1",
+        "-p:RestoreLockedMode=true",
+        "-p:TreatWarningsAsErrors=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/build-ypszpzkm/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "acd675db88e2768c4e0c2e7e4e998670f3dd067168a78b2e76e3f0d938cf4a72",
+      "result_sha256": "d3a7e66c3e169a1a79e0df2001361399ab3baf67908be2440ad8bec75781815f",
+      "raw_sha256": {
+        "stdout.raw.log": "05213adb43a74aca0be2e51898a01950ec9d689175de87cd571633bd8e2e32a5",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "0d303ff825015d76248f82e8c2762d470a396ff9eb0784ce4e9f0d546a857637"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/run-ua00axd5",
+      "pid": 96771,
+      "verb": "run",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "run",
+        "--project",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/PackageConsumers/EventHubsTesting/ViciOne.ServiceBus.Samples.EventHubsTestingPackageConsumer.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore"
+      ],
+      "start_sha256": "64cb0df6e0ee27b227f67029b1efa86c275576de1c1d967f46182196a7993492",
+      "result_sha256": "7dcb05463f39e59cf76078556bb295c88596f33645c65df22e930d661facf07f",
+      "raw_sha256": {
+        "stdout.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-q_zm10ms",
+      "pid": 96782,
+      "verb": "restore",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "restore",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/PackageConsumers/RabbitMqTesting/ViciOne.ServiceBus.Samples.RabbitMqTestingPackageConsumer.csproj",
+        "--configfile",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/NuGet.config",
+        "--force-evaluate",
+        "-p:NuGetLockFilePath=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/locks/ViciOne.ServiceBus.Samples.RabbitMqTestingPackageConsumer.packages.lock.json",
+        "-p:RestoreLockedMode=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-q_zm10ms/msbuild.binlog",
+        "-p:UseSharedCompilation=false",
+        "--disable-build-servers",
+        "-m:1"
+      ],
+      "start_sha256": "8d9b7d27cde3de75d5ef5a0ff028f3f93c9a74a7bc0aa09a6ab3d8603cac15e4",
+      "result_sha256": "09487dd1284f2a9689ec510a1dbd2009a903ee239a7a449b7ba5b19f3be3d5cf",
+      "raw_sha256": {
+        "stdout.raw.log": "6c254192190a50b42d458f6a6b3114477e686930af6a4fa914fb2499edaaed2a",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "54b29ee3725280973b70fbe8a3a2ee4f69a79545517756c81b55cc23d55f1746"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/build-d3dhtxlw",
+      "pid": 96799,
+      "verb": "build",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "build",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/PackageConsumers/RabbitMqTesting/ViciOne.ServiceBus.Samples.RabbitMqTestingPackageConsumer.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "--no-incremental",
+        "--disable-build-servers",
+        "-m:1",
+        "-p:RestoreLockedMode=true",
+        "-p:TreatWarningsAsErrors=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/build-d3dhtxlw/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "9b111c5aab087ce2ff5d90572e7f78ddad8bbca2691a26f494391f2819a23caf",
+      "result_sha256": "e661ebb56c5248284f7b66ae8d8289be063db0b788fa813f0fb908a9d1aaafcf",
+      "raw_sha256": {
+        "stdout.raw.log": "c9a5f9f277eddcb9dbd174f98664896c410e0e1739700add1bafb2eb6107b5e7",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "4ba806dc8c801813aa86ca5dbd7e403f4d53574bec1a8f5bc5188000fb5fa7ad"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/run-jxj6nwx3",
+      "pid": 96818,
+      "verb": "run",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "run",
+        "--project",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/PackageConsumers/RabbitMqTesting/ViciOne.ServiceBus.Samples.RabbitMqTestingPackageConsumer.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore"
+      ],
+      "start_sha256": "597435316a6799b5a27b61297da749232da86ca2edfb73a25715a296fd270b6e",
+      "result_sha256": "1a2e69c8a9768616c0fa609d67b5ced8dbde8ca9e6aa0e00d2f9ebcee97e7de0",
+      "raw_sha256": {
+        "stdout.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-h606ji_d",
+      "pid": 96832,
+      "verb": "restore",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "restore",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/PackageConsumers/SignalR/ViciOne.ServiceBus.Samples.SignalRPackageConsumer.csproj",
+        "--configfile",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/NuGet.config",
+        "--force-evaluate",
+        "-p:NuGetLockFilePath=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/locks/ViciOne.ServiceBus.Samples.SignalRPackageConsumer.packages.lock.json",
+        "-p:RestoreLockedMode=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-h606ji_d/msbuild.binlog",
+        "-p:UseSharedCompilation=false",
+        "--disable-build-servers",
+        "-m:1"
+      ],
+      "start_sha256": "bbae5589fd729cb60069d067493cc565ab943f2c94b59b681aaad1c53a7d91fe",
+      "result_sha256": "1b284aafdfa91a736da274bea18ff27dcf9cbcf9c0cfe79867fc3fa0cf873a7e",
+      "raw_sha256": {
+        "stdout.raw.log": "edf36256112081345249974314b86541d748686d2b9b28d9c456eaf563780a0a",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "ec9d6ef42fe1bb39617d8a8ad7999dbb38435c60f66f70a46e53de5d3ddd60f7"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/build-lwkdyquv",
+      "pid": 96853,
+      "verb": "build",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "build",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/PackageConsumers/SignalR/ViciOne.ServiceBus.Samples.SignalRPackageConsumer.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "--no-incremental",
+        "--disable-build-servers",
+        "-m:1",
+        "-p:RestoreLockedMode=true",
+        "-p:TreatWarningsAsErrors=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/build-lwkdyquv/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "5ef4ae3f4a7c5b03780fdcc02fd75f8490ec904968f293891e0a6d5ca3d82c70",
+      "result_sha256": "9665b466fe59b36ce114d25df17bc65f6561741a4f7f640f8aef3a8ae9ca075b",
+      "raw_sha256": {
+        "stdout.raw.log": "e8a78cdb2147a52787c232ff552d1ad024d1abce684df9e5bc6fba2a4dc9e9ff",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "6c72a6026d2f59d9df0621194179a83305da49d19bcc21fc4f9a0d1bf3714de3"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/run-bjdmkcll",
+      "pid": 96874,
+      "verb": "run",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "run",
+        "--project",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/PackageConsumers/SignalR/ViciOne.ServiceBus.Samples.SignalRPackageConsumer.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore"
+      ],
+      "start_sha256": "40d7d6a1d40feb25776bd3d61737974ad28b5640741c38f1f7477869e0ad6b2c",
+      "result_sha256": "6e2c261b92e093ef254cab53f38f7a59cc0919780dee59835df675aeffb12431",
+      "raw_sha256": {
+        "stdout.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-b0eu04nf",
+      "pid": 96889,
+      "verb": "restore",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "restore",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/PackageConsumers/PublicApiBaseline/ViciOne.ServiceBus.Samples.PublicApiBaselinePackageConsumer.csproj",
+        "--configfile",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/NuGet.config",
+        "--force-evaluate",
+        "-p:NuGetLockFilePath=/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/locks/ViciOne.ServiceBus.Samples.PublicApiBaselinePackageConsumer.packages.lock.json",
+        "-p:RestoreLockedMode=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/restore-b0eu04nf/msbuild.binlog",
+        "-p:UseSharedCompilation=false",
+        "--disable-build-servers",
+        "-m:1"
+      ],
+      "start_sha256": "e5ba0a7e6edd2a52ee0bdce8a67c91b92260c9037b12451a4eae8fc04a0ffefe",
+      "result_sha256": "25ce606de802ac162818e764ff7512282ae634e9c65643a2d28d3b596eafd007",
+      "raw_sha256": {
+        "stdout.raw.log": "5fe2de454a07df0c9bae45845c8aa5afe628acc8437352a9828f19c3db9c3e58",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "f8d65549055cb598eb0e4af2b8b33d67111529a4dc6e6636619acaacae6e1db8"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/build-5psgncnz",
+      "pid": 96943,
+      "verb": "build",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "build",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/samples/PackageConsumers/PublicApiBaseline/ViciOne.ServiceBus.Samples.PublicApiBaselinePackageConsumer.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "--no-incremental",
+        "--disable-build-servers",
+        "-m:1",
+        "-p:RestoreLockedMode=true",
+        "-p:TreatWarningsAsErrors=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/build-5psgncnz/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "6415ecdaab2810547b7199c5acae9a6187de2179e24b1ac931cfaaa4012f607c",
+      "result_sha256": "824e10b51f19ca9d51d3dc1212f3b5c3300aefe90da0481b64071b613790811e",
+      "raw_sha256": {
+        "stdout.raw.log": "136170f690e8d18f6d93eb12f823caa8259aaa7df535d931047a5ebdc1c1f992",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "decaa41600595449d3e3e0cb3b109bd987523b0e141ab0359af0a7f5fc097aa0"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/build-fssmyxdz",
+      "pid": 96967,
+      "verb": "build",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "build",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/tools/public-api-baseline/ViciOne.ServiceBus.Build.PublicApiBaseline.csproj",
+        "--configuration",
+        "Release",
+        "--no-restore",
+        "--disable-build-servers",
+        "-m:1",
+        "-p:RestoreLockedMode=true",
+        "-p:TreatWarningsAsErrors=true",
+        "/bl:/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/build-fssmyxdz/msbuild.binlog",
+        "-p:UseSharedCompilation=false"
+      ],
+      "start_sha256": "c59ae3166727a845c69b382c09767648db501b2537d5928ab97144f2dbb035f7",
+      "result_sha256": "911282a6a0580f1cbeeabe454b2960b10147ffb2c01f186a11fab170f23b8bcb",
+      "raw_sha256": {
+        "stdout.raw.log": "3d8bbb5475da827dff789ea311d2e845ebcb0c110cacf3ea21eef35d4b2d2c56",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "msbuild.binlog": "a5a790b11db70ed6a68d73f52e0107857fad7a1c9ad5923af6a37b19f4b1e33d"
+      }
+    },
+    {
+      "directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/run-vyckf5g7",
+      "pid": 96990,
+      "verb": "run",
+      "command": [
+        "/usr/local/share/dotnet/dotnet",
+        "run",
+        "--project",
+        "/private/tmp/vicione-servicebus-local-completion-20261008-package-journeys-current/tools/public-api-baseline/ViciOne.ServiceBus.Build.PublicApiBaseline.csproj",
+        "--configuration",
+        "Release",
+        "--no-build",
+        "--no-restore",
+        "--",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/global-packages",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu/packages",
+        "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/public-api-contract.txt"
+      ],
+      "start_sha256": "7a0642ee832bbf867793957a45474039b4b442e019b99736347f6522f04002bc",
+      "result_sha256": "40053d90fce63178b74ac930eccc286e6bc4cc3ee1a4fc307da0389eb9428512",
+      "raw_sha256": {
+        "stdout.raw.log": "f92e2977c7d416f881df3f7181a9d22fb7383f766e4d2262f0b57f85ae8cd9ea",
+        "stderr.raw.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  ],
+  "counts": {
+    "restore": 12,
+    "pack": 5,
+    "build": 7,
+    "run": 6
+  },
+  "all30_steps_actual_joined_zero_group_absent_crc_qualified": true,
+  "parent_shell_pid": 94817,
+  "parent_shell_group_absent": true,
+  "parent_exit_code_observed": null,
+  "aggregate_receipt_missing": true,
+  "tool_session33477_unavailable_after_user_steering": true,
+  "source_guard6186_each_and_protected85_build11_match": true,
+  "packages31": {
+    "ViciOne.ServiceBus.1.0.0.nupkg": "e5df5dcbc8f60609d47a7a74bb4694848289d79d2b0e16426f21cd16beed1a54",
+    "ViciOne.ServiceBus.Abstractions.1.0.0.nupkg": "42a8ca2fdc55a923df117479bdce8cc15b974829fc01ef58b91a7177affe8a2d",
+    "ViciOne.ServiceBus.ActiveMq.1.0.0.nupkg": "b55dde46d3d634ba3985196b66651803eb20fe6c1e5b1acbfec061ad23a70965",
+    "ViciOne.ServiceBus.AmazonS3.1.0.0.nupkg": "b3e71d730f9cef30fb2735c5a9d6afe53bb605707240b34fd01fdb969fc1d9b0",
+    "ViciOne.ServiceBus.AmazonSqs.1.0.0.nupkg": "5e8f6a11b43746247e7e6df7b58512e2fd1a4a2679dbe7fe01d473fff1319ef3",
+    "ViciOne.ServiceBus.Analyzers.1.0.0.nupkg": "4383f74eadc417657a0a51ad7ef4c564d1c80a4d8d1fa21c3aab3b6e1d7d1ebd",
+    "ViciOne.ServiceBus.Azure.Storage.1.0.0.nupkg": "43a70db97adcaa740cfbc19671fce93df892bdba83fbdb3d93f8ca7b65618075",
+    "ViciOne.ServiceBus.Azure.Table.1.0.0.nupkg": "eee1caaa08222bf1e960bf02ff348604ea0f17d4f7972956d2a74a7437bd2f77",
+    "ViciOne.ServiceBus.AzureServiceBus.1.0.0.nupkg": "b1b5aa384cd4558c882d766e8a0f25713f3190ba9b32509bc105dffce9f33958",
+    "ViciOne.ServiceBus.AzureServiceBus.Testing.1.0.0.nupkg": "63ee3d771bd27d76f6217a26d0f5dc51ad0851f3316e4b53ed2af4e02154fb57",
+    "ViciOne.ServiceBus.Courier.1.0.0.nupkg": "01b40469257750819caf10fc8c087df93a94212059a1e6bc577b9b02a150396a",
+    "ViciOne.ServiceBus.DynamoDb.1.0.0.nupkg": "80498964bf9bfed69ed7124e4ffc62993db281128a5eb64a06d5d63709bb8347",
+    "ViciOne.ServiceBus.EntityFrameworkCore.1.0.0.nupkg": "04ab2ec1462dd5af582b661b9bc337f77008284116c61b5ec3aa1d955b6b0aa6",
+    "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.1.0.0.nupkg": "4c1e53babd0196d98d82373e648720aab845e7ef8c7f6cece9663f63c95dfb0f",
+    "ViciOne.ServiceBus.EventHubs.1.0.0.nupkg": "4c7a0337bc89055e1005a5ecd5f49f8ab2211cc2cfb1aa0ac7e3038ba9a3542f",
+    "ViciOne.ServiceBus.EventHubs.Testing.1.0.0.nupkg": "6e72dc0a59c1d82e0327c643bdec51a0135810ebad699619300c5083525fb4ae",
+    "ViciOne.ServiceBus.Futures.1.0.0.nupkg": "536e97eeb3c345a5829e9cd6606a2228265c9dd1580dd49d9f0301440dcfbdf2",
+    "ViciOne.ServiceBus.Initializers.1.0.0.nupkg": "4d12c29846a3e8961bb399daddd1bf83485221baa800f1144b9513b9dba00307",
+    "ViciOne.ServiceBus.JobService.1.0.0.nupkg": "eaa77cb7af137853d06b2dbd6c6ea635883fdaff3a5303602d7ee9dce957664a",
+    "ViciOne.ServiceBus.Mediator.1.0.0.nupkg": "4eb843cc0b7a22d97640f42b92899452c4af592db8b301c1a413ccb9935baaf7",
+    "ViciOne.ServiceBus.MessagePack.1.0.0.nupkg": "bc9136556ba2c7394bd631fb20b11a3bf68dd1096fb9c8a53039472666994824",
+    "ViciOne.ServiceBus.Quartz.1.0.0.nupkg": "d44617d380d50376efdc799c1ddbee0e51adfb5efaa809ace4ec2ae1a9c0efbb",
+    "ViciOne.ServiceBus.RabbitMq.1.0.0.nupkg": "6f4282153173c436ce13753cc89385ee22da9fd418cec1c862dcb2c1595e1301",
+    "ViciOne.ServiceBus.RabbitMq.Testing.1.0.0.nupkg": "48d5058f28fd336bf8686f8aa82c545576668412d2cc746d197f877fe9fd9be3",
+    "ViciOne.ServiceBus.Sagas.1.0.0.nupkg": "761aaa8ee105262ac793a417752a299b65d51d7fa47c89a332dd690c25731737",
+    "ViciOne.ServiceBus.SignalR.1.0.0.nupkg": "535288a3ce60b2a1b4bad1cef301f66847c01a21fc32ac4a008ed39170552b1d",
+    "ViciOne.ServiceBus.SqlTransport.1.0.0.nupkg": "420bde966d39fb539a4309c40b86b8789d54bc73b936c33d7f559472f4fa44c1",
+    "ViciOne.ServiceBus.SqlTransport.PostgreSql.1.0.0.nupkg": "a14fe9afda458fe4188002bdc338d7a91da08d26f23ba30086e5d8edaf550fa3",
+    "ViciOne.ServiceBus.SqlTransport.SqlServer.1.0.0.nupkg": "fa1f4e3c5b2b45aac96ca919d670cbf764dd08f5319e3efde3eba96707e7f641",
+    "ViciOne.ServiceBus.StateMachineVisualizer.1.0.0.nupkg": "bb30015fa8d6c3034e5fdb7560365133952090ea879e196e890a1db9b6e011c4",
+    "ViciOne.ServiceBus.Testing.1.0.0.nupkg": "8b21dc7c62b04db43c90ff18f2fb0399a04bf3fe85324416a77326c6588b1d38"
+  },
+  "run_root": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package07-developer-journeys/current-default-package-pipeline-native-r4/retained/run.sM9WDu",
+  "public_api_baseline_sha256": "493c48624b80c801824bf6caee9b7e6b960b6608335bebaee97da97208e44252",
+  "actual_public_api_sha256": "e9616090b09c593c8a53cdb24c3404570076706ba8044684d72f3431ea797e5e",
+  "public_api_diff": {
+    "old_lines": 20118,
+    "new_lines": 20119,
+    "change": "exactly1additiveUsingAmazonSqs<TBus>line",
+    "inserted_line": "METHOD public static System.Void UsingAmazonSqs<TBus>(ViciOne.ServiceBus.Configuration.IBusRegistrationConfigurator<TBus> configurator, System.Action<ViciOne.ServiceBus.Configuration.IBusRegistrationContext,ViciOne.ServiceBus.AmazonSqs.IAmazonSqsBusFactoryConfigurator> configure = null [nullability={read=Nullable;write=Nullable;arguments=[{read=NotNull;write=NotNull},{read=NotNull;write=NotNull}]}]) [generic=TBus{flags=ReferenceTypeConstraint;constraints=[ViciOne.ServiceBus.IBus];nullable=[1];unmanaged=false}]"
+  },
+  "raw_pipeline_stdout_sha256": "4801334bcc5469f461ad575e5bef14f9cea7f8f70a72adcd505ceb993f30d122",
+  "raw_pipeline_stderr_sha256": "b5e297bae3192b68a1d397ecbd8652455fb3bcf467b27dc9df5467885ae163f8",
+  "limits": "Default fullgate didNOTPASS: actualAPIcmp mismatch retained. OuterPythonaggregate/parentjoinexit unavailable; no inferredoverallreturncode, no canonicalSDKrerun or hardware/cloud/coverage/all18flows. 30 actual SDK steps0 are bounded stageproof only. No blind baseline reset or producerlockupdate."
+}

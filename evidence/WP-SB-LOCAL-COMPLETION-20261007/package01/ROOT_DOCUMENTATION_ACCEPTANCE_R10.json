@@ -1,0 +1,16 @@
+{
+  "kind": "ROOT_CURRENT_DOCUMENTATION_R10_ACCEPTANCE",
+  "status": "ACCEPTED",
+  "freeze_sha256": "f525a64bd366f5a7c17fe0e7c9d52c20f12934c0084d7e19c27b535863734a36",
+  "independent_review_sha256": "91952be78f70b3c0a5a80b78e803e0c1b9fadd49e43fa4d53bac61c4cd3bc8bd",
+  "files": {
+    "CHANGELOG.md": "21bd643953bab83a68491206809239a2095f60284d5ecd2767f8e3d316c47fa2",
+    "TODO.md": "58b570fc75dda55a077f80311cad284ed4b0c6fdf12aa2bcbe1c3fb43066b90b",
+    ".testagent/status.md": "c5af877786ff30a99224f457c709f382014dfc6331678452b944fe58154be6f3",
+    ".testagent/plan.md": "2c7eba5bcb8a1ccc70623c59bbc5eb54e35a0597591cd429d005dbe6aec48c6f",
+    ".testagent/local-completion-plan.md": "f20b7950775e2f20d35a44478bd83512f8992eae0dc147b5c8987028ec73d5af",
+    "docs/quality-status.md": "dae6d4698be6a7d4529e2752f9ec458658b1281219ec385d0555892924c7a92d"
+  },
+  "c2_root_acceptance_sha256": "2b235155ea2dfb43d8aac04179aca1e8f98f9f71a11148b7bc50f5d8fa3a726d",
+  "scope": "Sixdocs boundedC2 accepted; R9/historicalAudit234/62OBL retained. Otherduration/cold/otherlocal/cloud/hardware gates open; no provider durability or C3nativeclaim."
+}

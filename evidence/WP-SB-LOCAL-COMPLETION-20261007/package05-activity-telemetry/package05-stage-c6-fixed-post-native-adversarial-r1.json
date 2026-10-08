@@ -1,0 +1,3420 @@
+{
+  "status": "QUALIFIED_UNCHANGED_FIXED_POST_NATIVE38_PASS__FINAL_AGGREGATE_PENDING_M5_REVIEW",
+  "reviewer": "continuation_adversarial internal independent read-only",
+  "post_result": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/RESULT.json",
+    "sha256": "b1651527d5a7cd0525ccfa66599e914c456e6be8c5913d32badffe744942d564"
+  },
+  "fixed_initial_result": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-r1/RESULT.json",
+    "sha256": "26dc6e30afee65f8db6c640423b2d187a73ad4fdbcde232671d57f255b4347f0"
+  },
+  "runtime17_initial_post_current_actual_byteidentical": true,
+  "source5_O_C3_snapshot_exact": {
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/PublicTelemetryCleanupIsolationTests.cs": "cd45b4f583f32312ba3eb8f58aa18eaf2b8f115fa3f4c831fbfab7405f30126c",
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/ActiveTelemetryCleanupIsolationTests.cs": "4ba3b7f61891cfff983161224666d108ef776aaa4cad00675a395928affdd635",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "6e93640a343c2d9328c9d40b410a060ed2052307a6e6482ee17c3026a26e0503",
+    "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs": "5d87f3120de34a96403e05378a1d0b5f9e834aedb45cf526b4b131281f864849",
+    "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs": "8c7532245dc15130c4adf8d06e6b4434061c6a3a60a57f682621d7489e407a34"
+  },
+  "source_freeze_sha256": "77f915ff6878f953fb940f704d843c1899485fe751991b57755f8dcc69f95896",
+  "Core810_84_context": {
+    "proof_sha256": "0398e2960671b582484cca755d5467b6284ec45862053a89ac8d93734e2fdb3a",
+    "all810_current_owner_O_C3_same": true,
+    "all84shared_O_C3_same": true,
+    "Root_personal_read_not_transferred": true
+  },
+  "native_session": {
+    "post": {
+      "session": 22443,
+      "joined_exit": 0
+    }
+  },
+  "native_counts": {
+    "total": 38,
+    "passed": 38,
+    "failed": 0,
+    "skipped": 0,
+    "new_focused_child_process_cases": 0
+  },
+  "actual_all38_individual_ids": [
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionBothFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionTimerFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: ActionObserverFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneObserverFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: WaitCancellation)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneTimerFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupAggregateAndTimerFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: StandaloneBothFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: WaitCancellationBothFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.ActiveTelemetryCleanupIsolationTests.ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(scenario: SetupTimerFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: ActionAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: WaitCancellationAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: ActionAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: WaitCancellationAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: ActionAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: WaitCancellationAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: StandaloneCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: WaitCancellationAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Send, scenario: Healthy)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: StandaloneCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: StandaloneCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: WaitCancellationAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: ActionFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Publish, scenario: StandaloneCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request1, scenario: StandaloneCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request3, scenario: ActionAndCleanupFailure)"
+    ],
+    [
+      "erfolgreich",
+      "ViciOne.ServiceBus.Tests.Monitoring.PublicTelemetryCleanupIsolationTests.CallerPreservesBodyOutcomeAndReleasesActualTracker(family: Request2, scenario: ActionAndCleanupFailure)"
+    ]
+  ],
+  "whole_read": "All38 exact native events and summary personally consumed untruncated with only identical repeated von-runtimepath lines omitted. Initial combined metadata/log truncation grants no extra read credit. Exact prior complete source2/tests2 bodies and author-reading hash chain reused only samebytes. Full archives/hash/PE/PDB/provenance independently checked.",
+  "runtime17_hashes": {
+    "ViciOne.ServiceBus.Tests.runtimeconfig.json": "9950d4583cfc9a106857c0d5b8a75b53e8774852b57b80bc3823a74d44a4d87f",
+    "ViciOne.ServiceBus.Tests": "a485b3d277bb128b832f9ac839cc04ed7da029ba9aaf40f0d4001582d08c513e",
+    "ViciOne.ServiceBus.Mediator.dll": "88ddf8fbf9f3d8ba46814c4ed1bdb32747fd5466af3d6cc1cc1e616dd24d37a3",
+    "ViciOne.ServiceBus.JobService.dll": "4d8a513cde01189e6cacb06d0045ec6309cf5faffd7fbbcc3d009da772b78cf7",
+    "ViciOne.ServiceBus.Tests.testconfig.json": "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f",
+    "ViciOne.ServiceBus.Testing.dll": "d2f9164f0dc281ef803ed6f9a3714a918b1a846d4f3fb9af86e901b594e00c45",
+    "ViciOne.ServiceBus.Courier.dll": "7134e5a0d17928653adb661a775be6b17462fb17bfa03029a7425245ae1dea33",
+    "ViciOne.ServiceBus.Futures.dll": "368f597a366d61cde01fed7f42b43ea10727b4734526cb3de40f4855bdfb39cb",
+    "ViciOne.ServiceBus.Abstractions.dll": "a28e0008303678d3638e39626955583ca3b3cc21c8ea59041a07365f6a09d26c",
+    "ViciOne.ServiceBus.Initializers.dll": "98599379e2ae5b2555e25cb95fb34dac02791b786f68a626dcd68faedf67fe30",
+    "ViciOne.ServiceBus.Sagas.dll": "51fbeaf2e71b22ad03e054b579bd8d8170a28992a9e82d5dd22d7cfdf4aeab68",
+    "ViciOne.ServiceBus.Tests.pdb": "20bbcae57ab0fb6b3c16043b1d3aa97e174ddbb1e31bcff1e91e7bbb851e50ba",
+    "ViciOne.ServiceBus.Tests.Infrastructure.dll": "a80ecbeadeb3f179dcbdc44b19253a46e8575aaefa0f35b586bddf0e6af77cc9",
+    "ViciOne.ServiceBus.dll": "946e8fb2d349456c9954e5dbf07474b7a7527e298b5a8c3049b763e0356f23b8",
+    "ViciOne.ServiceBus.Tests.dll": "62b22f9f3323ae501ae0c061cb6867f4c92ced605ae6d82ebfd35f99752d774b",
+    "ViciOne.ServiceBus.Tests.InternalAccess.dll": "83ab90f3b61c6ab856047764bb8d8f906a44a31663e1e1f365036bf43321d862",
+    "ViciOne.ServiceBus.Tests.deps.json": "ebd7e9743b85cadf35d729ceb9e51687088d9e1a60a6f25d8f8c8a09de8ed223"
+  },
+  "raw2_hashes": {
+    "p05-c6-fixed-post-r1.log": "924a2b7a5da4f4eb6a7f0242fbdb18cf11a63bf15205f967861ef8a67a676032",
+    "p05-c6-fixed-post-r1-20261007-045308--84625--8uOzeS-dotnet-test.binlog": "b098ed33c8293de4f1de7b69d68342b5e11a2006734f0e78417c1b59c597fe3e"
+  },
+  "PE_PDB12": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/runtime/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "a28e0008303678d3638e39626955583ca3b3cc21c8ea59041a07365f6a09d26c",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4274475132,
+          "guid": "3cbb930b-7da8-4168-960c-f946f40fc97c",
+          "path": "ViciOne.ServiceBus.Abstractions.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "0b93bb3ca87d6841960cf946f40fc97c7c50c7fe",
+        "sha256": "7c89b67e5857032ebe37b36360d319986712d35fb7cfd665fa3d8fc59452350b",
+        "documents": 700,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 700
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "defb9383f38577b507584af212fd30787dc5817c4f2d5a19c0ad9ab63c0ab966",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/runtime/ViciOne.ServiceBus.Courier.dll",
+      "sha256": "7134e5a0d17928653adb661a775be6b17462fb17bfa03029a7425245ae1dea33",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2911864475,
+          "guid": "441e3750-bce4-4273-a5db-20dae55cdeb3",
+          "path": "ViciOne.ServiceBus.Courier.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "50371e44e4bc7342a5db20dae55cdeb39b868fad",
+        "sha256": "5b708df16b1aff8264f67f18a48d8bec2f9cf9a47d539d80ef5a1cc124f471c2",
+        "documents": 146,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 146
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "03e1e0b0173596b24497ad8a53727daa328d6255889d92e88bf2cd50b017dfd3",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/runtime/ViciOne.ServiceBus.Futures.dll",
+      "sha256": "368f597a366d61cde01fed7f42b43ea10727b4734526cb3de40f4855bdfb39cb",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3948054218,
+          "guid": "fe7fefe7-ece3-4ca3-abc4-72bedc5dbf53",
+          "path": "ViciOne.ServiceBus.Futures.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "e7ef7ffee3eca34cabc472bedc5dbf53ca8652eb",
+        "sha256": "777a401aca178bd31357e465c404febd5ae8fa538b454a42f147f620147a38fe",
+        "documents": 61,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 61
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "fd9f454f7b44ca7af65540b0eacc67d98e65c1fd43c22580bf22f5e3bf70df1d",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/runtime/ViciOne.ServiceBus.Initializers.dll",
+      "sha256": "98599379e2ae5b2555e25cb95fb34dac02791b786f68a626dcd68faedf67fe30",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3737002958,
+          "guid": "6f2af947-a4c3-43cb-9700-362b02038ed9",
+          "path": "ViciOne.ServiceBus.Initializers.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "47f92a6fc3a4cb439700362b02038ed9ce23bede",
+        "sha256": "cefeda21228242cdfc6918c0a3da217c637e57babfdf5dc2f792ca28371eda69",
+        "documents": 11,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 11
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "8eb152b1f4b6add5262ca0457d3066de75c39660b09bdd32af4f49e2a497e5db",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/runtime/ViciOne.ServiceBus.JobService.dll",
+      "sha256": "4d8a513cde01189e6cacb06d0045ec6309cf5faffd7fbbcc3d009da772b78cf7",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3647707439,
+          "guid": "3d9a8edd-a978-4a0a-8236-cee445cc4bb3",
+          "path": "ViciOne.ServiceBus.JobService.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "dd8e9a3d78a90a4a8236cee445cc4bb32f996bd9",
+        "sha256": "8469f55e2997626520803d7f6844a4f176aec8f73323a4f79efaf6882d02eb49",
+        "documents": 175,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 175
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "7b5df0d54aea99ac22258ce0706992df1eb88fd8791954e24c7ecd1615eadd64",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/runtime/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "88ddf8fbf9f3d8ba46814c4ed1bdb32747fd5466af3d6cc1cc1e616dd24d37a3",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2446319107,
+          "guid": "48fd74bb-214a-4c03-86ff-60c0b3630851",
+          "path": "ViciOne.ServiceBus.Mediator.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "bb74fd484a21034c86ff60c0b363085103decf91",
+        "sha256": "6aeed9fcb7c3c8536a7a6fbb3b0e41db84ed34820a56b954534e79bbef574ed9",
+        "documents": 31,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 31
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "95d80554b380bd4c92b7dff52977a8541956f862a0632dd8296f4168a6fbac0d",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/runtime/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "51fbeaf2e71b22ad03e054b579bd8d8170a28992a9e82d5dd22d7cfdf4aeab68",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3997765422,
+          "guid": "157207da-1d4f-4ac6-84d3-3c5976ab38d8",
+          "path": "ViciOne.ServiceBus.Sagas.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "da0772154f1dc64a84d33c5976ab38d82e0f49ee",
+        "sha256": "32e8cd08e5d2ed2a392ebcd3557d85bfda3b497d621d0bcaf1211f273ee041de",
+        "documents": 374,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 374
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "f224463786968110e7bb284636bb74d7e180d29243f4d69b7905fe91396f3b5d",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/runtime/ViciOne.ServiceBus.Testing.dll",
+      "sha256": "d2f9164f0dc281ef803ed6f9a3714a918b1a846d4f3fb9af86e901b594e00c45",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4107624122,
+          "guid": "f2f1ba66-4a58-43eb-9893-f637ebedcd5b",
+          "path": "ViciOne.ServiceBus.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "66baf1f2584aeb439893f637ebedcd5bba5ed5f4",
+        "sha256": "7b0cefd50f8b3ff8a180bca810361e1fe75d274b5f3731693cb7ca9009f23688",
+        "documents": 104,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 104
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "866ad76692b2c19c1826f83c0834e3fe29bd3ead2e4bf3426b9e5bb5c25a3d86",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "5d87f3120de34a96403e05378a1d0b5f9e834aedb45cf526b4b131281f864849",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "5d87f3120de34a96403e05378a1d0b5f9e834aedb45cf526b4b131281f864849"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "8c7532245dc15130c4adf8d06e6b4434061c6a3a60a57f682621d7489e407a34",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "8c7532245dc15130c4adf8d06e6b4434061c6a3a60a57f682621d7489e407a34"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "a80ecbeadeb3f179dcbdc44b19253a46e8575aaefa0f35b586bddf0e6af77cc9",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3584832143,
+          "guid": "27b306cc-c92a-4f5a-81bc-b22c33955e7b",
+          "path": "ViciOne.ServiceBus.Tests.Infrastructure.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "cc06b3272ac95a4f81bcb22c33955e7b8f32acd5",
+        "sha256": "58411e4352baa551fc3c5b6506dada7487710382f759cb554567f49fbf454978",
+        "documents": 9,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 9
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "7e3ccd6af526efd9be798fd0ab19eae50e25bf9142108f4ffb1cd32e833847d8",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/runtime/ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "sha256": "83ab90f3b61c6ab856047764bb8d8f906a44a31663e1e1f365036bf43321d862",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2158992259,
+          "guid": "eafe6892-b1c4-4743-a4ce-f667c5864c94",
+          "path": "ViciOne.ServiceBus.Tests.InternalAccess.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "9268feeac4b14347a4cef667c5864c94839baf80",
+        "sha256": "29d9def5935ffb7e543937ca0b0485d0e16a468584527e3f88d4e5c030ba3de2",
+        "documents": 38,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 38
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "a622c2ddc60864fefe0c1a6e43023f809d4ca9f4542b0121757631e9904d2e8f",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/runtime/ViciOne.ServiceBus.Tests.dll",
+      "sha256": "62b22f9f3323ae501ae0c061cb6867f4c92ced605ae6d82ebfd35f99752d774b",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2634254145,
+          "guid": "0866f35d-95d0-406f-b8c2-b56525a2c9cc",
+          "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.Unit/release/ViciOne.ServiceBus.Tests.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "5df36608d0956f40b8c2b56525a2c9cc4187039d",
+        "sha256": "20bbcae57ab0fb6b3c16043b1d3aa97e174ddbb1e31bcff1e91e7bbb851e50ba",
+        "documents": 814,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 814
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "bd77193882cb76aefc1f269b72a51a5d871087e5861784a838bc0dcbba00d0eb",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Monitoring/ActiveTelemetryCleanupIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "4ba3b7f61891cfff983161224666d108ef776aaa4cad00675a395928affdd635",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "4ba3b7f61891cfff983161224666d108ef776aaa4cad00675a395928affdd635"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Monitoring/PublicTelemetryCleanupIsolationTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "cd45b4f583f32312ba3eb8f58aa18eaf2b8f115fa3f4c831fbfab7405f30126c",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "cd45b4f583f32312ba3eb8f58aa18eaf2b8f115fa3f4c831fbfab7405f30126c"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/runtime/ViciOne.ServiceBus.dll",
+      "sha256": "946e8fb2d349456c9954e5dbf07474b7a7527e298b5a8c3049b763e0356f23b8",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2659772801,
+          "guid": "2ba929f2-f1f1-4a07-95c9-f264fefca13c",
+          "path": "ViciOne.ServiceBus.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "f229a92bf1f1074a95c9f264fefca13c81e9889e",
+        "sha256": "c92664b9c41a301d0cbd3423b8a00c81c87d656105a227aa1f75efc264386a3c",
+        "documents": 1340,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 1296,
+          "EMBEDDED_SOURCE": 44
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "1ab7815c0c9a7311388d84186c75c9774dbea284f8b6ce3e5e184aa66650d306",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    }
+  ],
+  "PE_metadata12": [
+    {
+      "name": "ViciOne.ServiceBus.Abstractions.dll",
+      "mvid": "89aa0d4a-8009-4d1a-b89b-7716bac43b3b",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Immutable",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.RegularExpressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Concurrent",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Security.Cryptography",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.NetworkInformation",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Runtime.Intrinsics",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Expressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.Http",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.Mail",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Json",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.Process",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.NameResolution",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Encoding.Extensions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Courier.dll",
+      "mvid": "eea185f9-98c2-463e-a1d5-b4dbfdbb066f",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.DiagnosticSource",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Futures.dll",
+      "mvid": "92fc2374-1c7c-4c24-b488-c3db9e2e19c7",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Expressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Immutable",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Initializers.dll",
+      "mvid": "b4a19adb-73ef-4f31-81b4-f59f85c3981a",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.JobService.dll",
+      "mvid": "be1f4e44-aaf9-4ae5-9bd6-0c0e7d17594a",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Expressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading.Channels",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Concurrent",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.RegularExpressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Options",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Security.Cryptography",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Mediator.dll",
+      "mvid": "ab25b8bc-8814-4bc8-bdee-d7ab6d178d57",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Json",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.Mail",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Diagnostics",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Logging.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Sagas.dll",
+      "mvid": "696cba21-78c4-4811-922b-6500b6e3ee36",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Expressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.DiagnosticSource",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "FastExpressionCompiler",
+          "version": [
+            5,
+            4,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Logging.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Testing.dll",
+      "mvid": "0a72926f-06ce-45f8-8aae-1152fbce28c8",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.StackTrace",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Logging.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.DiagnosticSource",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Concurrent",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Mediator",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading.Channels",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Expressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Hosting.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Options",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Console",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "mvid": "a2591b9a-1fe5-456e-bd48-105341b5af12",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Configuration.UserSecrets",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Json",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Configuration.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Security.Cryptography",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Configuration",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Configuration.FileExtensions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Configuration.Json",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Configuration.Binder",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "mvid": "73e21676-0764-4f49-8309-85e5e0503532",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Logging.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Concurrent",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Transactions.Local",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Reflection.DispatchProxy",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Json",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.Mail",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.DiagnosticSource",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Options",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Hosting.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    },
+    {
+      "name": "ViciOne.ServiceBus.Tests.dll",
+      "mvid": "e4df172d-933f-4792-a6d5-e6b04ed20d17",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "xunit.v3.core",
+          "version": [
+            4,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "xunit.v3.runner.common",
+          "version": [
+            4,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Configuration.UserSecrets",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Testing.Platform",
+          "version": [
+            2,
+            3,
+            3,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Tests.Infrastructure",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Concurrent",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Logging.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Reflection.DispatchProxy",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Testing",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Diagnostics.HealthChecks",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Json",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Tests.InternalAccess",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.Mail",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Mediator",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Sagas",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Expressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Transactions.Local",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Courier",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading.Thread",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.TimeProvider.Testing",
+          "version": [
+            10,
+            9,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Options",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.DiagnosticSource",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Hosting.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.JobService",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Google.Protobuf",
+          "version": [
+            3,
+            36,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "System.Reflection.Emit",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Data.Common",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.Process",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.RegularExpressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading.Channels",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Reflection.Primitives",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Initializers",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Futures",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Immutable",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.Http",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "xunit.v3.runner.inproc.console",
+          "version": [
+            4,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "xunit.v3.mtp-v2",
+          "version": [
+            4,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Testing.Extensions.MSBuild",
+          "version": [
+            2,
+            3,
+            3,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Testing.Extensions.Telemetry",
+          "version": [
+            2,
+            3,
+            3,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Testing.Extensions.CodeCoverage",
+          "version": [
+            18,
+            10,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "xunit.v3.assert",
+          "version": [
+            4,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Runtime.InteropServices",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Encoding.Extensions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading.Tasks.Parallel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Parallel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Security.Cryptography",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Logging",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Diagnostics",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Hosting",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.AsyncEnumerable",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading.ThreadPool",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Console",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Specialized",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": [
+        {
+          "name": "ViciOne.ServiceBus.Tests.Requirements.CoreRequirements.json",
+          "implementation": 0,
+          "length": 1674601,
+          "sha256": "6e93640a343c2d9328c9d40b410a060ed2052307a6e6482ee17c3026a26e0503"
+        }
+      ]
+    },
+    {
+      "name": "ViciOne.ServiceBus.dll",
+      "mvid": "6cb21ce1-f0d3-4d4c-9fa9-2342f17326c7",
+      "assembly_refs": [
+        {
+          "name": "System.Runtime",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.DependencyInjection.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.Abstractions",
+          "version": [
+            1,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.ComponentModel",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Options",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Diagnostics.HealthChecks",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Concurrent",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading.Channels",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.StackTrace",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Logging.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Net.Mail",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Threading",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Transactions.Local",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Json",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Security.Cryptography",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Data.Common",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Hosting.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Diagnostics.DiagnosticSource",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Collections.Immutable",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Reflection.Emit",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Reflection.Emit.ILGeneration",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Linq.Expressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.RegularExpressions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Memory",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "Microsoft.Extensions.Diagnostics",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Console",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Encodings.Web",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Text.Encoding.Extensions",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "System.Reflection.Primitives",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "name": "FastExpressionCompiler",
+          "version": [
+            5,
+            4,
+            1,
+            0
+          ]
+        },
+        {
+          "name": "System.Runtime.InteropServices",
+          "version": [
+            10,
+            0,
+            0,
+            0
+          ]
+        }
+      ],
+      "resources": []
+    }
+  ],
+  "firstparty35_edges_resolve_archive12": [
+    {
+      "from": "ViciOne.ServiceBus.Courier.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Courier.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Futures.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Futures.dll",
+      "to": "ViciOne.ServiceBus.Sagas.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Futures.dll",
+      "to": "ViciOne.ServiceBus.Courier.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Futures.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Initializers.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.JobService.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.JobService.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.JobService.dll",
+      "to": "ViciOne.ServiceBus.Sagas.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Mediator.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Mediator.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Sagas.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Sagas.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Testing.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Testing.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Testing.dll",
+      "to": "ViciOne.ServiceBus.Sagas.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Testing.dll",
+      "to": "ViciOne.ServiceBus.Courier.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Testing.dll",
+      "to": "ViciOne.ServiceBus.Mediator.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "to": "ViciOne.ServiceBus.Sagas.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "to": "ViciOne.ServiceBus.Courier.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Testing.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Mediator.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Sagas.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Courier.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.JobService.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Initializers.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.Tests.dll",
+      "to": "ViciOne.ServiceBus.Futures.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "from": "ViciOne.ServiceBus.dll",
+      "to": "ViciOne.ServiceBus.Abstractions.dll",
+      "reference_version": [
+        1,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "ownC3_project_assets12": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/obj/ViciOne.ServiceBus.Abstractions/project.assets.json",
+      "sha256": "de834cbbb890687cfa98ba50b5754299d53623edbde0ed6846c6233c60516096",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj",
+      "project_sha256": "fc0b486dd4aa4c78487b1e0fa9f56c546cf1c27e0499d9e1f403f26923d54fbb",
+      "project_references": []
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/obj/ViciOne.ServiceBus.Courier/project.assets.json",
+      "sha256": "2f943807a05f0a3ce400f06028971acbbeac0aa56ed526cf498fe2da50c438e6",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+      "project_sha256": "3f04063a3393b887bc0d1b666c73e7f4375e73860b8d6b7640960d559913adad",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/obj/ViciOne.ServiceBus.Initializers/project.assets.json",
+      "sha256": "9492bfa0467c8ff2054196f409d863983f096d49e53a08cb48b0ae5dad5eb822",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj",
+      "project_sha256": "16d4e0c3ae2688b32231a0139ef2c6a47baefe670d260703054d73d83eb1d443",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/obj/ViciOne.ServiceBus.Futures/project.assets.json",
+      "sha256": "ed6a3ff82bb45e169d1fe0ef94249c012b64d454f4fb66f5019202ab6a33c99e",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+      "project_sha256": "8fe3e90f79ab15806ba2fd38e37e717f02a75eafa5b4c05f08b9ee63dd57ea18",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/obj/ViciOne.ServiceBus.Mediator/project.assets.json",
+      "sha256": "06d0bbbbc371aeeb02cb10b9756c3cce8909184c3d9ac566a9a3529692f2c7d3",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+      "project_sha256": "5594cd1825e0998de96fa6d78a5995ad36e949fa54cdcd75cf02de181877d023",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/obj/ViciOne.ServiceBus.JobService/project.assets.json",
+      "sha256": "dff6a5134cb99793eb54ed0e22a0fe7b9fecbb84731dccd9a58b1ce7b95b0eb7",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj",
+      "project_sha256": "8212a7535e1eb020e3b0a4f52d4e49443976acd30b7c0a5a3339d1610fb91f01",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.Infrastructure/project.assets.json",
+      "sha256": "3dfd8e1576cb8ce763f841f51274cdeea26364ddc397a70e48624a033f113075",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+      "project_sha256": "954d1e414f5ad15239213b69d4d6e0dd7bb71fff95d8ce81616f49f991d11656",
+      "project_references": []
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.Unit/project.assets.json",
+      "sha256": "8e243db6fea15eccb0b3865757f10a61ced21614663a25a7f7785b2877a6f9e6",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+      "project_sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Initializers/ViciOne.ServiceBus.Initializers.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.JobService/ViciOne.ServiceBus.JobService.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/ViciOne.ServiceBus.Tests.Infrastructure.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/obj/ViciOne.ServiceBus.Testing/project.assets.json",
+      "sha256": "6c56bf7f678351bd4dfa18d6602c2b9d0374f0bc4867c7781e2af6d49e9375ba",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Testing/ViciOne.ServiceBus.Testing.csproj",
+      "project_sha256": "1e90e8eedf73e374ffb0a4bb145fd4d1cf4a94cdd05b65c29d440a41f8b90603",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Futures/ViciOne.ServiceBus.Futures.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Mediator/ViciOne.ServiceBus.Mediator.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/obj/ViciOne.ServiceBus.Tests.InternalAccess/project.assets.json",
+      "sha256": "a3af201b2d130e8b20e0fe9c80f943594c4c8384948b7b5db217d43d98111a65",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+      "project_sha256": "f79459b8d6dc2fd119935f425fa0284caa4592a8cb04fb79fd2e732d8db76f2d",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Courier/ViciOne.ServiceBus.Courier.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/obj/ViciOne.ServiceBus/project.assets.json",
+      "sha256": "efae3cd2ed1822e2ae4f98809e14d39cb3708b540f6e567380236f3ae216845b",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+      "project_sha256": "382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Abstractions/ViciOne.ServiceBus.Abstractions.csproj"
+      ]
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/artifacts/sdk/obj/ViciOne.ServiceBus.Sagas/project.assets.json",
+      "sha256": "152b8c0b43477660398344cdc38da83f5a92492a3ca9b475ea23eda589be350d",
+      "project": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus.Sagas/ViciOne.ServiceBus.Sagas.csproj",
+      "project_sha256": "a6d0faa1c1f4065a2a95f49d92ff643cab6de89f9b5c62bb30980b60009e7a77",
+      "project_references": [
+        "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj"
+      ]
+    }
+  ],
+  "deps_project12": [
+    "ViciOne.ServiceBus.Abstractions/1.0.0",
+    "ViciOne.ServiceBus.Courier/1.0.0",
+    "ViciOne.ServiceBus.Futures/1.0.0",
+    "ViciOne.ServiceBus.Initializers/1.0.0",
+    "ViciOne.ServiceBus.JobService/1.0.0",
+    "ViciOne.ServiceBus.Mediator/1.0.0",
+    "ViciOne.ServiceBus.Sagas/1.0.0",
+    "ViciOne.ServiceBus.Testing/1.0.0",
+    "ViciOne.ServiceBus.Tests.Infrastructure/1.0.0",
+    "ViciOne.ServiceBus.Tests.InternalAccess/1.0.0",
+    "ViciOne.ServiceBus.Tests/1.0.0",
+    "ViciOne.ServiceBus/1.0.0"
+  ],
+  "compiledReq4708_resource": {
+    "name": "ViciOne.ServiceBus.Tests.Requirements.CoreRequirements.json",
+    "implementation": 0,
+    "length": 1674601,
+    "sha256": "6e93640a343c2d9328c9d40b410a060ed2052307a6e6482ee17c3026a26e0503"
+  },
+  "binlogs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c6-fixed-post-r1/raw/p05-c6-fixed-post-r1-20261007-045308--84625--8uOzeS-dotnet-test.binlog",
+      "sha256": "b098ed33c8293de4f1de7b69d68342b5e11a2006734f0e78417c1b59c597fe3e",
+      "gzip_valid": true,
+      "decompressed_bytes": 3238322,
+      "limit": "Structural MSBuild events not decoded; post has same17runtime bytes as independently qualified initialfixed build. Source/PE/PDB/assets/deps checked directly."
+    }
+  ],
+  "findings": [],
+  "limits": [
+    "Only fixedpost38PASS qualified. Final aggregate waits exact independently qualified M5 successor native report; otherpassed runs or predictions cannot substitute.",
+    "Existing wholeCore8112 and seven C5 fresh child events are separate receipts, not added to focusedpost38.",
+    "No complete structural binlog decode claim; current byteidentical compiledruntime and all3803PDBdocuments/12PEs/deps/assets/resource provide exact replay/sourcebinding.",
+    "No publicresource that throws before release guarantee, nativecrossedExpected/Actualstack attribution or unreached assertion credit.",
+    "No entireP05/currentcoverage/allUnit/providers/CI/cloud/device/SQL/release/A+ acceptance."
+  ],
+  "execution": {
+    "dotnet_docker_ssh_process_provider_started_by_reviewer": false,
+    "product_tests_tools_governance_written": false,
+    "only_own_report_written": true
+  }
+}

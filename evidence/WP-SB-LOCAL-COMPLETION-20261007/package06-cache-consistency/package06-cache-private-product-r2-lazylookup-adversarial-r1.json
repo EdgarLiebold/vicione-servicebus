@@ -1,0 +1,160 @@
+{
+  "kind": "PRIVATE_CACHE_PRODUCT_D2_LAZYLOOKUP_ADVERSARIAL",
+  "status": "NO_BLOCK_PRIVATE_D2_SOURCE__CANONICAL_NATIVE_MUTATION_PENDING",
+  "freeze": {
+    "path": "/private/tmp/vicione-servicebus-cache-fix-draft-r2/PRIVATE_CACHE_PRODUCT_FREEZE_R2.json",
+    "sha256": "0e785265fce330cc393985a062fd289c3ee287de05562ff269c3b6ee30a89d63"
+  },
+  "predecessor": {
+    "freeze_sha256": "0aa4a03e8b6091f65bad87ec48f357e6767beada84bc90f1a229092029020f8d",
+    "review_sha256": "e8d429bb71c04daf54ac32d6391a4aeaa8c41bb77123f284fb8705067a7e58c5",
+    "immutable": true,
+    "no_predecessor_native_or_mutation_credit": true
+  },
+  "sources19": [
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs",
+      "sha256": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12",
+      "lines": 32
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs",
+      "sha256": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69",
+      "lines": 32
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs",
+      "sha256": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c",
+      "lines": 13
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs",
+      "sha256": "4c94c5a3c336a4d90f40079265e5391604641e80ee93ecc2f7517b32430f10c3",
+      "lines": 25
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs",
+      "sha256": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4",
+      "lines": 24
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceMap.cs",
+      "sha256": "2db6ae5fa7ed933ec1aa037e77a63b09cc4a53294f3195d94703b10af03da271",
+      "lines": 168
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs",
+      "sha256": "686047b3c5af1ce34adca10173a4c668cd8ba17726fc126adb0f4ddbd7b3ff4d",
+      "lines": 27
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "sha256": "84f6d67e2e3724120b394367b413325f353f7a9423a713431e8a6f4449b78f18",
+      "lines": 134
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+      "sha256": "a129973c648355c3a05efe9f8531632db97d1c78a0ef9474e127705ae6f171de",
+      "lines": 26
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs",
+      "sha256": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743",
+      "lines": 82
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "sha256": "45bb92aea5df9ed96396604d8ef2b63afc888537ca4f49815f05ea734af41a6a",
+      "lines": 324
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs",
+      "sha256": "fcb891b5e80f4249002a3871fbdb318842b70972e7b7537d9d36f73d8d97b441",
+      "lines": 163
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs",
+      "sha256": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+      "lines": 102
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "sha256": "a77ab4864f0e44b8692c308371817a831f0a231a40aec57ebcbba7793d7b65d1",
+      "lines": 357
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "sha256": "9a23ca99892af8349c960056c26b8969c2b677f7c8634a1518f8b3e1dbc43925",
+      "lines": 382
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs",
+      "sha256": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7",
+      "lines": 11
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs",
+      "sha256": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76",
+      "lines": 75
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs",
+      "sha256": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4",
+      "lines": 16
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceFactory.cs",
+      "sha256": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc",
+      "lines": 13
+    }
+  ],
+  "only_D1_changed_owner": "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceMap.cs",
+  "other18_exact_byte_reuse": true,
+  "map_whole168_personally_read": true,
+  "entire_D1_D2_map_diff_personally_read": true,
+  "context": "Prior D1 entire9changed owners and complete diff read; other10unchanged original whole18 source closure exact byte reuse. D2 all18 other owners physically identical. Full call-site map reset/publicClear/pending retirement/complete factory and direct admission reviewed; no Root reading substituted by agent.",
+  "lazy_boundary": {
+    "never_initialized_lookup": "TryGetValue25 returns false/null before any key hash/equality. Public ResourceCacheIndex validates null key first; projected internal keys already checkednonnull.",
+    "prepare_attempt_initializes": "EnsureCapacity1 before flag true before userHash, so ordinary hash failure retains initialized backing-state semantics and later empty lookup can still throw. No logical slot/bucket published on failed prepare.",
+    "retirement": "Remove100 clears slot links/key/value and removes empty intbucket but preserves initialized flag. Public cache Clear and Dispose use identityRemove rather than mapClear; K5 later lookup after lastretirement remains fallible.",
+    "bulk_reset": "Only calls to mapClear come from ResourceCacheIndex.ResetEntries110–112, calledResourceCache.AddIndex126 on unpublished privateindex. Resetfalse cannot suppress comparers in already published publiccache state.",
+    "memory": "One minimum intbucket dictionary allocation before first hash, ordinary failure cannot grow failed-attempt logical bucket history. Map high-water backing may retain capacity and configured index count remains external; no deviceRAMclaim.",
+    "publication": "Prepared slots still fully created before final generation/version check and callback-free Publish. Identity old pending unlink and resource removal unchanged; generation/capacity invariants reuse exact D1 integration.",
+    "exception_scope": "Published maps under cache monitor; privatebulk exclusively owned. No mutable-key/reentrant-comparer/fatalOOM contract or general callbackcount guarantee added."
+  },
+  "verified_official_source": {
+    "url": "https://raw.githubusercontent.com/dotnet/runtime/v10.0.10/src/libraries/System.Private.CoreLib/src/System/Collections/Generic/Dictionary.cs",
+    "version": "v10.0.10",
+    "source_read_direct_primary": true,
+    "FindValue": "lines364–371 guard _buckets != null before hash line379/409; empty never-initialized dictionary returns missing without user hashing.",
+    "TryInsert": "lines463–482 Initialize(0) occurs before key/user hashing; ordinary failed first hashing leaves initialized state.",
+    "Clear": "lines255–270 clears arrays while retaining allocated buckets; D2 mapClearreset is only private rebuild, publiccacheClear does not invoke it.",
+    "boundary_inference": "D2 reproduces lazy caller-observable exception timing of existingDictionary for this bounded cache; it does not promise all Dictionary callback counts, exact bucket shape, collision defenses or ABI."
+  },
+  "reset_call_sites": [
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "line": 126,
+      "statement": "index.ResetEntries();"
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "line": 112,
+      "statement": "_entries.Clear();"
+    }
+  ],
+  "required_native_validation": [
+    "Expanded original27+twochild source/test qualification must complete before canonical source apply; privateR9/R10 variants independentlyreviewed only.",
+    "CorrectedK2/K3 actual hostile trace must now fail inside PrepareEntry/Map.Prepare after first slot preparation, and transactional bad-order compiled mutant must expose primary ghost physically. No R1compiled mutant survivor is claimed.",
+    "K5 after lastretirement still selected lookup hash fails and previously retired owner releases; initialized flag must not be cleared on Remove/publicClear.",
+    "Bulk AddIndex/partial required clock controls and full affectedcache/Core, singlecause mutation plus unchanged fixedpost remain pending."
+  ],
+  "findings": [],
+  "Root_role": "Root sole code/test/process author; Root whole168 read attestation not independently replaced.",
+  "limits": [
+    "No .NET/native/product canonical change or global cache acceptance in this review.",
+    "Only private D2 source qualified; D1review retained with its original limitations.",
+    "No parent test count/Core8139/mutation/native pass inference."
+  ],
+  "execution": "Pure file/hash/diff/source-call reads plus official Microsoft source browsing; own immutable report only."
+}

@@ -1,0 +1,846 @@
+{
+  "kind": "P05_C7_FIVE_COMPILED_MUTANTS_COMBINED_NATIVE_REVIEW_R2",
+  "status": "QUALIFIED_BOUNDED_65EVENTS19FINITE_RED46HEALTHY",
+  "inputs": {
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-mutant-m1-native-artifact-review-r1.json": "17c845b66c7f365b3b8167dc3e29f3d7df046422b18abf85efa8f468649ca010",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-mutant-m2-native-artifact-review-r1.json": "5c2770985c6c8d98ee910f98cb05de4dfd7271650faeb6f0c4404cd45f3e8fde",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-mutant-m3-native-artifact-review-r1.json": "52d97daa85512368df446f8043057731df3fe72be8c35b25470150897113de04",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-mutant-m4-native-artifact-review-r1.json": "7bd75c9e0419e5fe1d7ac0963ec835abf6b7d3e899471a38dc07a407cc59c078",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-mutant-m5-native-artifact-review-r1.json": "f3ddf3d4aba4e8f2213f621a95b4f6e4122b7a8be5e1cdaea938d8b4580ff131",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/shared-restore/RESULT.json": "60cba26e7ebff98fe2e0f40d7b597029096f7171d8e7df88de6ff0bf5b0ae08f",
+    "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-mutants-driver-preexecution-review-r3.json": "68dabbc23c9b3ab1e9ba5157a2b727020fc277f4e4491135a9aa3ecd6d0b5bc0",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-driver-r1/INPUTS_R2.json": "fb7c11713ec04bcb81a7280938c6c247aaf09dbd878e5a6651f60e743c490c3c",
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-driver-r1/run_c7_mutants-r3.py": "36f039111c634d96fc7cb9c2504129b8b7698ec818fc5d2e7ee707cd7c403be3"
+  },
+  "checks": {
+    "five_reports_all_findings_empty_checks_true": true,
+    "65_native_eventslots19finiteRed46Healthy": true,
+    "five_native_distinct_compiled_mutant_causes": true,
+    "five_actualbuild_PIDs_plus_five_native_PIDs_individually_joined": true,
+    "ten_unique_closed_variantbinlogs_plus_one_sharedrestore": true,
+    "sharedrestore_hash_expected_and_joined0": true,
+    "twenty_closed_raw_variantfiles95runtimefiles_hashbound": true,
+    "preexecution_R3_noBlock_hash_bound": true,
+    "sharedRestore2_rawhashes_and_closed": true
+  },
+  "findings": [],
+  "actual_native_counts": [
+    {
+      "name": "m1-initial-measurement-escapes",
+      "total": 13,
+      "failed": 3,
+      "passed": 10,
+      "skipped": 0
+    },
+    {
+      "name": "m2-elapsed-measurement-escapes",
+      "total": 13,
+      "failed": 2,
+      "passed": 11,
+      "skipped": 0
+    },
+    {
+      "name": "m3-zero-duration-fabricated",
+      "total": 13,
+      "failed": 4,
+      "passed": 9,
+      "skipped": 0
+    },
+    {
+      "name": "m4-required-notification-skipped-r2",
+      "total": 13,
+      "failed": 8,
+      "passed": 5,
+      "skipped": 0
+    },
+    {
+      "name": "m5-required-notification-not-awaited",
+      "total": 13,
+      "failed": 2,
+      "passed": 11,
+      "skipped": 0
+    }
+  ],
+  "first_finite_failure_matrix": [
+    {
+      "name": "m1-initial-measurement-escapes",
+      "events": [
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.DiagnosticClockPreservesTransactionAndRequiredFaultNotification(outcome: CommitFailure, fault: Timestamp)",
+          "assertion": "Assert.Same() Failure: Values are not the same instance",
+          "line": 59
+        },
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.DiagnosticClockPreservesTransactionAndRequiredFaultNotification(outcome: Success, fault: Timestamp)",
+          "assertion": "Assert.Null() Failure: Value is not null",
+          "line": 56
+        },
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.DiagnosticClockPreservesTransactionAndRequiredFaultNotification(outcome: SaveFailure, fault: Timestamp)",
+          "assertion": "Assert.Same() Failure: Values are not the same instance",
+          "line": 59
+        }
+      ]
+    },
+    {
+      "name": "m2-elapsed-measurement-escapes",
+      "events": [
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.DiagnosticClockPreservesTransactionAndRequiredFaultNotification(outcome: SaveFailure, fault: Frequency)",
+          "assertion": "Assert.Same() Failure: Values are not the same instance",
+          "line": 59
+        },
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.DiagnosticClockPreservesTransactionAndRequiredFaultNotification(outcome: CommitFailure, fault: Frequency)",
+          "assertion": "Assert.Same() Failure: Values are not the same instance",
+          "line": 59
+        }
+      ]
+    },
+    {
+      "name": "m3-zero-duration-fabricated",
+      "events": [
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.DiagnosticClockPreservesTransactionAndRequiredFaultNotification(outcome: SaveFailure, fault: Frequency)",
+          "assertion": "Assert.InRange() Failure: Value not in range",
+          "line": 73
+        },
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.DiagnosticClockPreservesTransactionAndRequiredFaultNotification(outcome: CommitFailure, fault: Frequency)",
+          "assertion": "Assert.InRange() Failure: Value not in range",
+          "line": 73
+        },
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.DiagnosticClockPreservesTransactionAndRequiredFaultNotification(outcome: CommitFailure, fault: Timestamp)",
+          "assertion": "Assert.InRange() Failure: Value not in range",
+          "line": 73
+        },
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.DiagnosticClockPreservesTransactionAndRequiredFaultNotification(outcome: SaveFailure, fault: Timestamp)",
+          "assertion": "Assert.InRange() Failure: Value not in range",
+          "line": 73
+        }
+      ]
+    },
+    {
+      "name": "m4-required-notification-skipped-r2",
+      "events": [
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.DiagnosticClockPreservesTransactionAndRequiredFaultNotification(outcome: SaveFailure, fault: Frequency)",
+          "assertion": "Assert.Single() Failure: The collection was empty",
+          "line": 60
+        },
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.DiagnosticClockPreservesTransactionAndRequiredFaultNotification(outcome: CommitFailure, fault: Frequency)",
+          "assertion": "Assert.Single() Failure: The collection was empty",
+          "line": 60
+        },
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.DiagnosticClockPreservesTransactionAndRequiredFaultNotification(outcome: SaveFailure, fault: None)",
+          "assertion": "Assert.Single() Failure: The collection was empty",
+          "line": 60
+        },
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.DiagnosticClockPreservesTransactionAndRequiredFaultNotification(outcome: CommitFailure, fault: Timestamp)",
+          "assertion": "Assert.Single() Failure: The collection was empty",
+          "line": 60
+        },
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.DiagnosticClockPreservesTransactionAndRequiredFaultNotification(outcome: SaveFailure, fault: Timestamp)",
+          "assertion": "Assert.Single() Failure: The collection was empty",
+          "line": 60
+        },
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.DiagnosticClockPreservesTransactionAndRequiredFaultNotification(outcome: CommitFailure, fault: None)",
+          "assertion": "Assert.Single() Failure: The collection was empty",
+          "line": 60
+        },
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.CommitFaultNotificationIsActuallyAwaited",
+          "assertion": "Assert.True() Failure",
+          "line": 111
+        },
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.RequiredFaultNotificationFailureRemainsAuthoritative",
+          "assertion": "Assert.Single() Failure: The collection was empty",
+          "line": 95
+        }
+      ]
+    },
+    {
+      "name": "m5-required-notification-not-awaited",
+      "events": [
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.CommitFaultNotificationIsActuallyAwaited",
+          "assertion": "Assert.False() Failure",
+          "line": 112
+        },
+        {
+          "id": "ViciOne.ServiceBus.EntityFrameworkCore.Tests.Outbox.ClassicEfOutboxClockIsolationTests.RequiredFaultNotificationFailureRemainsAuthoritative",
+          "assertion": "Assert.Same() Failure: Values are not the same instance",
+          "line": 96
+        }
+      ]
+    }
+  ],
+  "binlogs": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m1-initial-measurement-escapes/raw/p05-c7-m1-initial-measurement-escapes-build-r1-20261007-053552--86529--n0l0G4.binlog",
+      "sha256": "ec91a13938e3b16cff0c1a819ef9c29950e2873c1b320fe6f32a32043ecc00f9",
+      "uncompressed_bytes": 4634140,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m1-initial-measurement-escapes/raw/p05-c7-m1-initial-measurement-escapes-focused-r1-20261007-053623--86589--ZI2o1d-dotnet-test.binlog",
+      "sha256": "6a1b8a300df7d84f6370636eb53fc43ba75ce77d7c12856c159596f896cf2201",
+      "uncompressed_bytes": 3036702,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m2-elapsed-measurement-escapes/raw/p05-c7-m2-elapsed-measurement-escapes-build-r1-20261007-053643--86601--cuVvzV.binlog",
+      "sha256": "9a2e5785f699827930f26688f014b79800f3a473c4a28ba47ece2d48e4970783",
+      "uncompressed_bytes": 4641036,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m2-elapsed-measurement-escapes/raw/p05-c7-m2-elapsed-measurement-escapes-focused-r1-20261007-053659--86616--d6dnJ+-dotnet-test.binlog",
+      "sha256": "a7878f000da06563ef2b712ae09453638178f561e32adc0c15c168e0a84bc9ce",
+      "uncompressed_bytes": 3036702,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m3-zero-duration-fabricated/raw/p05-c7-m3-zero-duration-fabricated-build-r1-20261007-053719--86626--u5Cast.binlog",
+      "sha256": "6eb2874b865424b016a5d43abaf9c9cf6b26143f643994e6c18a5e5bc15bae02",
+      "uncompressed_bytes": 4640669,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m3-zero-duration-fabricated/raw/p05-c7-m3-zero-duration-fabricated-focused-r1-20261007-053730--86627--5wClbj-dotnet-test.binlog",
+      "sha256": "db586f481bbb9151e62423034a61329846d89abeb806aa6447db5451d204cf4f",
+      "uncompressed_bytes": 3036699,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m4-required-notification-skipped-r2/raw/p05-c7-m4-required-notification-skipped-r2-build-r1-20261007-053747--86638--8_UjRb.binlog",
+      "sha256": "ad2b29bd6906c88b261d25d0f025ba394bfdb097665dc2264b9089f4c3046f99",
+      "uncompressed_bytes": 4640540,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m4-required-notification-skipped-r2/raw/p05-c7-m4-required-notification-skipped-r2-focused-r1-20261007-053758--86687--0gYSvq-dotnet-test.binlog",
+      "sha256": "d3b47f75cfbe19ff29a75f46837d135cb5b82124ee02eb65f2f301ae0f47690b",
+      "uncompressed_bytes": 3036707,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m5-required-notification-not-awaited/raw/p05-c7-m5-required-notification-not-awaited-build-r1-20261007-053818--86735--44udTd.binlog",
+      "sha256": "ed0af9dbc808a56ec4541932de10369a3ae0c547903fbb8ac6f317943d251f5f",
+      "uncompressed_bytes": 4640690,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/m5-required-notification-not-awaited/raw/p05-c7-m5-required-notification-not-awaited-focused-r1-20261007-053827--86741--RCi0bB-dotnet-test.binlog",
+      "sha256": "45f0ddab9893e4ec95e95a1be7a0aad018ca03efe16aea99bf75002a39fd0734",
+      "uncompressed_bytes": 3036708,
+      "closed": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c7-mutants-r1/shared-restore/p05-c7-mutants-restore-r1-20261007-052426--86147--MfIPNF.binlog",
+      "sha256": "2f4cab6ad98fecde1daf0acae4fc57defab73cf4a54ab7af134d91a6fed7e3f6",
+      "uncompressed_bytes": 2328958,
+      "closed": true
+    }
+  ],
+  "raw20": [
+    [
+      "m1-initial-measurement-escapes",
+      "p05-c7-m1-initial-measurement-escapes-focused-r1-20261007-053623--86589--ZI2o1d-dotnet-test.binlog",
+      "6a1b8a300df7d84f6370636eb53fc43ba75ce77d7c12856c159596f896cf2201"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "p05-c7-m1-initial-measurement-escapes-build-r1-20261007-053552--86529--n0l0G4.binlog",
+      "ec91a13938e3b16cff0c1a819ef9c29950e2873c1b320fe6f32a32043ecc00f9"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "p05-c7-m1-initial-measurement-escapes-build-r1.log",
+      "28a3aab781f1b6c352c644dd9d07acf4d22b503e8de9c69696adae4eb86caf52"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "p05-c7-m1-initial-measurement-escapes-focused-r1.log",
+      "3451e59e745b96cbbf6ec967388cafb0fa0fca6b9f55bb0d21a272004fa7fdbd"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "p05-c7-m2-elapsed-measurement-escapes-build-r1.log",
+      "cbc1628c3a29a31cde506bd627823e463aaeca7f8f25d0a46eb54ca0431d4c45"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "p05-c7-m2-elapsed-measurement-escapes-focused-r1.log",
+      "de3568e58ea2849b1faa84c55badcbd42dbb8311cf3e81a375e38b487884f0cf"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "p05-c7-m2-elapsed-measurement-escapes-focused-r1-20261007-053659--86616--d6dnJ+-dotnet-test.binlog",
+      "a7878f000da06563ef2b712ae09453638178f561e32adc0c15c168e0a84bc9ce"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "p05-c7-m2-elapsed-measurement-escapes-build-r1-20261007-053643--86601--cuVvzV.binlog",
+      "9a2e5785f699827930f26688f014b79800f3a473c4a28ba47ece2d48e4970783"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "p05-c7-m3-zero-duration-fabricated-focused-r1-20261007-053730--86627--5wClbj-dotnet-test.binlog",
+      "db586f481bbb9151e62423034a61329846d89abeb806aa6447db5451d204cf4f"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "p05-c7-m3-zero-duration-fabricated-build-r1-20261007-053719--86626--u5Cast.binlog",
+      "6eb2874b865424b016a5d43abaf9c9cf6b26143f643994e6c18a5e5bc15bae02"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "p05-c7-m3-zero-duration-fabricated-focused-r1.log",
+      "52674f7cd64d17aa8810d7451f8276d346b7752887d7ce8cfb5d818bff8663ed"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "p05-c7-m3-zero-duration-fabricated-build-r1.log",
+      "aed1e4171090e8cec924a12798f0c99902f10a11dfba3282e72d5fe82a412835"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "p05-c7-m4-required-notification-skipped-r2-focused-r1-20261007-053758--86687--0gYSvq-dotnet-test.binlog",
+      "d3b47f75cfbe19ff29a75f46837d135cb5b82124ee02eb65f2f301ae0f47690b"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "p05-c7-m4-required-notification-skipped-r2-focused-r1.log",
+      "f1a56ef3038ab14959ed90932ec18612c2f9c5d24d1a38751e5658e976bbe1f9"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "p05-c7-m4-required-notification-skipped-r2-build-r1-20261007-053747--86638--8_UjRb.binlog",
+      "ad2b29bd6906c88b261d25d0f025ba394bfdb097665dc2264b9089f4c3046f99"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "p05-c7-m4-required-notification-skipped-r2-build-r1.log",
+      "34c15a9364b9e2093167e7eb8a802aa6e7e9259ba9392d7bd6c1e0a6e6cf2f05"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "p05-c7-m5-required-notification-not-awaited-focused-r1-20261007-053827--86741--RCi0bB-dotnet-test.binlog",
+      "45f0ddab9893e4ec95e95a1be7a0aad018ca03efe16aea99bf75002a39fd0734"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "p05-c7-m5-required-notification-not-awaited-focused-r1.log",
+      "e55a098ed397c2e52089e2cb6100d7930a44ff1085a226f4f6a3d16f7889dcf4"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "p05-c7-m5-required-notification-not-awaited-build-r1-20261007-053818--86735--44udTd.binlog",
+      "ed0af9dbc808a56ec4541932de10369a3ae0c547903fbb8ac6f317943d251f5f"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "p05-c7-m5-required-notification-not-awaited-build-r1.log",
+      "834e50c7f5c49dcc87fa4f15fafc88c6732410af90dcf8e54f21b92edf843e05"
+    ]
+  ],
+  "runtime95": [
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.dll",
+      "f37723c9ae9343e632c201aa76aad59d775703566f78dc3ed283931285f43bab"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.MessagePack.dll",
+      "98a3e41adf676c141daebf5c1975a85362a4f2d2ac74d4b1e3b5b8ac55a7679f"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+      "9454606dabe90ac55b6ba44035e1f179bbd3eeb3efa82a0fba00e4e49d526ce6"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.Mediator.dll",
+      "150d9602c239c3ab9aed536f3ef2c00205915a886cf750aaab50e4fed5bc88ca"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.JobService.dll",
+      "fed86127f0c6ec4d705510998eb92fbac0f531c9a9d61fc2f5a57fc488415569"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.pdb",
+      "afbc9ebacc6175bf30f62740ca01357117242b684b460c27ab54aded242b2495"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+      "60e638449d2c347e9186f33defac2010e9f5415f22f358edf0b4a4365723590f"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.testconfig.json",
+      "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.Testing.dll",
+      "ab5b59028fc0e3cdb046dc711af6867ff52deb7c8f2a700fc6b07099998b4d21"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.Courier.dll",
+      "a16c7d459c2348a96fc5ef32c14944e6d48fac830cf233fefc7140dcbaa50b6d"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.runtimeconfig.json",
+      "1955401410065e135853c5621f9a43fd42685aebfab3d1732fd60488336cdca5"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.Futures.dll",
+      "062f36b66d947a1c5f53f940a59d9bb32ed845c9f848dc139fdde4f3b1c0eea9"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.Abstractions.dll",
+      "2fc7e611c3af38a7af5159000c7b81e48df7e740f9b48d323fa2a9977d4b8993"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.Sagas.dll",
+      "93a80965694b60ca2db475f4f86577d299e2625b59b18d6bf3c68f35d35caa10"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "769980186a0a8ece21b50893b506b0afefeb73f07c91e392efc42c8511188651"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.deps.json",
+      "db0bab359fa398a7dfc7735b2b9a3a281e24c4bc42d75fc15becefbe1d283417"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.dll",
+      "7f3cf589ec0c39a1306bc14b84c8b47da798502088620dd9ee13ef4566c00cd0"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "5948814c4c20d86730eb9a3ac207881b3de71c3656947e88b7d278537fdf507b"
+    ],
+    [
+      "m1-initial-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "89a9f64bd039c3f6e84034b7f4e068cbb6c18b00b4ff445a2278fa3cc4f62b94"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.dll",
+      "f37723c9ae9343e632c201aa76aad59d775703566f78dc3ed283931285f43bab"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.MessagePack.dll",
+      "98a3e41adf676c141daebf5c1975a85362a4f2d2ac74d4b1e3b5b8ac55a7679f"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+      "9454606dabe90ac55b6ba44035e1f179bbd3eeb3efa82a0fba00e4e49d526ce6"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.Mediator.dll",
+      "150d9602c239c3ab9aed536f3ef2c00205915a886cf750aaab50e4fed5bc88ca"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.JobService.dll",
+      "fed86127f0c6ec4d705510998eb92fbac0f531c9a9d61fc2f5a57fc488415569"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.pdb",
+      "afbc9ebacc6175bf30f62740ca01357117242b684b460c27ab54aded242b2495"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+      "60e638449d2c347e9186f33defac2010e9f5415f22f358edf0b4a4365723590f"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.testconfig.json",
+      "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.Testing.dll",
+      "ab5b59028fc0e3cdb046dc711af6867ff52deb7c8f2a700fc6b07099998b4d21"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.Courier.dll",
+      "a16c7d459c2348a96fc5ef32c14944e6d48fac830cf233fefc7140dcbaa50b6d"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.runtimeconfig.json",
+      "1955401410065e135853c5621f9a43fd42685aebfab3d1732fd60488336cdca5"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.Futures.dll",
+      "062f36b66d947a1c5f53f940a59d9bb32ed845c9f848dc139fdde4f3b1c0eea9"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.Abstractions.dll",
+      "2fc7e611c3af38a7af5159000c7b81e48df7e740f9b48d323fa2a9977d4b8993"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.Sagas.dll",
+      "93a80965694b60ca2db475f4f86577d299e2625b59b18d6bf3c68f35d35caa10"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "769980186a0a8ece21b50893b506b0afefeb73f07c91e392efc42c8511188651"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.deps.json",
+      "db0bab359fa398a7dfc7735b2b9a3a281e24c4bc42d75fc15becefbe1d283417"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.dll",
+      "7f3cf589ec0c39a1306bc14b84c8b47da798502088620dd9ee13ef4566c00cd0"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "5948814c4c20d86730eb9a3ac207881b3de71c3656947e88b7d278537fdf507b"
+    ],
+    [
+      "m2-elapsed-measurement-escapes",
+      "ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "48b4f5acf5a0fe659aad3842c777d6dbea037f2158cd263147927297718e3bda"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.dll",
+      "f37723c9ae9343e632c201aa76aad59d775703566f78dc3ed283931285f43bab"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.MessagePack.dll",
+      "98a3e41adf676c141daebf5c1975a85362a4f2d2ac74d4b1e3b5b8ac55a7679f"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+      "9454606dabe90ac55b6ba44035e1f179bbd3eeb3efa82a0fba00e4e49d526ce6"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.Mediator.dll",
+      "150d9602c239c3ab9aed536f3ef2c00205915a886cf750aaab50e4fed5bc88ca"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.JobService.dll",
+      "fed86127f0c6ec4d705510998eb92fbac0f531c9a9d61fc2f5a57fc488415569"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.pdb",
+      "afbc9ebacc6175bf30f62740ca01357117242b684b460c27ab54aded242b2495"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+      "60e638449d2c347e9186f33defac2010e9f5415f22f358edf0b4a4365723590f"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.testconfig.json",
+      "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.Testing.dll",
+      "ab5b59028fc0e3cdb046dc711af6867ff52deb7c8f2a700fc6b07099998b4d21"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.Courier.dll",
+      "a16c7d459c2348a96fc5ef32c14944e6d48fac830cf233fefc7140dcbaa50b6d"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.runtimeconfig.json",
+      "1955401410065e135853c5621f9a43fd42685aebfab3d1732fd60488336cdca5"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.Futures.dll",
+      "062f36b66d947a1c5f53f940a59d9bb32ed845c9f848dc139fdde4f3b1c0eea9"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.Abstractions.dll",
+      "2fc7e611c3af38a7af5159000c7b81e48df7e740f9b48d323fa2a9977d4b8993"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.Sagas.dll",
+      "93a80965694b60ca2db475f4f86577d299e2625b59b18d6bf3c68f35d35caa10"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "769980186a0a8ece21b50893b506b0afefeb73f07c91e392efc42c8511188651"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.deps.json",
+      "db0bab359fa398a7dfc7735b2b9a3a281e24c4bc42d75fc15becefbe1d283417"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.dll",
+      "7f3cf589ec0c39a1306bc14b84c8b47da798502088620dd9ee13ef4566c00cd0"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "5948814c4c20d86730eb9a3ac207881b3de71c3656947e88b7d278537fdf507b"
+    ],
+    [
+      "m3-zero-duration-fabricated",
+      "ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "d153b5dd9587d8bb744a4c57bfc8f9c7f00f06bd3c2bce13f279c12d665d760e"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.dll",
+      "f561848c53bf55f3c367045c411aa7e2b20ce42f69b1949df1e6b2ac650d03f7"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.MessagePack.dll",
+      "98a3e41adf676c141daebf5c1975a85362a4f2d2ac74d4b1e3b5b8ac55a7679f"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+      "0888dc11ad121c1c2e64a0c8210befd610b845fdc543ae51b3e4b27f18b67f9a"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.Mediator.dll",
+      "150d9602c239c3ab9aed536f3ef2c00205915a886cf750aaab50e4fed5bc88ca"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.JobService.dll",
+      "fed86127f0c6ec4d705510998eb92fbac0f531c9a9d61fc2f5a57fc488415569"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.pdb",
+      "9a0966b39f91b459decbbbdaf15563c0455b4b56fa1bbf0f4f4d59b6466f75e9"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+      "60e638449d2c347e9186f33defac2010e9f5415f22f358edf0b4a4365723590f"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.testconfig.json",
+      "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.Testing.dll",
+      "ab5b59028fc0e3cdb046dc711af6867ff52deb7c8f2a700fc6b07099998b4d21"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.Courier.dll",
+      "a16c7d459c2348a96fc5ef32c14944e6d48fac830cf233fefc7140dcbaa50b6d"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.runtimeconfig.json",
+      "1955401410065e135853c5621f9a43fd42685aebfab3d1732fd60488336cdca5"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.Futures.dll",
+      "062f36b66d947a1c5f53f940a59d9bb32ed845c9f848dc139fdde4f3b1c0eea9"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.Abstractions.dll",
+      "2fc7e611c3af38a7af5159000c7b81e48df7e740f9b48d323fa2a9977d4b8993"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.Sagas.dll",
+      "93a80965694b60ca2db475f4f86577d299e2625b59b18d6bf3c68f35d35caa10"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "769980186a0a8ece21b50893b506b0afefeb73f07c91e392efc42c8511188651"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.deps.json",
+      "db0bab359fa398a7dfc7735b2b9a3a281e24c4bc42d75fc15becefbe1d283417"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.dll",
+      "7f3cf589ec0c39a1306bc14b84c8b47da798502088620dd9ee13ef4566c00cd0"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "5948814c4c20d86730eb9a3ac207881b3de71c3656947e88b7d278537fdf507b"
+    ],
+    [
+      "m4-required-notification-skipped-r2",
+      "ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "c11d1db808c5d9fcf7bd2de6fa4c4e8f5b2e4046e35dc51c16da3974681fe940"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.dll",
+      "5abe7deb4c52f91481cae823c0f2fdcda222d43bc9471600f5a05b2d0f8722b5"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.MessagePack.dll",
+      "98a3e41adf676c141daebf5c1975a85362a4f2d2ac74d4b1e3b5b8ac55a7679f"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+      "5d91d93030bed9ab3b597fa171b536e8ac7a603e7ee04cbc8781c34091488fed"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.Mediator.dll",
+      "150d9602c239c3ab9aed536f3ef2c00205915a886cf750aaab50e4fed5bc88ca"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.JobService.dll",
+      "fed86127f0c6ec4d705510998eb92fbac0f531c9a9d61fc2f5a57fc488415569"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.pdb",
+      "5e75ced02246ce022a9e2529cf93bc6258cdf20d4b1f59d72a7e8fbeee1ab50c"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests",
+      "60e638449d2c347e9186f33defac2010e9f5415f22f358edf0b4a4365723590f"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.testconfig.json",
+      "3d0eec5f58c6d4dc6aba60fe8c39ac2864a1a5b8cce1c1d69d1b9b750ca4342f"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.Testing.dll",
+      "ab5b59028fc0e3cdb046dc711af6867ff52deb7c8f2a700fc6b07099998b4d21"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.Courier.dll",
+      "a16c7d459c2348a96fc5ef32c14944e6d48fac830cf233fefc7140dcbaa50b6d"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.runtimeconfig.json",
+      "1955401410065e135853c5621f9a43fd42685aebfab3d1732fd60488336cdca5"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.Futures.dll",
+      "062f36b66d947a1c5f53f940a59d9bb32ed845c9f848dc139fdde4f3b1c0eea9"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.Abstractions.dll",
+      "2fc7e611c3af38a7af5159000c7b81e48df7e740f9b48d323fa2a9977d4b8993"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.Sagas.dll",
+      "93a80965694b60ca2db475f4f86577d299e2625b59b18d6bf3c68f35d35caa10"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "769980186a0a8ece21b50893b506b0afefeb73f07c91e392efc42c8511188651"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.EntityFrameworkCore.Tests.deps.json",
+      "db0bab359fa398a7dfc7735b2b9a3a281e24c4bc42d75fc15becefbe1d283417"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.dll",
+      "7f3cf589ec0c39a1306bc14b84c8b47da798502088620dd9ee13ef4566c00cd0"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "5948814c4c20d86730eb9a3ac207881b3de71c3656947e88b7d278537fdf507b"
+    ],
+    [
+      "m5-required-notification-not-awaited",
+      "ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "0cbc233da2063dbeb907c5772d96ff8fb4bac03746738082506000a01e84e4e0"
+    ]
+  ],
+  "limits": [
+    "ONE fresh clone and ONE shared locked restore; FIVE serial fresh-source writes and forced Rebuilds, not five clones/restores.",
+    "Each archive source is bound by its own compiled PE/PDB document checksum and native output graph; current mutable clone output may have advanced.",
+    "Actual M5 gateFalse112 red is credited from this run only; no scheduler-independent exact two-red guarantee.",
+    "Native failures are finite first assertions, no timeout/compiler/discovery kill.",
+    "Root outer driver-session join and unchanged fixed post native13 remain pending for final bounded chain acceptance.",
+    "No full P05/provider/current coverage/cloud/hardware acceptance."
+  ],
+  "supersedes_metadata_precursor": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c7-five-mutants-combined-native-artifact-review-r1.json",
+    "sha256": "b095a45e3c91621e07b3e7c86b36e9b3798f281ac0f4eff8c7a75364fff39813",
+    "correction": "R1 reviewer looked for shared restore raw under nonexistent raw/ subdirectory; actual immutable restore raw is directly inside shared-restore/. Corrected path binds both raw hashes and actual closed compressed binlog. No product/native rerun or changed evidence."
+  }
+}

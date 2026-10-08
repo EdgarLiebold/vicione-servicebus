@@ -1,0 +1,6 @@
+{
+  "kind": "ROOT_OPERATIONAL_DRIVER_ACCEPTANCE",
+  "script_sha256": "62c4bac8a6aec0325ca1f547d23293b6c5e06819a967aa6cdcff66457c0345f7",
+  "adversarial_review_sha256": "71a7c546b2644ef1f93dff8f5d55fdcbb59ff7bb4e91cef8585c095af39a26d9",
+  "scope": "Sequential root-owned m2..m5 restore/strict/native, joined stage PID receipts. Exact seven originalnames/nativecounters and runtime hashes enforced. Operational acceptance only; no causal/mutant credit before actual artifacts reviewed."
+}

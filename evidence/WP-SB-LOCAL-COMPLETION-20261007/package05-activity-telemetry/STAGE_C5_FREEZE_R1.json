@@ -1,0 +1,20 @@
+{
+  "kind": "P05_C5_FIXED_SOURCE_FREEZE",
+  "source_sha256": {
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/ColdTelemetrySourceIsolationTests.cs": "b70774d05b7d4bba088e0f2f0266bc0807fb1435b927077b2720ebd1a79d8eb6",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "00913637eafb82610ecbdd3a1a11a2e7c30d62bbe2ad81ce9ca0325287c52db4",
+    "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs": "05e403b9ff64a86e7828b08103837c7bd631e935890b089c63fe58eeb454abb5",
+    "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs": "d71cd6088adf54b5ab5e544b1bfc61ce4abfbd4028e4fdf1f53207e91f8b718a"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-fixed-owner-r1",
+  "root808_sha256": "a7ef18b7dbf6d015f10a0873f4f771d1fc0568701e4c9ff8fbc49b7c5ebbbd0c",
+  "research_plan_sha256": "ef9ef28c52d03e0cf0776019a50c127b9ab91a27f2d277c858537840d0e63679",
+  "native_parent_facts": 7,
+  "child_native_cases": 7,
+  "apphost_help_receipt_sha256": "5591ee005ea3395ce7132e300f832117e1deb8acc6a377e8a75148a163ef6617",
+  "excluded_parent_protocol_attempt_sha256": "b5d6021a0ad251eea562534c9024a9bf4000c473d7fe89ebeddf3a877d83b9d4",
+  "excluded_missing_signature_build_sha256": "18e865b4c7a1c7bfb259ca9a38d0a821182bf9f4cfe8178bcd3463f1dd729fda",
+  "original_source_freeze_sha256": "71ae3aca6fd8f24ac9457c2b9bc0872300095693572ee37003a2cd98649ef2b5",
+  "original_native_result_sha256": "88a6afdbc9e6a19482fa1c70d4ef4c4a3bb941abf00e87107e223b63277e253a",
+  "limits": "Two cold source owners only; public caller cleanup and EF elapsed remain open; nonthrowing source control passes original."
+}

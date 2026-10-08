@@ -1,0 +1,94 @@
+{
+  "kind": "ROOT_ACTUAL_FIRST_FINITE_COMPOSITION_FOUR_MUTANT_CAUSE_LEDGER_R1",
+  "rows": [
+    {
+      "name": "M1-drop-limits-cardinality",
+      "actual_native_sha256": "4621ddf594a3b99af5ffe365d5d0f8dc6b7e1fb0e1aa53876d2619378db1c898",
+      "focused_raw_sha256": "528c27d0c16bbf93ddb2e33aec62f7837a709768d3ec9fe34a0c8c3f91d799c9",
+      "first_finite_method": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests.MissingTransportAndLimitsFailTogetherBeforeRuntime",
+      "first_finite_source_line": 23,
+      "oracle": "Assert.Equal exact ordered diagnostic collection: expected2, actual1 transport diagnostic. ConfigurationException type check22 passed.",
+      "reached_boundary": "Diagnostic collection cardinality and preserved transport-only message; lower callback/probe/cleanup assertions29..33 unreached.",
+      "single_cause": "Source omitted MessageLimits cardinality call; one finite red, not independent lower cleanup errors.",
+      "healthy_controls": [
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests.SelectedTypedPayloadLimitFailsBeforeMaterialization",
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests.DefaultAndTypedBusesDeliverAndStopWithUnusedPayloadPoison"
+      ],
+      "strict_warnings_errors": {
+        "warnings": 0,
+        "errors": 0
+      },
+      "product_kill_count": 1
+    },
+    {
+      "name": "M2-defer-selected-payload-validation",
+      "actual_native_sha256": "55a62ad9db56e392083c681f446238b4d6d38c57bbb3e10c4299d9741d0b3937",
+      "focused_raw_sha256": "83af5f08149126c73904c76b927c7a6b682c85cbccf599e4439304fb03ac1a17",
+      "first_finite_method": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests.SelectedTypedPayloadLimitFailsBeforeMaterialization",
+      "first_finite_source_line": 40,
+      "oracle": "Assert.IsType: expected Microsoft.Extensions.Options.OptionsValidationException, actual ViciOne.ServiceBus.ConfigurationException.",
+      "reached_boundary": "Raw observed late BusComposition wrapper; direct OptionsName/type/message and callback/cleanup assertions41..51 unreached.",
+      "single_cause": "Source omitted eager payload ValidateOnStart; later options validation still rejects but at wrong observed boundary/type.",
+      "healthy_controls": [
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests.MissingTransportAndLimitsFailTogetherBeforeRuntime",
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests.DefaultAndTypedBusesDeliverAndStopWithUnusedPayloadPoison"
+      ],
+      "strict_warnings_errors": {
+        "warnings": 0,
+        "errors": 0
+      },
+      "product_kill_count": 1
+    },
+    {
+      "name": "M3-start-only-default-instance",
+      "actual_native_sha256": "8cb1a2e0417c0259844efd50aa2a08683109b0f0626a66377ed6b9325f156719",
+      "focused_raw_sha256": "5f785ae7714c65b89c70e481a9bd18b3e870dc4e55bf2be26abf67100f93aaef",
+      "first_finite_method": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests.DefaultAndTypedBusesDeliverAndStopWithUnusedPayloadPoison",
+      "first_finite_source_line": 91,
+      "oracle": "AssertStarted typed PreStart Equal: expected1 actual0, actual typed invocation RunAsync212; host/Created checks89/90 passed.",
+      "reached_boundary": "Early scalar first assertion before send/consume waits. Outer finally executes code attempts; output/Result/lower message/lifecycle/cleanup assertions never reached or emitted and receive zero health/kill credit.",
+      "single_cause": "Source start fan-out selected default only; no timeout/compiler kill.",
+      "healthy_controls": [
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests.MissingTransportAndLimitsFailTogetherBeforeRuntime",
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests.SelectedTypedPayloadLimitFailsBeforeMaterialization"
+      ],
+      "strict_warnings_errors": {
+        "warnings": 0,
+        "errors": 0
+      },
+      "product_kill_count": 1
+    },
+    {
+      "name": "M4-stop-only-default-instance",
+      "actual_native_sha256": "3a55e627552bf0edc278b619fbd5cfbf4675bc2694ec8f7f7b3476343954185b",
+      "focused_raw_sha256": "45874b5b363396c30a4512cfe190b3291f358897fdf8490a6f0e80062d1c067c",
+      "first_finite_method": "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests.DefaultAndTypedBusesDeliverAndStopWithUnusedPayloadPoison",
+      "first_finite_source_line": 100,
+      "oracle": "AssertLifecycle typed PreStop Equal: expected1 actual0, actual typed call71; default full lifecycle70 and prior message/callback assertions passed.",
+      "reached_boundary": "Immutable typed snapshot at Host.Stop BEFORE DI.Dispose: PreStop0/PostStop0. Typed PostStop/Faults and AssertCleanup assertions after100/71 unreached, zero extra kill. Raw cleanup diagnostics remain observations only.",
+      "single_cause": "Source stop fan-out selected default only; DI disposal cannot manufacture pre-disposal stop proof.",
+      "healthy_controls": [
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests.MissingTransportAndLimitsFailTogetherBeforeRuntime",
+        "ViciOne.ServiceBus.Tests.Configuration.DependencyInjection.BusCompositionGenericHostStartupTests.SelectedTypedPayloadLimitFailsBeforeMaterialization"
+      ],
+      "strict_warnings_errors": {
+        "warnings": 0,
+        "errors": 0
+      },
+      "product_kill_count": 1
+    }
+  ],
+  "aggregate": {
+    "variants": 4,
+    "same3_Facts_repeated_slots": 12,
+    "first_finite_RED": 4,
+    "healthy_controls": 8,
+    "distinct_case_ids": 3
+  },
+  "root_read_provenance": "All4 full focused native and strict build stdout logs personally consumed untruncated; fulloriginal322/owners319/89/78 and entirelossless4source changes known. Whole8149 event ledger mechanical plus3startup/projection/summary human spans. No callback-isolated/assertion timeout credit, no peer personal read transfer.",
+  "limits": [
+    "Only four deliberately compiled singlecause variants, not four current product findings. Repeated12not12distincttests.",
+    "Original3/whole8149 alreadyaccepted; physical48PE/PDB proofs and independent mutant review are separate/pending. Source finally restores6102 but currentruntime remainsM4 until freshpost.",
+    "Later/unreached asserts and repeatedstackframes/diagnosticobservations zero additional credit. No cloud/HW/currentcoverage/CRAP/fullP04/globalA+ claim."
+  ]
+}

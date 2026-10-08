@@ -1,0 +1,16 @@
+{
+  "kind": "CURRENT_DOCUMENTATION_RECONCILIATION_SUCCESSOR",
+  "status": "PENDING_INDEPENDENT_REVIEW",
+  "prior_freeze": "DOCUMENTATION_FREEZE_R5.json",
+  "fix": "AddboundedtypedSourceB1acceptance7968Core+2cases+3compiledmutants3red3healthy+post2; retainotherP05/cache/startup/coverage/provider/package/CI/cloud/hardware obligations",
+  "files": {
+    "CHANGELOG.md": "b033dcde2647835446e3ff1fb3790983ba24243b2f95dc439258a401794b464f",
+    "TODO.md": "ae3e29a8a5f6cdea87019ad75805cd21c3b4de06339e248172945e173c1446cc",
+    ".testagent/status.md": "9c9268a1360d757869aa4f9d4bae62203b9a055893d870db69f5fea5697f37fb",
+    ".testagent/plan.md": "12c5aa0edb8944cab37c85c363caa4a5a90bedf974b97738ef1b6e6c8cfed559",
+    ".testagent/local-completion-plan.md": "74d9e5f89542f592e693b61be60678fbf1b4fe5f09abc0f17e631a21a4d40d4b",
+    "docs/quality-status.md": "7a56aa10b925ff283c043d57965c1520ae53b53fb2fea9b129e30f9af38eb06e"
+  },
+  "snapshot_directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r6",
+  "broaderengineering_cloud_hardware": "Remain open; historicalsectionsandallOBLtokensretained"
+}

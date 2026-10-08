@@ -1,0 +1,32 @@
+{
+  "kind": "ROOT_QUALIFIED_ACTUAL_COUNTERS_FIXED_SOURCE_RECHECK_POST_EXECUTION_GATE_R1",
+  "references": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/RESULT.json",
+      "sha256": "22645aa8efd174131edcf4481fdd4b6cc79eb814432bd48057832d17b31a8161"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/ROOT_FIRST_FINITE_AND_PHYSICAL_REVIEW_R1.json",
+      "sha256": "829e930a5c36ff49836302b7305fb54c2c469980e3435142d871aa89f5db0644"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-four-counter-first-finite-native-adversarial-r1.json",
+      "sha256": "5cdb059645f0c0640edd23b5f9c2c23a8bbb0cdcddb2885156bd52f5b1ca93b0"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-clock-four-counters-native-adversarial-r1.json",
+      "sha256": "ce6b42dff760368585762f4079f678d7afee941fbcd06f4003d33f366a9d5869"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-restored-post-six-driver-r1/driver.py",
+      "sha256": "d1ce59f0577e99f3eca60844f7b9f86eb370ad88aa93ddb2e32aec224e0b5432"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-restored-post-six-driver-preflight-adversarial-r1.json",
+      "sha256": "917639945617af139e52e35696de3b1fcebfe94ebdae32f21bc692f9d4a173bc"
+    }
+  ],
+  "fullO6106_C216107_fixedsource_config14_locked13_exact": true,
+  "actualCounterStagesJoinedAndTwoIndependentReviewsRead": true,
+  "limits": "LiveM4runtime intentionally differsFixed; mandatoryforcedRebuild then actualsixnative and bytecomparison18 toqualifiedFixed beforecanonical. Executiongateonly."
+}

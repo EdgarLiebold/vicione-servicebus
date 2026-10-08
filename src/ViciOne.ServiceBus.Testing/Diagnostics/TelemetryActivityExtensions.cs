@@ -42,17 +42,23 @@ public static class TelemetryActivityExtensions
         ArgumentNullException.ThrowIfNull(timeProvider);
         cancellationToken.ThrowIfCancellationRequested();
 
-        using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);
+        var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);
+        bool bodyCompleted = false;
 
         try
         {
             await action(publishEndpoint).ConfigureAwait(false);
             await trackedActivity.WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);
+            bodyCompleted = true;
         }
         catch
         {
             trackedActivity.StopWaiting();
             throw;
+        }
+        finally
+        {
+            DisposeTracker(trackedActivity, bodyCompleted);
         }
     }
 
@@ -90,17 +96,23 @@ public static class TelemetryActivityExtensions
         ArgumentNullException.ThrowIfNull(timeProvider);
         cancellationToken.ThrowIfCancellationRequested();
 
-        using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);
+        var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);
+        bool bodyCompleted = false;
 
         try
         {
             await action(sendEndpoint).ConfigureAwait(false);
             await trackedActivity.WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);
+            bodyCompleted = true;
         }
         catch
         {
             trackedActivity.StopWaiting();
             throw;
+        }
+        finally
+        {
+            DisposeTracker(trackedActivity, bodyCompleted);
         }
     }
 
@@ -148,18 +160,24 @@ public static class TelemetryActivityExtensions
         ArgumentNullException.ThrowIfNull(timeProvider);
         cancellationToken.ThrowIfCancellationRequested();
 
-        using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);
+        var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);
+        bool bodyCompleted = false;
 
         try
         {
             Response<TResponse> response = await action(client).ConfigureAwait(false);
             await trackedActivity.WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);
+            bodyCompleted = true;
             return response;
         }
         catch
         {
             trackedActivity.StopWaiting();
             throw;
+        }
+        finally
+        {
+            DisposeTracker(trackedActivity, bodyCompleted);
         }
     }
 
@@ -211,18 +229,24 @@ public static class TelemetryActivityExtensions
         ArgumentNullException.ThrowIfNull(timeProvider);
         cancellationToken.ThrowIfCancellationRequested();
 
-        using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);
+        var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);
+        bool bodyCompleted = false;
 
         try
         {
             Response<TResponse1, TResponse2> response = await action(client).ConfigureAwait(false);
             await trackedActivity.WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);
+            bodyCompleted = true;
             return response;
         }
         catch
         {
             trackedActivity.StopWaiting();
             throw;
+        }
+        finally
+        {
+            DisposeTracker(trackedActivity, bodyCompleted);
         }
     }
 
@@ -278,18 +302,42 @@ public static class TelemetryActivityExtensions
         ArgumentNullException.ThrowIfNull(timeProvider);
         cancellationToken.ThrowIfCancellationRequested();
 
-        using var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);
+        var trackedActivity = new TrackedActivity(GetTestMethodName(), timeout, idleTimeout, timeProvider);
+        bool bodyCompleted = false;
 
         try
         {
             Response<TResponse1, TResponse2, TResponse3> response = await action(client).ConfigureAwait(false);
             await trackedActivity.WaitForCompletionAsync(cancellationToken).ConfigureAwait(false);
+            bodyCompleted = true;
             return response;
         }
         catch
         {
             trackedActivity.StopWaiting();
             throw;
+        }
+        finally
+        {
+            DisposeTracker(trackedActivity, bodyCompleted);
+        }
+    }
+
+    static void DisposeTracker(TrackedActivity tracker, bool bodyCompleted)
+    {
+        if (bodyCompleted)
+        {
+            tracker.Dispose();
+            return;
+        }
+
+        try
+        {
+            tracker.Dispose();
+        }
+        catch (Exception)
+        {
+            // Cleanup cannot replace the action or wait failure already propagating.
         }
     }
 

@@ -1,0 +1,17 @@
+{
+  "kind": "ROOT_ACTUAL_WHOLE_CORE_CACHE4_OWN_ORIGINAL_PHYSICAL_REUSE_R1",
+  "native_sha256": "3305ea0594216a80789af04e424046e6f9d4e67eb25251815b7f7f9db290b26f",
+  "own_fresh_original_physical_sha256": "972c16da572ea1beb41e71e458f0b85eb69f98d3417c4a4e23747e647fc10649",
+  "whole": {
+    "total": 8213,
+    "passed": 8213,
+    "failed": 0,
+    "skipped": 0
+  },
+  "runtime17_original_whole_live_directbytes_exact": true,
+  "assets12_equal": true,
+  "owners10_generated39_equal": true,
+  "raw3_crc1_exact": true,
+  "read": "Whole selected4 and Projection native bodies/final summary/empty stderr read; all8213 headers mechanically checked. Same actual runtime as own fresh12PE/3811documents original; no freshwhole PE parse.",
+  "limits": "Bounded whole Core aggregate, same4 repeated included; not sum with4focused. Independentwholeacceptance and counter/post/canonical2 remainpending; no productfix or A+globalclaim."
+}

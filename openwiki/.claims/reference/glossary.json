@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:28baedcd24588ec338e963634a8b7d916e6e0a99a3e00f686c23fb03121ad393",
+  "claims": [
+    {
+      "id": "claim_65aad5a2c4304d79a13ae56247b6f65d",
+      "statement": "ServiceBus combines application-hosted messaging with separately selected workflow and persistence features.",
+      "evidence": [
+        {
+          "resource": "repo://README.md",
+          "version": "repo-file-v1:sha256:1a6fb626c4b2d2523298a62e8f2c148e969fc21df3d8a058d3a4a2dfe069a83a"
+        },
+        {
+          "resource": "repo://docs/provider-capabilities.json",
+          "version": "repo-file-v1:sha256:422a0241dce7f85c76e587727d2a978969f44757063d8b0bacc699299ca9b3cb"
+        },
+        {
+          "resource": "repo://samples/SuiteComposition/Program.cs",
+          "version": "repo-file-v1:sha256:75e71fec6e23b9176ed3024ceee04d276cee0847f0c39b61881ba52edd620a9d"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.7.1",
+    "at": "2026-10-07T17:44:57.086Z"
+  }
+}

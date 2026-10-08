@@ -1,0 +1,185 @@
+{
+  "kind": "ROOT_FIVE_ACTUAL_EVENTHUB_CLOCK_CONTROLS_POST_PHYSICAL_QUALIFICATION_R1",
+  "aggregate_sha256": "b0ad66af1d2cb28e8bf977fad2946b36d17cbf5a2f5d0549da94dc2e74cc0bb4",
+  "root_sdk_session": 67622,
+  "root_sdk_joined_exit": 0,
+  "root_pure_physical_session": 1284,
+  "root_pure_physical_joined_exit": 0,
+  "stages": [
+    {
+      "variant": "M1-receiver-system",
+      "stage": "strict-rebuild",
+      "pid": 78682,
+      "exit": 0,
+      "joined": true,
+      "deadline": false,
+      "fresh_process_group_absent": true
+    },
+    {
+      "variant": "M1-receiver-system",
+      "stage": "focused-two",
+      "pid": 78739,
+      "exit": 2,
+      "joined": true,
+      "deadline": false,
+      "fresh_process_group_absent": true
+    },
+    {
+      "variant": "M2-processor-system",
+      "stage": "strict-rebuild",
+      "pid": 78804,
+      "exit": 0,
+      "joined": true,
+      "deadline": false,
+      "fresh_process_group_absent": true
+    },
+    {
+      "variant": "M2-processor-system",
+      "stage": "focused-two",
+      "pid": 79962,
+      "exit": 2,
+      "joined": true,
+      "deadline": false,
+      "fresh_process_group_absent": true
+    },
+    {
+      "variant": "M3-partition-system",
+      "stage": "strict-rebuild",
+      "pid": 80138,
+      "exit": 0,
+      "joined": true,
+      "deadline": false,
+      "fresh_process_group_absent": true
+    },
+    {
+      "variant": "M3-partition-system",
+      "stage": "focused-two",
+      "pid": 80268,
+      "exit": 2,
+      "joined": true,
+      "deadline": false,
+      "fresh_process_group_absent": true
+    },
+    {
+      "variant": "M4-batch-system",
+      "stage": "strict-rebuild",
+      "pid": 80532,
+      "exit": 0,
+      "joined": true,
+      "deadline": false,
+      "fresh_process_group_absent": true
+    },
+    {
+      "variant": "M4-batch-system",
+      "stage": "focused-two",
+      "pid": 80634,
+      "exit": 2,
+      "joined": true,
+      "deadline": false,
+      "fresh_process_group_absent": true
+    },
+    {
+      "variant": "M5-batch-wrong-interval",
+      "stage": "strict-rebuild",
+      "pid": 80707,
+      "exit": 0,
+      "joined": true,
+      "deadline": false,
+      "fresh_process_group_absent": true
+    },
+    {
+      "variant": "M5-batch-wrong-interval",
+      "stage": "focused-two",
+      "pid": 80781,
+      "exit": 2,
+      "joined": true,
+      "deadline": false,
+      "fresh_process_group_absent": true
+    },
+    {
+      "variant": "restored-post",
+      "stage": "strict-rebuild",
+      "pid": 80796,
+      "exit": 0,
+      "joined": true,
+      "deadline": false,
+      "fresh_process_group_absent": true
+    },
+    {
+      "variant": "restored-post",
+      "stage": "focused-two",
+      "pid": 80885,
+      "exit": 0,
+      "joined": true,
+      "deadline": false,
+      "fresh_process_group_absent": true
+    }
+  ],
+  "physical": [
+    {
+      "variant": "M1-receiver-system",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/M1-receiver-system/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "b17521f69ce6ad45f3dbd68e385ea054523b285fabd1bd8abedc03725065480b"
+    },
+    {
+      "variant": "M2-processor-system",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/M2-processor-system/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "dd72fcababc29a2faf30f7058b0111e25b122e883149bdb24339f324968feee5"
+    },
+    {
+      "variant": "M3-partition-system",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/M3-partition-system/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "958186583cba822c9172dcfa9e3b1c21f8848a333efd87d78a9d5d5814f4198c"
+    },
+    {
+      "variant": "M4-batch-system",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/M4-batch-system/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "4342bc1e562a99ad5ca00781c3f41664c835b027f6d3ab2ef4e6ec9059d02c2f"
+    },
+    {
+      "variant": "M5-batch-wrong-interval",
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/eventhub-selected-clock-five-controls-and-post-native-r1/M5-batch-wrong-interval/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+      "sha256": "9dd4e9676642731bca553f26dc19d09c083b52e19bc7805a68a53a5390cedd06"
+    }
+  ],
+  "first_finite_causes": [
+    {
+      "variant": "M1-receiver-system",
+      "first_finite_line": 33,
+      "legacy_control_passed": true,
+      "lower_partial_batch_phase_unreached": true
+    },
+    {
+      "variant": "M2-processor-system",
+      "first_finite_line": 33,
+      "legacy_control_passed": true,
+      "lower_partial_batch_phase_unreached": true
+    },
+    {
+      "variant": "M3-partition-system",
+      "first_finite_line": 33,
+      "legacy_control_passed": true,
+      "lower_partial_batch_phase_unreached": true
+    },
+    {
+      "variant": "M4-batch-system",
+      "first_finite_line": 33,
+      "legacy_control_passed": true,
+      "lower_partial_batch_phase_unreached": true
+    },
+    {
+      "variant": "M5-batch-wrong-interval",
+      "first_finite_line": 34,
+      "legacy_control_passed": true,
+      "lower_partial_batch_phase_unreached": true
+    }
+  ],
+  "post_result_sha256": "cc5b8d5e6ab3ac164fc77f988260621cd3fec3f16454b868545fb5963fe88bb1",
+  "all16_fixed_post_archive_live_byte_equal": true,
+  "all11_asset_equal": true,
+  "canonical_source_count": 6108,
+  "private_shared_source_count": 6109,
+  "configuration_files": 15,
+  "state_sha256": "ebbed0a202eb45a8912e0c80fee64afd1ef5cdbcc176f92c0cec6a7a3a63808c",
+  "limits": "Five variants repeat two FACTs: ten slots, five finite RED and five healthy Legacy controls; not ten new tests or five bugs. Actual M1..4 first Single-empty33; M5 first dueEqual34(7vs1sec), lower partial phase unreached. Corrected Post2 plus exact16 may reuse accepted corrected Six physical/ALL100 only; each mutant fresh11PE checksums qualified. Independent ALL100/cause/adversarial canonical transfer still pending; no global/cloud/HW closure."
+}

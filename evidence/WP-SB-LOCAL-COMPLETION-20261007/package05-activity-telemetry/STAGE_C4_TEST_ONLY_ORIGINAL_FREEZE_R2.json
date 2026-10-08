@@ -1,0 +1,16 @@
+{
+  "kind": "P05_C4_TEST_ONLY_ORIGINAL_FREEZE",
+  "native_cases": 13,
+  "source_sha256": {
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableSnapshotCadenceIsolationTests.cs": "d3cd40063b38b0f5a1e687c27463f299d531890f314c37274d08b71bd3f8c345",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "8637f1a9bf688ee55f9a0fba10c723e6f7a9ebe0635f83396759d3493ee17a81",
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs": "25d8ef5caa05e004b191561e29d557ee865c7d28b645ea853826b8b0d6101f6a"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c4-test-only-original-owner-r2",
+  "research_plan_sha256": "0d0965cc30df17bb4629f5d6451197788b069bdae58a27418f18421a8c6dc136",
+  "excluded_compiler_fixture_attempt": {
+    "result_sha256": "49827a77f28ffbb526042013ab5ca25d5b7ba32a94e988d2f6c30bbfcd9cd32a",
+    "native_credit": 0
+  }
+}

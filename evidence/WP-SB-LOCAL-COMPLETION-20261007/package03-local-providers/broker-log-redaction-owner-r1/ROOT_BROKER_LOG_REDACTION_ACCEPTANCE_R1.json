@@ -1,0 +1,18 @@
+{
+  "kind": "ROOT_BOUNDED_BROKER_LOG_KNOWN_RUN_CREDENTIAL_REDACTION_ACCEPTANCE_R1",
+  "finding": "ASB-DIAG-01",
+  "state": "CLOSED_WITHIN_KNOWN_LITERAL_RUN_CREDENTIAL_PRODUCER_AND_CURRENT_REDACTED_DERIVATIVE_SCOPE",
+  "independent_review_sha256": {
+    "package03-broker-log-redaction-private-source-tests-adversarial-r1.json": "d88384c42f5c67315c946b9df1a977886b1d80484d69f3dad81cad54a877cd63",
+    "package03-broker-log-redaction-original-fixed-nine-and-child-r2-adversarial-r1.json": "1e38e2a54dd7dc7230a56877960ceeaf9d043c025b4e986900e4b5376fdd22ea",
+    "package03-broker-log-redaction-canonical-post9-diag01-disposition-adversarial-r1.json": "fbc3c6c3cff29db892f0888af6698a892dec8d43d197e41a23e295c0c11b40da"
+  },
+  "canonical_application_sha256": "66003473fca75e0811ef9de1dcecc9e0be7318bb98317f55bfa59d40c504a09c",
+  "post9_result_sha256": "30e31e196fa3abbefa80297863c9ac6b1e1ff2d0f239b3efaa3503a2f42a3ba9",
+  "first_cause_sha256": "4f8f0876fb1c3ab4cb3cc2389d99788ac10cb189aa0c8a3947cfdb6a4900e077",
+  "native_boundaries": "Original9 has27 finiteAssertionfailures in6methods/3healthy;fixed9 andcanonicalpost9allPASS. R2 repeats attest actualloadedchildmodule paths/SHA; repeatedslotsnotadditionaluniquecases.",
+  "root_read": "Complete candidate160/test132, original27failureblocks/fixed/post9 wholelogs and substantivefinalreview personally consumed. All twofilecanonical/source/test and3postrawSHA mechanically rebound.",
+  "privacy_successor_sha256": "9f8f817fde624bd49df9a0862872cca12dca49e49da027387c4bbfa5b04b4aa6",
+  "known_sql_binlog_scan_sha256": "e4d81ddba6f25ca774027990034608f19a50ac7f5ddd264460ce808e19ed449b",
+  "limits": "Known literal11runcredentialnames only, no universal log/binlog/payload/encodedsecretcleanliness. ASB30 original collector remains historical hash e93; no retrospective native rerun. Three negativebrokerentitysizeevents and otherdiagnosticcausalityremainseparateopen."
+}

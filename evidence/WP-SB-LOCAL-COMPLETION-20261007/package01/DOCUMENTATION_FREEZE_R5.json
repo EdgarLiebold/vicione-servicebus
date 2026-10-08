@@ -1,0 +1,16 @@
+{
+  "kind": "CURRENT_DOCUMENTATION_RECONCILIATION_SUCCESSOR",
+  "status": "PENDING_INDEPENDENT_REVIEW",
+  "prior_freeze": "DOCUMENTATION_FREEZE_R4.json",
+  "fix": "Add acceptedSQL99baseline and boundedP05A, retainremainingtelemetry/historicalSQL/provideraggregate/coverage/cloud/hardware obligations",
+  "files": {
+    "CHANGELOG.md": "9a59e80b37e62393a7eea805758a38f076eecd2185bc2dba2830a28f4d5da65e",
+    "TODO.md": "11ce8ac1c573fd49101bccb175ea7742c99c57cddb62b24a18cba2dca6e3b24c",
+    ".testagent/status.md": "681e3698db1c058b5d00944edf4936fbabcc17b7773edf6d2be0b947abd19869",
+    ".testagent/plan.md": "247560ece1b03790a28c8b671e0a07a78ce63514cd26c3c3ce80e648efd9d245",
+    ".testagent/local-completion-plan.md": "e607108021050501809d2e05f191b9e9ed5cb5014216a6bea98140aaf90eb9c8",
+    "docs/quality-status.md": "9ec09a9611cfe5ef1ccf8cacb14da0afa452679e9be50a1e6bd80ec517e4d2e7"
+  },
+  "snapshot_directory": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/documentation-r5",
+  "broaderengineering_cloud_hardware": "Remain open; historicalsectionsretained"
+}

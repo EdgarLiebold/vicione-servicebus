@@ -27,19 +27,36 @@ public static class AmazonSqsBusFactoryConfiguratorExtensions
     public static void UsingAmazonSqs(this IBusRegistrationConfigurator configurator,
         Action<IBusRegistrationContext, IAmazonSqsBusFactoryConfigurator>? configure = null)
     {
-        configurator.Services.AddOptions<AmazonSqsTransportOptions>(string.Empty)
+        AddSharedServices(configurator.Services, string.Empty, "default");
+        configurator.SetBusFactory(new AmazonSqsRegistrationBusFactory(configure));
+    }
+
+    /// <summary>Registers Amazon SQS for a typed bus and validates its named transport options before host startup.</summary>
+    /// <typeparam name="TBus">The typed bus contract that owns the named transport options.</typeparam>
+    /// <param name="configurator">The typed bus registration configurator.</param>
+    /// <param name="configure">An optional callback that configures the bus factory.</param>
+    public static void UsingAmazonSqs<TBus>(this IBusRegistrationConfigurator<TBus> configurator,
+        Action<IBusRegistrationContext, IAmazonSqsBusFactoryConfigurator>? configure = null)
+        where TBus : class, IBus
+    {
+        AddSharedServices(configurator.Services, typeof(TBus).Name, typeof(TBus).FullName ?? typeof(TBus).Name);
+        configurator.SetBusFactory(new AmazonSqsRegistrationBusFactory(configure));
+    }
+
+    static void AddSharedServices(IServiceCollection services, string optionsName, string bus)
+    {
+        services.AddOptions<AmazonSqsTransportOptions>(optionsName)
             .Validate(
                 static options => options.Region is null || !string.IsNullOrWhiteSpace(options.Region),
-                "Amazon SQS transport for bus 'default': Region must not be empty when specified. Set an AWS region system name or leave it unset.")
+                $"Amazon SQS transport for bus '{bus}': Region must not be empty when specified. Set an AWS region system name or leave it unset.")
             .Validate(
                 static options => options.Scope is null || !string.IsNullOrWhiteSpace(options.Scope),
-                "Amazon SQS transport for bus 'default': Scope must not be empty when specified. Set a non-empty scope or leave it unset.")
+                $"Amazon SQS transport for bus '{bus}': Scope must not be empty when specified. Set a non-empty scope or leave it unset.")
             .Validate(
                 static options => string.IsNullOrWhiteSpace(options.Scope) || !string.IsNullOrWhiteSpace(options.Region),
-                "Amazon SQS transport for bus 'default': Scope requires Region. Set Region whenever a scope is configured.")
+                $"Amazon SQS transport for bus '{bus}': Scope requires Region. Set Region whenever a scope is configured.")
             .ValidateOnStart();
-        configurator.Services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, AmazonSqsSendFailureClassifier>());
-        configurator.SetBusFactory(new AmazonSqsRegistrationBusFactory(configure));
+        services.TryAddEnumerable(ServiceDescriptor.Singleton<ITransportSendFailureClassifier, AmazonSqsSendFailureClassifier>());
     }
 
     /// <summary>Configures the default host using the AWS SDK fallback region and credential resolution.</summary>

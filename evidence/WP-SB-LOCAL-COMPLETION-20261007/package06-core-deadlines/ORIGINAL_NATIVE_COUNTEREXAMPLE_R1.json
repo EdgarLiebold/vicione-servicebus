@@ -1,0 +1,89 @@
+{
+  "kind": "ORIGINAL_NATIVE_DEADLINES_COUNTEREXAMPLE",
+  "source_commit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "draft": "ORIGINAL_DRAFT_BINDING_R4.json",
+  "draft_sha256": "baa47dd05507e90aee165afbb5215e69f0a867e86774ca4a6fd674bf4723ab7f",
+  "native": {
+    "exit_code": 2,
+    "discovered": 13,
+    "passed": 7,
+    "failed": 6,
+    "skipped": 0,
+    "causal_assertion": "Assert.Single empty selected clock timer collection",
+    "compile_failures_are_not_causal": true,
+    "sandbox_named_pipe_failure_is_not_causal": true
+  },
+  "strict_rebuild": {
+    "exit_code": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "locked_restore_exit": 0,
+  "raw_closed_files": [
+    {
+      "name": "original-build-20261006-230241--59673--8xirYQ.binlog",
+      "bytes": 434945,
+      "sha256": "3945719deac6b866d37b33a30cbba1fd722440d2941b0309cca670080d9813b1"
+    },
+    {
+      "name": "original-build-r2-20261006-230306--59719--ZnClwT.binlog",
+      "bytes": 409462,
+      "sha256": "3163a7ce53c1d75bdbeac04034e7b74329423570254838521cff84c968fb1c1b"
+    },
+    {
+      "name": "original-build-r2.log",
+      "bytes": 270,
+      "sha256": "7fed5cba4c0a3db963cd803438d70ad335375d6c593fc725fcde1f49d724b489"
+    },
+    {
+      "name": "original-build.log",
+      "bytes": 1565,
+      "sha256": "c2c64fd0e6f9a8710abfac10e19690b1858dc7730611a30ebabececfeb6feac9"
+    },
+    {
+      "name": "original-locked-restore-20261006-230234--59666--aegVWm.binlog",
+      "bytes": 370435,
+      "sha256": "f2625e869849e31fb9dc254cf79e24e7c0c51eb5a81283bb3f73a8e359e9739c"
+    },
+    {
+      "name": "original-locked-restore.log",
+      "bytes": 280,
+      "sha256": "78f9d43bac12e192cee20dbe4e38ff933a6791f1889f7235a094edfbbd52fbc4"
+    },
+    {
+      "name": "original-restore-20261006-225841--59540--IE_gKJ.binlog",
+      "bytes": 369150,
+      "sha256": "260e2aac6865200d8c5b1eb9b1826cfa6bfc89ef34b90c937aa8c26b0465fe46"
+    },
+    {
+      "name": "original-restore.log",
+      "bytes": 203,
+      "sha256": "6fb6ed4497cc533f3a91ab9826acc8ae5fa3bef25d488401f1ea817040477f2f"
+    },
+    {
+      "name": "original-tests-r1-20261006-230321--59768--myundq-dotnet-test.binlog",
+      "bytes": 660854,
+      "sha256": "0a4180acf8741c478ffce3f5ccfe13b8bf6612b0dae5f56e12211d701fb6e3f7"
+    },
+    {
+      "name": "original-tests-r1.log",
+      "bytes": 3837,
+      "sha256": "7271bd124d0759f1615c29145127c77641f3e171ede59eb87c14c42adb2eb769"
+    },
+    {
+      "name": "original-tests-r2-20261006-230338--59848--QMqvRC-dotnet-test.binlog",
+      "bytes": 657130,
+      "sha256": "574694c62e122a527148e9804ffe70e4edfebcbde5dc8c4d6bdb1b4b0f9b3ffe"
+    },
+    {
+      "name": "original-tests-r2.log",
+      "bytes": 6012,
+      "sha256": "31df9db6840e862d01e33c00614ee85e8089d92ce34fb65740a41da7211bf436"
+    }
+  ],
+  "packages_lock": {
+    "path": "ORIGINAL_PACKAGES_LOCK_R1.json",
+    "sha256": "93eae93b078a2a29816a8b2a204ae8f46de7aa394f62793f9593f1f902c1e704"
+  },
+  "status": "AWAITING_ADVERSARIAL_REVIEW_NO_FIXED_ACCEPTANCE"
+}

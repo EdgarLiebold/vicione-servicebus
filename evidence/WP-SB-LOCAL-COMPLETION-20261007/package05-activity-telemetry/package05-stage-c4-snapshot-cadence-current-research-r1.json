@@ -1,0 +1,630 @@
+{
+  "kind": "INTERNAL_READ_ONLY_P05_C4_SNAPSHOT_CADENCE_RESEARCH_R1",
+  "utc": "2026-10-07T02:31:43.618088+00:00",
+  "reviewer": "/root/todo_reconciliation_review",
+  "status": "SOURCE_CAUSAL_CANDIDATES_NATIVE_PENDING_NO_PRODUCT_CHANGE_OR_ACCEPTANCE",
+  "scope": "Separate post-authoritativework retained-state snapshot cadence. Current C3 delivery-duration candidate bytes inspected, accepted C2 receipt retained; no native C3/C4 credit. Public signed testDriver route, real process-local store and required UTC/cancellation boundaries.",
+  "inputs": {
+    "pendingC3HistoricalResearch": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c3-bounded-delivery-research-adversarial-r1.json",
+      "sha256": "709ab57e155b12f3cdcb4809c98b89e64c8c9d559c5a12aa021ce28e919edc5c",
+      "bytes": 33009,
+      "lines": 556,
+      "reviewerRead": "WHOLE RELEVANT SCOPE/INVENTORY RECHECK",
+      "RootReadCreditTransferred": false
+    },
+    "acceptedC2Root": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_STAGE_C2_ACCEPTANCE_R1.json",
+      "sha256": "2b235155ea2dfb43d8aac04179aca1e8f98f9f71a11148b7bc50f5d8fa3a726d",
+      "bytes": 3060,
+      "lines": 50,
+      "reviewerRead": "PREVIOUS_WHOLE_DOCREVIEW; HASH RECHECK",
+      "RootReadCreditTransferred": false
+    }
+  },
+  "currentSourceInventory": {
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "sha256": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+      "bytes": 8551,
+      "lines": 191,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "sha256": "2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc",
+      "bytes": 8079,
+      "lines": 202,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "sha256": "25d8ef5caa05e004b191561e29d557ee865c7d28b645ea853826b8b0d6101f6a",
+      "bytes": 3780,
+      "lines": 100,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "sha256": "6ca9990d84571b6bf927087a19190c5f32c77bddb70edec61728d1d19f60d3b9",
+      "bytes": 8209,
+      "lines": 202,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs",
+      "sha256": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21",
+      "bytes": 4618,
+      "lines": 134,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "ac536dd009f59ea5cbe8898d464969da3ba3a2b2e4390fb6fa1272e2380ed11c",
+      "bytes": 23088,
+      "lines": 562,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs",
+      "sha256": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417",
+      "bytes": 8779,
+      "lines": 119,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingPolicy.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingPolicy.cs",
+      "sha256": "8641f388275391cc57c72dc9fc9a49b860a3c98edde716ebc6a639a1db82c5a9",
+      "bytes": 523,
+      "lines": 16,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingComposition.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingComposition.cs",
+      "sha256": "855aa2b2291fbde7ae51faed084a7d650fcba117a27050ea10f7a79322ddd9d7",
+      "bytes": 1242,
+      "lines": 24,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.cs",
+      "sha256": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc",
+      "bytes": 5517,
+      "lines": 127,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Outbox.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Outbox.cs",
+      "sha256": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72",
+      "bytes": 13381,
+      "lines": 320,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IOutboxStore.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IOutboxStore.cs",
+      "sha256": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6",
+      "bytes": 9142,
+      "lines": 155,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IReliableDeliverySource.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IReliableDeliverySource.cs",
+      "sha256": "2b5faa7c345ce596360efe0dc80ff7cdad05ece37a812f2a7decdee4bd840317",
+      "bytes": 1270,
+      "lines": 23,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendStoreSnapshot.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendStoreSnapshot.cs",
+      "sha256": "1578782accb4f5fc0a2bcfd902ba2c1dbe762255bca61abb9ec8816fe14d4a58",
+      "bytes": 4008,
+      "lines": 72,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs",
+      "sha256": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74",
+      "bytes": 2971,
+      "lines": 86,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs",
+      "sha256": "4ff7066cdd86cda1ea8e3890e4e6e437be99c4690192aeae750e392133ac2f96",
+      "bytes": 1102,
+      "lines": 25,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs",
+      "sha256": "8ff64032beabbffab0518f90bb7a62b12df83a5dd886e3d69ecbeab501cf58c5",
+      "bytes": 25942,
+      "lines": 436,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    },
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs",
+      "sha256": "41c159a7730682a1c30d57d6c7e1c81c430fba11d9a9fb70ff827df85c7fb8ee",
+      "bytes": 3621,
+      "lines": 102,
+      "reviewerRead": "WHOLE",
+      "RootReadCreditTransferred": false
+    }
+  },
+  "C3SuccessorDeltaPrecision": [
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "historicalC3ResearchSHA": "551075235d378635bc7a9ffc7729cc9b348cd1b7b1b53fd662bf9bd7452ccb2f",
+      "currentSHA": "2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc",
+      "meaning": "Current C3 candidate successor bytes, not C4 or native acceptance."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "historicalC3ResearchSHA": "158dceacfcfe2a05effc59b02c79efa67e6664a02fd80bad29ecb00715d96ba8",
+      "currentSHA": "25d8ef5caa05e004b191561e29d557ee865c7d28b645ea853826b8b0d6101f6a",
+      "meaning": "Current C3 candidate successor bytes, not C4 or native acceptance."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "historicalC3ResearchSHA": "0658c31e41c2cc96aeae7f33948a046b49189c263580df97a1fe71414594dcb9",
+      "currentSHA": "6ca9990d84571b6bf927087a19190c5f32c77bddb70edec61728d1d19f60d3b9",
+      "meaning": "Current C3 candidate successor bytes, not C4 or native acceptance."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "historicalC3ResearchSHA": "18bcafb43ebe38b70e004864d7efd2e997426f180d29967402d4b754df808302",
+      "currentSHA": "ac536dd009f59ea5cbe8898d464969da3ba3a2b2e4390fb6fa1272e2380ed11c",
+      "meaning": "Current C3 candidate successor bytes, not C4 or native acceptance."
+    }
+  ],
+  "sourceCausalCandidates": {
+    "optionalUTC": {
+      "owner": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "line": 128,
+      "expression": "RefreshTelemetrySnapshotIfDueAsync(_timeProvider.GetUtcNow(), token)",
+      "causal": "Argument GetUtcNow evaluates after authoritative delivery/emptyClaim and before current refresh catch."
+    },
+    "cadenceOverflow": {
+      "owner": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "line": 72,
+      "expression": "(now + RequirePolicy().TelemetrySnapshotInterval).UtcTicks",
+      "causal": "Cadence arithmetic occurs before observation try. Options validate positivity only, so TimeSpan.MaxValue is valid and overflows DateTimeOffset at ordinaryEpoch. Existing store failure handling does not cover it."
+    }
+  },
+  "requiredBoundariesRemainOutsideObservationCatch": [
+    {
+      "owner": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "boundary": "GetUtcNow -> ClaimDueAsync/await -> ValidateClaims; cancellation per batch/additionalSource; await additionalSources; no catch around any of these."
+    },
+    {
+      "owner": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "boundary": "MarkDelivered GetUtcNow+await; AwaitConsumerCompletion GetUtcNow+deadline+await; invalid mode/timeout Quarantine UTC+await; existing actual persistence errors rethrow; cancellation remains exact caller token."
+    },
+    {
+      "owner": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+      "boundary": "PersistFailure GetUtcNow before classification; ScheduleRetry/Quarantine exact UTC/due times/await; actual persistence faults and caller cancellation stay authoritative."
+    }
+  ],
+  "minimalCoherentCorrectionProposal": {
+    "productOwners": [
+      "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+      "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs"
+    ],
+    "capture": "Keep the already-required Claim UTC once in a method-local anchor available after required work. Pass this captured value to a private observation helper; never evaluate a new optional GetUtcNow argument at the caller. Storeless additional-source-only path continues to skip snapshot telemetry.",
+    "boundary": "Guard only the optional refresh chain: due decision, safe cadence reservation, fresh observational UTC capture, optional GetSnapshotAsync await, publication and existing diagnostic logging. Do not catch the enclosing batch/required work.",
+    "sequence": [
+      "Read existing deadline/saturation; if no representable future or captured claim anchor is before deadline, skip observational prep/read for this batch.",
+      "For due observation reserve a bounded anchor+interval deadline BEFORE invoking optional fresh UTC. The first observation remains allowed even if reservation discovers no representable successor; saturation only blocks subsequent attempts.",
+      "Capture fresh _timeProvider.GetUtcNow INSIDE observation catch. On ordinary failure keep the reserved claim-anchor cadence, log through existing no-throw diagnostics, omit snapshot/age publication, and return actual didWork.",
+      "When fresh UTC is available, advance/promote the next deadline from the fresh observation UTC BEFORE GetSnapshotAsync/Publish. Under healthy nondecreasing UTC, this preserves the documented minimum interval between snapshots and failure retry cadence. Do not shorten the provisional known anchor reservation on a backward fresh clock.",
+      "Attempt and await the actual optional snapshot, then publish its raw observedUTC via unchanged instrumentation. Store-observation error/cancellation/observer error remain isolated; cadence stays advanced so repeated busy batches cannot hot-loop snapshot reads. Existing stopping-cancellation catch remains scoped to observation."
+    ],
+    "arithmetic": "Compare positive interval.Ticks to DateTimeOffset.MaxValue.UtcTicks - basis.UtcTicks BEFORE addition. Greater means no representable future deadline: set explicit saturated/no-successor state. Equality means next exactlyMax is representable and NOT yet saturated: permit one due attempt atMax, then saturate its positive successor. A scalar MaxUtcTicks+1 sentinel is another exact representation, but Root prefers explicit saturated state. Do not naively clamp toMax and retain now <next, which admits exactMax repeatedly.",
+    "policyPrecision": "No System clock, fake timestamp/age, required UTC clamp, new timer/TimestampFrequency dependency or arbitrary observer queue. Snapshot interval positivity/public option shape remains unchanged. Normal due refresh publishes fresh actual observed UTC; unknownUTC means no new age snapshot. Cadence from authoritative claimUTC is a fallback, not stronger universal elapsed-clock guarantee.",
+    "singleWorkerPrecision": "Existing hosted-service main loop is sequential for batches, despite per-batch delivery task concurrency; proposal is bounded to that owning loop/sequential publicDriver calls. Existing Volatile scalar is not a transactional concurrency admission gate. Do not claim universal concurrent directDriver snapshot serialization."
+  },
+  "slowDeliveryTradeoff": {
+    "rejectedAnchorOnly": "With interval5s, first claimt0 and slow real dispatcher advances clock to4; snapshott4. Anchor-only nextdeadline5 admits next empty claimt5 -> snapshott5, only1s apart, violating current public minimum interval text.",
+    "preferredRefinement": "Reserve anchor deadline first; successful fresh observedUTCt4 promotes deadline9 BEFOREsnapshot1. Emptyclaimt5 andt9-minus1tick must not read snapshot; exactt9 reads snapshot2. All assertions follow completed public Driver operations, no elapsed waits.",
+    "remainingDifference": "Admission-anchor early due check can defer a refresh when claim starts before deadline but slow work ends after it; next batch can refresh. Current contract promises minimum interval, not maximum refresh latency/per-batch sampling. State this bounded observation scheduling choice; no message/state result changes.",
+    "failureLimitation": "When optional UTC is unavailable, no reliable post-work current timestamp exists; reservation uses last required batch claimUTC. Long delivery can make that fallback deadline already near/past by next batch. This bounds attempts in available claim-clock slots; it does NOT prove a full5s actual post-failure elapsed delay for all malicious clocks. No universal monotonic/wall-time guarantee claimed."
+  },
+  "proposedFinitePublicDriverPackage": [
+    {
+      "id": "C4-UTC-SUCCESS",
+      "priority": 1,
+      "fixture": "Real in-memory store admit one3byteintent; existing signed CreateDeliveryDriver with forward-only observed store and real successful dispatcher. Arm a distinct optional UTC fault only AFTER awaited real MarkDelivered returns, leaving Claim/Mark UTC untouched.",
+      "originalOracle": "Await batch; assert Claim1/dispatch1/exactid+lease+UTC+token/MarkTrue and inner storedCount0,bytes0 BEFORE Assert.Null(escaped). Currentsource predicts same optional failure escapes at caller128; finite native confirmation still required.",
+      "fixedOracle": "didWorktrue, no error, actual state removed, no optional snapshot publication; required result and existing outcome metric intact.",
+      "healthyControl": "Same fixture with healthy optional UTC records snapshot exactly once."
+    },
+    {
+      "id": "C4-UTC-EMPTY",
+      "priority": 1,
+      "fixture": "Empty real store; arm clock fault only after actual ClaimDueAsync returns empty.",
+      "originalOracle": "Claim1/dispatch0/realstateempty/snapshot0, then finite Assert.Null fails on original optional UTC exception.",
+      "fixedOracle": "didWorkfalse/noexception and no fabricatedsnapshot; ordinary idle-wait behavior can continue."
+    },
+    {
+      "id": "C4-CADENCE-OVERFLOW",
+      "priority": 1,
+      "fixture": "Pair successful realMark and empty realClaim; ordinary Epoch UTC, configure positive TelemetrySnapshotInterval=TimeSpan.MaxValue, leave required Lease/consumer/retry durations valid.",
+      "originalOracle": "Primary store work already completed; original DateTimeOffset cadence addition throws ArgumentOutOfRangeException before snapshot. Assert authoritative counters/state before Assert.Null. Do not use MaxUTC with a pending lease, which would create required Claim lease overflow.",
+      "fixedOracle": "First due snapshot at most once, primary didWork exact; later same clock empty batches never repeat snapshot or optional preparation after no-successor saturation."
+    },
+    {
+      "id": "C4-UTC-RETRY-CADENCE",
+      "priority": 2,
+      "fixture": "First empty claim atEpoch arms optional UTC failure; future required claim UTC remains healthy. Restore optional UTC after failure. Five-second interval.",
+      "oracle": "Completed repeated empty calls beforeEpoch+5s do not retry optionalUTC/GetSnapshot or repeatedly log. At exact boundary one retry/publication succeeds. No sleeps, timers or privatefield reads; instrument real store method counts and controlled clock phase read counts.",
+      "mutation": "Remove pre-reservation or pre-clock due gate only; corrected positive control stays healthy while bounded repeat counts fail."
+    },
+    {
+      "id": "C4-SLOW-MINIMUM-INTERVAL",
+      "priority": 2,
+      "fixture": "First admitted real delivery moves controlled fake time fromt0 tot4 during actual dispatch; first fresh observed snapshot at4. Then empty calls att5,t9-minus1tick,t9.",
+      "oracle": "snapshotcounts1,1,1,2; state remainsremoved and firstdidWorktrue/laterfalse. This kills anchor-only scheduling without time waits.",
+      "mutation": "Retain anchor reservation but remove fresh successful deadline promotion only."
+    },
+    {
+      "id": "C4-MAX-EQUALITY",
+      "priority": 2,
+      "fixture": "Empty real store; initialUTC=MaxValue-5s, interval5s; firstsnapshot then actualUTC exactlyMax and repeatedsameMax emptycalls.",
+      "oracle": "Snapshot1 atinitial, exactlyone Snapshot2 atMax, thereaftercount2 and no diagnosticprep retries; no required lease timestamp overflow because there are no records.",
+      "mutation": "Replace explicit no-successor handling with naiveMax clamp; bounded repeatedcall count must fail."
+    },
+    {
+      "id": "C4-SNAPSHOT-FAULT-CONTROL",
+      "priority": 2,
+      "fixture": "Forward-only store GetSnapshot throws a distinct ordinary observation fault after real authoritative work; paired healthy real snapshot read. Optional snapshotCancellation may be a sibling case using exact token, separate from required canceledClaim.",
+      "oracle": "Actual didWork/state unchanged; snapshotCalls1; repeatedcalls beforedeadline do not reread; exactboundary permitsretry; healthy tuple/ageobservables matchrealstate. Already largely handled today, so characterization/healthycontrol, not newly confirmed defect."
+    }
+  ],
+  "requiredNegativeControls": {
+    "reuse": "Current DurableDeliveryClockIsolationTests source includes Delivery_PreservesRequiredUtcFailuresAsync six declared boundary cases: Claim, Mark, Await, InvalidMode, ClassifiedFailure, Timeout. Hash-bound current fixture436 and publicDriver86 exact reading mandatory; no C3 native acceptance inferred from source.",
+    "preserve": "Same exact required exception reference, caller cancellation token, store/dispatcher/classifier counts and actual retained state. C4 observation should not run after required failure; assert snapshotCalls0 and optionalUTC phase not entered.",
+    "addOnlyIfMissing": "A transient ScheduleRetry required UTC failure can be independently selected to ensure Retry route as well as existing permanent ClassifiedFailure Quarantine; existing fixture classified failure selects permanent, so it does not alone prove every Retry boundary. Reuse persistence/cancellation scenarios for primary failure paths rather than clone exhaustive suite.",
+    "successfulRetryControl": "Use existing actual ScheduleRetry state/dueUTC/15s policy and zerojitter control; observation UTC/fault/cadence must not rewrite nextAttemptAt, attempt or failureKind.",
+    "backwardsUTCControl": "Controlled provider valid UTC values step backward after successful observation. Required Claim/transition receive their exact raw provider UTC; next snapshot does not bypass already reserved deadline; no domain clamp or F029 chronological guard. No claim that arbitrary oscillating clocks provide real elapsed minimum intervals."
+  },
+  "observerControlPrecision": {
+    "currentState": "GetSnapshot await and PublishDurableSnapshot already lie inside existing observation try; no accepted new observer defect follows from those bodies alone. Publish uses validated value-type snapshot and atomics; enabled observable collection occurs when the host listener records observables, not during those atomicwrites.",
+    "meaningfulProof": "Use exact real snapshot failure/read and genuine scoped meter observations for retainedstate/age. If listener initialization fault is included, count it as existing cold-meter characterization and prove exact InstrumentPublished call, not as all-listener C4 closure.",
+    "exclude": "Cold monitor/timeline initialization, arbitrary reentrant global listeners, asynchronous observer collection faults, whole observational inventory and provider durability remain separate."
+  },
+  "oneCauseMutationPlan": [
+    "Expose optional post-work UTC outside isolation while preserving anchor reservation, realstore and required UTC routes; kill by C4-UTC success/empty named cases.",
+    "Revert only safe deadline overflow/no-successor handling to originalDateTimeOffsetaddition; kill finiteTimeSpanMax and exactMax successor cases with healthy ordinary interval control.",
+    "Remove only fresh-UTC deadline promotion; kill finite slowt0/t4/t5 minimuminterval control; ordinary non-slow control remains healthy.",
+    "Remove only cadence reservation/gate before optional UTC; kill bounded clockfailure repeats/storefaultcadence count; fixed same fixture postcheck unchanged.",
+    "Use only mutants justified by actual authored changes and observed public oracle; never count compiler guards, privatefield checks or timeout-only outcomes as causal reds."
+  ],
+  "RootWholeReadList": {
+    "productAndPublicSPI": [
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+        "sha256": "9d5a683864658a55ccdd230322c44a10c844dc81ad8da62f6ee3450ca355f9a5",
+        "bytes": 8551,
+        "lines": 191,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+        "sha256": "2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc",
+        "bytes": 8079,
+        "lines": 202,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+        "sha256": "25d8ef5caa05e004b191561e29d557ee865c7d28b645ea853826b8b0d6101f6a",
+        "bytes": 3780,
+        "lines": 100,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs",
+        "sha256": "6ca9990d84571b6bf927087a19190c5f32c77bddb70edec61728d1d19f60d3b9",
+        "bytes": 8209,
+        "lines": 202,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Diagnostics.cs",
+        "sha256": "227768671b028363203f3d54e0c6431d18868576fd9245d4556d29cfa7e7df21",
+        "bytes": 4618,
+        "lines": 134,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+        "sha256": "ac536dd009f59ea5cbe8898d464969da3ba3a2b2e4390fb6fa1272e2380ed11c",
+        "bytes": 23088,
+        "lines": 562,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingOptions.cs",
+        "sha256": "2ed1e57ac841e9dbc8a13523519a33d452437a095a80de07d78f0a2e0b744417",
+        "bytes": 8779,
+        "lines": 119,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingPolicy.cs",
+        "sha256": "8641f388275391cc57c72dc9fc9a49b860a3c98edde716ebc6a639a1db82c5a9",
+        "bytes": 523,
+        "lines": 16,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Configuration/ReliableMessaging/ReliableMessagingComposition.cs",
+        "sha256": "855aa2b2291fbde7ae51faed084a7d650fcba117a27050ea10f7a79322ddd9d7",
+        "bytes": 1242,
+        "lines": 24,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.cs",
+        "sha256": "ccb430b8226d562ddbad72aa70345301b4f326b617fde2cefb2d7a42c62cc3cc",
+        "bytes": 5517,
+        "lines": 127,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/InMemory/InMemoryReliableStore.Outbox.cs",
+        "sha256": "9387bdc90e1811ffd3dc990320285c6ba2c81a1342eda3c0f08cdfe66ddf9f72",
+        "bytes": 13381,
+        "lines": 320,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IOutboxStore.cs",
+        "sha256": "9c1beed5782d14961cf2410119984b4902da8c4335bcdeca318b1aeb55fe11e6",
+        "bytes": 9142,
+        "lines": 155,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IReliableDeliverySource.cs",
+        "sha256": "2b5faa7c345ce596360efe0dc80ff7cdad05ece37a812f2a7decdee4bd840317",
+        "bytes": 1270,
+        "lines": 23,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendStoreSnapshot.cs",
+        "sha256": "1578782accb4f5fc0a2bcfd902ba2c1dbe762255bca61abb9ec8816fe14d4a58",
+        "bytes": 4008,
+        "lines": 72,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      }
+    ],
+    "driverAndExactCurrentFixture": [
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderDeliveryTestDriver.cs",
+        "sha256": "7311b7aaba6a6e79ce1fcc3ee39ce7447b35c78c57579c7ab21fe6f839b1ae74",
+        "bytes": 2971,
+        "lines": 86,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/DurableSend/DurableSenderTestFactory.cs",
+        "sha256": "4ff7066cdd86cda1ea8e3890e4e6e437be99c4690192aeae750e392133ac2f96",
+        "bytes": 1102,
+        "lines": 25,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs",
+        "sha256": "8ff64032beabbffab0518f90bb7a62b12df83a5dd886e3d69ecbeab501cf58c5",
+        "bytes": 25942,
+        "lines": 436,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Monitoring/MetricObservationSession.cs",
+        "sha256": "41c159a7730682a1c30d57d6c7e1c81c430fba11d9a9fb70ff827df85c7fb8ee",
+        "bytes": 3621,
+        "lines": 102,
+        "reviewerRead": "WHOLE",
+        "RootReadCreditTransferred": false
+      }
+    ],
+    "additionalImportsExistingContractsAndBuilds": [
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingProviderGuard.cs",
+        "sha256": "0c3a96b9115fef19f138533be24b111265b66508d03998d7ea4d808f34fb9b4d",
+        "bytes": 4137,
+        "lines": 128,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+        "sha256": "8a01e6f31430b513cea4f35072778ae70a3927d7e71eb6837fc858d9bd2c6404",
+        "bytes": 2555,
+        "lines": 65,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Monitoring/Telemetry/SafeActivityScope.cs",
+        "sha256": "542b4841562b4445fc89ad0d06ae121633b51375d9ab241378ec0aece767b2eb",
+        "bytes": 1640,
+        "lines": 65,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/IDurableSendDispatcher.cs",
+        "sha256": "47f679ff9cf7564b4bd1a57dcc7ae661f1336a54acf243613173e179c0a18b4c",
+        "bytes": 1416,
+        "lines": 24,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDelivery.cs",
+        "sha256": "4345e43534aa1b6da7753e1723b81cae3067d6e4708edd4fb372012142365e2d",
+        "bytes": 2378,
+        "lines": 46,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Providers/Persistence/ReliableMessaging/DurableSendDispatchContext.cs",
+        "sha256": "6a9b7e31ae5a53d4321d28b953287f790d0fe1841ebdb9fafd9b9fbf2f24c94f",
+        "bytes": 2626,
+        "lines": 50,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Operations/ReliableMessaging/DurableSendFailureKind.cs",
+        "sha256": "020874905a000f23311fdc7e7c33613d26ab64013fb3adb75cc6b68d805786b5",
+        "bytes": 997,
+        "lines": 26,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/DurableSend/DurableSenderDeliveryTests.cs",
+        "sha256": "d1a2553111cf63c9d272266a5d2644e76f7060e1e8a34fc7fa7aa9a19e432029",
+        "bytes": 39632,
+        "lines": 874,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/DurableSend/ReliableMessagingRegistrationAndAdmissionTests.cs",
+        "sha256": "28abbdaeccc928891ad98e34c4dafe0f7cb8b2c366b4b9b7964b90a59e3ad97a",
+        "bytes": 85224,
+        "lines": 1677,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Monitoring/ServiceBusInstrumentationTests.cs",
+        "sha256": "736791d5165a037b3cad460cb9bb8940b8ec35b063db82f1566022cee4260984",
+        "bytes": 24149,
+        "lines": 457,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Monitoring/DurableConsumerCompletionClockIsolationTests.cs",
+        "sha256": "a14c4f103e3c40a596a04fb58bc70c81c9ba2395fc173a28405818109678e5da",
+        "bytes": 10823,
+        "lines": 209,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+        "sha256": "2d1b6f28a89e52ad2ba396143ac976f61d88da8bfad931c133984dc24cad71d5",
+        "bytes": 1670669,
+        "lines": 32881,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+        "sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21",
+        "bytes": 2378,
+        "lines": 46,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.InternalAccess/ViciOne.ServiceBus.Tests.InternalAccess.csproj",
+        "sha256": "f79459b8d6dc2fd119935f425fa0284caa4592a8cb04fb79fd2e732d8db76f2d",
+        "bytes": 632,
+        "lines": 14,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Directory.Build.props",
+        "sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8",
+        "bytes": 3303,
+        "lines": 51,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.props",
+        "sha256": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf",
+        "bytes": 2886,
+        "lines": 49,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.targets",
+        "sha256": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1",
+        "bytes": 10658,
+        "lines": 146,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Packages.props",
+        "sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e",
+        "bytes": 5677,
+        "lines": 76,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/global.json",
+        "sha256": "9384d5f057ed52752aa3dc5407e75b2265495154fb3a6597afe70b79f8776f93",
+        "bytes": 63,
+        "lines": 5,
+        "reviewerRead": "EXACT_ROOT_READ_CONTEXT; NOT_WHOLE_READ_IN_THIS_C4_TASK",
+        "RootReadCreditTransferred": false
+      }
+    ],
+    "credit": "Root must personally consume exact current source/test-owner closure before authoring; existing Root57/Core805 hashes may be reused only where actual bytes/read attestations remain equal. Our reads do not transfer."
+  },
+  "notClaimed": [
+    "No .NET/MSBuild/Docker/provider/SSH/process-control/network execution; no product/test/tool edits. Own unique research JSON only.",
+    "No original/fixed C4 native outcome or confirmed product finding accepted. Predicted finite counterexamples require Root original compilation/execution and independent artifact review.",
+    "Current C3 source4 changes are a separate pending candidate; historical709 research and acceptedC2 immutable source/results retain their dated authority.",
+    "No real persistence-provider durability, wholeP05/Unit/provider/package/currentcoverage/CI/cloud/hardware or universal hostileclock/observer guarantee."
+  ]
+}

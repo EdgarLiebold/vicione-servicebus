@@ -1,0 +1,142 @@
+{
+  "status": "C1_SOURCE_TESTS_NO_BLOCK__ROOT804_84_PROVENANCE_VERIFIED__ORIGINAL8_CASES6_FINITE_METRIC_RED2_HEALTHY__FIXED_AND_TWO_MUTANTS_NATIVE_ACCEPTANCE_PENDING",
+  "reviewer": "/root/continuation_adversarial",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C1_FREEZE_R1.json",
+    "sha256": "2dd0aaecb248a1b5595289a50a6bc8db8a10866806422ce332550db44defec58"
+  },
+  "proof": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c1-source3-root804-original-independent-proof-r1.json",
+    "sha256": "99586f9b2d60defbb61e9ce9ff8fac3bcfa3c5700f8c9dc888e8b9ddb59ccdcb"
+  },
+  "test_review": {
+    "prior_latest_R4": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c1-tests-adversarial-readonly-r4.json",
+      "sha256": "d955d13810de45c46e9b76e12ed71057baf63c5263f2dcc10ff3f4fa0f664d17"
+    },
+    "whole219_current_test_reread": true,
+    "case_count": 8,
+    "required_business_and_metric_oracles": "Four diagnostic states x actual HandlerMessageFilter success/exact business failure; real required notification duration7seconds/cause/count/next/member/context, actual handler snapshotActive+1, final[1,-1],duration7seconds,boundedtags, healthylag3/absent onlagfault, retry1/absent onretrygetterfault. Existing factory/proxy/log context/Meter scope cleanup and interface signatures unchanged from acceptedR4.",
+    "findings": []
+  },
+  "product_review": {
+    "whole_current_lines": 442,
+    "ordinary_failure_isolation": [
+      "Create actual MetricOperation before active+1; independent retained Complete decreases active even when unrelated optional metadata preparation fails",
+      "One Observe encloses entire retry getter plus actual RetryAttempts.Add; second Observe encloses cached nullable SentTime getter, healthy UTC/AsUtc/arithmetic and actual DeliveryDuration.Record",
+      "Only one read of SentTime per attempted lag, no HasValue/Value repeated getter race; failed retry cannot prevent healthy lag, failed lag cannot disable healthy retry",
+      "Initial GetTimeProvider/GetTimestamp/SystemName/ProcessTags/Enabled/null semantics occur before active admission exactly unchanged; earlier initial timestamp failure remains guarded safe-null before any+1",
+      "Closure captures selected TimeProvider and tags; completion keeps guarded decrement, original fully qualified first fault tagging and optional elapsed observation. MetricOperation idempotence remains unchanged",
+      "All actual Handler/factory/consumer/saga/courier/business clocks/Notify/cancellation/store/provider calls remain outside the newly widened diagnostic lambdas. No other owner changed by C1product patch"
+    ],
+    "exact_scope": "Only StartProcess changed; complete original prefix before method and suffix from StartOutbox identical. No generic business catch, timestamp fallback, fake0 lag or invented retry.",
+    "limits": "Ordinary diagnostic exceptions only in bounded cases. Arbitrary reentrant/mutating listeners or partial emission to multiple hostile listeners do not have a universal measurement-ledger guarantee; no such claim added.",
+    "findings": []
+  },
+  "original_native_oracle_review": {
+    "RESULT_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c1-original-r1/RESULT.json",
+    "sha256": "cfd3077314169587fa56c325fef6f1861eeb1e8d313cb49200b81601c8c58fb6",
+    "strict_archived_log": "Original build log success0warnings/0errors; parent49152exit0 consistent RESULT; reviewer did not execute session",
+    "focused_log": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c1-original-r1/raw/p05-c1-original-focused-r1.log",
+      "sha256": "176620e1258199ffa0e7891d3ca25ffdad3963e2a10df53a8c244cf0284bd534",
+      "total_named_unique_events": 8,
+      "finite_failed_events": 6,
+      "healthy_events": 2,
+      "skipped": 0,
+      "parent31738_exit": 2
+    },
+    "events": [
+      {
+        "outcome": "fehlerhaft",
+        "display_name": "ViciOne.ServiceBus.Tests.Monitoring.MessageProcessingMetricPreparationIsolationTests.Handler_PreservesOutcomeAndIndependentMetricsWhenDiagnosticPreparationThrowsAsync(diagnosticFailure: SentTime, businessFailure: True)"
+      },
+      {
+        "outcome": "fehlerhaft",
+        "display_name": "ViciOne.ServiceBus.Tests.Monitoring.MessageProcessingMetricPreparationIsolationTests.Handler_PreservesOutcomeAndIndependentMetricsWhenDiagnosticPreparationThrowsAsync(diagnosticFailure: UtcNow, businessFailure: True)"
+      },
+      {
+        "outcome": "fehlerhaft",
+        "display_name": "ViciOne.ServiceBus.Tests.Monitoring.MessageProcessingMetricPreparationIsolationTests.Handler_PreservesOutcomeAndIndependentMetricsWhenDiagnosticPreparationThrowsAsync(diagnosticFailure: UtcNow, businessFailure: False)"
+      },
+      {
+        "outcome": "fehlerhaft",
+        "display_name": "ViciOne.ServiceBus.Tests.Monitoring.MessageProcessingMetricPreparationIsolationTests.Handler_PreservesOutcomeAndIndependentMetricsWhenDiagnosticPreparationThrowsAsync(diagnosticFailure: SentTime, businessFailure: False)"
+      },
+      {
+        "outcome": "fehlerhaft",
+        "display_name": "ViciOne.ServiceBus.Tests.Monitoring.MessageProcessingMetricPreparationIsolationTests.Handler_PreservesOutcomeAndIndependentMetricsWhenDiagnosticPreparationThrowsAsync(diagnosticFailure: RetryAttempt, businessFailure: False)"
+      },
+      {
+        "outcome": "erfolgreich",
+        "display_name": "ViciOne.ServiceBus.Tests.Monitoring.MessageProcessingMetricPreparationIsolationTests.Handler_PreservesOutcomeAndIndependentMetricsWhenDiagnosticPreparationThrowsAsync(diagnosticFailure: None, businessFailure: False)"
+      },
+      {
+        "outcome": "fehlerhaft",
+        "display_name": "ViciOne.ServiceBus.Tests.Monitoring.MessageProcessingMetricPreparationIsolationTests.Handler_PreservesOutcomeAndIndependentMetricsWhenDiagnosticPreparationThrowsAsync(diagnosticFailure: RetryAttempt, businessFailure: True)"
+      },
+      {
+        "outcome": "erfolgreich",
+        "display_name": "ViciOne.ServiceBus.Tests.Monitoring.MessageProcessingMetricPreparationIsolationTests.Handler_PreservesOutcomeAndIndependentMetricsWhenDiagnosticPreparationThrowsAsync(diagnosticFailure: None, businessFailure: True)"
+      }
+    ],
+    "all_six_exact_failure": "Each UtcNow/SentTime/RetryAttempt x business false/true reaches Assert.Equal89, expected[1,-1], actual[1]. All earlier actual Handler/outcome/notification7s/context/liveActive+1 assertions passed by sequential execution. No inferred real business failure or exact swallowed diagnostic exception stack claim.",
+    "individual_None_controls": "Both actual None/business false and None/business true pass all active,duration7,lag3,retry1,tagset/member/notification/lifetime assertions.",
+    "qualification_limits": "Four raw and sixteen archived runtime hashes verified independently. Complete PE/PDB/module/compiled projection graph reviewed separately by telemetry agent; no original wholeCore C1 credit."
+  },
+  "two_single_cause_prediffs": [
+    {
+      "id": "M1_remove_lag_guard_only",
+      "fixed_source_sha256": "a69ec12a095f6201e603e1ff5be0128ec0d4bfec4202a0f03243666b1f8c6802",
+      "predicted_source_sha256": "02d4b82b8095f42a9ecb571b1971ced74871c44841f761b60b745c43b2e0942a",
+      "before_exact": "                Observe(() =>\n                {\n                    DateTimeOffset? sentTime = consumeContext.SentTime;\n                    if (sentTime.HasValue)\n                    {\n                        double deliverySeconds = Math.Max(0, (timeProvider.GetUtcNow() - AsUtc(sentTime.Value)).TotalSeconds);\n                        state.DeliveryDuration.Record(deliverySeconds, tags);\n                    }\n                });",
+      "after_exact": "                {\n                    DateTimeOffset? sentTime = consumeContext.SentTime;\n                    if (sentTime.HasValue)\n                    {\n                        double deliverySeconds = Math.Max(0, (timeProvider.GetUtcNow() - AsUtc(sentTime.Value)).TotalSeconds);\n                        state.DeliveryDuration.Record(deliverySeconds, tags);\n                    }\n                }",
+      "complete_unified_diff": "--- fixed/src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs\n+++ M1_remove_lag_guard_only/src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs\n@@ -268,7 +268,6 @@\n                         state.RetryAttempts.Add(1, tags);\n                 });\n \n-                Observe(() =>\n                 {\n                     DateTimeOffset? sentTime = consumeContext.SentTime;\n                     if (sentTime.HasValue)\n@@ -276,7 +275,7 @@\n                         double deliverySeconds = Math.Max(0, (timeProvider.GetUtcNow() - AsUtc(sentTime.Value)).TotalSeconds);\n                         state.DeliveryDuration.Record(deliverySeconds, tags);\n                     }\n-                });\n+                }\n             }\n \n             return operation;\n",
+      "body_all_inner_bytes_preserved": true,
+      "only_changed_owner": "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs",
+      "predicted_events_only": {
+        "total": 8,
+        "failed": 4,
+        "healthy": 4,
+        "skip": 0,
+        "first_expected_red_line": 89,
+        "red_variants": [
+          "UtcNow/False",
+          "UtcNow/True",
+          "SentTime/False",
+          "SentTime/True"
+        ]
+      },
+      "actual_clone_or_native_execution": false
+    },
+    {
+      "id": "M2_remove_retry_guard_only",
+      "fixed_source_sha256": "a69ec12a095f6201e603e1ff5be0128ec0d4bfec4202a0f03243666b1f8c6802",
+      "predicted_source_sha256": "0dd6712c320f8b9deb92ebf7c85fdca5214df57b6bc28e9111b36f9ff0b594bf",
+      "before_exact": "                Observe(() =>\n                {\n                    if (consumeContext.GetRetryAttempt() > 0)\n                        state.RetryAttempts.Add(1, tags);\n                });",
+      "after_exact": "                {\n                    if (consumeContext.GetRetryAttempt() > 0)\n                        state.RetryAttempts.Add(1, tags);\n                }",
+      "complete_unified_diff": "--- fixed/src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs\n+++ M2_remove_retry_guard_only/src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs\n@@ -262,11 +262,10 @@\n \n             if (context is ConsumeContext consumeContext)\n             {\n-                Observe(() =>\n                 {\n                     if (consumeContext.GetRetryAttempt() > 0)\n                         state.RetryAttempts.Add(1, tags);\n-                });\n+                }\n \n                 Observe(() =>\n                 {\n",
+      "body_all_inner_bytes_preserved": true,
+      "only_changed_owner": "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs",
+      "predicted_events_only": {
+        "total": 8,
+        "failed": 2,
+        "healthy": 6,
+        "skip": 0,
+        "first_expected_red_line": 89,
+        "red_variants": [
+          "RetryAttempt/False",
+          "RetryAttempt/True"
+        ]
+      },
+      "actual_clone_or_native_execution": false
+    }
+  ],
+  "remaining": [
+    "Root fixed strict build/actual8 focused and wholeCore results",
+    "Actual fresh one-owner single-cause clones with identical test/requirement/tools pathsets, strict builds and named16 mutant events: Lag4red4healthy,Retry2red6healthy",
+    "Unchanged fixed replay plus independent runtime/module/projection assurance and explicit bounded Root acceptance"
+  ],
+  "Root_provenance": "Current804/hash owner manifest,84shared and extra8contexts match exact existing Root read attestation chain. Reviewer independently verifies bytes/paths and original/full delta reconstruction but transfers no Root personal reading.",
+  "reviewer_scope": "Read current full442source/219test, frozen original/fixed and exact requirement semantic delta/logs/hash bindings; wrote only own two reviewer reports. No .NET/product/test/tool/governance edits."
+}

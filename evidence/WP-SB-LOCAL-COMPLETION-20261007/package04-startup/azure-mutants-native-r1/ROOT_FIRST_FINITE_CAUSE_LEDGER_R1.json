@@ -1,0 +1,232 @@
+{
+  "kind": "ROOT_PERSONALLY_READ_ALL_FIVE_FULL_FOCUSED_STDOUT_LOGS_FIRST_FINITE_CAUSE_LEDGER_R1",
+  "variants": [
+    {
+      "name": "M1-typed-default-key",
+      "native_sha256": "e610023d8fe68c9fc44483ccd2976f5ef3a8872c7b6e46ddf006415b026f9048",
+      "first_finite_red": [
+        {
+          "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests.InvalidSecondSelectedBusFailsBeforeEitherRuntime",
+          "first_source": "AzureServiceBusGenericHostStartupTests.cs",
+          "first_line": 52,
+          "oracle_projection": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(System.InvalidOperationException)",
+            "ACTUAL_STARTUP_FAILURE: System.InvalidOperationException: chosen local Azure Service Bus pre-runtime startup barrier",
+            "STATE barrier=1 orders=1 billing=1 cleanupFailures=0 startTerminal=True"
+          ],
+          "limits": "Only first finite native assertion or positive direct Validate unexpected exception credited; later unreached assertions not credited. STATE is separate diagnostic observation, not passed state assertion."
+        },
+        {
+          "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests.SelectedNamedBlankConnectionStringFailsBeforeRuntime",
+          "first_source": "AzureServiceBusGenericHostStartupTests.cs",
+          "first_line": 20,
+          "oracle_projection": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(System.InvalidOperationException)",
+            "ACTUAL_STARTUP_FAILURE: System.InvalidOperationException: chosen local Azure Service Bus pre-runtime startup barrier",
+            "STATE barrier=1 orders=1 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "limits": "Only first finite native assertion or positive direct Validate unexpected exception credited; later unreached assertions not credited. STATE is separate diagnostic observation, not passed state assertion."
+        },
+        {
+          "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests.UnusedInvalidDefaultAndOtherNameCannotRejectSelectedNullConnectionString",
+          "first_source": "AzureServiceBusGenericHostStartupTests.cs",
+          "first_line": 38,
+          "oracle_projection": [
+            "Assert.Same() Failure: Values are not the same instance",
+            "Expected: System.InvalidOperationException: chosen local Azure Service Bus pre-runtime startup barrier",
+            "Actual:   Microsoft.Extensions.Options.OptionsValidationException: Azure Service Bus transport for bus 'ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests+IOrdersBus': ConnectionString must not be empty when specified. Set a complete connection string or leave it unset and configure the host in the bus callback.",
+            "ACTUAL_STARTUP_FAILURE: Microsoft.Extensions.Options.OptionsValidationException: Azure Service Bus transport for bus 'ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests+IOrdersBus': ConnectionString must not be empty when specified. Set a complete connection string or leave it unset and configure the host in the bus callback.",
+            "STATE barrier=0 orders=0 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "limits": "Only first finite native assertion or positive direct Validate unexpected exception credited; later unreached assertions not credited. STATE is separate diagnostic observation, not passed state assertion."
+        }
+      ],
+      "healthy": [
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusTransportOptionsStartupTests.UnsetOrCompleteConnectionString_PassesStartupValidation(connectionString: null)",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusTransportOptionsStartupTests.UnsetOrCompleteConnectionString_PassesStartupValidation(connectionString: \"Endpoint=sb://example.servicebus.windows.net/;Shar\"\u00b7\u00b7\u00b7)",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusTransportOptionsStartupTests.EmptyConnectionString_FailsAtStartupBeforeClientCreation"
+      ]
+    },
+    {
+      "name": "M2-null-rejected",
+      "native_sha256": "b4a4b9ab5ec676a1ae803d33eaacc34cdd1ca034fd99dce34303d2c71847fddb",
+      "first_finite_red": [
+        {
+          "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusTransportOptionsStartupTests.UnsetOrCompleteConnectionString_PassesStartupValidation(connectionString: null)",
+          "first_source": "AzureServiceBusTransportOptionsStartupTests.cs",
+          "first_line": 27,
+          "oracle_projection": [
+            "Xunit.MicrosoftTestingPlatform.XunitException: Microsoft.Extensions.Options.OptionsValidationException : Azure Service Bus transport for bus 'default': ConnectionString must not be empty when specified. Set a complete connection string or leave it unset and configure the host in the bus callback."
+          ],
+          "limits": "Only first finite native assertion or positive direct Validate unexpected exception credited; later unreached assertions not credited. STATE is separate diagnostic observation, not passed state assertion."
+        },
+        {
+          "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests.InvalidSecondSelectedBusFailsBeforeEitherRuntime",
+          "first_source": "AzureServiceBusGenericHostStartupTests.cs",
+          "first_line": 52,
+          "oracle_projection": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(System.AggregateException)",
+            "ACTUAL_STARTUP_FAILURE: System.AggregateException: One or more errors occurred. (Azure Service Bus transport for bus 'ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests+IOrdersBus': ConnectionString must not be empty when specified. Set a complete connection string or leave it unset and configure the host in the bus callback.) (Azure Service Bus transport for bus 'ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests+IBillingBus': ConnectionString must not be empty when specified. Set a complete connection string or leave it unset and configure the host in the bus callback.)",
+            "STATE barrier=0 orders=0 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "limits": "Only first finite native assertion or positive direct Validate unexpected exception credited; later unreached assertions not credited. STATE is separate diagnostic observation, not passed state assertion."
+        },
+        {
+          "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests.UnusedInvalidDefaultAndOtherNameCannotRejectSelectedNullConnectionString",
+          "first_source": "AzureServiceBusGenericHostStartupTests.cs",
+          "first_line": 38,
+          "oracle_projection": [
+            "Assert.Same() Failure: Values are not the same instance",
+            "Expected: System.InvalidOperationException: chosen local Azure Service Bus pre-runtime startup barrier",
+            "Actual:   Microsoft.Extensions.Options.OptionsValidationException: Azure Service Bus transport for bus 'ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests+IOrdersBus': ConnectionString must not be empty when specified. Set a complete connection string or leave it unset and configure the host in the bus callback.",
+            "ACTUAL_STARTUP_FAILURE: Microsoft.Extensions.Options.OptionsValidationException: Azure Service Bus transport for bus 'ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests+IOrdersBus': ConnectionString must not be empty when specified. Set a complete connection string or leave it unset and configure the host in the bus callback.",
+            "STATE barrier=0 orders=0 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "limits": "Only first finite native assertion or positive direct Validate unexpected exception credited; later unreached assertions not credited. STATE is separate diagnostic observation, not passed state assertion."
+        }
+      ],
+      "healthy": [
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusTransportOptionsStartupTests.UnsetOrCompleteConnectionString_PassesStartupValidation(connectionString: \"Endpoint=sb://example.servicebus.windows.net/;Shar\"\u00b7\u00b7\u00b7)",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusTransportOptionsStartupTests.EmptyConnectionString_FailsAtStartupBeforeClientCreation",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests.SelectedNamedBlankConnectionStringFailsBeforeRuntime"
+      ]
+    },
+    {
+      "name": "M3-blank-predicate-bypassed",
+      "native_sha256": "8717600157fade98d8c3081aefa675cba22a79f5f6300a089845d74fd1267ee6",
+      "first_finite_red": [
+        {
+          "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusTransportOptionsStartupTests.EmptyConnectionString_FailsAtStartupBeforeClientCreation",
+          "first_source": "AzureServiceBusTransportOptionsStartupTests.cs",
+          "first_line": 14,
+          "oracle_projection": [
+            "Assert.Throws() Failure: No exception was thrown",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)"
+          ],
+          "limits": "Only first finite native assertion or positive direct Validate unexpected exception credited; later unreached assertions not credited. STATE is separate diagnostic observation, not passed state assertion."
+        },
+        {
+          "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests.InvalidSecondSelectedBusFailsBeforeEitherRuntime",
+          "first_source": "AzureServiceBusGenericHostStartupTests.cs",
+          "first_line": 52,
+          "oracle_projection": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(System.InvalidOperationException)",
+            "ACTUAL_STARTUP_FAILURE: System.InvalidOperationException: chosen local Azure Service Bus pre-runtime startup barrier",
+            "STATE barrier=1 orders=1 billing=1 cleanupFailures=0 startTerminal=True"
+          ],
+          "limits": "Only first finite native assertion or positive direct Validate unexpected exception credited; later unreached assertions not credited. STATE is separate diagnostic observation, not passed state assertion."
+        },
+        {
+          "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests.SelectedNamedBlankConnectionStringFailsBeforeRuntime",
+          "first_source": "AzureServiceBusGenericHostStartupTests.cs",
+          "first_line": 20,
+          "oracle_projection": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(System.InvalidOperationException)",
+            "ACTUAL_STARTUP_FAILURE: System.InvalidOperationException: chosen local Azure Service Bus pre-runtime startup barrier",
+            "STATE barrier=1 orders=1 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "limits": "Only first finite native assertion or positive direct Validate unexpected exception credited; later unreached assertions not credited. STATE is separate diagnostic observation, not passed state assertion."
+        }
+      ],
+      "healthy": [
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusTransportOptionsStartupTests.UnsetOrCompleteConnectionString_PassesStartupValidation(connectionString: null)",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusTransportOptionsStartupTests.UnsetOrCompleteConnectionString_PassesStartupValidation(connectionString: \"Endpoint=sb://example.servicebus.windows.net/;Shar\"\u00b7\u00b7\u00b7)",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests.UnusedInvalidDefaultAndOtherNameCannotRejectSelectedNullConnectionString"
+      ]
+    },
+    {
+      "name": "M4-eager-validation-removed",
+      "native_sha256": "d834ffc7a5dbfb89f303056b5763dcd9ecd27d029c12a583d33a562293258964",
+      "first_finite_red": [
+        {
+          "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusTransportOptionsStartupTests.EmptyConnectionString_FailsAtStartupBeforeClientCreation",
+          "first_source": "AzureServiceBusTransportOptionsStartupTests.cs",
+          "first_line": 14,
+          "oracle_projection": [
+            "Assert.Throws() Failure: No exception was thrown",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)"
+          ],
+          "limits": "Only first finite native assertion or positive direct Validate unexpected exception credited; later unreached assertions not credited. STATE is separate diagnostic observation, not passed state assertion."
+        },
+        {
+          "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests.InvalidSecondSelectedBusFailsBeforeEitherRuntime",
+          "first_source": "AzureServiceBusGenericHostStartupTests.cs",
+          "first_line": 52,
+          "oracle_projection": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(ViciOne.ServiceBus.ConfigurationException)",
+            "ACTUAL_STARTUP_FAILURE: ViciOne.ServiceBus.ConfigurationException: Bus composition for bus 'ViciOne.ServiceBus.AzureServiceBus.Tests:ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests+IBillingBus': Azure Service Bus transport for bus 'ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests+IBillingBus': ConnectionString must not be empty when specified. Set a complete connection string or leave it unset and configure the host in the bus callback. Correct the named configuration before starting the host.",
+            "STATE barrier=0 orders=1 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "limits": "Only first finite native assertion or positive direct Validate unexpected exception credited; later unreached assertions not credited. STATE is separate diagnostic observation, not passed state assertion."
+        },
+        {
+          "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests.SelectedNamedBlankConnectionStringFailsBeforeRuntime",
+          "first_source": "AzureServiceBusGenericHostStartupTests.cs",
+          "first_line": 20,
+          "oracle_projection": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(ViciOne.ServiceBus.ConfigurationException)",
+            "ACTUAL_STARTUP_FAILURE: ViciOne.ServiceBus.ConfigurationException: Bus composition for bus 'ViciOne.ServiceBus.AzureServiceBus.Tests:ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests+IOrdersBus': Azure Service Bus transport for bus 'ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests+IOrdersBus': ConnectionString must not be empty when specified. Set a complete connection string or leave it unset and configure the host in the bus callback. Correct the named configuration before starting the host.",
+            "STATE barrier=0 orders=0 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "limits": "Only first finite native assertion or positive direct Validate unexpected exception credited; later unreached assertions not credited. STATE is separate diagnostic observation, not passed state assertion."
+        }
+      ],
+      "healthy": [
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusTransportOptionsStartupTests.UnsetOrCompleteConnectionString_PassesStartupValidation(connectionString: null)",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusTransportOptionsStartupTests.UnsetOrCompleteConnectionString_PassesStartupValidation(connectionString: \"Endpoint=sb://example.servicebus.windows.net/;Shar\"\u00b7\u00b7\u00b7)",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests.UnusedInvalidDefaultAndOtherNameCannotRejectSelectedNullConnectionString"
+      ]
+    },
+    {
+      "name": "M5-typed-diagnostic-name",
+      "native_sha256": "085e5d03c53fb573179c6201bbf16ff9c2435b40483753720b06f386b49906c7",
+      "first_finite_red": [
+        {
+          "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests.InvalidSecondSelectedBusFailsBeforeEitherRuntime",
+          "first_source": "AzureServiceBusGenericHostStartupTests.cs",
+          "first_line": 56,
+          "oracle_projection": [
+            "Assert.Contains() Failure: Sub-string not found",
+            "Not found: \"ViciOne.ServiceBus.AzureServiceBus.Tests.Configura\"\u00b7\u00b7\u00b7",
+            "ACTUAL_STARTUP_FAILURE: Microsoft.Extensions.Options.OptionsValidationException: Azure Service Bus transport for bus 'IBillingBus': ConnectionString must not be empty when specified. Set a complete connection string or leave it unset and configure the host in the bus callback.",
+            "STATE barrier=0 orders=0 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "limits": "Only first finite native assertion or positive direct Validate unexpected exception credited; later unreached assertions not credited. STATE is separate diagnostic observation, not passed state assertion."
+        },
+        {
+          "case": "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests.SelectedNamedBlankConnectionStringFailsBeforeRuntime",
+          "first_source": "AzureServiceBusGenericHostStartupTests.cs",
+          "first_line": 24,
+          "oracle_projection": [
+            "Assert.Contains() Failure: Sub-string not found",
+            "Not found: \"ViciOne.ServiceBus.AzureServiceBus.Tests.Configura\"\u00b7\u00b7\u00b7",
+            "ACTUAL_STARTUP_FAILURE: Microsoft.Extensions.Options.OptionsValidationException: Azure Service Bus transport for bus 'IOrdersBus': ConnectionString must not be empty when specified. Set a complete connection string or leave it unset and configure the host in the bus callback.",
+            "STATE barrier=0 orders=0 billing=0 cleanupFailures=0 startTerminal=True"
+          ],
+          "limits": "Only first finite native assertion or positive direct Validate unexpected exception credited; later unreached assertions not credited. STATE is separate diagnostic observation, not passed state assertion."
+        }
+      ],
+      "healthy": [
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusTransportOptionsStartupTests.UnsetOrCompleteConnectionString_PassesStartupValidation(connectionString: null)",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusTransportOptionsStartupTests.UnsetOrCompleteConnectionString_PassesStartupValidation(connectionString: \"Endpoint=sb://example.servicebus.windows.net/;Shar\"\u00b7\u00b7\u00b7)",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusTransportOptionsStartupTests.EmptyConnectionString_FailsAtStartupBeforeClientCreation",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.Configuration.AzureServiceBusGenericHostStartupTests.UnusedInvalidDefaultAndOtherNameCannotRejectSelectedNullConnectionString"
+      ]
+    }
+  ],
+  "limits": "Full five focused logs personally read untruncated before ledger. Pure mechanical extraction of first callsite/diagnostic projection checked against actual native messages. Later unreachable assertions not passed or independently killed."
+}

@@ -1,0 +1,355 @@
+{
+  "status": "READ_ONLY_BOUNDED_P05_STAGE_B_DESIGN_AND_CASE_PLAN__NOT_IMPLEMENTED_OR_NATIVE_ACCEPTED",
+  "reviewer": "/root/continuation_adversarial",
+  "read_credit": "NONE transferred to Root. Existing Root57 ownership proof referenced at exact unchanged4 owner hashes; acceptedStageA helper delta separately bound. Reviewer read RollingTimer body for allocation analysis; author must independently qualify any extra changed owner.",
+  "bindings": [
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "sha256": "118157dac9343c83457fe32661e15d521c9bcb42600991d421612effb99c8ff4",
+      "bytes": 22480,
+      "root57_unchanged_qualified": true,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+      "sha256": "4d008ca99020815d1453376e277cc06ea57ca2db75d0a7ffb6fea279a4ab64c4",
+      "bytes": 15567,
+      "root57_unchanged_qualified": true,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs",
+      "sha256": "bc9bdd069b20785457700ff8cfde1ffb996f8b0f07c8522898201bbdb4e4ef7c",
+      "bytes": 6586,
+      "root57_unchanged_qualified": true,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "6bc0539808fb6237280c50550743f04d5d0fc1d6cf454e7432e5c7befa6dac1b",
+      "bytes": 6926,
+      "root57_unchanged_qualified": true,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Logging/Diagnostics/ActivityObservation.cs",
+      "sha256": "c206f81c611584f1982f03f55b1044cae4613d3775650fa291b43a910134d625",
+      "bytes": 6137,
+      "root57_unchanged_qualified": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Monitoring/Telemetry/SafeActivityScope.cs",
+      "sha256": "542b4841562b4445fc89ad0d06ae121633b51375d9ab241378ec0aece767b2eb",
+      "bytes": 1640,
+      "root57_unchanged_qualified": true,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Util/RollingTimer.cs",
+      "sha256": "58b73f24ebf7a6115065a0c8d7fbcb226ca0404b3ff70f1888f62e0c9d55acee",
+      "bytes": 3763,
+      "root57_unchanged_qualified": false,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "sha256": "8647373561a105ff543247438d3239f869009b6e2efc829f533d45bdfb235291",
+      "bytes": 17839,
+      "root57_unchanged_qualified": true,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+      "sha256": "d941d74bc5ac55af42d7c2abde5537489cd2850dcc325ecadfd7e93ff80931b9",
+      "bytes": 2155,
+      "root57_unchanged_qualified": true,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/DependencyInjection/ViciOneServiceBusTestingServiceCollectionExtensions.cs",
+      "sha256": "4fcb66dd722ee22d11e9f91bcf1375f46b7321882bf8d13c54cc83815d4239a1",
+      "bytes": 15480,
+      "root57_unchanged_qualified": true,
+      "root_personal_read_transfer": false
+    },
+    {
+      "path": "src/ViciOne.ServiceBus.Testing/DependencyInjection/Internal/ContainerTestHarness.cs",
+      "sha256": "c45b3d2faa01d87e4f4e34e40b745a3f111256ee6d2b4db0e3e935e68492bcfc",
+      "bytes": 22891,
+      "root57_unchanged_qualified": true,
+      "root_personal_read_transfer": false
+    }
+  ],
+  "root57_receipt": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_TELEMETRY57_COMPLETE_SOURCE_READ_R1.json",
+    "sha256": "87c47890f03ff587088d3a13d6b17fcefdc2234b9ab0bde6e420b15c39cf9e72"
+  },
+  "accepted_stage_a_source_review": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-a-source-tests-adversarial-r1.json",
+    "sha256": "735395571cf8ce6f28378e5780226f87400442642028a81528789aae7b4fc78c"
+  },
+  "minimal_owner_design": [
+    {
+      "owner": "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs",
+      "design": "Keep source instance-owned nullable ActivitySource; catch only actual optional source construction (and restore captured ambient via accepted helper). Continue constructing Lazy host IMeterFactory meter regardless source failure. Nullable source returns SafeActivityScope.None from span entry; metric init independent. Dispose returned source only, never host Meter/factory. Preserve required argument guards; no new global fallback."
+    },
+    {
+      "owner": "src/ViciOne.ServiceBus/Batching/Runtime/BatchConsumer.cs",
+      "design": "Capture delivery caller Activity.Current at DeliverAsync entry; use accepted ActivityObservation.TrySetCurrent(_currentActivity) for optional handoff; original business try/catch unchanged; finally bounded TrySetCurrent(captured caller). Do not wrap actual consumer pipe, actual cancellation or retry propagation as optional."
+    },
+    {
+      "owner": "src/ViciOne.ServiceBus.Testing/Diagnostics/TestActivityListener.cs",
+      "design": "Replace eager static new ActivitySource with Lazy<ActivitySource?>, explicit ExecutionAndPublication factory catches actual optional ctor exception and returns cachednull; factory/outer ctor guards restore caller. Null result deliberately makes optional timeline inert with any returned instance listener/root unwound. MethodName-null path need not force unused source creation. Preserve TextWriter validation. State explicit output-writer failure policy separately and keep listener removal independently finally-owned."
+    },
+    {
+      "owner": "src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "design": "Replace eager static source with Lazy<ActivitySource> whose valueFactory throws original source constructor cause and whose wrapper creation cannot invoke host listeners. Use explicit ExecutionAndPublication. Acquire Value inside constructor own try, capture source/create/start original before cleanup. Restore captured ambient with accepted helper; dispose every returned listener/root/RollingTimer in unwind; suppress/log secondary only to retain original primary. Normal required monitor timer/deadline semantics stay required; no inert/rootless success."
+    }
+  ],
+  "factory_policy_comparison": {
+    "optional_nullable_cachednull": {
+      "initial_failure": "one guarded ctor attempt returns null without CLR type initializer failure",
+      "subsequent_same_process": "inert, zero new source ctor retries",
+      "healthy_process": "distinct cold native process initializes a valid source normally"
+    },
+    "required_lazy_cached_original_exception": {
+      "initial_failure": "one actual ctor attempt; original factory exception reaches caller, action not invoked",
+      "subsequent_same_process": "same original exception from cached factory fault; fail-fast even after foreign listener is removed",
+      "tradeoff": "Process monitor unavailable until fresh process; this is an explicit bounded failure-cache policy, not CLR type poisoning or healthy recovery claim"
+    },
+    "not_recommended": "PublicationOnly/retry-per-action has no bounded constructor-failure allocation guarantee; null required source conceals monitor failure. Recovery design would require separately scoped bounded attempts and native policy proof."
+  },
+  "allocation_and_cleanup_matrix": {
+    "typed": "Only successfully returned source can be instance-disposed; host Meter lazily obtained independently and owned by supplied IMeterFactory. Failed source ctor returns no handle.",
+    "optional_timeline": "Current ctor owns _traces and listener object before AddActivityListener; optional source may fail before/after own registration depending evaluation order. An inert failure must remove any returned registration even if Source.Value never returned. Optional root cannot prevent listener disconnect during DisposeAsync.",
+    "required_monitor": [
+      "Required validation/TCS/TimeProvider.GetTimestamp occur before current own try; timestamp error is required and before returned live owner.",
+      "RollingTimer constructor creates wrapper only, no ITimer: actual timer comes from ScheduleTimer->Restart->TimeProvider.CreateTimer.",
+      "Instance ActivityListener exists before AddActivityListener. With Lazy source acquisition inside owned try after registration, first-source failure must disconnect own listener despite timer count0.",
+      "Source.CreateActivity assigns root before ActivityObservation.TryStart. Root callbacks may synchronously create related child, scheduling a real timer before a later root callback fails.",
+      "Current constructor catch Dispose may throw from ITimer.Dispose and replace primary. Fix constructor unwind distinctly; no blanket optional catch for required monitor clocks/timers.",
+      "Listener.Dispose is runtime-owned removal, own ShouldListenTo currently pure true; do not fake an external registration throw that no actual boundary can produce. Native callback cause should be target-source constructor, sample/start/current change or injected actual time-provider timer failure."
+    ]
+  },
+  "cold_native_process_protocol": [
+    "Use native xUnit4/MTP2 case(s) in dedicated tiny NuGet-only consumers or exact existing friend canonical tests filtered one case per native process. Public published Testing facade cold cases are preferred for optional and required static first-source behavior; internal canonical owner tests can corroborate direct implementation without private reflection.",
+    "Before subject access, create ordinary caller Activity and nontarget probe source; install foreign listener unarmed. Predicate records if target source already existed during registration; require zero matching preexisting sources. Arm it only after listener setup.",
+    "Keep predicate source-name-specific so System.Diagnostics.Activity default source and test platform telemetry are never poisoned. Record exact matching source ctor callback count1; count0 or throw during listener setup means invalid fixture/discovery prerequisite, never product counterexample.",
+    "Invoke public subject facade after registration from a separate no-inline helper if needed to avoid eager baseline type initialization in the installer method. Public API path must actually reach target owner: optional Fact stack yields non-null methodName or canonical explicit-name control. Validate observed target creation count, not assumed cold order.",
+    "One independent fresh native process for each hostile/healthy first-source case; no reflection, static resets, custom AssemblyLoadContext reinitialization, fixed test ordering, fake source ownership or alternate runner.",
+    "Static source failure is expected inside invoked subject operation, not process startup/discovery. Exact exception object and action count prove required policy; process crash/watchdog/compile/fixture failures cannot count as kills.",
+    "Use same fixture/assertion bytes for original/fixed/single-cause mutant; preserve full Detailed individual outputs, zero skips, minimum expected cases, structured exits, immutable raw/binlogs/runtime, fresh source/private packages/locks/PE-PDB binding.",
+    "Process-exit bounds hidden runtime ctor registration lifetime; preserve explicit known framework limitation, rather than asserting public product disposed a never-returned object.",
+    "No real idle sleeps: injected recording/FakeTimeProvider drives required idle boundary; rendezvous/guard only bounds owned cleanup, no guard timeout is product evidence. Join awaited operations and dispose all fixture listeners/probe/child sources."
+  ],
+  "case_catalog": [
+    {
+      "id": "B-T1",
+      "family": "typed instance source",
+      "variants": [
+        "ordinary constructor listener failure",
+        "healthy constructor listener"
+      ],
+      "cold_process": "recommended each variant, per-instance ctor also independently callable in canonical existing friend test assembly",
+      "scenario": "Install target-name predicate; hostile branch changes Activity.Current to null and throws fixed exception once during new typed ActivitySource construction; create actual typed instrumentation with healthy host IMeterFactory; emit admission Accepted size5 and payload Inline size3.",
+      "exact_oracles": [
+        "constructor returns; caller same parent; exact source-constructor callback count1",
+        "host Meter factory Create count1; source-null host still receives durable admission accepted counter1/size histogram5 and payload inline counter1/body histogram3",
+        "no fallback process/global meter; host meter remains owned by host; subject Dispose does not dispose host factory/Meter",
+        "hostile activity start unavailable; healthy activity source produces one real started/stopped activity with unchanged names and bus tags"
+      ],
+      "causal_failure_original": "hostile constructor exception escapes before instrumentation/meter use; finite Record.Exception null/metric assertions fail",
+      "single_cause_mutants": [
+        "undo typed source ctor guard",
+        "gate entire metric initialization on source-null",
+        "remove captured ambient restoration when predicate mutates ambient"
+      ]
+    },
+    {
+      "id": "B-T2",
+      "family": "typed ownership",
+      "variants": [
+        "host source fails; instance disposed twice"
+      ],
+      "scenario": "Emit valid metric then Dispose twice. Use a distinct host-owned counter from the same returned meter and emit after instrumentation disposal, without creating another bus instrumentation.",
+      "exact_oracles": [
+        "subject idempotent Dispose; host counter still records exact1",
+        "factory Create remains1; factory Dispose count0 before provider teardown; no process fallback meter",
+        "after-disposed instrumentation methods emit nothing; host resource only closes with provider-owned teardown"
+      ],
+      "causal_failure_original": "may be covered only after T1 ctor failure is repaired; not falsely claimed original finite counterexample if subject creation never succeeded",
+      "single_cause_mutants": [
+        "dispose host meter/factory from instrumentation",
+        "short circuit host meter when source is null"
+      ]
+    },
+    {
+      "id": "B-B1",
+      "family": "batch ordinary ambient handoff",
+      "variants": [
+        "healthy callback",
+        "ordinary throwing CurrentChanged for chosen admission ambient"
+      ],
+      "scenario": "Real BatchCollector/BatchConsumer with message limit1, real serialized executor/dispatcher, selected live admission activity, captured delivery-caller parent. CurrentChanged throws only on assignment of selected admission activity; await actual ConsumeAsync/completion.",
+      "exact_oracles": [
+        "consumer pipe runs exactly1 with captured admission activity",
+        "batch completion success, same delivery-caller ambient restored by bounded finally",
+        "release queued/executor/collector owners and no unmatched owned work"
+      ],
+      "causal_failure_original": "CurrentChanged exception becomes _completed fault before consumer pipe; finite pipeline invocation/success assertions fail",
+      "single_cause_mutants": [
+        "replace accepted TrySetCurrent handoff with direct Activity.Current assignment",
+        "omit delivery-caller ambient restoration"
+      ]
+    },
+    {
+      "id": "B-B2",
+      "family": "batch preserves business fault",
+      "variants": [
+        "ordinary handoff callback failure plus actual consumer pipe ApplicationException"
+      ],
+      "scenario": "Same real batch with handoff observer hostile, pipe throws one exact chosen business exception.",
+      "exact_oracles": [
+        "pipe called1; exact business exception object delivered through batch completion",
+        "caller ambient restored despite ordinary throwing restore callback",
+        "retry payload/fault/cancellation logic remains original; no swallowing pipe operation"
+      ],
+      "causal_failure_original": "original handoff callback fault wins instead of pipe business cause; finite identity assertion fails",
+      "single_cause_mutants": [
+        "broadly catch/succeed actual pipe operation",
+        "direct unguarded handoff/restore"
+      ]
+    },
+    {
+      "id": "B-B3",
+      "family": "batch preserves delivery cancellation",
+      "variants": [
+        "actual pipe cancellation carrying context.CancellationToken"
+      ],
+      "scenario": "Use real context token and selected ambient; cancel actual delivery operation, not a watchdog.",
+      "exact_oracles": [
+        "actual context token identity preserved in terminal cancellation",
+        "pipe invoked once when admitted; caller ambient restored",
+        "cleanup/timer/executor accounting joined after cancellation"
+      ],
+      "causal_failure_original": "healthy behavior control, not automatically an original regression counterexample",
+      "single_cause_mutants": [
+        "swallow/reclassify pipeline cancellation as telemetry"
+      ]
+    },
+    {
+      "id": "B-L1",
+      "family": "optional cold test timeline",
+      "variants": [
+        "first source ctor hostile ShouldListenTo",
+        "first source ctor healthy"
+      ],
+      "cold_process": "MANDATORY one native case per fresh process; target ViciOne.ServiceBus.TestHarness must not have initialized before arming",
+      "scenario": "Synchronous Fact installs unarmed target-name listener then arms before real public AddViciOneServiceBusTestTelemetry registration+GetTestHarness DI activation (or separately documented direct internal owner canonical control with explicit methodName). Fact stack must select non-null methodName when public facade drives source creation. Repeat optional activation with same static factory in same process; dispose instances/provider.",
+      "exact_oracles": [
+        "registration/DI harness activation returns; optional timeline cannot change actual harmless harness action result/count1",
+        "hostile source attempts exact1 across repeat activation; no CLR TypeInitializationException escapes",
+        "inert failure instance retains no registered sampling listener/root: fresh unrelated source.CreateActivity/StartActivity returnsnull in otherwise listener-free fixture after failed activation",
+        "caller parent restored if foreign predicate mutates it; normal healthy timeline writes expected operation row once",
+        "ordinary DisposeAsync remains idempotent, removes listener and stops root before optional output"
+      ],
+      "causal_failure_original": "static initializer source exception poisons TestActivityListener type/DI activation; finite null-escaped-error/action result assertion fails",
+      "policy_dependency": "If source-null timeline deliberately continues collecting unrelated activities, it is not fully inert; declare changed policy and adapt leakage oracle rather than claiming full inert cleanup."
+    },
+    {
+      "id": "B-M1",
+      "family": "required cold monitor source",
+      "variants": [
+        "first source ctor hostile ShouldListenTo",
+        "first source ctor healthy"
+      ],
+      "cold_process": "MANDATORY one native case per fresh process; target ViciOne.ServiceBus.Testing.Monitor no earlier first source",
+      "scenario": "Drive actual public ExecuteAndWaitForIdleAsync on a strict inert concrete IPublishEndpoint whose methods are not called by the action, with recording provider; foreign target-name predicate throws one exact ApplicationException object during first source construction.",
+      "exact_oracles": [
+        "hostile exception same original object, not TypeInitializationException/InvalidOperationException replacement; actionCount0",
+        "caller ambient restored; recording provider active ITimer count0 and no surviving own sampling listener via unrelated probe",
+        "second call after hostile listener removal follows declared required factory exception-cache policy: same original exception/actionCount0, ctor-attempt total1",
+        "healthy separate process actionCount1 and real required root; exact injected idle deadline governs completion, active timers0 after disposal"
+      ],
+      "causal_failure_original": "static initializer wraps primary in CLR TypeInitializationException, fails exact identity; actionCount0 alone is insufficient counterproof",
+      "single_cause_mutants": [
+        "return inert/null/success on required source failure",
+        "wrap or replace original required source cause",
+        "dispose failure replaces primary",
+        "retry ctor unbounded or use PublicationOnly contrary to bounded cache policy"
+      ]
+    },
+    {
+      "id": "B-M2",
+      "family": "required start failure with actual created timer and secondary cleanup fault",
+      "variants": [
+        "root ActivityStarted creates related child then throws chosen primary; ITimer.Dispose marks released then throws chosen secondary"
+      ],
+      "scenario": "Healthy first source; foreign root ActivityStarted creates related child from a fixture-owned healthy source so own monitor observes it and ScheduleTimer creates a real recording ITimer, then throws exact primary. Constructor catch must attempt root, listener and timer cleanup; timer disposal deliberately releases then throws secondary.",
+      "exact_oracles": [
+        "exact primary root-start exception remains same object; public actionCount0",
+        "actual timer Created1/DisposeAttempt1/active0, root stopped, own listener removed (unrelated source unsampled)",
+        "fixture owns and separately disposes created child and foreign listener after removing hostile callbacks",
+        "secondary cleanup never credited as native causal counterexample instead of asserted primary"
+      ],
+      "causal_failure_original": "current ctor catch Dispose secondary failure can replace original; separately staged native counterexample required, no claim without execution",
+      "scope_note": "This directly validates constructor unwind; it does not establish public using-Dispose after a successful monitor initialization preserves an action error."
+    },
+    {
+      "id": "B-M3",
+      "family": "required monitor create/sample/start owner cleanup controls",
+      "variants": [
+        "Sample throws original",
+        "ActivityStarted throws original with ordinary CurrentChanged restore throw"
+      ],
+      "scenario": "Exercise real required initialization with chosen native callback failures and accepted Stage-A ambient helper.",
+      "exact_oracles": [
+        "original cause object preserved; actionCount0; root stopped when allocated; own listener disconnected; no active timers",
+        "healthy sampler and parent propagation controls stay intact; cancellation precheck before action remains required"
+      ],
+      "causal_failure_original": "existing callback cases require binding to changed owner/public caller; do not count setup/discovery errors as product causes",
+      "single_cause_mutants": [
+        "throw cleanup/restore secondary over primary",
+        "discard original out failure and throw generic error"
+      ]
+    }
+  ],
+  "catalog_count_precision": {
+    "scenarios": 9,
+    "expanded_proposed_cases": 14,
+    "mandatory_cold_scenarios": [
+      "B-L1",
+      "B-M1"
+    ],
+    "cold_typed_recommended": "B-T1 instance-source subject is not static, but fresh process keeps its predicate scope clean",
+    "not_execution_credit": true
+  },
+  "required_remaining_caller_risk": {
+    "paths": [
+      "src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs"
+    ],
+    "issue": "After successful monitor initialization, public APIs use using tracker. Their catch StopWaiting then rethrow primary action error, but subsequent Dispose can throw required ITimer cleanup error and replace action exception. A ctor-only correction does not close this.",
+    "recommendation": "Keep explicitly open if StageB limited to initialization. If included, bind additional owner deltas and tests for exact action-primary plus secondary timer disposal without hiding standalone required cleanup failure; do not pretend blanket Dispose swallowing has equivalent semantics."
+  },
+  "scope_exclusions": [
+    "Business UTC store clocks, generation-fenced completion, Fault/Notify operations, persistence/provider confirms, consumer exceptions and actual cancellation remain required.",
+    "No general P05 completion: optional durable/EF elapsed prep, StartProcess active-counter leakage and source creation in other owners are later stages.",
+    "StageA current guard isolates one ordinary callback; arbitrary reentrant ambient mutation is not universally repairable."
+  ],
+  "framework_boundary": {
+    "ActivitySource": "v10 source registers before external ShouldListenTo. Constructor failure returns no public disposable handle. Cache/limit attempts, do not assert zero runtime-global hidden partial instances.",
+    "urls": [
+      "https://raw.githubusercontent.com/dotnet/runtime/v10.0.0/src/libraries/System.Diagnostics.DiagnosticSource/src/System/Diagnostics/ActivitySource.cs",
+      "https://learn.microsoft.com/dotnet/api/system.lazy-1",
+      "https://learn.microsoft.com/en-us/dotnet/framework/performance/lazy-initialization"
+    ]
+  },
+  "skills": "Prior Microsoft OpenTelemetry source/host-meter/lifetime/trace-parent rules apply; no host/exporter changes. Case planning only; no test-writing role, file edits or native execution by reviewer.",
+  "next_author_steps": [
+    "Choose exact factory and optional inert/output policy explicitly in Root plan, split B1 typed+Batch from B2 testing static required semantics if helpful.",
+    "Freeze exact Product4 plus any additional helper/caller owner deltas; root own current full read before canonical edits; append actual requirements projection only for authored cases.",
+    "Native cold prerequisite qualification/original counterproof, fixed positive and one-effect compiled mutations; independent adversarial source/tests/runtime review before bounded StageB acceptance."
+  ]
+}

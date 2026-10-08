@@ -1,0 +1,92 @@
+{
+  "status": "READ_ONLY_TWO_ACTUAL_C2_CANONICAL_MUTANT_PREPARATIONS_NO_BLOCK__6087_CANONICAL_PATHS_AND_ONE_CHANGED_OWNER_EACH_VERIFIED__NO_NATIVE_MUTANT_CREDIT",
+  "reviewer": "/root/continuation_adversarial",
+  "fixed_freeze_sha256": "983ead8fea14aa633138bb87bd31a34d33888aae2104c58dbe3950c7e4b42cf5",
+  "canonical_source_reference": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+  "canonical_path_count": 6087,
+  "canonical_actual_path_hash_rows_sha256": "46e490db2eacbba733419cd7099f57383e69e97fb7d69524eb29ade4b04c1a17",
+  "mutants": [
+    {
+      "id": "m1-initial-timestamp-unguarded",
+      "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c2-mutants/m1-initial-timestamp-unguarded",
+      "prepared_receipt_sha256": "b9837f2beba8fecf736d6785dd3e7233c30c737c695851cd2d17f4c6c212e47b",
+      "diff_sha256": "8737360ec8b811946f9bc2562b248f54403735bfe8e9b6d745ed89c8abee5037",
+      "canonical_source_reference": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "path_count": 6087,
+      "pathsets_equal_canonical": true,
+      "unchanged_other6086": true,
+      "changed": {
+        "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+        "fixed_sha256": "8a01e6f31430b513cea4f35072778ae70a3927d7e71eb6837fc858d9bd2c6404",
+        "mutant_sha256": "68a38f1b1fe3500bb0d245475fecb1a35657e8ee4c7221444d10f74cb32b67c3"
+      },
+      "cause_exact_replacement_verified": true,
+      "complete_unified_diff_verified": true,
+      "four_owner_hashes_verified": true,
+      "own_aggregate_path_hash_rows_sha256": "97fdb35f658106e8684bd0929ac490e8211803d2756d81497479c578f4e2ca97",
+      "root_serializer_matches_found": [
+        "json_sorted_dict"
+      ],
+      "predicted_only": {
+        "native_cases": 9,
+        "red": 2,
+        "healthy": 7,
+        "red_variants": "InitialTimestamp × staleGeneration False/True",
+        "first_finite_red_assertion": 48
+      },
+      "native_credit": false
+    },
+    {
+      "id": "m2-elapsed-timestamp-unguarded",
+      "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c2-mutants/m2-elapsed-timestamp-unguarded",
+      "prepared_receipt_sha256": "a69b799d73446ab118e626738a63c42ab2079659753ebf1e08efc712a014f686",
+      "diff_sha256": "d284bd3fc1bd5a754d31fc89b1785b522b2ddb276e50f660722ff70931a97499",
+      "canonical_source_reference": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+      "path_count": 6087,
+      "pathsets_equal_canonical": true,
+      "unchanged_other6086": true,
+      "changed": {
+        "path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/DurableSendConsumerCompletion.cs",
+        "fixed_sha256": "8a01e6f31430b513cea4f35072778ae70a3927d7e71eb6837fc858d9bd2c6404",
+        "mutant_sha256": "67822bdf51c202e1d0ebcc569066f5d274b96ddd3afde93d053e4e7603501ab4"
+      },
+      "cause_exact_replacement_verified": true,
+      "complete_unified_diff_verified": true,
+      "four_owner_hashes_verified": true,
+      "own_aggregate_path_hash_rows_sha256": "2790fed550cae88a1dccda2e01c494a423e275016e10e96821ba004ca37b7fd5",
+      "root_serializer_matches_found": [
+        "json_sorted_dict"
+      ],
+      "predicted_only": {
+        "native_cases": 9,
+        "red": 2,
+        "healthy": 7,
+        "red_variants": "ElapsedTimestamp × staleGeneration False/True",
+        "first_finite_red_assertion": 58
+      },
+      "native_credit": false
+    }
+  ],
+  "O_vs_C3_reference_distinction": {
+    "current_pathsets_equal6087": true,
+    "only_differences": [
+      {
+        "path": "tools/ci/aggregate_coverage_receipts.py",
+        "canonical_sha256": "3249ba9322e31437a328e4a72f3e54eb97b5d469981ff44954b8e8c88b02ae6b",
+        "C3_sha256": "74e616ea0af9089d1c15462a71bbb5faf79379995e5332b3b6e8cd13af30a719"
+      },
+      {
+        "path": "tools/ci/coverage_receipt.py",
+        "canonical_sha256": "510d1ae6b7def49e2fa413b565b3de50c79a32c34b914cf4642248b78ad7519d",
+        "C3_sha256": "d668897d03b7120596b97f947a0773595b04f6d8147e7fea9800e32dea1f42dc"
+      }
+    ],
+    "explanation": "Root states clones were taken from canonical O, not C3. Independent comparison confirms every clone matches canonical O except its one Completion mutation. C3 carries older accepted coverage-script predecessor bytes; these two CI scripts are outside the native product build input. Product/test frozen4 match O and C3. No claim that full clone equals C3 except one file.",
+    "initial_failed_comparison": "Comparison against C3 found two extra coverage-script differences. This was an incorrect reference assumption by reviewer; Root clarified canonical O reference, independently verified here. No evidence of later source mutation inferred."
+  },
+  "scope": "M1 removes only constructor optional timestamp try/catch. M2 removes only conditional elapsed computation try/catch. Nullable timestamp, other guard, exact required store/UTC/cancellation and nullable typed metric signature/counter/histogram behavior remain fixed. Tests and4695requirements unchanged.",
+  "healthy_prediction": "Each same9 cases: two None, other diagnostic failure pair, and required UTC/store/cancellation trio =>7 named healthy; selected diagnostic failure across matching/stale generation =>2 finite red. Actual events pending, compile/setup/discovery reds receive no causal credit.",
+  "shell_redirection_attempt": "Parent reports first M1 shell redirection failed before dotnet due absent artifacts directory. No native/compiled/causal credit; successor execution pending.",
+  "findings": [],
+  "limits": "No .NET executed; own hashes and complete source diff verification are provenance, not Root personal reading or runtime module/PDB acceptance."
+}

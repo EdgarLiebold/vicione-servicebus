@@ -1,0 +1,16 @@
+{
+  "kind": "LOCAL_COMPLETION_DOCUMENTATION_FREEZE_SUCCESSOR_R15",
+  "source_sha256": {
+    "CHANGELOG.md": "d96b048fa2f5f8a19b801bc57e7deb6f1f9b197402c5bee7f75dd313053c7ca6",
+    "TODO.md": "3a192fa0847270482d6846bed8b34ebca9d4be3cc06f0297e34bc22c9ef13a9a",
+    ".testagent/status.md": "60805f80b638e47b2bb42def17c7c852fd05b8af682526b614c13539f580520d",
+    ".testagent/plan.md": "3cf7ee4174ac22ae871a21443be16edd15d527cd6c2bbf96d4bffb398227f00b",
+    ".testagent/local-completion-plan.md": "8342918de3e372c9dd2bdcd8f4b6d2a144608d7855ff960e47fedfdf3c57a2c3",
+    "docs/quality-status.md": "344ac74709a59573af4a7afd0297a7113a080b9cea7ad059fb1420f91eae2f92"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-r15",
+  "c6_acceptance_sha256": "10b95e5b13bb7fc5dcc9f24e2686e68f73e8f259675fe71d19ea8ff007d1310b",
+  "prior_freeze_sha256": "cb1482a43fc48e83af029de3923595db8521f65eb026fbfaa217e2c4f215806d",
+  "independent_proposed_review_sha256": "7f1f8c7daf6b5a6d693bcba6761e98d8089be6a52108f0300f977ef7900d560f",
+  "limits": "Only new bounded C6 checkpoint and currentC7active wording; historical234/11otherTODOsections/62OBLtokens retained; no new broader acceptance."
+}

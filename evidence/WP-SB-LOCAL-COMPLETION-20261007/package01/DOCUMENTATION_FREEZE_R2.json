@@ -1,0 +1,17 @@
+{
+  "kind": "DOCUMENTATION_AND_NATIVE_FREEZE",
+  "baseline": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "files": {
+    ".testagent/local-completion-plan.md": "a0a2e5823c5e93dbfa104338445b24aefb5270151234458b9c46f13f4b425ba2",
+    ".testagent/plan.md": "89252a79064bfc6ad51aa9a8ea00d24ab7aeabb7ab4745e88c3f50083d6ba3b6",
+    ".testagent/status.md": "0c93a0cc41aa64d7ce61eddf99a8ef3087b7ba9648ac4203f753a00ff1ad60a3",
+    "docs/quality-status.md": "f7cdbc8d8fade5f3706ac5567d2f82cf971383c9dbc4c7c208f79419005c551f",
+    "TODO.md": "d86e206a909e13ef3ccf77a8ffac30f99b0a7f2efb4dd07f78f740be9804ab90",
+    "CHANGELOG.md": "bd458d76d9c9a69754e325e2ee8b807335414158ea75d1f057e495c1b83f4055"
+  },
+  "patch_sha256": "27f3eeaad8e9b8d73b72571d0657f864a3f2a677cac38e59f6d55ef9428f6d8c",
+  "baseline_receipt_sha256": "fa2f696dc7f59157e20d9cecd2918afeec07ebb52438c722ba59edc41466444c",
+  "previous_documentation_freeze": "DOCUMENTATION_FREEZE_R1.json",
+  "native_unit": "PASS_EXECUTION_REVIEW_PENDING",
+  "local_provider": "RUNNING_NOT_ACCEPTED"
+}

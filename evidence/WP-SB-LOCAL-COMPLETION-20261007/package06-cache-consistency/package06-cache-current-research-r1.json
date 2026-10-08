@@ -1,0 +1,703 @@
+{
+  "kind": "READ_ONLY_CURRENT_CACHE_REMAINING_TODO_RESEARCH",
+  "status": "STATIC_CANDIDATES_RANKED_NATIVE_ORIGINAL_CONFIRMATION_REQUIRED_NO_PRODUCT_ACCEPTANCE",
+  "utc": "2026-10-07T01:01:59.807421+00:00",
+  "reviewer": "/root/todo_reconciliation_review",
+  "authorization_and_limits": {
+    "product_and_tests_read_only": true,
+    "own_report_only": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-current-research-r1.json",
+    "no_dotnet_msbuild_docker_provider_network_or_test_execution": true,
+    "source_or_frozen_evidence_writes": false,
+    "Root_personal_read_credit_transferred": false,
+    "no_global_A_plus_or_whole_TODO_closure": true
+  },
+  "baseline": {
+    "HEAD": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+    "O": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+    "C3": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed",
+    "cache_source_count": 18,
+    "canonical_cache_test_files": 8,
+    "all26_O_C3_HEAD_byte_equal": true
+  },
+  "cache_owner_and_tests_whole_read_hashes": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs",
+      "sha256": "464ca1305591f2717d5c9649ca9dce30cef51ced28416d873a54b00d43f00d12",
+      "bytes": 2180,
+      "lines": 32,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs",
+      "sha256": "d9143384e1e91739ecad02ca2dbd32fac7571db655726279c74480eac9e9ad69",
+      "bytes": 2007,
+      "lines": 32,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs",
+      "sha256": "425dbadfaa95efff5c152655984281da4a8741106a9a41da9b22fe70b929727c",
+      "bytes": 399,
+      "lines": 13,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs",
+      "sha256": "bba8eeb8b9366996b489c820d793bb568d47c396127095a18ef45426fd2a164e",
+      "bytes": 1059,
+      "lines": 24,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs",
+      "sha256": "57e5e9d950b73282c7375b8c0101e11c01c6950825cbc073e2cd611c16da73e4",
+      "bytes": 733,
+      "lines": 24,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs",
+      "sha256": "907772e0d3f688f3b11b0542b79d45e76f098559a0fb99e2ad1395ebdb13112d",
+      "bytes": 845,
+      "lines": 27,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "sha256": "d6ce8980172e278b8ce7eae72fed4f6c89f74e23778a24f93e8524ab0b99c5d9",
+      "bytes": 4072,
+      "lines": 117,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+      "sha256": "54c895f4d2ccb95316a7ae3f521022cea3a25e4014d9b22fabaf75a53211625d",
+      "bytes": 1084,
+      "lines": 25,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs",
+      "sha256": "0e1ad799ed2211388d2f9f197199bb5431400c25cb86b0cea92ebc54cd5ea743",
+      "bytes": 4412,
+      "lines": 82,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "sha256": "a593b0fa0dc498210a20d4669ab68a743a2f13542fe9dbe53aa814ed463f6366",
+      "bytes": 10796,
+      "lines": 287,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs",
+      "sha256": "0aeb97aeae8196ed5918ccafb7401cdb2bc6f176c74f9e4b8de89833d8a3d00d",
+      "bytes": 4429,
+      "lines": 163,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs",
+      "sha256": "2ce1f0d2d155c797c4e51b458bcf1e5755896810f71604377560de5272d1bb47",
+      "bytes": 3346,
+      "lines": 102,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "sha256": "d33d153e2de28609ec362672c5637c97c9bfa95cc2895af236857b0181f7abd0",
+      "bytes": 10042,
+      "lines": 351,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "sha256": "98da72d0f863585936f1c9ad702bb3d27b62a7e1d606d0a21f8c8f290c56b4a2",
+      "bytes": 15452,
+      "lines": 368,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs",
+      "sha256": "70e1ef83ad34228694b8b4ff292c541e326ef7a638a9c457e8afe920728b98c7",
+      "bytes": 420,
+      "lines": 11,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs",
+      "sha256": "8ef0c5e0beb008e8dc1fced15128dcb892166daa5ec830f1b3b8ecd861937a76",
+      "bytes": 3933,
+      "lines": 75,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs",
+      "sha256": "69c3ab0534a57ade8c8f1007541cfa4644b15aed3e71d17db43258091087a8f4",
+      "bytes": 1086,
+      "lines": 16,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceFactory.cs",
+      "sha256": "91ac695975b938389565aec792c24118b5c4b0ad99e03d0f9086496d386ce0cc",
+      "bytes": 777,
+      "lines": 13,
+      "relative_path": "src/ViciOne.ServiceBus/Caching/ResourceFactory.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/src/ViciOne.ServiceBus/Caching/ResourceFactory.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheConcurrencyTests.cs",
+      "sha256": "7087567d31ff3d8d42df1dcef4763d11f90cdfe6a97b9265ad8edc8528ed6063",
+      "bytes": 23824,
+      "lines": 488,
+      "relative_path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheConcurrencyTests.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheConcurrencyTests.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs",
+      "sha256": "fe08a94c9d3339cc2a83c85bfcc19c90e3b4f6decd3d55810d9147811062d5db",
+      "bytes": 18577,
+      "lines": 383,
+      "relative_path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpirationTests.cs",
+      "sha256": "8f128a449bc35bf7012638d79237393754c1e823fb33f34d68f34005996299ba",
+      "bytes": 24726,
+      "lines": 542,
+      "relative_path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpirationTests.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpirationTests.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpiredDuplicateOwnershipTests.cs",
+      "sha256": "75455c54efa1c5388e92ac8f577b73a52c330785e2d7e8dd9b933f073010c430",
+      "bytes": 7285,
+      "lines": 180,
+      "relative_path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpiredDuplicateOwnershipTests.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpiredDuplicateOwnershipTests.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheGenerationAndLockingTests.cs",
+      "sha256": "56e5e5b8ba01517ba221441930ecfdd9c50f8c6d1279c29220d626d96da63fdf",
+      "bytes": 24973,
+      "lines": 586,
+      "relative_path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheGenerationAndLockingTests.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheGenerationAndLockingTests.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheInitializationTests.cs",
+      "sha256": "23871810ed2cdd3bcec89ae6f336a3dc1e8433ae6fbdfe1391f69c3515627a9a",
+      "bytes": 5853,
+      "lines": 141,
+      "relative_path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheInitializationTests.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheInitializationTests.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheLifecycleTests.cs",
+      "sha256": "4c791cd63c5708a51015d250c943a9e376aa4ddc17518b87add6fafb69823866",
+      "bytes": 21824,
+      "lines": 497,
+      "relative_path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheLifecycleTests.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheLifecycleTests.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverAndDisposalTests.cs",
+      "sha256": "d2c10c5e7cd989c7f747c043bf8a583adec22d721de23544abcda1b6e315836e",
+      "bytes": 26841,
+      "lines": 622,
+      "relative_path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverAndDisposalTests.cs",
+      "C3_path": "/private/tmp/vicione-servicebus-local-completion-20261007-core-deadlines-fixed/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverAndDisposalTests.cs",
+      "C3_byte_equal": true,
+      "HEAD_byte_equal": true
+    }
+  ],
+  "Root_whole_read_list": {
+    "mandatory_cache_owner_and_canonical_tests": [
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/IResourceCacheIndex.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/IResourceCacheObserver.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/IResourceUsageSource.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/PendingResourceCreation.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceKeys.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheEntry.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/KeyedResourceCache.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Observers.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCacheExpirationMode.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCacheOptions.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCacheStatistics.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceFactory.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheConcurrencyTests.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheContractTests.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpirationTests.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheExpiredDuplicateOwnershipTests.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheGenerationAndLockingTests.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheInitializationTests.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheLifecycleTests.cs",
+      "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverAndDisposalTests.cs"
+    ],
+    "shared_context_and_callers": [
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/TODO.md",
+        "sha256": "11ce8ac1c573fd49101bccb175ea7742c99c57cddb62b24a18cba2dca6e3b24c",
+        "bytes": 21935,
+        "lines": 305
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/.testagent/local-completion-plan.md",
+        "sha256": "e607108021050501809d2e05f191b9e9ed5cb5014216a6bea98140aaf90eb9c8",
+        "bytes": 4200,
+        "lines": 34
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+        "sha256": "be76207e17ad3f949d5a40c6688dfa1718d8058f471608237b47f028d0639c07",
+        "bytes": 1668404,
+        "lines": 32842
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Advanced/LogContext.cs",
+        "sha256": "1b2d78d017eb7bf797ac96addd41d7bd10e7979f2d47d6d38d09dc05da22ddd9",
+        "bytes": 14961,
+        "lines": 325
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Logging/ILogContext.cs",
+        "sha256": "7e900f8d8f0b981694ca208f516d709cf7d7986b9bb7f2396c663d30b3cfbfca",
+        "bytes": 1418,
+        "lines": 31
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Logging/Internal/BusLogContext.cs",
+        "sha256": "49824e23a95dd2d2abe0b28615b6debc8854418073dd99945a84925f7dd1c2c1",
+        "bytes": 2629,
+        "lines": 69
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Logging/EnabledLogger.cs",
+        "sha256": "ef5aa89d3cf563ec3af0cb6ac5e36cc6371afc8ccf85a57eb92589f69344ef17",
+        "bytes": 1436,
+        "lines": 37
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/ConnectHandle.cs",
+        "sha256": "c0f43d3c38e2fab39a7ef1a85b5a7f69562799e4f9980cb2c2a8898d6622f161",
+        "bytes": 776,
+        "lines": 23
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Sending/SendEndpointCache.cs",
+        "sha256": "e4b8626538a12a7b062ff8c0e79067ed54ef41c21dd5e7fd3ac5942b24ec3b58",
+        "bytes": 2274,
+        "lines": 53
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Sending/SendEndpointCacheDefaults.cs",
+        "sha256": "5a5464268795ed90c5761cc1269d5e41ab1b0dca131328877a4bf83026b88bf4",
+        "bytes": 287,
+        "lines": 10
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Transports/Sending/CachedSendEndpoint.cs",
+        "sha256": "eb470970f17c2987c3600b7b7f9fdfcf655e8f381919e6c1b2baae42b4021eeb",
+        "bytes": 4625,
+        "lines": 136
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/MessageProducerCache.cs",
+        "sha256": "84cf2e11221f80a03fb56f39686e68812319aee46cb70dee3332718b4eb2ebd2",
+        "bytes": 3389,
+        "lines": 64
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.ActiveMq/ActiveMqTransport/CachedMessageProducer.cs",
+        "sha256": "ea1822b1eb3065a253b92f453b9b1356d0db4b1e94c874341b58452bfa00f47c",
+        "bytes": 13544,
+        "lines": 326
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/EventHubProducerCache.cs",
+        "sha256": "0c4f398020f9839a205befbc3dfe087555c78a84afd789c771122df10722566b",
+        "bytes": 2060,
+        "lines": 43
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.EventHubs/EventHubIntegration/CachedEventHubProducer.cs",
+        "sha256": "d705ef40fae96587d4b4d0119afe6a97731b70d2d2284834b0c60ab6dbdc7bd6",
+        "bytes": 7368,
+        "lines": 153
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueCache.cs",
+        "sha256": "0fb5c3df9e6678967cbbfba1dc3726be460d39eda76e4f6d53ffc40a06cfc049",
+        "bytes": 10647,
+        "lines": 256
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+        "sha256": "13d304a8b161cbbce750e4ae00f9a543cec80796bb1d2ed823f7e94c31a0ae45",
+        "bytes": 8413,
+        "lines": 186
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/DurableResourceStore.cs",
+        "sha256": "0e44570cc0d229e800f4c93354a5f795ab709c36513c5b08f5a6dea38e9e67ff",
+        "bytes": 8841,
+        "lines": 271
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/ViciOne.ServiceBus.csproj",
+        "sha256": "382a67cc70d06648c92f0c2ad4d4528c9dbe15be5ec27ff8835a36ef63c2d9d3",
+        "bytes": 9852,
+        "lines": 52
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/ViciOne.ServiceBus.Tests.csproj",
+        "sha256": "209f30c372207336faa8eaff923f8fcb46dba8f563395ea0b7003130f75e7e21",
+        "bytes": 2378,
+        "lines": 46
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.props",
+        "sha256": "194d42a2526727f58037addadc18bf8f7532712416c541f85e80aac05bb372cf",
+        "bytes": 2886,
+        "lines": 49
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Build.targets",
+        "sha256": "f36bdacfaa664683f17ef50b5b7db359e6abe376468275525c706cc22d53f9c1",
+        "bytes": 10658,
+        "lines": 146
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/Directory.Packages.props",
+        "sha256": "be01b98dc5a8821b10b0aeef289f547b643fff56e9488b46282ed6f13e07c94e",
+        "bytes": 5677,
+        "lines": 76
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Directory.Build.props",
+        "sha256": "55e23e71dff0d422ac60d2896130a92012384eb811fa5ad6029541a19c00a5d8",
+        "bytes": 3303,
+        "lines": 51
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Directory.Build.targets",
+        "sha256": "3a866a9a26434dcca1aaf6d61a8d2afc84960f21ceee810b5b825f1ecdd7fdb1",
+        "bytes": 12496,
+        "lines": 149
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/TestAssemblyBootstrap.cs",
+        "sha256": "8b489bc250d32dd030b381777b0e54c3493aba8ca465704852058e7d94e962ca",
+        "bytes": 1507,
+        "lines": 31
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/GlobalUsings.cs",
+        "sha256": "ae580d7c99fba34f66ce0f433556ed9996fe28a409a049e9f9309a9bfaabed39",
+        "bytes": 268,
+        "lines": 5
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageAttribute.cs",
+        "sha256": "d78d054d54468692e35500dca6c90e706e6a77bfcbb7d1878bcb4bc97fba4e9e",
+        "bytes": 915,
+        "lines": 25
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/Testing/ViciOne.ServiceBus.Tests.Infrastructure/Requirements/RequirementCoverageProjectionVerifier.cs",
+        "sha256": "130f488a8ff8ddc7d43561f77f6188e5d3088de109aef1ba588c454e73180c66",
+        "bytes": 13208,
+        "lines": 325
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+        "sha256": "a5f0ec6f59f1bb688a2378cee86bf81cbd181d29395659a14f4ea4d138ace7f0",
+        "bytes": 1065,
+        "lines": 27
+      }
+    ],
+    "missing_expected_context_paths": [],
+    "scope": "Full owner before modifying any partial; canonical fixture helper/cleanup bodies matter. Requirement JSON/build/native bootstrap are whole contextual reads for Root before adding a canonical or standalone test. Source/hash inspection here is not Root reading. Provider caller files are context for affected regression selection, not a provider implementation change proposal. Prior personally complete Root800/84 receipt remains authoritative only for its own frozen bytes."
+  },
+  "accepted_evidence_bindings": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-API-REVIEW-REPAIR-20261002/PACKAGE358_CACHE_REGRESSION2_TESTONLY_ROOT_APPLICATION_R1.json",
+      "sha256": "713974ed6d991191be84cc5523ebb563961c69d0f3f97b6ba0c05b77b72374f2",
+      "bytes": 1863,
+      "lines": 35
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/ROOT_CORE_OWNER_COMPLETE_READ_R1.json",
+      "sha256": "5e807c7f46275c714dcb6e8c3b6f478f5f6846299510c58a2fcac60b763c6b08",
+      "bytes": 261185,
+      "lines": 5656
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-core-deadlines/ROOT_CORE_DEADLINE_ACCEPTANCE_R1.json",
+      "sha256": "84ed164f61e1b3695c0bd0b55cad4f2f41be6c09edb052e09645d698c7ac5d4b",
+      "bytes": 2803,
+      "lines": 60
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-b1-fixed-r1/RESULT.json",
+      "sha256": "8c757df4ae8e9a9e9bbb0e2f1d78b959338263e9d9da353e04c26ce250ba8516",
+      "bytes": 3789,
+      "lines": 65
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-b1-fixed-native-artifact-review-r2.json",
+      "sha256": "5f3f9fdedc3ab4a568d42305cb4b74d47aee07c1ac60b5b795578141ef727ba4",
+      "bytes": 33618,
+      "lines": 743
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01/DOCUMENTATION_FREEZE_R5.json",
+      "sha256": "023a7c6d62e51a5db082a35418555dd351cad7e9e9331f47fd33d818e962eb5c",
+      "bytes": 1148,
+      "lines": 16
+    }
+  ],
+  "historical_cache_implementation": {
+    "commit": "cf2e9ebfbc193573fd376df549469a956bc7de80",
+    "path": "evidence/WP-F2-SERVICEBUS-REVIEW-INTEGRATION-01/V4-RESOURCE-CACHE/VALIDATION.md",
+    "sha256": "064ab69dfd840d51bb1504b450d2ea74e555deb9f16e61d0ce632cd409894f76",
+    "bytes": 9717,
+    "bounded_evidence": "Historical 3,109 Unit/Architecture tests and 26 one-cause mutations; M10 awaits added observation, M15 isolates callback failure, M12/M14 lock boundaries, M13 stale usage handler. Historical provider results and preexisting EF/ReceiveCount failure are retained; not fresh cache-wide acceptance."
+  },
+  "current_native_context": {
+    "latest_receipt_whole_core": {
+      "parent_session": 1879,
+      "parent_exit": 0,
+      "total": 7968,
+      "passed": 7968,
+      "failed": 0,
+      "skipped": 0
+    },
+    "own_archive_runtime_all16_hashes_match": true,
+    "runtime_checks": {
+      "ViciOne.ServiceBus.Tests.runtimeconfig.json": true,
+      "ViciOne.ServiceBus.Mediator.dll": true,
+      "ViciOne.ServiceBus.JobService.dll": true,
+      "ViciOne.ServiceBus.Tests.testconfig.json": true,
+      "ViciOne.ServiceBus.Testing.dll": true,
+      "ViciOne.ServiceBus.Courier.dll": true,
+      "ViciOne.ServiceBus.Futures.dll": true,
+      "ViciOne.ServiceBus.Abstractions.dll": true,
+      "ViciOne.ServiceBus.Initializers.dll": true,
+      "ViciOne.ServiceBus.Sagas.dll": true,
+      "ViciOne.ServiceBus.Tests.pdb": true,
+      "ViciOne.ServiceBus.Tests.Infrastructure.dll": true,
+      "ViciOne.ServiceBus.dll": true,
+      "ViciOne.ServiceBus.Tests.dll": true,
+      "ViciOne.ServiceBus.Tests.InternalAccess.dll": true,
+      "ViciOne.ServiceBus.Tests.deps.json": true
+    },
+    "own_PE_contains_exact_ExpiredDuplicateOwnership_type_identifier": true,
+    "compiled_source_PDB_binding_basis": "Existing separate B1 artifact review says all3,795 source document checksums match and PE/PDB/source/output bindings match. This report hashes that review and byte-compares all26 O/C3 cache owner/test files; it does not claim a new complete PDB parse or 7,968 named case inventory. 7,968 aggregate all-green is preserved, not contradicted by unexecuted new comparer cases."
+  },
+  "already_implemented": [
+    {
+      "contract": "Replace GreenCache and separate mandatory key/index state from optional observers",
+      "source": "ResourceCache.cs AddIndex/AddAsync and ResourceCache.Resources.cs PrepareKeys/CommitValue/RemoveEntry; facade delegates one shared owner. Five caller cache classes use KeyedResourceCache; durable AWS partition remains separate DurableResourceStore."
+    },
+    {
+      "contract": "Serialized awaited callbacks outside state lock; complete fanout; logging isolates each observer and diagnostic failures",
+      "source": "ResourceCache.Observers.cs DispatchObserversAsync29-58; gate waited by caller, per-observer catch/log, finally releases; no internal notification drainer or queue",
+      "existing_tests": [
+        "AddedObserverFailure_IsIsolatedAfterAtomicCommitAndDoesNotSkipLaterObserversAsync",
+        "RemovedObserverFailure_DoesNotSkipLaterObserversOrResourceDisposalAsync",
+        "ClearedObserverFailure_DoesNotSkipLaterObserversOrLeaveIndexedStateAsync",
+        "ObserverAndDiagnosticLoggingFailures_DoNotSkipLaterObserversAsync",
+        "GetOrAddAsync_DoesNotCompleteUntilTheAddedObserverHasFinishedAsync",
+        "ObserverCallbacks_AreSerializedAcrossConcurrentCommitsAsync"
+      ]
+    },
+    {
+      "contract": "Observer same-cache lookup/mutation/index-registration/observer-registration/disposal is rejected before entering work; Statistics/GetValues remain readable; ended captured scope stops rejecting",
+      "source": "ResourceCache.Lifecycle.cs EnterOperation/ThrowIfObserverMutation; observer AsyncLocal stores shared scope object whose Active becomes false in finally",
+      "existing_tests": [
+        "ObserverReentry_IsRejectedBeforeItCanMutateTheCacheAsync",
+        "ObserverReentry_RejectsIndexRegistrationObserverRegistrationAndDisposalAsync",
+        "CompletedObserverScope_DoesNotRejectLaterWorkFromACapturedExecutionContextAsync"
+      ],
+      "qualification": "Existing canonical body directly covers Add/AddIndex/Connect/Dispose. Get/GetOrAdd/Remove/Clear/Cleanup share EnterOperation guard by inspected call chain. Native all-method breadth is not asserted. Suppressing ExecutionContext or externally triggering another flow is outside this guard proof; no policy requiring universal cross-flow reentry rejection is invented. Disconnect is currently allowed and not an observer-registration operation."
+    },
+    {
+      "contract": "Committed+pending+retiring admission count and pending single-flight/lifetime generation protections",
+      "source": "ResourceCache.Creation.cs GetOrAdd, ResourceCache.cs AddAsync, ResourceCache.Resources.cs ReleaseEntries finally drops retiring slot",
+      "existing_tests": [
+        "CapacityOwnedByPendingCreation_BackpressuresAnotherKeyWithoutExceedingTheBoundAsync",
+        "DirectAdd_WaitsForPendingCapacityThenAtomicallyOwnsTheReplacementAsync",
+        "DirectAdd_CanceledDuringPendingCapacityWaitRetainsCallerOwnershipAsync",
+        "UsageSubscription_RacingRemovalIsDetachedFromTheReleasedResourceAsync",
+        "InvalidatedFactoryCompletion_CannotReplaceANewerGenerationWithTheSameKeyAsync"
+      ]
+    }
+  ],
+  "withdrawn_expired_duplicate_hypothesis": {
+    "prior_application": "PACKAGE358_CACHE_REGRESSION2_TESTONLY_ROOT_APPLICATION_R1.json explicitly withdraws original product finding",
+    "source_chain": "AddAsync prepared version captured before CollectExpired. Every successful expiration removal increments _indexVersion. Any removed entry makes prepared.IndexVersion != current, so EnsureKeysAvailable is skipped; lock exits, ReleaseEntriesAsync always runs, then keys reproject/retry. Duplicate rejection happens only after removed ownership was already released. No AddAsync catch/finally needed for this specific path. The using operation lease exits on failures. A comparer throwing inside removal is a different cause and invalidates this healthy branch, covered only as proposed new case.",
+    "existing_methods": [
+      "ResourceCacheLifecycleTests.ExpiredResources_AreReleasedEvenWhenTheIncomingAddIsRejectedByAnotherIndexAsync",
+      "ResourceCacheExpiredDuplicateOwnershipTests.AddAsync_ExpiredOwnershipIsReleasedEvenWhenTheNewKeyIsDuplicateAsync(duplicate:false/true)"
+    ],
+    "reviewer_erratum": "Initial commentary alert missed version-retry branch; withdrawn immediately after whole-branch/historical check. No new regression case or correction warranted for healthy duplicate expiration."
+  },
+  "ranked_new_native_proposals": [
+    {
+      "rank": 1,
+      "id": "CACHE-COMPARER-REMOVE-PARTIAL",
+      "classification": "Strong source-demonstrable invariant-break candidate; no executed native counterexample",
+      "owners": [
+        "ResourceCache.Resources.cs189-202 RemoveEntry_NoLock",
+        "ResourceCache.Creation.cs137-160 RemoveAsync",
+        "Implementation/ResourceCacheIndex.cs RemoveKey",
+        "ResourceCache.Lifecycle.cs CompleteDisposeAsync"
+      ],
+      "cause": "Removal drops main _entries member, makes entry inactive, increments _retiringEntries, then calls each index RemoveKey. A once-armed secondary GetHashCode exception occurs after these state changes, before requested is appended to release list or observers/disposal run. RemoveEntry has no transaction/catch or rollback. Public GetAsync returns index value without checking Active. Disposal visits only main _entries, so detached ownership is not recovered by normal disposal.",
+      "smallest_original_public_fixture": "Theory hostile=false/true. Public ResourceCache<OwnedResource> capacity1 with no expiration during case. Add normal primary string index then secondary string index using stable equality comparer that throws one exact sentinel exception on its first armed GetHashCode and then behaves normally. Commit one resource with comparer unarmed. Arm after successful AddAsync; call primary.RemoveAsync (primary lookup is healthy; secondary comparator first runs in removal). Observe exact sentinel fault only in hostile variant. Disarm in finally before all postreads/teardown. Record primary and secondary GetAsync outcomes and GetValues identities. Require each successful index lookup identity to be present in GetValues; do not prescribe rollback versus completed-removal policy yet. Terminal cache DisposeAsync must release original resource exactly once. On current source hostile variant predicts stale-secondary value with empty GetValues and resource dispose0; healthy variant no stale indexes/dispose1. No sleep, private-field poking or drainer queue.",
+      "bounded_cleanup": "Capture every started task. Restore comparer, join tasks with independent deadline, finish real cache DisposeAsync before any fallback caller release of leaked resource. Validate expected comparer exception identity; never suppress unexpected faults/timeouts. A capacity-cancel postcontrol may show stranded retiring slot, but is optional and not needed for smallest first proof.",
+      "fix_boundary": "Choose atomic failed-removal rollback or consistent completed-removal release explicitly after finite original red. A naive catch plus hostile comparer-based rollback can throw again. Preserve observer backpressure/fanout/reentry and resource generation. Mutant should remove exactly the chosen consistency/ownership guard, not trigger arbitrary unrelated errors."
+    },
+    {
+      "rank": 2,
+      "id": "CACHE-COMPARER-COMMIT-PARTIAL",
+      "classification": "Distinct source candidate; native public fixture must prove throw occurs during CommitKey rather than precheck",
+      "owners": [
+        "ResourceCache.Resources.cs88-102 CommitValue_NoLock",
+        "ResourceCache.cs AddAsync",
+        "ResourceCache.Creation.cs CompleteCreationAsync",
+        "Implementation/ResourceCacheIndex.cs CommitKey"
+      ],
+      "cause": "Commit inserts into one or more index dictionaries before main _entries insertion; no rollback if a later index comparer throws. Direct Add returns fault with caller ownership retained but first index can still return candidate. Factory catch disposes value when committed variable remains null, leaving first index able to return a disposed uncommitted resource. Earlier projection/collision healthy tests reject before this stage and do not prove rollback here.",
+      "smallest_original_public_fixture": "Start direct Add healthy/hostile two-case control after rank1. Two empty indexes, first stable and secondary once-throwing comparer; arm for first actual insertion only. On .NET Dictionary empty lookup normally avoids hashing, but fixture must record exact comparer call and stable primary public lookup identity when exception occurs; do not assume a fixed count of all prior hash calls. Stronger fixture may make comparer throw only when primary.GetAsync(candidateKey) completes successfully while main GetValues is empty; this public read predicate avoids private reflection and distinguishes commit from precheck, but it must stay finite and be reviewed for read recursion. After disarm: faulted Add candidate must not be retrievable in any published index while absent from GetValues; caller candidate not cache-disposed. Healthy Add exactidentity in both indexes and one cache release.",
+      "followup": "Only after direct cause confirmed, same stage via public primary.GetOrAddAsync can test factory-owned candidate disposed once and no stale disposed index reference, zero pending. One generic partial-commit cause, not a new large suite."
+    },
+    {
+      "rank": 3,
+      "id": "CACHE-OBSERVER-ORDER",
+      "classification": "Public deterministic characterization available; strict commit-order acceptance requires explicit disposition, not an already violated promised order",
+      "owners": [
+        "ResourceCache.cs AddAsync AttachUsage then NotifyAdded",
+        "ResourceCache.Resources.cs AttachUsage",
+        "ResourceCache.Observers.cs DispatchObserversAsync"
+      ],
+      "smallest_fixture": "IResourceUsageSource blocks its Used add accessor after first resource commits, signaled by TCS and bounded worker. Connect recording observer before add. While subscription is blocked, public primary.RemoveAsync or ClearAsync finishes and observer records remove or clear; release subscription in unconditional finally; join add and all operations. Record resulting remove-before-add or clear-before-add order, exact same resource identity/dispose1/subscriber0. Existing UsageSubscription_RacingRemoval test already covers subscriber cleanup but not observer history. A second add can similarly overtake first notification. This distinguishes gate order from state-commit order without random concurrent timing.",
+      "disposition_needed": "Current interface promises serialized/awaited callbacks and reports after commit, not a total order preserving commit history or resource liveness through Added. TODO explicitly keeps ordering open. Do not label inversion native defect until selected event semantics are agreed. Any chosen correction must retain awaited serialized callbacks and bounded ownership; no unbounded drainer."
+    },
+    {
+      "rank": 4,
+      "id": "CACHE-OBSERVER-FAILURE-CHANNEL",
+      "classification": "Existing logging-isolation implemented; broader mandatory error sink is a policy decision",
+      "owners": [
+        "IResourceCacheObserver.cs summaries",
+        "ResourceCache.Observers.cs per-observer catch",
+        "ResourceCache.Lifecycle.cs LogWarningSafely",
+        "Advanced/LogContext.cs Warning nullable AsyncLocal"
+      ],
+      "research": "Observer failures do not propagate after irreversible commit, all later observers run, and logger failures are suppressed. No observer exception metric/result API exists in this owner. With no enabled ambient Warning logger, diagnostic emission is naturally absent. Preserve this current documented isolation policy; do not invent throw-to-caller or mandatory persistent diagnostics. Existing metadata variants add-fanout-completes-before-rethrow and clear-fanout-completes-before-rethrow are stale labels despite methods/docs explicitly isolating, not evidence of required rethrow.",
+      "smallest_optional_control": "If channel disposition keeps logging as contract, public recording ILogger verifies exact sentinel exception+warning once and later observer event; healthy variant logger0; retain existing throwing logger fanout test. This is a proof refinement, not an original source failure prediction."
+    },
+    {
+      "rank": 5,
+      "id": "CACHE-BLOCKED-OBSERVER-RESOURCE-BOUND",
+      "classification": "Resource admission bounded; total concurrent-caller memory bound unspecified",
+      "owners": [
+        "ResourceCacheOptions.cs Capacity",
+        "ResourceCache.cs AddAsync",
+        "ResourceCache.Creation.cs capacity paths",
+        "ResourceCache.Observers.cs SemaphoreSlim.WaitAsync",
+        "ResourceCache.Resources.cs retiring capacity release"
+      ],
+      "research": "No internal notification drainer queue. Awaited SemaphoreSlim can retain caller wait tasks. Caller-supplied resources, projected dictionaries, active operation leases and capacity-wait Tasks can scale with external concurrency although owned committed/pending/retiring resources are bounded. ResourceCacheOptions promises maximum committed/in-flight resources, not unlimited-external-caller allocation immunity. Hard caller admission bound/overflow/cancellation/fairness behavior needs explicit resource contract; do not invent a default cap or drop observations.",
+      "smallest_current_contract_control": "Capacity1, observer blocks first added callback, finite N (e.g.8) independently canceled caller requests; at most one owned resource/factory, no second factory until retiring removal release. Finally unblock observer, join all callers and disposal, track owned resource exact releases; healthy unblocked control. Assert bounded finite counters and identities, not flaky process RSS or GC thresholds. This can confirm existing bounded ownership; cannot prove arbitrary-concurrency constant memory or mark TODO done."
+    }
+  ],
+  "recommended_next_bounded_package": {
+    "first": "Only rank1 hostile removal + healthy twin, original native public/API fixture against unchanged source with fresh closed binlogs/source/assembly/PDB binding. No correction before finite causal native assertion. Existing canonical multi-index/remove/observer/disposal/generation tests are affected regression gates. Rank2 direct commit is the next distinct small cause if rank1 confirms.",
+    "defer_policy_changes": "Keep total observer event ordering, mandatory alternate failure sink, and total external-caller memory/overload policy open until explicit disposition. Use current awaited serialized callbacks as baseline.",
+    "no_test_flood": "Do not duplicate already green expired-duplicate/projection-before-publication/fanout/single-flight cases; do not immediately create all proposed controls. Root executes selected finite package only."
+  },
+  "findings_not_acceptance": [
+    "No confirmed current native cache defect is asserted by this read-only report. Rank1/2 are concrete source-derived failure candidates whose original native counterexamples are pending.",
+    "Green canonical aggregate is compatible with additional hostile comparer behavior not present in inspected eight cache test bodies. No suite-wide absence claim relies only on rg results.",
+    "Historical 234 repairs, frozen audit authority and old validation remain unchanged. None of the deferred TODO sections is closed here."
+  ],
+  "skill_limits": "Prior dotnet-test test-anti-patterns and find-untested-sources skills were read in this reviewer context. Pairing script earlier failed missing tree_sitter_language_pack; no package installed or native tool invoked; no automated whole-repo pairing/absence result is claimed. Current case proposals follow whole cache owner/test bodies and public call chains."
+}

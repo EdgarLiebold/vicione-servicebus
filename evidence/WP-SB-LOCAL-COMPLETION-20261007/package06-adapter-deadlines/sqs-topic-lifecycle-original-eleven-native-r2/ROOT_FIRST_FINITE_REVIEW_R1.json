@@ -1,0 +1,84 @@
+{
+  "kind": "ROOT_ORIGINAL_SQS_ELEVEN_FIRST_FINITE_LEDGER_R1",
+  "native_result_sha256": "c20eafa4413eb60589d3484d5750e3b76ac6830cf763f474dff62410a01f80dc",
+  "actual": {
+    "total": 11,
+    "passed": 5,
+    "failed": 6,
+    "skipped": 0
+  },
+  "rows": [
+    {
+      "method": "Client_PreCanceledPublishDoesNotResolveOrCallProviderAsync",
+      "first_assert": "Equal208",
+      "expected": 0,
+      "actual": 1,
+      "unreached": [
+        "OCE/token209",
+        "SDKempty210"
+      ]
+    },
+    {
+      "method": "ConcurrentDisposals_BothWaitForAdmittedProviderWorkAsync",
+      "first_assert": "False64",
+      "native_stack_line": 62,
+      "actual": true,
+      "positive": "SDKentered60; actual first61/second62 retained",
+      "finally_line": 72,
+      "unreached": [
+        "first65",
+        "publish66",
+        "providerExit67",
+        "ownerToken68",
+        "healthy75..78"
+      ]
+    },
+    {
+      "method": "Client_ReresolvesDisposedTopicBeforeAdmissionAsync",
+      "first_assert": "Equal103",
+      "expected": 2,
+      "actual": 1,
+      "reached": "Null102 passes",
+      "unreached": [
+        "request104",
+        "lazy105"
+      ]
+    },
+    {
+      "method": "Client_TwoStaleTopicsStopWithoutCallingProviderAsync",
+      "first_assert": "IsType258",
+      "actual": null,
+      "unreached": [
+        "owner259",
+        "logical260",
+        "lookups261",
+        "SDK262"
+      ]
+    },
+    {
+      "method": "Client_ReresolvesOnlyUnadmittedEntryAfterFullChannelClosesAsync",
+      "first_assert": "Null139",
+      "actual": "BatchAdmissionClosedException emitted solely by actual Writer.WriteAsync closed before accepting entry",
+      "positive": "SDK10 entered124, target exactobject in blockedWrite ring129, originaldispose130; actualcleanup136 joined",
+      "unreached": [
+        "lookups140",
+        "zeroOldTarget142",
+        "freshTarget143",
+        "allfiller/provider/ID144..149"
+      ]
+    },
+    {
+      "method": "DisposedColdTopic_RejectsPublishWithoutCreatingBatcherAsync",
+      "first_assert": "IsType44",
+      "actual": null,
+      "unreached": [
+        "owner45",
+        "noLazy46",
+        "noSDK47",
+        "provider48"
+      ]
+    }
+  ],
+  "root_read": "Personally entire actual11 native event bodies/summary andempty stderr. Source487exactbody read and sourceR4delta exactreuse. Strict prior output personallywhole; current strict0warnErr mechanicallyverified and belowwhole-read separate. Ownphysical10images freshparse separate.",
+  "limits": "Six failing cases are notsixnewunique productbugs; lowerunreached no causecredit; finally notextra cause, SourceFalse64/native62 nearestcompilerpoint kept distinct; no timeout/compiler/runtime-private incompatibility credited. Grouped bounded findings require peer qualification before privatefix."
+}

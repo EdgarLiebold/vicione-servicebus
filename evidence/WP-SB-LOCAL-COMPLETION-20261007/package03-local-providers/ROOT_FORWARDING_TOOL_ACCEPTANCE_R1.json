@@ -1,0 +1,16 @@
+{
+  "kind": "ROOT_BOUNDED_LOCAL_FORWARDING_TOOL_ACCEPTANCE",
+  "status": "ACCEPTED_FOR_SINGLE_RUN_LOCAL_EXPERIMENT",
+  "contracts": {
+    "total": 17,
+    "passed": 17,
+    "failed": 0,
+    "exit_code": 0
+  },
+  "freeze_sha256": "850c8466150754f6697014b6e05dae87a45a4dca1acb0695b88aae8841ff1326",
+  "independent_review_sha256": "a73ab3ffd3d2eb4bad48440836a527be5d02863355310e220bd8cc390ba1fa32",
+  "provider_runtime_acceptance": "NOT_EXECUTED",
+  "canonical_ci_fixture_change": false,
+  "shared_vm_or_configuration_change": false,
+  "root_personal_read": "Complete tool/test/plan and canonical run_scope ownership body; successor source/test deltas personally authored and read; actual causal 16/17 original and 17/17 corrected process contracts."
+}

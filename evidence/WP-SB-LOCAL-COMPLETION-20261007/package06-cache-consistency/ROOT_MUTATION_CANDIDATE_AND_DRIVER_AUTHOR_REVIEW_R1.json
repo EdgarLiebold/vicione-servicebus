@@ -1,0 +1,90 @@
+{
+  "kind": "ROOT_CACHE_EIGHT_CANDIDATE_AUTHOR_DELTA_REVIEW_R1",
+  "Root_read19_sha256": "1d3caebc040fc1a224a7b71a9c9046aecf106a7e115e8177666c94f83a5438bc",
+  "prepared_index_sha256": "d41d7e2f96bdaf29c915d3455de93967c12611121880e85a34854d5122430a55",
+  "candidates": [
+    {
+      "name": "m1-retirement-comparer-callback",
+      "owner": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "fixed_sha256": "84f6d67e2e3724120b394367b413325f353f7a9423a713431e8a6f4449b78f18",
+      "mutant_sha256": "777012699a17c2b493c90d4729d91f9442771e62204f87f07833222f620b8160",
+      "prepared_sha256": "f74644a7850f8d48c32f6fb33037c485b740691ed9548e6fb4f60b7b3f94045a",
+      "personally_authored_read_full_delta": "--- \n+++ \n@@ -104,7 +104,9 @@\n \n     public override void RemoveEntrySlot(object slot)\n     {\n-        _entries.Remove((PreparedResourceMap<TKey, ResourceCacheEntry<TValue>>.Slot)slot);\n+        var prepared = (PreparedResourceMap<TKey, ResourceCacheEntry<TValue>>.Slot)slot;\n+        _ = _entries.TryGetValue(prepared.Key, out _);\n+        _entries.Remove(prepared);\n     }\n \n     public void ResetEntries()\n",
+      "remaining_fixed_body_reuse_root19_sha256": "1d3caebc040fc1a224a7b71a9c9046aecf106a7e115e8177666c94f83a5438bc",
+      "status": "STATIC_SINGLE_CAUSE_ONLY_NATIVE_PENDING"
+    },
+    {
+      "name": "m2-interleaved-index-publication",
+      "owner": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "fixed_sha256": "a77ab4864f0e44b8692c308371817a831f0a231a40aec57ebcbba7793d7b65d1",
+      "mutant_sha256": "dafc843597008a8532a6c73b1cf9a46deb5eae93f2c0ec906367e9fd4d83ab1f",
+      "prepared_sha256": "9f8b24569b94d4bd58d0e7e4a8d1b792708e122c861591fabe8d823d311495b6",
+      "personally_authored_read_full_delta": "--- \n+++ \n@@ -95,14 +95,15 @@\n         entry.Slots.EnsureCapacity(prepared.Keys.Count);\n         _entries.EnsureCapacity(_entries.Count + 1);\n         foreach (var pair in prepared.Keys)\n-            entry.Slots.Add(pair.Key, pair.Key.PrepareEntry(entry, pair.Value));\n+        {\n+            object slot = pair.Key.PrepareEntry(entry, pair.Value);\n+            entry.Slots.Add(pair.Key, slot);\n+            pair.Key.PublishEntry(slot);\n+        }\n \n         // All user comparison has completed. No live index changes before this final guard.\n         if (prepared.IndexVersion != _indexVersion || _disposed || pending?.Invalidated == true)\n             return null;\n-\n-        foreach (var pair in entry.Slots)\n-            pair.Key.PublishEntry(pair.Value);\n \n         _entries.Add(entry.Id, entry);\n         _totalCreated++;\n",
+      "remaining_fixed_body_reuse_root19_sha256": "1d3caebc040fc1a224a7b71a9c9046aecf106a7e115e8177666c94f83a5438bc",
+      "status": "STATIC_SINGLE_CAUSE_ONLY_NATIVE_PENDING"
+    },
+    {
+      "name": "m3-rejected-factory-value-not-disposed",
+      "owner": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "fixed_sha256": "45bb92aea5df9ed96396604d8ef2b63afc888537ca4f49815f05ea734af41a6a",
+      "mutant_sha256": "43973b5a7e4e81ffb65bd02defb14e92af9d6b72028d850f0c990b492009379c",
+      "prepared_sha256": "b3a60251292cad48dc3ba5be10ecc6b3a483074f24b9db820967ff9db6864627",
+      "personally_authored_read_full_delta": "--- \n+++ \n@@ -266,9 +266,6 @@\n         }\n         catch (Exception exception)\n         {\n-            if (value is not null && committed is null)\n-                await DisposeUncommittedResourceAsync(value).ConfigureAwait(false);\n-\n             CompleteFaultedPending(pending, exception);\n         }\n     }\n",
+      "remaining_fixed_body_reuse_root19_sha256": "1d3caebc040fc1a224a7b71a9c9046aecf106a7e115e8177666c94f83a5438bc",
+      "status": "STATIC_SINGLE_CAUSE_ONLY_NATIVE_PENDING"
+    },
+    {
+      "name": "m4-pending-cleanup-comparer-callback",
+      "owner": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "fixed_sha256": "84f6d67e2e3724120b394367b413325f353f7a9423a713431e8a6f4449b78f18",
+      "mutant_sha256": "e54cf7d68c894f6b2f42282d874eba8a4e1fe5863f6181ba139208498aa82c64",
+      "prepared_sha256": "1653d7957bdb5a35964aef12f2bef588729065581dc7acb2ff1b606d039aeb91",
+      "personally_authored_read_full_delta": "--- \n+++ \n@@ -122,6 +122,7 @@\n         if (pending.Slot is null)\n             return;\n \n+        _ = _pending.TryGetValue((TKey)pending.RequestedKey, out _);\n         _pending.Remove((PreparedResourceMap<TKey, PendingResourceCreation<TValue>>.Slot)pending.Slot);\n         pending.Slot = null;\n     }\n",
+      "remaining_fixed_body_reuse_root19_sha256": "1d3caebc040fc1a224a7b71a9c9046aecf106a7e115e8177666c94f83a5438bc",
+      "status": "STATIC_SINGLE_CAUSE_ONLY_NATIVE_PENDING"
+    },
+    {
+      "name": "m5-public-get-retirement-finally-removed",
+      "owner": "src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs",
+      "fixed_sha256": "45bb92aea5df9ed96396604d8ef2b63afc888537ca4f49815f05ea734af41a6a",
+      "mutant_sha256": "d817446447481e45fe2cb4c76ac447a47d016337c9f0cae1dab0703d74be1df3",
+      "prepared_sha256": "e56929c6f4ef389f512e924f85757a6b02b5d0cdc6b6394807212ef3ac20e237",
+      "personally_authored_read_full_delta": "--- \n+++ \n@@ -19,7 +19,6 @@\n         PendingResourceCreation<TValue>? pending = null;\n         long now = _options.TimeProvider.GetTimestamp();\n \n-        try\n         {\n             lock (_sync)\n             {\n@@ -45,10 +44,7 @@\n                 }\n             }\n         }\n-        finally\n-        {\n-            await ReleaseEntriesAsync(removed, true, _lifetimeCancellationToken).ConfigureAwait(false);\n-        }\n+        await ReleaseEntriesAsync(removed, true, _lifetimeCancellationToken).ConfigureAwait(false);\n \n         if (entry is not null)\n             return entry.Value;\n",
+      "remaining_fixed_body_reuse_root19_sha256": "1d3caebc040fc1a224a7b71a9c9046aecf106a7e115e8177666c94f83a5438bc",
+      "status": "STATIC_SINGLE_CAUSE_ONLY_NATIVE_PENDING"
+    },
+    {
+      "name": "m6-timed-retirement-finally-removed",
+      "owner": "src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs",
+      "fixed_sha256": "a77ab4864f0e44b8692c308371817a831f0a231a40aec57ebcbba7793d7b65d1",
+      "mutant_sha256": "699558ee697e4870d09d3bf322209258d561009d93c9e749ad0fe21d61bbb464",
+      "prepared_sha256": "c52ada959591e3833cba60a4766d59d469bbdfdbd15df08189d8a2dacacbb277",
+      "personally_authored_read_full_delta": "--- \n+++ \n@@ -31,16 +31,10 @@\n         var removed = new List<ResourceCacheEntry<TValue>>();\n         try\n         {\n-            try\n-            {\n-                long now = _options.TimeProvider.GetTimestamp();\n-                lock (_sync)\n-                    CollectExpired_NoLock(now, removed);\n-            }\n-            finally\n-            {\n-                await ReleaseEntriesAsync(removed, true, CancellationToken.None).ConfigureAwait(false);\n-            }\n+            long now = _options.TimeProvider.GetTimestamp();\n+            lock (_sync)\n+                CollectExpired_NoLock(now, removed);\n+            await ReleaseEntriesAsync(removed, true, CancellationToken.None).ConfigureAwait(false);\n         }\n         catch (Exception exception)\n         {\n",
+      "remaining_fixed_body_reuse_root19_sha256": "1d3caebc040fc1a224a7b71a9c9046aecf106a7e115e8177666c94f83a5438bc",
+      "status": "STATIC_SINGLE_CAUSE_ONLY_NATIVE_PENDING"
+    },
+    {
+      "name": "m7-collision-successor-backlink-lost",
+      "owner": "src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceMap.cs",
+      "fixed_sha256": "2db6ae5fa7ed933ec1aa037e77a63b09cc4a53294f3195d94703b10af03da271",
+      "mutant_sha256": "161ecdf333edfd79a762afaf19c325c04678345dc2dba25ba7f89e5a281bc77d",
+      "prepared_sha256": "ed2c36ba827249679e665b5e40198c4fe593b2c5ed78a4b36a293cdeeab5ba00",
+      "personally_authored_read_full_delta": "--- \n+++ \n@@ -111,7 +111,7 @@\n         if (slot.Next is null)\n             bucket.Last = slot.Previous;\n         else\n-            slot.Next.Previous = slot.Previous;\n+            slot.Next.Previous = null;\n \n         slot.Linked = false;\n         slot.Previous = slot.Next = null;\n",
+      "remaining_fixed_body_reuse_root19_sha256": "1d3caebc040fc1a224a7b71a9c9046aecf106a7e115e8177666c94f83a5438bc",
+      "status": "STATIC_SINGLE_CAUSE_ONLY_NATIVE_PENDING"
+    },
+    {
+      "name": "m8-key-removal-instead-of-owned-pending-slot",
+      "owner": "src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs",
+      "fixed_sha256": "84f6d67e2e3724120b394367b413325f353f7a9423a713431e8a6f4449b78f18",
+      "mutant_sha256": "ed645d59b27d5e90a16f7a5a6e9ef01e1b293a5473fe5cd3b41dfa3eb584b6a3",
+      "prepared_sha256": "e6220f563dabe87316c7fdeb16550b414c34aabe0bcbaf0aa4e54e06b338f6d5",
+      "personally_authored_read_full_delta": "--- \n+++ \n@@ -119,10 +119,11 @@\n \n     public override void RemovePending(PendingResourceCreation<TValue> pending)\n     {\n-        if (pending.Slot is null)\n-            return;\n-\n-        _pending.Remove((PreparedResourceMap<TKey, PendingResourceCreation<TValue>>.Slot)pending.Slot);\n+        if (_pending.TryGetValue((TKey)pending.RequestedKey, out var current) && current.Slot is not null)\n+        {\n+            _pending.Remove((PreparedResourceMap<TKey, PendingResourceCreation<TValue>>.Slot)current.Slot);\n+            current.Slot = null;\n+        }\n         pending.Slot = null;\n     }\n \n",
+      "remaining_fixed_body_reuse_root19_sha256": "1d3caebc040fc1a224a7b71a9c9046aecf106a7e115e8177666c94f83a5438bc",
+      "status": "STATIC_SINGLE_CAUSE_ONLY_NATIVE_PENDING"
+    }
+  ],
+  "driver_sha256": "3f76c7acc4adbd1622b748d871f51f8ce773754ebfa0dfc610438537beb53d72",
+  "inputs_sha256": "a0aaf4d85fa52a40cadcf496eb2976edc21ebf3679a18ea99d5bb93aa547bc5a",
+  "limits": "Root authored and personally read everycomplete delta; unchangedbody exactRoot19whole-body consumption reuse, no reviewerreadcredittransfer. Root readfull167line authoredrunner. Independentreview exact8candidate+runnerNO_BLOCKmessage beforeexecution; hashboundreport follows. Zero static/nativekill inference."
+}

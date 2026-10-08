@@ -1,0 +1,14 @@
+{
+  "kind": "ROOT_RELIABLE_RESTORED_POST13_EXACT_FIXED_IMAGE_SOURCE_REUSE_R1",
+  "native_sha256": "5ec645f91ba6b3552500f50a608e001e149b3b2a27c7ba5c14f57c712b6edd7b",
+  "fixed13_native_sha256": "0b19510a284de83a69390b0ce4e4f5602e24b31e56ad5efe53ed1d4461412ff7",
+  "same17_archive_fixed_live_runtime_bytes": true,
+  "same12_assets": true,
+  "same39_generated_documents": true,
+  "same3_source_owners": true,
+  "reused_own_physical_sha256": "3ebf8e047eab523a70c174e2c671af78c6ee925e3a2887e333a577c1cde9ef5e",
+  "reused_independent_physical_sha256": "dbf8d15e8ac945a39738b483424d17139b9b977ad2042cea15ec294d04d2d75d",
+  "reused_independent_compiled4730_sha256": "ab13f9aa02b9c80d496ec9d5ff67dc448ce06a7a0a4993591511574103401fb0",
+  "root_read": "Whole strict stdout and all13 native bodies/summary plus emptystderr personally read. Exact byte/hash comparisons and source/generated rechecks mechanical. Own fresh fixed13 PE parse reused solely because all17 bytes exact; no fresh post parse or borrowed peer humanread credit.",
+  "limits": "Independent executed all5/post/canonical4 gate remains open. Whole8209 already qualified on same fixedsource; not a second whole run. No cloud/hardware/coverage/globalA+/newremote claim."
+}

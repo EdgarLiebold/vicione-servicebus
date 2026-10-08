@@ -1,0 +1,49 @@
+{
+  "kind": "ROOT_BOUNDED_STAGE_C1_PROCESS_METRIC_BALANCE_ACCEPTANCE",
+  "status": "ACCEPTED",
+  "product_owners": 1,
+  "new_native_cases": 8,
+  "requirements_rows_added": 1,
+  "freeze_sha256": "2dd0aaecb248a1b5595289a50a6bc8db8a10866806422ce332550db44defec58",
+  "source_sha256": {
+    "src/ViciOne.ServiceBus/Logging/Monitoring/LogContextMetricsExtensions.cs": "a69ec12a095f6201e603e1ff5be0128ec0d4bfec4202a0f03243666b1f8c6802",
+    "tests/ViciOne.ServiceBus.Tests/Monitoring/MessageProcessingMetricPreparationIsolationTests.cs": "b2b43d8b25fecb359c5ec5c4cb35ef28cd33fec087dfa6365240cd7f7bf4c620",
+    "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "62827310059751585f9d1034e9231b923edb19f2327bf3605450002c1673183b"
+  },
+  "root_complete_read_closure_sha256": "fee48418d451623472df9b35c86f8de5ec66f8ca684cb3810268f6776cbda1c4",
+  "independent_reviews_sha256": {
+    "package05-stage-c1-source-tests-original-adversarial-r1.json": "040ecf3652ddbb24a8ecf89ab2a33e8a1d7930c316ab762bf8f14e7f5412c0c7",
+    "package05-stage-c1-original-native-artifact-review-r1.json": "e7962826996c1b0efb99a1fe830705de95f46398c13ed01373a6592450ec5c44",
+    "package05-stage-c1-fixed-native-artifact-review-r1.json": "ab2285695a2021dabd35612d577d39e492ac94a5ff4a06a1fe862deed9c0e68c",
+    "package05-stage-c1-mutant-m1-native-artifact-review-r1.json": "3efb23de1620df29ae99037814eac8c0e80ae41a7100177249629fb42dd89c18",
+    "package05-stage-c1-mutant-m2-native-artifact-review-r1.json": "9e7371c4599cbe5a606c63308d2ed3e5b9672f5e9d3e50a0df158903ddb9b73f",
+    "package05-stage-c1-final-native-artifact-review-r1.json": "27c885925d0c59f66efa0f1f2090374f4de53e2a2e33e0ddad3825824b28c8ea"
+  },
+  "native_summary": {
+    "original_finite_failed": 6,
+    "original_named_healthy": 2,
+    "fixed_focused_pass": 8,
+    "fixed_whole_core_pass": 7982,
+    "compiled_single_cause_mutants": 2,
+    "finite_mutant_reds": 6,
+    "named_mutant_healthy": 10,
+    "fixed_post_pass": 8,
+    "focused_event_slots": 40,
+    "unique_closed_binlogs": 12
+  },
+  "root_personal_native_parent_exits": {
+    "original_build49152": 0,
+    "original_focus31738": 2,
+    "fixed_build68985": 0,
+    "fixed_focus98308": 0,
+    "fixed_core10091": 0,
+    "m1_restore80630": 0,
+    "m1_build5327": 0,
+    "m1_focus69032": 2,
+    "m2_restore59594": 0,
+    "m2_build40494": 0,
+    "m2_focus61622": 2,
+    "fixed_post33148": 0
+  },
+  "limits": "Independent optional Retry/Lag preparation only; required handler/outcome/notifications and live active+1 control preserved. Original/mutant reds first fail metric sequence89; late assertions not credited on red paths. No swallowed getter exceptionstack/reference claim, real retryloop, required clock catches, global per-listener ledger or wholeP05/Unit/provider/package/coverage/CI/cloud/hardware acceptance. C2 successor orderedRequirements4695 doesnotrewrite C1frozen4693."
+}

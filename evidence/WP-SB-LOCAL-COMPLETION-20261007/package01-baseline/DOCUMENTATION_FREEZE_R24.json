@@ -1,0 +1,45 @@
+{
+  "kind": "ROOT_PUBLISHED_SIX_DOCUMENTATION_FREEZE_R24",
+  "prior_freeze_sha256": "e2f122e366e47235762135a82f3475e3b48901c9f5c48f2c04601b1ab9fd7ebd",
+  "prior_source_sha256": {
+    "CHANGELOG.md": "a534c6acb054cb27a70b509f8a927ed7d825c0a021c8d67f4272819600ebbb11",
+    "TODO.md": "68da2831ab14787d7568622743394a9cd8172a4843760664b41e6455950591c8",
+    ".testagent/status.md": "f4b1ae95c5ae7cedc19bae78874bedb15441dc1ce0fed43efc5d7547c330534f",
+    ".testagent/plan.md": "021565cf70a55610fe98352d9c3017e6fa0972aa4ab2f750c2ef41fa400a0156",
+    ".testagent/local-completion-plan.md": "651467cdcdb8b097cc6dfdc36ccc64b90fc14090e9d7e225945e8e674b7f1dfc",
+    "docs/quality-status.md": "e0a0141a329e6f9ecf662a7289bc258fdc947e6819384495e2380f01b85948d9"
+  },
+  "source_sha256": {
+    "CHANGELOG.md": "171fdba38f9237cc108ee85c8c0be99555897b01b755ee73e2393b9237569335",
+    "TODO.md": "46c9ca999ea4811f33f1060c53809d52e8c3059b8126e84d1216e7a0166770af",
+    ".testagent/status.md": "172aaf98251bc64a70121c78a636027688fde2745f9c08fb2843723fc452683f",
+    ".testagent/plan.md": "71b26c762ae3516535be46f1ce0314e3d133472cf551ac924223b3db88b64d84",
+    ".testagent/local-completion-plan.md": "ec10125b6959751cea9fdc5202b46c2cb82a155f2215e39ac1d05710690a34c6",
+    "docs/quality-status.md": "0904bb99c7f1aa8b81abe9243ce4bb2d2e353828762c08444e2a4fa9b228eae3"
+  },
+  "snapshot": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package01-baseline/documentation-proposed-r24",
+  "reliable_acceptance_sha256": "c757b77a4665c6c7b8482284f5e8d90eda61b1790ca88bff91ed9a6b2458a629",
+  "reliable_application_sha256": "30b470c037dea9e2512d15e989b5ed796a7dd3fa967c72c50e13d0654406450d",
+  "reliable_afterapply_peer_sha256": "b7811159e5519fda8bcc208420b0770a6b3836d63ab1410dfa55445a1f83b268",
+  "separate_op_report": {
+    "path": "docs/servicebus-local-completion-report.txt",
+    "prior_sha256": "8114f36a88603f30e66bcc0df829ddb04098197a6090572dddf824168b9070b4",
+    "proposed_sha256": "bd967557bb684ee5d01b48afc2fd326e0b539e74b1e290c68134ae2a413d3cae"
+  },
+  "preservation": {
+    "other11_TODO_blocks_byteexact": true,
+    "TODO_preamble_byteexact": true,
+    "ordered62_OBL_exact": true,
+    "history_suffix_sha256_including_heading": {
+      "CHANGELOG.md": "ac722185c45eb8f120469a4d9a8a597ada90f4596c56bcb0c73b0e6fcdc26b21",
+      ".testagent/status.md": "141c629ad53934c2dbf247a9dab5b57d714c50d7fb26afb1c249fbdfb24edd8a",
+      ".testagent/plan.md": "becedf8c20f2f897558d4e98a8eb9bf4cd00ac120c2b0bb2a88b57ffd571b4bc",
+      "docs/quality-status.md": "f31e03170f47921881c50fd71f1bed30b65c1e9d892ff263d97521e1cd828fd5"
+    },
+    "frozen234_unchanged": true
+  },
+  "limits": "Exact reviewed6docs+separatePO published locally with all prior guards. BoundedReliable accepted; otherstartup/EF/native/coverage/CRAP/providers/adapters/cache/telemetry/API/journeys/benchmarks/CI/cloud/HW/globalA+ remain open. PriorR23/frozen234 retained, no newremotecommit.",
+  "proposed_freeze_sha256": "fd6b1e09e44826dafb0bb90ee2725d1b2f380cf6d75dc8e115908a59b7fb1acf",
+  "independent_peer_sha256": "a8f4991ca4dd3eba9c94b98584e363567ad10cba9179b28428e6e1f96d3b5c5c",
+  "published_locally": true
+}

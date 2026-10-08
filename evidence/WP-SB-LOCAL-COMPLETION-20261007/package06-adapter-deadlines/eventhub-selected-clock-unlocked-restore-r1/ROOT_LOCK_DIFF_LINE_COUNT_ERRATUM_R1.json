@@ -1,0 +1,7 @@
+{
+  "kind": "ROOT_EVENTHUB_LOCK_DIFF_LINE_COUNT_ERRATUM_R1",
+  "qualified_receipt_sha256": "f03295a6b684b3e1eec0ae5f27ea9e52c6d1036fe722c05d65b95cb93194413a",
+  "correction": "Actual lossless lock diff has15 contentlines, not13. Entire diff was printed/consumed untruncated; only prosecount was wrong. No actual package/source/artifact/result change.",
+  "diff_sha256": "e9013baabea4e9f3c2ae318dff1b47ff0f1a2a6dc1ac9e1aae5f684df53c4a55",
+  "actual_lines": 15
+}

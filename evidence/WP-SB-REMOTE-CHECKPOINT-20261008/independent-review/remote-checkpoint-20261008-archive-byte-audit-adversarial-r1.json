@@ -1,0 +1,241 @@
+{
+  "kind": "INDEPENDENT_READONLY_ARCHIVE_PARTS_AND_BOTH_RESTORE_BYTE_AUDIT",
+  "manifest_sha256": "c79c3eb7757989c71605b930aea70a2fb6d42c3250bf28f9cb4c973839909093",
+  "inputs_sha256": "b981ec26d8a75413f70712cbbca98f4833e38e54b79918bb359dbf2bc179394b",
+  "encrypted_manifest_sha256": "7462ecd3e34abbc5e9ec0911295a3c22fa8dbae11ec7e213c26b117001b2bae8",
+  "parts": [
+    {
+      "index": 1,
+      "cipher": "review-evidence.aesgcm.part-001",
+      "bytes": 41943100,
+      "sha256": "feeb3888f42a9530d787e28d1364ef4b0880a96fab1ed275d4f054b2cd4f83e4"
+    },
+    {
+      "index": 2,
+      "cipher": "review-evidence.aesgcm.part-002",
+      "bytes": 41943100,
+      "sha256": "912be197e8cc365a7dc38d5a47f065bc990e8a50fba13c0717ac8a0b17e970e3"
+    },
+    {
+      "index": 3,
+      "cipher": "review-evidence.aesgcm.part-003",
+      "bytes": 41943100,
+      "sha256": "ddcdf21ec7e3a3e5d3ca81d9c78c0272c8170a53ad361eb682fdec7d8275f2d3"
+    },
+    {
+      "index": 4,
+      "cipher": "review-evidence.aesgcm.part-004",
+      "bytes": 41943100,
+      "sha256": "741700deca228c8c4dbeb1f293e1ce697daef91e9b1d7127dce3582965b11447"
+    },
+    {
+      "index": 5,
+      "cipher": "review-evidence.aesgcm.part-005",
+      "bytes": 41943100,
+      "sha256": "839dce74060b4435898af5682f781cc90e587b8957502f7a4f2b859e2450af61"
+    },
+    {
+      "index": 6,
+      "cipher": "review-evidence.aesgcm.part-006",
+      "bytes": 41943100,
+      "sha256": "f1c3ee4299b9ca228cf639353914a79b3ea008a254e508acf02ed377cc3ec83d"
+    },
+    {
+      "index": 7,
+      "cipher": "review-evidence.aesgcm.part-007",
+      "bytes": 41943100,
+      "sha256": "7e7acdc0f3b66396886440b305bbddc6c19c5f840a529da959e99b58b50df615"
+    },
+    {
+      "index": 8,
+      "cipher": "review-evidence.aesgcm.part-008",
+      "bytes": 41943100,
+      "sha256": "65eae2115de307b65b413b46c4de99e48a1ed6059b5fc16f5066a25d7baab657"
+    },
+    {
+      "index": 9,
+      "cipher": "review-evidence.aesgcm.part-009",
+      "bytes": 41943100,
+      "sha256": "d74d66629e78931461bca419abb2664881775f2ab6ce25999aa48e8494c6a4e7"
+    },
+    {
+      "index": 10,
+      "cipher": "review-evidence.aesgcm.part-010",
+      "bytes": 41943100,
+      "sha256": "1c7bf2aa79719325adac063af5f9b804e06058b06ba6a1885308f6509cdbecd9"
+    },
+    {
+      "index": 11,
+      "cipher": "review-evidence.aesgcm.part-011",
+      "bytes": 41943100,
+      "sha256": "cb4bf06b7bee2cf76a3579584cf62339d05498786989b63756ca6629fe48dcd6"
+    },
+    {
+      "index": 12,
+      "cipher": "review-evidence.aesgcm.part-012",
+      "bytes": 41943100,
+      "sha256": "e70d51c61501d710ec0ef519df65b8e7a3d8733db359615e1383db319a97dd56"
+    },
+    {
+      "index": 13,
+      "cipher": "review-evidence.aesgcm.part-013",
+      "bytes": 41943100,
+      "sha256": "6851ee80441158a9011f4f474358249e50e074fa23be33d0f076472ce2b39428"
+    },
+    {
+      "index": 14,
+      "cipher": "review-evidence.aesgcm.part-014",
+      "bytes": 41943100,
+      "sha256": "0730498553014f1a6533c9c2991a56d23a24732d71b8bf3d6dec9eb3f67923b9"
+    },
+    {
+      "index": 15,
+      "cipher": "review-evidence.aesgcm.part-015",
+      "bytes": 41943100,
+      "sha256": "9254f10b0b74c2c6eefc332386c80a1c31cbf88b4930f494f8e74a1a7414f527"
+    },
+    {
+      "index": 16,
+      "cipher": "review-evidence.aesgcm.part-016",
+      "bytes": 41943100,
+      "sha256": "a40193948b1b43a66013d2bc6298709674f5a7c0fa1e63e8be038ce0e5b6b988"
+    },
+    {
+      "index": 17,
+      "cipher": "review-evidence.aesgcm.part-017",
+      "bytes": 41943100,
+      "sha256": "2bdbb793c1502578971c7e91f20ea6529a651e29521f30ab619dd98ed675607c"
+    },
+    {
+      "index": 18,
+      "cipher": "review-evidence.aesgcm.part-018",
+      "bytes": 41943100,
+      "sha256": "6a4f40bc2170cdb7950393d29bd1e87221a9eb171c9d6b8901d429b0815b173e"
+    },
+    {
+      "index": 19,
+      "cipher": "review-evidence.aesgcm.part-019",
+      "bytes": 41943100,
+      "sha256": "b4bac79ea942b138d1f3a065ff4fe64c3b39001b57bc9a075e98b40cf1b48903"
+    },
+    {
+      "index": 20,
+      "cipher": "review-evidence.aesgcm.part-020",
+      "bytes": 41943100,
+      "sha256": "428223c37082d48dbd8a56799e50b5c7217e33223c9d227c3c7063d17f3cb271"
+    },
+    {
+      "index": 21,
+      "cipher": "review-evidence.aesgcm.part-021",
+      "bytes": 41943100,
+      "sha256": "1d3f529a5bc237811b2c5fd168d6b51636048ca969f992a08dbb29c170f7f4e9"
+    },
+    {
+      "index": 22,
+      "cipher": "review-evidence.aesgcm.part-022",
+      "bytes": 41943100,
+      "sha256": "fdda58825ca2e19d311a26c9d5238c66a7d2683b557babc7cea25ef35d092691"
+    },
+    {
+      "index": 23,
+      "cipher": "review-evidence.aesgcm.part-023",
+      "bytes": 41943100,
+      "sha256": "0c51febb56196b4ac5d80bf66ef2dc387183e33a18e8f084fe22f7104493025e"
+    },
+    {
+      "index": 24,
+      "cipher": "review-evidence.aesgcm.part-024",
+      "bytes": 41943100,
+      "sha256": "9f83cf3f34cdb0b13c0ec5997ec2305c74670b87cb8f27f7882d6f290be879b9"
+    },
+    {
+      "index": 25,
+      "cipher": "review-evidence.aesgcm.part-025",
+      "bytes": 41943100,
+      "sha256": "db588eab395a27b9644d0f188ae40566bb4cf01262399fa9c48db03c4bc6d62c"
+    },
+    {
+      "index": 26,
+      "cipher": "review-evidence.aesgcm.part-026",
+      "bytes": 41943100,
+      "sha256": "cb9d8880aece3979834509b9d08a2be514da5d6fc5249d65c2978a872f2bbebe"
+    },
+    {
+      "index": 27,
+      "cipher": "review-evidence.aesgcm.part-027",
+      "bytes": 41943100,
+      "sha256": "c76990929c9519278413381e8d8c750a37f65c83d5b28267aeb06153c305e128"
+    },
+    {
+      "index": 28,
+      "cipher": "review-evidence.aesgcm.part-028",
+      "bytes": 41943100,
+      "sha256": "2e3a126f57edd37f4c408782e7c4a24c66964804df52db1296872d68440f665c"
+    },
+    {
+      "index": 29,
+      "cipher": "review-evidence.aesgcm.part-029",
+      "bytes": 41943100,
+      "sha256": "395e61ac23820ebbc3b4ed55fa7c2f4e59a3aff474d11ab4e979ec8b932cf564"
+    },
+    {
+      "index": 30,
+      "cipher": "review-evidence.aesgcm.part-030",
+      "bytes": 41943100,
+      "sha256": "75c8a49801408a3c4d7382903d32a550a8b622de4aa253cfc45ed5a8ced37347"
+    },
+    {
+      "index": 31,
+      "cipher": "review-evidence.aesgcm.part-031",
+      "bytes": 41943100,
+      "sha256": "0b63343dc62ef7abe140b17af1368f64de7c4229e0503e9889f53a29c2191a69"
+    },
+    {
+      "index": 32,
+      "cipher": "review-evidence.aesgcm.part-032",
+      "bytes": 41943100,
+      "sha256": "c98d392465a6e61e6efc9d5214b1d99024814beae8e1c9acf010b5551cbd771b"
+    },
+    {
+      "index": 33,
+      "cipher": "review-evidence.aesgcm.part-033",
+      "bytes": 41943100,
+      "sha256": "1dd7938866aa4fdadaa3196e38efc0be2f4c37dba4880e4f7806fa1c258b805b"
+    },
+    {
+      "index": 34,
+      "cipher": "review-evidence.aesgcm.part-034",
+      "bytes": 41943100,
+      "sha256": "f6370bbd333ff054780958c2e4a1d3f4c6eb54dc729b2070b8278fa1ec8fa137"
+    },
+    {
+      "index": 35,
+      "cipher": "review-evidence.aesgcm.part-035",
+      "bytes": 34880110,
+      "sha256": "8f9eb3a0e817ca7041711b3d6ffdab3d272dd51951e02f9bd40e5b00a9e30dd3"
+    }
+  ],
+  "nonce_unique_count": 35,
+  "plaintext_archive_combined_sha256": "41733eb92c3b3a0651087145d50f5eecbde371c6c2631cab8ddeb4bed68d78ef",
+  "restores": [
+    {
+      "path": "/private/tmp/vicione-servicebus-checkpoint-restored-20261008",
+      "members": 19465,
+      "unique_inodes_hashed": 9162,
+      "duplicate_hardlinks": 10303,
+      "all_hash_size_mode_and_pathset_exact": true,
+      "restore_receipt_sha256": "82de04bff8e2a07ff9a777bd05e7bb0e1f77f98a8e7ff2d169ee5fca7bc8a957"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-encrypted-checkpoint-restored-20261008",
+      "members": 19465,
+      "unique_inodes_hashed": 9162,
+      "duplicate_hardlinks": 10303,
+      "all_hash_size_mode_and_pathset_exact": true,
+      "restore_receipt_sha256": "000ea4c4e2f3fda106ed759070c0221d96d0beaa8e6dbc368d553f196571c398"
+    }
+  ],
+  "all19465_current_captured_source_bytes_sizes_modes_exact": true,
+  "source_bytes": 5459271041,
+  "limits": "No AES/key/PowerShell/SDK/restore execution by reviewer. Cipher actual auth/tamper outcomes are Root execution evidence; reviewer checks framing/hash/order/nonces and existing full restored bytes independently. Read/hash only; no plaintext payload printed."
+}

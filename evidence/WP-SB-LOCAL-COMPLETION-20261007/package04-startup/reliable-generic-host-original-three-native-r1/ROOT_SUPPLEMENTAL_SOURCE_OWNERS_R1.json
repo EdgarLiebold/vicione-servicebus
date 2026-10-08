@@ -1,0 +1,6 @@
+{
+  "kind": "ROOT_SUPPLEMENTAL_ORIGINAL_R1_SELECTED_IMMUTABLE_SOURCE_ARCHIVE",
+  "native_sha256": "b990c604d1021b4f594005eaad7b4ba3d3034110ec002bd01a255e183adc064b",
+  "source_owners_sha256": "9e76e0c60bdc8d551851b8e9ed7ff8ac828c8936c4743411337fe7b4c99f3cd1",
+  "limits": "Added AFTER originalR1 nativearchive/currenttestR2copy as supplement from originalmatched330candidate andstillcanonicaloriginalproduct73be. Bothbytes matchdatedoriginalInput/PDBchecksums. No nativeRESULToverwrite/relabel/execute/bindingparse credited. NativeR1driver didnotarchiveowners; supplementRootauthoredseparately for future immutable source provenance."
+}

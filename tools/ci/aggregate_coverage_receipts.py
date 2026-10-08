@@ -47,6 +47,29 @@ def check_hashes(receipt, field):
             raise ValueError(f"Changed {field} file: {relative}")
 
 
+def check_binlogs(receipt, run_dir):
+    check_hashes(receipt, "binlogsSha256")
+    stages = receipt["binlogStages"]
+    if not isinstance(stages, dict) or set(stages) != {"restore", "build", "tests"}:
+        raise ValueError("Incomplete binary-log stage set")
+    recorded = set()
+    for stage, entries in stages.items():
+        if not isinstance(entries, list) or not entries or len(entries) != len(set(entries)):
+            raise ValueError(f"Missing or duplicate binary logs for {stage}")
+        for relative in entries:
+            path = checked_path(relative)
+            if ((REPO / relative).is_symlink() or path.parent != run_dir
+                    or not path.name.startswith(stage + "-") or path.suffix != ".binlog"
+                    or not path.stat().st_size or relative in recorded):
+                raise ValueError(f"Binary log is not owned by this run and stage: {relative}")
+            recorded.add(relative)
+        actual = {item.relative_to(REPO).as_posix() for item in run_dir.glob(stage + "-*.binlog")}
+        if actual != set(entries):
+            raise ValueError(f"Incomplete or unexpected binary-log files for {stage}")
+    if recorded != set(receipt["binlogsSha256"]):
+        raise ValueError("Binary-log hashes and stage membership disagree")
+
+
 def check_receipt(path, src_tree, tests_tree):
     receipt = json.loads(path.read_text())
     if (receipt["srcTree"], receipt["testsTree"]) != (src_tree, tests_tree):
@@ -62,6 +85,7 @@ def check_receipt(path, src_tree, tests_tree):
             raise ValueError(f"Receipt {key} disagrees with {head}: {path}")
     for field in ("binarySha256", "logsSha256", "reports"):
         check_hashes(receipt, field)
+    check_binlogs(receipt, path.parent)
     if len(receipt["reports"]) != 1:
         raise ValueError(f"Expected one Cobertura report: {path}")
     expected_logs = {(path.parent / name).relative_to(REPO).as_posix()

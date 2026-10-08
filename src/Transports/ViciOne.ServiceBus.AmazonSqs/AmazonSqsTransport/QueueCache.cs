@@ -17,6 +17,7 @@ public sealed class QueueCache :
     static readonly List<string> AllAttributes = [QueueAttributeName.All];
 
     readonly IAmazonSQS _client;
+    readonly Func<TimeProvider> _batchTimeProviderFactory;
     readonly DurableResourceStore<string, QueueInfo> _durableQueues;
     readonly KeyedResourceCache<string, QueueInfo> _ephemeralQueues;
     readonly Dictionary<string, QueueOperationGate> _operationGates = new(StringComparer.Ordinal);
@@ -27,9 +28,16 @@ public sealed class QueueCache :
     /// <param name="options">The capacity and lifetime settings for evictable entries.</param>
     /// <param name="lifetimeCancellationToken">The token that ends durable resource ownership.</param>
     public QueueCache(IAmazonSQS client, AmazonSqsClientContextCacheOptions options, CancellationToken lifetimeCancellationToken)
+        : this(client, options, lifetimeCancellationToken, () => TimeProvider.System)
+    {
+    }
+
+    internal QueueCache(IAmazonSQS client, AmazonSqsClientContextCacheOptions options, CancellationToken lifetimeCancellationToken,
+        Func<TimeProvider> batchTimeProviderFactory)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
         ArgumentNullException.ThrowIfNull(options);
+        _batchTimeProviderFactory = batchTimeProviderFactory ?? throw new ArgumentNullException(nameof(batchTimeProviderFactory));
 
         _durableQueues = new DurableResourceStore<string, QueueInfo>(lifetimeCancellationToken, StringComparer.Ordinal);
         _ephemeralQueues = new KeyedResourceCache<string, QueueInfo>(x => x.EntityName,
@@ -218,6 +226,7 @@ public sealed class QueueCache :
 
     async ValueTask<QueueInfo> CreateMissingQueueAsync(Queue queue, CancellationToken cancellationToken)
     {
+        TimeProvider timeProvider = _batchTimeProviderFactory();
         Dictionary<string, string> attributes = queue.QueueAttributes.ToDictionary(x => x.Key, x => x.Value.ToString()!);
 
         if (AmazonSqsEndpointAddress.IsFifo(queue.EntityName) && !attributes.ContainsKey(QueueAttributeName.FifoQueue))
@@ -239,11 +248,12 @@ public sealed class QueueCache :
         attributesResponse.EnsureSuccessfulResponse();
 
         return new QueueInfo(queue.EntityName, createResponse.QueueUrl, attributesResponse.Attributes ?? new Dictionary<string, string>(),
-            _client, cancellationToken, false);
+            _client, cancellationToken, false, timeProvider);
     }
 
     async ValueTask<QueueInfo> GetExistingQueueAsync(string queueName, CancellationToken cancellationToken)
     {
+        TimeProvider timeProvider = _batchTimeProviderFactory();
         var urlResponse = await _client.GetQueueUrlAsync(queueName, cancellationToken).ConfigureAwait(false);
         urlResponse.EnsureSuccessfulResponse();
 
@@ -251,6 +261,6 @@ public sealed class QueueCache :
         attributesResponse.EnsureSuccessfulResponse();
 
         return new QueueInfo(queueName, urlResponse.QueueUrl, attributesResponse.Attributes ?? new Dictionary<string, string>(), _client,
-            cancellationToken, true);
+            cancellationToken, true, timeProvider);
     }
 }

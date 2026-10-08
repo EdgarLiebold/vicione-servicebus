@@ -1,0 +1,119 @@
+{
+  "status": "NO_BLOCK_OPERATIONAL_DRIVER_SUCCESSOR__NO_MUTANT_NATIVE_CREDIT",
+  "script": {
+    "path": "/private/tmp/run_c5_mutants.py",
+    "sha256": "62c4bac8a6aec0325ca1f547d23293b6c5e06819a967aa6cdcff66457c0345f7",
+    "python_ast_parses": true,
+    "whole_body_personally_read_untruncated": true
+  },
+  "prior_review": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-stage-c5-native-driver-operational-review-r1.json",
+    "sha256": "ace0c7b5ac2e12dc0489ef93753c7f00c395dd2ffdf00235d462b693cb6e27da",
+    "D1": "Resolved actual total/failed/passed/skipped0 fields validated for everychild and parent; last actual localized summary accepted to handle parent failed-child printed diagnostics before final parent summary.",
+    "D2": "Resolved exact frozen7unique Fact set, unique7 childFQNs and parent eventFQN/outcome bijection."
+  },
+  "additional_binding_resolved": "All7 before/after digests now exactly match actual runtime directory files; childPID!=parentPID; mutant owner and unchanged test postexecution hashes required.",
+  "fixture_binding": {
+    "freeze_sha256": "8fabb9e58e19ef233ebb4b023a05cf23d53123495f70cce90ffd4a9abf1117cf",
+    "fixture_sha256": "b70774d05b7d4bba088e0f2f0266bc0807fb1435b927077b2720ebd1a79d8eb6",
+    "expected_fqns": [
+      "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests.OptionalTimeline_ColdHealthyPublicActivationWorksInFreshProcess",
+      "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests.OptionalTimeline_ColdSourceFailureRemainsInertAcrossPublicActivations",
+      "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests.RequiredMonitor_ColdHealthyPublicActionObeysExactIdleDeadline",
+      "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests.RequiredMonitor_ColdSourceFailurePreservesOriginalAndCachesOneAttempt",
+      "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests.RequiredMonitor_NonthrowingSourceObserverCannotChangeRootParent",
+      "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests.RequiredMonitor_StandaloneTimerCleanupFailureRemainsRequired",
+      "ViciOne.ServiceBus.Tests.Monitoring.ColdTelemetrySourceIsolationTests.RequiredMonitor_StartFailureKeepsPrimaryWhenOwnedTimerDisposeThrows"
+    ]
+  },
+  "summary_parser_static_validation": {
+    "method": "Extracted only pure summary AST function, applied to already archived native child stdout; driver top-level/subprocess not executed.",
+    "actual_archived_child_logs": [
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-original-r4/children/38625d28cfbd41cd874fe82311630e41/stdout.log",
+        "sha256": "a5db6e4f77c26c0781ad8fb822b71cb5151afa5d794e75df3946b40f46924adf",
+        "summary_checked": true
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-original-r4/children/01d52968ab2b4781b387999afd2ec85a/stdout.log",
+        "sha256": "c9956ab33173555cf27660b08e0d411a1af3db24e3edddf45af37c8951d20bb8",
+        "summary_checked": true
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-original-r4/children/cb2a276fbfcb4eec8d8f98ece4d71e83/stdout.log",
+        "sha256": "c5823b9f48d482e24391329a3eec0a345549a987a401ab724db4f22d90eea775",
+        "summary_checked": true
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-original-r4/children/2fd860bef59e49fa927c442d93e9f506/stdout.log",
+        "sha256": "2bebc948abb5330835c3caf7e55e4dd31c156c11c87d4f47fe59544c9f46f16c",
+        "summary_checked": true
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-original-r4/children/271acf53e3e348dea1ec299f01120843/stdout.log",
+        "sha256": "e098f1ddab7f93917773d260eed16225106f81815b34ddc3e8d2b52dfc93ec68",
+        "summary_checked": true
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-original-r4/children/c8acacdf0b9547608966b19b4913fc0c/stdout.log",
+        "sha256": "502c8ea72c9c708d6012963b87b859cf1afd9169ac9d942e4d2b930888a51700",
+        "summary_checked": true
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-original-r4/children/0dc65ff2bb874ed1943a8ce65bf3dc4f/stdout.log",
+        "sha256": "4bde0698779df412c675442fb24f07b908a0d12f5ab6fe1b26347946467fb77d",
+        "summary_checked": true
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-fixed-r2/children/e6987f6250a246b6b65b1b6d407f287c/stdout.log",
+        "sha256": "f0cf30653f733029407a54b7e198288cf4ae0ea0bfd34cc7847682dd3113c73c",
+        "summary_checked": true
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-fixed-r2/children/9392690c6bff4f6bb87ce07074f96ac2/stdout.log",
+        "sha256": "b40d907efecdeda11ddddf0ba27a9c6eb0a4cc5968304fcaf1074903a7671cee",
+        "summary_checked": true
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-fixed-r2/children/970b19b2fabd499fbaf67f801b6e9043/stdout.log",
+        "sha256": "42976e7efb031b00c861b9ee97bdd975492925c4d59feeaec6d2a9b6ff72565d",
+        "summary_checked": true
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-fixed-r2/children/756247194ff94c7bbc49308443722985/stdout.log",
+        "sha256": "d33fbae28189ee54e5688a9c57361b2a10e7aff2434e58d6d078559e68cc9de6",
+        "summary_checked": true
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-fixed-r2/children/7cee991781534da48165b9c706bfa702/stdout.log",
+        "sha256": "e6b2250ec83d4e32c0309dec5959900ca162bd1a4f46e09b48ce9799f3fe4fba",
+        "summary_checked": true
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-fixed-r2/children/3e8a1306b4e7449191d8addb58d2c2ed/stdout.log",
+        "sha256": "e7a8ff6f7fd805f0bc36cb3367a0e2cd0d7c931973b6bfdb2d76a799e7c8316b",
+        "summary_checked": true
+      },
+      {
+        "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/stage-c5-fixed-r2/children/a7bb4e536c284a3e992775fb94288aa8/stdout.log",
+        "sha256": "6df2f584690f9f6c7314a2c3835c669f55e8ec453fc597daf8522607a4a29461",
+        "summary_checked": true
+      }
+    ]
+  },
+  "operational_checks": [
+    "Root alone launches sequential restore/build/focused per clone and joins each actual subprocessPID.",
+    "Unique log refusal and unique /bl:{}; strict exit0 with0warnings/errors; focused exit2 required.",
+    "All7unique parent/child identities, actual summaries and actualruntime7 binding precede claimed receipt.",
+    "Runtime17/raw6/children7 archived before nextclone after acceptance preconditions; no source/test mutation code.",
+    "Source test hashes rechecked after stages."
+  ],
+  "limitations": [
+    "No compiled mutant case result inferred; actual red finite source/root/action/cache/cause oracles must be independently read.",
+    "Parent/child native counters kept separate; no double count into wholeCore.",
+    "Unexpected stage result aborts prior immutable receipt; Root must preserve raw invalid attempt before rerun.",
+    "Runtime PE/PDB/projectgraph qualification belongs separate telemetry review.",
+    "No cloud/device/provider/source/tool/test mutation or process-start by reviewer; only own report written."
+  ],
+  "findings": []
+}

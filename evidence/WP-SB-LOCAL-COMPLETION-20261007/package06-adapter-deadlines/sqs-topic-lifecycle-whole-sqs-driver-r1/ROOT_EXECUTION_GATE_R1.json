@@ -1,0 +1,27 @@
+{
+  "kind": "ROOT_SQS_WHOLE_MODULE_EXECUTION_GATE_R1",
+  "driver_sha256": "a60fd5e4fcb44e35b302feef9094c952e0ee79d5951b38918f4418f4d29b58f9",
+  "inputs": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-fixed-private-preparation-r1/INPUTS.json",
+    "sha256": "f6eac1e54fd7160ce845015af85d2e8eb86d1e4f6e60174d2742f49a5fbc4f8d"
+  },
+  "fixed_result": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-fixed-eleven-native-r1/RESULT.json",
+    "sha256": "f110dacf1168b74e6f2a46688bdbf14516862dc840b8b5d38dbbb0ab26ebb7fc"
+  },
+  "fixed_physical": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-fixed-eleven-native-r1/ROOT_COMPILED_PE_PDB_BINDING_R1.json",
+    "sha256": "89f671fa69f4f70ee928298ec66f945f7b2fc96c55edafd73f5896c568192f1a"
+  },
+  "reviewed_files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-fixed-eleven-native-adversarial-r1.json",
+      "sha256": "c184c0a081d690e601ca8713881457f64d7af18441114861429701b8ddaa897a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-whole-sqs-driver-r1-preflight-adversarial-r1.json",
+      "sha256": "e9059b0c737c0080025975bea782e85a621b4156fdf999bb1fa7074258a5cb20"
+    }
+  ],
+  "root_release": "Complete Fixedpeer andWholepreflight consumed, same15/runtime/10assets/13owners/gen32 guards. Only ownone300s noBuild/noRestore module invocation, regular actualcount retained. Externalacceptance expectsactual428/allPASS/each11exactlabel once including3failureKind variants; nofuturePass assumed."
+}

@@ -1,0 +1,67 @@
+{
+  "kind": "ROOT_SQS_SEVEN_COUNTER_EXECUTION_GATE_R1",
+  "driver_sha256": "697aed1f1ed62265c1e6457ac56aa560d1d41d9b26d004ebcaabb741c3ce9815",
+  "inputs": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-fixed-private-preparation-r1/INPUTS.json",
+    "sha256": "f6eac1e54fd7160ce845015af85d2e8eb86d1e4f6e60174d2742f49a5fbc4f8d"
+  },
+  "fixed_result": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-fixed-eleven-native-r1/RESULT.json",
+    "sha256": "f110dacf1168b74e6f2a46688bdbf14516862dc840b8b5d38dbbb0ab26ebb7fc"
+  },
+  "whole_result": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-whole-sqs-native-r1/RESULT.json",
+    "sha256": "e6b350971c1964afee847cdf977f65c567d4d2a5ce377def1def2e317c44c56f"
+  },
+  "variants": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-seven-counter-source-candidates-r1/PREPARED.json",
+    "sha256": "ad96bb2487af1d9af38ffabb58eb2178da97bb2bf3228bf3b33a75ac8cb46de5"
+  },
+  "reviewed_files": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-seven-counter-source-adversarial-r1.json",
+      "sha256": "6c96c764880493432ca8e47ee1f8e4d69396e5ff75714a791bc3de8321ec0bff"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-two-owner-product-source-adversarial-r1.json",
+      "sha256": "eaa9661824f60fe3c7bdd62eb5cd657550878afeb33571dcf3fdbfea984518df"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-source-candidate-r4-adversarial-r1.json",
+      "sha256": "a2353ad73d041150bd4a791bd1aadd84717dcb1d8e25f4f6fa481636df6581e6"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-fixed-eleven-fresh-physical-binding-adversarial-r1.json",
+      "sha256": "e07b491a797c58b88f15975b98d18b2d928e17597e9c274d3baf9340da69cabd"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-fixed-eleven-fresh-compiled-requirements-adversarial-r1.json",
+      "sha256": "a2d0a8d3c91ecc1fb0b7030bd31b8d1f50543aeb548c23d3673eacff4b3e94c7"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-fixed-eleven-native-adversarial-r1.json",
+      "sha256": "c184c0a081d690e601ca8713881457f64d7af18441114861429701b8ddaa897a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-whole-sqs-native-adversarial-r1.json",
+      "sha256": "0bbfe0ac8446c4af98776611b619c04bd2a9903422fb0212c45627b97b9758da"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-fixed-eleven-native-r1/SOURCE_OWNERS.json",
+      "sha256": "43c8b06ef815ab9dbc4f8bbd96e214a21f00e9e998ba415f70161f6b28215884"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-fixed-eleven-native-r1/GENERATED_SOURCE.json",
+      "sha256": "b4dcced434acc326445c79be689742c698afc78b720af4a0a2caccf5d0d7e617"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-sqs-topic-lifecycle-seven-counters-driver-r1-preflight-adversarial-r1.json",
+      "sha256": "7da9169c23e2fce679019bd6df19ac3daf1ab4b5af3ae56d2f95f345c404876e"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/sqs-topic-lifecycle-whole-sqs-native-r1/ROOT_QUALIFICATION_R1.json",
+      "sha256": "72d900a72d54702c4695de17aac047179ec4f1297ee44a5364b9d74979cd2634"
+    }
+  ],
+  "decision": "Root personally complete117driver/sourcepeers/Whole428/operational preflight; serial private singleowner controls authorized within ongoing audit, no canonical transfer yet."
+}

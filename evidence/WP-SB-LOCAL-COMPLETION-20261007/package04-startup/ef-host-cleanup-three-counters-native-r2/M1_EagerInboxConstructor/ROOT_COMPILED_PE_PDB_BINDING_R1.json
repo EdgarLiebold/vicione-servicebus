@@ -1,0 +1,611 @@
+{
+  "kind": "ROOT_ACTUAL_EF_GENERIC_HOST_FIVE_IMMUTABLE_OWNERS_PHYSICAL_PE_PDB_SOURCE_BINDING_R2",
+  "native_sha256": "5a5f9d3ddd7ca95408452316842572eeca5e74b4529e506c64f5d08a40303482",
+  "actual_images": 14,
+  "actual_document_checksums": 3155,
+  "actual_runtime_files": 19,
+  "actual_assets": 14,
+  "images": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/M1_EagerInboxConstructor/runtime/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "fee68704f73f0210af9e7eca5c3befd36bbc0973f2f626ddf9d25949a7c91534",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2540325471,
+          "guid": "35571017-a640-42b3-bb82-f6c8198c7c1e",
+          "path": "ViciOne.ServiceBus.Abstractions.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "1710573540a6b342bb82f6c8198c7c1e5f4a6a97",
+        "sha256": "aff9288c9fe84d1e7cd6462b52ef4d7945e9c2a6507c36ffd8f83a95b0cb56da",
+        "documents": 700,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 697,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "dadc3828142bf9704665792c59487c3535924547a81c76818aca48d0d2c6ac16",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/M1_EagerInboxConstructor/runtime/ViciOne.ServiceBus.Courier.dll",
+      "sha256": "eba4465288ecdb39806b56c56d629f232d247c10faf9998a57f6a61120815955",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2493870038,
+          "guid": "ccb87d80-3ded-4322-a045-e5040cab9336",
+          "path": "ViciOne.ServiceBus.Courier.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "807db8cced3d2243a045e5040cab9336d66fa594",
+        "sha256": "d68311b9d5a0db808d3da1ef88c08d2b9d971fe73e63c6992bab164ce5b37a92",
+        "documents": 146,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 143,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "a17e834c0335e27e487b4d08410871122530d5541558dcb8d58b84bb806bd03b",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/M1_EagerInboxConstructor/runtime/ViciOne.ServiceBus.EntityFrameworkCore.Sagas.dll",
+      "sha256": "af2267c68c4aee46b64fc3d67c84108a28cc7c3e12a4af1f0027c4233752ee70",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3809046653,
+          "guid": "984ca4af-7fc3-450e-a2ff-f889961ea116",
+          "path": "ViciOne.ServiceBus.EntityFrameworkCore.Sagas.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "afa44c98c37f0e45a2fff889961ea1167d7009e3",
+        "sha256": "bdebdfb46673d056987bb3c502df4570da80dbb40e9566c88017b589a1aeae9d",
+        "documents": 38,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 35,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "b04fcb782f79aded700a7c7b3bc139aa516618d849f8d552efdba7fe5231cd42",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/M1_EagerInboxConstructor/runtime/ViciOne.ServiceBus.EntityFrameworkCore.Tests.dll",
+      "sha256": "f7a4dde9df25cb988205b92cea662a0761d6c392428c955701318315b7e86170",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4039858936,
+          "guid": "2a9ab04d-5248-4a49-8aaa-aeb3706d026b",
+          "path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-generic-host-original/artifacts/sdk/obj/ViciOne.ServiceBus.EntityFrameworkCore.Tests/release/ViciOne.ServiceBus.EntityFrameworkCore.Tests.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "4db09a2a4852494a8aaaaeb3706d026bf85acbf0",
+        "sha256": "8ce2f913b4ba931fc8dc2faee8492a0cf19fb445e97126d8b2327612d3af6ec4",
+        "documents": 43,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 36,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 7
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "e5d64dcf5a55c320a550aa6fc2e26f7556a712d4c5412b2652f0eda7363afb3d",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-generic-host-original/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Configuration/EntityFrameworkGenericHostStartupTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "f70df3070ac395061977f219620a491c4679b2b5fa9751f2c58f9f8742bf9c0a",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "f70df3070ac395061977f219620a491c4679b2b5fa9751f2c58f9f8742bf9c0a"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-generic-host-original/tests/Persistence/ViciOne.ServiceBus.EntityFrameworkCore.Tests/Outbox/InboxCleanupServiceTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "5895b06692feccce3acc196c28681fa1b7513b23d0e445d3720c6a80176595b5",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "5895b06692feccce3acc196c28681fa1b7513b23d0e445d3720c6a80176595b5"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/M1_EagerInboxConstructor/runtime/ViciOne.ServiceBus.EntityFrameworkCore.dll",
+      "sha256": "931d50dc7e8db1b93aa0237756632006f3f92af5c3749e6277dc997e37e8ad53",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4037278520,
+          "guid": "a3bdbfda-f782-46be-9c6b-a5b508850702",
+          "path": "ViciOne.ServiceBus.EntityFrameworkCore.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "dabfbda382f7be469c6ba5b50885070238fba3f0",
+        "sha256": "4e6fa35352b58d9a1e90f93a91a15386275d636daa8e6f97637d3f96b696055e",
+        "documents": 77,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 72,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 5
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "aa1ca21f741fe16b097387cef874dffcee7e879be8d882f485958ba3478ba6cb",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-generic-host-original/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkBusOutboxConfigurator.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "08908a05eece71591d80f8414d3374fab9b0e6449dbe8ed1af2a5c5a5dde0084",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "08908a05eece71591d80f8414d3374fab9b0e6449dbe8ed1af2a5c5a5dde0084"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-generic-host-original/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Configuration/EntityFrameworkOutboxConfigurator.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "a362a802130391ba6da74d6b666f223f082ea7500cd73ddd97d9776a5fd55704",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "a362a802130391ba6da74d6b666f223f082ea7500cd73ddd97d9776a5fd55704"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-generic-host-original/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/EntityFrameworkTransactionalOutboxSource.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "67aa72ab20c2f4789975e1c77c503fd614ebce2e5a736f0771e1a4fe9dad28bd",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "67aa72ab20c2f4789975e1c77c503fd614ebce2e5a736f0771e1a4fe9dad28bd"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-generic-host-original/src/Persistence/ViciOne.ServiceBus.EntityFrameworkCore/Outbox/InboxCleanupService.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "ff1e18034380f06a7a7106031316277207bb4167cf307a389bd3d42aa44d995f",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "ff1e18034380f06a7a7106031316277207bb4167cf307a389bd3d42aa44d995f"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/M1_EagerInboxConstructor/runtime/ViciOne.ServiceBus.Futures.dll",
+      "sha256": "67c3d681968414fcb82e8669f924c0b5ea292ef0e645d3776dbf8c3b189af931",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4072306168,
+          "guid": "18122bf7-75d7-4d82-b2d4-e51b04557bc0",
+          "path": "ViciOne.ServiceBus.Futures.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "f72b1218d775824db2d4e51b04557bc0f875baf2",
+        "sha256": "7f77453cb1798d369da0316376d1ba97013d2d8195e9546daf1c4c607a230ed7",
+        "documents": 61,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 58,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "923feb0eba701c933aeb429935ed3d73dd0da24130643b366b386f052f9d7f7e",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/M1_EagerInboxConstructor/runtime/ViciOne.ServiceBus.JobService.dll",
+      "sha256": "e700c3375328eef0048e7ba805421f3615fd8ef674bd086b4cbba4cfeda19bb0",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2657419367,
+          "guid": "df5930bb-8765-475c-bd18-18487f197126",
+          "path": "ViciOne.ServiceBus.JobService.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "bb3059df65875c47bd1818487f1971266700659e",
+        "sha256": "51bd767e4291cd18c8d1113d5d98ae8c303ff97305e8a29a9a5d64df82af6d27",
+        "documents": 175,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 172,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "295906ba94187243b63d3a08850cb81b6df46282ad8e9a0b4a37eb4ecea3f084",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/M1_EagerInboxConstructor/runtime/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "38345ab0cf30d1973a4f801d97eb4746ced8b93250ecb0137366ac50045632cd",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3794645822,
+          "guid": "e9607b15-2aa9-459c-9aaa-b27a3c6fc90d",
+          "path": "ViciOne.ServiceBus.Mediator.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "157b60e9a92a9c459aaab27a3c6fc90d3eb32de2",
+        "sha256": "f985994fc05705bfa2660df28e7f47eb35d88a61f9591f16fc64d69ca58713da",
+        "documents": 31,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 28,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "7d791b46e5042ead24a3889e2046847cb1d00641cd570dbb037d2278f23eeba1",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/M1_EagerInboxConstructor/runtime/ViciOne.ServiceBus.MessagePack.dll",
+      "sha256": "85c679a2aed53c998181eb34122ac90bbc47d7d7c4260e3b38ec66a0d13fa5f9",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3913409162,
+          "guid": "38a4210b-2580-4a12-a959-b89dba5ccb3e",
+          "path": "ViciOne.ServiceBus.MessagePack.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "0b21a4388025124aa959b89dba5ccb3e8ae241e9",
+        "sha256": "b280e545b32ce27edf6c79a879395adb8dc866b54fef00c7cc0136df35550b52",
+        "documents": 18,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 14,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3,
+          "EMBEDDED_SOURCE": 1
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "a8fb9b4a658384fdd41f48889aaf3488046547321adf3e9754eb62f655716249",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/M1_EagerInboxConstructor/runtime/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "76345325bc05a54f99c400ef27b37a40681915745964235ce37baf02ad3534ae",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2782806456,
+          "guid": "b3e72594-1be5-400c-9871-5ba11d9634d3",
+          "path": "ViciOne.ServiceBus.Sagas.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "9425e7b3e51b0c4098715ba11d9634d3b841dea5",
+        "sha256": "871e53cebd5ee0a240e4a90554dc4cc9ac6e57eaa838043248e62330fe7a515d",
+        "documents": 374,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 371,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "a5266628fd6ba2a0071a0d2c148b83bfbbeba20edddcf0e496106fab4bd12017",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/M1_EagerInboxConstructor/runtime/ViciOne.ServiceBus.Testing.dll",
+      "sha256": "0a4f9d73b21568303fd8fc3cd0d039f3de62848cbc7dd2bf155d492aaf54fea5",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3304108123,
+          "guid": "4995b466-667c-4276-baef-c4828a88d2df",
+          "path": "ViciOne.ServiceBus.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "66b495497c667642baefc4828a88d2df5bb0f0c4",
+        "sha256": "6d61e5227a13d83526fa899b07b4c6873f08a28e4d1a8226fdf89e59df227fec",
+        "documents": 104,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 101,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "b88e4c1cf09e6209020d0eb98ed6826b5874d3dc729510d717c24442c6caa9df",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/M1_EagerInboxConstructor/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "98a999fca97202473a3673d40837e3fb3e6dee771a9a7ac9762ac553878bf19b",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2521243157,
+          "guid": "96e722f5-1800-4552-a541-8a2ab0973ee0",
+          "path": "ViciOne.ServiceBus.Tests.Infrastructure.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "f522e79600185245a5418a2ab0973ee0151e4796",
+        "sha256": "48cb21800e17664b8f75f53e3988caa2938ef4a2f1f75581f6151ecb19328006",
+        "documents": 9,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 6,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "6b3b45322f80dab94ecea8f2203bace40ce94d903af625c3d0782c7e0f6ef6b9",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/M1_EagerInboxConstructor/runtime/ViciOne.ServiceBus.Tests.InternalAccess.dll",
+      "sha256": "6bdcee28d2d22de5db9ff09eab12f7ae6bbfce6ced6e1bcd6641612efb29fb03",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3191989490,
+          "guid": "c30795ff-62d0-4564-a1bf-c43827da7ebc",
+          "path": "ViciOne.ServiceBus.Tests.InternalAccess.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "ff9507c3d0626445a1bfc43827da7ebcf2e441be",
+        "sha256": "4f6eb4a6434fcf02ae3027d0f89576064d0ea0ff801740051b8ae2f96a4accad",
+        "documents": 38,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 35,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 3
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "7f983e5b421907ae86715f1863a0336b93a6552e883b9b43f93f853d6a4c0e7d",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/ef-host-cleanup-three-counters-native-r2/M1_EagerInboxConstructor/runtime/ViciOne.ServiceBus.dll",
+      "sha256": "2e1b5baa62b135591fd556d835e089d39e43481e0df017407a71677de015c3df",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3063641859,
+          "guid": "f94f47de-32e6-40ed-8ce4-ea452fe5d529",
+          "path": "ViciOne.ServiceBus.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "de474ff9e632ed408ce4ea452fe5d52903779bb6",
+        "sha256": "181d74df7f36f88c194a4912b490a1886690d057c29c0e49a05304bb71bb8a47",
+        "documents": 1341,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 1293,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 4,
+          "EMBEDDED_SOURCE": 44
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "bc4ac135e1da759cdc527c1fd84a6f44cb08bfc33fabb94efdaae9896d64df90",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-ef-generic-host-original/src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "d1998569b140196e67013e1501cef218a0519e7c89cf4b66bed729fd69420729",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "d1998569b140196e67013e1501cef218a0519e7c89cf4b66bed729fd69420729"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    }
+  ],
+  "parser_source_sha256": "1bc09397fe31d1edaa74ae0f2ddc92b3d79b81240ec2ce571064652e7217fe1f",
+  "root_driver_sha256": "8c03cff291ac7e858b6948510bbec5014d0694e21b3c12bdd0a52c4f743fa765",
+  "generated_source_sha256": "72980d2fba1dd01097c359662d0eda19edeed91dfe2b6f5ac37f1cfe8113e636",
+  "source_owners_sha256": "472e18e949a4c2b41253efdbb1369175c1be28f25ddbc8d8c2095b4268b87030",
+  "limits": "Pure byte/metadata reads only. Fresh fourteen actual images and all PDB document checksums; generated source and mutant owner override are immutable. Compiled updated EF286 Requirements resource/method attrs and finite native causal review are separate; no source-read credit transfer, no current coverage/whole suite/globalA+ claim."
+}

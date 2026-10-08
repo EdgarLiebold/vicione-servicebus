@@ -1,0 +1,28 @@
+{
+  "kind": "ROOT_CACHE_FAILURE_CHANNEL_CANONICAL_THREE_TEST_FILE_APPLICATION_R1",
+  "before_source_count": 6102,
+  "after_source_count": 6103,
+  "after_manifest_equals_qualified_private6103": true,
+  "configuration14_unchanged": true,
+  "product_source_changed": 0,
+  "changed_files": [
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverAndDisposalTests.cs",
+      "before_sha256": "d2c10c5e7cd989c7f747c043bf8a583adec22d721de23544abcda1b6e315836e",
+      "after_sha256": "bbdd3f8c640ddd41cd845cb25aa45223abdc5aa957ca2c82c7c6acf2cb25617d"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheObserverFailureChannelTests.cs",
+      "before_sha256": null,
+      "after_sha256": "9e9d6719ba1751e46f40c0dc7d9494b395ca3c941518fa683fbc588cfe3918ea"
+    },
+    {
+      "path": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "before_sha256": "9bb63defc04475044e30a7f91fefa56c7f9eb9a8960ec6f79b587da1093aa292",
+      "after_sha256": "a4d0f99c1d388a4ef1afea6d3bd55ea5990f13f63f354d8eaa8d7d9d69596357"
+    }
+  ],
+  "transfer_gate_sha256": "9d7ccd5ea76e903b74c12889d23fa5248116db3f08299545f73c85947ebf0ef7",
+  "input_sha256": "70d7975a0044ef93e712292dc68d0c649e0297180dc30c08750676630bccfeec",
+  "limits": "Exact3 independently source/native/compiled/whole/mutant/post-qualified test-only files applied. Private nativewitness qualified against byteidenticalsource, no fresh test execution in canonicalroot claimed. Actual independent afterapply peer required. Frozen234/otheruserfiles untouched; no globalcache/currentcoverage/cloud/device/A+/commit/push closure."
+}

@@ -1,0 +1,354 @@
+{
+  "status": "READ_ONLY_C3_TWO_ACTUAL_MUTANT_PREPARATIONS_NO_BLOCK__FULL_CANONICAL6088_PATHSETS_AND_ONE_CAUSE_EACH_VERIFIED__NO_NATIVE_MUTANT_CREDIT",
+  "reviewer": "/root/continuation_adversarial",
+  "fixed_freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C3_FREEZE_R1.json",
+    "sha256": "a4e3c749f56cc901e53e4a3a3d230ae5b6686c03673d4dc21496b57b64625227",
+    "source6": {
+      "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs": "2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc",
+      "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs": "25d8ef5caa05e004b191561e29d557ee865c7d28b645ea853826b8b0d6101f6a",
+      "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.FailureHandling.cs": "6ca9990d84571b6bf927087a19190c5f32c77bddb70edec61728d1d19f60d3b9",
+      "src/ViciOne.ServiceBus/Monitoring/Telemetry/ServiceBusInstrumentation.cs": "ac536dd009f59ea5cbe8898d464969da3ba3a2b2e4390fb6fa1272e2380ed11c",
+      "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableDeliveryClockIsolationTests.cs": "8ff64032beabbffab0518f90bb7a62b12df83a5dd886e3d69ecbeab501cf58c5",
+      "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json": "2d1b6f28a89e52ad2ba396143ac976f61d88da8bfad931c133984dc24cad71d5"
+    }
+  },
+  "exact_corrected_four_owner_patch_verified": true,
+  "canonical_reference": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus",
+  "canonical_actual6088_aggregate_sha256": "b634f906efb01cfeae5d3694b85ea4ed7edb4224b44fa24cd6fbd190c7459359",
+  "read_scope": "Entire fixed Delivery202, Telemetry100, FailureHandling202 and canonical436line/63case owner; typed561 complete prior C2 current owner plus full sole nullable-delivery signature/histogram delta reconstructs exact562. Full actual mutant supplied cause/diffs personally read and independently reconstructed; unchanged bodies reused only exact hashes. All6088 actual files hashed for provenance, not human-reading transfer.",
+  "root806_provenance": {
+    "successor_R2_path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE806_STAGE_C3_READ_CLOSURE_R2.json",
+    "sha256": "956f7ed527a243575b13c78a0dd7133ee7b451dcf6b054083d65cb6c86a7efa5",
+    "all806_current_hashes": true,
+    "tracked800_plus_explicit6": true,
+    "prior805_804_same": true,
+    "shared84_same_current_and_both_clones": true,
+    "extra14_public_policy_source_hashes": true,
+    "reused12_actual_store_metadata_hashes": true,
+    "requirements4695_ordered_prefix_plus_two_unique4697": true,
+    "qualification": "Root owns whole authorship/current436 successor cancellationdelta attestations. Independent reviewer hashes do not become Root personal reading. R1 prior test9485 body obsolete; R2 current8ff640 bound by freeze."
+  },
+  "mutants": [
+    {
+      "id": "m1-initial-capture-unguarded",
+      "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m1-initial-capture-unguarded",
+      "prepared_sha256": "8cf14843cccbc6b7a846249328210d91bedc5ef7697ec4ac0d3fc8e435d7d692",
+      "diff_sha256": "0be6e098e37d2b56986582e78e867ef8290384f7179c5ae2416d991220d99661",
+      "path_count": 6088,
+      "all_pathsets_equal_canonical": true,
+      "all6087_other_files_unchanged": true,
+      "fixed_aggregate_matches_receipt": true,
+      "mutant_aggregate_matches_receipt": true,
+      "mutant_aggregate_sha256": "b0301594089e7a97457935381aa311f8b2170634b0cedaf5af7ee529fa29ca22",
+      "one_changed_path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Delivery.cs",
+      "fixed_sha256": "2760d2a8ba799954900bd374abbc43bea0d86600216a56b7514b6081b50184fc",
+      "mutant_sha256": "72bfc5da9b7b9f817bbfe89ac7e032731ee54377c9175acdf38a6b0c978c32bc",
+      "complete_cause_and_unified_diff_exact": true,
+      "other_three_product_owners_and_test_and_req_unchanged": true,
+      "shared84_current_expected_hashes_in_clone": true,
+      "predicted_only": {
+        "native_cases": 63,
+        "red": 19,
+        "healthy": "19 None +19 other diagnostic mode +6 RequiredUTC cases",
+        "skipped": 0,
+        "red_cases": [
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "TransportAccepted",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "AwaitConsumerCompletion",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "ClassifiedTransient",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "ClassifiedPermanent",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "Unclassified",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "RetryExhausted",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "InvalidMode",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "PersistenceFailure",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "DispatchCancellation",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "StateCancellation",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "FailurePersistenceFailure",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "FailurePersistenceCancellation",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "ConsumerTimeout",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "TimeoutPersistenceFailure",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "TimeoutCancellation",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "CompleteBeforeMark",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "CompleteBeforeAwait",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "CompleteBeforeRetry",
+            "first_assertion": 57
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "InitialTimestamp",
+            "scenario": "CompleteBeforeQuarantine",
+            "first_assertion": 57
+          }
+        ],
+        "M2_red_quality_caveat": "4 OCE subtype assertions prove actual InvalidOperationException versus required OCE only; absent origin/identity stack must not be invented"
+      },
+      "native_execution_or_credit": false
+    },
+    {
+      "id": "m2-elapsed-helper-unguarded",
+      "clone": "/private/tmp/vicione-servicebus-local-completion-20261007-p05-c3-mutants/m2-elapsed-helper-unguarded",
+      "prepared_sha256": "ef331696327559046f68ca8d09a10feb4f7f69352e85b796394844c2676800e6",
+      "diff_sha256": "52737d483f9b52a016b8c868991ad2317b8a45104b74d7fce637e30437ba5f72",
+      "path_count": 6088,
+      "all_pathsets_equal_canonical": true,
+      "all6087_other_files_unchanged": true,
+      "fixed_aggregate_matches_receipt": true,
+      "mutant_aggregate_matches_receipt": true,
+      "mutant_aggregate_sha256": "0c579cb05a7abc573ff5c93a6e5605eae96d84e822b8e6d2631f9af83ee006d6",
+      "one_changed_path": "src/ViciOne.ServiceBus/Providers/Persistence/ReliableMessaging/ReliableMessagingDeliveryService.Telemetry.cs",
+      "fixed_sha256": "25d8ef5caa05e004b191561e29d557ee865c7d28b645ea853826b8b0d6101f6a",
+      "mutant_sha256": "0f5fe36c20509eb198daf963a02eff04dce24858aac4470614afaf3729ab4472",
+      "complete_cause_and_unified_diff_exact": true,
+      "other_three_product_owners_and_test_and_req_unchanged": true,
+      "shared84_current_expected_hashes_in_clone": true,
+      "predicted_only": {
+        "native_cases": 63,
+        "red": 19,
+        "healthy": "19 None +19 other diagnostic mode +6 RequiredUTC cases",
+        "skipped": 0,
+        "red_cases": [
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "TransportAccepted",
+            "first_assertion": 108
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "AwaitConsumerCompletion",
+            "first_assertion": 108
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "ClassifiedTransient",
+            "first_assertion": 108
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "ClassifiedPermanent",
+            "first_assertion": 108
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "Unclassified",
+            "first_assertion": 108
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "RetryExhausted",
+            "first_assertion": 108
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "InvalidMode",
+            "first_assertion": 108
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "PersistenceFailure",
+            "first_assertion": 100
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "DispatchCancellation",
+            "first_assertion": 103
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "StateCancellation",
+            "first_assertion": 103
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "FailurePersistenceFailure",
+            "first_assertion": 100
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "FailurePersistenceCancellation",
+            "first_assertion": 103
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "ConsumerTimeout",
+            "first_assertion": 108
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "TimeoutPersistenceFailure",
+            "first_assertion": 100
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "TimeoutCancellation",
+            "first_assertion": 103
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "CompleteBeforeMark",
+            "first_assertion": 108
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "CompleteBeforeAwait",
+            "first_assertion": 108
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "CompleteBeforeRetry",
+            "first_assertion": 108
+          },
+          {
+            "testMethod": "Delivery_PreservesActualOutcomesWhenDiagnosticClockThrowsAsync",
+            "failure": "ElapsedFrequency",
+            "scenario": "CompleteBeforeQuarantine",
+            "first_assertion": 108
+          }
+        ],
+        "M2_red_quality_caveat": "4 OCE subtype assertions prove actual InvalidOperationException versus required OCE only; absent origin/identity stack must not be invented"
+      },
+      "native_execution_or_credit": false
+    }
+  ],
+  "case_matrix": {
+    "diagnostics3_times_scenarios19": 57,
+    "requiredUTC_controls": 6,
+    "total63": true,
+    "mutation_combined_predicted": "Same63 unchanged cases each =>126 predicted individual cases,38red and88healthy; no actual mutant events from prep."
+  },
+  "finite_oracle_assessment": [
+    "Initial19: same chosen clock.InitialFailure reference enters finite test branch; before Null57 checks actual claim1/dispatcher0/transition0 and physical inner-store retained1/3bytes. No timing/guard failure counted.",
+    "Elapsed19: public real dispatcher and state transition params/result and actual inner-store snapshot complete before final cause assertion:12 normal outcomes Null108,3 required persistence faults Same100,4 cancellation IsAssignable103 with exact token after subtype assertion.",
+    "Race-before-mark/await/retry/quarantine exercises actual context.ConsumerCompletion C2 guard, removes actual physical store record and leaves current transition false, while real completion telemetry and delivery telemetry remain scoped.",
+    "RequiredUTC Claim/Mark/Await/InvalidMode/ClassifiedFailure/Timeout remain None-clock controls; constructor/elapsed diagnostic mutations do not alter required store UTC calls/classifier-beforeUTC semantics/cancellation/physical persistence.",
+    "MemberData deterministic Enum Cartesian product and InlineData6 account for all63; linked owned subject token and independent snapshot global test cancellation avoid wrong-cancellation fixture reds. Dispose drivers/observations/CTS normally; no provider/cloud/SQL/restoration durability inference."
+  ],
+  "source_scope_assessment": [
+    "M1 changes only optional initial capture boundary into direct nullable capture. Every nullable private signature, selected elapsed guard/helper and typed absent-histogram behavior remains fixed; no compilation-kill from reverting long? to long.",
+    "M2 changes only elapsed helper try/catch into direct actual computation; nullable started guard remains. Initial failure still cached unavailable duration and therefore other diagnostic mode healthy. All actual cancellation/business persistence handling outside optional guards unchanged.",
+    "Typed delivery signature remains internal class ABI only, counters attempted even absentduration and histogram skipped absent, no inventedzero; snapshot refresh cadence/fault notification/store operations are outside mutant scope."
+  ],
+  "original_fixed_context_only": {
+    "original_result_sha256": "3a19c961469abf7c1e0b9716f9d7cf0e217d8599cae4ea6362fb3d707603b91b",
+    "original_receipt63": {
+      "finite_red": 38,
+      "healthy": 25,
+      "skip": 0
+    },
+    "receipt_event_names_unique63": true,
+    "original_prose": "Parent and separate telemetry reviewer qualify native logs/runtime. This prep review reads result metadata/events only and does not claim whole raw original/PE-PDB binding. Initial fixture compile failure R1 excluded by R2 receipt, no nativecredit.",
+    "fixed": "Parent reports focused63PASS; wholeCore63742 was running at assignment. No completed wholeCore/mutant acceptance inferred."
+  },
+  "findings": [],
+  "remaining": [
+    "Root actual strict clone builds and exact19 selected finite reds44 named healthy each, no setup/compile/discovery/watchdog failures",
+    "Separate runtime/source/PE-PDB/project graph review and complete wholeCore receipt",
+    "Unchanged corrected63 replay before bounded C3 Root acceptance"
+  ],
+  "execution": "Reviewer read-only; no .NET/provider/Product/Test/Tool/governance writes. Own R report only; canonical O, not runtime C3 older coveragePython scripts, is exact prep baseline."
+}

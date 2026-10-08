@@ -1,0 +1,77 @@
+{
+  "kind": "ORIGINAL_NATIVE_INDIVIDUAL_RESULTS",
+  "source_commit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "same_fixture_graph": "ORIGINAL_DRAFT_BINDING_R4.json",
+  "exit_code": 2,
+  "native_cases": [
+    {
+      "name": "CoreDeadlines.Contracts.CoreDeadlineTests.OutboxSuccessfulSend_AcknowledgesOnlyAfterTransportCompletionAsync",
+      "result": "PASS"
+    },
+    {
+      "name": "CoreDeadlines.Contracts.CoreDeadlineTests.UnexpectedLoopExit_UsesTheEndpointClockForItsAutomaticStopBudgetAsync",
+      "result": "FAIL"
+    },
+    {
+      "name": "CoreDeadlines.Contracts.CoreDeadlineTests.EarlyConsumerDrain_ReleasesTheUnusedDeadlineTimerAsync",
+      "result": "PASS"
+    },
+    {
+      "name": "CoreDeadlines.Contracts.CoreDeadlineTests.ConsumerGrace_CancelsEveryRetainedDeliveryAtTheClockBoundaryAndOwnsFailuresAsync(callbackThrows: True)",
+      "result": "FAIL"
+    },
+    {
+      "name": "CoreDeadlines.Contracts.CoreDeadlineTests.ConsumerGrace_CancelsEveryRetainedDeliveryAtTheClockBoundaryAndOwnsFailuresAsync(callbackThrows: False)",
+      "result": "FAIL"
+    },
+    {
+      "name": "CoreDeadlines.Contracts.CoreDeadlineTests.OutboxTransportFailure_PreservesTheCauseAndDoesNotAdvanceProgressAsync",
+      "result": "PASS"
+    },
+    {
+      "name": "CoreDeadlines.Contracts.CoreDeadlineTests.OutboxDeadline_CancelsResolutionAndSendAtTheSelectedClockBoundaryAsync(physicalSend: True)",
+      "result": "FAIL"
+    },
+    {
+      "name": "CoreDeadlines.Contracts.CoreDeadlineTests.OutboxDeadline_CancelsResolutionAndSendAtTheSelectedClockBoundaryAsync(physicalSend: False)",
+      "result": "FAIL"
+    },
+    {
+      "name": "CoreDeadlines.Contracts.CoreDeadlineTests.OutboxCallerCancellation_PreservesTheActualLinkedTokenAsync(physicalSend: False)",
+      "result": "PASS"
+    },
+    {
+      "name": "CoreDeadlines.Contracts.CoreDeadlineTests.OutboxCallerCancellation_PreservesTheActualLinkedTokenAsync(physicalSend: True)",
+      "result": "PASS"
+    },
+    {
+      "name": "CoreDeadlines.Contracts.CoreDeadlineTests.OutboxDeadline_CapturesTheOperationClockBeforeAsynchronousLoadingAsync",
+      "result": "FAIL"
+    },
+    {
+      "name": "CoreDeadlines.Contracts.CoreDeadlineTests.NullDeadline_DrainsWithoutInventingACancellationBudgetAsync(unexpectedExit: True)",
+      "result": "PASS"
+    },
+    {
+      "name": "CoreDeadlines.Contracts.CoreDeadlineTests.NullDeadline_DrainsWithoutInventingACancellationBudgetAsync(unexpectedExit: False)",
+      "result": "PASS"
+    }
+  ],
+  "passed": 7,
+  "failed": 6,
+  "skipped": 0,
+  "output_verbosity": "Detailed",
+  "primary_documentation": "https://learn.microsoft.com/dotnet/core/tools/dotnet-test-mtp",
+  "closed_raw_files": [
+    {
+      "path": "original-raw-r2-detailed/original-tests-r3-detailed-20261006-231037--60701--VPc3hd-dotnet-test.binlog",
+      "bytes": 657179,
+      "sha256": "ee2ee09b9e9aa2eae6f7e33c16178fe8e94bca35113c5499622e207a1cedb991"
+    },
+    {
+      "path": "original-raw-r2-detailed/original-tests-r3-detailed.log",
+      "bytes": 8002,
+      "sha256": "e06e490cb308c8b59018fe4d61bbfc6f616af541bc0e017e0921fb5fc2946df7"
+    }
+  ]
+}

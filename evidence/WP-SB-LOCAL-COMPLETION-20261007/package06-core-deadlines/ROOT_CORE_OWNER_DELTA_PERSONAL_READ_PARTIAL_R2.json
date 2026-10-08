@@ -1,0 +1,175 @@
+{
+  "kind": "ROOT_PERSONAL_COMPLETE_DELTA_PACK_READ_PARTIAL",
+  "actor": "/root",
+  "baseline": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "manifest": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/MANIFEST.json",
+    "sha256": "495f07f30da7a3b8610c143cd1ff1773677164f920c01cc163ac882104e36c10"
+  },
+  "packs_personally_read_untruncated": [
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-000.txt",
+      "sha256": "349653f1f0e6f746578333d47f1593672c7f8b6719534df51646d14714ed8454"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-001.txt",
+      "sha256": "b371f8fcd749a595a765526c0fb665445fa1f7e60bbfe8112334cb66d96fc832"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-002.txt",
+      "sha256": "117aaefa4f04b4f3d5df9ef3ad51b4e27c284c84e579ca40c7bf9f666aa59620"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-003.txt",
+      "sha256": "45e0928ba90fe0ef9ca676d03a090c4ada9fe2735bf55535366aedc3a10f0db9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-004.txt",
+      "sha256": "a5302bb7ffa7cd2078d244fd2f3e4a3db3da5ae00cfab0c0047a9eaf35205fa2"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-005.txt",
+      "sha256": "fc9f3308480313120a0f0c48a807efd5c6497a78b49577e5c78c0b5e6dff81d7"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-006.txt",
+      "sha256": "7bead78dab00d9ec26260fc93c9739bcc8055f8af9aeb4c77f5abe52302626ec"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-007.txt",
+      "sha256": "6a88057ae8cef7e05ad00e144c144f005b1bccea661d70d91b6432cd72c0b469"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-008.txt",
+      "sha256": "c37bbae3d63a025453416d2bb8174acea70f35ed918c458fff33df1f6a2a56db"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-009.txt",
+      "sha256": "0852cf76e099b97bd1347a85f30f8c0558980bddccf307493065ed194b2075fc"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-010.txt",
+      "sha256": "e0b292a99a8f1a61804e15ddb8e01182d5c6f2bcf35b0efef4f2338886c0664e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-011.txt",
+      "sha256": "4fdccd14e851a5f7251d114b85ccffe95a6a5dc539b3c9da7615892976235023"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-012.txt",
+      "sha256": "d300841dc11bdfac2e323cd5f56ba03c90235a8e7d9427d4356731c9cac91f7c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-013.txt",
+      "sha256": "d5e53c166dd913955983992eebc36a0ef0140faac177a9dfb15df45f31c84cd1"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-014.txt",
+      "sha256": "95f98a30c052683cb9a036687353f926903e827f63732e69092a1d3139a01429"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-015.txt",
+      "sha256": "62b01a2648d3a8456be0a3fae9de1f8a30f736fcffed191593d9e4b4f8e6620e"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-016.txt",
+      "sha256": "30661b522a98d099357cff6d7162f878be40e7b7b7dc0a05b6fc790d2b3b3264"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-017.txt",
+      "sha256": "6a5dbd1c36f2d0bae6044174ddee2f3668e5947494028b0772cc096333d9941b"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-018.txt",
+      "sha256": "ce5bcc14d366e5f6caa35e6f8b7346ea7ab79a7beff169b61359f9b372247b33"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-019.txt",
+      "sha256": "de27586848ccdaed899c5b55975afb3748ce2d98a73d5644803a699c264f600a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-020.txt",
+      "sha256": "3e32d00802f05f3064cdc71341d3a0dfc793db55df421409212c7d27e97aca14"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-021.txt",
+      "sha256": "a940b645ba70703599468c361f8c9cc95971d90feed9b6b941539c57369292ad"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-022.txt",
+      "sha256": "72c3a1960e02832d5afaebe9bbeb4fbdf30aec27f87b73fde466d48633b52ce5"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-023.txt",
+      "sha256": "b74bfeddd66b103ffc9a186733fb4c69e2fbfd7217104790d8b9327f4de35e9a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-024.txt",
+      "sha256": "462ad0b40694338ac30a00c1d08842c328d2bb37e13d724e8a1148eaf3d1f22d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-025.txt",
+      "sha256": "e1bc51cf31dcc4af6d6abaf78c5b5e5824efe6cb2c1d6da2f2131292ee990050"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-026.txt",
+      "sha256": "aededb59ca101e81db9d902837881e9fa116879b5ad308bb1b88388a7fba8e0a"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-027.txt",
+      "sha256": "a75739defb8c74b274a63c4c878cbe3b38594b23434cdd4beb71e7108bc0e0d9"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-028.txt",
+      "sha256": "1da50172be2f41c2a92a7c3c2fce373a6b60616e0f7b62b988ed2db9573181e8"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-029.txt",
+      "sha256": "74ae455af8b0cdeab2daf9b31f57064da3b278f72407c3fe4041e3be5e1daabe"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-030.txt",
+      "sha256": "f809de5c5f72d62787308c0a8728d4caf68744c5f9780df9207719e4bbcd9b22"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-031.txt",
+      "sha256": "e67aa6c66a82a4e1fb99210211be483b366b6fa76170ad224c0cfa856b3d4117"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-032.txt",
+      "sha256": "e322f0cc70b8fc0f5392bb424085d89fb3cac0df794cca309483ad96e089b2de"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-033.txt",
+      "sha256": "e34f02b91e3f3c703cc47ec652485576fa22535ca4a475c71eb86bc464832655"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-034.txt",
+      "sha256": "43e1309bd1d5a82276d81094d10a95b4def67ff26d414438e94182d8c414ea34"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-035.txt",
+      "sha256": "04f2b803d6a4d1234971fd1a95ff5fb5432cc38871557b062fa31076b4f8d048"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-036.txt",
+      "sha256": "5aaca79723c96ad74126701ab4e4f23ce7f1afcfd74584d0522530d044a8b56c"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-037.txt",
+      "sha256": "e2cc665a02939a11cd2aee2565d9d42b6de3d0407072913e3e1955471ff7ffaf"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-038.txt",
+      "sha256": "aa8e90a9f13406101638e29381491afeb9556ac42973c77fc38194595a07e81d"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/core-read-delta/structured-json-r3/PACK-039.txt",
+      "sha256": "1b0e25a52220527a45e1ac62e7eb456047b33c9eb3b636fe71e40148ddf39fbb"
+    }
+  ],
+  "range": "000..039",
+  "whole_current_owner_read": false,
+  "predecessor": "ROOT_CORE_OWNER_DELTA_PERSONAL_READ_PARTIAL_R1.json",
+  "next_pack": 40
+}

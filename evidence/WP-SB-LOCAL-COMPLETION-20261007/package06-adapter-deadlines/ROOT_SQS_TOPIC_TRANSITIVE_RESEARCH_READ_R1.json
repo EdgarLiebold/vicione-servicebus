@@ -1,0 +1,93 @@
+{
+  "kind": "ROOT_SQS_TOPIC_TRANSITIVE_RESEARCH_READ_R1",
+  "files": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicInfo.cs",
+      "sha256": "c04b60807111fa94ede0ec09198a59a21920f01cef197f6a4cb0a359d0f71a79",
+      "lines": 64,
+      "root_read": "Whole body personally consumed this logical continuation; AmazonSqsClientContext354 prior matched whole-body reuse plus visible current body, no false current combined-truncated-output completeness claim."
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/TopicCache.cs",
+      "sha256": "13d304a8b161cbbce750e4ae00f9a543cec80796bb1d2ed823f7e94c31a0ae45",
+      "lines": 186,
+      "root_read": "Whole body personally consumed this logical continuation; AmazonSqsClientContext354 prior matched whole-body reuse plus visible current body, no false current combined-truncated-output completeness claim."
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/QueueInfo.cs",
+      "sha256": "3ea57707ac22b6755e42f69b7148b761abc67249484a87a4febf9db046934a81",
+      "lines": 298,
+      "root_read": "Whole body personally consumed this logical continuation; AmazonSqsClientContext354 prior matched whole-body reuse plus visible current body, no false current combined-truncated-output completeness claim."
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/BatchEntry.cs",
+      "sha256": "bcec5699585f925497c5729b6bc8f9ef4c37d6ad4a0fda4d0819e2e7114b02b6",
+      "lines": 132,
+      "root_read": "Whole body personally consumed this logical continuation; AmazonSqsClientContext354 prior matched whole-body reuse plus visible current body, no false current combined-truncated-output completeness claim."
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/Batcher.cs",
+      "sha256": "2539ec46704400fb75596c69b1162cc620f487691bc227d0bca1aeefa5c6d9f9",
+      "lines": 220,
+      "root_read": "Whole body personally consumed this logical continuation; AmazonSqsClientContext354 prior matched whole-body reuse plus visible current body, no false current combined-truncated-output completeness claim."
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/PublishBatcher.cs",
+      "sha256": "54c3110613a8ccdfbb9843b6fc7d6b19f70a0bfb999c2f25f366add8b531d0fe",
+      "lines": 48,
+      "root_read": "Whole body personally consumed this logical continuation; AmazonSqsClientContext354 prior matched whole-body reuse plus visible current body, no false current combined-truncated-output completeness claim."
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/PublishBatchSettings.cs",
+      "sha256": "5190de9e1b49cb2559edb31d4010e15633bc68d76f0077af4ae1f4f51e667846",
+      "lines": 32,
+      "root_read": "Whole body personally consumed this logical continuation; AmazonSqsClientContext354 prior matched whole-body reuse plus visible current body, no false current combined-truncated-output completeness claim."
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/AmazonSqsClientContext.cs",
+      "sha256": "7bf23a6d364d8c33714f52d60a32b8f15f5b947e7444a5326b5efc4652e7aa19",
+      "lines": 354,
+      "root_read": "Whole body personally consumed this logical continuation; AmazonSqsClientContext354 prior matched whole-body reuse plus visible current body, no false current combined-truncated-output completeness claim."
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/ConnectionContext.cs",
+      "sha256": "f844ee8d2971b6c514026bccf55a7870359db9c687c3243fb78cc89d9f3cc3be",
+      "lines": 57,
+      "root_read": "Whole body personally consumed this logical continuation; AmazonSqsClientContext354 prior matched whole-body reuse plus visible current body, no false current combined-truncated-output completeness claim."
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AmazonSqs/AmazonSqsTransport/IBatcher.cs",
+      "sha256": "14fcfe90806ed1fb0a21753d4083c8e0bafb3047ba12c2af9536a2b3c056592d",
+      "lines": 11,
+      "root_read": "Whole body personally consumed this logical continuation; AmazonSqsClientContext354 prior matched whole-body reuse plus visible current body, no false current combined-truncated-output completeness claim."
+    },
+    {
+      "path": "src/ViciOne.ServiceBus/Util/TaskExecutor.cs",
+      "sha256": "9fff24754957b54b0bb38153396638ce88674620279bcb1f61e74e59256db316",
+      "lines": 363,
+      "root_read": "Whole body personally consumed this logical continuation; AmazonSqsClientContext354 prior matched whole-body reuse plus visible current body, no false current combined-truncated-output completeness claim."
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/TestDoubles/InterfaceProxy.cs",
+      "sha256": "55a842f6dddc1ba37756a23f01159dc4adb64cf4a686cae6565e7ab8b44677d7",
+      "lines": 23,
+      "root_read": "Whole body personally consumed this logical continuation; AmazonSqsClientContext354 prior matched whole-body reuse plus visible current body, no false current combined-truncated-output completeness claim."
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsBatcherCancellationTests.cs",
+      "sha256": "4f197ffb561255346adddea70afeb8d08e017df2b92b4df671fe66c4a1452c08",
+      "lines": 412,
+      "root_read": "Whole body personally consumed this logical continuation; AmazonSqsClientContext354 prior matched whole-body reuse plus visible current body, no false current combined-truncated-output completeness claim."
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/AmazonSqsClientContextApiTests.cs",
+      "sha256": "a1c3013f9069707feeb259e708f8264518d7df8887b6ed47eb298f5c7e2c855c",
+      "lines": 37,
+      "root_read": "Whole body personally consumed this logical continuation; AmazonSqsClientContext354 prior matched whole-body reuse plus visible current body, no false current combined-truncated-output completeness claim."
+    }
+  ],
+  "selected_runtime_source": "BoundedChannel12..67/239..286/303..355/516..641/653..654; AsyncOperation414..424/569..579; ChannelUtilities124..144 personally read. No full runtime3file read claimed.",
+  "neighbor_queue_eviction": "Whole288 visible after combined-output truncation; no fresh aggregate-output completeness claimed. Existing helper merely fills300/pending, new positive runtimeblocked target witness strengthens phase.",
+  "classification": "Research only; no finding confirmed before original actualnative.",
+  "source_correction": "PublishBatchSettings actual32lines5190...; earlier summary PublishSettings32 misnamed actualpublicinterface7a486. Initial broad regex counted Fixture.FinishAsync; corrected requirement-attribute-bound9testmethods before anySDK."
+}

@@ -1,0 +1,458 @@
+{
+  "kind": "ROOT_ACTUAL_RABBIT_ONECAUSE_MUTANT11_PE_PDB_BINDING_R1",
+  "native_result_sha256": "9210603485d4c091086b0d81597f48e51732a6986829682e5a3adff65e8eabe0",
+  "parser_sha256": "1bc09397fe31d1edaa74ae0f2ddc92b3d79b81240ec2ce571064652e7217fe1f",
+  "images": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/rabbit-mutants-native-r1/M2-transport-eager-validation/runtime/ViciOne.ServiceBus.Mediator.dll",
+      "sha256": "c88b7b1a672450127be705331b58c7ae33039916b6f626a5303e184f7fd7de0e",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 4144275616,
+          "guid": "07b30ae1-2076-498c-9e7b-71ea8cfc8fd4",
+          "path": "ViciOne.ServiceBus.Mediator.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "e10ab30776208c499e7b71ea8cfc8fd4a0a004f7",
+        "sha256": "521358cafa20cd38a097b09997a9fd79b62f94ae32c92a814326aa037df951b2",
+        "documents": 31,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 31
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "528ce26f50164e4217b7b6ed36e787d9eb48f56b2690240ba88ae51f0a3b435d",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/rabbit-mutants-native-r1/M2-transport-eager-validation/runtime/ViciOne.ServiceBus.Testing.dll",
+      "sha256": "ec8b9a07a33e3bc8597baadff23fc299ffa2c012fb1e1ce5ac1a431253832966",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3029062065,
+          "guid": "deebd543-4c04-4491-8432-3d4f3415590d",
+          "path": "ViciOne.ServiceBus.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "43d5ebde044c914484323d4f3415590db1d18bb4",
+        "sha256": "9ce47b29875f24bdb18175dadde22775cd9e30d573cd49f3751305a99639f1b7",
+        "documents": 104,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 104
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "ee2dc765244a08c9945715ed272bd60a2e1bc391a972a574797df0626b78b49a",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/rabbit-mutants-native-r1/M2-transport-eager-validation/runtime/ViciOne.ServiceBus.Courier.dll",
+      "sha256": "28cc1905291d6927a298732171219ec6953aad50408ed8cf027baac86c8fcac7",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 2587597692,
+          "guid": "c7c60daf-5c2a-4d9f-8432-80ef438e89ff",
+          "path": "ViciOne.ServiceBus.Courier.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "af0dc6c72a5c9f4d843280ef438e89ff7c9b3b9a",
+        "sha256": "bf2ca1d6a0a15ac16f05491b4ccc63c50a9e66f9ba6ac13610475f7f6d7f6a69",
+        "documents": 146,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 146
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "ac2567d155351f7cfff30d06d430d18cd3b9e950aafb70b5b2aa9b9aa77305fa",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/rabbit-mutants-native-r1/M2-transport-eager-validation/runtime/ViciOne.ServiceBus.Futures.dll",
+      "sha256": "56c4caabbab8b42b60b96bc149b2180adab159c7a399370ea649bcc207b9ed72",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3344009974,
+          "guid": "30c1e25a-a88d-452b-9aa6-b91254864b33",
+          "path": "ViciOne.ServiceBus.Futures.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "5ae2c1308da82b459aa6b91254864b33f68a51c7",
+        "sha256": "5387643f9ce7ebbd716f5360c71321931b85b88e0d238f25afd295d97c8f0372",
+        "documents": 61,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 61
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "ce2d0569e9e0af84d9b035d1916e46b38ce9a581ab83bd334e421e6c4db22ad8",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/rabbit-mutants-native-r1/M2-transport-eager-validation/runtime/ViciOne.ServiceBus.Abstractions.dll",
+      "sha256": "eb762afcb4e90336d9a64db45e855590999559af5914fe245b76d8b81cbb98eb",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3006053046,
+          "guid": "0d0bdd5e-97f7-40f0-85b8-103a3688f86c",
+          "path": "ViciOne.ServiceBus.Abstractions.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "5edd0b0df797f04085b8103a3688f86cb6ba2cb3",
+        "sha256": "a35f117c5653cf12b2ca2cf508d9ec24ead3363be50e971a1cafaad1ac973bbe",
+        "documents": 700,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 700
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "6a13813c9a21d1293efc4aaf76218acc0f556e00920791265ef1247e9f764050",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/rabbit-mutants-native-r1/M2-transport-eager-validation/runtime/ViciOne.ServiceBus.RabbitMq.Testing.dll",
+      "sha256": "0bcd3b3d2b007118fa997543bcd742b15f9320b35e200423e5b2d43addb15845",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3441139905,
+          "guid": "c5d8c263-2771-4209-ad03-473875e46bb6",
+          "path": "ViciOne.ServiceBus.RabbitMq.Testing.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "63c2d8c571270942ad03473875e46bb6c1a01bcd",
+        "sha256": "e888b25f6f073c60c91f3fd972eaf24d865782a6b3ca24523ddad48b8242c7ee",
+        "documents": 9,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 9
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "176bb02cc379d7a0bd0705d66bcd03370b3f41cb71fb16b7d74d94504f3c7b8e",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/rabbit-mutants-native-r1/M2-transport-eager-validation/runtime/ViciOne.ServiceBus.Sagas.dll",
+      "sha256": "c2408815e3fb1dd4c704c1d9de3420f774f29a20a14aac2af4d59ba614c61def",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3758086683,
+          "guid": "dae300e4-c6cd-4fed-af7d-bf42efbd701c",
+          "path": "ViciOne.ServiceBus.Sagas.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "e400e3dacdc6ed4faf7dbf42efbd701c1bdaffdf",
+        "sha256": "c56ef4b5d2e923c4849deb7ad7e1db86039a3e53832004d534919869f5decadb",
+        "documents": 374,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 374
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "a84c5156cb7f8b989ee487bbf75838cc83d7b046e593ebe792f5f9d12f005404",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/rabbit-mutants-native-r1/M2-transport-eager-validation/runtime/ViciOne.ServiceBus.Tests.Infrastructure.dll",
+      "sha256": "398e177b0906b6d4fc4850463e56acb203714900907ae1e33ceccb47e6212e10",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3838894787,
+          "guid": "08d47452-24f7-4b72-a4ae-871e1e68be72",
+          "path": "ViciOne.ServiceBus.Tests.Infrastructure.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "5274d408f724724ba4ae871e1e68be72c3e2d0e4",
+        "sha256": "4c18af446d10a9988e2acc64fce85f716c4fa060113eca3abbd3a8338a3be1a1",
+        "documents": 9,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 9
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "ca409d45c8c5a81baef46b0bfc99a860e8dca7ab347bafb0042698658af1d5c0",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/rabbit-mutants-native-r1/M2-transport-eager-validation/runtime/ViciOne.ServiceBus.RabbitMq.Tests.dll",
+      "sha256": "8ebcbaafaa200ced15ea397754970df78f95886e02222f71a81a76fdb89a9edf",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3778870570,
+          "guid": "7312156d-70c2-4ad6-91aa-794d5e4cc402",
+          "path": "/private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/artifacts/sdk/obj/ViciOne.ServiceBus.RabbitMq.Tests/release/ViciOne.ServiceBus.RabbitMq.Tests.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "6d151273c270d64a91aa794d5e4cc4022afd3ce1",
+        "sha256": "557598e661ac4f1b604dbcd6b83c72b652c47473cb4069929410c08675084a06",
+        "documents": 72,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 72
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "8b69ea8ab9bb6a99a3336978543ac91659a2f734b2e8afd42b42c517cf976d0d",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqGenericHostStartupTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "12fb5282c4048c05d80a8faf661089a258c4ebe06bdb4e8b001667c2e2a69540",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "12fb5282c4048c05d80a8faf661089a258c4ebe06bdb4e8b001667c2e2a69540"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Configuration/RabbitMqTransportOptionsStartupTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "967cb99eebbc593bf30429f40983d8dd0022475397535d3b8d9eef5e0075d1a1",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "967cb99eebbc593bf30429f40983d8dd0022475397535d3b8d9eef5e0075d1a1"
+          },
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/tests/Transports/ViciOne.ServiceBus.RabbitMq.Tests/Requirements/RequirementCoverageProjectionTests.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "439b358fa50d110ecce7a1dd5e9f5af0836a23e0151f8e70976157f0411bb3cb",
+            "binding": "ACTUAL_DOCUMENT_PATH",
+            "bound_sha256": "439b358fa50d110ecce7a1dd5e9f5af0836a23e0151f8e70976157f0411bb3cb"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": false
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/rabbit-mutants-native-r1/M2-transport-eager-validation/runtime/ViciOne.ServiceBus.dll",
+      "sha256": "f16facbe1bd998cde023e0dd573665e0b767b69d998fc5a0285f49b4a499836e",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3597846456,
+          "guid": "9e8783a4-7f55-4390-8ab2-7813c45a35c6",
+          "path": "ViciOne.ServiceBus.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "a483879e557f90438ab27813c45a35c6b8c772d6",
+        "sha256": "f1e61ba5904d4d3fda0859f957025767f284fe0fc992cf6c38d911b08ab17a7b",
+        "documents": 1341,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 1297,
+          "EMBEDDED_SOURCE": 44
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "099a9c44e1e8c2f226a05ad0de715ce995688d4d5c484a3eaee53c36593a79d3",
+        "targets": []
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package04-startup/rabbit-mutants-native-r1/M2-transport-eager-validation/runtime/ViciOne.ServiceBus.RabbitMq.dll",
+      "sha256": "adf9cb399ce10df6e740ecb64bd0a33fa9ea75bddbad78e97cccc3b7725b5f3e",
+      "debug": [
+        {
+          "type": 2,
+          "timestamp": 3911864720,
+          "guid": "e7cd2c8d-baa2-4665-a505-a25fe526974d",
+          "path": "ViciOne.ServiceBus.RabbitMq.pdb"
+        },
+        {
+          "type": 19,
+          "timestamp": 0
+        },
+        {
+          "type": 16,
+          "timestamp": 0
+        },
+        {
+          "type": 17,
+          "timestamp": 0
+        }
+      ],
+      "pdb": {
+        "id": "8d2ccde7a2ba6546a505a25fe526974d90512ae9",
+        "sha256": "23a2648c7bdd5cc86adbd3b1d39bcfa1d3a05a96f72077da2932fe28d00d919c",
+        "documents": 200,
+        "bindings": {
+          "ACTUAL_DOCUMENT_PATH": 198,
+          "IMMUTABLE_SOURCE_SNAPSHOT": 1,
+          "EMBEDDED_SOURCE": 1
+        },
+        "missing": [],
+        "mismatch": [],
+        "document_inventory_sha256": "cf52781b172f0d2519ab0b915240e23aa49664e0e938349ea786251d56af2140",
+        "targets": [
+          {
+            "path": "/private/tmp/vicione-servicebus-local-completion-20261007-rabbit-startup-original/src/Transports/ViciOne.ServiceBus.RabbitMq/Configuration/RabbitMqBusFactoryConfiguratorExtensions.cs",
+            "algorithm": "8829d00f-11b8-4213-878b-770e8597ac16",
+            "checksum": "7a155382609273bf9140dc679b80974fc6812b9466c3ae287509698ac0cf20d0",
+            "binding": "IMMUTABLE_SOURCE_SNAPSHOT",
+            "bound_sha256": "7a155382609273bf9140dc679b80974fc6812b9466c3ae287509698ac0cf20d0"
+          }
+        ]
+      },
+      "pe_pdb_id_matches": true,
+      "embedded": true
+    }
+  ],
+  "documents": 3047,
+  "owner_sha256": "7a155382609273bf9140dc679b80974fc6812b9466c3ae287509698ac0cf20d0",
+  "source_override": "Exact immutable archived compiled-owner only; all other actual source paths and embedded source checksums parsed afresh after driver full join. Canonical6098/privateoriginal6099/config14 guards equal.",
+  "limits": "Pure byte/PDB/document qualification, no runtime load trace or whole human source read. Actual native finite first causes qualified separately."
+}

@@ -1,0 +1,23 @@
+{
+  "utc": "2026-10-06T22:07:53.581016+00:00",
+  "status": "LOCAL_MAIN_FAST_FORWARD_PREPARED_REMOTE_MAIN_PUSH_REJECTED_EXPLICIT_APPROVAL_PENDING",
+  "repository": "EdgarLiebold/vicione-servicebus",
+  "local_branch": "main",
+  "local_commit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "remote_main_before_rejected_action": "5afd0d077788f594b268a5ac441e788d54d57a70",
+  "backup_branch_remote_commit": "6b451cff07f46c6bf3eee325ff81ead1089e8c89",
+  "local_fast_forward_only": true,
+  "conflicts": 0,
+  "local_worktree_clean": true,
+  "all6330_reviewed_commit_and_live_input_identities_verified": true,
+  "previous_native_validation_green": true,
+  "new_CI_run": false,
+  "GitHub_native_test_workflow_state": "disabled_manually",
+  "workflow_was_not_enabled_by_this_action": true,
+  "rejected_action": "git push origin main",
+  "action_executed": false,
+  "reason_summary": "Automatic approval review rejected the default-branch push because the question whether merging was sensible did not clearly authorize this concrete main update.",
+  "next_required_approval": "Explicit permission to fast-forward origin/main from5afd0d077 to6b451cff07f46c6bf3eee325ff81ead1089e8c89 in EdgarLiebold/vicione-servicebus.",
+  "no_force_push_no_deployment": true,
+  "external_provider_ARM64_validation_still_partial": true
+}

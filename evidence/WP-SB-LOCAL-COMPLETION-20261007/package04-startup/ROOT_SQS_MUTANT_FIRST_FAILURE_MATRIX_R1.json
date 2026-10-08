@@ -1,0 +1,575 @@
+{
+  "kind": "ROOT_SQS_SIX_NATIVE_MUTANT_FIRST_CAUSAL_ORACLE_MATRIX_R1",
+  "rows": [
+    {
+      "name": "m1-typed-options-bound-to-default",
+      "result_sha256": "6c8d6374b2647b53a439fd4b5fc9d3912721e13927228017abfb00623a946bab",
+      "root_actual_pe_sha256": "b0e61591d8453a0c0ca43959f3b86af511eb8abd274b3b90fa99d08364927937",
+      "cases": [
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedInvalidDefaultStillFailsBeforeRuntime",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.UnusedInvalidDefaultCannotRejectCoherentNamedBus",
+          "status": "fehlerhaft",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": [
+            "Assert.Same() Failure: Values are not the same instance",
+            "Expected: System.InvalidOperationException: chosen local pre-runtime startup barrier",
+            "Actual:   Microsoft.Extensions.Options.OptionsValidationException: Amazon SQS transport for bus 'ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests+IOrdersBus': Region must not be empty when specified. Set an AWS region system name or leave it unset.",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155",
+            "um ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.UnusedInvalidDefaultCannotRejectCoherentNamedBus() in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:39",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155"
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.CoherentNamedBusReachesExactlyTheSameRuntimeBoundary",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Region, reason: \"Region must not be empty\")",
+          "status": "fehlerhaft",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(System.InvalidOperationException)",
+            "um ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:22",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155"
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Scope, reason: \"Scope must not be empty\")",
+          "status": "fehlerhaft",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(System.InvalidOperationException)",
+            "um ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:22",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155"
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: ScopeWithoutRegion, reason: \"Scope requires Region\")",
+          "status": "fehlerhaft",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(System.InvalidOperationException)",
+            "um ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:22",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "m2-validate-on-start-removed",
+      "result_sha256": "e22be5dc41327d8e57cb371239ec82ea504245e5a975cc92bf3f35c10710d75a",
+      "root_actual_pe_sha256": "1fcb845f83cfa11670ed79978d2239590c1ae4d721f0e80c96cc45807cf415dc",
+      "cases": [
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedInvalidDefaultStillFailsBeforeRuntime",
+          "status": "fehlerhaft",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(ViciOne.ServiceBus.ConfigurationException)",
+            "um ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedInvalidDefaultStillFailsBeforeRuntime() in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:52",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155"
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.UnusedInvalidDefaultCannotRejectCoherentNamedBus",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.CoherentNamedBusReachesExactlyTheSameRuntimeBoundary",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Region, reason: \"Region must not be empty\")",
+          "status": "fehlerhaft",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(ViciOne.ServiceBus.ConfigurationException)",
+            "um ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:22",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155"
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Scope, reason: \"Scope must not be empty\")",
+          "status": "fehlerhaft",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(ViciOne.ServiceBus.ConfigurationException)",
+            "um ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:22",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155"
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: ScopeWithoutRegion, reason: \"Scope requires Region\")",
+          "status": "fehlerhaft",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(ViciOne.ServiceBus.ConfigurationException)",
+            "um ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:22",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "m3-region-predicate-bypassed",
+      "result_sha256": "f2b2fa971e2ce03d4622ab1153366e958f855e48055646fd6df17b72ada3ad5b",
+      "root_actual_pe_sha256": "e9a91b4742701e224233b907778c8067fa17ed31e51713a3bab8401d04cab8b3",
+      "cases": [
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedInvalidDefaultStillFailsBeforeRuntime",
+          "status": "fehlerhaft",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(System.InvalidOperationException)",
+            "um ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedInvalidDefaultStillFailsBeforeRuntime() in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:52",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155"
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.UnusedInvalidDefaultCannotRejectCoherentNamedBus",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.CoherentNamedBusReachesExactlyTheSameRuntimeBoundary",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Region, reason: \"Region must not be empty\")",
+          "status": "fehlerhaft",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(System.InvalidOperationException)",
+            "um ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:22",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155"
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Scope, reason: \"Scope must not be empty\")",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: ScopeWithoutRegion, reason: \"Scope requires Region\")",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        }
+      ]
+    },
+    {
+      "name": "m4-scope-predicate-bypassed",
+      "result_sha256": "967081f6fc85f23eadbc8a9b163b8fe1fadf4fdcb636a62861871a5dcde4764b",
+      "root_actual_pe_sha256": "8d09203318ce4e52793447d2f56e4fe25ae79870b62254045f215670e06aa340",
+      "cases": [
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedInvalidDefaultStillFailsBeforeRuntime",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.UnusedInvalidDefaultCannotRejectCoherentNamedBus",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.CoherentNamedBusReachesExactlyTheSameRuntimeBoundary",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Region, reason: \"Region must not be empty\")",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Scope, reason: \"Scope must not be empty\")",
+          "status": "fehlerhaft",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(System.InvalidOperationException)",
+            "um ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:22",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155"
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: ScopeWithoutRegion, reason: \"Scope requires Region\")",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        }
+      ]
+    },
+    {
+      "name": "m5-scope-region-coherence-bypassed",
+      "result_sha256": "1cd5316a4c5ca30c45b06fb40f76bbd25cd660f32c22db71f484a92530b08af0",
+      "root_actual_pe_sha256": "4e4cc28b942c0ed6b4db8cd23a1eda1c040da64b453c0f11a0c69a2e2b721914",
+      "cases": [
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedInvalidDefaultStillFailsBeforeRuntime",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.UnusedInvalidDefaultCannotRejectCoherentNamedBus",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.CoherentNamedBusReachesExactlyTheSameRuntimeBoundary",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Region, reason: \"Region must not be empty\")",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Scope, reason: \"Scope must not be empty\")",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: ScopeWithoutRegion, reason: \"Scope requires Region\")",
+          "status": "fehlerhaft",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": [
+            "Assert.IsType() Failure: Value is not the exact type",
+            "Expected: typeof(Microsoft.Extensions.Options.OptionsValidationException)",
+            "Actual:   typeof(System.InvalidOperationException)",
+            "um ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:22",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "m6-typed-diagnostic-owner-shortened",
+      "result_sha256": "d33ded75e10ff4e4efdf733a3ef0e9dcc0a63cc2a1949c7d50a5136cdcde3e67",
+      "root_actual_pe_sha256": "75212df45e9c4303fe50d566c0f700be218e01c8db6578345bec791808d39615",
+      "cases": [
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedInvalidDefaultStillFailsBeforeRuntime",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.UnusedInvalidDefaultCannotRejectCoherentNamedBus",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.CoherentNamedBusReachesExactlyTheSameRuntimeBoundary",
+          "status": "erfolgreich",
+          "state": {
+            "barrier": "1",
+            "materializations": "1",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": []
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Region, reason: \"Region must not be empty\")",
+          "status": "fehlerhaft",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": [
+            "Assert.Contains() Failure: Sub-string not found",
+            "String:    \"Amazon SQS transport for bus 'IOrdersBus': Region \"\u00b7\u00b7\u00b7",
+            "Not found: \"ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.A\"\u00b7\u00b7\u00b7",
+            "um ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:26",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155"
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: Scope, reason: \"Scope must not be empty\")",
+          "status": "fehlerhaft",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": [
+            "Assert.Contains() Failure: Sub-string not found",
+            "String:    \"Amazon SQS transport for bus 'IOrdersBus': Scope m\"\u00b7\u00b7\u00b7",
+            "Not found: \"ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.A\"\u00b7\u00b7\u00b7",
+            "um ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:26",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155"
+          ]
+        },
+        {
+          "name": "ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(invalid: ScopeWithoutRegion, reason: \"Scope requires Region\")",
+          "status": "fehlerhaft",
+          "state": {
+            "barrier": "0",
+            "materializations": "0",
+            "clientFactories": "0",
+            "cleanupFailures": "0",
+            "startTerminal": "True"
+          },
+          "first_failure_lines": [
+            "Assert.Contains() Failure: Sub-string not found",
+            "String:    \"Amazon SQS transport for bus 'IOrdersBus': Scope r\"\u00b7\u00b7\u00b7",
+            "Not found: \"ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.A\"\u00b7\u00b7\u00b7",
+            "um ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.SelectedNamedInvalidOptionsFailBeforeRuntime(InvalidNamedOption invalid, String reason) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:26",
+            "at ViciOne.ServiceBus.AmazonSqs.Tests.Configuration.AmazonSqsGenericHostStartupTests.RunAsync(Boolean typed, Nullable`1 selectedInvalid, Boolean poisonDefault) in /private/tmp/vicione-servicebus-local-completion-20261007-startup-sqs-original/tests/Transports/ViciOne.ServiceBus.AmazonSqs.Tests/Configuration/AmazonSqsGenericHostStartupTests.cs:line 155"
+          ]
+        }
+      ]
+    }
+  ],
+  "observed_slots": 36,
+  "observed_first_failures": 15,
+  "healthy_passes": 21,
+  "root_personal_consumption": "M1/M2 wholelog reads; M3/M6 firstfinitefailure blocks+healthyheaders/states from bounded initialbatch; M4/M5 fullfirstfailure+healthyheaders/states reread repairs initialsharedoutputtruncation. No blanket fullframeworkframes claim; allsix actualPE2997check executedownpureparser afternative57514joined0. Root authored original27/57read,new194testdelta,new79product/helper/6candidateonecause deltas/driver143, exact reused unchangedcontexts.",
+  "limits": "M1 type22(3)/Same39(1); M2 type52default/type22(3) actual ConfigurationException at BusCompositionValidator182 after late OptionsMonitor.Get; M3 type52default/type22Region; M4 type22Scope; M5 type22Cross; M6 ContainsFullName26(3), whosepreceding type/name/reason assertions passed. Alllaterassertions onredcase uncredited; independentprintedstate observables not assertedfailurecredit. Runtime/client/cloudbeforebarrier only; no global productgrade/wholebodycredit."
+}

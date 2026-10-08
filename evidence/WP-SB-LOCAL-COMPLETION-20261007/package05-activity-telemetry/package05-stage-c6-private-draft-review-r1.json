@@ -1,0 +1,160 @@
+{
+  "reviewer": "Internal readonly static draft assessment; no external product role or Root personal-read transfer.",
+  "authorized_scope": "Private draft test/design review only. No canonical test, requirements, CurrentOrder, product source or native execution by reviewer.",
+  "context_owner_paths_and_hashes": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Diagnostics/TelemetryActivityExtensions.cs",
+      "sha256": "8647373561a105ff543247438d3239f869009b6e2efc829f533d45bdfb235291",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestHarnessExtensions.cs",
+      "sha256": "d941d74bc5ac55af42d7c2abde5537489cd2850dcc325ecadfd7e93ff80931b9",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Internal/Observations/ActiveTestObservationScope.cs",
+      "sha256": "676b3732bd05212d1196a7fbd59fa6a3d8268df88d9a2e30539197e3c27a9ec3",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Diagnostics/TrackedActivity.cs",
+      "sha256": "90a781b81f734a2be9b4b3a4e4272b49afb842d46cd62bb9f05df823ec33126e",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/IBaseTestHarness.cs",
+      "sha256": "de679bca81fc7cafe3d5fda0ee2542c300f483c57831fafb7565beb297f1dc94",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Testing/Harnesses/Activities/ActiveTestResult.cs",
+      "sha256": "6f1268640e301f9702dce5388cb3b4ad2197158d81bfa30c5da14c307b4cdfa0",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Clients/Response.cs",
+      "sha256": "ffff2c639a268c4fc732b489445343d6888a485e6702cdf93035849a1879b468",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus.Abstractions/Advanced/ConnectHandle.cs",
+      "sha256": "c0f43d3c38e2fab39a7ef1a85b5a7f69562799e4f9980cb2c2a8898d6622f161",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Util/RollingTimer.cs",
+      "sha256": "58b73f24ebf7a6115065a0c8d7fbcb226ca0404b3ff70f1888f62e0c9d55acee",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Testing/ObservableTimeProvider.cs",
+      "sha256": "e3bf439b800f4f8cf7b96dc8a9a21be05d637157104efa4c72514eadb59c6f5c",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Testing/TestHarnessObservationPolicyTests.cs",
+      "sha256": "4a8343b4152a0f0a5234609173fa93ba997d8f295085861abd9125e884d929fa",
+      "whole_body_read_basis": "Direct whole-body current review or exact hash reuse from earlier whole read in this ongoing bounded session."
+    }
+  ],
+  "prior_public_caller_plan": {
+    "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package05-public-caller-primary-cleanup-readonly-r2.json",
+    "sha256": "2e89a0b9d01a8565192721a4a1dcdff4fbbcf9174b7ecddb6ba35d5374ea58d7"
+  },
+  "public_five_family_API_check": "Publish/Send and typed Request1/Request2/Request3 explicit-provider signatures match actual TelemetryActivityExtensions. Response1 proxy implements actual Response<T>; Response2/Response3 are public structs accepting completed chosen branch plus retained pending branches, expose Is/Deconstruct/Message matching draft use. Public nonsealed DispatchProxy bases and enum InlineData are consistent with existing patterns. No concrete static API/type mismatch found; compilation/analyzers remain unexecuted.",
+  "active_API_check": "IBaseTestHarness public connector/getter proxy signatures, ConnectHandle default async disposal and public ActAsync fit current definitions. Fake timer creates real inner timer, releases it before chosen ordinary Dispose exception. Scope constructor and Dispose currently aggregate original lease errors in defined order; setup aggregate inner refs are the correct observable contract.",
+  "meaningful_existing_oracles": [
+    "Explicit 5x5 family/scenario matrix has real action root/source/parent, fake timer count1, idle-minus-one-tick vs exact-deadline, selected Task.FromException primary, real linked CTS wait cancellation and exact cancellation token.",
+    "Strict endpoint/client proxies reject all backend calls. Typed request healthy results preserve chosen response/message and original branch tasks; MessageReads only1 on healthy request path,0 on failure. Pending branch tasks are retained data, not an unjoined started background operation.",
+    "Act13 public harness cases require actual three connector attempts, exactly2 established leases on send setup failure or3 otherwise; registry object identity is removed before chosen ordinary lease exception; final registry empty and actual timer0/stopped root are asserted.",
+    "Action errors are actual task faults; cancellation is from the owned linked token while native TestContext token remains uncancelled. TimeSpan waits are finite harness watchdogs rather than product elapsed-time oracles.",
+    "Single ordinary required cleanup failure must retain original object identity. Body primary wins against all secondary owner errors. Setup AggregateException is verified by its original selected setup/cleanup inner identities, not a fabricated wrapper Same assertion."
+  ],
+  "baseline_prediction_only": {
+    "public": {
+      "cases": 25,
+      "predicted_finite_red": 10,
+      "predicted_healthy": 15
+    },
+    "active": {
+      "cases": 13,
+      "predicted_finite_red": 7,
+      "predicted_healthy": 6
+    },
+    "total_cases": 38,
+    "predicted_red": 17,
+    "predicted_healthy": 21,
+    "qualification": "Static path prediction only; first native failure/cause, compiled case identities and actual result counts may differ. No baseline native acceptance."
+  },
+  "cleanup_limits": [
+    "Existing-case physical release counts establish once-per-resource release, not exact Dispose invocation count; lease/timer implementations deliberately release before selected errors. No arbitrary throw-before-release resource implementation guarantee.",
+    "Both drafts cancel/advance/await their own operation in finally when still incomplete, and dispose owned CTS/listeners/caller/probe. A timeout/operation setup assertion is not accepted as a product causal kill without actual finite source-qualified evidence.",
+    "Assertions preceding exception-identity checks can be the first finite failure if physical state or an action/root assertion fails. Qualify actual first native cause; do not credit late unreached assertions.",
+    "Global activity listener isolation uses existing OpenTelemetryGlobalCollection. No cold static-source reset/newprocess claim; C5 handles cold behavior separately."
+  ],
+  "canonical_prerequisites": [
+    "Root must bind its final plan/CurrentOrder and complete reading to actual canonical test files plus existing owner/shared contexts before native work.",
+    "Two new canonical test files imply808->810 owner inventory. If both classes occupy one new file,809 is coherent. Actual final inventory decides the label.",
+    "Two Theory method purpose rows need exact final RequirementCoverage projection and original4706 semantic ordered prefix; theory case discovery must still show all25+13 distinct actual IDs. No predicted purpose count substitutes for compiled native identities.",
+    "Original test-only strict/native counterexamples, fixed focus/Core, one-cause mutants with controls and post replay remain Root execution and independent evidence work."
+  ],
+  "skills_used": [
+    "Previously applied dotnet-test:test-anti-patterns workflow for bounded static suite review; no test generation/writing by reviewer."
+  ],
+  "no_canonical_draft_owners_exist_at_review": {
+    "public": true,
+    "active": true
+  },
+  "no_source_or_native_acceptance": "Static private draft review only; no C6 product candidate/fix, native test pass, all P05/TODO/current coverage/provider/cloud/device acceptance.",
+  "execution": "Read-only file/hash/API/source/JSON inspection. Only distinct reviewer JSON records written.",
+  "status": "CHANGES_REQUIRED_STATIC_PRIVATE_DRAFT_R1",
+  "drafts": {
+    "public_path": "/private/tmp/PublicTelemetryCleanupIsolationTests.draft.cs",
+    "public_sha256": "cd45b4f583f32312ba3eb8f58aa18eaf2b8f115fa3f4c831fbfab7405f30126c",
+    "public_lines": 216,
+    "active_path_at_initial_review": "/private/tmp/ActiveTelemetryCleanupIsolationTests.draft.cs",
+    "active_R1_sha256": "d40f162f68ad414c8563bab726a5338aa63c27575c78e94d4c2b614eb5c814b9",
+    "active_R1_lines": 216,
+    "design_path": "/private/tmp/c6-caller-cleanup-design-notes.txt",
+    "design_sha256": "482c5e7ea30b1dd2ef99018dbe6ff129af5cff978442ab13ab8ced3baa3182c8"
+  },
+  "findings": [
+    {
+      "id": "C6-DRAFT-R1-01",
+      "severity": "medium",
+      "owner": "/private/tmp/ActiveTelemetryCleanupIsolationTests.draft.cs",
+      "original_lines": [
+        97,
+        98,
+        99,
+        100,
+        177,
+        188
+      ],
+      "contract": "Established observation scope must be disposed before tracker.",
+      "gap": "R1 observes only final registry emptiness, release counts, root stopped and error-list order. It does not observe physical owner disposal order.",
+      "finite_survivor_candidate": "Reverse tracker/observation disposal, but put resulting errors into observation-then-timer order: all current R1 physical/aggregate assertions can still pass. This is static mutation reasoning, not an executed mutant.",
+      "smallest_oracle": "Record actual root identity and IsStopped at each real lease release, then assert same root and not stopped after the joined operation. It requires no additional test case or fake cleanup event."
+    },
+    {
+      "id": "C6-DRAFT-R1-02",
+      "severity": "medium",
+      "owner": "/private/tmp/ActiveTelemetryCleanupIsolationTests.draft.cs",
+      "original_lines": [
+        117,
+        120,
+        171
+      ],
+      "contract": "Retain an observation scope own AggregateException as one owner failure when normal successful body has tracker cleanup failure too.",
+      "gap": "Only the publish lease throws in R1 StandaloneBothFailure; the observation-owner exception is ordinary, so flattening nested owner aggregates is never exercised in the newly changed public Act caller path.",
+      "existing_evidence_limit": "TestHarnessObservationPolicyTests.ActiveScope_DisposalAttemptsEveryConnectionAndIsIdempotentWhenCleanupFails verifies scope multi-handle order directly. It does not execute the new outer public Act cleanup composition. SetupAggregateAndTimerFailure verifies a body-primary aggregate, which is a separate preservation path.",
+      "smallest_oracle": "Strengthen StandaloneBothFailure with actually released publish and consume leases both throwing selected originals, then expect outer [scope AggregateException(pubE,consumeE),timerE]. Do not invent equality with an inaccessible aggregate wrapper; assert nested shape and original inner identities."
+    }
+  ],
+  "historical_preservation": {
+    "reason": "Root replaced private active draft with R2 during this review after the two findings were sent. This R1 report records the observed original R1 SHA and preserves its exact source bytes in JSON.",
+    "method": "Exact inverse of Root R2 delta; recovered bytes independently SHA-verified to initially observed d40f162f... hash.",
+    "active_R1_source": "using System.Diagnostics;\nusing System.Reflection;\nusing ViciOne.ServiceBus.Advanced;\nusing ViciOne.ServiceBus.Testing;\nusing ViciOne.ServiceBus.Tests.Infrastructure.Requirements;\nusing ViciOne.ServiceBus.Tests.Testing;\nusing Xunit;\n\nnamespace ViciOne.ServiceBus.Tests.Monitoring;\n\n[Collection(OpenTelemetryGlobalCollection.Name)]\npublic sealed class ActiveTelemetryCleanupIsolationTests\n{\n    public enum Scenario\n    {\n        Healthy, ActionFailure, ActionTimerFailure, ActionObserverFailure, ActionBothFailure,\n        StandaloneTimerFailure, StandaloneObserverFailure, SetupFailure, SetupTimerFailure,\n        WaitCancellation, WaitCancellationBothFailure, StandaloneBothFailure, SetupAggregateAndTimerFailure\n    }\n\n    [Theory]\n    [InlineData(Scenario.Healthy)]\n    [InlineData(Scenario.ActionFailure)]\n    [InlineData(Scenario.ActionTimerFailure)]\n    [InlineData(Scenario.ActionObserverFailure)]\n    [InlineData(Scenario.ActionBothFailure)]\n    [InlineData(Scenario.StandaloneTimerFailure)]\n    [InlineData(Scenario.StandaloneObserverFailure)]\n    [InlineData(Scenario.SetupFailure)]\n    [InlineData(Scenario.SetupTimerFailure)]\n    [InlineData(Scenario.WaitCancellation)]\n    [InlineData(Scenario.WaitCancellationBothFailure)]\n    [InlineData(Scenario.StandaloneBothFailure)]\n    [InlineData(Scenario.SetupAggregateAndTimerFailure)]\n    [RequirementCoverage(\"REQ-VSB-OBSERVABILITY-ISOLATION\", \"public-active-harness-primary-and-all-owned-cleanup\")]\n    public async Task ActiveScopeReleasesAllOwnersAndPreservesRequiredOutcome(Scenario scenario)\n    {\n        var actionError = new InvalidOperationException(\"chosen action failure\");\n        var setupError = new InvalidOperationException(\"chosen send connection failure\");\n        var observationError = new InvalidOperationException(\"chosen releasing publish connection failure\");\n        var timerError = new InvalidOperationException(\"chosen releasing timer failure\");\n        bool actionFault = scenario is Scenario.ActionFailure or Scenario.ActionTimerFailure\n            or Scenario.ActionObserverFailure or Scenario.ActionBothFailure;\n        bool setupFault = scenario is Scenario.SetupFailure or Scenario.SetupTimerFailure or Scenario.SetupAggregateAndTimerFailure;\n        bool timerFault = scenario is Scenario.ActionTimerFailure or Scenario.ActionBothFailure or Scenario.StandaloneTimerFailure\n            or Scenario.SetupTimerFailure or Scenario.WaitCancellationBothFailure or Scenario.StandaloneBothFailure or Scenario.SetupAggregateAndTimerFailure;\n        bool observationFault = scenario is Scenario.ActionObserverFailure or Scenario.ActionBothFailure or Scenario.StandaloneObserverFailure\n            or Scenario.WaitCancellationBothFailure or Scenario.StandaloneBothFailure or Scenario.SetupAggregateAndTimerFailure;\n        bool waitCancellation = scenario is Scenario.WaitCancellation or Scenario.WaitCancellationBothFailure;\n        var clock = new ObservableTimeProvider(new DateTimeOffset(2026, 10, 7, 0, 0, 0, TimeSpan.Zero), timerFault ? timerError : null);\n        using var ownedCancellation = CancellationTokenSource.CreateLinkedTokenSource(TestContext.Current.CancellationToken);\n        CancellationToken token = ownedCancellation.Token;\n        var state = new HarnessState(clock, token, setupFault ? setupError : null, observationFault ? observationError : null);\n        IBaseTestHarness harness = DispatchProxy.Create<IBaseTestHarness, HarnessProxy>();\n        ((HarnessProxy)harness).State = state;\n        using var caller = new Activity(\"active-cleanup-caller\").Start();\n        Assert.NotNull(caller);\n        Activity? root = null;\n        int starts = 0;\n        using var rootListener = new ActivityListener\n        {\n            ShouldListenTo = s => s.Name == \"ViciOne.ServiceBus.Testing.Monitor\",\n            Sample = (ref ActivityCreationOptions<System.Diagnostics.ActivityContext> _) => ActivitySamplingResult.AllData,\n            ActivityStarted = a => { root = a; starts++; },\n        };\n        ActivitySource.AddActivityListener(rootListener);\n        using var probe = new ActivitySource(\"active-cleanup-unrelated-probe\");\n        Assert.Null(probe.StartActivity(\"before\"));\n        int actions = 0;\n        ActiveTestResult? result = null;\n        Task operation = RunAsync();\n        try\n        {\n            Assert.Equal(1, starts);\n            Assert.NotNull(root);\n            Assert.Equal(caller.Id, root.ParentId);\n            Assert.Equal(setupFault ? 0 : 1, actions);\n            Assert.Equal(1, clock.TimerCount);\n            Assert.Equal(3, state.ConnectionAttempts);\n            Assert.Equal(setupFault ? 2 : 3, state.Leases.Count);\n            if (actionFault || setupFault)\n                Assert.True(operation.IsCompleted);\n            else\n            {\n                Assert.False(operation.IsCompleted);\n                Assert.Equal(state.Idle, clock.LastDueTime);\n                if (waitCancellation)\n                    ownedCancellation.Cancel();\n                else\n                {\n                    clock.Advance(state.Idle - TimeSpan.FromTicks(1));\n                    Assert.False(operation.IsCompleted);\n                    clock.Advance(TimeSpan.FromTicks(1));\n                }\n            }\n            Exception? escaped = await Record.ExceptionAsync(() => operation.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));\n            Assert.Empty(state.Registry);\n            Assert.All(state.Leases, lease => Assert.Equal(1, lease.ReleaseCount));\n            Assert.Equal(0, clock.ActiveTimerCount);\n            Assert.True(root.IsStopped);\n            Assert.Null(probe.StartActivity(\"after\"));\n            if (actionFault)\n                Assert.Same(actionError, escaped);\n            else if (scenario == Scenario.SetupAggregateAndTimerFailure)\n            {\n                AggregateException aggregate = Assert.IsType<AggregateException>(escaped);\n                Assert.Collection(aggregate.InnerExceptions, e => Assert.Same(setupError, e), e => Assert.Same(observationError, e));\n            }\n            else if (setupFault)\n                Assert.Same(setupError, escaped);\n            else if (waitCancellation)\n            {\n                OperationCanceledException canceled = Assert.IsAssignableFrom<OperationCanceledException>(escaped);\n                Assert.Equal(token, canceled.CancellationToken);\n                Assert.False(TestContext.Current.CancellationToken.IsCancellationRequested);\n            }\n            else if (scenario == Scenario.StandaloneBothFailure)\n            {\n                AggregateException aggregate = Assert.IsType<AggregateException>(escaped);\n                Assert.Collection(aggregate.InnerExceptions, e => Assert.Same(observationError, e), e => Assert.Same(timerError, e));\n            }\n            else if (observationFault)\n                Assert.Same(observationError, escaped);\n            else if (timerFault)\n                Assert.Same(timerError, escaped);\n            else\n            {\n                Assert.Null(escaped);\n                Assert.NotNull(result);\n                Assert.Empty(result.Consumed);\n                Assert.Empty(result.Published);\n                Assert.Empty(result.Sent);\n            }\n        }\n        finally\n        {\n            if (!operation.IsCompleted)\n            {\n                ownedCancellation.Cancel();\n                clock.Advance(state.Timeout);\n                await Record.ExceptionAsync(() => operation.WaitAsync(TimeSpan.FromSeconds(5), TestContext.Current.CancellationToken));\n            }\n        }\n\n        async Task RunAsync()\n        {\n            result = await harness.ActAsync(() =>\n            {\n                actions++;\n                Assert.Same(root, Activity.Current);\n                Assert.Equal(3, state.Registry.Count);\n                return actionFault ? Task.FromException(actionError) : Task.CompletedTask;\n            }, \"actual-active-cleanup\", token);\n        }\n    }\n\n    public sealed class HarnessState(TimeProvider clock, CancellationToken token, Exception? setupFailure, Exception? observerFailure)\n    {\n        public TimeSpan Timeout { get; } = TimeSpan.FromMinutes(10);\n        public TimeSpan Idle { get; } = TimeSpan.FromMinutes(1);\n        public TimeProvider Clock { get; } = clock;\n        public CancellationToken Token { get; } = token;\n        public Dictionary<string, object> Registry { get; } = [];\n        public List<Lease> Leases { get; } = [];\n        public int ConnectionAttempts { get; private set; }\n        public ConnectHandle Connect(string name, object observer)\n        {\n            ConnectionAttempts++;\n            if (name == \"send\" && setupFailure is not null) throw setupFailure;\n            Registry.Add(name, observer);\n            var lease = new Lease(this, name, observer, name == \"publish\" ? observerFailure : null);\n            Leases.Add(lease);\n            return lease;\n        }\n    }\n\n    public sealed class Lease(HarnessState state, string name, object observer, Exception? failure) : ConnectHandle\n    {\n        private int _released;\n        public int ReleaseCount { get; private set; }\n        public void Disconnect() => Dispose();\n        public void Dispose()\n        {\n            if (Interlocked.Exchange(ref _released, 1) != 0) return;\n            Assert.Same(observer, state.Registry[name]);\n            Assert.True(state.Registry.Remove(name));\n            ReleaseCount++;\n            if (failure is not null) throw failure;\n        }\n    }\n\n    public class HarnessProxy : DispatchProxy\n    {\n        public HarnessState State { get; set; } = null!;\n        protected override object? Invoke(MethodInfo? targetMethod, object?[]? args)\n        {\n            if (args is { Length: 0 })\n                return targetMethod?.Name switch\n                {\n                    \"get_TestTimeout\" => State.Timeout,\n                    \"get_TestInactivityTimeout\" => State.Idle,\n                    \"get_TimeProvider\" => State.Clock,\n                    _ => throw new InvalidOperationException(\"Unexpected harness getter: \" + targetMethod?.Name),\n                };\n            if (args is { Length: 1 } && args[0] is { } observer)\n                return targetMethod?.Name switch\n                {\n                    \"ConnectConsumeObserver\" when observer is IConsumeObserver => State.Connect(\"consume\", observer),\n                    \"ConnectPublishObserver\" when observer is IPublishObserver => State.Connect(\"publish\", observer),\n                    \"ConnectSendObserver\" when observer is ISendObserver => State.Connect(\"send\", observer),\n                    _ => throw new InvalidOperationException(\"Unexpected harness connection: \" + targetMethod?.Name),\n                };\n            throw new InvalidOperationException(\"Unexpected harness SPI call: \" + targetMethod?.Name);\n        }\n    }\n}\n"
+  }
+}

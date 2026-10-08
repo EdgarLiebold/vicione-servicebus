@@ -1,0 +1,23 @@
+{
+  "kind": "ROOT_BOUNDED_TWO_EXTERNAL_SECRET_ALERTS_CLASSIFICATION",
+  "independent_report_sha256": "90b431fc1b6edcdea2c1e5d24c60448569d7cdd91ae0c0479c5609f6c8c3c80d",
+  "root_whole_report_read": true,
+  "all5_git_blob_hashes_independently_verified": true,
+  "findings": [
+    {
+      "commit": "be715fa56161a3259f400b7e9d02a76fdcad3c0c",
+      "reported_path": "build/verification/expected/sql-transport.txt",
+      "reported_line": 19,
+      "classification": "PARAMETERIZED_PARSING_TEST_IDENTITY"
+    },
+    {
+      "commit": "211e73fdd045b306799cf7c7a82eaaec09fe0690",
+      "reported_path": "tools/ci/policies/__init__.py",
+      "reported_line": 99,
+      "classification": "KNOWN_DEFAULT_CREDENTIAL_DENYLIST"
+    }
+  ],
+  "conclusion": "Both reported locations are test-input/denylist falsepositives for deployedsecret exposure in inspectedsourcecontext.",
+  "recommended_action": "Document each alert as falsepositive with provenance. No rotation/historyrewrite justified solely by these matches; no remote dismissal performed.",
+  "limits": "Exact two historical locations only; actualhistoricalreuse/globalcredentialabsence notasserted. No credential values retained."
+}

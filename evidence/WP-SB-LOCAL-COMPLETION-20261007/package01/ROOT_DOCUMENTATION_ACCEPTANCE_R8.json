@@ -1,0 +1,16 @@
+{
+  "kind": "ROOT_CURRENT_DOCUMENTATION_R8_ACCEPTANCE",
+  "status": "ACCEPTED",
+  "freeze_sha256": "61a1bccd8f612a55b1619450768d8a8dc99fe1844aafa3759ce4ace9dd276630",
+  "independent_review_sha256": "fce18f522829ba364b87f6f214674f0aac57cdba959de925c36022d4f5d6343f",
+  "files": {
+    "CHANGELOG.md": "cc25a476551570f8706fcaaf2e922ced4bf326b05b2b3e32c680e5a209777ec2",
+    "TODO.md": "01c6b1550b0d6db338c26a5d2d16652700fabe0eb6d717a170345ceef11856b1",
+    ".testagent/status.md": "81aff6c1a03b6a82fecda371aa950c42e9af7c35f3165780f4f734ae2d36a6df",
+    ".testagent/plan.md": "8c4b6db5c4fd40256acbf5d477556ebe3fd7f6b9dd64286827338166395cb98a",
+    ".testagent/local-completion-plan.md": "c7fa94c953c22fd586e71bc250866caa638acfa6a60043e5fa4b866a73bd9d00",
+    "docs/quality-status.md": "191a318458982e1da871613736c9e86573d38805ec2b8c894eae374831eb4160"
+  },
+  "resolution": "R7ChangelogFinding resolvedwithdatedStageAremainingwording;R7authorityretained",
+  "scope": "Sixcurrentdocs boundedBatchB2acceptance; allhistory/Audit234/OBL62 preserved; no C1/currentcoverage/allUnitproviderpackageCI/cloudhardware closure."
+}

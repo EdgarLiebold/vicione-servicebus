@@ -216,9 +216,26 @@ public class AmazonSqsClientContext :
     /// <returns>A task that completes when Amazon SNS accepts the batch entry.</returns>
     public async Task PublishAsync(string topicName, PublishBatchRequestEntry request, CancellationToken cancellationToken)
     {
-        var topicInfo = await ConnectionContext.GetTopicByNameAsync(topicName, cancellationToken).ConfigureAwait(false);
+        for (var attempt = 0; attempt < 2; attempt++)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var topicInfo = await ConnectionContext.GetTopicByNameAsync(topicName, cancellationToken).ConfigureAwait(false);
+            Task? operation = topicInfo.TryPublishAsync(request, cancellationToken);
+            if (operation is null)
+                continue;
 
-        await topicInfo.PublishAsync(request, cancellationToken).ConfigureAwait(false);
+            try
+            {
+                await operation.ConfigureAwait(false);
+                return;
+            }
+            catch (BatchAdmissionClosedException) when (attempt == 0 && !cancellationToken.IsCancellationRequested)
+            {
+                // The closed channel did not accept this entry, so one fresh lookup is safe.
+            }
+        }
+
+        throw new ObjectDisposedException(nameof(TopicInfo), $"Topic '{topicName}' was evicted during batch admission.");
     }
 
     /// <summary>Sends a prepared batch entry to the named Amazon SQS queue.</summary>

@@ -14,7 +14,7 @@ internal sealed partial class ReliableMessagingDeliveryService<TBus>
         DurableSendDelivery delivery,
         Exception dispatchException,
         SafeActivityScope activity,
-        long started,
+        long? started,
         CancellationToken cancellationToken)
     {
         try

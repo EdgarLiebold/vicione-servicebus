@@ -1,0 +1,146 @@
+{
+  "kind": "INDEPENDENT_PRIVATE_CACHE_R7_BULK_TEST_REQUIREMENT_ADVERSARIAL_REVIEW",
+  "utc": "2026-10-07T06:42:10.481717+00:00",
+  "status": "CHANGES_REQUIRED_SINGLE_PRE_RETIREMENT_SNAPSHOT_ORACLE",
+  "reviewer": "/root/todo_reconciliation_review",
+  "inputs": {
+    "draft": {
+      "path": "/private/tmp/ResourceCacheComparerIsolationTests.draft-r7.cs",
+      "sha256": "942822ea902be9dd4e88df7ce1d61966fae26a4252484d55f3214b79c5d63a24",
+      "lines": 537
+    },
+    "canonical_R6": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Caching/ResourceCacheComparerIsolationTests.cs",
+      "sha256": "404cdbc3326688944f871a18782b703b648d2c29ae8da98f9dfd8efab154f83d",
+      "lines": 439
+    },
+    "private_requirements": {
+      "path": "/private/tmp/CoreRequirements.cache-proposed-r2.json",
+      "sha256": "2b6d88aa4853e7d543e5fa2b710c13ad27a83b1fc5bdf09d5baf4137e4ea4f1d",
+      "rows": 4717
+    },
+    "canonical_requirements": {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+      "sha256": "8cfab7601e9be9f02ab59308a37f8e351ab800757658f9ebb0e16ef00ece6f8e",
+      "rows": 4716
+    },
+    "prior_product_context": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-product-r1-adversarial.json",
+      "sha256": "e8d429bb71c04daf54ac32d6391a4aeaa8c41bb77123f284fb8705067a7e58c5",
+      "freeze": {
+        "path": "/private/tmp/vicione-servicebus-cache-fix-draft-r1/PRIVATE_CACHE_PRODUCT_FREEZE_R1.json",
+        "sha256": "0aa4a03e8b6091f65bad87ec48f357e6767beada84bc90f1a229092029020f8d"
+      }
+    },
+    "prior_R6": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-private-direct-r6-pending-r3-strict-delta-adversarial.json",
+      "sha256": "74a9c5547613c81dafbd768ce9429851aeb9abe667454954730985affc8723d9"
+    },
+    "prior_original_native": {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-cache-original-r2-native-artifact-adversarial-r1.json",
+      "sha256": "48a0e67e199a6c8c2234e37601db1a0f1d82c95478fac3f492efc8ab0fbb3303",
+      "counts": {
+        "total": 13,
+        "finite_causal_red": 5,
+        "named_healthy": 8,
+        "skipped": 0
+      }
+    }
+  },
+  "complete_delta": "--- canonical-R6\n+++ private-R7\n@@ -323,6 +323,83 @@\n         }\n     }\n \n+    [Theory, InlineData(false), InlineData(true)]\n+    [RequirementCoverage(\"REQ-VSB-CACHE-MULTI-INDEX\", \"failed-bulk-index-cannot-attach-unpublished-retirement-metadata\")]\n+    public async Task FailedBulkIndexCannotCorruptExistingRetirement(bool hostile)\n+    {\n+        await using var fixture = new Fixture(capacity: 2);\n+        var primary = fixture.Cache.AddIndex(\"primary\", x => x.Id);\n+        var first = fixture.New(\"first\");\n+        var second = fixture.New(\"second\");\n+        await fixture.RunAsync(fixture.Cache.AddAsync(first, TestContext.Current.CancellationToken).AsTask());\n+        await fixture.RunAsync(fixture.Cache.AddAsync(second, TestContext.Current.CancellationToken).AsTask());\n+        var comparer = new BulkComparer(output) { FailSecondHash = hostile };\n+        IResourceCacheIndex<string, Owned>? added = null;\n+        Exception? additionFailure = Record.Exception(() =>\n+            added = fixture.Cache.AddIndex(\"bulk\", x => x.Id, comparer: comparer));\n+        output.WriteLine(\"ACTUAL_BULK_ADDITION_FAILURE: \" + additionFailure);\n+        comparer.FailSecondHash = false;\n+        Assert.Equal(0, first.DisposeCalls);\n+        Assert.Equal(0, second.DisposeCalls);\n+        Assert.Equal(2, fixture.Cache.Statistics.Count);\n+        Assert.Equal(2, fixture.Cache.Statistics.TotalCreated);\n+        Assert.Equal(0, fixture.Cache.Statistics.PendingCreations);\n+        Assert.Equal(2, fixture.Observer.Added);\n+        Assert.Same(first, await fixture.RunAsync(primary.GetAsync(first.Id, TestContext.Current.CancellationToken).AsTask()));\n+        Assert.Same(second, await fixture.RunAsync(primary.GetAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n+        if (hostile)\n+        {\n+            Assert.Null(added);\n+            Assert.Same(comparer.Failure, additionFailure);\n+            Assert.Equal(2, comparer.SecondCalls);\n+            Assert.Throws<KeyNotFoundException>(() => fixture.Cache.GetIndex<string>(\"bulk\"));\n+        }\n+        else\n+        {\n+            Assert.Null(additionFailure);\n+            Assert.Same(added, fixture.Cache.GetIndex<string>(\"bulk\"));\n+            Assert.Same(first, await fixture.RunAsync(added!.GetAsync(first.Id, TestContext.Current.CancellationToken).AsTask()));\n+            Assert.Same(second, await fixture.RunAsync(added!.GetAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n+        }\n+\n+        bool removed = false;\n+        Exception? removalFailure;\n+        comparer.ThrowFirst = hostile;\n+        try\n+        {\n+            removalFailure = await Record.ExceptionAsync(async () =>\n+                removed = await fixture.RunAsync(primary.RemoveAsync(first.Id, TestContext.Current.CancellationToken).AsTask()));\n+            output.WriteLine(\"ACTUAL_BULK_RETIREMENT_FAILURE: \" + removalFailure);\n+        }\n+        finally { comparer.ThrowFirst = false; }\n+        // Physical ownership is checked before reference/error oracles or fixture rescue.\n+        Assert.Equal(1, first.DisposeCalls);\n+        Assert.Equal(0, second.DisposeCalls);\n+        Assert.Equal(1, fixture.Cache.Statistics.Count);\n+        Assert.Equal(1, fixture.Observer.Removed);\n+        Assert.Equal(hostile ? 1 : 0, comparer.Throws);\n+        Assert.Null(removalFailure);\n+        Assert.True(removed);\n+        (_, Exception? missing) = await fixture.ReadAsync(primary, first.Id);\n+        Assert.IsType<KeyNotFoundException>(missing);\n+        Assert.Same(second, await fixture.RunAsync(primary.GetAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n+        Assert.Same(second, Assert.Single(fixture.Cache.GetValues(TestContext.Current.CancellationToken)));\n+        if (hostile)\n+            added = fixture.Cache.AddIndex(\"bulk\", x => x.Id, comparer: comparer);\n+        Assert.Same(second, await fixture.RunAsync(added!.GetAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n+        Assert.True(await fixture.RunAsync(primary.RemoveAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n+        Assert.Equal(1, second.DisposeCalls);\n+        Assert.Equal(0, fixture.Cache.Statistics.Count);\n+        Assert.Equal(2, fixture.Observer.Removed);\n+        var replacement = fixture.New(\"replacement\");\n+        await fixture.RunAsync(fixture.Cache.AddAsync(replacement, TestContext.Current.CancellationToken).AsTask());\n+        Assert.Same(replacement, await fixture.RunAsync(added!.GetAsync(replacement.Id, TestContext.Current.CancellationToken).AsTask()));\n+        await fixture.StopAsync();\n+        Assert.Equal(1, first.DisposeCalls);\n+        Assert.Equal(1, second.DisposeCalls);\n+        Assert.Equal(1, replacement.DisposeCalls);\n+    }\n+\n     sealed class Comparer : IEqualityComparer<string>\n     {\n         public string? ArmedKey { get; set; }\n@@ -340,6 +417,27 @@\n             if (ThrowEquality) { Throws++; throw Failure; }\n             return StringComparer.Ordinal.Equals(left, right);\n         }\n+    }\n+\n+    sealed class BulkComparer(ITestOutputHelper output) : IEqualityComparer<string>\n+    {\n+        public bool FailSecondHash { get; set; }\n+        public bool ThrowFirst { get; set; }\n+        public int SecondCalls { get; private set; }\n+        public int Throws { get; private set; }\n+        public Exception Failure { get; } = new InvalidOperationException(\"chosen bulk index comparer failure\");\n+        public int GetHashCode(string key)\n+        {\n+            if (key == \"second\") SecondCalls++;\n+            if ((FailSecondHash && key == \"second\" && SecondCalls == 2) || (ThrowFirst && key == \"first\"))\n+            {\n+                Throws++;\n+                output.WriteLine(\"ACTUAL_BULK_COMPARER_ATTEMPT: \" + key + \"\\n\" + new System.Diagnostics.StackTrace());\n+                throw Failure;\n+            }\n+            return StringComparer.Ordinal.GetHashCode(key);\n+        }\n+        public bool Equals(string? left, string? right) => StringComparer.Ordinal.Equals(left, right);\n     }\n \n     sealed class Owned(string id) : IAsyncDisposable\n",
+  "whole_new_bulk_body": "    [Theory, InlineData(false), InlineData(true)]\n    [RequirementCoverage(\"REQ-VSB-CACHE-MULTI-INDEX\", \"failed-bulk-index-cannot-attach-unpublished-retirement-metadata\")]\n    public async Task FailedBulkIndexCannotCorruptExistingRetirement(bool hostile)\n    {\n        await using var fixture = new Fixture(capacity: 2);\n        var primary = fixture.Cache.AddIndex(\"primary\", x => x.Id);\n        var first = fixture.New(\"first\");\n        var second = fixture.New(\"second\");\n        await fixture.RunAsync(fixture.Cache.AddAsync(first, TestContext.Current.CancellationToken).AsTask());\n        await fixture.RunAsync(fixture.Cache.AddAsync(second, TestContext.Current.CancellationToken).AsTask());\n        var comparer = new BulkComparer(output) { FailSecondHash = hostile };\n        IResourceCacheIndex<string, Owned>? added = null;\n        Exception? additionFailure = Record.Exception(() =>\n            added = fixture.Cache.AddIndex(\"bulk\", x => x.Id, comparer: comparer));\n        output.WriteLine(\"ACTUAL_BULK_ADDITION_FAILURE: \" + additionFailure);\n        comparer.FailSecondHash = false;\n        Assert.Equal(0, first.DisposeCalls);\n        Assert.Equal(0, second.DisposeCalls);\n        Assert.Equal(2, fixture.Cache.Statistics.Count);\n        Assert.Equal(2, fixture.Cache.Statistics.TotalCreated);\n        Assert.Equal(0, fixture.Cache.Statistics.PendingCreations);\n        Assert.Equal(2, fixture.Observer.Added);\n        Assert.Same(first, await fixture.RunAsync(primary.GetAsync(first.Id, TestContext.Current.CancellationToken).AsTask()));\n        Assert.Same(second, await fixture.RunAsync(primary.GetAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n        if (hostile)\n        {\n            Assert.Null(added);\n            Assert.Same(comparer.Failure, additionFailure);\n            Assert.Equal(2, comparer.SecondCalls);\n            Assert.Throws<KeyNotFoundException>(() => fixture.Cache.GetIndex<string>(\"bulk\"));\n        }\n        else\n        {\n            Assert.Null(additionFailure);\n            Assert.Same(added, fixture.Cache.GetIndex<string>(\"bulk\"));\n            Assert.Same(first, await fixture.RunAsync(added!.GetAsync(first.Id, TestContext.Current.CancellationToken).AsTask()));\n            Assert.Same(second, await fixture.RunAsync(added!.GetAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n        }\n\n        bool removed = false;\n        Exception? removalFailure;\n        comparer.ThrowFirst = hostile;\n        try\n        {\n            removalFailure = await Record.ExceptionAsync(async () =>\n                removed = await fixture.RunAsync(primary.RemoveAsync(first.Id, TestContext.Current.CancellationToken).AsTask()));\n            output.WriteLine(\"ACTUAL_BULK_RETIREMENT_FAILURE: \" + removalFailure);\n        }\n        finally { comparer.ThrowFirst = false; }\n        // Physical ownership is checked before reference/error oracles or fixture rescue.\n        Assert.Equal(1, first.DisposeCalls);\n        Assert.Equal(0, second.DisposeCalls);\n        Assert.Equal(1, fixture.Cache.Statistics.Count);\n        Assert.Equal(1, fixture.Observer.Removed);\n        Assert.Equal(hostile ? 1 : 0, comparer.Throws);\n        Assert.Null(removalFailure);\n        Assert.True(removed);\n        (_, Exception? missing) = await fixture.ReadAsync(primary, first.Id);\n        Assert.IsType<KeyNotFoundException>(missing);\n        Assert.Same(second, await fixture.RunAsync(primary.GetAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n        Assert.Same(second, Assert.Single(fixture.Cache.GetValues(TestContext.Current.CancellationToken)));\n        if (hostile)\n            added = fixture.Cache.AddIndex(\"bulk\", x => x.Id, comparer: comparer);\n        Assert.Same(second, await fixture.RunAsync(added!.GetAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n        Assert.True(await fixture.RunAsync(primary.RemoveAsync(second.Id, TestContext.Current.CancellationToken).AsTask()));\n        Assert.Equal(1, second.DisposeCalls);\n        Assert.Equal(0, fixture.Cache.Statistics.Count);\n        Assert.Equal(2, fixture.Observer.Removed);\n        var replacement = fixture.New(\"replacement\");\n        await fixture.RunAsync(fixture.Cache.AddAsync(replacement, TestContext.Current.CancellationToken).AsTask());\n        Assert.Same(replacement, await fixture.RunAsync(added!.GetAsync(replacement.Id, TestContext.Current.CancellationToken).AsTask()));\n        await fixture.StopAsync();\n        Assert.Equal(1, first.DisposeCalls);\n        Assert.Equal(1, second.DisposeCalls);\n        Assert.Equal(1, replacement.DisposeCalls);\n    }\n\n",
+  "whole_new_bulk_comparer": "    sealed class BulkComparer(ITestOutputHelper output) : IEqualityComparer<string>\n    {\n        public bool FailSecondHash { get; set; }\n        public bool ThrowFirst { get; set; }\n        public int SecondCalls { get; private set; }\n        public int Throws { get; private set; }\n        public Exception Failure { get; } = new InvalidOperationException(\"chosen bulk index comparer failure\");\n        public int GetHashCode(string key)\n        {\n            if (key == \"second\") SecondCalls++;\n            if ((FailSecondHash && key == \"second\" && SecondCalls == 2) || (ThrowFirst && key == \"first\"))\n            {\n                Throws++;\n                output.WriteLine(\"ACTUAL_BULK_COMPARER_ATTEMPT: \" + key + \"\\n\" + new System.Diagnostics.StackTrace());\n                throw Failure;\n            }\n            return StringComparer.Ordinal.GetHashCode(key);\n        }\n        public bool Equals(string? left, string? right) => StringComparer.Ordinal.Equals(left, right);\n    }\n\n",
+  "preservation": {
+    "subtract_only_new77line_method_and21line_helper_recovers_exact439line_R6": true,
+    "prior_direct11_bodies_and_existing_helpers_exact": true,
+    "prior_package13_includes_separate_pending2": true,
+    "new_bulk_native_cases": 2,
+    "planned_direct_cases": 13,
+    "planned_package_cases_including_pending2": 15,
+    "exact4716_ordered_requirements_and_raw_record_bytes_preserved": true,
+    "preserved_raw_prefix_bytes": 1677494,
+    "final3_array_closing_bytes_relocated_only": true,
+    "new_single_existing_requirement_purpose": {
+      "requirementId": "REQ-VSB-CACHE-MULTI-INDEX",
+      "testAssembly": "ViciOne.ServiceBus.Tests",
+      "testMethod": "FailedBulkIndexCannotCorruptExistingRetirement",
+      "testType": "ViciOne.ServiceBus.Tests.Caching.ResourceCacheComparerIsolationTests",
+      "variantKey": "failed-bulk-index-cannot-attach-unpublished-retirement-metadata"
+    }
+  },
+  "source_context_hashes": {
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.cs": {
+      "sha256": "98da72d0f863585936f1c9ad702bb3d27b62a7e1d606d0a21f8c8f290c56b4a2",
+      "reading_basis": "Selected exact AddIndex/GetIndex/RemoveAsync/RemoveEntry/cleanup/index context; not whole overlay acceptance."
+    },
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs": {
+      "sha256": "d33d153e2de28609ec362672c5637c97c9bfa95cc2895af236857b0181f7abd0",
+      "reading_basis": "Selected exact AddIndex/GetIndex/RemoveAsync/RemoveEntry/cleanup/index context; not whole overlay acceptance."
+    },
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs": {
+      "sha256": "a593b0fa0dc498210a20d4669ab68a743a2f13542fe9dbe53aa814ed463f6366",
+      "reading_basis": "Selected exact AddIndex/GetIndex/RemoveAsync/RemoveEntry/cleanup/index context; not whole overlay acceptance."
+    },
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs": {
+      "sha256": "0aeb97aeae8196ed5918ccafb7401cdb2bc6f176c74f9e4b8de89833d8a3d00d",
+      "reading_basis": "Selected exact AddIndex/GetIndex/RemoveAsync/RemoveEntry/cleanup/index context; not whole overlay acceptance."
+    },
+    "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs": {
+      "sha256": "d6ce8980172e278b8ce7eae72fed4f6c89f74e23778a24f93e8524ab0b99c5d9",
+      "reading_basis": "Selected exact AddIndex/GetIndex/RemoveAsync/RemoveEntry/cleanup/index context; not whole overlay acceptance."
+    },
+    "/private/tmp/vicione-servicebus-cache-fix-draft-r1/src/ViciOne.ServiceBus/Caching/ResourceCache.cs": {
+      "sha256": "9a23ca99892af8349c960056c26b8969c2b677f7c8634a1518f8b3e1dbc43925",
+      "reading_basis": "Selected exact AddIndex/GetIndex/RemoveAsync/RemoveEntry/cleanup/index context; not whole overlay acceptance."
+    },
+    "/private/tmp/vicione-servicebus-cache-fix-draft-r1/src/ViciOne.ServiceBus/Caching/ResourceCache.Resources.cs": {
+      "sha256": "a77ab4864f0e44b8692c308371817a831f0a231a40aec57ebcbba7793d7b65d1",
+      "reading_basis": "Selected exact AddIndex/GetIndex/RemoveAsync/RemoveEntry/cleanup/index context; not whole overlay acceptance."
+    },
+    "/private/tmp/vicione-servicebus-cache-fix-draft-r1/src/ViciOne.ServiceBus/Caching/ResourceCache.Creation.cs": {
+      "sha256": "45bb92aea5df9ed96396604d8ef2b63afc888537ca4f49815f05ea734af41a6a",
+      "reading_basis": "Selected exact AddIndex/GetIndex/RemoveAsync/RemoveEntry/cleanup/index context; not whole overlay acceptance."
+    },
+    "/private/tmp/vicione-servicebus-cache-fix-draft-r1/src/ViciOne.ServiceBus/Caching/ResourceCache.Lifecycle.cs": {
+      "sha256": "fcb891b5e80f4249002a3871fbdb318842b70972e7b7537d9d36f73d8d97b441",
+      "reading_basis": "Selected exact AddIndex/GetIndex/RemoveAsync/RemoveEntry/cleanup/index context; not whole overlay acceptance."
+    },
+    "/private/tmp/vicione-servicebus-cache-fix-draft-r1/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndex.cs": {
+      "sha256": "84f6d67e2e3724120b394367b413325f353f7a9423a713431e8a6f4449b78f18",
+      "reading_basis": "Selected exact AddIndex/GetIndex/RemoveAsync/RemoveEntry/cleanup/index context; not whole overlay acceptance."
+    },
+    "/private/tmp/vicione-servicebus-cache-fix-draft-r1/src/ViciOne.ServiceBus/Caching/Implementation/ResourceCacheIndexBase.cs": {
+      "sha256": "a129973c648355c3a05efe9f8531632db97d1c78a0ef9474e127705ae6f171de",
+      "reading_basis": "Whole bounded helper read."
+    },
+    "/private/tmp/vicione-servicebus-cache-fix-draft-r1/src/ViciOne.ServiceBus/Caching/Implementation/PreparedResourceMap.cs": {
+      "sha256": "b3ee80b4cbe599994267d720519ed404f207e5a42f1271d4d54a4062375ed4fd",
+      "reading_basis": "Whole bounded helper read."
+    }
+  },
+  "findings": [
+    {
+      "id": "CACHE-R7-BULK-SNAPSHOT-01",
+      "severity": "medium",
+      "path": "/private/tmp/ResourceCacheComparerIsolationTests.draft-r7.cs",
+      "line": 349,
+      "finding": "Immediately after failed bulk AddIndex, intact public GetValues snapshot is not directly asserted. Disposal0/stats/two primary references are checked, but only GetValues check occurs after first removal at386.",
+      "required_minimal_correction": "Before hostile/healthy branch and first removal, capture GetValues and assert count2 plus both exact references order-independently. No new case or policy."
+    }
+  ],
+  "oracle_assessment": {
+    "cause": "Stable ordinal BulkComparer fails second hash of secondkey: HashSet validation then original CommitKey versus corrected PrepareEntry. Actual exception stack is logged. Original live firstentry metadata can retain unpublished index; corrected private preparation attaches no live metadata until complete validation.",
+    "physical": "First DisposeCalls1 line376 precedes retirement outcome/error assertions and fixture rescue; original DisposeCalls0 is a source-derived finite prediction, not yet native proof.",
+    "healthy": "Same public paired setup with hostilefalse admits/reads bulk index, retires both, verifies survivor/replacement/capacity and exact terminal disposal.",
+    "recovery": "Failed name absent, primary remains available; original failed comparer armed on firstkey only during primary retirement and disabled in finally. Same-name retry, surviving snapshot and freshresource test continued usability.",
+    "task_ownership": "New bulk path creates no factory/worker gates; every actual async cache task enters unchanged Fixture.RunAsync→Own. WaitAsync Bound/currenttoken limits observation; original task remains retained. Cleanup uses None and exact recorded terminal exception identity, recursively joins actual operations, then cache Stop before any rescue.",
+    "finite_limits": "No timeout/compiler/fatal failure earns native product credit. Source snapshot order and exact counter/stack phase must be confirmed in fresh original public native run; no general comparer call-frequency/public-order promise.",
+    "compiler_static": "No concrete new API/type/nullable/definite-assignment concern found; added! null suppression follows runtime assertions and paired branch. Strict compilation/native success pending."
+  },
+  "read_statement": "All537lines and complete R6→R7 delta personally consumed, requirement append and raw-prefix verified. Selected original/private source context read; oversized rg projection truncated carries no additional whole-source credit. Prior product context and native13 chain remain exact immutable separate evidence, never newbulk proof.",
+  "limits": [
+    "Static private draft only; no newbulk original/fixed/mutant/native or wholecache acceptance.",
+    "No product/test/requirement edits or .NET/Docker/process/provider starts; own immutable report only.",
+    "No observer-order/error-sink/externalcallerRAM/globalA+/coverage/policy closure; Root sole writer/executor, no Root read transfer."
+  ]
+}

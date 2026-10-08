@@ -12,6 +12,8 @@ public class TopicInfo :
     ViciOne.ServiceBus.Caching.IResourceUsageSource
 {
     readonly Lazy<IBatcher<PublishBatchRequestEntry>> _batchPublisher;
+    readonly object _lifecycleLock = new();
+    Task? _disposeTask;
     bool _disposed;
 
     /// <summary>Initializes resolved topic metadata and a lazy publish batcher.</summary>
@@ -21,12 +23,19 @@ public class TopicInfo :
     /// <param name="cancellationToken">The token used to cancel provider requests issued by the lazy batcher.</param>
     /// <param name="existing">Whether the topic existed before it was resolved.</param>
     public TopicInfo(string entityName, string arn, IAmazonSimpleNotificationService client, CancellationToken cancellationToken, bool existing)
+        : this(entityName, arn, client, cancellationToken, existing, TimeProvider.System)
     {
+    }
+
+    internal TopicInfo(string entityName, string arn, IAmazonSimpleNotificationService client, CancellationToken cancellationToken,
+        bool existing, TimeProvider timeProvider)
+    {
+        ArgumentNullException.ThrowIfNull(timeProvider);
         EntityName = entityName;
         Arn = arn;
         Existing = existing;
 
-        _batchPublisher = new Lazy<IBatcher<PublishBatchRequestEntry>>(() => new PublishBatcher(client, arn, cancellationToken));
+        _batchPublisher = new Lazy<IBatcher<PublishBatchRequestEntry>>(() => new PublishBatcher(client, arn, cancellationToken, timeProvider));
     }
 
     /// <summary>Gets the logical topic name.</summary>
@@ -41,11 +50,14 @@ public class TopicInfo :
 
     /// <summary>Disposes the publish batcher when it has been initialized.</summary>
     /// <returns>A task that completes when the initialized batcher has drained and stopped.</returns>
-    public async ValueTask DisposeAsync()
+    public ValueTask DisposeAsync()
     {
-        if (_disposed)
-            return;
+        lock (_lifecycleLock)
+            return new ValueTask(_disposeTask ??= DisposeCoreAsync());
+    }
 
+    async Task DisposeCoreAsync()
+    {
         _disposed = true;
 
         if (_batchPublisher.IsValueCreated)
@@ -57,8 +69,12 @@ public class TopicInfo :
     /// <param name="cancellationToken">The token used to cancel admission to the batch queue.</param>
     /// <returns>A task that completes when Amazon SNS reports the entry result.</returns>
     public Task PublishAsync(PublishBatchRequestEntry entry, CancellationToken cancellationToken)
+        => TryPublishAsync(entry, cancellationToken) ?? throw new ObjectDisposedException(nameof(TopicInfo));
+
+    internal Task? TryPublishAsync(PublishBatchRequestEntry entry, CancellationToken cancellationToken)
     {
         Used?.Invoke();
-        return _batchPublisher.Value.ExecuteAsync(entry, cancellationToken);
+        lock (_lifecycleLock)
+            return _disposed ? null : _batchPublisher.Value.ExecuteAsync(entry, cancellationToken);
     }
 }

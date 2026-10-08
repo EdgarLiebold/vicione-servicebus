@@ -251,26 +251,35 @@ internal static class LogContextMetricsExtensions
                 : "unknown";
             TagList tags = ProcessTags(system, operationName, processorKind);
 
-            Observe(() => state.ActiveOperations.Add(1, tags));
-
-            if (context is ConsumeContext consumeContext)
-            {
-                if (consumeContext.GetRetryAttempt() > 0)
-                    Observe(() => state.RetryAttempts.Add(1, tags));
-
-                if (consumeContext.SentTime.HasValue)
-                {
-                    double deliverySeconds = Math.Max(0, (timeProvider.GetUtcNow() - AsUtc(consumeContext.SentTime.Value)).TotalSeconds);
-                    Observe(() => state.DeliveryDuration.Record(deliverySeconds, tags));
-                }
-            }
-
-            return new MetricOperation(exception =>
+            var operation = new MetricOperation(exception =>
             {
                 Observe(() => state.ActiveOperations.Add(-1, tags));
                 TagList completed = WithError(tags, exception);
                 Observe(() => state.ProcessDuration.Record(ElapsedSeconds(timeProvider, started), completed));
             });
+
+            Observe(() => state.ActiveOperations.Add(1, tags));
+
+            if (context is ConsumeContext consumeContext)
+            {
+                Observe(() =>
+                {
+                    if (consumeContext.GetRetryAttempt() > 0)
+                        state.RetryAttempts.Add(1, tags);
+                });
+
+                Observe(() =>
+                {
+                    DateTimeOffset? sentTime = consumeContext.SentTime;
+                    if (sentTime.HasValue)
+                    {
+                        double deliverySeconds = Math.Max(0, (timeProvider.GetUtcNow() - AsUtc(sentTime.Value)).TotalSeconds);
+                        state.DeliveryDuration.Record(deliverySeconds, tags);
+                    }
+                });
+            }
+
+            return operation;
         });
 
     private static MetricOperation? StartOutbox(ILogContext logContext, string operation)

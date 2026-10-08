@@ -1,0 +1,270 @@
+{
+  "kind": "ROOT_ACTUAL_FOUR_AZURE_CLOCK_AND_COMPLETED_REGISTRATION_FIRST_FINITE_PHYSICAL_LEDGER_R1",
+  "parent_sha256": "22645aa8efd174131edcf4481fdd4b6cc79eb814432bd48057832d17b31a8161",
+  "actual_repeated_slots24": true,
+  "first_finite_failed4": true,
+  "healthy_repeated_slots20": true,
+  "distinct_test_identities": 6,
+  "own_fresh_images": 52,
+  "own_fresh_pdb_documents": 13028,
+  "variants": [
+    {
+      "key": "M1-processor-clock",
+      "native_sha256": "7710bc3f373ad0a10569a3120799fff87a472844024807335eea4211bdd6b8a2",
+      "mutation": {
+        "key": "M1-processor-clock",
+        "owner": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Receiver.cs",
+        "before_sha256": "b7c1ecd2b13dc4c07c76c8d7a817d681ef85d271d86bc0de0379cf5760e06899",
+        "after_sha256": "aea0bac4f8c8ce1ae9f23fdd14efc44e4aa00a80d0328f24ef48f630f9ba1de0",
+        "old": "new CancellationTokenSource(_context.ConsumerStopTimeout.Value, _context.GetTimeProvider())",
+        "new": "new CancellationTokenSource(_context.ConsumerStopTimeout.Value)",
+        "fixture_unchanged": true,
+        "limits": "Single source edit, no outcome prediction accepted."
+      },
+      "physical_sha256": "50b31900b9d0e3bedd6cfad9254a8f35c9cbb6246f28aba5036cf4a65af1de64",
+      "images": 13,
+      "documents": 3257,
+      "failed_FQN": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.ProcessorCancellation_UsesSelectedClockForGraceAndDisposesTimerAsync",
+      "healthy_FQNs": [
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.SessionCancellation_UsesSelectedClockForGraceAndDisposesTimerAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.SessionCompletion_RemovesBrokerCancellationRegistrationByCallbackCompletionAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.SessionCancellation_WithoutGraceCancelsImmediatelyAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.ProcessorCancellation_WithoutGraceCancelsImmediatelyAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.ProcessorCompletion_RemovesBrokerCancellationRegistrationByCallbackCompletionAsync"
+      ],
+      "first_finite": "Assert.Single63 empty selected timer",
+      "duplicate_finally_frame": 98,
+      "unreached_assertion_credit": 0,
+      "unreached_scope": "64+ timer boundary/disposal and final healthy cleanup scalar100",
+      "finally_reached": "actual owned DrainAsync releases/joins callback, dispatcher, receiver and SDK; fixture-owned timer fallback not product disposal proof",
+      "raw6CRC2": [
+        {
+          "name": "strict-rebuild.stdout.log",
+          "sha256": "edf84f15af343abc9de7a5eed72ffa6c201b02bfe2cf1ee3181d69f6bb60bf23",
+          "crc_bytes": null
+        },
+        {
+          "name": "strict-rebuild.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "crc_bytes": null
+        },
+        {
+          "name": "p06-azure-receiver-clock-counter-M1-processor-clock-strict-rebuild-r1-20261008-011100--57253--c5OJCV.binlog",
+          "sha256": "de5b9d4790336b8e1fff61385ea071e3f11c4bfc855398e572b69fd7f4354677",
+          "crc_bytes": 3958106
+        },
+        {
+          "name": "focused-six.stdout.log",
+          "sha256": "e4065509834f74cb2c1db6f9083efe64f250633e95a48e2a8eee4a017df9db6b",
+          "crc_bytes": null
+        },
+        {
+          "name": "focused-six.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "crc_bytes": null
+        },
+        {
+          "name": "p06-azure-receiver-clock-counter-M1-processor-clock-focused-six-r1-20261008-011151--57319--XH15xw-dotnet-test.binlog",
+          "sha256": "a7e57a396d048838b0e4cbcade6be0736adc24c55bdd90cbb6a9e88abb1230b3",
+          "crc_bytes": 3036383
+        }
+      ]
+    },
+    {
+      "key": "M2-session-clock",
+      "native_sha256": "a1f1ebfc18fb39e71875841c17bfce2df9db374e1b7ad7114a8b11d9ba293267",
+      "mutation": {
+        "key": "M2-session-clock",
+        "owner": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/SessionReceiver.cs",
+        "before_sha256": "ac4ae989bdfa220388ee56e1d0c62742f64a0fe6278a828390d34b5483c4f763",
+        "after_sha256": "25bd174ae624661d55781f34ba9809eb6ff6e782021a52a6e1da1ea1a702556d",
+        "old": "new CancellationTokenSource(_context.ConsumerStopTimeout.Value, _context.GetTimeProvider())",
+        "new": "new CancellationTokenSource(_context.ConsumerStopTimeout.Value)",
+        "fixture_unchanged": true,
+        "limits": "Single source edit, no outcome prediction accepted."
+      },
+      "physical_sha256": "fb5d9e2b5eb9f120ef4f34081a56deead437b1f3874c102c23b7310b2c6f3a50",
+      "images": 13,
+      "documents": 3257,
+      "failed_FQN": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.SessionCancellation_UsesSelectedClockForGraceAndDisposesTimerAsync",
+      "healthy_FQNs": [
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.SessionCompletion_RemovesBrokerCancellationRegistrationByCallbackCompletionAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.ProcessorCancellation_UsesSelectedClockForGraceAndDisposesTimerAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.SessionCancellation_WithoutGraceCancelsImmediatelyAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.ProcessorCancellation_WithoutGraceCancelsImmediatelyAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.ProcessorCompletion_RemovesBrokerCancellationRegistrationByCallbackCompletionAsync"
+      ],
+      "first_finite": "Assert.Single63 empty selected timer",
+      "duplicate_finally_frame": 98,
+      "unreached_assertion_credit": 0,
+      "unreached_scope": "64+ timer boundary/disposal and final healthy cleanup scalar100",
+      "finally_reached": "actual owned DrainAsync releases/joins callback, dispatcher, receiver and SDK; fixture-owned timer fallback not product disposal proof",
+      "raw6CRC2": [
+        {
+          "name": "strict-rebuild.stdout.log",
+          "sha256": "c018d595649d69fdc2a27ac752d59b65e8379a9937a40508880327dc073424b0",
+          "crc_bytes": null
+        },
+        {
+          "name": "strict-rebuild.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "crc_bytes": null
+        },
+        {
+          "name": "p06-azure-receiver-clock-counter-M2-session-clock-strict-rebuild-r1-20261008-011219--57378--LEjDGS.binlog",
+          "sha256": "f555be1012ef5fe1e954056a9cfe9e4ec87e462b32f3b70b76f20a647027dfe4",
+          "crc_bytes": 3958098
+        },
+        {
+          "name": "focused-six.stdout.log",
+          "sha256": "034382441917e904ae7b7af5e1f2f02afbae72ac9a27bbdb6917941aa8fe10e0",
+          "crc_bytes": null
+        },
+        {
+          "name": "focused-six.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "crc_bytes": null
+        },
+        {
+          "name": "p06-azure-receiver-clock-counter-M2-session-clock-focused-six-r1-20261008-011311--57466--EUZ6b8-dotnet-test.binlog",
+          "sha256": "f300139622a72cd441b8b9e9d0ffe8dea20f33c69cc54925c2b599f8bb7bca98",
+          "crc_bytes": 3036379
+        }
+      ]
+    },
+    {
+      "key": "M3-processor-registration",
+      "native_sha256": "14fb465c53821b99e7a7dc25e3f08e68549d0adf808a036b54cd59873bbbbbfa",
+      "mutation": {
+        "key": "M3-processor-registration",
+        "owner": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Receiver.cs",
+        "before_sha256": "b7c1ecd2b13dc4c07c76c8d7a817d681ef85d271d86bc0de0379cf5760e06899",
+        "after_sha256": "37ce51e76e3f0fb9b5d6a56490365b43c456529af83746bb99d41dbbe73fdfe2",
+        "old": "            registration.Dispose();\n",
+        "new": "",
+        "fixture_unchanged": true,
+        "limits": "Single source edit, no outcome prediction accepted."
+      },
+      "physical_sha256": "51a32edd563684054d724cc5678138935b0c381c34f2844e8b06e9d748fb94bd",
+      "images": 13,
+      "documents": 3257,
+      "failed_FQN": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.ProcessorCompletion_RemovesBrokerCancellationRegistrationByCallbackCompletionAsync",
+      "healthy_FQNs": [
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.SessionCancellation_UsesSelectedClockForGraceAndDisposesTimerAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.SessionCompletion_RemovesBrokerCancellationRegistrationByCallbackCompletionAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.ProcessorCancellation_UsesSelectedClockForGraceAndDisposesTimerAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.SessionCancellation_WithoutGraceCancelsImmediatelyAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.ProcessorCancellation_WithoutGraceCancelsImmediatelyAsync"
+      ],
+      "first_finite": "Assert.Empty137 new selected timer after completed callback/late broker.Cancel",
+      "duplicate_finally_frame": 143,
+      "unreached_assertion_credit": 0,
+      "unreached_scope": "fake Advance138/token139 and final healthy cleanup scalar145",
+      "finally_reached": "actual owned DrainAsync releases/joins callback, dispatcher, receiver and SDK; fixture-owned timer fallback not product disposal proof",
+      "raw6CRC2": [
+        {
+          "name": "strict-rebuild.stdout.log",
+          "sha256": "9563e32dc7937c167a3db7734c8e984458bf29e9f2bc281e88608b67f9d821ae",
+          "crc_bytes": null
+        },
+        {
+          "name": "strict-rebuild.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "crc_bytes": null
+        },
+        {
+          "name": "p06-azure-receiver-clock-counter-M3-processor-registration-strict-rebuild-r1-20261008-011338--57509--txMpg3.binlog",
+          "sha256": "39aa9a150ffbceccc3d46606c598d9ee9aad65132575a5e0933dc04b67412ff6",
+          "crc_bytes": 3958236
+        },
+        {
+          "name": "focused-six.stdout.log",
+          "sha256": "535792aa8bad001558134f899949c47125ae6e4cf9a48742f9ca089b0a083ff6",
+          "crc_bytes": null
+        },
+        {
+          "name": "focused-six.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "crc_bytes": null
+        },
+        {
+          "name": "p06-azure-receiver-clock-counter-M3-processor-registration-focused-six-r1-20261008-011430--57576--V6aqKu-dotnet-test.binlog",
+          "sha256": "b21fcdfc70d7ab54f943697896a023ae4e3b128800f5a37a92a0ef05aa693aec",
+          "crc_bytes": 3036397
+        }
+      ]
+    },
+    {
+      "key": "M4-session-registration",
+      "native_sha256": "6e966d4e9f792db0d25676c5361c1c1a88280173f3db5e551bc8860f28d23729",
+      "mutation": {
+        "key": "M4-session-registration",
+        "owner": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/SessionReceiver.cs",
+        "before_sha256": "ac4ae989bdfa220388ee56e1d0c62742f64a0fe6278a828390d34b5483c4f763",
+        "after_sha256": "e8f794d74a93341b287c1627e819aa1a56d05999b448e053f57e44bffaeb2fc0",
+        "old": "            registration.Dispose();\n",
+        "new": "",
+        "fixture_unchanged": true,
+        "limits": "Single source edit, no outcome prediction accepted."
+      },
+      "physical_sha256": "29cdb2ba19fe3aab5a2a890e6055217b4e152127a5a91f19be57ef86504d6b38",
+      "images": 13,
+      "documents": 3257,
+      "failed_FQN": "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.SessionCompletion_RemovesBrokerCancellationRegistrationByCallbackCompletionAsync",
+      "healthy_FQNs": [
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.SessionCancellation_UsesSelectedClockForGraceAndDisposesTimerAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.ProcessorCancellation_UsesSelectedClockForGraceAndDisposesTimerAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.SessionCancellation_WithoutGraceCancelsImmediatelyAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.ProcessorCancellation_WithoutGraceCancelsImmediatelyAsync",
+        "ViciOne.ServiceBus.AzureServiceBus.Tests.ServiceBusReceiverCancellationClockTests.ProcessorCompletion_RemovesBrokerCancellationRegistrationByCallbackCompletionAsync"
+      ],
+      "first_finite": "Assert.Empty137 new selected timer after completed callback/late broker.Cancel",
+      "duplicate_finally_frame": 143,
+      "unreached_assertion_credit": 0,
+      "unreached_scope": "fake Advance138/token139 and final healthy cleanup scalar145",
+      "finally_reached": "actual owned DrainAsync releases/joins callback, dispatcher, receiver and SDK; fixture-owned timer fallback not product disposal proof",
+      "raw6CRC2": [
+        {
+          "name": "strict-rebuild.stdout.log",
+          "sha256": "1b808b303e4df07f5b36c4a8a9dd8a2b0873f3b33c2432ba22b60bf1e96351ef",
+          "crc_bytes": null
+        },
+        {
+          "name": "strict-rebuild.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "crc_bytes": null
+        },
+        {
+          "name": "p06-azure-receiver-clock-counter-M4-session-registration-strict-rebuild-r1-20261008-011456--57628--kev0ga.binlog",
+          "sha256": "13bce1cfe6e681b6e3f0a95b74911cc77910eab2b000c90bbf08d31ea10c8d78",
+          "crc_bytes": 3958430
+        },
+        {
+          "name": "focused-six.stdout.log",
+          "sha256": "3d9992b30d8e2879ebc6f06a971ffedc6f953c3a5e9a7c03d0ead36ef175793d",
+          "crc_bytes": null
+        },
+        {
+          "name": "focused-six.stderr.log",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "crc_bytes": null
+        },
+        {
+          "name": "p06-azure-receiver-clock-counter-M4-session-registration-focused-six-r1-20261008-011547--57706--xnhEj+-dotnet-test.binlog",
+          "sha256": "30d152fd3d2dde8964dea83409e9a841885577a9aef52523fe0f6bb7b643b2da",
+          "crc_bytes": 3036393
+        }
+      ]
+    }
+  ],
+  "root_read_scope": "Personally whole4x6 native outcome bodies/summary and all4 strictstdout; empty8stderr read/rechecked; ownfresh52PE/13028 checks with exact12immutableowner targets pervariant. No allPDB sourcehumanreading or transferred233metadata credit.",
+  "restored_fixed_source6107_and_canonical6106_config14_assets13": true,
+  "current_runtime": "Last M4 mutant live bytes exactlastarchive; source restored does not restore compiled runtime.",
+  "current_differs_from_fixed": [
+    "ViciOne.ServiceBus.AzureServiceBus.dll",
+    "ViciOne.ServiceBus.AzureServiceBus.Testing.dll",
+    "ViciOne.ServiceBus.AzureServiceBus.Tests.dll",
+    "ViciOne.ServiceBus.AzureServiceBus.Tests.pdb"
+  ],
+  "limits": "Four effective single-cause finite controls; clock/registration-by-completion only, no concurrent cleanup/publication race kill. Independent fresh metadata/native/physical final qualification precedes post/canonical. No globalclosure."
+}

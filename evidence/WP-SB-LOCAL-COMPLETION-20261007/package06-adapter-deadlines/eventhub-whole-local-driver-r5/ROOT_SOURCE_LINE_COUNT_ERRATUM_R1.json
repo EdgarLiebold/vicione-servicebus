@@ -1,0 +1,10 @@
+{
+  "kind": "ROOT_SOURCE_LINE_COUNT_ERRATUM_R1",
+  "old_immutable_root_read": "3ecd6857ea09a8743e12d0da04212f8fa24f3c9ff5ea22f718e6e0da903098b9",
+  "actual_diff_line_counts": {
+    "r4": 106,
+    "r5": 22
+  },
+  "correction": "EarlierRootprose18 was estimated; actualR4toR5diff22. Fullactualdiffbody visible/read, byteidentity unaffected; no separate whole293 freshbody claim.",
+  "whole_r5_peer": "d125b0fe12d13f7fba60f6e6862ee6e1b5b4684fcbaee45ca15dc34bfe2ab0f1"
+}

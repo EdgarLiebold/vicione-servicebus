@@ -1,0 +1,248 @@
+{
+  "kind": "ROOT_BOUNDED_AZURE_RECEIVER_SELECTED_CLOCK_AND_REGISTRATION_LIFETIME_ACCEPTANCE_R1",
+  "status": "ACCEPTED_BOUNDED_CANONICAL_SIX_APPLICATION_AFTER_INDEPENDENT_REVIEW",
+  "finding": {
+    "id": "AZURE-RECEIVER-CANCELLATION-CLOCK-01",
+    "severity": "Medium",
+    "status": "CLOSED_BOUNDED_TWO_RECEIVER_PATHS",
+    "original": "Both processor and session grace ignore selected context TimeProvider; actual first Single63 no selected timer",
+    "fix": "Both timeout CTS use existing GetTimeProvider. Broker registration is joined before timeout registration cleanup as defensive source-based ordering, not a proved concurrent race."
+  },
+  "actual": {
+    "original6": {
+      "total": 6,
+      "passed": 4,
+      "failed": 2,
+      "skipped": 0
+    },
+    "fixed6": {
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0
+    },
+    "whole_azure": {
+      "native_slots": 613,
+      "passed": 613,
+      "failed": 0,
+      "skipped": 0,
+      "shortened_labels": 610,
+      "inherited_collision_groups": [
+        3,
+        2
+      ]
+    },
+    "counters": {
+      "variants": 4,
+      "repetitions_of_same6": 24,
+      "first_finite_failed": 4,
+      "healthy": 20,
+      "skipped": 0
+    },
+    "restored_post6": {
+      "total": 6,
+      "passed": 6,
+      "failed": 0,
+      "skipped": 0
+    },
+    "canonical_applied_files": 6,
+    "canonical_source_files": 6107,
+    "other_existing_source6101_unchanged": true
+  },
+  "references": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-original-six-native-r1/RESULT.json",
+      "sha256": "742a374496740358f27fd2ca54410b28ce19b21cde5ad1c00f67e9cf3e510c86"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-fixed-six-native-r1/RESULT.json",
+      "sha256": "113fb467045930d5d445c4f9c77c1dd89e9f5fe66d65496d5e0114f59e945810"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-whole-azure-native-r1/RESULT.json",
+      "sha256": "692b026a790910787ec9d54ab458affba40afdb3df035ac0754c4ef2c36c3863"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/RESULT.json",
+      "sha256": "22645aa8efd174131edcf4481fdd4b6cc79eb814432bd48057832d17b31a8161"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-four-counters-native-r1/ROOT_FIRST_FINITE_AND_PHYSICAL_REVIEW_R1.json",
+      "sha256": "829e930a5c36ff49836302b7305fb54c2c469980e3435142d871aa89f5db0644"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-restored-post-six-native-r1/RESULT.json",
+      "sha256": "5658d1c509764ae6e60758d2c04515a9d5a930ceb55e5abcac4d676b71fc34e1"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-restored-post-six-native-r1/ROOT_EXACT_RUNTIME_PHYSICAL_REUSE_R1.json",
+      "sha256": "0bfac28f301112a1ed22d56919e4b3d4f9784cc7aa384c6b224740d582da0fa6"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-canonical-six-application-r1/RESULT.json",
+      "sha256": "fc44bc83a31101768be5e0202ace52fd4fe0c78089336845d79f33cb70d76a99"
+    },
+    {
+      "path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-clock-canonical-six-afterapply-adversarial-r1.json",
+      "sha256": "c2763d37873308932cbcd77b63946e898dc97886baafbdde1ade5ef65c5f95ac"
+    }
+  ],
+  "independent_retained": [
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-cancellation-source-candidate-r3-adversarial-r1.json",
+      "sha256": "536438e0759b1cbab8339a9355daa2e37fd4b35022090421b694a181e3596572",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-cancellation-source-candidate-r3-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-selected-clock-two-owner-product-source-adversarial-r1.json",
+      "sha256": "e8cece3cb07af592020d8b2b598f5423e3e63eb7353106791aea58d7b4eead57",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-selected-clock-two-owner-product-source-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-clock-unlocked-restore-generated-lock-adversarial-r1.json",
+      "sha256": "22b1ce5d7957f8cab7e5b2d469e53b6eb1b7cf15dd714138b816b3a46edd643e",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-clock-unlocked-restore-generated-lock-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-clock-original-six-native-adversarial-r1.json",
+      "sha256": "94e76f91ac1a839716013cfb5cfe52c91bde151e7d00436dbc58c65a72efd64c",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-clock-original-six-native-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-clock-fixed-six-fresh-physical-binding-adversarial-r1.json",
+      "sha256": "6163b571088ab1cef51e380d1998b663224caf567925615c67db48bbc372813e",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-clock-fixed-six-fresh-physical-binding-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-clock-fixed-six-fresh-compiled-requirements-adversarial-r1.json",
+      "sha256": "74a680c84a83e32e568e03cc2a40369ed03d286b0cc46359b6f7d0ffb7b91ece",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-clock-fixed-six-fresh-compiled-requirements-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-clock-fixed-six-native-adversarial-r1.json",
+      "sha256": "b120fa98a144e62b58f8a73ae70c93a6c6fd92d388f8ed564f6fb5df7c4f8439",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-clock-fixed-six-native-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-clock-whole-azure-native-adversarial-r2.json",
+      "sha256": "91b19cad4cdfaeb740c4eb5403ea4c00b1c3cec5c6278201556a2b7a08af6236",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-clock-whole-azure-native-adversarial-r2.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-clock-four-counters-fresh-physical-binding-adversarial-r1.json",
+      "sha256": "90f98e9fb3295eb8f7974524624e25439304df373b968ea5f02a8122fbeca406",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-clock-four-counters-fresh-physical-binding-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-clock-four-counters-fresh-compiled-requirements-adversarial-r1.json",
+      "sha256": "032358b9712753b4c94f9df53ed99d78079bfa01d8143b8d38ee1e14ba07cfa9",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-clock-four-counters-fresh-compiled-requirements-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-clock-four-counters-native-adversarial-r1.json",
+      "sha256": "ce6b42dff760368585762f4079f678d7afee941fbcd06f4003d33f366a9d5869",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-clock-four-counters-native-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-four-counter-first-finite-native-adversarial-r1.json",
+      "sha256": "5cdb059645f0c0640edd23b5f9c2c23a8bbb0cdcddb2885156bd52f5b1ca93b0",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-four-counter-first-finite-native-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-clock-post6-final-six-canonical-gate-adversarial-r1.json",
+      "sha256": "45161a26e9165532607fea92075d46fa08844addbe5dff653b63d3ed360895d9",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-clock-post6-final-six-canonical-gate-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-clock-canonical-six-afterapply-adversarial-r1.json",
+      "sha256": "c2763d37873308932cbcd77b63946e898dc97886baafbdde1ade5ef65c5f95ac",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-clock-canonical-six-afterapply-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-fixed-six-driver-r2-preflight-adversarial-r1.json",
+      "sha256": "71f2bcbdc4cbdc18a2e122228069ea4907cdacfa95c4f5d8d14a670326a52335",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-fixed-six-driver-r2-preflight-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-whole-azure-driver-preflight-adversarial-r1.json",
+      "sha256": "5b9837f0a5168e907f1f1ac262fcffe5d330f89eabcc4dd1de79c802670e10be",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-whole-azure-driver-preflight-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-four-counter-design-and-driver-r2-preflight-adversarial-r1.json",
+      "sha256": "42fcbd28f6dfc52868c3d278d4aee62e21514d1597c17829959ea422b940bd5d",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-four-counter-design-and-driver-r2-preflight-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-restored-post-six-driver-preflight-adversarial-r1.json",
+      "sha256": "917639945617af139e52e35696de3b1fcebfe94ebdae32f21bc692f9d4a173bc",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-restored-post-six-driver-preflight-adversarial-r1.json"
+    },
+    {
+      "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-receiver-clock-final-independent-retention-r1/package06-azure-receiver-canonical-six-proposal-adversarial-r1.json",
+      "sha256": "255401c9b37affdfd6ae222a442f5fb6e7f7dee8d9b29303da1b6faea1d507c5",
+      "original_path": "/private/tmp/vicione-servicebus-local-completion-reviews-20261007/package06-azure-receiver-canonical-six-proposal-adversarial-r1.json"
+    }
+  ],
+  "canonical_files": [
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/Receiver.cs",
+      "before_sha256": "f5a3e5458b5417d27bb990a987c57d7be6dbd83671b04e250270c947a7d2f567",
+      "after_sha256": "b7c1ecd2b13dc4c07c76c8d7a817d681ef85d271d86bc0de0379cf5760e06899",
+      "lines": 224
+    },
+    {
+      "path": "src/Transports/ViciOne.ServiceBus.AzureServiceBus/AzureServiceBusTransport/SessionReceiver.cs",
+      "before_sha256": "e90a133c7585532587e6a24211fd7e042c000cef181a826e11ec98cef1373841",
+      "after_sha256": "ac4ae989bdfa220388ee56e1d0c62742f64a0fe6278a828390d34b5483c4f763",
+      "lines": 80
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/Requirements/AzureServiceBusRequirements.json",
+      "before_sha256": "3ceca9007a214249ccb66e3206b43519cf5be9df99d5ce4e28f6b3dac2dc91f9",
+      "after_sha256": "0b2041b30280912a08a7b4d294c5bbcb5dbbb74deb18e9f8efb4896d2834698a",
+      "lines": 1633
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ServiceBusReceiverCancellationClockTests.cs",
+      "before_sha256": null,
+      "after_sha256": "809bc63d0d827b39dfa8c20419f3d37b418e926290577f0363e51428874c01ff",
+      "lines": 398
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/ViciOne.ServiceBus.AzureServiceBus.Tests.csproj",
+      "before_sha256": "0115d885cf448462222419838477d6c1e2b8e7d21c69b4e2a6aa365d9cf2c3ba",
+      "after_sha256": "cd7d2d00b88d6b3bbc1806be4d074968b62c9f80c26e1700bfec4822f5b9851b",
+      "lines": 34
+    },
+    {
+      "path": "tests/Transports/ViciOne.ServiceBus.AzureServiceBus.Tests/packages.lock.json",
+      "before_sha256": "0c5c5965abd49d1707d6385280f2cfed3e3f22be1b99dd07b3fe0daaabc58447",
+      "after_sha256": "1c112fbd475b572733d61c390250a12b6db19872c41b0782dd76288e830583cc",
+      "lines": 699
+    }
+  ],
+  "root_physical": {
+    "fixed_fresh_images": 13,
+    "fixed_pdb_docs": 3257,
+    "counter_fresh_images": 52,
+    "counter_pdb_docs": 13028,
+    "post": "Exact18 Fixed/Post/live byte equality permits reuse, no freshPost parse",
+    "compiled233": "Independent fresh Fixed/all4Variant method/resource qualification; native projection also passed as subset613"
+  },
+  "first_failure_limits": "Original and M1/M2 Single63; finally98 not extra; M3/M4 Empty137 after callback done, finally143 not extra; lower assertions zero cause credit.",
+  "scope": "Real receiver/ConsumerAgent/dispatcher/SDKpublicmock/settlement gates and exact selected17s fake deadline, null grace and registration lifetime by callback completion. No broker/cloud/network integration claim.",
+  "source_read": "Root own complete original fixture398, two product owners and exact minimal delta plus separately retained transitive body reads; peer body reads never transferred. Complete nativefocused logs and actual owned stage joins qualified; whole613 counts mechanical plus selected bodies/summary.",
+  "microsoft_skill": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package06-adapter-deadlines/azure-servicebus-skill-pinned-r1/SKILL.md",
+    "sha256": "6a16e0ef96cb683daaf6787e488fc65fbfd69d9b220fdb1b4ef5ecee9d36e9ba",
+    "scope": "Pinned official Microsoft Azure ServiceBus skill and relevant .NET test/build skills applied; actualSDK7.20.2 unchanged."
+  },
+  "limits": [
+    "Cleanup reorder is defensive source reasoning, not actual concurrent race reproduction or kill.",
+    "All focused cases recur in613; 24 control repetitions not24 newtests/4 productbugs.",
+    "Native builds executed against exactprivate6107, canonicaltransfer verifiedbyteexact; no extra canonical SDK run claimed.",
+    "Frozen234 audit/62 external obligations/history unchanged; other SQS/EventHub/startup/cache/schema/coverage/provider/API/journeys/bench/CI/HW/cloud tasks open.",
+    "No new commit or remote push, no globalA+ release verdict."
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "kind": "ROOT_DOCUMENTATION_R26_GUARDED_PUBLICATION_ACCEPTANCE",
+  "published_freeze_sha256": "854b698af9ccead7669e079b890948f3858a87c292980c29ab05452dcc309633",
+  "proposed_freeze_sha256": "39f78ae2ed42494c41d4123f382f0d63c3e26c6a56edff40185b875857775eba",
+  "independent_peer_sha256": "bb2d8a8c6ee8e6a9fac760fddf212ba4fd40794d11f43855692e4e8d842b3904",
+  "source_sha256": {
+    "CHANGELOG.md": "4dabd224e52110cfc04f7eba7b08db973aac8ea5bd4ed6da10d1c31522e92956",
+    "TODO.md": "ac6ba9a8bfda7e92058fe3eced17778eace200300de3a885221932e5807eabe4",
+    ".testagent/status.md": "45c487453693e7fdc97f68269acaa3af3ac671f280e8bcc6a842fab8ccb918f6",
+    ".testagent/plan.md": "ce7db13809907a939b62f464e0ca6188cc4040e3c8209faea630bbe801c70d60",
+    ".testagent/local-completion-plan.md": "109ecc99a31b8dc8800e376ea0d628428fe1212aa2ce749d98eee98127b99ae4",
+    "docs/quality-status.md": "0ab90ba1dc4aeb0c29f19aa920af557bde84fd1a99de8fe9813c797c57a39285"
+  },
+  "PO_sha256": "3ef99188653104aa225b69ce207d3fdedd2b06df52801d681881cb5c25f61da1",
+  "own_read": "Entirelossless172 diff andwholePO71 personallyread; priorR25unchangedbodies exactreuse, notfreshhistorybodycredit.",
+  "limits": "Exact6docs+separatePO71 published afterguards andadversarialreview; Cache4 boundedacceptance e832 only. Other11TODO/62OBL/history/frozen234 preserved. Azure6 sourcecandidate only, broaderlocal/external work pending, no newcommit/push/globalA+."
+}

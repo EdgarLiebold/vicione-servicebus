@@ -1,0 +1,49 @@
+{
+  "status": "INDEPENDENT_C2_TEST_ONLY4_CURRENT_ROOT805_84_PUBLIC_CONTEXT_AND_PROJECTION_PROVENANCE_VERIFIED__NO_NATIVE_ACCEPTANCE_OR_ROOT_READ_TRANSFER",
+  "freeze": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/STAGE_C2_TEST_ONLY_ORIGINAL_FREEZE_R1.json",
+    "sha256": "1f819419547e7b1f938991fca329d9906d5fd086c21c32bed4e047783aa5807e",
+    "four_snapshot_current_hash_matches": true
+  },
+  "Root805": {
+    "path": "/Users/edgar.liebold/Downloads/ViciOne Suite 2.0/repositories/vicione-servicebus/evidence/WP-SB-LOCAL-COMPLETION-20261007/package05-activity-telemetry/ROOT_CORE805_STAGE_C2_READ_CLOSURE_R1.json",
+    "sha256": "c17b0e732d723f904ff05a9562615d15ac96e67ddd59c46f917ce2b184435d69",
+    "current_rows_hash_verified": 805,
+    "tracked_git_paths": 800,
+    "explicit_added_known_current_owner_paths": [
+      "tests/ViciOne.ServiceBus.Tests/Consumers/Batching/BatchActivityHandoffIsolationTests.cs",
+      "tests/ViciOne.ServiceBus.Tests/Logging/ActivityObservationIsolationTests.cs",
+      "tests/ViciOne.ServiceBus.Tests/Monitoring/ActivitySourceActivationIsolationTests.cs",
+      "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableConsumerCompletionClockIsolationTests.cs",
+      "tests/ViciOne.ServiceBus.Tests/Monitoring/MessageProcessingMetricPreparationIsolationTests.cs"
+    ],
+    "priorRoot804_same_rows": 803,
+    "new_whole209line_owner": "tests/ViciOne.ServiceBus.Tests/Monitoring/DurableConsumerCompletionClockIsolationTests.cs",
+    "sole_changed_old_owner": "tests/ViciOne.ServiceBus.Tests/Requirements/CoreRequirements.json",
+    "same_shared84_current_and_prior": true,
+    "12_extra_public_store_metadata_context_current_hashes_verified": true
+  },
+  "projection": {
+    "prior4693_rows_ordered_same": true,
+    "two_exact_added_unique_rows": [
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "Completion_PreservesActualStoreResultWhenDiagnosticClockThrowsAsync",
+        "testType": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests",
+        "variantKey": "durable-completion-optional-clock-keeps-store-result"
+      },
+      {
+        "requirementId": "REQ-VSB-OBSERVABILITY-ISOLATION",
+        "testAssembly": "ViciOne.ServiceBus.Tests",
+        "testMethod": "Completion_PreservesRequiredClockStoreAndCancellationFailuresAsync",
+        "testType": "ViciOne.ServiceBus.Tests.Monitoring.DurableConsumerCompletionClockIsolationTests",
+        "variantKey": "durable-completion-required-failures-remain-authoritative"
+      }
+    ],
+    "current_total4695_unique": true,
+    "current_sha256": "1b1172c896c3f63f252b58507f1aea05cdb6f895e0508c7c42ca736f47e29073"
+  },
+  "original_product_pair": "Current Completion48/typed560 baseline94c9/f825 both exact frozen; no C2product change at review time",
+  "Root_qualification": "Root805 owns whole new body read and context proof; accepted B1 current typed560 source read is Root57 old542 plus full authored delta, with no reviewer reading substitution."
+}
